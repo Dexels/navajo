@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2760">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2771">
 <locations>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.12.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.12"/>
+</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
 <unit id="org.eclipse.jetty.bundles.f.source.feature.group" version="9.4.9.201803201811"/>
@@ -27,10 +31,6 @@
 <unit id="org.eclipse.jgit.pgm.source.feature.group" version="4.11.0.201803080745-r"/>
 <unit id="org.eclipse.jgit.source.feature.group" version="4.11.0.201803080745-r"/>
 <repository location="http://download.eclipse.org/egit/updates-4.11"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.11.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.11"/>
 </location>
 </locations>
 <includeBundles>
@@ -65,14 +65,14 @@
 <plugin id="com.dexels.server.mgmt.api"/>
 <plugin id="com.dexels.server.mgmt.impl"/>
 <plugin id="com.dexels.sharedconfigstore"/>
-<plugin id="com.fasterxml.aalto-xml"/>
+<plugin id="com.fasterxml.aalto-xml-dexels"/>
 <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 <plugin id="com.fasterxml.jackson.core.jackson-core"/>
 <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml"/>
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
 <plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
-<plugin id="com.fasterxml.woodstox.woodstox-core"/>
+<plugin id="com.fasterxml.woodstox.woodstox-core" version="5.0.3"/>
 <plugin id="com.google.guava"/>
 <plugin id="com.google.inject"/>
 <plugin id="com.google.protobuf"/>
