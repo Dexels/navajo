@@ -74,10 +74,9 @@ public class CallTransformer implements ReactiveTransformer {
 	private Function<Flowable<NavajoStreamEvent>,Flowable<DataItem>> callService(StreamScriptContext context, String service, boolean debug) {
 		return fx->{
 			
-			StreamScriptContext ctx = context.withInput(fx)
-					.withService(service)
-					.withUsername(context.username)
-					.withPassword(context.password);
+			StreamScriptContext ctx = context
+			        .withInput(fx)
+					.withService(service);
 			try {
 				Flowable<DataItem> x = context.runner().build(service, debug).execute(ctx);
 				return x;

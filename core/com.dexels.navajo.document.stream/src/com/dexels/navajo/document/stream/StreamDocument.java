@@ -1051,8 +1051,8 @@ public class StreamDocument {
 		return inNavajo(name, username, password, Collections.emptyList());
 	}
 	
-	public static FlowableTransformer<DataItem, DataItem> inNavajoDataItem(String name, Optional<String> username, Optional<String> password, List<String> methods) {
-		return flow->flow.startWith(Flowable.just(DataItem.of(Events.started(NavajoHead.createSimple(name, username, password)))))
+	public static FlowableTransformer<DataItem, DataItem> inNavajoDataItem(String name, String username, String password, List<String> methods) {
+		return flow->flow.startWith(Flowable.just(DataItem.of(Events.started(NavajoHead.createSimple(name, Optional.ofNullable(username),  Optional.ofNullable(password))))))
 				.concatWith(Flowable.just(DataItem.of(Events.done(methods.stream().map(Method::new).collect(Collectors.toList())))));
 	}
 	

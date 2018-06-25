@@ -31,24 +31,25 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 
 	@Override
 	public List<String> services() {
-		return scriptsInProgress.values().stream().map(e->e.service).collect(Collectors.toList());
+		return scriptsInProgress.values().stream().map(e->e.getService()).collect(Collectors.toList());
 	}
 	
 	@Override
 	public void completed(StreamScriptContext context) {
-		long started = context.started;
+		long started = context.getStarted();
 		long elapsed = System.currentTimeMillis() - started;
-		logger.info("Script: {} ran for: {} millis",context.service,elapsed);
+		logger.info("Script: {} ran for: {} millis",context.getService(),elapsed);
 		scriptsInProgress.remove(context.uuid());
 	}
 
 	@Override
 	public void cancel(String uuid) {
 		StreamScriptContext ctx = scriptsInProgress.get(uuid);
-		if(ctx!=null) {
-			ctx.cancel();
+		if (ctx == null) {
+		    logger.warn("Tried to cancel unknown uuid: {}", uuid);
+		    return;
 		}
-		completed(ctx);
+		ctx.cancel();
 	}
 	
 	@Override
@@ -64,12 +65,12 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 			ObjectNode current = objectMapper.createObjectNode();
 			current.put("id", e.getKey());
 			StreamScriptContext ctx = e.getValue();
-			current.put("service", ctx.service);
-			current.put("tenant", ctx.tenant);
+			current.put("service", ctx.getService());
+			current.put("tenant", ctx.getTenant());
 			current.put("deployment", ctx.deployment());
-			current.put("username", ctx.username.orElse("<unknown>"));
-			current.put("started", ctx.started);
-			current.put("running", (now-ctx.started));
+			current.put("username", ctx.getUsername());
+			current.put("started", ctx.getStarted());
+			current.put("running", (now-ctx.getStarted()));
 			list.add(current);
 		});
 		return list;

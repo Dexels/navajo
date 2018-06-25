@@ -164,7 +164,7 @@ public class ReactiveScriptParser {
 			public Flowable<DataItem> execute(StreamScriptContext context) {
 //				StreamScriptContext resolvedContext = !hasInputSource ? context.resolveInput() : context;
 				boolean isTml = finalType.equals(Type.EVENT);
-				
+
 				Flowable<DataItem> flow;
 				try {
 					flow = parallel > 1 ?
@@ -177,7 +177,7 @@ public class ReactiveScriptParser {
 							.doOnComplete(()->context.logEvent("source completed"));
 					if(isTml) {
 						// Omit password from response
-						flow = flow.compose(StreamDocument.inNavajoDataItem(context.service,context.username,Optional.empty(),methods));
+						flow = flow.compose(StreamDocument.inNavajoDataItem(context.getService(),context.getUsername(),"",methods));
 					}
 					return flow;
 				} catch (Throwable e) {

@@ -55,7 +55,7 @@ public class SQLReactiveSource implements ReactiveSource {
 				logger.info(" -> param : {}",object);
 			}
 		}
-		Flowable<DataItem> flow = SQL.query(datasource, context.tenant, query, unnamedParams)
+		Flowable<DataItem> flow = SQL.query(datasource, context.getTenant(), query, unnamedParams)
 				.map(d->DataItem.of(d));
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{

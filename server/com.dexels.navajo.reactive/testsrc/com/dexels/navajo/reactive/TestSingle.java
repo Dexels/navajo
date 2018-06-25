@@ -136,7 +136,7 @@ public class TestSingle {
 	public void testSingle() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"serviceName")
+			reactiveScriptParser.parse(myContext.getService(), in,"serviceName")
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -149,7 +149,7 @@ public class TestSingle {
 	public void testStore() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("teststore.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -162,7 +162,7 @@ public class TestSingle {
 	public void testReduce() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("testreduce.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -175,7 +175,7 @@ public class TestSingle {
 	public void testInputStream() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("inputstream.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			Navajo n = reactiveScriptParser.parse(myContext.service, in,"storeTestScript")
+			Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))

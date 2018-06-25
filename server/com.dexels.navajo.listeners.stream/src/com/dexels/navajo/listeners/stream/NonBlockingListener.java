@@ -144,7 +144,7 @@ public class NonBlockingListener extends HttpServlet {
 		StreamScriptContext context;
 		ac.setTimeout(-1);
 		try {
-			context = createScriptContext(ac,responseSubscriber,authMethodBuilder);
+			context = createScriptContext(ac, responseSubscriber);
 		} catch (AuthorizationException e3) {
 			logger.error("Authorization problem: ",e3);
 			response.sendError(401,"Not authorized");
@@ -204,7 +204,9 @@ public class NonBlockingListener extends HttpServlet {
 						.map(n->context.withInputNavajo(n))
 						.map(ctx->rs.execute(ctx))
 						.toFlowable()
-						.flatMap(elt->elt);
+						.flatMap(elt->elt)
+						.doOnComplete(()->context.complete())
+		                .doOnError((e)->removeRunningScript(context));
 
 			switch(rs.dataType()) {
 			case DATA:
@@ -212,7 +214,6 @@ public class NonBlockingListener extends HttpServlet {
 					.map(di->di.data())
 					.compose(StreamCompress.compress(responseEncoding))
 					.doOnCancel(()->removeRunningScript(context))
-					.doOnTerminate(()->removeRunningScript(context))
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -222,7 +223,6 @@ public class NonBlockingListener extends HttpServlet {
 				.map(di->di.message())
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
 				.doOnCancel(()->removeRunningScript(context))
-				.doOnTerminate(()->removeRunningScript(context))
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -236,7 +236,6 @@ public class NonBlockingListener extends HttpServlet {
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))
-				.doOnTerminate(()->removeRunningScript(context))
 				.doOnCancel(()->removeRunningScript(context))
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
@@ -261,7 +260,6 @@ public class NonBlockingListener extends HttpServlet {
 							.compose(StreamCompress.compress(responseEncoding));
 						}
 					})
-					.doOnTerminate(()->removeRunningScript(context))
 					.doOnCancel(()->removeRunningScript(context))
 //					.doOnNext(e->System.err.println("RESULT: "+e.length))
 					.map(ByteBuffer::wrap)
@@ -289,7 +287,7 @@ public class NonBlockingListener extends HttpServlet {
 		writer.write("<html><head></head><body>");
 		writer.write("<h2>Running scripts:</h2><ul>");
 		runningReactiveScripts.contexts().forEach(e->{
-			writer.write("<li><a href=\"stream?cancel="+e.uuid()+"&list\">"+e.service+"</li>");
+			writer.write("<li><a href=\"stream?cancel="+e.uuid()+"&list\">"+e.getService()+"</li>");
 			
 		});
 		writer.write("<ul></body></html>");
@@ -332,25 +330,26 @@ public class NonBlockingListener extends HttpServlet {
 
 
 	private ReactiveScript buildScript(StreamScriptContext context, boolean debug) throws IOException {
-		return reactiveScriptEnvironment.build(context.service, debug);
+		return reactiveScriptEnvironment.build(context.getService(), debug);
 
 	}
 
-	public Navajo authenticate(String service, String username, String password, String authHeader, String tenant) throws AuthorizationException {
-		Access a = new Access(-1,-1,username,service,"stream","ip","hostname",null,false,"access");
-		if(tenant==null) {
-			throw new AuthorizationException(true, false, username, "Can not authenticate without tenant!");
-		}
+	public Access authenticate(String service, String authHeader, String tenant) throws AuthorizationException {
+	    if(tenant==null) {
+            throw new AuthorizationException(true, false, "placeholder", "Can not authenticate without tenant!");
+        }
+	    
+        Access a = new Access(-1, -1, "placeholder", service, "stream", "ip", "hostname", null, false, null);
+		
 		a.setTenant(tenant);
 		a.setInDoc(NavajoFactory.getInstance().createNavajo());
-		a.rpcPwd = password;
 		authMethodBuilder.getInstanceForRequest(authHeader).process(a);
-		return a.getInDoc();
+		return a;
 	}
 
 	private static Flowable<NavajoStreamEvent> errorMessage(boolean wrapNavajo, StreamScriptContext context, Optional<Throwable> throwable, String message) {
 
-		String service = context.service;
+		String service = context.getService();
 		Flowable<NavajoStreamEvent> result = Msg.create("error")
 				.with(Prop.create("code","-1","integer" ))
 				.with(Prop.create("description", message))
@@ -360,7 +359,7 @@ public class NonBlockingListener extends HttpServlet {
 //				.concatWith(Observable.just(Events.done()))
 				.toFlowable(BackpressureStrategy.BUFFER);
 		if(wrapNavajo) {
-			result = result.compose(StreamDocument.inNavajo(context.service, context.username,Optional.of("")));
+			result = result.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()),Optional.of("")));
 		}
 		return result;
 	}
@@ -392,37 +391,30 @@ public class NonBlockingListener extends HttpServlet {
 		    return bytesArray;
 	}
 
-	private StreamScriptContext createScriptContext(AsyncContext ac, Disposable responseSubscriber, AuthenticationMethodBuilder builder) throws IOException, AuthorizationException {
+	private StreamScriptContext createScriptContext(AsyncContext ac, Disposable responseSubscriber) throws IOException, AuthorizationException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
-		String username = (String) attributes.get("X-Navajo-Username");
-		String password = (String) attributes.get("X-Navajo-Password");
 		String serviceHeader = (String) attributes.get("X-Navajo-Service");
 		String authorizationHeader = (String) attributes.get("Authorization");
 		boolean isGet = "GET".equals(req.getMethod());
-		if(serviceHeader == null) {
+		if(serviceHeader == null  || serviceHeader.trim().equals("")) {
 			throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
 		}
-		if(username == null) {
-			throw new NullPointerException("Missing username header. Streaming Endpoint requires a 'X-Navajo-Username' header");
-		}
-		if(password == null) {
-			throw new NullPointerException("Missing username header. Streaming Endpoint requires a 'X-Navajo-Password' header");
+		if(authorizationHeader == null || authorizationHeader.trim().equals("")) {
+			throw new NullPointerException("Missing authorizationHeader header. Streaming Endpoint requires a 'authorizationHeader' header");
 		}
 		if(tenant == null) {
 			throw new NullPointerException("Missing tenant header. Streaming Endpoint requires a tenant");
 		}
-		Navajo in = authenticate(serviceHeader,username,password,authorizationHeader,tenant);
+		Access access = authenticate(serviceHeader, authorizationHeader, tenant);
 
 		if(isGet) {
-			return new StreamScriptContext(tenant,serviceHeader, 
-					Optional.ofNullable(username), 
-					Optional.ofNullable(password),
-					in,
+			return new StreamScriptContext(tenant,
+			        access,
 					attributes,Optional.of(
-							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument
-									.inNavajo(serviceHeader, Optional.of(username), Optional.of(password)))
+					        // TODO?
+							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(""), Optional.of("")))
 							),
 					Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), 
 					Collections.emptyList(), 
@@ -441,7 +433,11 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-		return new StreamScriptContext(tenant,serviceHeader, Optional.ofNullable(username), Optional.ofNullable(password),in,attributes,Optional.of(input),Optional.of(this.reactiveScriptEnvironment), Collections.emptyList(), Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),Optional.of(runningReactiveScripts));
+        return new StreamScriptContext(tenant, access, attributes, Optional.of(input), Optional.of(this.reactiveScriptEnvironment),
+                Collections.emptyList(), Optional.of(() -> {
+                    responseSubscriber.dispose();
+                    ac.complete();
+                }), Optional.of(runningReactiveScripts));
 	}
 
 	// warn: Duplicated code

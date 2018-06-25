@@ -66,7 +66,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 					logger.info("Current thread: "+Thread.currentThread().getName());
 				}
 				
-				return DataItem.of(SQL.update(resource, context.tenant, query, params)
+				return DataItem.of(SQL.update(resource, context.getTenant(), query, params)
 						.subscribeOn(Schedulers.io(), true));
 //						.map(DataItem::of);
 			});
