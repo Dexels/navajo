@@ -195,6 +195,7 @@ public class StreamScriptContext {
 
 	public void complete() {
 	    access.setFinished();
+	    access.setExitCode(Access.EXIT_OK);
 	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
 		if(this.runningScripts.isPresent()) {
 			this.runningScripts.get().completed(this);
@@ -215,5 +216,13 @@ public class StreamScriptContext {
     
     public long getStarted() {
         return access.getCreated().getTime();
+    }
+
+    public void error(Throwable e) {
+        access.setException(e);
+        access.setExitCode(Access.EXIT_EXCEPTION);
+        if(this.runningScripts.isPresent()) {
+            this.runningScripts.get().completed(this);
+        }
     }
 }
