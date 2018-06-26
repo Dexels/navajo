@@ -61,16 +61,11 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 			con.setRequestProperty("Connection", "Keep-Alive");
 
-			if(useCompression) {
-				if (!forceGzip) {
-					con.setChunkedStreamingMode(1024);
-					con.setRequestProperty("Transfer-Encoding", "chunked");
-					con.setRequestProperty("Accept-Encoding", "deflate");
-				} else {
-					con.setRequestProperty("Content-Encoding", "gzip");
-
-				}
-			}
+		    if (bearerToken != null) {
+	            con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+	        } else if (useBasicAuth) {
+	            con.setRequestProperty("Authorization","Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+	        }
 
 			postNavajo(inputNavajo, useCompression, con);
 			resultNavajo = readResponse(useCompression, con);
@@ -164,21 +159,16 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	private void postNavajo(Navajo inputNavajo, boolean useCompression, HttpURLConnection con)
 			throws UnsupportedEncodingException, IOException {
-		if (bearerToken != null) {
-			con.setRequestProperty("Authorization", "Bearer " + bearerToken);
-		} else if (useBasicAuth) {
-			con.setRequestProperty("Authorization","Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
-		}
-
-		if (useCompression) {
-			if (forceGzip) {
-				con.setRequestProperty("Content-Encoding", "gzip");
-				con.setRequestProperty("Accept-Encoding", "gzip");
-			} else {
-				con.setRequestProperty("Content-Encoding", "jzlib");
-				con.setRequestProperty("Accept-Encoding", "jzlib");
-			}
-			// con.connect();
+        if (useCompression) {
+            if (forceGzip) {
+                con.setRequestProperty("Content-Encoding", "gzip");
+                con.setRequestProperty("Accept-Encoding", "gzip");
+            } else {
+                con.setChunkedStreamingMode(1024);
+                con.setRequestProperty("Transfer-Encoding", "chunked");
+                con.setRequestProperty("Content-Encoding", "jzlib");
+                con.setRequestProperty("Accept-Encoding", "jzlib");
+            }
 
 			BufferedWriter out = null;
 			try {

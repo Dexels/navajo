@@ -40,7 +40,7 @@ public abstract class NavajoClient implements ClientInterface{
 
     protected boolean allowCompression = true;
     protected boolean forceGzip = true;
-    protected boolean useBasicAuth;
+    protected boolean useBasicAuth = true; // default to true
     protected String bearerToken;
     protected boolean generateConditionErrors = true;
     
