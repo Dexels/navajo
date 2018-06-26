@@ -48,8 +48,8 @@ public class TipiSetPostman extends TipiAction {
 		myContext.getClient().setServerUrl("" + serv.value);
 		
 		if (token != null && token.value != null) {
-		    myContext.getClient().setHeader("Authorization", "Bearer " + token.value);
-		    
+		   // myContext.getClient().setHeader("Authorization", "Bearer " + token.value);
+		    myContext.getClient().setBearerToken(token.value.toString());
 		    // Clear username/password
 		    myContext.getClient().setUsername("_oauth_");
             myContext.getClient().setPassword("");
