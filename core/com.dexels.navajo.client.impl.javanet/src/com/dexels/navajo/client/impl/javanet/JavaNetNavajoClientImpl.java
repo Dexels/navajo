@@ -57,15 +57,16 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 			con.setDoInput(true);
 			con.setUseCaches(false);
 			con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+			
+			if (bearerToken != null) {
+                con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+            } else if (useBasicAuth) {
+                con.setRequestProperty("Authorization","Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+            }
+			
 			appendHeaderToHttp(con, inputNavajo.getHeader());
 
 			con.setRequestProperty("Connection", "Keep-Alive");
-
-		    if (bearerToken != null) {
-	            con.setRequestProperty("Authorization", "Bearer " + bearerToken);
-	        } else if (useBasicAuth) {
-	            con.setRequestProperty("Authorization","Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
-	        }
 
 			postNavajo(inputNavajo, useCompression, con);
 			resultNavajo = readResponse(useCompression, con);

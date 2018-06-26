@@ -81,13 +81,15 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
         long timeStamp = System.currentTimeMillis();
         try {
             HttpPost httppost = new HttpPost(uri);
+            
+            if (bearerToken != null) {
+                httppost.setHeader("Authorization", "Bearer " + bearerToken);
+            } else if (useBasicAuth) {
+                httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64((username+":"+password).getBytes()));
+            }
            
             appendHeaderToHttp(httppost, d.getHeader());
-            if (bearerToken != null) {
-            	httppost.setHeader("Authorization", "Bearer " + bearerToken);
-            } else if (useBasicAuth) {
-            	httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64((username+":"+password).getBytes()));
-            }
+            
 
             NavajoRequestEntity reqEntity = new NavajoRequestEntity(d, useCompression, forceGzip);
             httppost.setEntity(reqEntity);
