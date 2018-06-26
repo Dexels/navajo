@@ -237,11 +237,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
     }
 
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
-        httppost.setHeader("X-Navajo-RpcName", header.getRPCName());
-        httppost.setHeader("X-Navajo-RpcUser", header.getRPCUser());
-        httppost.setHeader("X-Navajo-Username", header.getRPCUser());
         httppost.setHeader("X-Navajo-Service", header.getRPCName());
-        httppost.setHeader("X-Navajo-Password", header.getRPCPassword());
         
         for (String key : httpHeaders.keySet()) {
         	httppost.setHeader(key, httpHeaders.get(key));
