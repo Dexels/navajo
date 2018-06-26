@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
@@ -137,7 +136,7 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		String serviceHeader = request.getHeader("X-Navajo-Service");
 		if(serviceHeader==null) {
-			logger.info("Can not deal with missing X-Navajo-Service header, redirecting to legacy");
+		    throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
 		}
 		AsyncContext ac = request.startAsync();
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
@@ -149,7 +148,6 @@ public class NonBlockingListener extends HttpServlet {
 			logger.error("Authorization problem: ",e3);
 			response.sendError(401,"Not authorized");
 			return;
-
 		} catch (Throwable e3) {
 			logger.error("Low level problem: ",e3);
 			// TODO do something prettier?
@@ -178,18 +176,7 @@ public class NonBlockingListener extends HttpServlet {
 				respondError("Script compilation problem",context, responseEncoding,response,  responseSubscriber, e2);	
 				return;
 			}
-			
-			
-//			final Navajo in;
 
-			try {
-//				in = authenticate(service, username, password, authHeader, tenant)
-//				in = authorize(context);
-//				in.write(System.err);
-			} catch (Exception e1) {
-				respondError("Authentication problem. ",context, responseEncoding,response,  responseSubscriber, e1);	
-				return;
-			}
 			// TODO Cache file exists result + Flush on change
 			Function<? super Throwable,? extends Publisher<? extends DataItem>> cc = e->{
 				logger.error("Error detected: {}",e);
@@ -206,14 +193,14 @@ public class NonBlockingListener extends HttpServlet {
 						.toFlowable()
 						.flatMap(elt->elt)
 						.doOnComplete(()->context.complete())
-		                .doOnError((e)->removeRunningScript(context));
+		                .doOnError((e)->context.error(e));
 
 			switch(rs.dataType()) {
 			case DATA:
 				execution
 					.map(di->di.data())
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnCancel(()->removeRunningScript(context))
+					.doOnCancel(()->context.complete())
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -222,7 +209,7 @@ public class NonBlockingListener extends HttpServlet {
 				.onErrorResumeNext(cc)
 				.map(di->di.message())
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
-				.doOnCancel(()->removeRunningScript(context))
+				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -236,7 +223,7 @@ public class NonBlockingListener extends HttpServlet {
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))
-				.doOnCancel(()->removeRunningScript(context))
+				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -260,8 +247,8 @@ public class NonBlockingListener extends HttpServlet {
 							.compose(StreamCompress.compress(responseEncoding));
 						}
 					})
-					.doOnCancel(()->removeRunningScript(context))
 //					.doOnNext(e->System.err.println("RESULT: "+e.length))
+                    .doOnCancel(()->{logger.warn("AAA"); context.complete();})
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 			}
@@ -397,19 +384,16 @@ public class NonBlockingListener extends HttpServlet {
 		String tenant = determineTenantFromRequest(req);
 		String serviceHeader = (String) attributes.get("X-Navajo-Service");
 		String authorizationHeader = (String) attributes.get("Authorization");
-		boolean isGet = "GET".equals(req.getMethod());
-		if(serviceHeader == null  || serviceHeader.trim().equals("")) {
-			throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
-		}
+		
 		if(authorizationHeader == null || authorizationHeader.trim().equals("")) {
-			throw new NullPointerException("Missing authorizationHeader header. Streaming Endpoint requires a 'authorizationHeader' header");
+			throw new NullPointerException("Missing authorizationHeader header. Streaming Endpoint requires a 'Authorization' header");
 		}
 		if(tenant == null) {
 			throw new NullPointerException("Missing tenant header. Streaming Endpoint requires a tenant");
 		}
 		Access access = authenticate(serviceHeader, authorizationHeader, tenant);
 
-		if(isGet) {
+		if("GET".equals(req.getMethod())) {
 			return new StreamScriptContext(tenant,
 			        access,
 					attributes,Optional.of(
