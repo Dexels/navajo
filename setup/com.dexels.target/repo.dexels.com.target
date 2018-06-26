@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2771">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2776">
 <locations>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.12.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.12"/>
-</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
 <unit id="org.eclipse.jetty.bundles.f.source.feature.group" version="9.4.9.201803201811"/>
@@ -31,6 +27,10 @@
 <unit id="org.eclipse.jgit.pgm.source.feature.group" version="4.11.0.201803080745-r"/>
 <unit id="org.eclipse.jgit.source.feature.group" version="4.11.0.201803080745-r"/>
 <repository location="http://download.eclipse.org/egit/updates-4.11"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.13.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.13"/>
 </location>
 </locations>
 <includeBundles>
