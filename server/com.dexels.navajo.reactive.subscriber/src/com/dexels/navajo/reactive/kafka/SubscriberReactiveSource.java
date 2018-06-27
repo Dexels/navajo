@@ -63,7 +63,7 @@ public class SubscriberReactiveSource implements ReactiveSource {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters resolvedParams = params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, relativePath);
-		String tenant = context.tenant;
+		String tenant = context.getTenant();
 		String topic = resolvedParams.paramString("topic");
 		String group = tenant+"-"+context.deployment()+"-"+UUID.randomUUID().toString();  //+ resolvedParams.paramString("group");
 		String from = resolvedParams.paramString("from",()->"0:0");
