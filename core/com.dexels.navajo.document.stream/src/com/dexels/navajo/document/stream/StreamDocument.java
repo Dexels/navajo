@@ -68,14 +68,6 @@ public class StreamDocument {
 		return NavajoDomStreamer.streamMessage(message);
 	}
 	
-	
-//	public static ObservableTransformer<Navajo,Observable<NavajoStreamEvent>> domStreamTransformerOld() {
-//		return e->e.map(elt->{
-//			List<NavajoStreamEvent> eventList = NavajoDomStreamer.processNavajo(elt);
-//			return Observable.fromIterable(eventList);
-//
-//		});
-//	}
 
 	public static SingleTransformer<Navajo,Observable<NavajoStreamEvent>> domStreamTransformer() {
 		return e->e.map(elt->{
@@ -91,114 +83,7 @@ public class StreamDocument {
 		}).map(e->e.getNavajo()).toObservable();
 	}
 
-//	public static ObservableOperator<Observable<Navajo>, NavajoStreamEvent> collectNew() {
-//		return new ObservableOperator<Observable<Navajo>,NavajoStreamEvent>() {
-//
-//			@Override
-//			public Observer<? super NavajoStreamEvent> apply(Observer<? super Observable<Navajo>> child)
-//					throws Exception {
-//				return new Observer<NavajoStreamEvent>() {
-//					NavajoStreamCollector collector = new NavajoStreamCollector();
-//
-//					private Disposable parentSubscription;
-//
-//					@Override
-//					public void onComplete() {
-//						child.onComplete();
-//					}
-//
-//					@Override
-//					public void onError(Throwable e) {
-//						child.onError(e);
-//					}
-//
-//					@Override
-//					public void onNext(NavajoStreamEvent event) {
-//						System.err.println("EEEENVENT: "+event);
-//						try {
-//							Optional<Navajo> n = collector.processNavajoEvent(event);
-//							if (n.isPresent()) {
-//								child.onNext(Observable.just(n.get()));
-//							} else {
-//								child.onNext(Observable.empty());
-//							}
-//						} catch (IOException e) {
-//							child.onError(e);
-//							parentSubscription.dispose();
-//						}
-//						
-//					}
-//
-//					@Override
-//					public void onSubscribe(Disposable d) {
-//						this.parentSubscription = d;
-//						child.onSubscribe(d);
-//					};
-//				};
-//			}
-//
-//
-//		};
-//	}
-	
-//	public static FlowableOperator<Navajo, NavajoStreamEvent> collectFlowable() {
-//		return new FlowableOperator<Navajo,NavajoStreamEvent>() {
-//
-//			NavajoStreamCollector collector = new NavajoStreamCollector();
-//			@Override
-//			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super Navajo> child) throws Exception {
-//				return new Op(child);
-//			}
-//			final class Op implements Subscriber<NavajoStreamEvent>, Subscription {
-//				final Subscriber<? super Navajo> child;
-//
-//				Subscription parentSubscription;
-//
-//				final AtomicBoolean isCancelled = new AtomicBoolean(false);
-//				public Op(Subscriber<? super Navajo> child) {
-//					this.child = child;
-//				}
-//				@Override
-//				public void onSubscribe(Subscription s) {
-//					this.parentSubscription = s;
-//					child.onSubscribe(this);
-//				}
-//
-//				@Override
-//				public void onNext(NavajoStreamEvent v) {
-//					try {
-//						Optional<Navajo> result = collector.processNavajoEvent(v);
-//						if(result.isPresent()) {
-//							child.onNext(result.get());
-//						}
-//					} catch (IOException e) {
-//						onError(e);
-//						cancel();
-//					}
-//				}
-//
-//				@Override
-//				public void onError(Throwable e) {
-//					child.onError(e);
-//				}
-//
-//				@Override
-//				public void onComplete() {
-//					child.onComplete();
-//				}
-//				@Override
-//				public void cancel() {
-//					isCancelled.set(true);
-//					parentSubscription.cancel();
-//				}
-//				@Override
-//				public void request(long n) {
-//					parentSubscription.request(Long.MAX_VALUE);
-//				}
-//			}
-//		};
-//	}	
-//	
+
 	public static FlowableOperator<Binary,String> gatherBinary() {
 		return new BaseFlowableOperator<Binary,String>(1) {
 		
@@ -401,8 +286,7 @@ public class StreamDocument {
 					Stack<String> pathStack = new Stack<>();
 					AtomicInteger arrayCounter = new AtomicInteger();
 					List<ImmutableMessage> currentArray  = new ArrayList<>();
-					Map<String,ImmutableMessage> submessages = new HashMap<>();
-					Map<String,List<ImmutableMessage>> submessageLists = new HashMap<>();
+
 					@Override
 					public void onComplete() {
 						operatorComplete(child);
@@ -473,8 +357,8 @@ public class StreamDocument {
 					Stack<String> pathStack = new Stack<>();
 					AtomicInteger arrayCounter = new AtomicInteger();
 					List<ImmutableMessage> currentArray  = new ArrayList<>();
-					Map<String,ImmutableMessage> submessages = new HashMap<>();
-					Map<String,List<ImmutableMessage>> submessageLists = new HashMap<>();
+					
+
 					@Override
 					public void onComplete() {
 						operatorComplete(child);

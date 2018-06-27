@@ -131,6 +131,7 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		
 		if(request.getParameter("list")!=null) {
+		    
 			listScriptsHtml(request,response);
 			return;
 		}
@@ -275,7 +276,6 @@ public class NonBlockingListener extends HttpServlet {
 		writer.write("<h2>Running scripts:</h2><ul>");
 		runningReactiveScripts.contexts().forEach(e->{
 			writer.write("<li><a href=\"stream?cancel="+e.uuid()+"&list\">"+e.getService()+"</li>");
-			
 		});
 		writer.write("<ul></body></html>");
 	}
