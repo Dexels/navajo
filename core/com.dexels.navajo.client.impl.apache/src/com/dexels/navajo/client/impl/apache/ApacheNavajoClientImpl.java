@@ -85,7 +85,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
             if (bearerToken != null) {
                 httppost.setHeader("Authorization", "Bearer " + bearerToken);
             } else if (useBasicAuth) {
-                httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64((username+":"+password).getBytes()));
+                httppost.setHeader("Authorization", "Basic " + Base64.encodeBase64String((username+":"+password).getBytes()));
             }
            
             appendHeaderToHttp(httppost, d.getHeader());
