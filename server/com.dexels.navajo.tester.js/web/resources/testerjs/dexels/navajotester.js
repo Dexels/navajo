@@ -238,18 +238,18 @@ function runScript(script) {
         }
 
         var navajoinput = prepareInputNavajo(script);
-
+        var authHeader = "Basic " + btoa(sessionStorage.user + ":" + sessionStorage.password)
+        
         $.ajax({
         	beforeSend: function(req) {
         		startTitleLoader();
-        		req.setRequestHeader('Authorization', null); // Safari fix
         		req.setRequestHeader('Content-Type', "text/xml;charset=utf-8");
         	},
         	complete: function() {stopTitleLoader();},
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","X-Navajo-Username":sessionStorage.user,"X-Navajo-Service":script,"X-Navajo-Password":sessionStorage.password},
+            headers: {"X-Navajo-Tester": "true","Authorization": authHeader, "X-Navajo-Service": script},
             success: function(result) {
             	  if(result instanceof Node) {
                       replaceXml(script, result);

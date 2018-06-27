@@ -27,7 +27,7 @@ public class TestExpressionErrors {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("expressionerrors.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("Single",Optional.empty());
 			try {
-				ReactiveScript parsedScript = TestSetup.setup().parse(myContext.service, in,"serviceName");
+				ReactiveScript parsedScript = TestSetup.setup().parse(myContext.getService(), in,"serviceName");
 				System.err.println("Problems: "+parsedScript.problems());
 				parsedScript
 					.execute(myContext)

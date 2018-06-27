@@ -117,7 +117,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context, Navajo input) {
 		try {
-				context.authNavajo.getAllMessages().forEach(message->{
+				context.resolvedNavajo().getAllMessages().forEach(message->{
 					input.addMessage(message);
 				});
 				Navajo result = execute(context, input);
@@ -129,29 +129,25 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 						.toFlowable(BackpressureStrategy.BUFFER);
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
- 				return errorMessage(context.service,context.username,101,"Could not resolve script: "+context.service);
+ 				return errorMessage(context.getService(),context.getUsername(),101,"Could not resolve script: "+context.getService());
 			}
 			
 	}
 	
 	private final Navajo execute(StreamScriptContext context, Navajo in) throws IOException {
-
-		if (context.tenant != null) {
-			MDC.put("instance", context.tenant);
-		}
+		MDC.put("instance", context.getTenant());
 		try {
 			in.getHeader().setHeaderAttribute("useComet", "true");
 			if (in.getHeader().getHeaderAttribute("callback") != null) {
 
 				String callback = in.getHeader().getHeaderAttribute("callback");
 
-				Navajo callbackNavajo = getLocalClient().handleCallback(context.tenant, in, callback);
+				Navajo callbackNavajo = getLocalClient().handleCallback(context.getTenant(), in, callback);
 				return callbackNavajo;
 
 			} else {
-				in.getHeader().setRPCUser(context.username.get());
-				in.getHeader().setRPCPassword(context.password.get());
-				Navajo outDoc = getLocalClient().handleInternal(context.tenant,in,true);
+				in.getHeader().setRPCUser(context.getUsername());
+				Navajo outDoc = getLocalClient().handleInternal(context.getTenant(), in, true);
 
 //				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, createClientInfo(context));
 				return outDoc;
@@ -190,13 +186,13 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 //		clientInfo.setAuthHeader(authHeader);
 //			return clientInfo;
 //	}
-	private static Flowable<NavajoStreamEvent> errorMessage(String service, Optional<String> user, int code, String message) {
+	private static Flowable<NavajoStreamEvent> errorMessage(String service, String user, int code, String message) {
 		return Msg.create("error")
 				.with(Prop.create("code",""+code,Property.INTEGER_PROPERTY))
 				.with(Prop.create("description", message))
 				.stream()
 				.toFlowable(BackpressureStrategy.BUFFER)
-				.compose(StreamDocument.inNavajo(service, user, Optional.empty()));
+				.compose(StreamDocument.inNavajo(service, Optional.ofNullable(user), Optional.empty()));
 	}
 
 	@Override

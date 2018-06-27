@@ -66,9 +66,9 @@ public class AsyncTransformer implements ReactiveTransformer {
 
 	private ImmutableMessage createOutputMessage(StreamScriptContext context) {
 		return ImmutableFactory.empty()
-		.with("service", context.service, Property.STRING_PROPERTY)
+		.with("service", context.getService(), Property.STRING_PROPERTY)
 		.with("uuid", context.uuid(), Property.STRING_PROPERTY)
-		.with("username", context.username.orElse(""), Property.STRING_PROPERTY);
+		.with("username", context.getUsername(), Property.STRING_PROPERTY);
 	}
 
 	@Override

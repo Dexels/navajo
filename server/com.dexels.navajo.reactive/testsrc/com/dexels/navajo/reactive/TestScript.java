@@ -79,7 +79,7 @@ public class TestScript {
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.service, in, "serviceName").execute(myContext)
+			reactiveScriptParser.parse(myContext.getService(), in, "serviceName").execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));

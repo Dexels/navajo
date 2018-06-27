@@ -210,10 +210,6 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 	}
 
 	private void appendHeaderToHttp(HttpURLConnection con, Header header) {
-		con.setRequestProperty("X-Navajo-RpcName", header.getRPCName());
-		con.setRequestProperty("X-Navajo-RpcUser", header.getRPCUser());
-		con.setRequestProperty("X-Navajo-Username", header.getRPCUser());
-		con.setRequestProperty("X-Navajo-Password", header.getRPCPassword());
 		con.setRequestProperty("X-Navajo-Service", header.getRPCName());
 //		con.setRequestProperty("X-Navajo-Debug", "true");
 		for (String key : httpHeaders.keySet()) {
