@@ -216,7 +216,7 @@ public class TslPreCompiler {
 
             String extendsAttr = n.getAttribute("extends");
             if (extendsAttr == null || extendsAttr.equals("") || !extendsAttr.startsWith("navajo://")) {
-                return;
+                continue;
             }
 
             String ext = extendsAttr.substring(9);
