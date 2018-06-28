@@ -4,11 +4,7 @@ import javax.swing.JPanel;
 
 import org.icepdf.ri.common.SwingController;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
-import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiPDFViewer extends TipiSwingDataComponentImpl {
     private static final long serialVersionUID = -4533671175260716894L;

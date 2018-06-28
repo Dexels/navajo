@@ -48,8 +48,8 @@ public class TipiPDFSearch extends TipiHeadlessComponentImpl {
             // open the document
             Document document = new Document();
             try {
-                // document.setFile(binary.getTempFileName(false));
-                document.setFile("/home/chris/Documents/220401884.pdf");
+                 document.setFile(binary.getTempFileName(false));
+//                document.setFile("/home/chris/Documents/220401884.pdf");
             } catch (PDFException | PDFSecurityException | IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
