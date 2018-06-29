@@ -55,6 +55,9 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
         }
 
         String username = client.getUsername();
+        if (oauthToken != null && oauthToken.getUsername() != null && !oauthToken.getUsername().equals("")) {
+            username = oauthToken.getUsername();
+        }
         String pathInfo = req.getPathInfo();
         String instance = client.getInstance();
 
@@ -81,11 +84,13 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
             a.setClientDescription("Article");
             a.setClientToken("Client id: " + client.getId());
             
+            
+            
             ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
                     instance, oauthToken);
             runtime.setAccess(a);
             
-            runtime.setUsername(client.getUsername());
+            runtime.setUsername(username);
             ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext());
             tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable e) {
