@@ -49,7 +49,7 @@ public abstract class NavajoClient implements ClientInterface{
     protected SSLSocketFactory socketFactory;
     protected KeyStore keyStore;
 
-	private boolean markDescriptions = System.getProperty("MARK_DESCRIPTIONS")!=null;
+	private boolean markDescriptions = false;
 
     
     @Override

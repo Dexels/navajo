@@ -603,9 +603,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
         if (value != null) {
             return value;
         }
-        value = System.getenv(name);
-        return value;
-
+        try {
+            value = System.getenv(name);
+            return value;
+        } catch (Throwable t) {
+            logger.warn("Error getting env {}", name, t);
+        }
+        return null;
     }
 
     private void createClient(XMLElement config) {
