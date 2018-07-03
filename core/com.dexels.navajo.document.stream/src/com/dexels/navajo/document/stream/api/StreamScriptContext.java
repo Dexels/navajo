@@ -221,6 +221,8 @@ public class StreamScriptContext {
     public void error(Throwable e) {
         access.setException(e);
         access.setExitCode(Access.EXIT_EXCEPTION);
+        NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
+
         if(this.runningScripts.isPresent()) {
             this.runningScripts.get().completed(this);
         }
