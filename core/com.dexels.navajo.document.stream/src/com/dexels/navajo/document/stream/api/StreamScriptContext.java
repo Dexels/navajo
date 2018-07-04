@@ -17,7 +17,6 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
@@ -226,5 +225,9 @@ public class StreamScriptContext {
         if(this.runningScripts.isPresent()) {
             this.runningScripts.get().completed(this);
         }
+    }
+
+    public String getAccessId() {
+        return access.getAccessID();
     }
 }

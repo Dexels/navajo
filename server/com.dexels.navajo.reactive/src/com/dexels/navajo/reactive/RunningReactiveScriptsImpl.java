@@ -1,7 +1,6 @@
 package com.dexels.navajo.reactive;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +30,7 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 
 	@Override
 	public List<String> services() {
-		return scriptsInProgress.values().stream().map(e->e.getService()).collect(Collectors.toList());
+		return scriptsInProgress.values().stream().map(e->e.getService() + " ("+ e.getAccessId() +")").collect(Collectors.toList());
 	}
 	
 	@Override
