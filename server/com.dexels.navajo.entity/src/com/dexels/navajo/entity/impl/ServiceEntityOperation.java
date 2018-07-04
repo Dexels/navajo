@@ -395,7 +395,10 @@ public class ServiceEntityOperation implements EntityOperation {
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
         Property entityVersion = NavajoFactory.getInstance().createProperty(input, "version", "string", myEntity.getMyVersion(), 0, "",
                 Property.DIR_OUT);
+        Property entityName = NavajoFactory.getInstance().createProperty(input, "name", "string", myEntity.getMessageName(), 0, "",
+                Property.DIR_OUT);
         entityInfo.addProperty(entityVersion);
+        entityInfo.addProperty(entityName);
         input.addMessage(entityInfo);
 
 		// Perform validation method if defined
