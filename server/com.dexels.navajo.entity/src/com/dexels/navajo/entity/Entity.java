@@ -29,7 +29,6 @@ public class Entity {
     private final static Logger logger = LoggerFactory.getLogger(Entity.class);
     protected String entityName = null;
     protected String messageName = null;
-    private String myVersion;
     private Navajo entityNavajo = null;
 
     // Keep track of entities that are derived from this entity.
@@ -156,14 +155,6 @@ public class Entity {
                 });
         setMyValidations(entityNavajo.getMessage("__validations__"));
         // for future configuration messages::
-    }
-
-    public void setMyVersion(String version) {
-        this.myVersion = version;
-    }
-
-    public String getMyVersion() {
-        return this.myVersion;
     }
 
     public void refreshEntityManagerOperationsFromNavajo(Navajo n) {
