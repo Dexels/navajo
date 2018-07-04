@@ -24,6 +24,8 @@ import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.exception.TokenStoreException;
 
 public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
+    private static final String ACCESS_PREFIX = "article/";
+
     private final static Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
 
     private static final long serialVersionUID = 1199676363102046960L;
@@ -76,7 +78,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
                 ip = req.getRemoteAddr();
             }
 
-            Access a = new Access(-1, -1, username, "article/" + articleName, "", "", "", null, false, null);
+            Access a = new Access(-1, -1, username, ACCESS_PREFIX + articleName, "", "", "", null, false, null);
             a.setTenant(instance);
             a.rpcPwd = token;
             a.created = new Date();
