@@ -43,9 +43,24 @@ public class Entity {
     protected Map<String, Entity> superEntitiesMap = new HashMap<String, Entity>();
 
     protected Map<String, String> myValidations = new TreeMap<String, String>();
+    protected Map<String, String> myCaching = new TreeMap<String, String>();
 
-    private static String VALIDATIONS = "__validations__";
-    public static final String[] VALID_CONFIGURATION_MESSAGES = { VALIDATIONS };
+    private static final String VALIDATIONS = "__validations__";
+    private static final String CACHING = "__caching__";
+    public static final String[] VALID_CONFIGURATION_MESSAGES = { VALIDATIONS, CACHING };
+
+    public static final String CACHING_MUST_REVALIDATE = "must-revalidate";
+    public static final String CACHING_NO_CACHE = "no-cache";
+    public static final String CACHING_NO_STORE = "no-store";
+    public static final String CACHING_NO_TRANSFORM = "no-transform";
+    public static final String CACHING_PUBLIC = "public";
+    public static final String CACHING_PRIVATE = "private";
+    public static final String CACHING_PROXY_REVALIDATE = "proxy-revalidate";
+    public static final String CACHING_MAX_AGE = "max-age";
+    public static final String CACHING_SMAX_AGE = "s-maxage";
+
+    public static final String[] VALID_CACHING_PROPERTIES = { CACHING_MUST_REVALIDATE, CACHING_NO_CACHE, CACHING_NO_STORE,
+            CACHING_NO_TRANSFORM, CACHING_PUBLIC, CACHING_PRIVATE, CACHING_PROXY_REVALIDATE, CACHING_MAX_AGE, CACHING_SMAX_AGE };
 
     public static final String DEFAULT_VERSION = "0";
 
@@ -154,6 +169,7 @@ public class Entity {
                     logger.error("Invalid config message found : {}. Skipping it...", m.getName());
                 });
         setMyValidations(entityNavajo.getMessage("__validations__"));
+        setMyCaching(entityNavajo.getMessage("__caching__"));
         // for future configuration messages::
     }
 
@@ -205,6 +221,10 @@ public class Entity {
         return myValidations;
     }
 
+    public Map<String, String> getMyCaching() {
+        return myCaching;
+    }
+
     public void setMyValidations(Message validationsMessage) {
 
         if (validationsMessage == null) {
@@ -225,6 +245,34 @@ public class Entity {
 
         validationsMessage.getAllProperties().forEach(prop -> {
             myValidations.put(prop.getName(), prop.getValue());
+        });
+
+    }
+
+    public void setMyCaching(Message cachingMessage) {
+
+        if (cachingMessage == null) {
+            return;
+        }
+
+        // First check cachingMessage message
+        if (!cachingMessage.getType().equals(Message.MSG_TYPE_SIMPLE)) {
+            logger.error("Could not register entity caching directions.");
+            return;
+        }
+
+        if (cachingMessage.getAllProperties().stream().filter(prop -> !prop.getType().equals(Property.STRING_PROPERTY)).findFirst()
+                .orElse(null) != null) {
+            logger.error("Could not register caching directions. Properties of validation message must be of type string");
+            return;
+        }
+
+        cachingMessage.getAllProperties().forEach(prop -> {
+            if (Arrays.asList(VALID_CACHING_PROPERTIES).contains(prop.getName())) {
+                myCaching.put(prop.getName(), prop.getValue());
+            } else {
+                logger.error("Skiping invalid caching property: " + prop.getName());
+            }
         });
 
     }

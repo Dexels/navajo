@@ -258,6 +258,11 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
+            // Set Caching parameter
+            if (e.getMyCaching().size() > 0) {
+                result = setCachingHeader(result, e, runner);
+            }
+
             if (method.equals(HTTP_METHOD_GET) && result.getMessage(entityMessage.getName()) != null) {
                 runner.setOutputEtag(result.getMessage(entityMessage.getName()).generateEtag());
             }
@@ -310,6 +315,55 @@ public class EntityDispatcher {
             }
 
         }
+    }
+
+    private Navajo setCachingHeader(Navajo result, Entity e, EntityContinuationRunner runner) {
+        String cacheHeader = "";
+        for (Map.Entry<String, String> entry : e.getMyCaching().entrySet()) {
+            switch (entry.getKey()) {
+            case Entity.CACHING_MUST_REVALIDATE:
+                cacheHeader += " must-revalidate,";
+                break;
+            case Entity.CACHING_NO_CACHE:
+                cacheHeader += " must-revalidate,";
+                break;
+            case Entity.CACHING_NO_STORE:
+                cacheHeader += " no-store,";
+                break;
+            case Entity.CACHING_NO_TRANSFORM:
+                cacheHeader += " no-transform,";
+                break;
+            case Entity.CACHING_PUBLIC:
+                cacheHeader += " public,";
+                break;
+            case Entity.CACHING_PRIVATE:
+                cacheHeader += " private,";
+                break;
+            case Entity.CACHING_PROXY_REVALIDATE:
+                cacheHeader += " proxy-revalidate,";
+                break;
+            case Entity.CACHING_MAX_AGE:
+                cacheHeader += " max-age=" + entry.getValue() + ",";
+                break;
+            case Entity.CACHING_SMAX_AGE:
+                cacheHeader += " s-maxage=" + entry.getValue() + ",";
+                break;
+            default:
+                break;
+            }
+        }
+
+        cacheHeader = cacheHeader.trim();
+        cacheHeader = cacheHeader.replace("public", "private");
+        if (cacheHeader.endsWith(",")) {
+            cacheHeader = cacheHeader.substring(0, cacheHeader.length() - 1);
+        }
+        // Add to navajo response
+        result.getHeader().setHeaderAttribute("cachecontrol", cacheHeader);
+
+        // Add to runner httpResponse
+        runner.getHttpResponse().setHeader("Cache-Control", cacheHeader);
+        return result;
     }
 
     private void processGetOptions(Entity e, HttpServletResponse response) {

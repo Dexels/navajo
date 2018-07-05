@@ -177,7 +177,11 @@ public class EntityContinuationRunner implements TmlRunnable {
     @Override
     public void endTransaction() throws IOException {
         // Only end-points are allowed to cache - no servers in between
-        response.setHeader("Cache-Control", "private");
+        if (!response.getHeader("Cache-Control").contains("private") && response.getHeader("Cache-Control").contains("public")) {
+            response.setHeader("Cache-Control", response.getHeader("Cache-Control").replace("public", "private"));
+        } else if (!response.getHeader("Cache-Control").contains("private")) {
+            response.setHeader("Cache-Control", response.getHeader("Cache-Control") + ", private");
+        }
 
         writeOutput();
         continuation.complete();
