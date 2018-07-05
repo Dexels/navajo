@@ -432,6 +432,11 @@
         <input>string|empty</input>
         <result>string</result>
     </function>
+    <function name="GetRequestUserAgent" class="com.dexels.navajo.functions.GetRequestUserAgent">
+        <description>Returns the User-Agent header value of the Navajo request with empty string as default, optionaly overriding the default</description>
+        <input>string|empty</input>
+        <result>string</result>
+    </function>
 	<function name="GetSelectedName" class="com.dexels.navajo.functions.GetSelectedName">
 		<description>Gets the name of a selected property</description>
 		<input />
