@@ -107,8 +107,7 @@ public class EntityDispatcher {
                     
                 }
             }
-           
-            
+
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
             if (ip == null || ip.equals("")) {
                 ip = runner.getHttpRequest().getRemoteAddr();
@@ -222,8 +221,13 @@ public class EntityDispatcher {
             if (locale != null) {
                 header.setHeaderAttribute("locale", locale);
             }
-            input.addHeader(header);
 
+            String userAgent = runner.getHttpRequest().getHeader("User-Agent");
+            if (userAgent != null) {
+                header.setHeaderAttribute("user_agent", userAgent);
+            }
+
+            input.addHeader(header);
 
             access.created = new Date(runner.getStartedAt());
             access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
