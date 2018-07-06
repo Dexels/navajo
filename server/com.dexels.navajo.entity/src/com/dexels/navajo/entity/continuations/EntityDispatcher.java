@@ -251,7 +251,8 @@ public class EntityDispatcher {
             }
 
             long opStartTime = System.currentTimeMillis();
-            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), entityOperation, version);
+            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), entityOperation, version,
+                    entityName);
             result = seo.perform(input);
 
             if (result.getMessage(entityMessage.getName()) == null) {

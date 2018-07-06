@@ -39,6 +39,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Key myKey;
 	private Set<String> validMessages = new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
     private String entityVersion = Entity.DEFAULT_VERSION;
+    private String mappedPath;
 
     public ServiceEntityOperation(EntityManager m, Operation o, String version) throws EntityException {
 		this.dispatcher = DispatcherFactory.getInstance();
@@ -51,6 +52,14 @@ public class ServiceEntityOperation implements EntityOperation {
         this.entityVersion = version;
 		setup(m, o);
 	}
+
+    public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o, String version, String mappedPath)
+            throws EntityException {
+        this.dispatcher = c;
+        this.entityVersion = version;
+        this.mappedPath = mappedPath;
+        setup(m, o);
+    }
 
     private void setup(EntityManager m, Operation o) throws EntityException {
 		this.manager = m;
@@ -71,7 +80,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
 		if (dispatcher != null) {
-            return new ServiceEntityOperation(manager, dispatcher, o, entityVersion);
+            return new ServiceEntityOperation(manager, dispatcher, o, entityVersion, mappedPath);
 		} else {
 			return null;
 		}
@@ -271,7 +280,7 @@ public class ServiceEntityOperation implements EntityOperation {
 							try {
 								Operation o = EntityManager.getInstance().getOperation(entityName, "GET");
 								ServiceEntityOperation seo = new ServiceEntityOperation(EntityManager.getInstance(),
-                                        DispatcherFactory.getInstance(), o, entityVersion);
+                                        DispatcherFactory.getInstance(), o, entityVersion, mappedPath);
 								entityObj = seo.perform(referencedEntities.get(entityName));
 								cachedEntities.put(entityName, entityObj);
 							} catch (Exception e) {
@@ -395,10 +404,17 @@ public class ServiceEntityOperation implements EntityOperation {
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
         Property entityVersion = NavajoFactory.getInstance().createProperty(input, "Version", "string", this.entityVersion, 0, "",
                 Property.DIR_OUT);
-        Property entityName = NavajoFactory.getInstance().createProperty(input, "Name", "string", myEntity.getMessageName(), 0, "",
+        Property entityMessageName = NavajoFactory.getInstance().createProperty(input, "Name", "string", myEntity.getMessageName(), 0, "",
                 Property.DIR_OUT);
+        Property entityDefinitionPath = NavajoFactory.getInstance().createProperty(input, "DefinitionPath", "string", myEntity.getName(), 0,
+                "", Property.DIR_OUT);
+        Property entityMappedPath = NavajoFactory.getInstance().createProperty(input, "MappedPath", "string",
+                mappedPath != null ? mappedPath : myEntity.getName(), 0, "",
+                Property.DIR_OUT);
+        entityInfo.addProperty(entityMessageName);
         entityInfo.addProperty(entityVersion);
-        entityInfo.addProperty(entityName);
+        entityInfo.addProperty(entityDefinitionPath);
+        entityInfo.addProperty(entityMappedPath);
         input.addMessage(entityInfo);
 
 		// Perform validation method if defined
