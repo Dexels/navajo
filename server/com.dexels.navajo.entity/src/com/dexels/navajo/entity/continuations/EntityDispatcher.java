@@ -51,7 +51,6 @@ public class EntityDispatcher {
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
 
-
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
@@ -516,6 +515,14 @@ public class EntityDispatcher {
 
     public void clearEntityMapper(EntityMapper mapp) {
         myMapper = null;
+    }
+
+    public EntityManager getMyManager() {
+        return this.myManager;
+    }
+
+    public EntityMapper getMyMapper() {
+        return this.myMapper;
     }
 
 }

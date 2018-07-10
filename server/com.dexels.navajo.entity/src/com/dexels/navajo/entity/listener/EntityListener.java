@@ -1,6 +1,8 @@
 package com.dexels.navajo.entity.listener;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.continuations.EntityContinuationRunner;
 import com.dexels.navajo.entity.continuations.EntityDispatcher;
 import com.dexels.navajo.script.api.TmlScheduler;
@@ -36,10 +39,15 @@ public class EntityListener extends HttpServlet {
      */
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        EntityContinuationRunner runner = new EntityContinuationRunner(request, response);
-        runner.setEntityDispatcher(entityDispatcher);
-        runner.setDispatcher(dispatcherInterface);
-        tmlScheduler.submit(runner, false);
+        if (request.getParameter("getDefinition") != null) {
+            performHeadRequest(request, response);
+        } else {
+            EntityContinuationRunner runner = new EntityContinuationRunner(request, response);
+            runner.getInputNavajo();
+            runner.setEntityDispatcher(entityDispatcher);
+            runner.setDispatcher(dispatcherInterface);
+            tmlScheduler.submit(runner, false);
+        }
     }
 
     public void setTmlScheduler(TmlScheduler scheduler) {
@@ -64,6 +72,50 @@ public class EntityListener extends HttpServlet {
 
     public void clearDispatcher(DispatcherInterface di) {
         this.dispatcherInterface = null;
+    }
+
+    private void performHeadRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Entity e = getEntityFromRequest(request);
+        if (e == null) {
+            response.sendError(302, "Entity Not Found");
+        }
+        try (OutputStream out = response.getOutputStream()) {
+                e.getMyNavajo().write(out);
+        }
+    }
+
+    private Entity getEntityFromRequest(HttpServletRequest request) {
+        String path = request.getPathInfo();
+        if (path.startsWith("/entity")) {
+            path = path.substring(7);
+        }
+        String entityName = path.substring(1);
+        if (entityName.indexOf('.') > 0) {
+            // Remove .<format> from entityName
+            entityName = entityName.substring(0, entityName.indexOf('.'));
+        }
+        entityName = entityName.replace("/", ".");
+        String mappedEntity = null;
+
+        String entitySubName = entityName.substring(entityName.lastIndexOf('.') + 1);
+        String folder;
+        if (entityName.equals(entitySubName)) {
+            folder = ""; // Root folder
+        } else {
+            folder = path.substring(1, path.lastIndexOf("/"));
+        }
+        Set<String> entities = entityDispatcher.getMyMapper().getEntities(folder);
+
+        for (String s : entities) {
+            String anEntity = s.substring(s.lastIndexOf('.') + 1);
+            if (anEntity.equals(entitySubName)) {
+                mappedEntity = s;
+                break;
+            }
+        }
+
+        Entity e = entityDispatcher.getMyManager().getEntity(mappedEntity);
+        return e;
     }
 
 }
