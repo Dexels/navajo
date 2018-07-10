@@ -44,7 +44,6 @@ public class RequestPublisher implements Publisher<ByteBuffer> {
 
   public RequestPublisher(final AsyncContext context, final int readBufferLimit, final int sequentialReadLimit) throws IOException {
     this.inputStream = context.getRequest().getInputStream();
-    context.setTimeout(100000);
     this.readBufferLimit = readBufferLimit;
     this.sequentialReadLimit = sequentialReadLimit;
     if (readBufferLimit <= 0) throw new IllegalArgumentException("readBufferLimit must be greater than 0");
