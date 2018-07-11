@@ -1792,8 +1792,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 removeMessage(m);
                 continue;
             }
-
             
+
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
@@ -1802,9 +1802,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                     logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
                     
                 } else {
+
                     for (int i = 0; i < m.getElements().size(); i++) {
                             m.getElements().get(i).maskMessage(mask_message, method);
                     }
+                    // also mask the definition message
+                    definitionMessage.maskMessage(mask_message, method);
                 }
             } else {
                 m.maskMessage(mask_message, method);
