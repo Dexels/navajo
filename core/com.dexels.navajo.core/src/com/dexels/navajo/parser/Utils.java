@@ -398,6 +398,10 @@ public final class Utils extends Exception {
 			boolean result = true;
 			ArrayList list = (ArrayList) a;
 
+            if (list.size() == 0) {
+                return isEqual(a, b);
+            }
+
 			for (int i = 0; i < list.size(); i++) {
 				boolean dum = isEqual(list.get(i), b);
 				if (!(dum))
