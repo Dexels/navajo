@@ -23,7 +23,13 @@ public class GetBinaryFromStore extends FunctionInterface{
 		if(bucket==null) {
 			throw new TMLExpressionException("No bucket defined in GetBinaryFromStore");
 		}
-		String id = (String) getOperand(2);
+		Object idObj = getOperand(2);
+		String id = null;
+		if (idObj instanceof String) {
+		    id = (String) idObj;
+		} else {
+		    id = idObj.toString();
+		}
 		if(id==null) {
 			throw new TMLExpressionException("No id defined in GetBinaryFromStore");
 		}
