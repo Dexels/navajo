@@ -46,6 +46,9 @@ public class ImageScaler {
         	ios.flush();
         	ios.close();
         	ios = null;
+        	
+            c.setMimeType(c.guessContentType());
+
         	return c;
         } catch (IOException e) {
         	throw new IOException(e.getMessage());
