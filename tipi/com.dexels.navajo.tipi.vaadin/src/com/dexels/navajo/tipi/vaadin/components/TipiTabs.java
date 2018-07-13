@@ -121,7 +121,8 @@ public class TipiTabs extends TipiVaadinComponentImpl {
 //		super.addToVaadinContainer(currentContainer, component, constraints);
 		tabSheet.addComponent(component);
 		component.setSizeFull();
-		tabSheet.addTab(component, ""+constraints, null);
+        Object name = component.getCaption() != null ? component.getCaption() : constraints;
+        tabSheet.addTab(component, "" + name, null);
 		tabSheet.setSelectedTab(component);
 		//		component.setCaption(""+constraints);
 	}
