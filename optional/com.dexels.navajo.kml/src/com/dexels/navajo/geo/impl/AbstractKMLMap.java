@@ -21,6 +21,9 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -39,6 +42,7 @@ import com.dexels.navajo.geo.color.WhiteOrangeColorizer;
 import com.dexels.navajo.geo.color.WhiteRedColorizer;
 
 public abstract class AbstractKMLMap {
+    private final static Logger logger = LoggerFactory.getLogger(AbstractKMLMap.class);
 
 	protected GeoColorizer myColorizer = null;
 
@@ -112,8 +116,7 @@ public abstract class AbstractKMLMap {
 		}
 		String styleId = style.getStringAttribute("id");
 		if (styleId == null) {
-			System.err.println("Huh?");
-			System.err.println("style:\n" + polyStyle);
+		    logger.debug("Null styleid? Using style {}", polyStyle);
 			return;
 		}
 		String markerId = null;
@@ -184,7 +187,7 @@ public abstract class AbstractKMLMap {
 					iconShape = message.getProperty("IconURL").getValue();
 					// Make sure to replace &amp; with &
 					iconShape = iconShape.replaceAll("&amp;", "&");
-					System.err.println("URL: " + iconShape);
+					logger.debug("Using url: {}", iconShape);
 				} else if (message.getProperty("Icon") != null) {
 					iconShape = "http://maps.google.com/mapfiles/kml/" + message.getProperty("Icon").getTypedValue();
 				}
@@ -358,7 +361,7 @@ public abstract class AbstractKMLMap {
 		}
 
 		placemark.addTagKeyValue("description", descr.toString());
-		System.err.println("descr: " + descr);
+		logger.debug("Description: {}", descr);
 
 		XMLElement region = new CaseSensitiveXMLElement("Region");
 		if (useLOD) {
@@ -399,7 +402,7 @@ public abstract class AbstractKMLMap {
 			overlay.getParent().removeChild(overlay);
 		} else {
 			XMLElement href = overlay.getElementByTagName("href");
-			System.err.println("HREF Found: " + href);
+			logger.debug("Found href: {}", href);
 			href.setContent(legendHref);
 		}
 
@@ -432,7 +435,7 @@ public abstract class AbstractKMLMap {
 		if (useLegend) {
 			LegendCreator lc = new LegendCreator();
 			File imageFile = lc.createLegendImagePath(title, legendSteps, minLegend, maxLegend, new Dimension(legendWidth, legendHeight), colorize);
-			System.err.println("Legend link: " + legendHref);
+			logger.debug("Legend link: {}", legendHref);
 			zipEntry = new ZipEntry(legendHref);
 			zos.putNextEntry(zipEntry);
 			FileInputStream fis = new FileInputStream(imageFile);
