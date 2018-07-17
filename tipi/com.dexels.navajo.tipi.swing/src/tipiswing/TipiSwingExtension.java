@@ -105,6 +105,8 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 				logger.error("Error setting look and feel: "+tipiLaf,e);
 			} catch (UnsupportedLookAndFeelException e) {
 				logger.error("Error setting look and feel: "+tipiLaf,e);
+            } catch (NoClassDefFoundError e) {
+                logger.error("Error setting look and feel: " + tipiLaf, e);
 			}
 			return;
 		}
