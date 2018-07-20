@@ -50,9 +50,6 @@ function setupLoginDialog() {
 
 }
 
-
-
-
 $(document).ready(function() {
 	
 	// Inside document.ready, so that it's executed AFTER the page is ready. Navigate to the last clicked entity :)  
@@ -108,7 +105,7 @@ $(document).ready(function() {
      */
     $(document).on('click', '#oauthflowbutton', function() {
         
-        var redirect = document.location;
+        var redirect = 'http://' + window.location.hostname  +':' + location.port + window.location.pathname;
         var clientid = $('#clientid').val();
         var scopes = $('#oauthscopes').val(); // TODO: scopes empty
         
@@ -131,7 +128,6 @@ $(document).ready(function() {
         url += "&state=123abcdef";
         url += "&login_page_type=full";
         
-        //http://localhost:9090/oauth?redirect_uri=http://localhost:9090/entityDocumentation/knvb/voetbalnl/website&response_type=token&client_id=Xsm3pXOVzh&state=123abcdef&login_page_type=full
         sessionStorage.authType = 'oauth';
         window.location = url;
     });
