@@ -211,15 +211,12 @@ public class RESTAdapter extends NavajoMap {
         Binary bContent = new Binary();
         if (textContent == null) {
             // Remove globals and parms message
-            if (od.getMessage("__globals__") != null) {
-                od.removeMessage("__globals__");
-            }
-            if (od.getMessage("__parms__") != null) {
-                od.removeMessage("__parms__");
-            }
-            if (od.getMessage("__aaa__") != null) {
-                od.removeMessage("__aaa__");
-            }
+            if (od.getMessage("__globals__") != null)  od.removeMessage("__globals__");
+
+            if (od.getMessage(Message.MSG_PARAMETERS_BLOCK) != null) od.removeMessage(Message.MSG_PARAMETERS_BLOCK);
+            if (od.getMessage(Message.MSG_TOKEN_BLOCK) != null) od.removeMessage(Message.MSG_TOKEN_BLOCK);
+            if (od.getMessage(Message.MSG_AAA_BLOCK) != null) od.removeMessage(Message.MSG_AAA_BLOCK);
+            
             
             try {
                 json.format(od, w, true);

@@ -828,16 +828,29 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
         }
         // Always copy aaa message
-        if (inMessage.getMessage("__aaa__") != null) {
-            Message aaamsg = inMessage.getMessage("__aaa__").copy(outDoc);
-            Message existing = outDoc.getMessage("__aaa__");
-            try {
-                outDoc.addMessage(aaamsg);
-                if (existing != null) {
-                    outDoc.addMessage(existing);
+        if (inMessage.getMessage(Message.MSG_AAA_BLOCK) != null) {
+            Message aaa = inMessage.getMessage(Message.MSG_AAA_BLOCK).copy(outDoc);
+            if (outDoc.getMessage(Message.MSG_AAA_BLOCK) != null) {
+                outDoc.getMessage(Message.MSG_AAA_BLOCK).merge(aaa, true);
+            } else {
+                try {
+                    outDoc.addMessage(aaa);
+                } catch (NavajoException e) {
+                    e.printStackTrace(Access.getConsoleWriter(access));
                 }
-            } catch (NavajoException e) {
-                e.printStackTrace(Access.getConsoleWriter(access));
+            }
+        }
+        // Always copy token message
+        if (inMessage.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
+            Message token = inMessage.getMessage(Message.MSG_TOKEN_BLOCK).copy(outDoc);
+            if (outDoc.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
+                outDoc.getMessage(Message.MSG_TOKEN_BLOCK).merge(token, true);
+            } else {
+                try {
+                    outDoc.addMessage(token);
+                } catch (NavajoException e) {
+                    e.printStackTrace(Access.getConsoleWriter(access));
+                }
             }
         }
 

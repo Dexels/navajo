@@ -18,10 +18,18 @@ public class NavajoRequestToString extends FunctionInterface {
 		if ( m != null ) {
 			in.removeMessage("__globals__");
 		}
-		m = in.getMessage("__parms__");
+		m = in.getMessage(Message.MSG_PARAMETERS_BLOCK);
 		if ( m != null ) {
-			in.removeMessage("__parms__");
+			in.removeMessage(Message.MSG_PARAMETERS_BLOCK);
 		}
+		m = in.getMessage(Message.MSG_AAA_BLOCK);
+        if ( m != null ) {
+            in.removeMessage(Message.MSG_AAA_BLOCK);
+        }
+        m = in.getMessage(Message.MSG_TOKEN_BLOCK);
+        if ( m != null ) {
+            in.removeMessage(Message.MSG_TOKEN_BLOCK);
+        }
 		StringWriter ws = new StringWriter();
 		try {
 			in.write(ws);

@@ -697,7 +697,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 doc.removeMessage(doc.getMessage("__globals__"));
                 // }
                 // if ( doc.getMessage("__parms__") != null ) {
-                doc.removeMessage("__parms__");
+                doc.removeMessage(Message.MSG_AAA_BLOCK);
+                doc.removeMessage(Message.MSG_PARAMETERS_BLOCK);
+                doc.removeMessage(Message.MSG_TOKEN_BLOCK);
                 // }
             } catch (Exception e) {
             }

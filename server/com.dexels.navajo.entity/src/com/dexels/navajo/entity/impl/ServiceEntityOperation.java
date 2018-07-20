@@ -656,12 +656,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		getop.setTenant(myOperation.getTenant());
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
 		Navajo request = myKey.generateRequestMessage(input);
-		if (input.getMessage("__parms__") != null) {
-			request.addMessage(input.getMessage("__parms__").copy(request));
+		if (input.getMessage(Message.MSG_PARAMETERS_BLOCK) != null) {
+			request.addMessage(input.getMessage(Message.MSG_PARAMETERS_BLOCK).copy(request));
 		}
-		if (input.getMessage("__aaa__") != null) {
-			request.addMessage(input.getMessage("__aaa__").copy(request));
+		if (input.getMessage(Message.MSG_AAA_BLOCK) != null) {
+			request.addMessage(input.getMessage(Message.MSG_AAA_BLOCK).copy(request));
 		}
+		if (input.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
+            request.addMessage(input.getMessage(Message.MSG_TOKEN_BLOCK).copy(request));
+        }
 		if (getop.getExtraMessage() != null) {
 			request.addMessage(getop.getExtraMessage().copy(request));
 		}
