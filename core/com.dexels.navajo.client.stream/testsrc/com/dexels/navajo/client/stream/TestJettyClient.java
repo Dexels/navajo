@@ -78,8 +78,9 @@ public class TestJettyClient {
 	.toObservable()
 	.compose(StreamDocument.domStreamCollector())
 	.blockingFirst();
-	System.err.println(">>>> ");
+//	System.err.println(">>>> ");
 	n.write(System.err);
+	client.close();
 //	.blockingForEach(e->System.err.println("elt: "+e));
 	}
 
@@ -89,7 +90,7 @@ public class TestJettyClient {
 		
 		int size = client.call("vla/authorization/InitLoginSystemUser", "", Flowable.empty())
 			.lift(StreamDocument.serialize())
-			.doOnNext(e->System.err.println("$$: "+new String(e)))
+//			.doOnNext(e->System.err.println("$$: "+new String(e)))
 			.reduce(new AtomicInteger(),(acc,i)->{acc.addAndGet(i.length); return acc;})
 			.blockingGet().get();
 		
