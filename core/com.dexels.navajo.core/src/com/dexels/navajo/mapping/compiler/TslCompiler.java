@@ -493,31 +493,9 @@ public class TslCompiler {
 
 		// Use Expression.evaluate() if expression could not be executed in an
 		// optimized way.
-		if (!exact) {
-			result.append(printIdent(ident)
-					+ "op = Expression.evaluate("
-					+ replaceQuotes(clause)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null, getEvaluationParams());\n");
-			result.append(printIdent(ident) + "sValue = op.value;\n");
-		} else { // USE OUR OPTIMIZATION SCHEME.
-			// //System.out.println("CALL = " + call);
-			result.append(printIdent(ident) + "sValue = " + call + ";\n");
-			if (!functionName.equals("")) { // Construct Navajo function
-											// instance if needed.
-				String functionVar = "function" + (functionCounter++);
-				result.append(printIdent(ident)
-						+ "com.dexels.navajo.functions." + functionName + " "
-						+ functionVar + " = (com.dexels.navajo.functions."
-						+ functionName + ") getFunction("
-						+ "\"com.dexels.navajo.functions." + functionName
-						+ "\");\n");
-				result.append(printIdent(ident) + functionVar + ".reset();\n");
-				result.append(printIdent(ident) + functionVar
-						+ ".insertOperand(sValue);\n");
-				result.append(printIdent(ident) + "sValue = " + functionVar
-						+ ".evaluate();\n");
-			}
-		}
+        result.append(printIdent(ident) + "op = Expression.evaluate(" + replaceQuotes(clause)
+                + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null, getEvaluationParams());\n");
+        result.append(printIdent(ident) + "sValue = op.value;\n");
 
 		return result.toString();
 	}
