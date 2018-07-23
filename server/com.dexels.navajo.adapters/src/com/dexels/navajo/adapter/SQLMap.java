@@ -174,6 +174,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	// configuration file!
 	public boolean autoCommit = true;
 	public boolean replaceQueryDoubleQuotes = true;
+	public boolean dosMode = false;
 
 	public int transactionIsolation = -1;
 	public int rowCount = 0;
@@ -1455,6 +1456,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		this.replaceQueryDoubleQuotes = b;
 	}
 
+	public void setDosMode( boolean mode ) {
+		this.dosMode = mode;
+	}
+
 	public int getStartIndex(String s) {
 		return startIndex;
 	}
@@ -1695,7 +1700,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 							fw.write(this.separator + column);
 						}
 					}
-					fw.write("\n");
+					fw.write( ( ! dosMode ) ? "\n" : "\r\n" );
 				}
 			} catch (Exception e) {
 				e.printStackTrace(Access.getConsoleWriter(myAccess));
@@ -1711,7 +1716,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						fw.write(this.separator + value);
 					}
 				}
-				fw.write("\n");
+				fw.write( ( ! dosMode ) ? "\n" : "\r\n" );
 			}
 			fw.flush();
 			fw.close();
