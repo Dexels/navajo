@@ -10,6 +10,7 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.config.runtime.TestConfig;
@@ -61,7 +62,7 @@ public class TestHttpResource {
 //		HttpResourceFactory.setInstance(null);
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testHead() throws IOException, MappableException, UserException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
 		bsa.load(access);
@@ -71,7 +72,7 @@ public class TestHttpResource {
 		Assert.assertFalse(exists);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testDelete() throws IOException, MappableException, UserException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
 		bsa.load(access);
@@ -82,7 +83,7 @@ public class TestHttpResource {
 		Assert.assertNotSame(200, reply.status());
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testPut() throws IOException, MappableException, UserException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
 		bsa.load(access);
@@ -92,7 +93,7 @@ public class TestHttpResource {
 	}
 
 	
-	@Test 
+	@Test @Ignore
 	public void testStoreAdapterBasics() throws IOException, MappableException, UserException, InterruptedException {
 		BinaryStoreAdapter bsa = new BinaryStoreAdapter();
 		bsa.load(access);
@@ -115,7 +116,7 @@ public class TestHttpResource {
 
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testStoreAdapterAdvanced() throws IOException, MappableException, UserException, InterruptedException {
 		Binary b = createBinary();
 
