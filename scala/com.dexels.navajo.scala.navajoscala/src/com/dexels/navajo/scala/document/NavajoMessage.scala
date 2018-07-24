@@ -177,6 +177,23 @@ class NavajoMessage(val parent: Message) {
     None
   }
   
+   def getLong(key : String) : Option[Long] = {
+    if (parent == null) {
+      return None;
+    }
+    
+    val prop = parent.getProperty(key)
+    if (prop != null && prop.getValue != null) {
+      val value : Any = prop.getTypedValue
+      value match {
+        case value : Long => return Some(value)
+        case value : String => return Some(value.toLong)
+        case value : Integer => return Some(value.toLong)
+        case _ =>  new RuntimeException("Invalid long: ")
+      }
+    }
+    None
+  }
   
   
   def getDate(key : String) : Option[Date] = {
