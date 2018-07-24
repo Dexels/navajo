@@ -97,10 +97,11 @@ public class ResourceComponent implements HttpResource {
 		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
 						.method(HttpMethod.PUT)
-						.idleTimeout(idle_timeout, TimeUnit.MILLISECONDS)
-						.timeout(timeout, TimeUnit.MILLISECONDS)
+						.idleTimeout(idle_timeout, TimeUnit.SECONDS)
+						.timeout(timeout, TimeUnit.SECONDS)
 				,Flowable.fromPublisher(data)
 				,type)
+				.timeout(timeout+1, TimeUnit.SECONDS)
 				.firstOrError();
 	}
 
@@ -108,7 +109,7 @@ public class ResourceComponent implements HttpResource {
 	public Flowable<byte[]> get(String tenant, String bucket, String id) {
 		String callingUrl = assembleURL(tenant,bucket, id);
 		return client.callWithoutBody(callingUrl, r->r.header("Authorization", this.authorization))
-                .timeout(timeout, TimeUnit.MILLISECONDS)
+                .timeout(timeout+1, TimeUnit.SECONDS)
     			.toFlowable()
     			.compose(client.responseStream());
 	}
@@ -116,18 +117,19 @@ public class ResourceComponent implements HttpResource {
 	@Override
 	public Single<ReactiveReply> delete(String tenant, String bucket, String id) {
 		return client.callWithoutBody(assembleURL(tenant,bucket, id), r->r.header("Authorization", this.authorization)
-		        .idleTimeout(idle_timeout, TimeUnit.MILLISECONDS)
-                .timeout(timeout, TimeUnit.MILLISECONDS)
-		        .method(HttpMethod.DELETE));
+		        .idleTimeout(idle_timeout, TimeUnit.SECONDS)
+                .timeout(timeout+1, TimeUnit.SECONDS)
+		        .method(HttpMethod.DELETE)
+		       ).timeout(timeout, TimeUnit.SECONDS);
 	}
 	
 	@Override
 	public Single<ReactiveReply> head(String tenant, String bucket, String id) {
 		return client.callWithoutBody(assembleURL(tenant,bucket, id), 
 				r->r.header("Authorization", this.authorization)
-                    .timeout(timeout, TimeUnit.MILLISECONDS)
+                    .timeout(timeout+1, TimeUnit.SECONDS)
 					.method(HttpMethod.HEAD)
-				);
+				).timeout(timeout, TimeUnit.SECONDS);
 	}
 
 
