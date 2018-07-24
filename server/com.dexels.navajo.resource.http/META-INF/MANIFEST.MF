@@ -30,8 +30,10 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  navajo;version="1.1.0",
  navajoextension,
  org.apache.commons.codec.digest;version="1.10.0",
+ org.eclipse.jetty.client;version="9.4.9",
  org.eclipse.jetty.client.api;version="9.4.9",
  org.eclipse.jetty.http;version="9.4.9",
+ org.eclipse.jetty.reactive.client;version="1.0.1",
  org.eclipse.jetty.util.log;version="9.4.9",
  org.junit;version="4.0.0";resolution:=optional,
  org.osgi.framework;version="1.8.0",
@@ -39,3 +41,4 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: navajohttpresource.Version
+Require-Bundle: org.eclipse.jetty.util
