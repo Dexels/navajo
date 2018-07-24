@@ -43,7 +43,6 @@ public class EntityListener extends HttpServlet {
             performHeadRequest(request, response);
         } else {
             EntityContinuationRunner runner = new EntityContinuationRunner(request, response);
-            runner.getInputNavajo();
             runner.setEntityDispatcher(entityDispatcher);
             runner.setDispatcher(dispatcherInterface);
             tmlScheduler.submit(runner, false);
