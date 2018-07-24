@@ -16,6 +16,7 @@ public interface JsonTmlConverter {
 	
 	public Message toMessage(String messageName, ImmutableMessage message, Navajo rootNavajo);
 
+	public Navajo toFlatNavajo(String name, ReplicationMessage message);
 	public Navajo toFlatNavajo(String name,ImmutableMessage message);
 
 }

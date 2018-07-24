@@ -34,10 +34,22 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 		rootNavajo.addMessage(root);
 		return rootNavajo;
 	}
+	
+	@Override
+    public Navajo toFlatNavajo(String name, ReplicationMessage message) {
+        Navajo rootNavajo = NavajoFactory.getInstance().createNavajo();
+        Message root = toMessage(name, message.message(), rootNavajo);
+        Property timestamp = NavajoFactory.getInstance().createProperty(rootNavajo, "Timestamp", 
+                Property.LONG_PROPERTY,  message.timestamp()+"", 0, "", Property.DIR_OUT);
+        root.addProperty(timestamp);
+        rootNavajo.addMessage(root);
+        return rootNavajo;
+    }
 
 	@Override
 	public Message toMessage(String messageName, ImmutableMessage message, Navajo rootNavajo) {
 		Message cV =  NavajoFactory.getInstance().createMessage(rootNavajo, messageName);
+				
 		for (String columnName : message.columnNames()) {
 			String type = message.columnType(columnName);
 			Object value = message.columnValue(columnName);
