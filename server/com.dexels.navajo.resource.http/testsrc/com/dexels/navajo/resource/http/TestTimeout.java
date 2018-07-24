@@ -1,5 +1,7 @@
 package com.dexels.navajo.resource.http;
 
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.reactive.client.ReactiveRequest;
@@ -20,9 +22,10 @@ public class TestTimeout {
 		httpClient.start();
 
 		// Create a request using the HttpClient APIs.
-		Request request = httpClient.newRequest("http://reactivex.io/documentation/operators/groupby.html");
-//		Request request = httpClient.newRequest("http://localhost:1234/path");
-//		
+		Request request = httpClient.newRequest("http://localhost:1234/path");
+		request = request.idleTimeout(3000, TimeUnit.MILLISECONDS)
+			.timeout(5000, TimeUnit.MILLISECONDS);
+		
 		// Wrap the request using the API provided by this project.
 		ReactiveRequest reactiveRequest = ReactiveRequest.newBuilder(request).build();
 
@@ -32,6 +35,8 @@ public class TestTimeout {
 		// Wrap the ReactiveStreams Publisher with RxJava.
 		int status = Single.fromPublisher(publisher)
 		        .map(ReactiveResponse::getStatus)
+		        .doOnSuccess(s->System.err.println("Completed!"))
+		        .doOnError(e->e.printStackTrace())
 		        .blockingGet();		
 		System.err.println("status: "+status);
 	}
