@@ -182,7 +182,7 @@ public class EntityDispatcher {
             }            
             // Check if input contains the entityMessage
             if (input.getMessage(entityMessage.getName()) == null) {
-                logger.error("Entity name not found in input - format incorrect or bad request");
+                logger.error("Entity name {} not found in input - format incorrect or bad request", entityMessage.getName());
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
