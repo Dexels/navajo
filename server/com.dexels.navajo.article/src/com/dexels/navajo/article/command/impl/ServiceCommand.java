@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
@@ -93,7 +94,7 @@ public class ServiceCommand implements ArticleCommand {
 		} else {
 			n = NavajoFactory.getInstance().createNavajo();
 		}
-		appendAAAMessage(runtime, n);
+		appendTokenAttributes(runtime, n);
 		final String username = runtime.getUsername();
 		Header h = NavajoFactory.getInstance().createHeader(n, name, username, "", -1);
 		if (runtime.getAccess() != null) {
@@ -108,7 +109,7 @@ public class ServiceCommand implements ArticleCommand {
 		return null;
 	}
 
-	private void appendAAAMessage(ArticleRuntime runtime, Navajo n) {
+	private void appendTokenAttributes(ArticleRuntime runtime, Navajo n) {
 	    Map<String, Object> extraParams = new HashMap<String, Object>();
 	    if (runtime.getToken() != null && runtime.getToken().getUser() != null) {
 	        extraParams.put("USERID", runtime.getToken().getUser().getUserId());
@@ -123,7 +124,19 @@ public class ServiceCommand implements ArticleCommand {
         extraParams.put("UNIONID", "");
         GlobalManagerImpl.appendMapToAAA(n, extraParams);
         
+        if (n.getMessage(Message.MSG_TOKEN_BLOCK) == null) {
+            Message tokenMsg = NavajoFactory.getInstance().createMessage(n,Message.MSG_TOKEN_BLOCK);
+            n.addMessage(tokenMsg);
+        }
+        Message tokenMsg = n.getMessage(Message.MSG_TOKEN_BLOCK);
         
+        // Add attributes
+        for (String key : runtime.getUserAttributes().keySet()) {
+            Object value = runtime.getUserAttributes().get(key);
+            Property p2 = NavajoFactory.getInstance().createProperty(n, key, "", "", Property.DIR_OUT);
+            p2.setAnyValue(value);
+            tokenMsg.addProperty(p2);
+        }
     }
 
     protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance) throws APIException {
