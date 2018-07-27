@@ -89,6 +89,9 @@ public class Key {
 	
     public boolean keyMatch(Set<Property> input) {
         for (Property p : myKey) {
+            if ((Key.isAutoKey(p.getKey()))) {
+                continue;
+            }
             if (p.getKey().indexOf("optional") == -1) {
 
                 // Find property in input.

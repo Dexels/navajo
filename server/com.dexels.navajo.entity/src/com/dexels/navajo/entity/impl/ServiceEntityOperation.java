@@ -376,7 +376,7 @@ public class ServiceEntityOperation implements EntityOperation {
                     && myEntity.getAutoKey(entityVersion) == null) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
-				myKey = new Key("", myEntity);
+                myKey = new Key("", myEntity);
 			}
 		}
 
@@ -500,8 +500,10 @@ public class ServiceEntityOperation implements EntityOperation {
 
         // If entity has auto keys the getCurrentEntity shouldn't be responsible of
         // getting the entity. It will crash.
-        if (myEntity.getAutoKey(entityVersion) != null) {
-            return;
+        for (Property p : myKey.getKeyProperties()) {
+            if (Key.isAutoKey(p.getKey())) {
+                return;
+            }
         }
 		if (getCurrentEntity(input) != null) {
 			// TODO: Support POST for updates
