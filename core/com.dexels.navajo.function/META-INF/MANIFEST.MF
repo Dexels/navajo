@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Functions
 Bundle-SymbolicName: com.dexels.navajo.function
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.62
+Bundle-Version: 3.4.63.qualifier
 Bundle-Activator: navajofunctions.Version
 Navajo-Name: Function
 Navajo-Extension: com/dexels/navajo/functions/functions.xml
