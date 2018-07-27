@@ -105,7 +105,9 @@ $(document).ready(function() {
      */
     $(document).on('click', '#oauthflowbutton', function() {
         
-        var redirect = window.location.protocol +"//"+ window.location.hostname  +':' + location.port + window.location.pathname;
+        var redirect = window.location.origin + window.location.pathname;
+    	
+    	console.log(redirect)
         var clientid = $('#clientid').val();
         var scopes = $('#oauthscopes').val(); // TODO: scopes empty
         
