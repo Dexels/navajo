@@ -498,7 +498,11 @@ public class ServiceEntityOperation implements EntityOperation {
 	private void performPostValidation(Navajo input, Message inputEntity) throws EntityException {
 		// Duplicate entry check.
 
-
+        // If entity has auto keys the getCurrentEntity shouldn't be responsible of
+        // getting the entity. It will crash.
+        if (myEntity.getAutoKey(entityVersion) != null) {
+            return;
+        }
 		if (getCurrentEntity(input) != null) {
 			// TODO: Support POST for updates
 			// Right now we cannot detect whether the POST will cause a conflict (e.g.
@@ -507,7 +511,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 	}
 
-	private Navajo handleGet(Navajo input, Message inputEntity) throws EntityException {
+    private Navajo handleGet(Navajo input, Message inputEntity) throws EntityException {
 
 		// property type validation
         validateInputMessage(input.getMessage(myEntity.getMessage(entityVersion).getName()));
