@@ -568,6 +568,11 @@
         <input>binary</input>
         <result>boolean</result>        
     </function>
+    <function name="JsonToTml" class="com.dexels.navajo.functions.JsonToTml">
+        <description>Returns a tml representation of the supplied json object</description>
+        <input>string,string</input>
+        <result>tml</result>
+    </function>
     <function name="LimitList" class="com.dexels.navajo.functions.LimitList">
         <description>Return a list with at most x elements</description>
         <input>list,number</input>
