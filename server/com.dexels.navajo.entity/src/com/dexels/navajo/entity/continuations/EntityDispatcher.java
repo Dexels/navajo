@@ -260,7 +260,7 @@ public class EntityDispatcher {
 
             // Set Caching parameter
             if (e.getMyCaching().size() > 0) {
-                result = setCachingHeader(result, e, runner);
+                setCachingHeader(result, e, runner);
             }
 
             if (method.equals(HTTP_METHOD_GET) && result.getMessage(entityMessage.getName()) != null) {
@@ -317,7 +317,7 @@ public class EntityDispatcher {
         }
     }
 
-    private Navajo setCachingHeader(Navajo result, Entity e, EntityContinuationRunner runner) {
+    private void setCachingHeader(Navajo result, Entity e, EntityContinuationRunner runner) {
         String cacheHeader = "";
         for (Map.Entry<String, String> entry : e.getMyCaching().entrySet()) {
             switch (entry.getKey()) {
@@ -354,16 +354,13 @@ public class EntityDispatcher {
         }
 
         cacheHeader = cacheHeader.trim();
-        cacheHeader = cacheHeader.replace("public", "private");
+        //cacheHeader = cacheHeader.replace("public", "private");
         if (cacheHeader.endsWith(",")) {
             cacheHeader = cacheHeader.substring(0, cacheHeader.length() - 1);
         }
-        // Add to navajo response
-        result.getHeader().setHeaderAttribute("cachecontrol", cacheHeader);
 
         // Add to runner httpResponse
         runner.getHttpResponse().setHeader("Cache-Control", cacheHeader);
-        return result;
     }
 
     private void processGetOptions(Entity e, HttpServletResponse response) {
