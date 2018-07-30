@@ -39,7 +39,7 @@ public class EntityListener extends HttpServlet {
      */
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("getDefinition") != null) {
+        if ("GET".equals(request.getMethod()) && request.getParameter("getDefinition") != null) {
             performHeadRequest(request, response);
         } else {
             EntityContinuationRunner runner = new EntityContinuationRunner(request, response);
