@@ -37,7 +37,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Operation myOperation;
 	private Entity myEntity;
 	private Key myKey;
-	private Set<String> validMessages = new HashSet<String>(Arrays.asList("__parms__", "__globals__", "__aaa__"));
+	private Set<String> validMessages = new HashSet<String>(Arrays.asList(Message.MSG_PARAMETERS_BLOCK, "__globals__", Message.MSG_AAA_BLOCK, Message.MSG_TOKEN_BLOCK ));
     private String entityVersion = Entity.DEFAULT_VERSION;
     private String mappedPath;
 
