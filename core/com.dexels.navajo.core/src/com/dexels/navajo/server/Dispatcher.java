@@ -838,7 +838,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             }
             
             if (instance != null && !tenantConfig.getTenants().contains(instance)) {
-                throw new FatalException("Unsupported tenant");
+                throw new FatalException("Unsupported tenant: " + instance);
             }
 
 
