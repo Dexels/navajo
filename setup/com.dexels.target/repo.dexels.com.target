@@ -29,8 +29,8 @@
 <repository location="http://download.eclipse.org/egit/updates-4.11"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.20.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.20"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.13.21.RELEASE"/>
+<repository location="http://repo.dexels.com/eclipse/3rdparty_1.13.21"/>
 </location>
 </locations>
 <includeBundles>
