@@ -103,6 +103,9 @@ public class GlobalManagerImpl implements GlobalManager {
             for (String key : extraParams.keySet()) {
                 Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY, "", 10, "", Property.DIR_OUT);
                 p2.setAnyValue(extraParams.get(key));
+                if (extraParams.get(key) == null) {
+                    p2.setType(Property.STRING_PROPERTY);
+                }
                 paramMsg.addProperty(p2);
             }
         }
