@@ -820,6 +820,12 @@ public class ServiceEntityOperation implements EntityOperation {
 		h.setHeaderAttribute("entity_operation", o.getMethod());
 		h.setHeaderAttribute("entity_service", o.getService());
 		h.setHeaderAttribute("application", "entity");
+		if (input.getHeader().getHeaderAttribute("user_agent") != null) {
+		    h.setHeaderAttribute("user_agent", input.getHeader().getHeaderAttribute("user_agent"));
+		}
+		if (input.getHeader().getHeaderAttribute("locale") != null) {
+            h.setHeaderAttribute("locale", input.getHeader().getHeaderAttribute("locale"));
+        }
 
 		h.setRPCUser(input.getHeader().getRPCUser());
 		h.setRPCPassword(input.getHeader().getRPCPassword());
