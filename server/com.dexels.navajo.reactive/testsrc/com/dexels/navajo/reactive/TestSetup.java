@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;

@@ -16,11 +16,9 @@ import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
@@ -31,6 +29,7 @@ import io.reactivex.functions.Function;
 
 public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
+	@SuppressWarnings("unused")
 	private TopicPublisher topicPublisher;
     public void setTopicSubscriber(TopicPublisher topicPublisher, Map<String,Object> settings) {
         this.topicPublisher = topicPublisher;

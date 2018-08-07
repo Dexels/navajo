@@ -54,3 +54,4 @@ Export-Package: com.dexels.navajo.reactive;version="1.0.0",
 Service-Component: OSGI-INF/*,
  OSGI-INF/navajo.reactive.running.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.reactive

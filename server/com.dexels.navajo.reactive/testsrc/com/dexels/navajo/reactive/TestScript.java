@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
