@@ -163,7 +163,13 @@ public class EntityApiDocListener extends HttpServlet  {
             requestBody = printRequestKeysDefinition(e, entityVersion);
         } else {
             String requestbodyTemplate = getTemplate("operationrequestbody.template");
-            requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request"));
+            Boolean skipAutoKeysIfRequired;
+            if (method.equals(Operation.POST)) {
+                skipAutoKeysIfRequired = true;
+            } else {
+                skipAutoKeysIfRequired = false;
+            }
+            requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request", skipAutoKeysIfRequired));
             // Add descriptions in request
             requestBody = requestBody.replace("{{PP_DESCRIPTIONS}}", printModel(e.getMessage(Entity.DEFAULT_VERSION), method, "request"));
         }
@@ -236,16 +242,20 @@ public class EntityApiDocListener extends HttpServlet  {
         result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         return result;
     }
-        
+
     private String writeEntityJson(Navajo n, String method) throws ServletException {
+        return writeEntityJson(n, method, false);
+    }
+
+    private String writeEntityJson(Navajo n, String method, Boolean skipAutoKeysIfRequired) throws ServletException {
         StringWriter writer = new StringWriter();
         JSONTML json = JSONTMLFactory.getInstance();
         Navajo masked = n.copy().mask(n, method);
         if (method.equals("request")) {
-            // Remove all auto keys since they are not 
+            // Remove all auto keys since they are not
             for (Message m : masked.getAllMessages()) {
                 for (Property p : m.getAllProperties()) {
-                    if (p.getKey() != null && p.getKey().contains("auto")) {
+                    if (p.getKey() != null && p.getKey().contains("auto") && skipAutoKeysIfRequired) {
                         m.removeProperty(p);
                     }
                 }
