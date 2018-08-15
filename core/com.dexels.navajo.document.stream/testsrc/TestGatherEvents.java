@@ -10,8 +10,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 
 import io.reactivex.BackpressureStrategy;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class TestGatherEvents {

@@ -3,6 +3,7 @@ package com.dexels.navajo.document.stream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -41,8 +42,10 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
+import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
+import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -141,6 +144,7 @@ public class StreamDocument {
 			}
 		};
 	}
+	
 
 	public static FlowableOperator<Flowable<NavajoStreamEvent>, XMLEvent> parse() {
 		return new BaseFlowableOperator<Flowable<NavajoStreamEvent>, XMLEvent>(10) {
@@ -180,6 +184,9 @@ public class StreamDocument {
 		};
 	}
 
+	public static FlowableTransformer<NavajoStreamEvent,ImmutableMessage> eventsToImmutable(String path) {
+		return new EventToImmutable(path);
+	}
 	public static ObservableOperator<byte[], NavajoStreamEvent> serializeObservable() {
 		return new ObservableOperator<byte[], NavajoStreamEvent>() {
 			private final NavajoStreamSerializer collector = new NavajoStreamSerializer();
@@ -235,6 +242,10 @@ public class StreamDocument {
 				}
 			}
 		};
+	}
+	
+	public static Flowable<byte[]> dataFromInputStream(InputStream stream) {
+		return Bytes.from(stream);
 	}
 
 	public static FlowableOperator<byte[], NavajoStreamEvent> serialize() {

@@ -1,0 +1,8 @@
+<tml>
+	<message name="Member">
+		<property method="" name="Name" type="string" value="Dmitri"
+			direction="out" />
+		<message name="Qualifications">
+		</message>
+	</message>
+</tml>

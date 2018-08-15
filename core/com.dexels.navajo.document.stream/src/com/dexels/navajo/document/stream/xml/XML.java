@@ -14,10 +14,6 @@ import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOperator;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.util.BackpressureHelper;
 
 public class XML {

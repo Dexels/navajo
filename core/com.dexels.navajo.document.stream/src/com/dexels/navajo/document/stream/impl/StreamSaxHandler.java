@@ -23,7 +23,7 @@ import com.dexels.navajo.document.stream.xml.XmlInputHandler;
 
 public final class StreamSaxHandler implements XmlInputHandler {
 
-    private List<Prop> currentProperties = new ArrayList<>();
+    private Stack<List<Prop>> currentPropertiesStack = new Stack<>();
     private Stack<Map<String,String>> attributeStack = new Stack<>();
 //    private Method currentMethod = null;
 	private final NavajoStreamHandler handler;
@@ -32,6 +32,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
 	private Map<String, String> asyncAttributes;
 	private final List<Select> currentSelections = new ArrayList<>();
     private List<Method> methods = new ArrayList<>();
+    
+//    private final Stack<Msg> msgStack = new Stack<>();
 	
 	public StreamSaxHandler(NavajoStreamHandler handler) {
 		this.handler = handler;
@@ -46,6 +48,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
             return 0;
         }
         if (tag.equals("message")) {
+        	currentPropertiesStack.push(new ArrayList<>());
         	String type = h.get("type");
         	if(Message.MSG_TYPE_ARRAY_ELEMENT.equals(type)) {
             	handler.arrayElementStarted();
@@ -216,6 +219,7 @@ public final class StreamSaxHandler implements XmlInputHandler {
         	return 1;
          }
         if (tag.equals("message")) {
+        	List<Prop> currentProperties = currentPropertiesStack.pop();
         	String type = attributes.get("type");
         	String name = attributes.get("name");
             if(Message.MSG_TYPE_DEFINITION.equals(type)) {
@@ -248,7 +252,8 @@ public final class StreamSaxHandler implements XmlInputHandler {
             } else {
                 currentProperty = Prop.create(attributes,currentSelections);
 			}
-        	currentProperties.add(currentProperty);
+        	currentPropertiesStack.peek().add(currentProperty);
+//        	currentProperties.add(currentProperty);
         	currentProperty = null;
         	currentSelections.clear();
         	return 0;

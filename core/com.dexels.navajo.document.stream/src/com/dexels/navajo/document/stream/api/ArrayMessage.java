@@ -1,12 +1,12 @@
 package com.dexels.navajo.document.stream.api;
 
 import java.util.Collections;
+import java.util.function.Function;
 
 import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 
 public class ArrayMessage {
 	private final String name;

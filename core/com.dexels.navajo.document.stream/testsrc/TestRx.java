@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.StreamCompress;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.xml.XML;

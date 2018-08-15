@@ -105,7 +105,11 @@ public class StreamScriptContext {
 		return uuid;
 	}
 	public StreamScriptContext withService(String service) {
-		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,runner, methods,onDispose,this.runningScripts);
+		Access a = this.access;
+		Access acc = new Access(a.userID, a.serviceID, a.getRpcUser(), service, a.userAgent, a.ipAddress, a.hostName, a.getUserCertificate(), a.betaUser, a.accessID);
+		acc.setInDoc(a.getInDoc());
+//		acc.setI
+		return new StreamScriptContext(this.uuid, acc, attributes, inputFlowable,runner, methods,onDispose,this.runningScripts);
 	}
 
 	public StreamScriptContext copyWithNewUUID() {
@@ -130,6 +134,13 @@ public class StreamScriptContext {
 		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),runner, methods, onDispose,this.runningScripts);
 	}
 
+	public StreamScriptContext withTenant(String tenant) {
+	    Access newAccess = access.cloneWithoutNavajos();
+	    newAccess.setInDoc(access.getInDoc());
+	    newAccess.setTenant(tenant);
+		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),runner, methods, onDispose,this.runningScripts);
+	}
+	
 	public StreamScriptContext withDispose(Runnable disposer) {
 		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,runner, methods, Optional.of(disposer),this.runningScripts);
 	}
@@ -168,6 +179,9 @@ public class StreamScriptContext {
 			return Maybe.empty();
 		}
 		collectedInput = true;
+		if(!inputFlowable.isPresent()) {
+			return Maybe.just(NavajoFactory.getInstance().createNavajo());
+		}
 		return inputFlowable.get()
 				.toObservable()
 				.compose(StreamDocument.domStreamCollector())
@@ -230,4 +244,5 @@ public class StreamScriptContext {
     public String getAccessId() {
         return access.getAccessID();
     }
+
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.reactivestreams.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,6 @@ public class NavajoStreamCollector {
 	
 	public NavajoStreamCollector() {
 	}
-	// return # of emitted items, for handling the backpressure
 	public Optional<Navajo> processNavajoEvent(NavajoStreamEvent n) throws IOException {
 		switch (n.type()) {
 		case NAVAJO_STARTED:

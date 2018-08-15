@@ -1,5 +1,3 @@
-import java.util.Collections;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,10 +9,6 @@ import com.dexels.replication.factory.ReplicationFactory;
 
 public class TestTMLReplicationConversion {
 
-	public TestTMLReplicationConversion() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Test
 	public void testReplToMessage() {
 		ReplicationMessage rm = ReplicationFactory.empty().with("Monkey", "Koko", "string");
