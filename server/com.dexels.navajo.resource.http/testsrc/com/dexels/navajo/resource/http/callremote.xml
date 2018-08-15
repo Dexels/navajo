@@ -1,0 +1,6 @@
+<reactive methods="input">
+	<source.single count.eval="5" >
+		<set to="Some" value.eval="[index]" />
+		<msg.stream.event messageName="Item" isArray.eval="true"/>
+	</source.single>
+</reactive>
