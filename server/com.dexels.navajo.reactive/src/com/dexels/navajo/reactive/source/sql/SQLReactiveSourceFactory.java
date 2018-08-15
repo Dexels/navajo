@@ -40,7 +40,7 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"resource","query","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"resource","query","debug","tenant"}));
 	}
 
 	@Override
@@ -54,6 +54,7 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 		r.put("resource", Property.STRING_PROPERTY);
 		r.put("query", Property.STRING_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
+		r.put("tenant", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 }

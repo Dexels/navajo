@@ -10,14 +10,17 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
 import com.dexels.navajo.reactive.stored.InputStreamSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.other.SkipTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
@@ -34,6 +37,7 @@ public class TestSetup {
 		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
 		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
 		reactiveScriptParser.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
+		reactiveScriptParser.addReactiveSourceFactory(new EventStreamSourceFactory(),"eventstream");
 		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
 		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
 		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
@@ -44,6 +48,8 @@ public class TestSetup {
 		reactiveScriptParser.addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
 		reactiveScriptParser.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
 		reactiveScriptParser.addReactiveTransformerFactory(new SkipTransformerFactory(),"skip");
+		reactiveScriptParser.addReactiveTransformerFactory(new ParseEventStreamFactory(),"streamtoimmutable");
+		reactiveScriptParser.addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
 		return reactiveScriptParser;
 	}
 	

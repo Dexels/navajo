@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -58,8 +59,9 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
+				StreamScriptContext ctx = context.withService(service);
 				try {
-					Flowable<DataItem> map = Flowable.just(DataItem.ofEventStream(runLegacy(context,debug)));
+					Flowable<DataItem> map = Flowable.just(DataItem.ofEventStream(runLegacy(ctx,debug)));
 					return map;
 				} catch (Exception e) {
 					logger.error("Error: ", e);
@@ -99,7 +101,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	private Flowable<NavajoStreamEvent> runLegacy(StreamScriptContext context, boolean debug) {
 		Single<Navajo> in = context.getInput();
-		return in
+		Flowable<NavajoStreamEvent> flow = in
 			.doOnSuccess(nav->
 				{
 					if(debug) {
@@ -110,7 +112,11 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 				})
 			.map(inputNav->executeLegacy(context,inputNav))
 			.toFlowable()
-			.concatMap(e->e)
+			.concatMap(e->e);
+//		if(skipNavajoEvents) {
+//			flow = flow.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE);
+//		}
+		return flow
 		;
 	}
 	 
@@ -121,6 +127,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 					input.addMessage(message);
 				});
 				Navajo result = execute(context, input);
+				logIfError(result);
 				return Single.just(result)
 						.compose(StreamDocument.domStreamTransformer())
 						.toObservable()
@@ -134,8 +141,19 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			
 	}
 	
+	private void logIfError(Navajo result) {
+		if(result.getMessage("error")!=null) {
+			logger.info("Error:");
+			result.write(System.err);
+		}
+		
+	}
+
 	private final Navajo execute(StreamScriptContext context, Navajo in) throws IOException {
 		MDC.put("instance", context.getTenant());
+		if(in.getHeader()==null) {
+			in.addHeader(NavajoFactory.getInstance().createHeader(in, context.getService(), context.getUsername(), "", -1));
+		}
 		try {
 			in.getHeader().setHeaderAttribute("useComet", "true");
 			if (in.getHeader().getHeaderAttribute("callback") != null) {

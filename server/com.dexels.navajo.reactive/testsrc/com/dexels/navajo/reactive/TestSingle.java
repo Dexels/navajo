@@ -21,6 +21,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
@@ -189,4 +190,29 @@ public class TestSingle {
 		}
 	}
 	
+	@Test
+	public void testNavajoParseFromInputStream() throws IOException {
+		try( InputStream scriptInputStream = TestScript.class.getClassLoader().getResourceAsStream("eventstream.xml")) {
+				StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
+
+				int i = reactiveScriptParser.parse(myContext.getService(), scriptInputStream,"eventScript")
+				.execute(myContext)
+				.map(di->di.event())
+//				.lift(StreamDocument.serialize())
+//				.compose(StreamDocument.inNavajo("Event", Optional.empty(), Optional.empty()))
+//				.lift(StreamDocument.serialize())
+				.toObservable()
+				.compose(StreamDocument.domStreamCollector())
+				.map(e->e.getMessage("Person").getArraySize())
+				.blockingFirst();
+				
+				Assert.assertEquals(3, i);
+//				.blockingForEach(e->System.err.print(new String(e)));
+				
+//				Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
+				
+				
+
+		}
+	}
 }

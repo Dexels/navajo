@@ -32,7 +32,7 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 	}
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"service","debug"}));
+		return Optional.of(Arrays.asList(new String[]{"service","debug","server","username","password"}));
 	}
 
 	@Override
@@ -45,6 +45,9 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 		Map<String,String> r = new HashMap<String, String>();
 		r.put("service", Property.STRING_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
+		r.put("server", Property.STRING_PROPERTY);
+		r.put("username", Property.STRING_PROPERTY);
+		r.put("password", Property.STRING_PROPERTY);
 		return Optional.of(r);
 	}
 	

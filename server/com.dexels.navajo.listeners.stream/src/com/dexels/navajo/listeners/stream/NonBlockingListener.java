@@ -194,8 +194,10 @@ public class NonBlockingListener extends HttpServlet {
 						.toFlowable()
 						.flatMap(elt->elt)
 						.doOnComplete(()->context.complete())
-		                .doOnError((e)->context.error(e));
+		                .doOnError((e)->context.error(e))
+		                .doOnCancel(()->removeRunningScript(context));
 
+			System.err.println(">>> DataType: "+rs.dataType());
 			switch(rs.dataType()) {
 			case DATA:
 				execution
@@ -205,6 +207,7 @@ public class NonBlockingListener extends HttpServlet {
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
+			case SINGLEMESSAGE:
 			case MESSAGE:
 				execution
 				.onErrorResumeNext(cc)
@@ -228,10 +231,7 @@ public class NonBlockingListener extends HttpServlet {
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
-			case EMPTY:
-			case MSGSTREAM:
 			case EVENT:
-			default:
 				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
@@ -252,6 +252,12 @@ public class NonBlockingListener extends HttpServlet {
                     .doOnCancel(()->{logger.warn("AAA"); context.complete();})
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
+				break;
+			case EMPTY:
+			case MSGSTREAM:
+			case ANY:
+				throw new UnsupportedOperationException("Can't deal with type: "+rs.dataType()+" on toplevel");
+
 			}
 		} catch (Throwable e1) {
 			respondError("General error", context, responseEncoding, response, responseSubscriber, e1);

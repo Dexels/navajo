@@ -588,14 +588,16 @@ public class ReactiveScriptParser {
 
 	private static Type finalType(ReactiveSourceFactory source, List<ReactiveTransformer> transformers, List<ReactiveParseProblem> problems) {
 		Type current = source.sourceType();
-		logger.debug("Determine source type: "+current);
+		logger.info("Determine source type: "+current);
+		int count = 0;
 		for (ReactiveTransformer reactiveTransformer : transformers) {
 			if(!reactiveTransformer.metadata().inType().contains(current)) {
-				problems.add(ReactiveParseProblem.of("Type mismatch: Last type in pipeline: "+current+" next part ("+reactiveTransformer.metadata().name()+") expects: "+reactiveTransformer.metadata().inType()));
+				problems.add(ReactiveParseProblem.of("#"+count+": Type mismatch: Last type in pipeline: "+current+" next part ("+reactiveTransformer.metadata().name()+") expects: "+reactiveTransformer.metadata().inType()));
 			}
 			current = reactiveTransformer.metadata().outType();
+			count++;
 		}
-		logger.debug("Final type: "+current);
+		logger.info("Final type: "+current);
 		return current;
 	}
 

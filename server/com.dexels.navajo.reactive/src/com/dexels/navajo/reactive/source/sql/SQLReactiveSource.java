@@ -48,6 +48,7 @@ public class SQLReactiveSource implements ReactiveSource {
 		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
+		Optional<String> queryTenant = params.optionalString("tenant");
 		boolean debug = params.optionalBoolean("debug").orElse(false);
 		if(debug) {
 			logger.info("Starting SQL query to resource: {} and query:\n{}",datasource,query);
@@ -55,7 +56,7 @@ public class SQLReactiveSource implements ReactiveSource {
 				logger.info(" -> param : {}",object);
 			}
 		}
-		Flowable<DataItem> flow = SQL.query(datasource, context.getTenant(), query, unnamedParams)
+		Flowable<DataItem> flow = SQL.query(datasource, queryTenant.orElseGet(()->context.getTenant()), query, unnamedParams)
 				.map(d->DataItem.of(d));
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{
