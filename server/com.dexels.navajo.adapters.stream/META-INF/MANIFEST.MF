@@ -42,8 +42,8 @@ Export-Package: com.dexels.navajo.adapters.stream,
  hu.akarnokd.rxjava2.debug
 Bundle-ClassPath: .,
  lib/guava-mini-0.1.1.jar,
- lib/rxjava-extras-0.8.0.11.jar,
  lib/rxjava2-extensions-0.17.5.jar,
- lib/rxjava2-pool-0.1-RC32.jar,
- lib/rxjava2-jdbc-0.1-RC32.jar
+ lib/rxjava2-pool-0.1-RC38.jar,
+ lib/rxjava2-jdbc-0.1-RC38.jar
 Require-Bundle: com.oracle.jdbc.driver;bundle-version="11.2.31";resolution:=optional
+Automatic-Module-Name: com.dexels.navajo.adapters.stream
