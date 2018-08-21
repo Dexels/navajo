@@ -160,6 +160,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     protected Navajo inMessage;
     protected Message msgPointer;
 
+    // If dropTokenMsg is set, then, when preparing the output doc, the token
+    // message should be discarded
+    private boolean dropTokenMessage = false;
+
     public String method;
 
     /** 
@@ -840,7 +844,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 }
             }
         }
-        // Always copy token message
+        // Always copy token message if the user hasn't specified otherwise
         if (inMessage.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
             Message token = inMessage.getMessage(Message.MSG_TOKEN_BLOCK).copy(outDoc);
             if (outDoc.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
@@ -852,6 +856,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                     e.printStackTrace(Access.getConsoleWriter(access));
                 }
             }
+        }
+
+        if (this.dropTokenMessage) {
+            outDoc.removeMessage(Message.MSG_TOKEN_BLOCK);
         }
 
         return outDoc;
@@ -1984,6 +1992,14 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     public void setLowPriority(boolean lowPriority) {
         this.lowPriority = lowPriority;
+    }
+
+    public void setDropTokenMessage(boolean dropTokenMessage) {
+        this.dropTokenMessage = dropTokenMessage;
+    }
+
+    public boolean getDropTokenMessage() {
+        return this.dropTokenMessage;
     }
 
 }

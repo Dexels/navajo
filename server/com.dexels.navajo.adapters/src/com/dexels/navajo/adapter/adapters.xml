@@ -326,6 +326,7 @@
 			<value name="block" type="boolean" required="false" direction="in" />
             <value name="lowPriority" type="boolean" required="false" direction="in" />
 			<value name="username" type="string" required="false" direction="in" />
+            <value name="dropTokenMessage" type="boolean" required="false" direction="in" />
 			<value name="password" type="string" required="false" direction="in" />
             <value name="tenant" type="string" required="false" direction="in" />
             <value name="locale" type="string" required="false" direction="in" />
