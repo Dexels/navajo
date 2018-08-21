@@ -858,10 +858,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
         }
 
-        if (this.dropTokenMessage) {
-            outDoc.removeMessage(Message.MSG_TOKEN_BLOCK);
-        }
-
         return outDoc;
     }
 
