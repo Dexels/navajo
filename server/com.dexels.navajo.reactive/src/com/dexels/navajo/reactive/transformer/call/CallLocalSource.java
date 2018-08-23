@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -63,18 +62,19 @@ public class CallLocalSource implements ReactiveSource {
 				
 		
 		try {
-			Flowable<NavajoStreamEvent> flow = ctx.runner().build(service, debug).execute(ctx)
+			Flowable<DataItem> flow = ctx.runner().build(service, debug).execute(ctx)
 					.map(e->e.eventStream())
 					.concatMap(e->e)
-					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE);
+					.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE)
+					.map(DataItem::of);
 					
-			Flowable<DataItem> item  =Flowable.just(DataItem.ofEventStream(flow));;
+//			Flowable<DataItem> item  =Flowable.just(DataItem.ofEventStream(flow));;
 			
 			for (ReactiveTransformer reactiveTransformer : transformers) {
-				item = item.compose(reactiveTransformer.execute(context));
+				flow = flow.compose(reactiveTransformer.execute(context));
 			}
 
-			return item;
+			return flow;
 		} catch (IOException e) {
 			return Flowable.error(e);
 		}

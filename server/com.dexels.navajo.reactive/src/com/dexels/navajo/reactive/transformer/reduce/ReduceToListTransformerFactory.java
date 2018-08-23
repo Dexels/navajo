@@ -2,12 +2,14 @@ package com.dexels.navajo.reactive.transformer.reduce;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -22,33 +24,34 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.functions.Function;
 
-public class ScanTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
+public class ReduceToListTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
-	public ScanTransformerFactory() {
+	public ReduceToListTransformerFactory() {
 	}
 
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
-
-
+			
 		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , buildContext);
-		return new ScanTransformer(this, reducermapper,parameters,xml);
+		return new ReduceToListTransformer(this, reducermapper,parameters,xml);
 	}
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Collections.emptyList());
+		return Optional.of(Arrays.asList(new String[] {"debug"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Collections.emptyList());
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		return Optional.of(Collections.emptyMap());
+		Map<String, String> r = new HashMap<>();
+		r.put("debug", Property.BOOLEAN_PROPERTY);
+		return Optional.of(Collections.unmodifiableMap(r));
 	}
 
 
@@ -59,12 +62,12 @@ public class ScanTransformerFactory implements ReactiveTransformerFactory, Trans
 
 	@Override
 	public Type outType() {
-		return Type.SINGLEMESSAGE;
+		return Type.MSGLIST;
 	}
 	
 
 	@Override
 	public String name() {
-		return "scan";
+		return "reducetolist";
 	}
 }

@@ -26,7 +26,7 @@ public class FlattenEventStreamFactory implements ReactiveTransformerFactory, Tr
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new FlattenEventStream(this,parameters);
+		return new FlattenEventStream(this,parameters,xml);
 	}
 
 

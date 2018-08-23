@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.other;
 import java.util.Optional;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -20,11 +21,13 @@ public class FlattenMsgStream implements ReactiveTransformer {
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
 	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
+	private Optional<XMLElement> sourceElement;
 	
-	public FlattenMsgStream(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
+	public FlattenMsgStream(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper,Optional<XMLElement> sourceElement) {
 		this.parameters = parameters;
 		this.metadata = metadata;
 		this.joiner = joinermapper;
+		this.sourceElement = sourceElement;
 	}
 
 	@Override
@@ -52,5 +55,10 @@ public class FlattenMsgStream implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
 	}
 }

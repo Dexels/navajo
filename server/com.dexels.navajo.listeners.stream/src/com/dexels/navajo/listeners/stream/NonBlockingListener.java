@@ -223,7 +223,6 @@ public class NonBlockingListener extends HttpServlet {
 				.map(e->e.eventStream())
 				.concatMap(e->e)
 				.doOnCancel(()->System.err.println("Cancel at toplevel"))
-//				.compose(StreamDocument.inNavajo(context.service, context.username, Optional.empty()))
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))
@@ -237,8 +236,6 @@ public class NonBlockingListener extends HttpServlet {
 					.map(di->di.event())
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
-//					.doOnNext(e->System.err.println("RES>>>>: "+e.length))
-//					.doOnRequest(l->System.err.println("Got: "+l))
 					.compose(StreamCompress.compress(responseEncoding))
 					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
 						@Override
@@ -248,7 +245,6 @@ public class NonBlockingListener extends HttpServlet {
 							.compose(StreamCompress.compress(responseEncoding));
 						}
 					})
-//					.doOnNext(e->System.err.println("RESULT: "+e.length))
                     .doOnCancel(()->{logger.warn("AAA"); context.complete();})
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);

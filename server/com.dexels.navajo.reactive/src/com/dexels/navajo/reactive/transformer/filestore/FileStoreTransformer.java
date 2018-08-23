@@ -128,5 +128,10 @@ public class FileStoreTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
+	}
 	
 }

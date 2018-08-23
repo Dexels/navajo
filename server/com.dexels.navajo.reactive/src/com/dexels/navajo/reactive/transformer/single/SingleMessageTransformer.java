@@ -50,5 +50,10 @@ public class SingleMessageTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return this.source;
+	}
 	
 }

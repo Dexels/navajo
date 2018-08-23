@@ -42,7 +42,6 @@ import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent.NavajoEventTypes;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 import com.dexels.navajo.document.stream.xml.ObservableNavajoParser;
-import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.document.stream.xml.XMLEvent;
 import com.dexels.navajo.document.types.Binary;
 import com.github.davidmoten.rx2.Bytes;

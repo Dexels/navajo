@@ -29,7 +29,7 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new TakeTransformer(this,parameters);
+		return new TakeTransformer(this,parameters,xml);
 	}
 	
 	@Override

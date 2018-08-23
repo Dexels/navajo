@@ -34,7 +34,7 @@ public class ParallelMessageStreamFactory implements ReactiveTransformerFactory,
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-		return new ParallelMessageStream(this,parameters,joinermapper);
+		return new ParallelMessageStream(this,parameters,joinermapper,xmlElement);
 	}
 
 

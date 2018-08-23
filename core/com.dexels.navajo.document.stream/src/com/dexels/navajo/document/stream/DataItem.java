@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.stream;
 
+import java.util.List;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -11,6 +13,7 @@ public class DataItem {
 	private final ImmutableMessage msg;
 	private final ImmutableMessage stateMsg;
 	private final byte[] data;
+	private final List<ImmutableMessage> messageList;
 	private final NavajoStreamEvent streamEvent;
 	private final Flowable<NavajoStreamEvent> eventStream;
 	private final Flowable<ImmutableMessage> msgList;
@@ -22,6 +25,7 @@ public class DataItem {
 		EVENTSTREAM,
 		DATA,
 		MSGSTREAM,
+		MSGLIST,
 		EMPTY,
 		ANY
 	}
@@ -34,6 +38,7 @@ public class DataItem {
 		this.type = Type.EMPTY;
 		this.stateMsg = null;
 		this.eventStream = null;
+		this.messageList = null;
 	}
 	
 	private DataItem(ImmutableMessage msg) {
@@ -44,6 +49,7 @@ public class DataItem {
 		this.type = Type.MESSAGE;
 		this.stateMsg = null;
 		this.eventStream = null;
+		this.messageList = null;
 	}
 	
 	private DataItem(ImmutableMessage msg, ImmutableMessage stateMessage) {
@@ -54,6 +60,7 @@ public class DataItem {
 		this.stateMsg = stateMessage;
 		this.type = Type.MESSAGE;
 		this.eventStream = null;
+		this.messageList = null;
 	}
 
 	private DataItem(byte[] data) {
@@ -64,6 +71,7 @@ public class DataItem {
 		this.type = Type.DATA;
 		this.stateMsg = null;
 		this.eventStream = null;
+		this.messageList = null;
 	}
 	
 	private DataItem(byte[] data, ImmutableMessage stateMessage) {
@@ -74,6 +82,7 @@ public class DataItem {
 		this.type = Type.DATA;
 		this.stateMsg = stateMessage;
 		this.eventStream = null;
+		this.messageList = null;
 	}
 
 	private DataItem(NavajoStreamEvent event) {
@@ -84,6 +93,19 @@ public class DataItem {
 		this.type = Type.EVENT;
 		this.stateMsg = null;
 		this.eventStream = null;
+		this.messageList = null;
+	}
+	
+
+	private DataItem(List<ImmutableMessage> list) {
+		this.msg = null;
+		this.data = null;
+		this.streamEvent = null;
+		this.msgList = null;
+		this.type = Type.MSGLIST;
+		this.stateMsg = null;
+		this.eventStream = null;
+		this.messageList = list;
 	}
 	
 	// Ugly but can not make two identical constructors
@@ -98,6 +120,7 @@ public class DataItem {
 		if(msgList!=null && event!=null) {
 			throw new IllegalArgumentException("Can not both supply a msgList and an event stream");
 		}
+		this.messageList = null;
 	}
 	
 	public Flowable<ImmutableMessage> messageStream() {
@@ -117,6 +140,7 @@ public class DataItem {
 	public ImmutableMessage stateMessage() {
 		return this.stateMsg == null ? ImmutableFactory.empty() : this.stateMsg;
 	}
+	
 	public ImmutableMessage message() {
 		if(this.msg==null) {
 			throw new NullPointerException("DataItem without message, can't request message of dataitem of type: "+this.type);
@@ -132,6 +156,15 @@ public class DataItem {
 		}
 
 		return this.streamEvent;
+	}
+	
+	public List<ImmutableMessage> messageList() {
+		if(this.messageList==null) {
+			NullPointerException nullPointerException = new NullPointerException("DataItem without messageList, can't request event of dataitem of type: "+this.type);
+			nullPointerException.printStackTrace();
+			throw nullPointerException;
+		}
+		return this.messageList;
 	}
 	
 	public byte[] data() {
@@ -160,6 +193,10 @@ public class DataItem {
 
 	public static DataItem of(ImmutableMessage repl) {
 		return new DataItem(repl);
+	}
+	
+	public static DataItem of(List<ImmutableMessage> msgList) {
+		return new DataItem(msgList);
 	}
 
 	public static DataItem of(ImmutableMessage repl, ImmutableMessage stateMessage) {

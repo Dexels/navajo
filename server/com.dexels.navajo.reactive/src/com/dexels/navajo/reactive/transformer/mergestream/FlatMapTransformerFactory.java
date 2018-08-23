@@ -12,7 +12,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -22,12 +21,12 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
-import io.reactivex.functions.Function;
-
-public class MergeMultiTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
+public class FlatMapTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	
-	public MergeMultiTransformerFactory() {
+	private ReactiveSource childSource = null;
+
+	public FlatMapTransformerFactory() {
 	}
 	
 	public void activate() {
@@ -38,8 +37,8 @@ public class MergeMultiTransformerFactory implements ReactiveTransformerFactory,
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
+		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeMultiTransformerFactory: Can't build without XML element"));
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 		Optional<ReactiveSource> subSource;
 		try {
 			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext);
@@ -49,11 +48,11 @@ public class MergeMultiTransformerFactory implements ReactiveTransformerFactory,
 		if(!subSource.isPresent()) {
 			throw new NullPointerException("Missing sub source in xml: "+xml);
 		}
-		ReactiveSource sub = subSource.get();
-		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
-			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
-		}
-		return new MergeMultiTransformer(this,parameters,sub, joinermapper);
+		childSource = subSource.get();
+//		if(!childSource.finalType().equals(DataItem.Type.MESSAGE)) {
+//			throw new IllegalArgumentException("Wrong type of sub source: "+childSource.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
+//		}
+		return new FlatMapTransformer(this,parameters,childSource,xmlElement);
 	}
 	
 
@@ -65,7 +64,7 @@ public class MergeMultiTransformerFactory implements ReactiveTransformerFactory,
 
 	@Override
 	public Type outType() {
-		return Type.MSGSTREAM;
+		return childSource.finalType();
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class MergeMultiTransformerFactory implements ReactiveTransformerFactory,
 
 	@Override
 	public String name() {
-		return "mergesingle";
+		return "flatmap";
 	}
 
 

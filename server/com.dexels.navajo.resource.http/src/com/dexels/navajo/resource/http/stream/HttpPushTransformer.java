@@ -72,4 +72,10 @@ public class HttpPushTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
+	}
+
 }

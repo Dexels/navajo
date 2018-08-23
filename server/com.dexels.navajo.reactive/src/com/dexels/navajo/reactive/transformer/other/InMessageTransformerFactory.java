@@ -26,7 +26,7 @@ public class InMessageTransformerFactory implements ReactiveTransformerFactory, 
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new InMessageTransformer(this,parameters);
+		return new InMessageTransformer(this,parameters,xml);
 	}
 
 

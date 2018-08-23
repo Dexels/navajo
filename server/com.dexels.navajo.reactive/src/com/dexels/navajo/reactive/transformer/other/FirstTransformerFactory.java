@@ -27,8 +27,7 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 	@Override
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
-
-		return new FirstTransformer(this);
+		return new FirstTransformer(this,xml);
 	}
 	
 	@Override

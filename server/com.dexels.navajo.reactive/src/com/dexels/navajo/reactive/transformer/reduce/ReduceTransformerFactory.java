@@ -34,7 +34,7 @@ public class ReduceTransformerFactory implements ReactiveTransformerFactory, Tra
 			ReactiveBuildContext buildContext) {
 			
 		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , buildContext);
-		return new ReduceTransformer(this, reducermapper,parameters);
+		return new ReduceTransformer(this, reducermapper,parameters,xml);
 	}
 
 	@Override

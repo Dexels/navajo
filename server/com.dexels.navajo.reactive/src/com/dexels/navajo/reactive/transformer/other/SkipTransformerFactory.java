@@ -30,7 +30,7 @@ public class SkipTransformerFactory implements ReactiveTransformerFactory, Trans
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new SkipTransformer(this,parameters);
+		return new SkipTransformer(this,parameters,xml);
 	}
 	@Override
 	public Set<Type> inType() {

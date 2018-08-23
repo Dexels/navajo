@@ -11,6 +11,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
@@ -50,7 +51,7 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 		return flow->
 			{
 				
-			Flowable<DataItem> result = client.callWithBodyToStream(server, e->
+			Flowable<NavajoStreamEvent> result = client.callWithBodyToStream(server, e->
 				e.header("X-Navajo-Username", username)
 				 .header("X-Navajo-Password", password)
 				 .header("X-Navajo-Service", service)
@@ -62,15 +63,24 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 				.doOnNext(e->System.err.println("Element encountered"))
 				.concatMap(e->e)
 				.lift(StreamDocument.parse())
-				.map(DataItem::ofEventStream);
+				.concatMap(e->e)
+				.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE)
+				.doOnNext(e->System.err.println("ITEMMMM: "+e));
+
+			
+			return Flowable.just(DataItem.ofEventStream(result));
 	
-			return result;
 		};
 	}
 
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
 	}
 
 

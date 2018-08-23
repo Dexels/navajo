@@ -26,7 +26,7 @@ public class IntervalTransformerFactory  implements ReactiveTransformerFactory, 
     public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
             ReactiveBuildContext buildContext) {
 
-        return new IntervalTransformer(this,parameters);
+        return new IntervalTransformer(this,parameters,xml);
     }
 
     @Override

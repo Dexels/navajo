@@ -23,7 +23,6 @@ public class LogTransformer implements ReactiveTransformer {
 
 	private TransformerMetadata metadata;
 	private String relativePath;
-	private List<ReactiveParseProblem> problems;
 	private ReactiveParameters parameters;
 	private Optional<XMLElement> xml;
 	private ReactiveBuildContext buildContext;
@@ -34,7 +33,6 @@ public class LogTransformer implements ReactiveTransformer {
 	public LogTransformer(TransformerMetadata metadata, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml, ReactiveBuildContext buildContext) {
 		this.metadata = metadata;
 		this.relativePath = relativePath;
-		this.problems = problems;
 		this.parameters = parameters;
 		this.xml = xml;
 		this.buildContext = buildContext;
@@ -55,6 +53,11 @@ public class LogTransformer implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return xml;
 	}
 
 }

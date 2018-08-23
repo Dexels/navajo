@@ -25,7 +25,7 @@ public class CallLocalSourceFactory implements ReactiveSourceFactory {
 	
 	@Override
 	public Type sourceType() {
-		return Type.EVENTSTREAM;
+		return Type.EVENT;
 	}
 
 	@Override

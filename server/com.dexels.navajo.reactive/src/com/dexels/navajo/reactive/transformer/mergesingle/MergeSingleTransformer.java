@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 
 import java.util.Optional;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -17,12 +18,14 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 
 	private final ReactiveSource source;
 	private final Function<StreamScriptContext,Function<DataItem,DataItem>> joiner;
-	private TransformerMetadata metadata;
+	private final TransformerMetadata metadata;
+	private final Optional<XMLElement> sourceElement;
 
-	public MergeSingleTransformer(TransformerMetadata metadata, ReactiveParameters parameters, ReactiveSource source, Function<StreamScriptContext,Function<DataItem,DataItem>> joiner) {
+	public MergeSingleTransformer(TransformerMetadata metadata, ReactiveParameters parameters, ReactiveSource source, Function<StreamScriptContext,Function<DataItem,DataItem>> joiner,Optional<XMLElement> sourceElement) {
 		this.source = source;
 		this.joiner = joiner;
 		this.metadata = metadata;
+		this.sourceElement = sourceElement;
 	}
 
 	@Override
@@ -45,6 +48,11 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
 	}
 
 }

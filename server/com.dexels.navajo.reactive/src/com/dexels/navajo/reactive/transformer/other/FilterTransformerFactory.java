@@ -32,7 +32,7 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 			Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new FilterTransformer(this,parameters);
+		return new FilterTransformer(this,parameters,xml);
 	}
 
 

@@ -12,15 +12,11 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.ReactiveBuildContext;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.replication.impl.protobuf.FallbackReplicationMessageParser;
-
-import io.reactivex.functions.Function;
 
 public class ReplicationMessageParseTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
@@ -30,7 +26,7 @@ public class ReplicationMessageParseTransformerFactory implements ReactiveTransf
 	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new ReplicationMessageParseTransformer(this, parser);
+		return new ReplicationMessageParseTransformer(this, parser,xml);
 	}
 
 	@Override

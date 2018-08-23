@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.other;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.RunningReactiveScripts;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -20,12 +21,14 @@ public class AsyncTransformer implements ReactiveTransformer {
 
 	private final TransformerMetadata metadata;
 	private final ReactiveSource subSource;
+	private final Optional<XMLElement> sourceElement;
 //	private final TopicPublisher publisher;
 
 	public AsyncTransformer(AsyncTransformerFactory metadata, ReactiveParameters parameters,
-			ReactiveSource sub, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
+			ReactiveSource sub, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper, Optional<XMLElement> sourceElement) {
 		this.metadata = metadata;
 		this.subSource = sub;
+		this.sourceElement = sourceElement;
 	}
 
 	@Override
@@ -63,6 +66,11 @@ public class AsyncTransformer implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return sourceElement;
 	}
 
 

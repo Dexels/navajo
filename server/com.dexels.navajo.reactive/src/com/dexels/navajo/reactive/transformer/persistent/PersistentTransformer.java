@@ -116,5 +116,10 @@ public class PersistentTransformer implements ReactiveTransformer {
 		
 	}
 
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return this.xml;
+	}
+
 
 }

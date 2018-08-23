@@ -57,7 +57,7 @@ public class CallRemoteSource implements ReactiveSource {
 		String password = resolved.paramString("password");
 		final String service =  resolved.paramString("service");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
-		Flowable<DataItem> flow = client.callWithBodyToStream(server, e->
+		Flowable<NavajoStreamEvent> flow = client.callWithBodyToStream(server, e->
 		e.header("X-Navajo-Username", username)
 		 .header("X-Navajo-Password", password)
 		 .header("X-Navajo-Service", service)
@@ -70,12 +70,19 @@ public class CallRemoteSource implements ReactiveSource {
 		.lift(XML.parseFlowable(10))
 		.concatMap(e->e)
 		.lift(StreamDocument.parse())
-		.map(DataItem::ofEventStream);
+		.concatMap(e->e)
+		.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE)
+		.doOnNext(e->System.err.println("ITEMMMM: "+e));
+
+	
+		Flowable<DataItem> fw =  Flowable.just(DataItem.ofEventStream(flow));
+
+//		.map(DataItem::ofEventStream);
 		
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			flow = flow.compose(reactiveTransformer.execute(context));
+			fw = fw.compose(reactiveTransformer.execute(context));
 		}
-		return flow;
+		return fw;
 	}
 
 	@Override

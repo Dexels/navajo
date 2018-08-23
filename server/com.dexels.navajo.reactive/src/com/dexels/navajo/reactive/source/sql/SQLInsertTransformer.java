@@ -82,4 +82,9 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return this.sourceElement;
+	}
+
 }

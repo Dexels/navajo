@@ -68,7 +68,7 @@ public class TestKafka {
 		String service ="blo";
 		String deployment ="develop";
 		
-		ReactiveTransformer rt = new ReplicationMessageParseTransformer(StandardTransformerMetadata.noParams(Type.DATA, Type.MESSAGE), parser);
+		ReactiveTransformer rt = new ReplicationMessageParseTransformer(StandardTransformerMetadata.noParams(Type.DATA, Type.MESSAGE), parser,Optional.empty());
 		List<ReactiveTransformer> transformers = Arrays.asList(new ReactiveTransformer[]{rt});
 		
 		ReactiveParameters params = ReactiveParameters.empty()

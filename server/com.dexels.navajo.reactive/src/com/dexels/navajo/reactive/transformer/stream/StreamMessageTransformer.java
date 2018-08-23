@@ -45,4 +45,9 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public Optional<XMLElement> sourceElement() {
+		return this.sourceElement;
+	}
+
 }

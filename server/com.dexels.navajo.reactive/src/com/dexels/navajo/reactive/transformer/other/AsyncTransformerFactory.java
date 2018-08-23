@@ -65,7 +65,7 @@ public class AsyncTransformerFactory implements ReactiveTransformerFactory, Tran
 			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
 		}
 //		return new MergeSingleTransformer(this,parameters,sub, joinermapper);
-				return new AsyncTransformer(this,parameters,sub, joinermapper);
+				return new AsyncTransformer(this,parameters,sub, joinermapper,xmlElement);
 	}
 
 

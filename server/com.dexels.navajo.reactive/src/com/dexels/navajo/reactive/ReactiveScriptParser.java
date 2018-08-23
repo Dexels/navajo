@@ -55,6 +55,7 @@ import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.reactive.mappers.Store;
 import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
+import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformer;
@@ -89,6 +90,7 @@ public class ReactiveScriptParser {
 		reactiveReducer.put("saveall", new Store());
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
+		reactiveReducer.put("storeList", new StoreAsSubMessageList());
 		
 	}
 	
@@ -130,12 +132,8 @@ public class ReactiveScriptParser {
 			problems.add(rpp);
 			e.printStackTrace();
 		}
-//		parseParamsFromChildren("", sourceElement)
 		int parallel = x.getIntAttribute("parallel",1);
-//		final Optional<String> streamMessage = Optional.ofNullable(x.getStringAttribute("streamMessage"));
-
 		String methodsString = x.getStringAttribute("methods","");
-		
 		final List<String> methods = methodsString.equals("") ? Collections.emptyList() : Arrays.asList(methodsString.split(","));
 		Optional<String> mime = Optional.ofNullable(x.getStringAttribute("mime"));
 		List<ReactiveSource> r = parseRoot(x,relativePath,problems);
@@ -592,7 +590,8 @@ public class ReactiveScriptParser {
 		int count = 0;
 		for (ReactiveTransformer reactiveTransformer : transformers) {
 			if(!reactiveTransformer.metadata().inType().contains(current)) {
-				problems.add(ReactiveParseProblem.of("#"+count+": Type mismatch: Last type in pipeline: "+current+" next part ("+reactiveTransformer.metadata().name()+") expects: "+reactiveTransformer.metadata().inType()));
+				
+				problems.add(ReactiveParseProblem.of("#"+count+": Type mismatch: Last type in pipeline: "+current+" next part ("+reactiveTransformer.metadata().name()+") expects: "+reactiveTransformer.metadata().inType()).withTag(reactiveTransformer.sourceElement().orElse(new XMLElement())));
 			}
 			current = reactiveTransformer.metadata().outType();
 			count++;

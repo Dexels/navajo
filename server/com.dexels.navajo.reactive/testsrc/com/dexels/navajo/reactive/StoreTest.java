@@ -57,26 +57,9 @@ public class StoreTest {
 	@Test
 	public void testStore() throws UnsupportedEncodingException, IOException {
 		ReactiveParameters parameters = ReactiveParameters.empty()
-//				.withConstant("debug", true, Property.BOOLEAN_PROPERTY);
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		StreamScriptContext context = createContext("Single",Optional.empty());
-		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty();
-
-//		Store storeMapper = new Store();
-//		ReactiveParameters mapperParameter = ReactiveParameters.empty()
-//				.with("value", (ctx,item,state)->{
-//					Integer count = (Integer)state.columnValue("count");
-//					if(count == null) {
-//						count = 0;
-//					}
-//					count++;
-//					System.err.println("Count: "+count);
-//					return new Operand(count, Property.INTEGER_PROPERTY);
-//				})
-//				.withConstant("name", "count", Property.STRING_PROPERTY);
-
-//		new StoreAsSubMessage().execute(ReactiveParameters.empty()).
 		ReduceTransformerFactory fac = new ReduceTransformerFactory();
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 		ReactiveTransformer storeTrans = fac.build(problems,transformerParameter); //new ReduceTransformer(storeMapper.execute(mapperParameter),transformerParameter);

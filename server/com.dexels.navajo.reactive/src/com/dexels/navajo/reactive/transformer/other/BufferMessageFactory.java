@@ -33,7 +33,7 @@ public class BufferMessageFactory implements ReactiveTransformerFactory, Transfo
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("BufferMessageFactory: Can't build without XML element"));
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-		return new BufferMessage(this,parameters,joinermapper);
+		return new BufferMessage(this,parameters,joinermapper,xmlElement);
 	}
 
 
