@@ -845,7 +845,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
         }
         // Always copy token message if the user hasn't specified otherwise
-        if (inMessage.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
+        if (inMessage.getMessage(Message.MSG_TOKEN_BLOCK) != null && !this.dropTokenMessage) {
             Message token = inMessage.getMessage(Message.MSG_TOKEN_BLOCK).copy(outDoc);
             if (outDoc.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
                 outDoc.getMessage(Message.MSG_TOKEN_BLOCK).merge(token, true);
