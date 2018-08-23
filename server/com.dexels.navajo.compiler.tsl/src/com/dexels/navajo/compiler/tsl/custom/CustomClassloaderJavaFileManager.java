@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.tools.FileObject;
@@ -42,20 +43,22 @@ public class CustomClassloaderJavaFileManager extends
 	private final Map<String, CustomJavaFileObject> fileMap = new HashMap<String, CustomJavaFileObject>();
 //	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
 	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
-	private BundleContext bundleContext;
+	private Optional<BundleContext> bundleContext;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(CustomClassloaderJavaFileManager.class);
 	
 
-	public CustomClassloaderJavaFileManager(BundleContext context,
+	public CustomClassloaderJavaFileManager(Optional<BundleContext> context,
 			ClassLoader classLoader, JavaFileManager standardFileManager) {
 		super(standardFileManager);
 		this.classLoader = classLoader;
 //		this.standardFileManager = standardFileManager;
 		this.bundleContext = context;
-		this.bundleContext.addBundleListener(this);
-		enumerateBundles(bundleContext);
+		this.bundleContext.ifPresent(ctx->{
+			ctx.addBundleListener(this);
+			enumerateBundles(ctx);
+		});
 	}
 
 	@Override
@@ -82,7 +85,14 @@ public class CustomClassloaderJavaFileManager extends
 
 	@Override
 	public boolean hasLocation(Location location) {
-		if (location.equals( StandardLocation.CLASS_OUTPUT)) {
+		if (location.equals( StandardLocation.CLASS_OUTPUT) 
+				|| location.equals(StandardLocation.UPGRADE_MODULE_PATH)
+				|| location.equals(StandardLocation.SYSTEM_MODULES)
+				|| location.equals(StandardLocation.PATCH_MODULE_PATH)
+				|| location.equals(StandardLocation.MODULE_SOURCE_PATH)
+				|| location.equals(StandardLocation.MODULE_PATH)
+				
+				) {
 			return false;
 		}
 		return true;
@@ -309,7 +319,7 @@ public class CustomClassloaderJavaFileManager extends
 	@Override
 	public void close() throws IOException {
 		super.close();
-		bundleContext.removeBundleListener(this);
+		bundleContext.ifPresent(ctx->ctx.removeBundleListener(this));
 		fileMap.clear();
 	}
 

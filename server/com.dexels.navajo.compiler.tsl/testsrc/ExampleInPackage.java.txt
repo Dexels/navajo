@@ -1,0 +1,8 @@
+package somepkg;
+
+public class ExampleInPackage {
+
+	public static void main(String[] args) {
+		System.err.println("Something");
+	}
+}

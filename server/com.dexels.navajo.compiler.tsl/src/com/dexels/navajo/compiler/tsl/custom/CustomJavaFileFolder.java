@@ -91,7 +91,7 @@ public class CustomJavaFileFolder {
 					uri = u.toURI();
 					// try {
 					final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(
-							resource, uri, u, Kind.CLASS);
+							resource, uri, u.toURI(), Kind.CLASS);
 					result.add(customJavaFileObject);
 					contentMap.put(resource, customJavaFileObject);
 

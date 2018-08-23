@@ -1,0 +1,12 @@
+import java.util.concurrent.Callable;
+
+public class Example implements Callable<Integer> {
+
+	public static void main(String[] args) {
+		System.err.println("Something");
+	}
+	
+	public Integer call() {
+		return 13;
+	}
+}

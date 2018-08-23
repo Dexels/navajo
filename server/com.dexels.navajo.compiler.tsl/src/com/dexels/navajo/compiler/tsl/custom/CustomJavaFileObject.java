@@ -2,6 +2,8 @@ package com.dexels.navajo.compiler.tsl.custom;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,7 +12,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -18,13 +23,14 @@ import javax.tools.JavaFileObject;
 
 import org.apache.commons.io.IOUtils;
 
+
 public class CustomJavaFileObject implements JavaFileObject {
 	private final String binaryName;
 	private final URI uri;
-	private final String name;
+	private String name;
 	private Kind kind;
 	private byte[] localContents;
-	private URL lazyURL;
+	private URI lazyURL;
 
 	public CustomJavaFileObject(String javaObjectName, URI uri, InputStream is,
 			Kind kind) throws IOException {
@@ -33,11 +39,41 @@ public class CustomJavaFileObject implements JavaFileObject {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 			IOUtils.copy(is, baos);
-			setContents(baos.toByteArray());
+			byte[] data = baos.toByteArray();
+			setContents(data);
+			File generated = File.createTempFile("compile", ".java");
+			File parent = generated.getParentFile();
+			File current = parent;
+			List<String> parts = foldersToCreate(javaObjectName);
+			for (String element : parts) {
+				current = new File(current,element);
+				current.mkdirs();
+			}
+			String resolvedName = fileName(javaObjectName);
+			File tmp = new File(current,resolvedName);
+			FileOutputStream fos = new FileOutputStream(tmp);
+			IOUtils.copy(new ByteArrayInputStream(data), fos);
+			fos.close();
+			this.name = tmp.getAbsolutePath();
+			this.lazyURL = Paths.get(tmp.getAbsolutePath()).toUri();
 		}
 	}
 
-	public CustomJavaFileObject(String javaObjectName, URI uri, URL contents,
+	private List<String> foldersToCreate(String javaObjectName) {
+		List<String> result = new ArrayList<>();
+		String[] parts = javaObjectName.split("/");
+		for (int i = 0; i < parts.length-1; i++) {
+			result.add(parts[i]);
+		}
+		return result;
+	}
+	
+	private String fileName(String javaObjectName) {
+		String[] parts = javaObjectName.split("/");
+		return parts[parts.length-1];
+	}
+
+	public CustomJavaFileObject(String javaObjectName, URI uri, URI contents,
 			Kind kind) {
 		this(javaObjectName, uri, kind);
 		this.lazyURL = contents;
@@ -51,7 +87,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 		if (stripName.endsWith("/")) {
 			stripName = stripName.substring(0, stripName.length() - 1);
 		}
-		name = javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
+		name = uri.toString(); // javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
 	}
 
 	private void setContents(byte[] byteArray) {
@@ -60,7 +96,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	@Override
 	public URI toUri() {
-		return uri;
+		return lazyURL;
 	}
 
 	@Override
@@ -71,7 +107,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	private InputStream getContents() throws IOException {
 		if (lazyURL != null) {
-			return lazyURL.openStream();
+			return lazyURL.toURL().openStream();
 		}
 		return new ByteArrayInputStream(localContents);
 	}
