@@ -85,17 +85,22 @@ public class CustomClassloaderJavaFileManager extends
 
 	@Override
 	public boolean hasLocation(Location location) {
-		if (location.equals( StandardLocation.CLASS_OUTPUT) 
-				|| location.equals(StandardLocation.UPGRADE_MODULE_PATH)
-				|| location.equals(StandardLocation.SYSTEM_MODULES)
-				|| location.equals(StandardLocation.PATCH_MODULE_PATH)
-				|| location.equals(StandardLocation.MODULE_SOURCE_PATH)
-				|| location.equals(StandardLocation.MODULE_PATH)
-				
-				) {
-			return false;
+		if(location.equals(StandardLocation.SOURCE_PATH)) {
+			return true;
 		}
-		return true;
+		return false;
+//		if (location.equals( StandardLocation.CLASS_OUTPUT) 
+//				|| location.equals(StandardLocation.UPGRADE_MODULE_PATH)
+//				|| location.equals(StandardLocation.SYSTEM_MODULES)
+//				|| location.equals(StandardLocation.PATCH_MODULE_PATH)
+//				|| location.equals(StandardLocation.MODULE_SOURCE_PATH)
+//				|| location.equals(StandardLocation.MODULE_PATH)
+//				
+//				) {
+//			return false;
+//		}
+//		System.err.println(">><>>> "+location);
+//		return true;
 	}
 
 	@Override

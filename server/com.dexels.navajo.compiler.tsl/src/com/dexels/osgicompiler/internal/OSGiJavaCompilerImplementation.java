@@ -25,7 +25,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -38,6 +37,7 @@ import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
 
+@SuppressWarnings("restriction")
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 	private final static Logger logger = LoggerFactory
@@ -82,6 +82,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			}
 		}
 		compiler = getEclipseCompiler(); // ToolProvider.getSystemJavaCompiler();
+		System.err.println("Compiler created");
 		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
 			@Override
@@ -95,11 +96,13 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		customJavaFileManager = new CustomClassloaderJavaFileManager(Optional.ofNullable(context),
 				getClass().getClassLoader(), fileManager);
 		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
+		System.err.println("cl created");
 
 
 		if(context!=null) { 		// support unit tests:
 			this.fileManagerRegistration = this.context.registerService(
 					JavaFileManager.class, customJavaFileManager, null);
+			System.err.println("FileMananger created");
 
 			// (type=navajoScriptClassLoader)
 			Dictionary<String, String> nsc = new Hashtable<String, String>();

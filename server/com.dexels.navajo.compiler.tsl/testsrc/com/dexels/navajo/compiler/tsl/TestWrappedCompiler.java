@@ -16,10 +16,6 @@ import com.dexels.osgicompiler.internal.OSGiJavaCompilerImplementation;
 
 public class TestWrappedCompiler {
 
-	public TestWrappedCompiler() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Test
 	public void testWrapped() throws IOException, CompilationException {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
