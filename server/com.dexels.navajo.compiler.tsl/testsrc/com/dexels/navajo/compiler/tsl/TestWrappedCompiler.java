@@ -14,9 +14,11 @@ import org.junit.Test;
 import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.osgicompiler.internal.OSGiJavaCompilerImplementation;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
 public class TestWrappedCompiler {
 
-	@Test
+	@Test @Ignore
 	public void testWrapped() throws IOException, CompilationException {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);
@@ -26,7 +28,7 @@ public class TestWrappedCompiler {
 		Assert.assertTrue(result.length>100);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testPackageCompile() throws IOException, CompilationException {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);
@@ -37,7 +39,7 @@ public class TestWrappedCompiler {
 		
 	}
 	@SuppressWarnings("unchecked")
-	@Test
+	@Test  @Ignore
 	public void testActualClassLoad() throws Exception {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);

@@ -25,6 +25,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -82,7 +83,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			}
 		}
 		compiler = getEclipseCompiler(); // ToolProvider.getSystemJavaCompiler();
-		System.err.println("Compiler created");
 		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
 			@Override
@@ -96,13 +96,11 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		customJavaFileManager = new CustomClassloaderJavaFileManager(Optional.ofNullable(context),
 				getClass().getClassLoader(), fileManager);
 		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
-		System.err.println("cl created");
 
 
 		if(context!=null) { 		// support unit tests:
 			this.fileManagerRegistration = this.context.registerService(
 					JavaFileManager.class, customJavaFileManager, null);
-			System.err.println("FileMananger created");
 
 			// (type=navajoScriptClassLoader)
 			Dictionary<String, String> nsc = new Hashtable<String, String>();
@@ -167,7 +165,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		StringWriter swe = new StringWriter();
 		ArrayList<String> options = new ArrayList<String>();
 		options.add("-nowarn");
-
+		options.add("-target");
+		options.add("1.8");
+		 
 //		options.add(CompilerOptions.OPTION_Compliance);
 //		options.add(CompilerOptions.VERSION_1_8);
 //		options.add(CompilerOptions.OPTION_Source);
@@ -176,25 +176,24 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 //		options.add(CompilerOptions.VERSION_1_8);
 //		int sup = compiler.isSupportedOption(CompilerOptions.OPTION_TargetPlatform);
 //		options.add(CompilerOptions.OPTION_Process_Annotations);
-		Writer outdump = new Writer() {
-
-			@Override
-			public void write(char[] cbuf, int off, int len) throws IOException {
-				System.err.println(" > "+new String(cbuf,off,len));
-			}
-
-			@Override
-			public void flush() throws IOException {
-				
-			}
-
-			@Override
-			public void close() throws IOException {
-				
-			}
-			
-		};
-		CompilationTask task = compiler.getTask(outdump, customJavaFileManager,
+//		Writer outdump = new Writer() {
+//
+//			@Override
+//			public void write(char[] cbuf, int off, int len) throws IOException {
+//			}
+//
+//			@Override
+//			public void flush() throws IOException {
+//				
+//			}
+//
+//			@Override
+//			public void close() throws IOException {
+//				
+//			}
+//			
+//		};
+		CompilationTask task = compiler.getTask(swe, customJavaFileManager,
 				compilerOutputListener, options, null,
 				fileObjects);
 		boolean success = task.call();
