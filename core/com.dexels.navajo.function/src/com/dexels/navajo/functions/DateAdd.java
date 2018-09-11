@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**
@@ -71,5 +72,18 @@ public final class DateAdd extends FunctionInterface {
 		return cal.getTime();
 
 		
+    }
+    
+    public static void main(String [] args ) throws TMLExpressionException {
+    	DateAdd da = new DateAdd();    	
+    	Integer add = 365;
+        da.reset();
+        da.insertOperand(new java.util.Date());
+    	da.insertOperand(add);
+    	da.insertOperand("DAY");
+    	Object o = da.evaluate();
+    	System.err.println("begindate:  " + new java.util.Date() + " new date: " + o);
+    	
+    	
     }
 }
