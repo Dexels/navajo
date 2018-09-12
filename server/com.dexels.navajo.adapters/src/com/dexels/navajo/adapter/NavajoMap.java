@@ -80,6 +80,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     public String password = null;
     public String tenant = null;
     public String locale = null;
+    private String userAgent = null;
     public String server = null;
     // For scheduling tasks from NavajoMap.
     public String trigger = null;
@@ -221,6 +222,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     private Object waitForResult = new Object();
     private String resource;
     private Throwable caughtThrowable;
+
 
     @Override
     public void load(Access access) throws MappableException, UserException {
@@ -638,6 +640,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     
     public void setLocale(String locale) {
     		this.locale = locale;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
     /**
@@ -1530,6 +1536,11 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             	} else if (access.getInDoc() != null && 
                     access.getInDoc().getHeader().getHeaderAttribute("locale") != null) {
                 h.setHeaderAttribute("locale", access.getInDoc().getHeader().getHeaderAttribute("locale"));
+            }
+            if (userAgent != null && !userAgent.equals("")) {
+                h.setHeaderAttribute("user_agent", userAgent);
+            } else if (access.getInDoc() != null && access.getInDoc().getHeader().getHeaderAttribute("user_agent") != null) {
+                h.setHeaderAttribute("user_agent", access.getInDoc().getHeader().getHeaderAttribute("user_agent"));
             }
             // TODO: MAYBE ALL?
             String tenant = access.getTenant();
