@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
@@ -54,18 +53,22 @@ public class GetSelectedValues extends FunctionInterface {
 	@SuppressWarnings("unchecked")
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
-		if (getOperands().size() != 1) {
+		if (getOperands().size() > 2) {
 			throw new TMLExpressionException(this,
-					"Invalid function call, need one parameter");
+					"Invalid function call, need one or two parameters");
 		}
 		Object o = getOperand(0);
 		if (o == null) {
 			throw new TMLExpressionException(this,
 					"Invalid function call in GetSelectedValues: Parameter null");
 		}
-		
-		@SuppressWarnings("rawtypes")
-		List values = new ArrayList();
+
+		boolean outputAsStringList = false;
+		if (getOperands().size() > 1) {
+			outputAsStringList = (Boolean)getOperand(1);
+		}
+
+		List<Object> values = new ArrayList<Object>();
 		if ( o instanceof Property ) {
 			Property p = (Property) o;
 			if ( p.getSelected() != null ) {
@@ -83,11 +86,28 @@ public class GetSelectedValues extends FunctionInterface {
 						"Invalid function call in GetSelectedValues: Not a selection property");
 	
 			}
-			List<Selection> l = (List<Selection>) o;
-			values.add(l);
+			if (((List<Object>)o).size() != 0) {
+				List<Object> l = (List<Object>) o;
+				if (outputAsStringList) {
+					for (Object selection : l) {
+						values.add(selection.toString());
+					}
+				} else {
+					values.add(l);
+				}
+			}
 		}
 
-		return values;
+		// Outputtype...
+		if (outputAsStringList && values.size() != 0) {
+			String output = "";
+			for ( Object item : values) {
+				output += item.toString() + ";";
+			}
+			return output;
+		} else {
+			return values;
+		}
 	}
 
 	@Override

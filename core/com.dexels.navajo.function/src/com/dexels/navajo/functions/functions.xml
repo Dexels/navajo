@@ -449,7 +449,7 @@
 	</function>
     <function name="GetSelectedValues" class="com.dexels.navajo.functions.GetSelectedValues">
         <description>Gets the values of a selection property</description>
-        <input />
+        <input>selection,string|empty</input>
         <result />
     </function>
 	<!-- GetUrlBase is not a used function, so it's not in here -->
