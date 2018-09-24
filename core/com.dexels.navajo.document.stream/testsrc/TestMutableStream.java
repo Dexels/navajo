@@ -1,3 +1,5 @@
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class TestMutableStream {
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e)
-			.lift(NavajoStreamToMutableMessageStream.toMutable("Club/Accommodation"))
+			.lift(NavajoStreamToMutableMessageStream.toMutable(Optional.of("Club/Accommodation")))
 			.count()
 			.blockingGet();
 		
@@ -37,7 +39,7 @@ public class TestMutableStream {
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e)
-			.lift(NavajoStreamToMutableMessageStream.toMutable("Member"))
+			.lift(NavajoStreamToMutableMessageStream.toMutable(Optional.of("Member")))
 			.concatMap(e->e)
 			.doOnNext(e->System.err.println(e.getAllProperties()))
 			.count()
@@ -53,7 +55,7 @@ public class TestMutableStream {
 			.concatMap(e->e)
 			.lift(StreamDocument.parse())
 			.concatMap(e->e)
-			.lift(NavajoStreamToMutableMessageStream.toMutable("Member"))
+			.lift(NavajoStreamToMutableMessageStream.toMutable(Optional.of("Member")))
 			.concatMap(e->e)
 			.map(StreamDocument::messageToReplication)
 			.doOnNext(e->System.err.println("whoop:"+ImmutableFactory.createParser().describe(e)))

@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.stream;
 
+import java.util.Optional;
+
 import org.reactivestreams.Publisher;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -10,9 +12,9 @@ import io.reactivex.FlowableTransformer;
 
 public class EventToImmutable implements FlowableTransformer<NavajoStreamEvent,ImmutableMessage> {
 
-	private final String path;
+	private final Optional<String> path;
 
-	public EventToImmutable(String path) {
+	public EventToImmutable(Optional<String> path) {
 		this.path = path;
 	}
 
@@ -20,7 +22,7 @@ public class EventToImmutable implements FlowableTransformer<NavajoStreamEvent,I
 	@Override
 	public Publisher<ImmutableMessage> apply(Flowable<NavajoStreamEvent> flow) {
 			return flow
-					.doOnNext(e->System.err.println("Input: "+e))
+//					.doOnNext(e->System.err.println("Input: "+e))
 					.lift(NavajoStreamToMutableMessageStream.toMutable(this.path))
 					.concatMap(e->e)
 					.map(StreamDocument::messageToReplication);

@@ -183,7 +183,7 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableTransformer<NavajoStreamEvent,ImmutableMessage> eventsToImmutable(String path) {
+	public static FlowableTransformer<NavajoStreamEvent,ImmutableMessage> eventsToImmutable(Optional<String> path) {
 		return new EventToImmutable(path);
 	}
 	public static ObservableOperator<byte[], NavajoStreamEvent> serializeObservable() {

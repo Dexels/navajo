@@ -1,11 +1,8 @@
 package com.dexels.navajo.document.stream;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import javax.xml.stream.XMLStreamException;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -21,7 +18,6 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.Select;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
-import com.dexels.navajo.document.stream.xml.XMLEvent;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -39,23 +35,45 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	private final Stack<String> matchStack = new Stack<>();
 	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamToMutableMessageStream.class);
 
-	public NavajoStreamToMutableMessageStream(String path) {
+	public NavajoStreamToMutableMessageStream(Optional<String> path) {
 		super(10);
-		for (String element : path.split("/")) {
-			matchStack.push(element);
-		}
 		
+		if(path.isPresent()) {
+			for (String element : path.get().split("/")) {
+				matchStack.push(element);
+			}
+		} else {
+			Message msg = NavajoFactory.getInstance().createMessage(null,"",Message.MSG_TYPE_SIMPLE);
+			messageStack.push(msg);
+		}
 		
 	}
 	
 	private boolean emitStack() {
 		System.err.println("Checking tagstack: "+tagStack+" with: "+this.matchStack);
-		return this.tagStack.equals(this.matchStack);
+		return  this.tagStack.equals(this.matchStack);
 //		return true;
 	}
 	
+	private Flowable<Message> navajoEventComplete() {
+		if(matchStack.isEmpty()) {
+//			if(tagStack.isEmpty()) {
+				Message prMessage = null;
+				if(!messageStack.isEmpty()) {
+					prMessage = messageStack.peek();
+				}
+				if(prMessage!=null) {
+					return Flowable.just(prMessage);
+				} else {
+					return Flowable.empty();
+				}
+//			}
+		}
+		return Flowable.empty();
+	}
+	
 	public Flowable<Message> processNavajoEvent(NavajoStreamEvent n)  {
-		System.err.println("Processing event with type: "+n.type()+" path: "+n.path());
+//		System.err.println("Processing event with type: "+n.type()+" path: "+n.path());
 		switch (n.type()) {
 		case NAVAJO_STARTED:
 			return Flowable.empty();
@@ -85,9 +103,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			for (Prop e : msgProps) {
 				msgParent.addProperty(createTmlProperty(e));
 			}
-//			if(msgParent==null) {
-//				currentMessage.set(null);
-//			}
 			if(emitStack()) {
 				tagStack.pop();
 				return Flowable.just(msgParent);
@@ -203,20 +218,13 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 		return result;
 	}
 
-	public static FlowableOperator<Flowable<Message>, NavajoStreamEvent> toMutable(String path) {
+	public static FlowableOperator<Flowable<Message>, NavajoStreamEvent> toMutable(Optional<String> path) {
 		return new NavajoStreamToMutableMessageStream(path);
 	}
 	
 	public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super Flowable<Message>> downStream) throws Exception {
 		return new Subscriber<NavajoStreamEvent>() {
 
-
-//			@Override
-//			public void onNext(NavajoStreamEvent event) {
-//				Flowable<Message> msg = processNavajoEvent(event);
-//				downStream.onNext(msg);
-//				subscription.request(1);
-//			}
 
 		    @Override
 		    public void onError(Throwable t) {
@@ -228,6 +236,7 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 		    @Override
 		    public void onComplete() {
 //				feeder.endOfInput();
+		    	queue.offer(navajoEventComplete());
 		        done = true;
 		        drain(downStream);
 		    }
