@@ -24,7 +24,7 @@ public class StoreFactory implements ReactiveTransformerFactory {
 
 	// TODO fix, now broken. Do we need it?
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
 		return null; //new Store();

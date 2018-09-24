@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
@@ -115,7 +117,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
-		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath);
+		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath,Optional.of(Type.EVENT));
 		scripts.put(serviceName, parsed);
 		return parsed;
 	}

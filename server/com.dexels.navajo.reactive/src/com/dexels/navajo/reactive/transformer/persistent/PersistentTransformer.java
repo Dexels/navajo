@@ -10,6 +10,7 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.RunningReactiveScripts;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -38,19 +39,22 @@ public class PersistentTransformer implements ReactiveTransformer {
 	private final TopicPublisher topicPublisher;
 	private final Optional<XMLElement> xml;
 	private final String relativePath;
+	private final Type parentType;
 
 	public PersistentTransformer(PersistentTransformerFactory metadata,
 			String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xmlElement,
 			ReactiveParameters parameters,
 			ReactiveBuildContext buildContext
-			, TopicPublisher topicPublisher,Binary xmlCode) {
+			, TopicPublisher topicPublisher,Binary xmlCode,Type parentType) {
 		this.parameters = parameters;
 		this.metadata = metadata;
 		this.topicPublisher = topicPublisher;
 		this.xml = xmlElement;
 		this.relativePath = relativePath;
+		this.parentType = parentType;
 		
-		ReactiveScriptParser.parseTransformationsFromChildren("", problems, xmlElement,buildContext);
+		// Todo what to do with type?
+		ReactiveScriptParser.parseTransformationsFromChildren(Type.MESSAGE, "", problems, xmlElement,buildContext);
 		
 		XMLElement xe = new CaseSensitiveXMLElement();
 		try {
@@ -60,7 +64,7 @@ public class PersistentTransformer implements ReactiveTransformer {
 			e.printStackTrace();
 		}
 		try {
-			this.reactiveSource = ReactiveScriptParser.findSubSource(relativePath, xe, problems, buildContext).get();
+			this.reactiveSource = ReactiveScriptParser.findSubSource(relativePath, xe, problems, buildContext,Optional.of(parentType)).get();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

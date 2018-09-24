@@ -27,7 +27,7 @@ import io.reactivex.functions.Function;
 public class BufferMessageFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xmlElement,
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
 		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("BufferMessageFactory: Can't build without XML element"));

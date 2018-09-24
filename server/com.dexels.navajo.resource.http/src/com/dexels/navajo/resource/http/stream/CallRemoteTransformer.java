@@ -60,7 +60,7 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 					.lift(StreamDocument.serialize())
 			, "text/xml")
 				.lift(XML.parseFlowable(10))
-				.doOnNext(e->System.err.println("Element encountered"))
+//				.doOnNext(e->System.err.println("Element encountered"))
 				.concatMap(e->e)
 				.lift(StreamDocument.parse())
 				.concatMap(e->e)

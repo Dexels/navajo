@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -78,7 +79,7 @@ public class TestScript {
 	public void testSimpleScript() throws IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("simplereactive.xml")) {
 			StreamScriptContext myContext = createContext("SimpleReactiveSql",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in, "serviceName").execute(myContext)
+			reactiveScriptParser.parse(myContext.getService(), in, "serviceName",Optional.of(Type.EVENT)).execute(myContext)
 				.map(di->di.event())
 				.lift(StreamDocument.serialize())
 				.blockingForEach(e->System.err.print(new String(e)));

@@ -20,8 +20,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.document.stream.xml.XML;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
@@ -137,7 +137,7 @@ public class TestSingle {
 	public void testSingle() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"serviceName")
+			reactiveScriptParser.parse(myContext.getService(), in,"serviceName",Optional.of(Type.EVENT))
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -150,7 +150,7 @@ public class TestSingle {
 	public void testStore() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("teststore.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
+			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -163,7 +163,7 @@ public class TestSingle {
 	public void testReduce() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("testreduce.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
+			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -176,7 +176,7 @@ public class TestSingle {
 	public void testInputStream() throws UnsupportedEncodingException, IOException {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("inputstream.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
+			Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
 				.execute(myContext)
 				.map(di->di.event())
 				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
@@ -195,7 +195,7 @@ public class TestSingle {
 		try( InputStream scriptInputStream = TestScript.class.getClassLoader().getResourceAsStream("eventstream.xml")) {
 				StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
 
-				int i = reactiveScriptParser.parse(myContext.getService(), scriptInputStream,"eventScript")
+				int i = reactiveScriptParser.parse(myContext.getService(), scriptInputStream,"eventScript",Optional.of(Type.EVENT))
 				.execute(myContext)
 				.map(di->di.event())
 //				.lift(StreamDocument.serialize())

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 
@@ -27,7 +28,7 @@ public class TestExpressionErrors {
 		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("expressionerrors.xml")) {
 			StreamScriptContext myContext = TestSetup.createContext("Single",Optional.empty());
 			try {
-				ReactiveScript parsedScript = TestSetup.setup().parse(myContext.getService(), in,"serviceName");
+				ReactiveScript parsedScript = TestSetup.setup().parse(myContext.getService(), in,"serviceName",Optional.of(Type.EVENT));
 				System.err.println("Problems: "+parsedScript.problems());
 				parsedScript
 					.execute(myContext)

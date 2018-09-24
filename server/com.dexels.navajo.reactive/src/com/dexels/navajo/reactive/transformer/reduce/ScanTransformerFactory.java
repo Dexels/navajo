@@ -28,7 +28,7 @@ public class ScanTransformerFactory implements ReactiveTransformerFactory, Trans
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
 

@@ -28,7 +28,7 @@ public class CallRemoteTransformerFactory implements ReactiveTransformerFactory 
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath,List<ReactiveParseProblem> problems,
+	public ReactiveTransformer build(Type parentType, String relativePath,List<ReactiveParseProblem> problems,
 			ReactiveParameters parameters,
 			Optional<XMLElement> xml, 
 			ReactiveBuildContext buildContext) {

@@ -253,6 +253,10 @@ public class NonBlockingListener extends HttpServlet {
 			case MSGSTREAM:
 			case ANY:
 				throw new UnsupportedOperationException("Can't deal with type: "+rs.dataType()+" on toplevel");
+			case MSGLIST:
+				break;
+			default:
+				break;
 
 			}
 		} catch (Throwable e1) {
@@ -284,21 +288,7 @@ public class NonBlockingListener extends HttpServlet {
 	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("application/json");
 		PrintWriter writer = response.getWriter();
-//		
-//		ArrayNode list = objectMapper.createArrayNode();
-//		long now = System.currentTimeMillis();
-//		this.scriptsInProgress.entrySet().forEach(e->{
-//			ObjectNode current = objectMapper.createObjectNode();
-//			current.put("id", e.getKey());
-//			StreamScriptContext ctx = e.getValue();
-//			current.put("service", ctx.service);
-//			current.put("tenant", ctx.tenant);
-//			current.put("deployment", ctx.deployment());
-//			current.put("username", ctx.username.orElse("<unknown>"));
-//			current.put("started", ctx.started);
-//			current.put("running", (now-ctx.started));
-//			list.add(current);
-//		});
+
 		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
 	}
 

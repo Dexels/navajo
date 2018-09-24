@@ -26,7 +26,7 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
 		return new TakeTransformer(this,parameters,xml);

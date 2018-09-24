@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -24,6 +27,8 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class FlatMapTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	
+	private final static Logger logger = LoggerFactory.getLogger(FlatMapTransformerFactory.class);
+
 	private ReactiveSource childSource = null;
 
 	public FlatMapTransformerFactory() {
@@ -33,7 +38,7 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
@@ -41,7 +46,7 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext,Optional.of(parentType));
 		} catch (Exception e) {
 			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}
@@ -49,10 +54,11 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 			throw new NullPointerException("Missing sub source in xml: "+xml);
 		}
 		childSource = subSource.get();
+		logger.info("sub source type>>"+childSource.finalType());
 //		if(!childSource.finalType().equals(DataItem.Type.MESSAGE)) {
 //			throw new IllegalArgumentException("Wrong type of sub source: "+childSource.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
 //		}
-		return new FlatMapTransformer(this,parameters,childSource,xmlElement);
+		return new FlatMapTransformer(this,parameters,childSource,xmlElement,parentType);
 	}
 	
 

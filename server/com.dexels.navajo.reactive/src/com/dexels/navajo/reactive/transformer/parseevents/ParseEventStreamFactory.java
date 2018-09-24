@@ -25,17 +25,17 @@ public class ParseEventStreamFactory implements ReactiveTransformerFactory, Tran
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
 			Optional<XMLElement> xml, 
 			ReactiveBuildContext buildContext) {
 
-		return new ParseEventStream(this,parameters,xml,relativePath);
+		return new ParseEventStream(this,parameters,xml,relativePath,parentType);
 	}
 
 
 	@Override
 	public Set<Type> inType() {
-		return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{Type.EVENT})));
+		return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{Type.EVENT,Type.EVENTSTREAM})));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ParseEventStreamFactory implements ReactiveTransformerFactory, Tran
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"path"}));
+		return Optional.of(Collections.emptyList());
 	}
 
 	@Override

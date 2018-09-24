@@ -37,7 +37,7 @@ public class PersistentTransformerFactory implements ReactiveTransformerFactory,
     }
 
 	@Override
-	public PersistentTransformer build(String relativePath, List<ReactiveParseProblem> problems, 
+	public PersistentTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, 
 			ReactiveParameters parameters,
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
@@ -57,7 +57,7 @@ public class PersistentTransformerFactory implements ReactiveTransformerFactory,
 		Binary b = new Binary(baos.toByteArray());
 
 		
-		return new PersistentTransformer(this,relativePath,problems,xmlElement,parameters, buildContext,topicPublisher,b);
+		return new PersistentTransformer(this,relativePath,problems,xmlElement,parameters, buildContext,topicPublisher,b,parentType);
 	}
 	
 //	private byte[] serializeScript(	)

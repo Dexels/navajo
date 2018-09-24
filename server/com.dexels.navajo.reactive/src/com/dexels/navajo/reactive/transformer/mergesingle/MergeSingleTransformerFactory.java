@@ -34,7 +34,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	}
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
@@ -42,7 +42,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 		Optional<ReactiveSource> subSource;
 		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext);
+			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext,Optional.of(Type.SINGLEMESSAGE));
 		} catch (Exception e) {
 			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
 		}

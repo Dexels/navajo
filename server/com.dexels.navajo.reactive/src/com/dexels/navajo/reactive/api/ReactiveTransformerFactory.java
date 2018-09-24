@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.ReactiveBuildContext;
 
 public interface ReactiveTransformerFactory extends TransformerMetadata {
 	public ReactiveTransformer build(
+			Type parentType,
 			String relativePath,
 			List<ReactiveParseProblem> problems,
 			ReactiveParameters parameters,
@@ -18,8 +20,8 @@ public interface ReactiveTransformerFactory extends TransformerMetadata {
 			);
 
 	default 	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
-		ReactiveBuildContext buildContext = ReactiveBuildContext.of(n->null,n->null,n->null,Collections.emptySet(),Collections.emptySet(),true);
-		return build("",problems,parameters, Optional.empty(),buildContext);
+		ReactiveBuildContext buildContext = ReactiveBuildContext.of(n->null,(n,type)->null,n->null,Collections.emptySet(),Collections.emptySet(),true);
+		return build(Type.ANY, "",problems,parameters, Optional.empty(),buildContext);
 	}
 
 }

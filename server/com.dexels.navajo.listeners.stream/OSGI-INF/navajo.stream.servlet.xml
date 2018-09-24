@@ -7,7 +7,7 @@
    </service>
    <!-- Optional for now-->
    <reference bind="setLocalClient" cardinality="0..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
-   <property name="asyncSupported" value="true"/>
+   <property name="asyncSupported" type="Boolean" value="true"/>
    <property name="alias" type="String" value="/stream"/>
    <property name="servletName" type="String" value="stream-postman"/>
    <property name="servlet-name" type="String" value="stream-postman"/>

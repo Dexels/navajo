@@ -26,7 +26,7 @@ import io.reactivex.functions.Function;
 public class HttpPushTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
+	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
 		return new HttpPushTransformer(this,relativePath, problems, parameters, xml,buildContext.useGlobalInput);
