@@ -48,6 +48,11 @@
 		<input>string,string|empty</input>
 		<result>any</result>
 	</function>
+    <function name="CapString" class="com.dexels.navajo.functions.CapString">
+        <description>Caps a string to a given length</description>
+        <input>string,int</input>
+        <result>string</result>
+    </function>
 	<function name="CheckDate" class="com.dexels.navajo.functions.CheckDate">
 		<description>Checks whether the input param is a date, returns true if
 			this is the case. If year is greater than 9999, return false by default
