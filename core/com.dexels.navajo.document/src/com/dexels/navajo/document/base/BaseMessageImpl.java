@@ -1754,7 +1754,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             if (!matchMethod) {
                 removeProperty(p);
-            } else if (!p.getType().equals(m_p.getType()) && m_p.getType() != Property.SELECTION_PROPERTY) { 
+            } else if (!p.getType().equals(m_p.getType()) && !m_p.getType().equals(Property.SELECTION_PROPERTY)) { 
                 if (p.getValue() != null) {
                     logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(), m_p.getType());
                 }
