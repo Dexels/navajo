@@ -2,7 +2,7 @@
  * Navajo Expression Language
  * Copyright(c) 2001 Dexels BV
  * $Id$
- *
+ * bloep
  */
 
 options {
@@ -49,7 +49,8 @@ TOKEN:
   <MIN: "-"> |
   <DIV: "/"> |
   <MOD: "%"> |
-  <NULL: "null">
+  <NULL: "null"> |
+  <PIPE: "->">
 }
 
 TOKEN:
@@ -159,6 +160,7 @@ void ListExpression() #void:
      <BEGIN_LIST> [ Expression() {jjtThis.args++;} (<LIST_SEPARATOR> Expression() {jjtThis.args++;}) * ] <END_LIST>
    ) #ListNode
 }
+
 
 void Expression() #void:
 {
@@ -335,3 +337,21 @@ void MappableLiteral() #void:
 ("(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")")?
 {jjtThis.val = t.image; } ) #MappableNode
 }
+
+void KeyValue() #void:
+{Token t;}
+{
+  (t = <NORMAL_IDENTIFIER> "=" Expression()
+  ) #TransformerNode
+}
+
+void Transformer() #void:
+{Token t;
+}
+{
+  (t = <NORMAL_IDENTIFIER>
+     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
+    {jjtThis.transformerName = t.image;    	}
+  ) #TransformerNode
+}
+

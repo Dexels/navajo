@@ -174,6 +174,14 @@ public abstract class SimpleNode implements Node {
 	
 	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Object, Object> func, Optional<String> requiredReturnType) {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
+		if(requiredReturnType.isPresent() && expA.returnType().isPresent()) {
+			String expectedType = requiredReturnType.get();
+			String foundType = expA.returnType().get();
+			if(!expectedType.equals(foundType)) {
+				problems.add("Error (static) type checking. Type: "+foundType+" does not match expected type: "+expectedType);
+			}
+			
+		}
 		return new ContextExpression() {
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
