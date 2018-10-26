@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.stream;
 
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -29,14 +30,14 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata,sourceElement,sourcePath);
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
 		// TODO remove duplication
 		return flow->flow.map(di->di.message())
 				.compose(StreamDocument.toMessageEvent(messageName,isArray))
-				.doOnNext(e->System.err.println(">>>>>>>>>> propagating evnt: "+e))
+//				.doOnNext(e->System.err.println(">>>>>>>>>> propagating evnt: "+e))
 				.map(DataItem::of);
 	}
 

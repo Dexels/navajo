@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -39,7 +40,7 @@ public class ReduceTransformer implements ReactiveTransformer {
 		this.sourceElement = sourceElement;
 	}
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
 
 		boolean debug = parms.optionalBoolean("debug").orElse(false);

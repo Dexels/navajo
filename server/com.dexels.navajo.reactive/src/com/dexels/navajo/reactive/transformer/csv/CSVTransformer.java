@@ -98,7 +98,7 @@ public class CSVTransformer implements ReactiveTransformer {
 	
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		return createTransformer(context);
 	}
 

@@ -57,7 +57,7 @@ public class SQLReactiveSource implements ReactiveSource {
 			}
 		}
 		Flowable<DataItem> flow = SQL.query(datasource, queryTenant.orElseGet(()->context.getTenant()), query, unnamedParams)
-				.map(d->DataItem.of(d));
+				.map(d->DataItem.of(d).withStateMessage(current.orElse(ImmutableFactory.empty())));
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{
 				logger.info("Result record: {}",ImmutableFactory.getInstance().describe(dataitem.message()));
@@ -65,7 +65,7 @@ public class SQLReactiveSource implements ReactiveSource {
 			});
 		}
 		for (ReactiveTransformer trans : transformers) {
-			flow = flow.compose(trans.execute(context));
+			flow = flow.compose(trans.execute(context,current));
 		}
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{
@@ -73,6 +73,8 @@ public class SQLReactiveSource implements ReactiveSource {
 				
 			});
 		}
+//		flow = flow.doOnNext(e->System.err.println("TYPE: "+e.type+" msg: "+e));
+		
 		return flow;
 	}
 

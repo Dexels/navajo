@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.pubsub.transformer;
 
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -25,7 +26,7 @@ public class ReplicationMessageParseTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		return d->d
 				.map(b->DataItem.of(parser.parseBytes(b.data()).message()));
 	}

@@ -72,7 +72,7 @@ public class PersistentTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		StreamScriptContext cp = context.copyWithNewUUID();
 		RunningReactiveScripts rrs = context.runningScripts().get();
 		return e->{
