@@ -7,7 +7,7 @@
 
 options {
    MULTI=true;
-   LOOKAHEAD=1;
+   LOOKAHEAD=2;
    STATIC=false;
    NODE_PACKAGE="com.dexels.navajo.parser.compiled";
 }
@@ -341,17 +341,34 @@ void MappableLiteral() #void:
 void KeyValue() #void:
 {Token t;}
 {
-  (t = <NORMAL_IDENTIFIER> "=" Expression()
-  ) #TransformerNode
+  (t = <NORMAL_IDENTIFIER> {jjtThis.val = t.image;} {jjtThis.args++;} "=" Expression() {jjtThis.args++;}
+  {jjtThis.val = t.image;}
+  ) #KeyValueNode
 }
 
 void Transformer() #void:
 {Token t;
 }
 {
-  (t = <NORMAL_IDENTIFIER>
+  (t = <NORMAL_IDENTIFIER> 
      "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
     {jjtThis.transformerName = t.image;    	}
   ) #TransformerNode
 }
+
+void MixedFunctionCall() #void:
+{Token t;
+}
+{
+  (t = <NORMAL_IDENTIFIER> 
+    "(" 
+    [ KeyValue() {jjtThis.args++;} ("," KeyValue() {jjtThis.args++;}) * ] 
+    [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] 
+    
+    ")"
+   {jjtThis.functionCall = t.image;    	}
+  ) #MixedFunctionCall
+ 
+}
+
 

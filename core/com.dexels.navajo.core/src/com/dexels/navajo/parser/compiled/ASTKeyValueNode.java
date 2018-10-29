@@ -4,11 +4,16 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 
+import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 
 public
 class ASTKeyValueNode extends SimpleNode {
-  public ASTKeyValueNode(int id) {
+
+    int args = 0;
+    String val = "";
+
+	public ASTKeyValueNode(int id) {
     super(id);
   }
 
@@ -18,8 +23,13 @@ class ASTKeyValueNode extends SimpleNode {
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression) {
-	// TODO Auto-generated method stub
-	return null;
+	int num = jjtGetNumChildren();
+	if(num!=1) {
+		problems.add("Incorrect # of params in named parameter");
+	}
+//	String id = ((Token)jjtGetChild(0)).image;
+	ContextExpression exp = jjtGetChild(0).interpretToLambda(problems, originalExpression);
+	return new NamedExpression(val, exp);
 }
 
 }
