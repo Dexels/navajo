@@ -4,17 +4,24 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
+import com.dexels.navajo.parser.compiled.ASTMixedFunctionCall;
+import com.dexels.navajo.parser.compiled.ASTTransformerNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
@@ -125,7 +132,7 @@ public class TestCompiledExpression {
 	@Test
 	public void parsePerformanceTest() throws TMLExpressionException, SystemException {
 		long before = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
 		}
 		long now = System.currentTimeMillis();
@@ -134,7 +141,7 @@ public class TestCompiledExpression {
 //		Expression.dumpStats();
 		ExpressionCache.getInstance().printStats();
 		before = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
 		}
 		now = System.currentTimeMillis();
@@ -154,4 +161,52 @@ public class TestCompiledExpression {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testExpressionExtentions() throws ParseException {
+		String expression = "rename('aap','noot')";
+		StringReader sr = new StringReader(expression);
+		ImmutableMessage inMessage = ImmutableFactory.empty().with("aap", "abc", "string");
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Transformer();		
+		ASTTransformerNode atn = (ASTTransformerNode) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		ContextExpression ce = atn.interpretToLambda(problems, expression);
+		Function<ImmutableMessage,ImmutableMessage> trans = (Function<ImmutableMessage, ImmutableMessage>) ce.apply(input, input.getMessage("TestMessage"), null, null, null, null, null, Optional.empty(), Optional.empty());
+		
+		ImmutableMessage out = trans.apply(inMessage);
+		String s = ImmutableFactory.createParser().describe(out);
+		System.err.println("s: "+s);
+//		atn.evaluateTransformer();
+		Assert.assertEquals("abc", out.columnValue("noot"));
+		Assert.assertNull(out.columnValue("aap"));
+//        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
+	}
+	
+	@Test
+	public void testNamedExpression() throws ParseException {
+		String expression = "aap=1+1";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.KeyValue();		
+		ASTKeyValueNode atn = (ASTKeyValueNode) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression);
+		System.err.println("Problems: "+problems);
+		Assert.assertEquals(0, problems.size());
+		Assert.assertEquals("aap",ne.name);
+		Assert.assertEquals(2, ne.apply());
+	}
+
+	@Test
+	public void testMixedFunctionCall() throws ParseException {
+		String expression = "somefunction(aap='blub',3+5,4)";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.MixedFunctionCall();
+		ASTMixedFunctionCall atn = (ASTMixedFunctionCall) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		ContextExpression ne = atn.interpretToLambda(problems, expression);
+		
+	}
 }
