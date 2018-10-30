@@ -13,6 +13,7 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -1759,6 +1760,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                     logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(), m_p.getType());
                 }
                 p.setType(m_p.getType());
+                p.setSubType(m_p.getSubType());
             }
         }
 
