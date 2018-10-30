@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.other;
 
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -25,10 +26,13 @@ public class FilterTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		return e->e.filter(item->{
 			ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.of(item.message()), item.stateMessage(), metadata, Optional.empty(), "");
-			return parms.paramBoolean("filter");
+			boolean paramBoolean = parms.paramBoolean("filter");
+//			System.err.println("FILTER: "+paramBoolean);
+			return paramBoolean;
+
 		});
 	}
 

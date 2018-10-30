@@ -78,6 +78,7 @@ public class ImplicitCaster {
 	
 	
 	public static  Flowable<ImmutableMessage> implicitCastToMessage(Flowable<DataItem> flow, Type type) {
+		System.err.println("Impicit casting to: "+type);
 		switch (type) {
 		case EVENT:
 			return flow.map(di->di.event())

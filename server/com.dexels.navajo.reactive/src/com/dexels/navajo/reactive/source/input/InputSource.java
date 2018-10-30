@@ -42,7 +42,7 @@ public class InputSource implements ReactiveSource {
 				.lift(StreamDocument.collectEventsToImmutable())
 				.map(DataItem::of);
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			flow = flow.compose(reactiveTransformer.execute(context));
+			flow = flow.compose(reactiveTransformer.execute(context,current));
 		}
 		return flow;
 	}

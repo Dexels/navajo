@@ -59,7 +59,7 @@ public class EventStreamSource implements ReactiveSource {
 //					.concatMap(e->e)
 					.map(DataItem::ofEventStream);
 			for (ReactiveTransformer reactiveTransformer : transformers) {
-				flow = flow.compose(reactiveTransformer.execute(context));
+				flow = flow.compose(reactiveTransformer.execute(context,current));
 			}
 			return flow;
 					//			Bytes/ b;

@@ -258,6 +258,7 @@ public class ReactiveScriptParser {
 						
 						if(transformer==null) {
 							String msg = "Missing transformer for factory: "+operatorName;
+							System.err.println("available transformers: "+this.reactiveOperatorFactory.keySet());
 							ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
 							problems.add(rpp);
 							throw new RuntimeException(msg);
@@ -683,7 +684,7 @@ public class ReactiveScriptParser {
 				}
 				
 				@Override
-				public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+				public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current) {
 					return transformer;
 				}
 			})

@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.mergestream;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Collections.emptyList());
+		return Optional.of(Arrays.asList(new String[]{"parallel"}));
 	}
 
 	@Override
@@ -85,7 +86,10 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		return Optional.of(Collections.emptyMap());
+		Map<String, String> r = new HashMap<>();
+		r.put("parallel", "integer");
+		return Optional.of(Collections.unmodifiableMap(r));
+
 	}
 
 	@Override

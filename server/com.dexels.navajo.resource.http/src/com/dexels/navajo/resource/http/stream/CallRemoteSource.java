@@ -80,7 +80,7 @@ public class CallRemoteSource implements ReactiveSource {
 //		.map(DataItem::ofEventStream);
 		
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			fw = fw.compose(reactiveTransformer.execute(context));
+			fw = fw.compose(reactiveTransformer.execute(context,current));
 		}
 		return fw;
 	}

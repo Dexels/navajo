@@ -34,6 +34,7 @@ public interface CompiledParserTreeConstants
   public int JJTTMLNODE = 28;
   public int JJTTIPINODE = 29;
   public int JJTMAPPABLENODE = 30;
+  public int JJTTRANSFORMERNODE = 31;
 
 
   public String[] jjtNodeName = {
@@ -68,6 +69,7 @@ public interface CompiledParserTreeConstants
     "TmlNode",
     "TipiNode",
     "MappableNode",
+    "TransformerNode",
   };
 }
-/* JavaCC - OriginalChecksum=d4cf72b80c57a9f37fb6921f5165c9ca (do not edit this line) */
+/* JavaCC - OriginalChecksum=fe238354f233c3346482cbc32244883f (do not edit this line) */

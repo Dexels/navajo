@@ -49,37 +49,39 @@ public interface CompiledParserConstants {
   /** RegularExpression Id. */
   int NULL = 24;
   /** RegularExpression Id. */
-  int SARTRE = 25;
+  int PIPE = 25;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 26;
+  int SARTRE = 26;
   /** RegularExpression Id. */
-  int FLOAT_LITERAL = 27;
+  int INTEGER_LITERAL = 27;
   /** RegularExpression Id. */
-  int TML_IDENTIFIER = 28;
+  int FLOAT_LITERAL = 28;
   /** RegularExpression Id. */
-  int EXISTS_TML_IDENTIFIER = 29;
+  int TML_IDENTIFIER = 29;
   /** RegularExpression Id. */
-  int REGULAREXPRESSION = 30;
+  int EXISTS_TML_IDENTIFIER = 30;
   /** RegularExpression Id. */
-  int PARENT_MSG = 31;
+  int REGULAREXPRESSION = 31;
   /** RegularExpression Id. */
-  int REGULAR1 = 32;
+  int PARENT_MSG = 32;
   /** RegularExpression Id. */
-  int REGULAR2 = 33;
+  int REGULAR1 = 33;
   /** RegularExpression Id. */
-  int IDENTIFIER = 34;
+  int REGULAR2 = 34;
   /** RegularExpression Id. */
-  int LETTER = 35;
+  int IDENTIFIER = 35;
   /** RegularExpression Id. */
-  int DIGIT = 36;
+  int LETTER = 36;
   /** RegularExpression Id. */
-  int NORMAL_IDENTIFIER = 37;
+  int DIGIT = 37;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 38;
+  int NORMAL_IDENTIFIER = 38;
   /** RegularExpression Id. */
-  int EXPRESSION_LITERAL = 39;
+  int STRING_LITERAL = 39;
   /** RegularExpression Id. */
-  int TIPI_IDENTIFIER = 40;
+  int EXPRESSION_LITERAL = 40;
+  /** RegularExpression Id. */
+  int TIPI_IDENTIFIER = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -111,6 +113,7 @@ public interface CompiledParserConstants {
     "\"/\"",
     "\"%\"",
     "\"null\"",
+    "\"->\"",
     "<SARTRE>",
     "<INTEGER_LITERAL>",
     "<FLOAT_LITERAL>",
@@ -137,6 +140,7 @@ public interface CompiledParserConstants {
     "\"$\"",
     "\"]\"",
     "\".\"",
+    "\"=\"",
   };
 
 }

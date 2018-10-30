@@ -38,7 +38,7 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 
 	@Override
 	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.MESSAGE}));
+		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.MESSAGE,DataItem.Type.SINGLEMESSAGE}));
 	}
 
 	@Override
