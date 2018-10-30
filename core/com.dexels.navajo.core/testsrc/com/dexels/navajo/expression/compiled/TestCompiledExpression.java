@@ -16,14 +16,17 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
-import com.dexels.navajo.parser.compiled.ASTMixedFunctionCall;
 import com.dexels.navajo.parser.compiled.ASTTransformerNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.script.api.SystemException;
@@ -200,13 +203,36 @@ public class TestCompiledExpression {
 
 	@Test
 	public void testMixedFunctionCall() throws ParseException {
-		String expression = "somefunction(aap='blub',3+5,4)";
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+		String expression = "addtest(aap='blub',3+5,4)";
 		StringReader sr = new StringReader(expression);
 		CompiledParser cp = new CompiledParser(sr);
-		cp.MixedFunctionCall();
-		ASTMixedFunctionCall atn = (ASTMixedFunctionCall) cp.getJJTree().rootNode();
+		cp.Expression();
+		SimpleNode atn = (SimpleNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
 		ContextExpression ne = atn.interpretToLambda(problems, expression);
+		Object result = ne.apply();
+		System.err.println("Final: "+result);
 		
 	}
+
+	@Test
+	public void testEmptyFunctionCall() throws ParseException {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+
+		String expression = "addtest()";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Expression();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        Object o = ss.apply();
+        System.err.println(">> "+o);
+		
+	}
+
 }
