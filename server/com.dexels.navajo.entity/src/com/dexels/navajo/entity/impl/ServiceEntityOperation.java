@@ -341,6 +341,44 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		return sb.toString();
 	}
+	
+	private void checkSubTypes(Message message) throws Exception {
+		for (Property property : message.getAllProperties()) {
+			for (String subTypeKey : property.getSubTypes().keySet()) {
+				switch (subTypeKey) {
+				case "enum":
+					// for the enum check, an enum of value null is always correct (if nullable=false is specified, the nullable check will complain)
+					boolean found = property.getValue() == null;
+					for (String enumValue : property.getSubType(subTypeKey).split(";")) {
+						if (enumValue.equals(property.getValue())) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						throw new Exception("Property " + property.getName() + " is of type enum '" + property.getSubType(subTypeKey) + "', but its value is: '" + property.getValue() + "'");
+					}
+					break;
+				case "nullable":
+					if (property.getSubType(subTypeKey).equalsIgnoreCase("false")) {
+						if (property.getValue() == null) {
+							throw new Exception("Property " + property.getName() + " is not nullable, but its value is null'");
+						}
+					}
+					break;
+				}
+			}
+		}
+		for (Message subMessage : message.getAllMessages()) {
+			if (subMessage.isArrayMessage()) {
+				for (Message element : subMessage.getElements()) {
+					checkSubTypes(element);
+				}
+			} else {
+				checkSubTypes(subMessage);
+			}
+		}
+	}
 
 	@Override
     public Navajo perform(Navajo input) throws EntityException {
@@ -399,6 +437,11 @@ public class ServiceEntityOperation implements EntityOperation {
 			merge = false;
 		}
         clean(input, "request", false, merge, entityVersion);
+        try {
+        	checkSubTypes(input.getRootMessage());
+        } catch (Exception e) {
+        	throw new EntityException(EntityException.BAD_REQUEST, e);
+        }
 
         // Add the entity input message
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
@@ -688,7 +731,11 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 
         clean(result, "response", true, true, entityVersion);
-
+        try {
+        	checkSubTypes(result.getRootMessage());
+        } catch (Exception e) {
+        	throw new EntityException(EntityException.SERVER_ERROR, e);
+        }
 		return result;
 	}
 
@@ -746,6 +793,11 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 
         clean(result, "response", true, true, entityVersion);
+        try {
+        	checkSubTypes(result.getRootMessage());
+        } catch (Exception e) {
+        	throw new EntityException(EntityException.SERVER_ERROR, e);
+        }
 
 		return result;
 
