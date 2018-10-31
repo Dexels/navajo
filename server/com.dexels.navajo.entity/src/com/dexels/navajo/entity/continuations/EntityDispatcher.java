@@ -3,6 +3,7 @@ package com.dexels.navajo.entity.continuations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -412,12 +413,16 @@ public class EntityDispatcher {
             // Specifically check for condition errors
             Navajo n = ((EntityException) ex).getNavajo();
             if (n != null && n.getMessage("ConditionErrors") != null) {
+            	Message violationsMessage = NavajoFactory.getInstance().createMessage(result, "Violations");
                 ArrayList<String> viols = new ArrayList<String>();
+                HashMap<String, String> detailedViols = new HashMap<String,String>();
                 for (Message message : n.getMessage("ConditionErrors").getAllMessages()) {
                     viols.add(message.getProperty("Id").getValue());
+                    violationsMessage.addProperty(NavajoFactory.getInstance().createProperty(result, message.getProperty("Id").getValue(), "string", message.getProperty("Description").getValue(), 1, null, null));
                 }
                 m.addProperty(
                         NavajoFactory.getInstance().createProperty(result, "ViolationCodes", "list", viols.toString(), 1, null, null));
+                m.addMessage(violationsMessage);
             } else {
                 m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
             }
