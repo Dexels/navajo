@@ -436,12 +436,12 @@ public class ServiceEntityOperation implements EntityOperation {
 			// are already present in the backend with empty values
 			merge = false;
 		}
-        clean(input, "request", false, merge, entityVersion);
-        try {
+		try {
         	checkSubTypes(input.getRootMessage());
         } catch (Exception e) {
         	throw new EntityException(EntityException.BAD_REQUEST, e);
         }
+        clean(input, "request", false, merge, entityVersion);
 
         // Add the entity input message
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
