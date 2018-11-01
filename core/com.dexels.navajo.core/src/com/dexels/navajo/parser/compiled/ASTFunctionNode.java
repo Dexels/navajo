@@ -67,7 +67,7 @@ public final class ASTFunctionNode extends SimpleNode {
 		if(typeCheckInstance==null) {
 			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
 		}
-		
+//		System.err.println("# of operands: "+jjtGetNumChildren());
 		// TODO Type check input parameters
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);

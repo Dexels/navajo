@@ -1,7 +1,10 @@
 package com.dexels.navajo.expression.compiled;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -15,7 +18,9 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
@@ -29,7 +34,9 @@ import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.tipilink.TipiLink;
 
 public class TestCompiledExpression {
 
@@ -110,6 +117,18 @@ public class TestCompiledExpression {
 		System.err.println("<o>"+o);
 		cp.Expression();
         Assert.assertEquals(false, o);
+	}
+	
+	@Test
+	public void testMultilineStringLiteral() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "'what is a haiku\n" + 
+				"nothing but words, poetic?\n" + 
+				"this is a haiku'";
+		StringReader sr = new StringReader(clause);
+		CompiledParser cp = new CompiledParser(sr);
+		String o = (String) Expression.evaluate(clause,input, null, null, null).value;
+		int lines = o.split("\n").length;
+		Assert.assertEquals(3, lines);
 	}
 	
 	@Test
@@ -202,7 +221,7 @@ public class TestCompiledExpression {
 	}
 
 	@Test
-	public void testMixedFunctionCall() throws ParseException {
+	public void testFunctionCallWithNamedParams() throws ParseException {
         FunctionInterface testFunction = new AddTestFunction();
         FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
         FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
@@ -215,7 +234,7 @@ public class TestCompiledExpression {
 		ContextExpression ne = atn.interpretToLambda(problems, expression);
 		Object result = ne.apply();
 		System.err.println("Final: "+result);
-		
+		Assert.assertEquals("monkey", result);
 	}
 
 	@Test
@@ -231,8 +250,42 @@ public class TestCompiledExpression {
 		List<String> problems = new ArrayList<>();
         ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
         Object o = ss.apply();
+		Assert.assertEquals("monkey", o);
         System.err.println(">> "+o);
+	}
+	
+	@Test
+	public void testReactiveFunctionCall() throws ParseException {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+
+		String expression = "addtest()->addtest()";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.ReactiveElement();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("Problems");
+        Object o = ss.apply();
+		Assert.assertEquals("monkey", o);
+        System.err.println(">> "+o);
+	}
+
+
+	@Test
+	public void testMultiArgFunction() throws Exception {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("SingleValueQuery",fd);
+		String expression = 	"SingleValueQuery( 'aap','noot' )";
 		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.getClass());
 	}
 
 }
