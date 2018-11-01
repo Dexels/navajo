@@ -71,7 +71,7 @@ public class ExpressionTest {
 		types.put("SomeString", "string");
 		values.put("SomeInteger", 3);
 		types.put("SomeInteger", "integer");
-		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		immutableMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(), null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 		
 		Map<String,Object> valueparams = new HashMap<>();
 		Map<String,String> typeparams = new HashMap<>();
@@ -79,7 +79,7 @@ public class ExpressionTest {
 		typeparams.put("SomeString", "string");
 		valueparams.put("SomeInteger", 4);
 		typeparams.put("SomeInteger", "integer");
-		paramMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		paramMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(),null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 
 
 	}
@@ -266,4 +266,6 @@ public class ExpressionTest {
 		assertEquals(4, o.value);
 	}
 
+
 }
+

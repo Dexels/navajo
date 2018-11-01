@@ -27,16 +27,18 @@ public interface CompiledParserTreeConstants
   public int JJTDATEPATTERNNODE = 21;
   public int JJTFORALLNODE = 22;
   public int JJTFUNCTIONNODE = 23;
-  public int JJTMIXEDFUNCTIONCALL = 24;
-  public int JJTFLOATCONSTANTNODE = 25;
-  public int JJTINTEGERCONSTANTNODE = 26;
-  public int JJTSTRINGCONSTANTNODE = 27;
-  public int JJTEXPRESSIONLITERALNODE = 28;
-  public int JJTTMLNODE = 29;
-  public int JJTTIPINODE = 30;
-  public int JJTMAPPABLENODE = 31;
-  public int JJTKEYVALUENODE = 32;
-  public int JJTTRANSFORMERNODE = 33;
+  public int JJTFLOATCONSTANTNODE = 24;
+  public int JJTINTEGERCONSTANTNODE = 25;
+  public int JJTSTRINGCONSTANTNODE = 26;
+  public int JJTEXPRESSIONLITERALNODE = 27;
+  public int JJTTMLNODE = 28;
+  public int JJTTIPINODE = 29;
+  public int JJTMAPPABLENODE = 30;
+  public int JJTKEYVALUENODE = 31;
+  public int JJTTRANSFORMERNODE = 32;
+  public int JJTREACTIVEELEMENTNODE = 33;
+  public int JJTREACTIVEHEADERNODE = 34;
+  public int JJTREACTIVESCRIPTNODE = 35;
 
 
   public String[] jjtNodeName = {
@@ -64,7 +66,6 @@ public interface CompiledParserTreeConstants
     "DatePatternNode",
     "ForAllNode",
     "FunctionNode",
-    "MixedFunctionCall",
     "FloatConstantNode",
     "IntegerConstantNode",
     "StringConstantNode",
@@ -74,6 +75,9 @@ public interface CompiledParserTreeConstants
     "MappableNode",
     "KeyValueNode",
     "TransformerNode",
+    "ReactiveElementNode",
+    "ReactiveHeaderNode",
+    "ReactiveScriptNode",
   };
 }
-/* JavaCC - OriginalChecksum=48884f010bab48fe61e64444b176e8e1 (do not edit this line) */
+/* JavaCC - OriginalChecksum=120349a35a40cb0a943ba692753e33d5 (do not edit this line) */

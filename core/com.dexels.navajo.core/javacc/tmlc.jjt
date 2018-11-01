@@ -48,7 +48,9 @@ TOKEN:
   <DIV: "/"> |
   <MOD: "%"> |
   <NULL: "null"> |
-  <PIPE: "->">
+  <PIPE: "->"> |
+  <HEADER: "=>">
+  
 }
 
 TOKEN:
@@ -264,37 +266,20 @@ void FunctionLiteral() #void:
 }
 {
   (t = <NORMAL_IDENTIFIER>
-     "(" 
-     [Expression() {jjtThis.args++;} | KeyValue() {jjtThis.args++;}
-     	("," [Expression() {jjtThis.args++;} | KeyValue() {jjtThis.args++;}]) * ]
-     ")"
     {jjtThis.functionName = t.image;    	}
+     "(" [
+        ( Expression() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		"," 
+     		(	Expression() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) * ]
+     ")"
   ) #FunctionNode
 }
 
-void MixedFunctionCall() #void:
-{Token t;
-}
-{
-  (t = <NORMAL_IDENTIFIER> 
-    "(" 
-    [ KeyValue() {jjtThis.args++;} ("," KeyValue() {jjtThis.args++;}) * ] 
-    [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] 
-    
-    ")"
-   {jjtThis.functionCall = t.image;    	}
-  ) #MixedFunctionCall
- 
-}
-
-void MixedParamList() #void:
-{}
-{
-	"("
-        ( KeyValue() | Expression() )?
-		("," [KeyValue() | Expression() ])*
-	")"
-}
 void FloatLiteral() #void:
 {Token t;}
 {
@@ -380,5 +365,27 @@ void Transformer() #void:
   ) #TransformerNode
 }
 
+void ReactiveElement() #void:
+{
+}
+{
+	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
+}
 
+void ReactiveHeader() #void:
+{
+}
+{
+	(<HEADER> FunctionLiteral() {jjtThis.args++;}) #ReactiveHeaderNode
+}
+
+void ReactiveScript() #void:
+{
+}
+{
+	(
+		(ReactiveHeader() )?
+		(FunctionLiteral() {jjtThis.args++;}  (FunctionLiteral() {jjtThis.args++;})*) #ReactiveScriptNode
+	)
+}
 
