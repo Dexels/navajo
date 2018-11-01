@@ -356,13 +356,13 @@ public class ServiceEntityOperation implements EntityOperation {
 						}
 					}
 					if (!found) {
-						throw new Exception("Property " + property.getName() + " is of type enum '" + property.getSubType(subTypeKey) + "', but its value is: '" + property.getValue() + "'");
+						throw new Exception("Property " + property.getName() + " is of type enum '" + property.getSubType(subTypeKey) + "', but its value is: '" + property.getValue() + "': " + message.getPath());
 					}
 					break;
 				case "nullable":
 					if (property.getSubType(subTypeKey).equalsIgnoreCase("false")) {
 						if (property.getValue() == null) {
-							throw new Exception("Property " + property.getName() + " is not nullable, but its value is null'");
+							throw new Exception("Property " + property.getName() + " is not nullable, but its value is null: " + message.getPath());
 						}
 					}
 					break;
@@ -439,6 +439,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		try {
         	checkSubTypes(input.getRootMessage());
         } catch (Exception e) {
+        	e.printStackTrace();
         	throw new EntityException(EntityException.BAD_REQUEST, e);
         }
         clean(input, "request", false, merge, entityVersion);
@@ -734,6 +735,7 @@ public class ServiceEntityOperation implements EntityOperation {
         try {
         	checkSubTypes(result.getRootMessage());
         } catch (Exception e) {
+        	e.printStackTrace();
         	throw new EntityException(EntityException.SERVER_ERROR, e);
         }
 		return result;
@@ -796,6 +798,7 @@ public class ServiceEntityOperation implements EntityOperation {
         try {
         	checkSubTypes(result.getRootMessage());
         } catch (Exception e) {
+        	e.printStackTrace();
         	throw new EntityException(EntityException.SERVER_ERROR, e);
         }
 
