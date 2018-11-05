@@ -1,10 +1,7 @@
 package com.dexels.navajo.expression.compiled;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -18,9 +15,7 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
@@ -34,9 +29,7 @@ import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public class TestCompiledExpression {
 
@@ -124,8 +117,8 @@ public class TestCompiledExpression {
 		String clause = "'what is a haiku\n" + 
 				"nothing but words, poetic?\n" + 
 				"this is a haiku'";
-		StringReader sr = new StringReader(clause);
-		CompiledParser cp = new CompiledParser(sr);
+//		StringReader sr = new StringReader(clause);
+//		CompiledParser cp = new CompiledParser(sr);
 		String o = (String) Expression.evaluate(clause,input, null, null, null).value;
 		int lines = o.split("\n").length;
 		Assert.assertEquals(3, lines);

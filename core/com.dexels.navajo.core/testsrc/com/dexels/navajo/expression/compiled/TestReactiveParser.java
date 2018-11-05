@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.navajo.parser.compiled.ASTReactiveElementNode;
 import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.Node;
