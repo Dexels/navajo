@@ -141,7 +141,6 @@
 <plugin id="org.apache.pdfbox.jempbox"/>
 <plugin id="org.apache.servicemix.bundles.ant"/>
 <plugin id="org.apache.servicemix.bundles.aopalliance"/>
-<plugin id="org.apache.servicemix.bundles.batik"/>
 <plugin id="org.apache.servicemix.bundles.bcel"/>
 <plugin id="org.apache.servicemix.bundles.javax.mail"/>
 <plugin id="org.apache.servicemix.bundles.jcip-annotations"/>
@@ -200,12 +199,12 @@
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.objectweb.asm" version="6.1.1"/>
 <plugin id="org.objectweb.asm" version="5.0.3"/>
-<plugin id="org.objectweb.asm.commons" version="5.0.3"/>
 <plugin id="org.objectweb.asm.commons" version="6.1.1"/>
-<plugin id="org.objectweb.asm.tree" version="6.1.1"/>
+<plugin id="org.objectweb.asm.commons" version="5.0.3"/>
 <plugin id="org.objectweb.asm.tree" version="5.0.3"/>
-<plugin id="org.objectweb.asm.util" version="6.1.1"/>
+<plugin id="org.objectweb.asm.tree" version="6.1.1"/>
 <plugin id="org.objectweb.asm.util" version="5.0.3"/>
+<plugin id="org.objectweb.asm.util" version="6.1.1"/>
 <plugin id="org.openstreetmap.jmapviewer"/>
 <plugin id="org.ops4j.base.io"/>
 <plugin id="org.ops4j.base.lang"/>
