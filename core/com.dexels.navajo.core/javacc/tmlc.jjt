@@ -372,20 +372,15 @@ void ReactiveElement() #void:
 	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
 }
 
-void ReactiveHeader() #void:
-{
-}
-{
-	(<HEADER> FunctionLiteral() {jjtThis.args++;}) #ReactiveHeaderNode
-}
-
 void ReactiveScript() #void:
 {
 }
 {
 	(
-		(ReactiveHeader() )?
-		(FunctionLiteral() {jjtThis.args++;}  (FunctionLiteral() {jjtThis.args++;})*) #ReactiveScriptNode
-	)
+		(<HEADER> FunctionLiteral() {jjtThis.args++;})?
+		(
+			FunctionLiteral() {jjtThis.args++;}  (FunctionLiteral() {jjtThis.args++;})*
+		) 
+	) #ReactiveScriptNode
 }
 

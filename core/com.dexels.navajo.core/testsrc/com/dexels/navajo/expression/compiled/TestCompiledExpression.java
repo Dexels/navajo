@@ -288,4 +288,40 @@ public class TestCompiledExpression {
         System.err.println("ss: "+ss.getClass());
 	}
 
+
+	@Test
+	public void testNestedNamedFunction() throws Exception {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("MysteryFunction",fd);
+        
+		String expression = 	"MysteryFunction(eep=MysteryFunction('blib','blob'), 'aap','noot' )";
+		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.apply().getClass());
+	}
+	
+	@Test
+	public void testNestedNamedParams() throws Exception {
+        FunctionInterface testFunction = new ParameterNamesFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ParameterNamesFunction",fd);
+        
+		String expression = 	"ParameterNamesFunction(aap=1+1,noot=2+2)";
+		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.apply());
+        Assert.assertEquals("aap,noot", ss.apply());
+	}
+	
+
+
 }

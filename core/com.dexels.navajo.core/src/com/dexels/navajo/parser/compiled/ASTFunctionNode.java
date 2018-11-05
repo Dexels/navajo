@@ -80,6 +80,8 @@ public final class ASTFunctionNode extends SimpleNode {
 			}
 		}
 		
+		// TODO Check if named params are constants (isLiteral), if so, resolve now.
+		
 //		for (int i = 0; i < args; i++) {
 //			ContextExpression a = jjtGetChild(i).interpretToLambda(problems,expression);
 //			l.add(a);
@@ -99,6 +101,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public boolean isLiteral() {
+				// TODO also check named params
 				return typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
 			}
 			

@@ -37,8 +37,7 @@ public interface CompiledParserTreeConstants
   public int JJTKEYVALUENODE = 31;
   public int JJTTRANSFORMERNODE = 32;
   public int JJTREACTIVEELEMENTNODE = 33;
-  public int JJTREACTIVEHEADERNODE = 34;
-  public int JJTREACTIVESCRIPTNODE = 35;
+  public int JJTREACTIVESCRIPTNODE = 34;
 
 
   public String[] jjtNodeName = {
@@ -76,8 +75,7 @@ public interface CompiledParserTreeConstants
     "KeyValueNode",
     "TransformerNode",
     "ReactiveElementNode",
-    "ReactiveHeaderNode",
     "ReactiveScriptNode",
   };
 }
-/* JavaCC - OriginalChecksum=120349a35a40cb0a943ba692753e33d5 (do not edit this line) */
+/* JavaCC - OriginalChecksum=3066d0b424cef08859355090be0ac5dc (do not edit this line) */

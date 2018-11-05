@@ -1111,16 +1111,30 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     }
   }
 
-  final public void ReactiveHeader() throws ParseException {
-          ASTReactiveHeaderNode jjtn001 = new ASTReactiveHeaderNode(JJTREACTIVEHEADERNODE);
+  final public void ReactiveScript() throws ParseException {
+          ASTReactiveScriptNode jjtn001 = new ASTReactiveScriptNode(JJTREACTIVESCRIPTNODE);
           boolean jjtc001 = true;
           jjtree.openNodeScope(jjtn001);
     try {
-      jj_consume_token(HEADER);
+      if (jj_2_61(2)) {
+        jj_consume_token(HEADER);
+        FunctionLiteral();
+                                             jjtn001.args++;
+      } else {
+        ;
+      }
       FunctionLiteral();
-                                      jjtree.closeNodeScope(jjtn001, true);
-                                      jjtc001 = false;
-                                     jjtn001.args++;
+                                           jjtn001.args++;
+      label_12:
+      while (true) {
+        if (jj_2_62(2)) {
+          ;
+        } else {
+          break label_12;
+        }
+        FunctionLiteral();
+                                                                                 jjtn001.args++;
+      }
     } catch (Throwable jjte001) {
           if (jjtc001) {
             jjtree.clearNodeScope(jjtn001);
@@ -1139,49 +1153,6 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
           if (jjtc001) {
             jjtree.closeNodeScope(jjtn001, true);
           }
-    }
-  }
-
-  final public void ReactiveScript() throws ParseException {
-    if (jj_2_61(2)) {
-      ReactiveHeader();
-    } else {
-      ;
-    }
-                  ASTReactiveScriptNode jjtn001 = new ASTReactiveScriptNode(JJTREACTIVESCRIPTNODE);
-                  boolean jjtc001 = true;
-                  jjtree.openNodeScope(jjtn001);
-    try {
-      FunctionLiteral();
-                                    jjtn001.args++;
-      label_12:
-      while (true) {
-        if (jj_2_62(2)) {
-          ;
-        } else {
-          break label_12;
-        }
-        FunctionLiteral();
-                                                                          jjtn001.args++;
-      }
-    } catch (Throwable jjte001) {
-                  if (jjtc001) {
-                    jjtree.clearNodeScope(jjtn001);
-                    jjtc001 = false;
-                  } else {
-                    jjtree.popNode();
-                  }
-                  if (jjte001 instanceof RuntimeException) {
-                    {if (true) throw (RuntimeException)jjte001;}
-                  }
-                  if (jjte001 instanceof ParseException) {
-                    {if (true) throw (ParseException)jjte001;}
-                  }
-                  {if (true) throw (Error)jjte001;}
-    } finally {
-                  if (jjtc001) {
-                    jjtree.closeNodeScope(jjtn001, true);
-                  }
     }
   }
 
@@ -1661,7 +1632,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_34() {
+  private boolean jj_3R_33() {
     if (jj_3R_14()) return true;
     Token xsp;
     while (true) {
@@ -1672,7 +1643,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
   }
 
   private boolean jj_3R_13() {
-    if (jj_3R_34()) return true;
+    if (jj_3R_33()) return true;
     return false;
   }
 
@@ -1791,7 +1762,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_37() {
+  private boolean jj_3R_36() {
     if (jj_scan_token(EXPRESSION_LITERAL)) return true;
     return false;
   }
@@ -1856,7 +1827,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
   private boolean jj_3_40() {
     if (jj_3R_27()) return true;
     if (jj_scan_token(LIST_SEPARATOR)) return true;
-    if (jj_3R_37()) return true;
+    if (jj_3R_36()) return true;
     return false;
   }
 
@@ -1943,7 +1914,7 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_36() {
+  private boolean jj_3R_35() {
     if (jj_3R_18()) return true;
     if (jj_scan_token(47)) return true;
     if (jj_3R_18()) return true;
@@ -2155,26 +2126,21 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_35() {
-    if (jj_3R_36()) return true;
+  private boolean jj_3R_34() {
+    if (jj_3R_35()) return true;
     return false;
   }
 
   private boolean jj_3R_21() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_35()) {
+    if (jj_3R_34()) {
     jj_scanpos = xsp;
     if (jj_3_14()) {
     jj_scanpos = xsp;
     if (jj_3_15()) return true;
     }
     }
-    return false;
-  }
-
-  private boolean jj_3_61() {
-    if (jj_3R_33()) return true;
     return false;
   }
 
@@ -2199,6 +2165,12 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
   private boolean jj_3_10() {
     if (jj_scan_token(44)) return true;
     if (jj_3R_17()) return true;
+    return false;
+  }
+
+  private boolean jj_3_61() {
+    if (jj_scan_token(HEADER)) return true;
+    if (jj_3R_26()) return true;
     return false;
   }
 
@@ -2231,12 +2203,6 @@ public class CompiledParser/*@bgen(jjtree)*/implements CompiledParserTreeConstan
       xsp = jj_scanpos;
       if (jj_3_8()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_33() {
-    if (jj_scan_token(HEADER)) return true;
-    if (jj_3R_26()) return true;
     return false;
   }
 
