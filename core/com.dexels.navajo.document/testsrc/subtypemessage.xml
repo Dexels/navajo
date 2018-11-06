@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tml>
+	<message name="SubTypeMessage" subtype="do=re,mi=fa">
+		<property name="pString" type="string" value="s1"/>
+		<property name="pInteger" type="string" value="12"/>
+		<property name="pBoolean" type="boolean" value="true"/>
+	</message>
+</tml>

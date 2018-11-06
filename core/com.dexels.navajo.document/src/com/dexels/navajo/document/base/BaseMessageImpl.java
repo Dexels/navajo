@@ -13,7 +13,6 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -96,6 +95,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     protected BaseMessageImpl definitionMessage = null;
 
+	private String subType;
+
+	private Map<String, String> subtypeMap;
+
+	
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -1302,6 +1306,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (myScope != null && !myScope.equals("")) {
             m.put(Message.MSG_SCOPE, myScope);
         }
+		if (subType != null && !subType.equals("") ) {
+			m.put(MSG_SUBTYPE, subType);
+		}
         return m;
     }
 
@@ -2052,4 +2059,33 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		p.setAnyValue(value);
 	}
+	
+	public String getSubType() {
+		return subType;
+	}
+	
+	@Override
+	public final String getSubType(String key) {
+		if (subtypeMap != null) {
+			return subtypeMap.get(key);
+		}
+		return null;
+
+	}
+	
+	@Override
+	public final Map<String,String> getSubTypes() {
+		if(subtypeMap==null) {
+			return  new HashMap<String, String>();
+		}
+		return new HashMap<String, String>(subtypeMap);
+	}	
+
+	
+	@Override
+	public void setSubType(String subType) {
+		this.subType = subType;
+		subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
+	}
+	
 }
