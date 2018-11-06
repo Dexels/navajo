@@ -4,19 +4,29 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
+import com.dexels.navajo.parser.compiled.ASTTransformerNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.script.api.SystemException;
@@ -103,6 +113,18 @@ public class TestCompiledExpression {
 	}
 	
 	@Test
+	public void testMultilineStringLiteral() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "'what is a haiku\n" + 
+				"nothing but words, poetic?\n" + 
+				"this is a haiku'";
+//		StringReader sr = new StringReader(clause);
+//		CompiledParser cp = new CompiledParser(sr);
+		String o = (String) Expression.evaluate(clause,input, null, null, null).value;
+		int lines = o.split("\n").length;
+		Assert.assertEquals(3, lines);
+	}
+	
+	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
 		Object o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
         System.err.println("ss: "+o);
@@ -125,7 +147,7 @@ public class TestCompiledExpression {
 	@Test
 	public void parsePerformanceTest() throws TMLExpressionException, SystemException {
 		long before = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
 		}
 		long now = System.currentTimeMillis();
@@ -134,7 +156,7 @@ public class TestCompiledExpression {
 //		Expression.dumpStats();
 		ExpressionCache.getInstance().printStats();
 		before = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Object o3 = Expression.evaluate("?[/@Param] AND [/@Param] != ''", input);
 		}
 		now = System.currentTimeMillis();
@@ -154,4 +176,144 @@ public class TestCompiledExpression {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testExpressionExtentions() throws ParseException {
+		String expression = "rename('aap','noot')";
+		StringReader sr = new StringReader(expression);
+		ImmutableMessage inMessage = ImmutableFactory.empty().with("aap", "abc", "string");
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Transformer();		
+		ASTTransformerNode atn = (ASTTransformerNode) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		ContextExpression ce = atn.interpretToLambda(problems, expression);
+		Function<ImmutableMessage,ImmutableMessage> trans = (Function<ImmutableMessage, ImmutableMessage>) ce.apply(input, input.getMessage("TestMessage"), null, null, null, null, null, Optional.empty(), Optional.empty());
+		
+		ImmutableMessage out = trans.apply(inMessage);
+		String s = ImmutableFactory.createParser().describe(out);
+		System.err.println("s: "+s);
+//		atn.evaluateTransformer();
+		Assert.assertEquals("abc", out.columnValue("noot"));
+		Assert.assertNull(out.columnValue("aap"));
+//        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
+	}
+	
+	@Test
+	public void testNamedExpression() throws ParseException {
+		String expression = "aap=1+1";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.KeyValue();		
+		ASTKeyValueNode atn = (ASTKeyValueNode) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression);
+		System.err.println("Problems: "+problems);
+		Assert.assertEquals(0, problems.size());
+		Assert.assertEquals("aap",ne.name);
+		Assert.assertEquals(2, ne.apply());
+	}
+
+	@Test
+	public void testFunctionCallWithNamedParams() throws ParseException {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+		String expression = "addtest(aap='blub',3+5,4)";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Expression();
+		SimpleNode atn = (SimpleNode) cp.getJJTree().rootNode();
+		List<String> problems = new ArrayList<>();
+		ContextExpression ne = atn.interpretToLambda(problems, expression);
+		Object result = ne.apply();
+		System.err.println("Final: "+result);
+		Assert.assertEquals("monkey", result);
+	}
+
+	@Test
+	public void testEmptyFunctionCall() throws ParseException {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+
+		String expression = "addtest()";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Expression();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        Object o = ss.apply();
+		Assert.assertEquals("monkey", o);
+        System.err.println(">> "+o);
+	}
+	
+	@Test
+	public void testReactiveFunctionCall() throws ParseException {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
+
+		String expression = "addtest()->addtest()";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.ReactiveElement();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("Problems");
+        Object o = ss.apply();
+		Assert.assertEquals("monkey", o);
+        System.err.println(">> "+o);
+	}
+
+
+	@Test
+	public void testMultiArgFunction() throws Exception {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("SingleValueQuery",fd);
+		String expression = 	"SingleValueQuery( 'aap','noot' )";
+		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.getClass());
+	}
+
+
+	@Test
+	public void testNestedNamedFunction() throws Exception {
+        FunctionInterface testFunction = new AddTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("MysteryFunction",fd);
+        
+		String expression = 	"MysteryFunction(eep=MysteryFunction('blib','blob'), 'aap','noot' )";
+		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.apply().getClass());
+	}
+	
+	@Test
+	public void testNestedNamedParams() throws Exception {
+        FunctionInterface testFunction = new ParameterNamesFunction();
+        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ParameterNamesFunction",fd);
+        
+		String expression = 	"ParameterNamesFunction(aap=1+1,noot=2+2)";
+		
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		List<String> problems = new ArrayList<>();
+		cp.Expression();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString());
+        System.err.println("ss: "+ss.apply());
+        Assert.assertEquals("aap,noot", ss.apply());
+	}
+	
+
 }

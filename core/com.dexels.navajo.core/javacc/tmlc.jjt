@@ -1,13 +1,11 @@
 /*
  * Navajo Expression Language
- * Copyright(c) 2001 Dexels BV
- * $Id$
- * bloep
+ * Copyright(c) 2018 Dexels BV
  */
 
 options {
    MULTI=true;
-   LOOKAHEAD=1;
+   LOOKAHEAD=2;
    STATIC=false;
    NODE_PACKAGE="com.dexels.navajo.parser.compiled";
 }
@@ -50,7 +48,9 @@ TOKEN:
   <DIV: "/"> |
   <MOD: "%"> |
   <NULL: "null"> |
-  <PIPE: "->">
+  <PIPE: "->"> |
+  <HEADER: "=>">
+  
 }
 
 TOKEN:
@@ -266,8 +266,17 @@ void FunctionLiteral() #void:
 }
 {
   (t = <NORMAL_IDENTIFIER>
-     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
     {jjtThis.functionName = t.image;    	}
+     "(" [
+        ( Expression() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		"," 
+     		(	Expression() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) * ]
+     ")"
   ) #FunctionNode
 }
 
@@ -341,17 +350,37 @@ void MappableLiteral() #void:
 void KeyValue() #void:
 {Token t;}
 {
-  (t = <NORMAL_IDENTIFIER> "=" Expression()
-  ) #TransformerNode
+  (t = <NORMAL_IDENTIFIER> {jjtThis.val = t.image;} {jjtThis.args++;} "=" Expression() {jjtThis.args++;}
+  {jjtThis.val = t.image;}
+  ) #KeyValueNode
 }
 
 void Transformer() #void:
 {Token t;
 }
 {
-  (t = <NORMAL_IDENTIFIER>
+  (t = <NORMAL_IDENTIFIER> 
      "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
     {jjtThis.transformerName = t.image;    	}
   ) #TransformerNode
+}
+
+void ReactiveElement() #void:
+{
+}
+{
+	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
+}
+
+void ReactiveScript() #void:
+{
+}
+{
+	(
+		(<HEADER> FunctionLiteral() {jjtThis.args++;})?
+		(
+			FunctionLiteral() {jjtThis.args++;}  (FunctionLiteral() {jjtThis.args++;})*
+		) 
+	) #ReactiveScriptNode
 }
 

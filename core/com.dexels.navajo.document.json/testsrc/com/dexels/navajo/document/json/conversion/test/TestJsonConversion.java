@@ -39,7 +39,7 @@ public class TestJsonConversion {
 //		System.err.println("MMM: "+m.toString());
 		ObjectNode on = JsonTmlFactory.getInstance().toNode(m, "ble");
 		JSONReplicationMessageParserImpl parser = new JSONReplicationMessageParserImpl();
-		ReplicationMessage rmsg = parser.parseJson(on);
+		ReplicationMessage rmsg = parser.parseJson(Optional.empty(), on);
 		ObjectMapper mapper  = new ObjectMapper();
 //		JsonNode n = rmsg.toJSON(mapper);
 		System.err.println("Before:\n");

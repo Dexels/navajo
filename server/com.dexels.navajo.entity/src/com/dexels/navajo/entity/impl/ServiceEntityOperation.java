@@ -441,7 +441,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		try {
         	checkSubTypes(input.getRootMessage());
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error("Subtypes check failed {}",e);
         	throw new EntityException(EntityException.BAD_REQUEST, e);
         }
         clean(input, "request", false, merge, entityVersion);
@@ -737,7 +737,7 @@ public class ServiceEntityOperation implements EntityOperation {
         try {
         	checkSubTypes(result.getRootMessage());
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error("Subtypes check failed {}",e);
         	throw new EntityException(EntityException.SERVER_ERROR, e);
         }
 		return result;
@@ -800,7 +800,7 @@ public class ServiceEntityOperation implements EntityOperation {
         try {
         	checkSubTypes(result.getRootMessage());
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error("Subtypes check failed {}",e);
         	throw new EntityException(EntityException.SERVER_ERROR, e);
         }
 
