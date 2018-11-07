@@ -1691,6 +1691,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             String newMsgName = subMessages.get(i).getName();
             Message existing = this.getMessage(newMsgName);
             if (existing == null) {
+            	String nullableString = subMessages.get(i).getSubType("nullable");
+    			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
+    			if (nullable) {
+    				continue;
+    			}
                 try {
                     Message newMsg = subMessages.get(i).copy();
                     Message o_m = null;

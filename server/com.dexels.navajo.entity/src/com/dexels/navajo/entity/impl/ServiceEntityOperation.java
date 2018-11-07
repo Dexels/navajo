@@ -258,9 +258,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 		}
 		if (n.getMessage(myEntity.getMessageName()) != null) {
-			String nullableString = n.getMessage(myEntity.getMessageName()).getSubType("nullable");
-			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
-			if (merge && !nullable) {
+			if (merge) {
                 n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(entityVersion), true);
 			}
             n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(entityVersion), method);
