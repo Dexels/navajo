@@ -178,20 +178,28 @@ public class BundleCreatorComponent implements BundleCreator {
              if (dir.exists()) {
             	 files = FileUtils.listFiles(dir, fileFilter, null);
              }
-             
-    	     if (f.exists()) {
-    	    	 matchedScript = true;
-        	     createBundleForScript(rpcName, rpcName,  f, files.size() > 0, failures, success, skipped, keepIntermediate);
-    	     }
-
+             Map<String, File> tenantSpecificFiles = new HashMap<String, File>();
+             Collection<String> tenantsToIgnore = new ArrayList<String>();
              for (File ascript : files) {
             	 matchedScript = true;
                  String pathRelative = getRelative(scriptFolder, ascript );
                  String[] splitted =  pathRelative.split("\\.");
                  String tenantScriptName = splitted[0].replace('\\', '/');
 //                 String extension = "." + splitted[1];
-                 createBundleForScript(tenantScriptName, rpcName, ascript,  false, failures, success, skipped, keepIntermediate);
+                 tenantSpecificFiles.put(tenantScriptName, ascript);
+                 // Get the tenant out of the name and put it in the tenantsToIgnore collection
+                 tenantsToIgnore.add(tenantScriptName.split("_")[1]); 
              }
+             
+    	     if (f.exists()) {
+    	    	 matchedScript = true;
+        	     createBundleForScript(rpcName, rpcName,  f, tenantsToIgnore, true, failures, success, skipped, keepIntermediate);
+    	     }
+    	     for (Map.Entry<String, File> entry : tenantSpecificFiles.entrySet())
+    	     {
+    	    	 createBundleForScript(entry.getKey(), rpcName, entry.getValue(),  tenantsToIgnore, false, failures, success, skipped, keepIntermediate);
+    	     }
+
              
     	}
     	
@@ -200,7 +208,7 @@ public class BundleCreatorComponent implements BundleCreator {
     	}
     }
 
-	private void createBundleForScript(String script, String rpcName, File scriptFile, boolean hasTenantSpecificFile,
+	private void createBundleForScript(String script, String rpcName, File scriptFile, Collection<String> ignoreTenants, boolean isGenericVersion,
 			List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate)
 			throws Exception {
       
@@ -211,28 +219,29 @@ public class BundleCreatorComponent implements BundleCreator {
             return;
         }
 
-        if (getScriptCompiler(scriptFile).supportTslDependencies()) {
+        // Only do the include dependency check if we're at the generic version of the script
+        if (isGenericVersion && getScriptCompiler(scriptFile).supportTslDependencies()) {
         	 Set<String> newTenants = new HashSet<>();
         	 depanalyzer.addDependencies(script, scriptFile);
              List<Dependency> dependencies = depanalyzer.getDependencies(script, Dependency.INCLUDE_DEPENDENCY);
 
-             if (!hasTenantSpecificFile && dependencies != null) {
-                 // We are not tenant-specific, but check whether we include any tenant-specific files.
-                 // If so, compile all versions as if we are tenant-specific (forceTenant)
+             if (dependencies != null) {
+                 // We are at the generic version, but check whether we include any tenant-specific files.
+                 // If so, compile all versions as if we are tenant-specific (forceTenant), but ignore those tenants that have a tenant-specific version of the original script
                  for (Dependency d : dependencies) {
-                     if (d.isTentantSpecificDependee()) {
+                     if (d.isTentantSpecificDependee() && ! ignoreTenants.contains(d.getTentantDependee())) {
                          newTenants.add(d.getTentantDependee());
                      }
                  }
                  for(String newTenant : newTenants) {
-                     compileAndCreateBundle(script, scriptFile, newTenant, hasTenantSpecificFile,
+                     compileAndCreateBundle(script, scriptFile, newTenant, false,
                              true, keepIntermediate, success, skipped, failures);
                  }
                  
                  
              }
 
-             if (!hasTenantSpecificFile) {
+             if (isGenericVersion) {
                  // We are not tenant-specific, but check whether we used to have any includes that
                  // were tenant-specific, that furthermore no longer exist in the new version.
                  // If so, those must be removed.
@@ -240,7 +249,7 @@ public class BundleCreatorComponent implements BundleCreator {
              }
         }
        
-        compileAndCreateBundle(script, scriptFile, scriptTenant, hasTenantSpecificFile, false, keepIntermediate,
+        compileAndCreateBundle(script, scriptFile, scriptTenant, !isGenericVersion, false, keepIntermediate,
                 success, skipped, failures);
     }
     
