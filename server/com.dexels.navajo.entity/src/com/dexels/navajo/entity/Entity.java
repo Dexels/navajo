@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
@@ -200,6 +201,7 @@ public class Entity {
             } else {
                 Message newMessage = m.copy();
                 newMessage.setName(getMessageName());
+                cleanMessageProperties(newMessage);
                 myMessageVersionMap.put(m.getName().contains(".") ? m.getName().split("\\.")[1] : "0", newMessage);
             }
         });
@@ -223,6 +225,16 @@ public class Entity {
 
     public Map<String, String> getMyCaching() {
         return myCaching;
+    }
+    
+    public void cleanMessageProperties(Message m) {
+    	// String properties should have null value by default and not empty string value. 
+    	m.getAllProperties().stream().filter( p -> Property.STRING_PROPERTY.equals(p.getType())).forEach(p -> {
+    		p.setAnyValue(null);
+    	});
+    	for(Message subM : m.getAllMessages()) {
+    		cleanMessageProperties(subM);
+    	}
     }
 
     public void setMyValidations(Message validationsMessage) {
