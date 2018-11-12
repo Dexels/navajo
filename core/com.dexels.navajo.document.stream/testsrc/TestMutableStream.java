@@ -26,6 +26,7 @@ public class TestMutableStream {
 			.lift(StreamDocument.parse())
 			.concatMap(e->e)
 			.lift(NavajoStreamToMutableMessageStream.toMutable(Optional.of("Club/Accommodation")))
+			.concatMap(e->e)
 			.count()
 			.blockingGet();
 		

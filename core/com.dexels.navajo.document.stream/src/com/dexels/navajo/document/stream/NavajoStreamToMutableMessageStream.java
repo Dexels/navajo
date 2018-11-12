@@ -50,9 +50,7 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	}
 	
 	private boolean emitStack() {
-		System.err.println("Checking tagstack: "+tagStack+" with: "+this.matchStack);
 		return  this.tagStack.equals(this.matchStack);
-//		return true;
 	}
 	
 	private Flowable<Message> navajoEventComplete() {
@@ -155,7 +153,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 		case ARRAY_ELEMENT:
 			Message elementParent = messageStack.pop();
 			Msg msgElement= (Msg)n.body();
-			System.err.println(">> "+msgElement.properties());
 			List<Prop> elementProps = msgElement.properties();
 			for (Prop e : elementProps) {
 				elementParent.addProperty(createTmlProperty(e));
