@@ -534,7 +534,24 @@ public interface Message
    */
   public void merge(Message incoming);
   
+  /**
+   * Merge message with incoming message.  All properties and submessages of incoming message are merged
+   * with the current message. The name of the incoming message is not relevant.
+   * 
+   * @param incoming
+   * @param preferThis in case of a conflict use the current message
+   */
   public void merge(Message incoming, boolean preferThis);
+  
+  /**
+   * Merge message with incoming message.  All properties and submessages of incoming message are merged
+   * with the current message. The name of the incoming message is not relevant.
+   * 
+   * @param incoming
+   * @param preferThis in case of a conflict use the current message
+   * @param applySubType apply the subtype constraints (for instance nullable=true)
+   */
+  public void merge(Message incoming, boolean preferThis, boolean applySubType);
   
   /**
    * Add empty message at index
