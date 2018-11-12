@@ -14,8 +14,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
 
 import io.reactivex.Flowable;
@@ -209,7 +207,6 @@ public class StreamScriptContext {
 	public void complete() {
 	    access.setFinished();
 	    access.setExitCode(Access.EXIT_OK);
-	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
 		if(this.runningScripts.isPresent()) {
 			this.runningScripts.get().completed(this);
 		}
@@ -234,7 +231,6 @@ public class StreamScriptContext {
     public void error(Throwable e) {
         access.setException(e);
         access.setExitCode(Access.EXIT_EXCEPTION);
-        NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
 
         if(this.runningScripts.isPresent()) {
             this.runningScripts.get().completed(this);
