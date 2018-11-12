@@ -381,6 +381,7 @@ public class Entity {
             }
         }
         // Copy properties/messages from superEntity.
+		// at registration time of entities apply sub type is false: otherwise, if an entity extends another entity which has a nullable submessage, this submessage gets lost, because the source entity doesn't have the submessage and it is marked as nullable.
         m.merge(incoming, true, false);
         registerSuperEntity(superEntity);
     }

@@ -1713,7 +1713,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             	// if we dont have this message ourselves and incoming message has it marked as nullable, then we should NOT add it (because we explicitly allow the message to not exist)
             	String nullableString = subMessages.get(i).getSubType("nullable");
     			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
-    			// at registration time of entities apply sub type is false: otherwise, if an entity extends another entity which has a nullable submessage, this submessage gets lost, because the source entity doesn't have the submessage and it is marked as nullable.
     			if (nullable && applySubType) {
     				continue;
     			}
