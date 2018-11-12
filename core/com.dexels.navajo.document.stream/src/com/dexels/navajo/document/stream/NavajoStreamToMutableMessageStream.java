@@ -6,8 +6,6 @@ import java.util.Stack;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoFactory;
@@ -33,7 +31,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	private final Stack<Message> messageStack = new Stack<Message>();
 	private final Stack<String> tagStack = new Stack<>();
 	private final Stack<String> matchStack = new Stack<>();
-	private final static Logger logger = LoggerFactory.getLogger(NavajoStreamToMutableMessageStream.class);
 
 	public NavajoStreamToMutableMessageStream(Optional<String> path) {
 		super(10);
@@ -109,7 +106,7 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			return Flowable.empty();
 		case ARRAY_STARTED:
 			tagStack.push(n.path());
-			String path = currentPath();
+//			String path = currentPath();
 //			AtomicInteger cnt = arrayCounts.get(path);
 //			if(cnt==null) {
 //				cnt = new AtomicInteger();
@@ -130,13 +127,13 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			messageStack.push(arr);
 			return Flowable.empty();
 		case ARRAY_DONE:
-			String apath = currentPath();
+//			String apath = currentPath();
 //			arrayCounts.remove(apath);
 			this.messageStack.pop();
 			return Flowable.empty();
 		case ARRAY_ELEMENT_STARTED:
 			String arrayElementName = tagStack.peek();
-			String  arrayPath = currentPath();
+//			String  arrayPath = currentPath();
 //			AtomicInteger currentCount = arrayCounts.get(arrayPath);
 //			if(currentCount!=null) {
 //				String ind = "@"+currentCount.getAndIncrement();
@@ -144,7 +141,7 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 //			} else {
 //				System.err.println("Huh?!");
 //			}
-			arrayPath = currentPath();
+//			arrayPath = currentPath();
 			Message newElt = NavajoFactory.getInstance().createMessage(null, arrayElementName, Message.MSG_TYPE_ARRAY_ELEMENT);
 			Message arrParent = messageStack.peek();
 			arrParent.addElement(newElt);
@@ -167,10 +164,8 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			return Flowable.empty();
 			
 		case MESSAGE_DEFINITION_STARTED:
-			// TODO
 			return Flowable.empty();
 		case MESSAGE_DEFINITION:
-			// TODO
 			//			tagStack.push(n.path());
 			//			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
 			return Flowable.empty();
@@ -182,18 +177,18 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 		}
 	}
 	
-	private String currentPath() {
-		StringBuilder sb = new StringBuilder();
-		for (String path : tagStack) {
-			sb.append(path);
-			sb.append('/');
-		}
-		int len = sb.length();
-		if(sb.charAt(len-1)=='/') {
-			sb.deleteCharAt(len-1);
-		}
-		return sb.toString();
-	}
+//	private String currentPath() {
+//		StringBuilder sb = new StringBuilder();
+//		for (String path : tagStack) {
+//			sb.append(path);
+//			sb.append('/');
+//		}
+//		int len = sb.length();
+//		if(sb.charAt(len-1)=='/') {
+//			sb.deleteCharAt(len-1);
+//		}
+//		return sb.toString();
+//	}
 
 	private Property createTmlProperty(Prop p) {
 		Property result;

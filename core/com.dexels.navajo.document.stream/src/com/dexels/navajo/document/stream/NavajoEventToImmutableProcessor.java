@@ -35,7 +35,7 @@ public class NavajoEventToImmutableProcessor {
 			case ARRAY_ELEMENT:
 				Msg m = (Msg)event.body();
 				arrayCounter.incrementAndGet();
-				ImmutableMessage copy = m.toImmutableMessage();
+				m.toImmutableMessage();
 				break;
 				
 			case NAVAJO_DONE:
