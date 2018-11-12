@@ -81,7 +81,7 @@ public class ExpressionCache {
 			return cachedValue.get();
 		}
 		List<String> problems = new ArrayList<>();
-		ContextExpression parse = parse(problems,expression);
+		ContextExpression parse = parse(problems,expression,ParseMode.DEFAULT);
 		if(!problems.isEmpty()) {
 			problems.forEach(problem->
 				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
@@ -93,10 +93,10 @@ public class ExpressionCache {
 		
 	}
 	
-	public ContextExpression parse(List<String> problems, String expression) {
-		return parse(problems, expression,true);
+	public ContextExpression parse(List<String> problems, String expression,ParseMode mode) {
+		return parse(problems, expression,mode,true);
 	}
-	public ContextExpression parse(List<String> problems, String expression, boolean allowLiteralResolve) {
+	public ContextExpression parse(List<String> problems, String expression,ParseMode mode, boolean allowLiteralResolve) {
 		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
@@ -107,7 +107,7 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,mode);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);

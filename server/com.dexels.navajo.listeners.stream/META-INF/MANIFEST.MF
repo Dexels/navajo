@@ -37,3 +37,4 @@ Export-Package: com.dexels.navajo.listeners.stream;version="2.1.5"
 Bundle-ClassPath: .,
  lib/rxjava2-extras-0.1.20.jar
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.listeners.stream

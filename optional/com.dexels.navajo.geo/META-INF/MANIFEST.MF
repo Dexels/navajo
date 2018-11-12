@@ -1,9 +1,0 @@
-Bundle-Name: Sportlink Geo Tools
-Bundle-SymbolicName: com.dexels.navajo.geo
-Bundle-Description: Core version manager
-Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.1.qualifier
-Bundle-Vendor: Dexels
-Import-Package: org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.7.1"
-Export-Package: com.dexels.navajo.geo.tools

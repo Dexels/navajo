@@ -1,6 +1,5 @@
 package com.dexels.navajo.resource.http.stream;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +10,9 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.StreamDocument;
-import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -80,7 +79,7 @@ public class CallRemoteSource implements ReactiveSource {
 //		.map(DataItem::ofEventStream);
 		
 		for (ReactiveTransformer reactiveTransformer : transformers) {
-			fw = fw.compose(reactiveTransformer.execute(context));
+			fw = fw.compose(reactiveTransformer.execute(context,current));
 		}
 		return fw;
 	}

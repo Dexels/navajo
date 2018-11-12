@@ -18,7 +18,7 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 
 public class TestWrappedCompiler {
 
-	@Test @Ignore
+	@Test
 	public void testWrapped() throws IOException, CompilationException {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);
@@ -28,7 +28,15 @@ public class TestWrappedCompiler {
 		Assert.assertTrue(result.length>100);
 	}
 	
-	@Test @Ignore
+	public static void main(String[] args) throws IOException, CompilationException {
+		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
+		o.activateCompiler(null, null);
+		InputStream is = TestWrappedCompiler.class.getClassLoader().getResourceAsStream("Example.java.txt");
+		byte[] result = o.compile("Example", is);
+		System.err.println("result: "+result.length);
+		Assert.assertTrue(result.length>100);		
+	}
+	@Test
 	public void testPackageCompile() throws IOException, CompilationException {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);
@@ -39,7 +47,7 @@ public class TestWrappedCompiler {
 		
 	}
 	@SuppressWarnings("unchecked")
-	@Test  @Ignore
+	@Test
 	public void testActualClassLoad() throws Exception {
 		OSGiJavaCompilerImplementation o = new OSGiJavaCompilerImplementation();
 		o.activateCompiler(null, null);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -300,6 +301,10 @@ public class JSONTMLImpl implements JSONTML {
 					prop.setCardinality(ep.getCardinality());
 					prop.setType(ep.getType());
 					prop.addSelection(s);
+				} else if ( ep.getType().equals(Property.BINARY_PROPERTY) && value != null) {
+					prop.setValue(new Binary(new StringReader(value.toString())));
+					prop.setType(ep.getType());
+					prop.setMethod(ep.getMethod());
 				} else {
 					prop.setType(ep.getType());
 					prop.setMethod(ep.getMethod());

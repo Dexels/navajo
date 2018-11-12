@@ -9,16 +9,16 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.postgresql.ds.PGConnectionPoolDataSource;
+import org.postgresql.ds.PGPoolingDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.postgresql.jdbc.service.impl.PostgreSQLJDBCDataSourceService;
 
+@SuppressWarnings("deprecation")
 public class PostgresqlWrapped implements DataSource {
 
 	private DataSource wrapped = null;
-	private PGConnectionPoolDataSource datasource;
 	private PostgreSQLJDBCDataSourceService data;
 	
 	private final static Logger logger = LoggerFactory.getLogger(PostgresqlWrapped.class);
@@ -26,15 +26,14 @@ public class PostgresqlWrapped implements DataSource {
 	
 	public void activate(Map<String,Object> settings) {
 		data = new PostgreSQLJDBCDataSourceService();
-//		String name = (String) settings.get("name");
 		try {
 			Properties p = new Properties();
 			for (Entry<String,Object> element : settings.entrySet()) {
 				p.put(element.getKey(),element.getValue());
 			}
 
-			datasource = new PGConnectionPoolDataSource();
-			wrapped = data.setup(datasource,p);
+	    	PGPoolingDataSource source = new PGPoolingDataSource();
+			wrapped = data.setup(source,p);
 		} catch (SQLException e) {
 			logger.error("Error creating postgresql ",e);
 		} catch (Exception e) {

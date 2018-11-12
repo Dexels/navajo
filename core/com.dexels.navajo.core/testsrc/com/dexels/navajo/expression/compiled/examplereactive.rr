@@ -1,0 +1,9 @@
+SQL(resource='some',
+	query='select * from ORGANIZATION WHERE ROWNUM <=40')
+	->Filter([name]!=null)
+	->Stream('Clubs')
+SQL(resource='some',query='select * from PERSON WHERE ROWNUM <=10')
+	->Stream('Persons')
+	->Reduce()
+	
+	

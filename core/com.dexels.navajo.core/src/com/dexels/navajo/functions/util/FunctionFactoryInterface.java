@@ -38,6 +38,13 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		readDefinitionFile(getConfig(fd), fd);
 
 	}
+	
+	public void addExplicitFunctionDefinition(String name, FunctionDefinition fd) {
+		if(defaultConfig==null) {
+			defaultConfig = new HashMap<>();
+		}
+		defaultConfig.put(name, fd);
+	}
 
 	
 	public abstract void readDefinitionFile(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;

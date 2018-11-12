@@ -45,7 +45,6 @@ import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -64,7 +63,7 @@ public class NonBlockingListener extends HttpServlet {
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
 	
-	private final static ObjectMapper objectMapper = new ObjectMapper();
+//	private final static ObjectMapper objectMapper = new ObjectMapper();
 
 	private RunningReactiveScripts runningReactiveScripts = new RunningReactiveScriptsImpl();
 	
@@ -285,12 +284,12 @@ public class NonBlockingListener extends HttpServlet {
 		});
 		writer.write("<ul></body></html>");
 	}
-	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setContentType("application/json");
-		PrintWriter writer = response.getWriter();
-
-		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
-	}
+//	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		response.setContentType("application/json");
+//		PrintWriter writer = response.getWriter();
+//
+//		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
+//	}
 
 	private void respondError(String message, StreamScriptContext context, Optional<String> responseEncoding, HttpServletResponse response,
 			Subscriber<ByteBuffer> responseSubscriber, Throwable e1) {

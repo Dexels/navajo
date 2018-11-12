@@ -13,6 +13,7 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 
 @SuppressWarnings({"rawtypes"})
@@ -21,8 +22,8 @@ public final class ASTGENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY));
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),mode);
 	}
 	
     public static final Boolean compare(Object a, Object b, String expression)  {

@@ -1,12 +1,9 @@
 package com.dexels.navajo.env;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
@@ -16,8 +13,8 @@ public class EnvironmentConfigComponent {
 
 	private ConfigurationAdmin configAdmin;
 
-	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
-	private final Set<String> resourcePids = new HashSet<String>();
+//	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
+//	private final Set<String> resourcePids = new HashSet<String>();
 
 	private final static Logger logger = LoggerFactory.getLogger(EnvironmentConfigComponent.class);
 	

@@ -8,6 +8,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 
 public final class ASTNegativeNode extends SimpleNode {
@@ -33,8 +34,8 @@ public final class ASTNegativeNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyFunction(problems,expression, a->interpret(a), Optional.empty());
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),mode);
 	}
 
 }

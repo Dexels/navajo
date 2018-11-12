@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTExpressionNode extends SimpleNode {
     public ASTExpressionNode(int id) {
@@ -12,8 +13,8 @@ public final class ASTExpressionNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return  jjtGetChild(0).interpretToLambda(problems,expression);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return  jjtGetChild(0).interpretToLambda(problems,expression,mode);
 	}
 
 }

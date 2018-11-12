@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
+@SuppressWarnings("rawtypes")
 public class EclipseCompiler implements JavaCompiler {
 
 	
@@ -109,7 +110,7 @@ public class EclipseCompiler implements JavaCompiler {
         loader=cl;
     }
 
-    @Override
+	@Override
 	public boolean compile(ArrayList elements) {
         try {
             if (compilerClass==null) {

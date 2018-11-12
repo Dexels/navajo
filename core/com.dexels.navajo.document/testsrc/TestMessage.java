@@ -760,4 +760,23 @@ public class TestMessage {
 		Assert.assertEquals(3,vv.size());
 	}
 
+	@Test
+	public void testMessageSubType() {
+		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("subtypemessage.xml"));
+		Message m = n.getMessage("SubTypeMessage");
+		Map<String,String> stypes = m.getSubTypes();
+		System.err.println("Subtypes: "+stypes);
+		Assert.assertEquals(2, stypes.size());
+		Assert.assertEquals("fa", stypes.get("mi"));
+		Assert.assertEquals("fa", m.getSubType("mi"));
+		m.setSubType("sol=la");
+		Assert.assertEquals("la", m.getSubType("sol"));
+		Assert.assertEquals(1, m.getSubTypes().size());
+		StringWriter sw = new StringWriter();
+		m.write(sw);
+		System.err.println("sw: "+sw);
+		Assert.assertTrue(sw.toString().indexOf("sol")!=-1);
+		Assert.assertTrue(sw.toString().indexOf("fa")==-1);
+		
+	}
 }

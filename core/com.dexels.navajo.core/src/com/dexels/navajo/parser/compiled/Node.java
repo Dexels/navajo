@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 /* All AST nodes must implement this interface.  It provides basic
    machinery for constructing the parent and child relationships
@@ -38,9 +39,11 @@ interface Node {
   public int jjtGetNumChildren();
   
   /** Interpret method */
-//  public Object interpret(Navajo input) throws TMLExpressionException;
-
-ContextExpression interpretToLambda(List<String> problems, String originalExpression);
+//  default ContextExpression interpretToLambda(List<String> problems, String originalExpression) {
+//	 return interpretToLambda(problems, originalExpression, ParseMode.DEFAULT);
+//  } 
+  
+  ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode);
 
 }
 /* JavaCC - OriginalChecksum=22197c64ec0b9502885f0a5dc1d3ddd7 (do not edit this line) */

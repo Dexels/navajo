@@ -123,6 +123,28 @@ public class DataItem {
 		this.messageList = null;
 	}
 	
+	public DataItem(NavajoStreamEvent streamEvent, ImmutableMessage state) {
+		this.msg = null;
+		this.data = null;
+		this.streamEvent = streamEvent;
+		this.msgList = null;
+		this.type = Type.EVENT;
+		this.stateMsg = state;
+		this.eventStream = null;
+		this.messageList = null;
+	}
+
+	public DataItem(Flowable<ImmutableMessage> msgList, ImmutableMessage state) {
+		this.msg = null;
+		this.data = null;
+		this.streamEvent = null;
+		this.msgList = msgList;
+		this.type = Type.MSGLIST;
+		this.stateMsg = state;
+		this.eventStream = null;
+		this.messageList = null;
+	}
+
 	public Flowable<ImmutableMessage> messageStream() {
 		if(this.msgList==null) {
 			throw new NullPointerException("DataItem without messagestream, can't request messagestream of dataitem of type: "+this.type);
@@ -188,7 +210,29 @@ public class DataItem {
 
 	// TODO support all types?
 	public DataItem withStateMessage(ImmutableMessage state) {
-		return new DataItem(this.data,state);
+		switch (type) {
+		case DATA:
+			return new DataItem(this.data,state);
+		case ANY:
+			throw new UnsupportedOperationException();
+		case EMPTY:
+			throw new UnsupportedOperationException();
+		case EVENT:
+			return new DataItem(this.streamEvent,state);
+		case EVENTSTREAM:
+			return new DataItem(this.data,state);
+		case MESSAGE:
+			return new DataItem(this.msg, state);
+		case MSGLIST:
+			return new DataItem(this.msgList, state);
+		case MSGSTREAM:
+			return new DataItem(this.messageStream(), state);
+		case SINGLEMESSAGE:
+			return new DataItem(this.msg, state);
+		default:
+			break;
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	public static DataItem of(ImmutableMessage repl) {
@@ -217,8 +261,9 @@ public class DataItem {
 	}
 
 	public static DataItem of(Flowable<ImmutableMessage> msgList) {
-		return new DataItem(msgList,null);
+		return new DataItem(msgList,(Flowable<NavajoStreamEvent>)null);
 	}
+//	private DataItem(Flowable<ImmutableMessage> msgList, Flowable<NavajoStreamEvent> event) {
 	
 	public String toString() {
 		if(streamEvent!=null) {

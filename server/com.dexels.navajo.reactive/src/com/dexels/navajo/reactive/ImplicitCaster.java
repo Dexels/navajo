@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
-import com.dexels.navajo.document.stream.DataItem.Type;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
@@ -78,6 +78,7 @@ public class ImplicitCaster {
 	
 	
 	public static  Flowable<ImmutableMessage> implicitCastToMessage(Flowable<DataItem> flow, Type type) {
+		System.err.println("Impicit casting to: "+type);
 		switch (type) {
 		case EVENT:
 			return flow.map(di->di.event())

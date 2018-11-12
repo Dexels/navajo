@@ -36,7 +36,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.reactive.api.ParameterValidator;
+import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
@@ -258,6 +260,7 @@ public class ReactiveScriptParser {
 						
 						if(transformer==null) {
 							String msg = "Missing transformer for factory: "+operatorName;
+							System.err.println("available transformers: "+this.reactiveOperatorFactory.keySet());
 							ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
 							problems.add(rpp);
 							throw new RuntimeException(msg);
@@ -330,7 +333,7 @@ public class ReactiveScriptParser {
 				}
 				try {
 					List<String> probs = new ArrayList<>();
-					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e));
+					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e),ParseMode.DEFAULT);
 					probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 					
 					if(ce.returnType().isPresent() && parameterTypes.isPresent()) {
@@ -408,7 +411,7 @@ public class ReactiveScriptParser {
 				if(name==null) {
 					if (evaluate) {
 						List<String> probs = new ArrayList<>();
-						ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+						ContextExpression ce = ExpressionCache.getInstance().parse(probs,content,ParseMode.DEFAULT);
 						probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 						// TODO should we type check unnamed parameters somehow?
 						Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param),streamInput);
@@ -423,7 +426,7 @@ public class ReactiveScriptParser {
 					
 						try {
 							List<String> probs = new ArrayList<>();
-							ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+							ContextExpression ce = ExpressionCache.getInstance().parse(probs,content,ParseMode.DEFAULT);
 							probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 							if(ce.returnType().isPresent() && validator.parameterTypes().isPresent()) {
 								String ret = ce.returnType().get();
@@ -683,7 +686,7 @@ public class ReactiveScriptParser {
 				}
 				
 				@Override
-				public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
+				public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current) {
 					return transformer;
 				}
 			})

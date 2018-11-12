@@ -54,9 +54,9 @@ public class InputStreamSource implements ReactiveSource {
 		Iterator<ObjectNode> node;
 		try {
 			node = objectMapper.readerFor(ObjectNode.class).readValues(fis);
-			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(on).message()));
+			Flowable<DataItem> flow = Flowable.fromIterable(()->node).map(on->DataItem.of(ReplicationJSON.parseJSON(Optional.empty(), on).message()));
 			for (ReactiveTransformer trans : transformers) {
-				flow = flow.compose(trans.execute(context));
+				flow = flow.compose(trans.execute(context,current));
 			}
 			return flow;
 		} catch (IOException e1) {

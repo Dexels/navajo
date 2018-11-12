@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -22,15 +23,10 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
-import com.dexels.navajo.parser.internal.ParseException;
-import com.dexels.navajo.parser.internal.TMLParser;
-import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
-import com.dexels.replication.api.ReplicationMessage;
 
 public final class Expression {
     private final static Logger logger = LoggerFactory.getLogger(Expression.class);
@@ -38,16 +34,6 @@ public final class Expression {
 
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
 	public static boolean compileExpressions = true; // Enabled by default
-	
-	static {
-		String env = System.getenv("COMPILED_EXPRESSIONS");
-		if (env != null) {
-		    compileExpressions = "true".equalsIgnoreCase(env);
-		}
-		logger.info("Compile expressions: {}", compileExpressions);
-		
-	}
-
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage) throws TMLExpressionException, SystemException {
 		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
@@ -62,51 +48,7 @@ public final class Expression {
 		if (clause.trim().equals("")) {
 			return new Operand(null, "", "");
 		}
-		if(compileExpressions) {
-			return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage,paramMessage);
-		}
-		
-		Object aap = null;
-
-
-		if ((clause.length() > 0 && clause.charAt(0) == '=') && clause.endsWith(";")) {
-			clause = clause.substring(1, clause.length() - 1);
-		}
-		try {
-
-			TMLParser parser = null;
-
-			java.io.StringReader input = new java.io.StringReader(clause);
-			parser = new TMLParser(input);
-			if (params != null) {
-				Access acc = (Access) params.get(ACCESS);
-				if (acc != null) {
-					parser.setAccess(acc);
-				}
-			}
-			parser.setNavajoDocument(inMessage);
-			parser.setMappableObject(o);
-			parser.setParentMsg(parent);
-			parser.setParentParamMsg(paramParent);
-			parser.setParentSel(sel);
-			parser.setTipiLink(tl);
-			parser.Expression();
-
-			aap = parser.jjtree.rootNode().interpret();
-
-		} catch (ParseException ce) {
-			throw new SystemException(SystemException.PARSE_ERROR, "Expression syntax error: " + clause + "\n"
-					+ "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
-		} catch (Throwable t) {
-			throw new TMLExpressionException("Invalid expression: " + clause + ".\nCause: " + t.getMessage(), t);
-		}
-
-		if (aap == null)
-			return new Operand(null, "", "");
-
-		String type = MappingUtils.determineNavajoType(aap);
-		return new Operand(aap, type, "");
-
+		return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage,paramMessage);
 	}
 
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,

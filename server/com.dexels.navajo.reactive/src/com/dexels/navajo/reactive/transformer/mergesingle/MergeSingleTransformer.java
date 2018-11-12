@@ -2,6 +2,8 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 
 import java.util.Optional;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -29,8 +31,8 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context) {
-		return flow->flow.flatMap(item->{
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+		return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty()))).flatMap(item->{
 			Flowable<DataItem> sourceStream = source.execute(context,  Optional.of(item.message()))
 					.doOnNext(dataitem->{
 						System.err.println("");

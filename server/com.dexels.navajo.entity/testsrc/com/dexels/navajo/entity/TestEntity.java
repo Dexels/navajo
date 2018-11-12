@@ -148,8 +148,10 @@ public class TestEntity {
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
+        e.printKeys(Entity.DEFAULT_VERSION);
         Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
-        Assert.assertNull(k);
+        Assert.assertNotNull(k);
+
     }
 
     @Test
@@ -188,8 +190,6 @@ public class TestEntity {
         e.startEntity();
         Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
-        Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/_id"));
-
     }
 
     @Test

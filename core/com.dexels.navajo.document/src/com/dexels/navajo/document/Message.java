@@ -42,6 +42,8 @@ public interface Message
   public static final String MSG_TYPE_ARRAY = "array";
   public static final String MSG_TYPE_TABLE = "table";
 
+  public static final String MSG_SUBTYPE = "subtype";
+
   public static final String MSG_SCOPE_LOCAL = "local";
   public static final String MSG_SCOPE_GLOBAL = "global";
   
@@ -114,6 +116,35 @@ public interface Message
    * 
    */
   public void setOrderBy(String s);
+
+  
+  /**
+   * Sets the complete subtype attribute of a message.
+   *
+   * @param subType the subtype key.
+   */
+  public void setSubType(String subType);
+
+  /**
+   * Get the value of subtype key/value pair.
+   *
+   * @param key the subtype key
+   * @return the subtype value
+   */
+  public String getSubType(String key);
+  
+  /**
+   * Get the value of the complete subtype attribute of a message.
+   *
+   * @return the subtypes value
+   */
+  public String getSubType();
+  
+  /**
+   * Get all subtypes.
+   * 
+   */
+  public Map<String, String> getSubTypes();
 
   /**
    * Get the type of a message.
@@ -503,7 +534,24 @@ public interface Message
    */
   public void merge(Message incoming);
   
+  /**
+   * Merge message with incoming message.  All properties and submessages of incoming message are merged
+   * with the current message. The name of the incoming message is not relevant.
+   * 
+   * @param incoming
+   * @param preferThis in case of a conflict use the current message
+   */
   public void merge(Message incoming, boolean preferThis);
+  
+  /**
+   * Merge message with incoming message.  All properties and submessages of incoming message are merged
+   * with the current message. The name of the incoming message is not relevant.
+   * 
+   * @param incoming
+   * @param preferThis in case of a conflict use the current message
+   * @param applySubType apply the subtype constraints (for instance nullable=true)
+   */
+  public void merge(Message incoming, boolean preferThis, boolean applySubType);
   
   /**
    * Add empty message at index
@@ -588,5 +636,6 @@ public interface Message
 	public void printCloseTag(final Writer sw, int indent) throws IOException;
 
 	public void setValue(String propertyName, Object value);
+
 
 }

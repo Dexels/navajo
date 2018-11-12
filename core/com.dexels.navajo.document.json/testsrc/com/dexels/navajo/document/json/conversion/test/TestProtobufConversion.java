@@ -78,7 +78,7 @@ public class TestProtobufConversion {
         values.put("played", true);
         types.put("played", "boolean");
     
-        return ReplicationFactory.createReplicationMessage("2.27.89433", new Date().getTime(),
+        return ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(),"2.27.89433", new Date().getTime(),
                 Operation.UPDATE, pks, types, values, Collections.emptyMap(),
                 Collections.emptyMap(), Optional.empty());
     }

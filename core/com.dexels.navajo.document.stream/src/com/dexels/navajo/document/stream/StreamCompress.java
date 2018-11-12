@@ -24,8 +24,6 @@ import java.util.zip.ZipException;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
 
@@ -37,7 +35,6 @@ public class StreamCompress {
 
 	private enum CompressionType {GZIP,DEFLATE}
 
-	private final static Logger logger = LoggerFactory.getLogger(StreamCompress.class);
 
 	   /**
      * GZIP header magic number.

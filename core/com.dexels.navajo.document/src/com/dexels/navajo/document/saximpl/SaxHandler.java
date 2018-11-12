@@ -450,6 +450,7 @@ public final class SaxHandler implements DocHandler {
         String scope = h.get(Message.MSG_SCOPE);
         String extendsMsg = h.get(Message.MSG_EXTENDS);
         String eTag = h.get(Message.MSG_ETAG);
+        String subtype = h.get(Message.MSG_SUBTYPE);
         
         Message m = null;
         if (type!=null) {
@@ -469,6 +470,9 @@ public final class SaxHandler implements DocHandler {
         if (eTag != null && !"".equals(eTag) ) {
         	m.setEtag(eTag);
         }
+        if (subtype != null && !"".equals(subtype) ) {
+        	m.setSubType(subtype);
+        }
         if (messageStack.isEmpty()) {
 //            logger.info("Adding to root!");
             currentDocument.addMessage(m);
@@ -482,8 +486,7 @@ public final class SaxHandler implements DocHandler {
                 
         	}
         }
-          messageStack.push(m);
-//        logger.info("Stack: "+messageStack);
+        messageStack.push(m);
     }
 
 

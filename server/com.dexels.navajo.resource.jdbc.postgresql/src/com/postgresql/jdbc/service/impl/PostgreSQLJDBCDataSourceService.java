@@ -1,7 +1,6 @@
 package com.postgresql.jdbc.service.impl;
 
 import java.net.URI;
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -10,33 +9,16 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
-
-
-
-
-
-
-
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.osgi.service.jdbc.DataSourceFactory;
-import org.postgresql.ds.PGConnectionPoolDataSource;
-import org.postgresql.ds.common.BaseDataSource;
+import org.postgresql.ds.PGPoolingDataSource;
 import org.postgresql.xa.PGXADataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
+@SuppressWarnings("deprecation")
 public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PostgreSQLJDBCDataSourceService.class);
-	private ObjectPool<Object> pool;
-	
+
 //	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
@@ -46,7 +28,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
-    	PGConnectionPoolDataSource source = new PGConnectionPoolDataSource();
+    	PGPoolingDataSource source = new PGPoolingDataSource();
         try {
             DataSource result = setup(source, props);
             return result;
@@ -60,7 +42,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
-    	PGConnectionPoolDataSource source = new PGConnectionPoolDataSource();
+    	PGPoolingDataSource source = new PGPoolingDataSource();
         try {
 			return (ConnectionPoolDataSource) setup(source, props);
 		} catch (Exception e) {
@@ -91,7 +73,7 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
      * Setups the basic properties for {@link DataSource}s
      * @throws Exception 
      */
-    public DataSource setup(PGConnectionPoolDataSource base, Properties props) throws Exception {
+    public DataSource setup(PGPoolingDataSource base, Properties props) throws Exception {
     	if (props == null) {
             return null;
         }
@@ -133,9 +115,11 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
         if (props.containsKey(JDBC_USER)) {
         	base.setUser(props.getProperty(JDBC_USER));
         }
-        DataSource source = createPooledConnection(base, (String)props.get(JDBC_URL),(String) props.get(JDBC_USER), (String)props.get(JDBC_PASSWORD),  (Integer)props.get("min_connections"),  (Integer)props.get("max_connections"));
-        
-    	return source;
+        return base;
+//        DataSource source = createPooledConnection(base, (String)props.get(JDBC_URL),(String) props.get(JDBC_USER), (String)props.get(JDBC_PASSWORD),  (Integer)props.get("min_connections"),  (Integer)props.get("max_connections"));
+//        
+//        DataSource source = mew PGPoolingDataSource()
+//    	return source;
 
     }
 
@@ -160,58 +144,60 @@ public class PostgreSQLJDBCDataSourceService implements DataSourceFactory {
     * @param maxActive - Connection Pool Maximum Capacity (Size)
     * @throws Exception
     */
-   public DataSource createPooledConnection(final BaseDataSource baseSource, String connectURI, 
-	final String username, 
-	final String password,
-	Integer minIdle, Integer maxActive
-	) throws Exception {
-       //
-       // First, we'll need a ObjectPool that serves as the
-       // actual pool of connections.
-       //
-       // We'll use a GenericObjectPool instance, although
-       // any ObjectPool implementation will suffice.
-       //
-	   
-	   final GenericObjectPool<Object> connectionPool = new GenericObjectPool<Object>(null);
-
-       
-       if(minIdle!=null) {
-           connectionPool.setMinIdle( minIdle );
-       } else {
-           connectionPool.setMinIdle( 5 );
-    	   
-       }
-       if(maxActive!=null) {
-           connectionPool.setMaxActive( maxActive );
-       } else {
-           connectionPool.setMaxActive( 5 );
-       }
-
-     this.pool = connectionPool; 
-
-       
-     ConnectionFactory connectionFactory = new ConnectionFactory() {
-		
-		@Override
-		public Connection createConnection() throws SQLException {
-
-			return baseSource.getConnection(username,password);
-		}
-	};
-	new PoolableConnectionFactory(
-     	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
-
-       PoolingDataSource dataSource = 
-       	new PoolingDataSource(connectionPool);
-
-       return dataSource;
-   }
-   
-   public void printDriverStats() throws Exception {
-       logger.info("NumActive: " + pool.getNumActive());
-       logger.info("NumIdle: " + pool.getNumIdle());
-   }
+    
+    
+//   public DataSource createPooledConnection(final BaseDataSource baseSource, String connectURI, 
+//	final String username, 
+//	final String password,
+//	Integer minIdle, Integer maxActive
+//	) throws Exception {
+//       //
+//       // First, we'll need a ObjectPool that serves as the
+//       // actual pool of connections.
+//       //
+//       // We'll use a GenericObjectPool instance, although
+//       // any ObjectPool implementation will suffice.
+//       //
+//	   
+//	   final GenericObjectPool<Object> connectionPool = new GenericObjectPool<Object>(null);
+//
+//       
+//       if(minIdle!=null) {
+//           connectionPool.setMinIdle( minIdle );
+//       } else {
+//           connectionPool.setMinIdle( 5 );
+//    	   
+//       }
+//       if(maxActive!=null) {
+//           connectionPool.setMaxActive( maxActive );
+//       } else {
+//           connectionPool.setMaxActive( 5 );
+//       }
+//
+//     this.pool = connectionPool; 
+//     
+//       
+//     ConnectionFactory connectionFactory = new ConnectionFactory() {
+//		
+//		@Override
+//		public Connection createConnection() throws SQLException {
+//
+//			return baseSource.getConnection(username,password);
+//		}
+//	};
+//	new PoolableConnectionFactory(
+//     	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
+//
+//       PoolingDataSource dataSource = 
+//       	new PoolingDataSource(connectionPool);
+//
+//       return dataSource;
+//   }
+//   
+//   public void printDriverStats() throws Exception {
+//       logger.info("NumActive: " + pool.getNumActive());
+//       logger.info("NumIdle: " + pool.getNumIdle());
+//   }
 
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.replication.api.ReplicationMessage.Operation;
 import com.dexels.replication.factory.ReplicationFactory;
 
+@SuppressWarnings("unchecked")
 public class ExpressionTest {
 
 	private Navajo testDoc;
@@ -71,7 +73,7 @@ public class ExpressionTest {
 		types.put("SomeString", "string");
 		values.put("SomeInteger", 3);
 		types.put("SomeInteger", "integer");
-		immutableMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		immutableMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(), null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 		
 		Map<String,Object> valueparams = new HashMap<>();
 		Map<String,String> typeparams = new HashMap<>();
@@ -79,7 +81,7 @@ public class ExpressionTest {
 		typeparams.put("SomeString", "string");
 		valueparams.put("SomeInteger", 4);
 		typeparams.put("SomeInteger", "integer");
-		paramMessage = ReplicationFactory.createReplicationMessage(null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		paramMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(),null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
 
 
 	}
@@ -266,4 +268,30 @@ public class ExpressionTest {
 		assertEquals(4, o.value);
 	}
 
+	@Test
+	public void testListWithMultipleTypes() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{1,'a',2+2}", testDoc);
+		List<Object> res = (List<Object>) o.value;
+		assertEquals(3, res.size());
+	}
+
+	@Test
+	public void testListWithSingleElement() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{'a'}", testDoc);
+		List<Object> res = (List<Object>) o.value;
+		assertEquals(1, res.size());
+	}
+
+	@Test
+	public void testTipiExpression() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{tipi:/bla}", null,null,null,e->"chicken",null,Optional.empty());
+		String s = (String) o.value;
+		assertEquals("chicken", s);
+	}
+
+
 }
+

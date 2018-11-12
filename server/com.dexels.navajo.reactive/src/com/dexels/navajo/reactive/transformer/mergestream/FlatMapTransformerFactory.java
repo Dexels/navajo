@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.mergestream;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.ReactiveBuildContext;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
+import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -75,7 +75,7 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Collections.emptyList());
+		return Optional.of(Arrays.asList(new String[]{"parallel"}));
 	}
 
 	@Override
@@ -85,7 +85,10 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		return Optional.of(Collections.emptyMap());
+		Map<String, String> r = new HashMap<>();
+		r.put("parallel", "integer");
+		return Optional.of(Collections.unmodifiableMap(r));
+
 	}
 
 	@Override

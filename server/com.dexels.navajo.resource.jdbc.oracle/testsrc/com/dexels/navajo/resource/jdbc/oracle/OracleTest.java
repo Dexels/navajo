@@ -1,15 +1,16 @@
 package com.dexels.navajo.resource.jdbc.oracle;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.sql.DataSource;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class OracleTest {
 			.getLogger(OracleTest.class);
 	
 	public static void main(String args[]) throws SQLException,
-			InterruptedException {
+			InterruptedException, IOException {
 
 		// Create a OracleConnectionPoolDataSource instance
 		// final OracleConnectionPoolDataSource ocpds =
@@ -42,60 +43,43 @@ public class OracleTest {
 		ow.activate(settings);
 		Thread.sleep(2000);
 		// Set connection parameters
+		FileWriter found = new FileWriter("foundids.txt");
 		long start = System.currentTimeMillis();
-		ExecutorService executor = Executors.newFixedThreadPool(5);
-		for (int i = 0; i < 10; i++) {
-			Runnable worker = new Runnable() {
-
-				@Override
-				public void run() {
-					for (int i = 0; i < 10; i++) {
-						try {
-							testConnection(ow);
-						} catch (SQLException e) {
-							logger.error("Error: ", e);
-						}
-					}
-				}
-			};
-			executor.execute(worker);
-		}
-		executor.shutdown();
-		while (!executor.isTerminated()) {
-		}
+		Connection conn = ow.getConnection();
+		AtomicInteger count = new AtomicInteger(0);
+		Files.lines(Paths.get("list.txt")).forEach(e->{
+			System.err.println("> "+e);
+			doQuery(conn,e,count.getAndIncrement(),found);
+		});
+		found.close();
 		logger.info("Finished all threads");
 		logger.info("Took: " + (System.currentTimeMillis() - start));
 	}
 
-	private static void testConnection(DataSource pc) throws SQLException {
-		// Create a pooled connection
-
-		// Get a Logical connection
-		Connection conn = pc.getConnection();
-		// Create a Statement
-		Statement stmt = conn.createStatement();
-
-		// Select the ENAME column from the EMP table
-		ResultSet rset = stmt.executeQuery("select * from sport");
-
-		// Iterate through the result and print the employee names
-		while (rset.next()) {
-			// System.out.println (rset.getString (1));
+	private static void doQuery(Connection conn, String e, int count, FileWriter found) {
+		String[] parts = e.split(",");
+		try {
+			if(count % 100 == 0) {
+				System.err.println("Progress: "+count);
+			}
+			Statement stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery("select count(*) from whatever");
+			rset.next();
+			int rows = rset.getInt(1);
+			if(rows<1) {
+				found.write(parts[0]+"<$>"+parts[1]+"<$>"+parts[2]+"\n");
+				System.err.println("Missing row detected: "+e);
+				found.flush();
+			}
+			stmt.close();
+			rset.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-
-		// Close the RseultSet
-		rset.close();
-		rset = null;
-
-		// Close the Statement
-		stmt.close();
-		stmt = null;
-
-		// Close the logical connection
-		conn.close();
-		// conn = null;
-
-		// Close the pooled connection
-		// pc = null;
+		
 	}
+
+
 }

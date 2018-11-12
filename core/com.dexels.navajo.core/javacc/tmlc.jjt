@@ -1,13 +1,11 @@
 /*
  * Navajo Expression Language
- * Copyright(c) 2001 Dexels BV
- * $Id$
- *
+ * Copyright(c) 2018 Dexels BV
  */
 
 options {
    MULTI=true;
-   LOOKAHEAD=1;
+   LOOKAHEAD=2;
    STATIC=false;
    NODE_PACKAGE="com.dexels.navajo.parser.compiled";
 }
@@ -49,7 +47,9 @@ TOKEN:
   <MIN: "-"> |
   <DIV: "/"> |
   <MOD: "%"> |
-  <NULL: "null">
+  <NULL: "null"> |
+  <PIPE: "->"> |
+  <HEADER: "=>">
 }
 
 TOKEN:
@@ -146,8 +146,8 @@ TOKEN:
 TOKEN:
 {
   <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
-  <STRING_LITERAL: "'"(<IDENTIFIER>|"|"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"\\'"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|"\t"|"~"|<DIGIT>)*"'" > |
-  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|"%"|<DIGIT>)*"`" > |
+      <STRING_LITERAL: "'"(<IDENTIFIER>|"|"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"\\'"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"/"|"\\"|"\t"|"~"|<DIGIT>)*"'" > |
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"|"|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|"%"|"^"|<DIGIT>)*"`" > |
   <TIPI_IDENTIFIER: "{"(<IDENTIFIER>|"~"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"\""|"\""|"/"|"\\"|<DIGIT>)+"}" >
 }
 
@@ -159,6 +159,7 @@ void ListExpression() #void:
      <BEGIN_LIST> [ Expression() {jjtThis.args++;} (<LIST_SEPARATOR> Expression() {jjtThis.args++;}) * ] <END_LIST>
    ) #ListNode
 }
+
 
 void Expression() #void:
 {
@@ -264,8 +265,17 @@ void FunctionLiteral() #void:
 }
 {
   (t = <NORMAL_IDENTIFIER>
-     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
     {jjtThis.functionName = t.image;    	}
+     "(" [
+        ( Expression() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		"," 
+     		(	Expression() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) * ]
+     ")"
   ) #FunctionNode
 }
 
@@ -335,3 +345,50 @@ void MappableLiteral() #void:
 ("(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")")?
 {jjtThis.val = t.image; } ) #MappableNode
 }
+
+void KeyValue() #void:
+{Token t;}
+{
+  (t = <NORMAL_IDENTIFIER> {jjtThis.val = t.image;} {jjtThis.args++;} "=" Expression() {jjtThis.args++;}
+  {jjtThis.val = t.image;}
+  ) #KeyValueNode
+}
+
+void Transformer() #void:
+{Token t;
+}
+{
+  (t = <NORMAL_IDENTIFIER> 
+     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
+    {jjtThis.transformerName = t.image;    	}
+  ) #TransformerNode
+}
+
+void ReactiveElement() #void:
+{
+}
+{
+	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
+}
+
+
+void ReactiveScript() #void:
+{
+}
+{
+	(
+/*		(<HEADER> Expression() {jjtThis.args++;})? */
+		(
+			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
+		) 
+	)  #ReactiveScriptNode
+	<EOF>
+}
+
+void ReactivePipe() #void:
+{
+}
+{
+	(Expression()   (<PIPE> Expression() )*
+	) #ReactivePipe
+} 

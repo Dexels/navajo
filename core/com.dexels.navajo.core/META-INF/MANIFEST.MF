@@ -125,6 +125,7 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.document.comparatormanager,
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.document.stream;version="3.0.5",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.persistence;version="2.2.0",
  com.dexels.navajo.repository.api,
@@ -167,3 +168,4 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
 Service-Component: OSGI-INF/*.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.core
