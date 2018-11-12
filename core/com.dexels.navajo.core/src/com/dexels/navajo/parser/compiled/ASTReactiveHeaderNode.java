@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public
 class ASTReactiveHeaderNode extends SimpleNode {
@@ -14,7 +15,7 @@ class ASTReactiveHeaderNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
 	// TODO Auto-generated method stub
 	return null;
 }

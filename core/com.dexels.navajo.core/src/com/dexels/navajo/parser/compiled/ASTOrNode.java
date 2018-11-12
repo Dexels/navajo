@@ -11,6 +11,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -20,10 +21,10 @@ public final class ASTOrNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
 		checkOrAdd("Or expression failed, first expression is not a boolean but a "+expA.returnType().orElse("<unknown>"), problems, expA.returnType(), Property.BOOLEAN_PROPERTY);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
 		checkOrAdd("Or expression failed, second expression is not a boolean but a "+expB.returnType().orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 		return new ContextExpression() {
 			

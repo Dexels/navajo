@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTExpressionLiteralNode extends SimpleNode {
 
@@ -17,10 +18,10 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
-        return ExpressionCache.getInstance().parse(problems,value);
+        return ExpressionCache.getInstance().parse(problems,value,mode);
 
 	}
 }

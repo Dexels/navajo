@@ -22,6 +22,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -55,23 +56,16 @@ public final class ASTFunctionNode extends SimpleNode {
 	}
 	
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression, ParseMode mode) {
 
 
 		List<ContextExpression> l = new LinkedList<>();
 		// TODO make lazy?
 		Map<String,ContextExpression> named = new HashMap<>();
 
-		// BEWARE: Don't actually use this function object, as it might have threading conflicts
-		FunctionInterface typeCheckInstance = getFunction();
-		if(typeCheckInstance==null) {
-			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
-		}
-//		System.err.println("# of operands: "+jjtGetNumChildren());
-		// TODO Type check input parameters
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);
-			ContextExpression cn = sn.interpretToLambda(problems, expression);
+			ContextExpression cn = sn.interpretToLambda(problems, expression,mode);
 			if(cn instanceof NamedExpression) {
 				NamedExpression ne = (NamedExpression)cn;
 				named.put(ne.name, ne.expression);
@@ -79,13 +73,101 @@ public final class ASTFunctionNode extends SimpleNode {
 				l.add(cn);
 			}
 		}
-		
-		// TODO Check if named params are constants (isLiteral), if so, resolve now.
-		
-//		for (int i = 0; i < args; i++) {
-//			ContextExpression a = jjtGetChild(i).interpretToLambda(problems,expression);
-//			l.add(a);
-//		}
+
+		switch (mode) {
+			case REACTIVE_HEADER:
+				
+				break;
+			case REACTIVE_SOURCE:
+				System.err.println("Creating reactive source: "+this.functionName);
+				return resolveReactiveSource(l, named, problems, expression);
+			case REACTIVE_TRANSFORMER:
+				System.err.println("Creating reactive transformer: "+this.functionName);
+				return resolveReactiveTransformer(l, named, problems, expression);
+	
+			case DEFAULT:
+				default:
+		}
+		return resolveNormalFunction(l, named, problems, expression);
+
+	}
+	private ContextExpression resolveReactiveSource(List<ContextExpression> l, Map<String, ContextExpression> named,
+			List<String> problems, String expression) {
+		return new ContextExpression() {
+			
+			@Override
+			public Optional<String> returnType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public boolean isLiteral() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public String expression() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+					Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+
+	}
+	private ContextExpression resolveReactiveTransformer(List<ContextExpression> l, Map<String, ContextExpression> named,
+			List<String> problems, String expression) {
+		return new ContextExpression() {
+			
+			@Override
+			public Optional<String> returnType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public boolean isLiteral() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public String expression() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+					Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+
+	}
+
+	
+	private ContextExpression resolveNormalFunction(List<ContextExpression> l, Map<String, ContextExpression> named,
+			List<String> problems, String expression) {
+		// BEWARE: Don't actually use this function object, as it might have threading conflicts
+
+		FunctionInterface typeCheckInstance = getFunction();
+		if(typeCheckInstance==null) {
+			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
+		}
+//		System.err.println("# of operands: "+jjtGetNumChildren());
+		// TODO Type check input parameters
+
 		try {
 			List<String> typeProblems = typeCheckInstance.typeCheck(l,expression);
 			if(!typeProblems.isEmpty()) {
@@ -105,7 +187,6 @@ public final class ASTFunctionNode extends SimpleNode {
 				return typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
 			}
 			
-//			List<String> problems
 			@Override
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {

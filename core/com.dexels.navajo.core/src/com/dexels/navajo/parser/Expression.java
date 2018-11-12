@@ -35,16 +35,6 @@ public final class Expression {
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
 	public static boolean compileExpressions = true; // Enabled by default
 	
-	static {
-		String env = System.getenv("COMPILED_EXPRESSIONS");
-		if (env != null) {
-		    compileExpressions = "true".equalsIgnoreCase(env);
-		}
-		logger.info("Compile expressions: {}", compileExpressions);
-		
-	}
-
-	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage) throws TMLExpressionException, SystemException {
 		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
 	}

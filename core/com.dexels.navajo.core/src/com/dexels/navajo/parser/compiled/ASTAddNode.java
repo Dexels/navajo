@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTAddNode extends SimpleNode {
@@ -17,8 +18,8 @@ public final class ASTAddNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression));
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),mode);
 	}
 	
 	public final Object interpret(Object a,Object b, String expression) {

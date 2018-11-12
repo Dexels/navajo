@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.replication.api.ReplicationMessage.Operation;
 import com.dexels.replication.factory.ReplicationFactory;
 
+@SuppressWarnings("unchecked")
 public class ExpressionTest {
 
 	private Navajo testDoc;
@@ -264,6 +266,30 @@ public class ExpressionTest {
 		Expression.compileExpressions = true;
 		Operand o = Expression.evaluate("[@SomeInteger]", testDoc,(MappableTreeNode)null,topMessage,(Message)null,(Selection)null,(TipiLink)null,Collections.emptyMap() ,Optional.of(immutableMessage),Optional.of(paramMessage));
 		assertEquals(4, o.value);
+	}
+
+	@Test
+	public void testListWithMultipleTypes() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{1,'a',2+2}", testDoc);
+		List<Object> res = (List<Object>) o.value;
+		assertEquals(3, res.size());
+	}
+
+	@Test
+	public void testListWithSingleElement() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{'a'}", testDoc);
+		List<Object> res = (List<Object>) o.value;
+		assertEquals(1, res.size());
+	}
+
+	@Test
+	public void testTipiExpression() throws Exception {
+		Expression.compileExpressions = true;
+		Operand o = Expression.evaluate("{tipi:/bla}", null,null,null,e->"chicken",null,Optional.empty());
+		String s = (String) o.value;
+		assertEquals("chicken", s);
 	}
 
 

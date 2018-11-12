@@ -36,6 +36,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -331,7 +332,7 @@ public class ReactiveScriptParser {
 				}
 				try {
 					List<String> probs = new ArrayList<>();
-					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e));
+					ContextExpression ce = ExpressionCache.getInstance().parse(probs,x.getStringAttribute(e),ParseMode.DEFAULT);
 					probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 					
 					if(ce.returnType().isPresent() && parameterTypes.isPresent()) {
@@ -409,7 +410,7 @@ public class ReactiveScriptParser {
 				if(name==null) {
 					if (evaluate) {
 						List<String> probs = new ArrayList<>();
-						ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+						ContextExpression ce = ExpressionCache.getInstance().parse(probs,content,ParseMode.DEFAULT);
 						probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 						// TODO should we type check unnamed parameters somehow?
 						Function3<StreamScriptContext,Optional<ImmutableMessage>, ImmutableMessage, Operand> value = (context,msg,param)->evaluateCompiledExpression(ce, context, Collections.emptyMap(), msg,Optional.of(param),streamInput);
@@ -424,7 +425,7 @@ public class ReactiveScriptParser {
 					
 						try {
 							List<String> probs = new ArrayList<>();
-							ContextExpression ce = ExpressionCache.getInstance().parse(probs,content);
+							ContextExpression ce = ExpressionCache.getInstance().parse(probs,content,ParseMode.DEFAULT);
 							probs.stream().forEach(elt->problems.add(ReactiveParseProblem.of(elt)));
 							if(ce.returnType().isPresent() && validator.parameterTypes().isPresent()) {
 								String ret = ce.returnType().get();

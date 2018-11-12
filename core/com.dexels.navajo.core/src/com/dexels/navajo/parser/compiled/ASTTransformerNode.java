@@ -5,7 +5,6 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -16,6 +15,7 @@ import com.dexels.navajo.parser.RenameTransformerFunction;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.TransformerFunction;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -29,13 +29,13 @@ public class ASTTransformerNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
 	// TODO do something prettier
 	List<ContextExpression> parameters = new ArrayList<>();
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		Node node = jjtGetChild(i);
 //		SimpleNode expr = (SimpleNode)node;
-		parameters.add(node.interpretToLambda(problems, originalExpression));
+		parameters.add(node.interpretToLambda(problems, originalExpression,mode));
 		System.err.println("NODE: "+node);
 	}
 	return new ContextExpression() {

@@ -50,7 +50,6 @@ TOKEN:
   <NULL: "null"> |
   <PIPE: "->"> |
   <HEADER: "=>">
-  
 }
 
 TOKEN:
@@ -147,8 +146,8 @@ TOKEN:
 TOKEN:
 {
   <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
-  <STRING_LITERAL: "'"(<IDENTIFIER>|"|"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"\\'"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|"\t"|"~"|<DIGIT>)*"'" > |
-  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|"%"|<DIGIT>)*"`" > |
+      <STRING_LITERAL: "'"(<IDENTIFIER>|"|"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"\\'"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"/"|"\\"|"\t"|"~"|<DIGIT>)*"'" > |
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"|"|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|"%"|"^"|<DIGIT>)*"`" > |
   <TIPI_IDENTIFIER: "{"(<IDENTIFIER>|"~"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"\""|"\""|"/"|"\\"|<DIGIT>)+"}" >
 }
 
@@ -372,15 +371,24 @@ void ReactiveElement() #void:
 	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
 }
 
+
 void ReactiveScript() #void:
 {
 }
 {
 	(
-		(<HEADER> FunctionLiteral() {jjtThis.args++;})?
+/*		(<HEADER> Expression() {jjtThis.args++;})? */
 		(
-			FunctionLiteral() {jjtThis.args++;}  (FunctionLiteral() {jjtThis.args++;})*
+			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
 		) 
-	) #ReactiveScriptNode
+	)  #ReactiveScriptNode
+	<EOF>
 }
 
+void ReactivePipe() #void:
+{
+}
+{
+	(Expression()   (<PIPE> Expression() )*
+	) #ReactivePipe
+} 

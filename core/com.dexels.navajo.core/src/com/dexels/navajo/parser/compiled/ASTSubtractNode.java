@@ -11,6 +11,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTSubtractNode extends SimpleNode {
@@ -19,8 +20,8 @@ public final class ASTSubtractNode extends SimpleNode {
     }
     
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypesOrDateWithDatePattern(),(a,b)->Optional.empty());
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypesOrDateWithDatePattern(),(a,b)->Optional.empty(),mode);
 	}
 	
     protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypesOrDateWithDatePattern() {

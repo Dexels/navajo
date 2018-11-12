@@ -20,6 +20,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public class TestCompiledExpression {
 
@@ -58,7 +59,7 @@ public class TestCompiledExpression {
 	@Test
 	public void testFunctionParamTypeError() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)");
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",ParseMode.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType());
 		if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
@@ -73,7 +74,7 @@ public class TestCompiledExpression {
 	@Test
 	public void testNestedFunctionType() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))");
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",ParseMode.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType().orElse("<unknown>"));
 		Assert.assertTrue("Expected a return type here", o.returnType().isPresent());
@@ -84,7 +85,7 @@ public class TestCompiledExpression {
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		List<String> problems = new ArrayList<>();
-		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])");
+		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",ParseMode.DEFAULT);
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
 	}
 

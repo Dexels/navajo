@@ -16,6 +16,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -44,7 +45,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
 		return new ContextExpression() {
 			
 			@Override
@@ -56,8 +57,8 @@ public final class ASTForAllNode extends SimpleNode {
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
-				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression);
-				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression);
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,mode);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,mode);
 				
 				if(!problems.isEmpty()) {
 					throw new TMLExpressionException(problems,expression);
