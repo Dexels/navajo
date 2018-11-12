@@ -32,16 +32,13 @@ import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslPreCompiler {
     private static final  Logger logger = LoggerFactory.getLogger(TslPreCompiler.class);
-    private NavajoIOConfig navajoIOConfig = null;
     private final InputStreamReader inputStreamReader = new FileInputStreamReader();
 
 
     public void setIOConfig(NavajoIOConfig config) {
-        this.navajoIOConfig = config;
     }
 
     public void clearIOConfig(NavajoIOConfig config) {
-        this.navajoIOConfig = null;
     }
 
     public void getAllDependencies(File script, String scriptFolder, List<Dependency> deps, String scriptTenant) throws XPathExpressionException, UserException {
