@@ -155,10 +155,6 @@ public class Entity {
         startEntity();
         setMyConfigurations();
 
-        Operation head = new OperationComponent();
-        head.setEntityName(getName());
-        head.setMethod("HEAD");
-
         // Add operations defined in entity.
         refreshEntityManagerOperationsFromNavajo(n);
     }
