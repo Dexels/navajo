@@ -786,6 +786,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (mergeThisMsg.getExtends() != null && (origMsg.getExtends() == null || origMsg.getExtends().equals(""))) {
             origMsg.setExtends(mergeThisMsg.getExtends());
         }
+        if (mergeThisMsg.getSubType() != null && (origMsg.getSubType() == null || origMsg.getSubType().equals(""))) {
+            origMsg.setSubType(mergeThisMsg.getSubType());
+        }
 
         // Find overlapping children.
         List<Message> childrenPrev = origMsg.getAllMessages();
