@@ -878,6 +878,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         cp.setScope(getScope());
         cp.setMethod(getMethod());
         cp.setSubType(getSubType());
+        cp.setSubTypesMap(getSubTypesMap());
         cp.setOrderBy(getOrderBy());
 
         // If definition message is available, copy it as well.
@@ -906,7 +907,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return cp;
     }
 
-    public final void prune() {
+    private Map<String,String> getSubTypesMap() {
+		return this.subtypeMap;
+	}
+
+	private void setSubTypesMap(Map<String, String> subTypes) {
+		this.subtypeMap = subTypes;
+	}
+
+	public final void prune() {
 
         if (messageList != null) {
             for (int i = 0; i < messageList.size(); i++) {
