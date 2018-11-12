@@ -119,7 +119,7 @@ public interface Message
 
   
   /**
-   * Sets the complete subtype attribute of a property.
+   * Sets the complete subtype attribute of a message.
    *
    * @param subType the subtype key.
    */
@@ -132,7 +132,13 @@ public interface Message
    * @return the subtype value
    */
   public String getSubType(String key);
-
+  
+  /**
+   * Get the value of the complete subtype attribute of a message.
+   *
+   * @return the subtypes value
+   */
+  public String getSubType();
   
   /**
    * Get all subtypes.
