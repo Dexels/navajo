@@ -58,7 +58,7 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 		        // Only log if we have useful context
 		        logger.error("TML parsing issue with expression: {} exception", clause, e );
 		    }
-			throw new TMLExpressionException("TML parsing issue");
+			throw new TMLExpressionException("TML parsing issue", e);
 		}
 	}
 
