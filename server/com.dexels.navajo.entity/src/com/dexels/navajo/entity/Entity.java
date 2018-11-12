@@ -381,7 +381,7 @@ public class Entity {
             }
         }
         // Copy properties/messages from superEntity.
-        m.merge(incoming, true);
+        m.merge(incoming, true, false);
         registerSuperEntity(superEntity);
     }
 
