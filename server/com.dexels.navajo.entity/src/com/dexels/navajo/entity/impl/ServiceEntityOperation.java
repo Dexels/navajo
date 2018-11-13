@@ -426,23 +426,22 @@ public class ServiceEntityOperation implements EntityOperation {
                         "Could not perform insert, missing required properties: " + listToString(missing));
             }
         }
-
-		// Merge input, except when modifying existing entry to prevent clearing
-		// existing fields
-		boolean merge = true;
-		if (myOperation.getMethod().equals(Operation.PUT)) {
-			// Don't merge input on PUT (update) operation to prevent overwriting missing
-			// attributes that
-			// are already present in the backend with empty values
-			merge = false;
-		}
-		try {
+        
+        // first clean the input without merging, so we can check do the checksubtypes without the merged properties
+        clean(input, "request", false, false, entityVersion);
+        try {
         	checkSubTypes(input.getRootMessage());
         } catch (Exception e) {
         	logger.error("Subtypes check failed {}",e);
         	throw new EntityException(EntityException.BAD_REQUEST, e);
         }
-        clean(input, "request", false, merge, entityVersion);
+
+		// Merge input, except when modifying existing entry to prevent clearing
+		// existing fields
+		if (!myOperation.getMethod().equals(Operation.PUT)) {
+			clean(input, "request", false, true, entityVersion);
+		}
+
 
         // Add the entity input message
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
