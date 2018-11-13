@@ -48,19 +48,6 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.StandardTransformerMetadata;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
-import com.dexels.navajo.reactive.mappers.Delete;
-import com.dexels.navajo.reactive.mappers.DeleteSubMessage;
-import com.dexels.navajo.reactive.mappers.JsonFileAppender;
-import com.dexels.navajo.reactive.mappers.Log;
-import com.dexels.navajo.reactive.mappers.LogState;
-import com.dexels.navajo.reactive.mappers.Rename;
-import com.dexels.navajo.reactive.mappers.SetSingle;
-import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
-import com.dexels.navajo.reactive.mappers.Store;
-import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
-import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
-import com.dexels.navajo.reactive.mappers.StoreSingle;
-import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformer;
 
 import io.reactivex.Flowable;
@@ -73,56 +60,77 @@ public class ReactiveScriptParser {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveScriptParser.class);
+	
+	private ReactiveFinder finder;
+	
+	// TODO
+	public void setReactiveFinder(ReactiveFinder finder) {
+		this.finder = finder;
+	}
 
-	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
-	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
-	private final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
+	public void clearReactiveFinder(ReactiveFinder finder) {
+		this.finder = null;
+	}
+	
+//
+//	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
+//	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
+//	private final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
+//
+//	public final Set<String> sourceFactories() {
+//		return factories.keySet();
+//	}
+//
+//	public final Set<String> transformerFactories() {
+//		return reactiveOperatorFactory.keySet();
+//	}
+//
+//	public final Set<String> reactiveMappers() {
+//		return reactiveReducer.keySet();
+//	}
+//
+//	public final ReactiveSourceFactory getSourceFactory(String name) {
+//		return factories.get(name);
+//	}
+//
+//	public final ReactiveTransformerFactory getTransformerFactory(String name) {
+//		return reactiveOperatorFactory.get(name);
+//	}
+//
+//	public final ReactiveMerger getMergerFactory(String name) {
+//		return reactiveReducer.get(name);
+//	}
 
 	private enum TagType {
 		TRANSFORMER,
 		MAPPER, UNKNOWN
 	}
-	public ReactiveScriptParser() {
-		reactiveReducer.put("set", new SetSingle());
-		reactiveReducer.put("setkv", new SetSingleKeyValue());
-		reactiveReducer.put("toSubMessage", new ToSubMessage());
-		reactiveReducer.put("delete", new Delete());
-		reactiveReducer.put("deleteAll", new DeleteSubMessage());
-		reactiveReducer.put("rename", new Rename());
-		reactiveReducer.put("dump", new JsonFileAppender());
-		reactiveReducer.put("log", new Log());
-		reactiveReducer.put("logState", new LogState());
-		reactiveReducer.put("saveall", new Store());
-		reactiveReducer.put("save", new StoreSingle());
-		reactiveReducer.put("store", new StoreAsSubMessage());
-		reactiveReducer.put("storeList", new StoreAsSubMessageList());
-		
-	}
-	
-	public void addReactiveSourceFactory(ReactiveSourceFactory factory, String name) {
-		factories.put(name, factory);
-	}
 
-	public void addReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
-		factories.put((String) settings.get("name"), factory);
-	}
-
-	public void removeReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
-		String name = (String) settings.get("name");
-		factories.remove(name);
-	}
-
-	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, String name) {
-		reactiveOperatorFactory.put(name, factory);
-	}
-	
-	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
-		reactiveOperatorFactory.put((String) settings.get("name"), factory);
-	}
-
-	public void removeReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
-		reactiveOperatorFactory.remove((String) settings.get("name"));
-	}
+//	
+//	public void addReactiveSourceFactory(ReactiveSourceFactory factory, String name) {
+//		factories.put(name, factory);
+//	}
+//
+//	public void addReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
+//		factories.put((String) settings.get("name"), factory);
+//	}
+//
+//	public void removeReactiveSourceFactory(ReactiveSourceFactory factory, Map<String,Object> settings) {
+//		String name = (String) settings.get("name");
+//		factories.remove(name);
+//	}
+//
+//	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, String name) {
+//		reactiveOperatorFactory.put(name, factory);
+//	}
+//	
+//	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
+//		reactiveOperatorFactory.put((String) settings.get("name"), factory);
+//	}
+//
+//	public void removeReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
+//		reactiveOperatorFactory.remove((String) settings.get("name"));
+//	}
 	
 	ReactiveScript parse(String serviceName, InputStream in, String relativePath, Optional<Type> desiredType) throws UnsupportedEncodingException, IOException {
 		List<ReactiveParseProblem> problems = new ArrayList<>();
@@ -213,7 +221,7 @@ public class ReactiveScriptParser {
 	}
 
 	public ReactiveTransformerFactory getTransformerFactory(String name, Type inferType, List<ReactiveParseProblem> problems, XMLElement xx, String relativePath) {
-		ReactiveTransformerFactory base = this.reactiveOperatorFactory.get(name);
+		ReactiveTransformerFactory base = finder.getTransformerFactory(name);
 		
 		Set<Type> baseAllowed = base.inType();
 		if(!baseAllowed.contains(inferType)) {
@@ -246,9 +254,9 @@ public class ReactiveScriptParser {
 				.stream()
 				.map(xx->{
 					ReactiveBuildContext buildContext = ReactiveBuildContext.of(operatorName->{ 
-						ReactiveSourceFactory src = this.factories.get(operatorName);
+						ReactiveSourceFactory src = finder.getSourceFactory(operatorName);
 						if(src==null) {
-							String msg = "Missing source for factory: "+operatorName+" available sources: "+factories.keySet();
+							String msg = "Missing source for factory: "+operatorName+" available sources: "+finder.sourceFactories();
 							ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
 							problems.add(rpp);
 						}
@@ -260,14 +268,14 @@ public class ReactiveScriptParser {
 						
 						if(transformer==null) {
 							String msg = "Missing transformer for factory: "+operatorName;
-							System.err.println("available transformers: "+this.reactiveOperatorFactory.keySet());
+							System.err.println("available transformers: "+finder.transformerFactories());
 							ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
 							problems.add(rpp);
 							throw new RuntimeException(msg);
 						}
 						return transformer;
 					}, operatorName->{
-						ReactiveMerger mpr = this.reactiveReducer.get(operatorName);
+						ReactiveMerger mpr = finder.getMergerFactory(operatorName);
 						if(mpr==null) {
 							String msg = "Missing mapper for factory: "+operatorName;
 							ReactiveParseProblem rpp = ReactiveParseProblem.of(msg).withTag(xx).withRelativePath(relativePath);
@@ -275,8 +283,8 @@ public class ReactiveScriptParser {
 							throw new RuntimeException(msg);
 						}
 						return mpr;
-					}, reactiveOperatorFactory.keySet(),
-	reactiveReducer.keySet()
+					}, finder.transformerFactories() ,
+	finder.reactiveMappers()
 	, !streamInput);
 					try {
 						return parseSource(relativePath, xx,problems,buildContext,desiredType);

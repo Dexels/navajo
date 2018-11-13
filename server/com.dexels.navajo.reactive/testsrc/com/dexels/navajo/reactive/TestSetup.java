@@ -1,7 +1,10 @@
 package com.dexels.navajo.reactive;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Optional;
+
+import org.junit.Before;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.NavajoFactory;
@@ -18,6 +21,7 @@ import com.dexels.navajo.reactive.transformer.filestore.FileStoreTransformerFact
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
+import com.dexels.navajo.reactive.transformer.other.IntervalTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.SkipTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
@@ -31,28 +35,37 @@ public class TestSetup {
 
 	public static ReactiveScriptParser setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
-		ImmutableFactory.setInstance(ImmutableFactory.createParser());
-		Expression.compileExpressions = true;
+//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+		File root = new File("testscripts");
+//		env = new ReactiveScriptEnvironment(root);
 		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
-		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
-		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
-		reactiveScriptParser.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
-		reactiveScriptParser.addReactiveSourceFactory(new EventStreamSourceFactory(),"eventstream");
-		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
-		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
-		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
-		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
-		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
-		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
-		reactiveScriptParser.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
-		reactiveScriptParser.addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
-		reactiveScriptParser.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
-		reactiveScriptParser.addReactiveTransformerFactory(new SkipTransformerFactory(),"skip");
-		reactiveScriptParser.addReactiveTransformerFactory(new ParseEventStreamFactory(),"streamtoimmutable");
-		reactiveScriptParser.addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
+		ReactiveFinder finder = new CoreReactiveFinder();
+		reactiveScriptParser = new ReactiveScriptParser();
+		reactiveScriptParser.setReactiveFinder(finder);
+//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
+		Expression.compileExpressions = true;
+//		finder.a
+		finder.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
+		finder.addReactiveSourceFactory(new SingleSourceFactory(),"single");
+		finder.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
+		finder.addReactiveSourceFactory(new EventStreamSourceFactory(),"eventstream");
+		finder.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+		finder.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
+		finder.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
+		finder.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
+		finder.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
+		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
+		finder.addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
+		finder.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
+		finder.addReactiveTransformerFactory(new SkipTransformerFactory(),"skip");
+		finder.addReactiveTransformerFactory(new ParseEventStreamFactory(),"streamtoimmutable");
+		finder.addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
+		finder.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
+//		env.setReactiveScriptParser(reactiveScriptParser);
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		return reactiveScriptParser;
 	}
-	
 	
 	public static StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
 //		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
