@@ -528,7 +528,15 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		Navajo currentEntity = getCurrentEntity(input);
 		validateEtag(input, inputEntity, currentEntity);
-
+		
+		// Add the current entity to the input of the service. Since a get is happening in backend level, this addition
+		// allows the developers to reuse the gotten entity, instead of recalling it inside the webservice. 
+		if( currentEntity != null && currentEntity.getMessage(inputEntity.getName()) != null ) {
+			Message currentMessage = currentEntity.getMessage(inputEntity.getName()).copy();
+			currentMessage.setName("CurrentEntity");
+			input.getMessage("__entity__").addMessage(currentMessage);
+		}
+		
 		if (hasExtraMessageMongo()) {
 			if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
 				// TODO: Monogo backend does not support PUT for inserts. Thus we give an
@@ -652,6 +660,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			if (!(postedEtag.equals(entityMessage.generateEtag()))) {
 				throw new EntityException(EntityException.ETAG_ERROR);
 			}
+			
 		}
 	}
 
