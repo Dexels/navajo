@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive;
+package com.dexels.navajo.reactive.api;
 
 import java.util.Set;
 

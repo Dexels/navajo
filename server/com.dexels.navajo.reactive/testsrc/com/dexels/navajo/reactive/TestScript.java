@@ -18,6 +18,7 @@ import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.stored.InputStreamSourceFactory;

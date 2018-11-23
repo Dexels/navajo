@@ -39,6 +39,7 @@ import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
+import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
