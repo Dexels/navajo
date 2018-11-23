@@ -36,6 +36,8 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		
+		long start = System.currentTimeMillis();
+		
 		if ( getOperands().size() != 7 ) {
 			throw new TMLExpressionException("Invalid number of operands.");
 		}
@@ -80,9 +82,33 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 			binaryColumnName = (String) getOperand(6);
 		}
 		
+		// Max in operator in oracle takes 1000 ites, but we need more ::
+		int numOfItems = items.size();
+		String queryPart = "";
+		int startPosition = 0;
+		int endPosition = 999;
+		if(startPosition + endPosition >= numOfItems) {
+			endPosition = numOfItems - 1;
+		} else {
+			endPosition = startPosition + 999;
+		}
+		while(endPosition <= numOfItems && startPosition != endPosition) {
+			queryPart = queryPart + " or "+ tableId +" in " + items.subList(startPosition, endPosition).toString().replace(",","','").replace("[", "('").replace("]","')").replace(" ", "");
+			startPosition = endPosition;
+			if(endPosition + 999 >= numOfItems) {
+				endPosition = numOfItems;
+			} else {
+				endPosition = startPosition + 999;
+			}
+			
+		}
 		
+		queryPart = queryPart.substring(4).substring(tableId.length());
 		
-		String query = "select * FROM document where "+ tableId + " in "+items.toString().replace(",","','").replace("[", "('").replace("]","')").replace(" ", "") + " AND objectType  = '" + objectType +"'";
+		String query = "select * FROM document where " + tableId 
+						+	queryPart
+						+ " AND objectType  = '" + objectType +"'";
+
 		JDBCMappable sql = null;
 		ArrayList result = new ArrayList();
 		
@@ -90,10 +116,11 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 			sql = JDBCFactory.getJDBCMap(getAccess());
 			if (transactionContext != -1) {
 				  sql.setTransactionContext(transactionContext);
-			  }
+			} else {
+				sql.setDatasource(datasource);
+				sql.setUsername(username);
+			}
 			sql.setQuery(query);
-			sql.setDatasource(datasource);
-			sql.setUsername(username);
 			System.out.println(query);
 			ResultSetMap [] resultSet = sql.getResultSet();
 			if (resultSet.length > 0) {
@@ -127,6 +154,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 					merger.mergeDocuments();
 					Binary resultPDF = new Binary(new File(fileName), false);
 					tempFile.delete();
+					
 					return resultPDF;
 					
 				} catch (IOException e) {
@@ -138,6 +166,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 			sql.kill();
 			throw new TMLExpressionException(this, "Fatal error: " + e.getMessage() + ", query = " + query,e);
 		} finally {
+			long end = System.currentTimeMillis();
 			sql.kill();
 		}
 				
