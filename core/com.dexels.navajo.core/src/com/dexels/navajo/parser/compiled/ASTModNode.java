@@ -7,14 +7,15 @@ import java.util.Optional;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTModNode extends SimpleNode {
     public ASTModNode(int id) {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY));
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),mode);
 	}
 
 	public final Object interpret(Object a, Object b){

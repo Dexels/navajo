@@ -38,6 +38,7 @@ public interface CompiledParserTreeConstants
   public int JJTTRANSFORMERNODE = 32;
   public int JJTREACTIVEELEMENTNODE = 33;
   public int JJTREACTIVESCRIPTNODE = 34;
+  public int JJTREACTIVEPIPE = 35;
 
 
   public String[] jjtNodeName = {
@@ -76,6 +77,7 @@ public interface CompiledParserTreeConstants
     "TransformerNode",
     "ReactiveElementNode",
     "ReactiveScriptNode",
+    "ReactivePipe",
   };
 }
-/* JavaCC - OriginalChecksum=3066d0b424cef08859355090be0ac5dc (do not edit this line) */
+/* JavaCC - OriginalChecksum=8034eafc1d4cbd7117f0489898c50002 (do not edit this line) */

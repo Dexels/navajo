@@ -786,6 +786,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (mergeThisMsg.getExtends() != null && (origMsg.getExtends() == null || origMsg.getExtends().equals(""))) {
             origMsg.setExtends(mergeThisMsg.getExtends());
         }
+        if (mergeThisMsg.getSubType() != null && (origMsg.getSubType() == null || origMsg.getSubType().equals(""))) {
+            origMsg.setSubType(mergeThisMsg.getSubType());
+        }
 
         // Find overlapping children.
         List<Message> childrenPrev = origMsg.getAllMessages();
@@ -874,6 +877,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         cp.setExtends(getExtends());
         cp.setScope(getScope());
         cp.setMethod(getMethod());
+        cp.setSubType(getSubType());
         cp.setOrderBy(getOrderBy());
 
         // If definition message is available, copy it as well.
@@ -902,7 +906,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return cp;
     }
 
-    public final void prune() {
+    private Map<String,String> getSubTypesMap() {
+		return this.subtypeMap;
+	}
+
+	private void setSubTypesMap(Map<String, String> subTypes) {
+		this.subtypeMap = subTypes;
+	}
+
+	public final void prune() {
 
         if (messageList != null) {
             for (int i = 0; i < messageList.size(); i++) {
@@ -1648,9 +1660,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return new ArrayList<Message>(messageList);
         }
     }
-
+    
     @Override
     public void merge(Message incoming, boolean preferThis) {
+    	merge(incoming, preferThis, true);
+    }
+
+    @Override
+    public void merge(Message incoming, boolean preferThis, boolean applySubType) {
         if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
             // Perform merge for all my children with the definition message
             for (Message child : this.getElements()) {
@@ -1660,6 +1677,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
         if (incoming.getScope() != null && (this.getScope() == null || this.getScope().equals(""))) {
             this.setScope(incoming.getScope());
+        }
+        if (incoming.getSubType() != null && (this.getSubType() == null || this.getSubType().equals(""))) {
+            this.setSubType(incoming.getSubType());
         }
 
         // Check if message with incoming name exists.
@@ -1690,6 +1710,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             String newMsgName = subMessages.get(i).getName();
             Message existing = this.getMessage(newMsgName);
             if (existing == null) {
+            	// if we dont have this message ourselves and incoming message has it marked as nullable, then we should NOT add it (because we explicitly allow the message to not exist)
+            	String nullableString = subMessages.get(i).getSubType("nullable");
+    			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
+    			if (nullable && applySubType) {
+    				continue;
+    			}
                 try {
                     Message newMsg = subMessages.get(i).copy();
                     Message o_m = null;
@@ -1755,7 +1781,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 removeProperty(p);
                 continue;
             }
-
+            
+            p.setSubType(m_p.getSubType());
+            
             // A method that is null or "" is considered to always match
             boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")
                     || p.getMethod().equals("") || p.getMethod().equals(method);
@@ -1767,7 +1795,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                     logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(), m_p.getType());
                 }
                 p.setType(m_p.getType());
-                p.setSubType(m_p.getSubType());
             }
         }
 

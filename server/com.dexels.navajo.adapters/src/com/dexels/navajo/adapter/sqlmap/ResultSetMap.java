@@ -137,5 +137,9 @@ public class ResultSetMap implements Mappable {
 	public String getColumnName() {
 		return columnName;
 	}
+	
+	public int getValuesSize() {
+		return values.size();
+	}
 
 }

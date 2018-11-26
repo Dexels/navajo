@@ -37,6 +37,11 @@ public void load(Access access) throws MappableException, UserException {
 		  to.setScope(from.getScope());
 	  }
 	  
+	  // Copy subtypes
+	  if ( from.getSubType() != null && !from.getSubType().equals("")) {
+		  to.setSubType(from.getSubType());
+	  }
+	  
 	  // Copy extends.
 	  if ( from.getExtends() != null && !from.getExtends().equals("") ) {
 		  to.setExtends(from.getExtends());

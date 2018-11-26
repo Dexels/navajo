@@ -770,6 +770,7 @@ public class TslCompiler {
 		String extendsMsg = n.getAttribute("extends");
 		String scopeMsg = n.getAttribute("scope");
 		String method = n.getAttribute("method");
+		String subType = n.getAttribute("subtype");
 		
 		// //System.out.println("COUNT = " + count);
 		type = (type == null) ? "" : type;
@@ -777,6 +778,7 @@ public class TslCompiler {
 		condition = (condition == null) ? "" : condition;
 		count = (count == null || count.equals("")) ? "1" : count;
 		method = (method == null) ? "" : method;
+		subType = (subType == null) ? "" : subType;
 		int startIndex = (start_index == null || start_index.equals("")) ? -1
 				: Integer.parseInt(start_index);
 
@@ -923,6 +925,11 @@ public class TslCompiler {
 					+ "outMsgStack.push(currentOutMsg);\n");
 			result.append(printIdent(ident + 2) + "currentOutMsg = "
 					+ messageList + "[messageCount" + (ident) + "];\n");
+			
+			if (subType != null && !subType.equals("")) {
+				result.append(printIdent(ident + 2)
+						+ "currentOutMsg.setSubType(\"" + subType + "\");\n");
+			}
 			if (extendsMsg != null && !extendsMsg.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");

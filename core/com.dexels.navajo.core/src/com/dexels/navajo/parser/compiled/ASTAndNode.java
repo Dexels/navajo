@@ -11,6 +11,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
@@ -21,9 +22,9 @@ public final class ASTAndNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression);
+	public ContextExpression interpretToLambda(List<String> problems,String expression, ParseMode mode) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
 		Optional<String> expressionA = expA.returnType();
 		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 //		

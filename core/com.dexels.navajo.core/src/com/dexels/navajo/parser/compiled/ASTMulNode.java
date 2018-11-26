@@ -9,6 +9,7 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 
 public final class ASTMulNode extends SimpleNode {
@@ -17,9 +18,9 @@ public final class ASTMulNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
 		// TODO We can do *some* type restriction, just not much.
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty());
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty(),mode);
 	}
 	
 	public  Object interpret(Object a, Object b) {

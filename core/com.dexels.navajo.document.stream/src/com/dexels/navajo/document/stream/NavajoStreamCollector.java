@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.reactivestreams.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,12 +143,8 @@ public class NavajoStreamCollector {
 			return Optional.empty();
 			
 		case MESSAGE_DEFINITION_STARTED:
-			// TODO
 			return Optional.empty();
 		case MESSAGE_DEFINITION:
-			// TODO
-			//			tagStack.push(n.path());
-			//			deferredMessages.get(stripIndex(n.path())).setDefinitionMessage((Message) n.body());
 			return Optional.empty();
 		case NAVAJO_DONE:
 			@SuppressWarnings("unchecked")

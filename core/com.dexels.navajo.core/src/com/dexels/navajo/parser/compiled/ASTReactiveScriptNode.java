@@ -5,17 +5,25 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public
 class ASTReactiveScriptNode extends SimpleNode {
   public int args = 0;
+  public ASTFunctionNode header = null;
   public ASTReactiveScriptNode(int id) {
     super(id);
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression) {
-	// TODO Auto-generated method stub
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+	// TODO support headers;
+	
+	for (int i = 0; i < jjtGetNumChildren(); i++) {
+		ASTReactivePipe pipe = (ASTReactivePipe) jjtGetChild(i);
+		pipe.interpretToLambda(problems,originalExpression,ParseMode.DEFAULT);
+		
+	}
 	return null;
 }
 

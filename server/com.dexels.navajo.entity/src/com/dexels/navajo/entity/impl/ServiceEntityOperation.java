@@ -258,9 +258,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 		}
 		if (n.getMessage(myEntity.getMessageName()) != null) {
-			String nullableString = null; //n.getMessage(myEntity.getMessageName()).getSubType("nullable");
-			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
-			if (merge && !nullable) {
+			if (merge) {
                 n.getMessage(myEntity.getMessageName()).merge(myEntity.getMessage(entityVersion), true);
 			}
             n.getMessage(myEntity.getMessageName()).maskMessage(myEntity.getMessage(entityVersion), method);
@@ -428,23 +426,22 @@ public class ServiceEntityOperation implements EntityOperation {
                         "Could not perform insert, missing required properties: " + listToString(missing));
             }
         }
-
-		// Merge input, except when modifying existing entry to prevent clearing
-		// existing fields
-		boolean merge = true;
-		if (myOperation.getMethod().equals(Operation.PUT)) {
-			// Don't merge input on PUT (update) operation to prevent overwriting missing
-			// attributes that
-			// are already present in the backend with empty values
-			merge = false;
-		}
-		try {
+        
+        // first clean the input without merging, so we can check do the checksubtypes without the merged properties
+        clean(input, "request", false, false, entityVersion);
+        try {
         	checkSubTypes(input.getRootMessage());
         } catch (Exception e) {
         	logger.error("Subtypes check failed {}",e);
         	throw new EntityException(EntityException.BAD_REQUEST, e);
         }
-        clean(input, "request", false, merge, entityVersion);
+
+		// Merge input, except when modifying existing entry to prevent clearing
+		// existing fields
+		if (!myOperation.getMethod().equals(Operation.PUT)) {
+			clean(input, "request", false, true, entityVersion);
+		}
+
 
         // Add the entity input message
         Message entityInfo = NavajoFactory.getInstance().createMessage(input, "__entity__");
@@ -531,7 +528,15 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		Navajo currentEntity = getCurrentEntity(input);
 		validateEtag(input, inputEntity, currentEntity);
-
+		
+		// Add the current entity to the input of the service. Since a get is happening in backend level, this addition
+		// allows the developers to reuse the gotten entity, instead of recalling it inside the webservice. 
+		if( currentEntity != null && currentEntity.getMessage(inputEntity.getName()) != null ) {
+			Message currentMessage = currentEntity.getMessage(inputEntity.getName()).copy();
+			currentMessage.setName("CurrentEntity");
+			input.getMessage("__entity__").addMessage(currentMessage);
+		}
+		
 		if (hasExtraMessageMongo()) {
 			if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
 				// TODO: Monogo backend does not support PUT for inserts. Thus we give an
@@ -655,6 +660,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			if (!(postedEtag.equals(entityMessage.generateEtag()))) {
 				throw new EntityException(EntityException.ETAG_ERROR);
 			}
+			
 		}
 	}
 

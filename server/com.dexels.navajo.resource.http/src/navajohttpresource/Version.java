@@ -1,13 +1,13 @@
 package navajohttpresource;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.resource.http.bundle.ResourceAdapterFunctionLibrary;
 import com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary;
+
+import navajoextension.AbstractCoreExtension;
 
 /**
  * <p>Title: Navajo Product Project</p>

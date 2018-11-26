@@ -8,15 +8,16 @@ import java.util.Optional;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTNotNode extends SimpleNode {
     public ASTNotNode(int id) {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
 		
-		return lazyFunction(problems,expression, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY));
+		return lazyFunction(problems,expression, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY),mode);
 	}
 
 	public final Object interpret(Object a) {

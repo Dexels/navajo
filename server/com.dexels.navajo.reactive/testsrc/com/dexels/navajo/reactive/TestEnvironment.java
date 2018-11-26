@@ -52,25 +52,27 @@ public class TestEnvironment {
 		File root = new File("testscripts");
 		env = new ReactiveScriptEnvironment(root);
 		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
+		ReactiveFinder finder = new CoreReactiveFinder();
+		reactiveScriptParser = new ReactiveScriptParser();
+		reactiveScriptParser.setReactiveFinder(finder);
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
-		reactiveScriptParser = new ReactiveScriptParser();
-		reactiveScriptParser.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
-		reactiveScriptParser.addReactiveSourceFactory(new SingleSourceFactory(),"single");
-		reactiveScriptParser.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
-		reactiveScriptParser.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
-		reactiveScriptParser.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
-		reactiveScriptParser.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
-		reactiveScriptParser.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
-		reactiveScriptParser.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
-		reactiveScriptParser.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
-		reactiveScriptParser.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
-		reactiveScriptParser.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
-        reactiveScriptParser.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
+//		finder.a
+		finder.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
+		finder.addReactiveSourceFactory(new SingleSourceFactory(),"single");
+		finder.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
+		finder.addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+		finder.addReactiveTransformerFactory(new FileStoreTransformerFactory(),"filestore");
+		finder.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
+		finder.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
+		finder.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
+		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
+		finder.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
+		finder.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
 
 		env.setReactiveScriptParser(reactiveScriptParser);
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
-//		rsp.addReactiveSourceFactory("", settings);
 	}
 
 	@Test 
