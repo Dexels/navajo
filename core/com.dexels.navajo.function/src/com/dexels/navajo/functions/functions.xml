@@ -35,7 +35,14 @@
 		<input />
 		<result />
 	</function>
-        <function name="BasicAuthenticationHeader" class="com.dexels.navajo.functions.BasicAuthenticationHeader">
+    <function name="Base64ImageStringToBinary" class="com.dexels.navajo.functions.Base64ImageStringToBinary">
+        <description>Get a binary from a Base64 representation of a given string.
+        </description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+    
+    <function name="BasicAuthenticationHeader" class="com.dexels.navajo.functions.BasicAuthenticationHeader">
         <description> Gets the HTTP Authorization header value based on username + password
         </description>
         <input />
