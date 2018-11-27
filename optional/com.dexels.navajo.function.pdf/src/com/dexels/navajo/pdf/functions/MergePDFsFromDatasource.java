@@ -159,7 +159,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 					merger.setDestinationFileName(fileName);
 					
 					
-					// Make a logic to short by the items. Basically itterate through items and find the value in the result set that matches it and add the source to the merger
+					// Logic to short by items. 
 					for(String item : items) {
 						for(int i = 0; i<resultSet.length; i++) {
 							if(resultSet[i].getColumnValue(tableId).toString().equals(item)) {
@@ -169,10 +169,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 							}
 						}
 					}
-										
-//					for(ResultSetMap row : resultSet) {
-//						merger.addSource(((Binary)row.getColumnValue(dataPosition)).getFile());
-//					}
+
 					
 					merger.mergeDocuments();
 					Binary resultPDF = new Binary(new File(fileName), false);
