@@ -129,6 +129,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 				}
 			}
 			int dataPosition = -1;
+			int idPosition = -1;
 			
 			// We got them all, now MERGE :D
 			if(result.size() > 0) {
@@ -140,16 +141,38 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 						break;
 					}
 				}
+				
+				// Find ID position
+				for(int i = 0; i < resultSet[0].getValuesSize(); i++ ) {
+					if(resultSet[0].getColumnName(i).equalsIgnoreCase(tableId)) {
+						idPosition = i;
+						break;
+					}
+				}
+				
+				
 				// Then combine
 				try {
 					PDFMergerUtility merger = new PDFMergerUtility();
 					File tempFile = File.createTempFile("pdfmerge", "pdf");
 					String fileName = tempFile.getCanonicalPath();
 					merger.setDestinationFileName(fileName);
-										
-					for(ResultSetMap row : resultSet) {
-						merger.addSource(((Binary)row.getColumnValue(dataPosition)).getFile());
+					
+					
+					// Make a logic to short by the items. Basically itterate through items and find the value in the result set that matches it and add the source to the merger
+					for(String item : items) {
+						for(int i = 0; i<resultSet.length; i++) {
+							if(resultSet[i].getColumnValue(tableId).toString().equals(item)) {
+								// FOUND
+								merger.addSource(((Binary)resultSet[i].getColumnValue(dataPosition)).getFile());
+								break;
+							}
+						}
 					}
+										
+//					for(ResultSetMap row : resultSet) {
+//						merger.addSource(((Binary)row.getColumnValue(dataPosition)).getFile());
+//					}
 					
 					merger.mergeDocuments();
 					Binary resultPDF = new Binary(new File(fileName), false);
