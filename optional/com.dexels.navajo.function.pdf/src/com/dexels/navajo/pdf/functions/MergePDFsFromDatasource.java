@@ -129,7 +129,6 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 				}
 			}
 			int dataPosition = -1;
-			int idPosition = -1;
 			
 			// We got them all, now MERGE :D
 			if(result.size() > 0) {
@@ -141,15 +140,6 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 						break;
 					}
 				}
-				
-				// Find ID position
-				for(int i = 0; i < resultSet[0].getValuesSize(); i++ ) {
-					if(resultSet[0].getColumnName(i).equalsIgnoreCase(tableId)) {
-						idPosition = i;
-						break;
-					}
-				}
-				
 				
 				// Then combine
 				try {
