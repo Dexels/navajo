@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.immutable.api.customtypes.CoordinateType;
 import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionTag;
@@ -448,6 +449,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
         if (o instanceof Coordinate) {
             setValue((Coordinate) o, internal);
+            return;
+        }
+        if (o instanceof CoordinateType) {
+            setValue((CoordinateType) o, internal);
             return;
         }
 		if (o instanceof Memo) {
@@ -1023,6 +1028,23 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
     }
 
     private final void setValue(Coordinate value, Boolean internal) {
+        Object old = null;
+        if (hasPropertyDataListeners()) {
+            old = getTypedValue();
+        }
+        setType(COORDINATE_PROPERTY);
+
+        if (value != null) {
+            setCheckedValue(value.toString());
+        } else {
+            myValue = null;
+        }
+        if (hasPropertyDataListeners()) {
+            firePropertyChanged(PROPERTY_VALUE, old, getTypedValue(), internal);
+        }
+    }
+    
+    private final void setValue(CoordinateType value, Boolean internal) {
         Object old = null;
         if (hasPropertyDataListeners()) {
             old = getTypedValue();

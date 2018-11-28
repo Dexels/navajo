@@ -140,16 +140,26 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 						break;
 					}
 				}
+				
 				// Then combine
 				try {
 					PDFMergerUtility merger = new PDFMergerUtility();
 					File tempFile = File.createTempFile("pdfmerge", "pdf");
 					String fileName = tempFile.getCanonicalPath();
 					merger.setDestinationFileName(fileName);
-										
-					for(ResultSetMap row : resultSet) {
-						merger.addSource(((Binary)row.getColumnValue(dataPosition)).getFile());
+					
+					
+					// Logic to short by items. 
+					for(String item : items) {
+						for(int i = 0; i<resultSet.length; i++) {
+							if(resultSet[i].getColumnValue(tableId).toString().equals(item)) {
+								// FOUND
+								merger.addSource(((Binary)resultSet[i].getColumnValue(dataPosition)).getFile());
+								break;
+							}
+						}
 					}
+
 					
 					merger.mergeDocuments();
 					Binary resultPDF = new Binary(new File(fileName), false);
