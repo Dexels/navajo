@@ -160,14 +160,21 @@ void ListExpression() #void:
    ) #ListNode
 }
 
-
 void Expression() #void:
 {
 }
 {
   /*AdditiveExpression()*/
-  OrExpression()
+  ReactivePipe()
 }
+
+void ReactivePipe() #void:
+{
+}
+{
+	(OrExpression()   (<PIPE> OrExpression() )*
+	) #ReactivePipe
+} 
 
 void OrExpression() #void:
 {}
@@ -267,11 +274,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( Expression() {jjtThis.args++;}
+        ( ReactivePipe() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	Expression() {jjtThis.args++;} 
+     		(	ReactivePipe() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]
@@ -364,20 +371,11 @@ void Transformer() #void:
   ) #TransformerNode
 }
 
-void ReactiveElement() #void:
-{
-}
-{
-	(FunctionLiteral() {jjtThis.args++;}  ("->" FunctionLiteral() {jjtThis.args++;})*) #ReactiveElementNode
-}
-
-
 void ReactiveScript() #void:
 {
 }
 {
 	(
-/*		(<HEADER> Expression() {jjtThis.args++;})? */
 		(
 			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
 		) 
@@ -385,10 +383,4 @@ void ReactiveScript() #void:
 	<EOF>
 }
 
-void ReactivePipe() #void:
-{
-}
-{
-	(Expression()   (<PIPE> Expression() )*
-	) #ReactivePipe
-} 
+

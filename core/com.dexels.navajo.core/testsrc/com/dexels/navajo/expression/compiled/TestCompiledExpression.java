@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,6 +31,11 @@ import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.parser.compiled.api.ReactivePipe;
+import com.dexels.navajo.reactive.api.ReactiveSource;
+import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.script.api.SystemException;
 
 public class TestCompiledExpression {
@@ -257,10 +263,11 @@ public class TestCompiledExpression {
 		String expression = "addtest()->addtest()";
 		StringReader sr = new StringReader(expression);
 		CompiledParser cp = new CompiledParser(sr);
-		cp.ReactiveElement();
+		cp.ReactivePipe();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
-        System.err.println("Problems");
+        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.REACTIVE);
+        ReactiveSourceFactory rs = (ReactiveSourceFactory) ss.source.apply();
+        List<ReactiveTransformerFactory> transformerFactories = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
         Object o = ss.apply();
 		Assert.assertEquals("monkey", o);
         System.err.println(">> "+o);

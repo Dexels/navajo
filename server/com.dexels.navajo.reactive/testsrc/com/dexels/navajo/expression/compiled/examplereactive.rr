@@ -4,6 +4,6 @@ SQL(resource='some',
 	->Stream('Clubs')
 SQL(resource='some',query='select * from PERSON WHERE ROWNUM <=10')
 	->Stream('Persons')
-	->Reduce()
+	->Reduce(Single()->Filter(true))
 	
 	

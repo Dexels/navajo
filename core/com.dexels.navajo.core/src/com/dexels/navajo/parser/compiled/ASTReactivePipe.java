@@ -2,10 +2,12 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.dexels.navajo.parser.compiled;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.parser.compiled.api.ReactivePipe;
 
 public
 class ASTReactivePipe extends SimpleNode {
@@ -15,15 +17,22 @@ class ASTReactivePipe extends SimpleNode {
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+
 	int count = jjtGetNumChildren();
-	if(count==0) {
-		throw new RuntimeException("No reactive children found. Weird, should not happen, should handle this better");
+	if(mode==ParseMode.DEFAULT) {
+		ContextExpression passthough = (ContextExpression) jjtGetChild(0).interpretToLambda(problems, originalExpression,ParseMode.DEFAULT);
+		return passthough;
 	}
-	jjtGetChild(0).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_SOURCE);
+	List<ContextExpression> pipeElements = new ArrayList<>();
+	ContextExpression source = (ContextExpression) jjtGetChild(0).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_SOURCE);
+//	pipeElements.add(source);
 	for (int i = 1; i < count; i++) {
-		jjtGetChild(i).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_TRANSFORMER);
+		ContextExpression transformer = jjtGetChild(i).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_TRANSFORMER);
+		pipeElements.add(transformer);
 	}
-	return null;
+	ReactivePipe pipe = new ReactivePipe(source, pipeElements);
+	return pipe;
+	
 }
 
 }
