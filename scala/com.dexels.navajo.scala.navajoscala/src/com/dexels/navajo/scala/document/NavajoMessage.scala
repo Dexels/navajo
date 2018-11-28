@@ -9,11 +9,18 @@ import com.dexels.navajo.document.Selection
 import java.util.ArrayList
 
 class NavajoMessage(val parent: Message) {
+  
+  if(parent == null){
+    throw new NullPointerException("No parent for navajo message")
+  }
 
   def rootDoc: NavajoDocument = {
     new NavajoDocument(parent.getRootDoc())
   }
   def message(name: String): NavajoMessage = {
+    if(parent.getMessage(name) == null){
+      return null
+    }
     new NavajoMessage(parent.getMessage(name));
   }
 
