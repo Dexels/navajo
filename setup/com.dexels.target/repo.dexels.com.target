@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2806">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="2802">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.3.22.201711021538"/>
@@ -14,23 +13,22 @@
 <unit id="org.eclipse.jgit.source.feature.group" version="4.11.0.201803080745-r"/>
 <repository location="http://download.eclipse.org/egit/updates-4.11"/>
 </location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.core.feature.feature.group" version="1.6.0.v20180903-1343"/>
-<unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.15.0.v20180827-1536"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.15.0.v20180904-1442"/>
-<unit id="org.eclipse.equinox.server.core.feature.group" version="1.7.0.v20180903-1546"/>
-<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
-<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.16.5.RELEASE"/>
-<repository location="http://repo.dexels.com/eclipse/3rdparty_1.16.5"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.9.201803201811"/>
-<unit id="org.eclipse.jetty.bundles.f.source.feature.group" version="9.4.9.201803201811"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.9.v20180320"/>
-</location>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
+        <unit id="org.eclipse.equinox.core.feature.feature.group" version="1.6.0.v20180903-1343"/>
+        <unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.15.0.v20180827-1536"/>
+        <unit id="org.eclipse.equinox.server.core.feature.group" version="1.7.0.v20180903-1546"/>
+        <unit id="org.eclipse.equinox.sdk.feature.group" version="3.15.0.v20180904-1442"/>
+        <unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
+    </location>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <unit id="org.eclipse.jetty.bundles.f.feature.group" version="9.4.14.v20181113"/>
+        <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.14.v20181113"/>
+    </location>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <unit id="com.dexels.thirdparty.feature.feature.group" version="1.17.0.RELEASE"/>
+        <repository location="http://repo.dexels.com/eclipse/3rdparty_1.17.0"/>
+    </location>
 </locations>
 <includeBundles>
 <plugin id="ch.qos.logback.classic"/>
@@ -74,22 +72,14 @@
 <plugin id="com.google.inject"/>
 <plugin id="com.google.protobuf"/>
 <plugin id="com.hazelcast"/>
-<plugin id="com.ibm.icu"/>
 <plugin id="com.jcraft.jsch" version="0.1.54.v20170116-1932"/>
 <plugin id="com.mysql.jdbc"/>
 <plugin id="com.nimbusds.nimbus-jose-jwt"/>
 <plugin id="com.oracle.jdbc.driver"/>
 <plugin id="com.vaadin"/>
-<plugin id="io.reactivex.rxjava-joins"/>
-<plugin id="io.reactivex.rxjava-string"/>
 <plugin id="io.reactivex.rxjava2.rxjava"/>
 <plugin id="javaewah"/>
-<plugin id="javax.el-api"/>
-<plugin id="javax.enterprise.cdi-api"/>
 <plugin id="javax.inject"/>
-<plugin id="javax.interceptor-api"/>
-<plugin id="javax.servlet"/>
-<plugin id="javax.transaction-api"/>
 <plugin id="json"/>
 <plugin id="lz4-java"/>
 <plugin id="net.minidev.accessors-smart"/>
@@ -104,9 +94,7 @@
 <plugin id="org.apache.aries.util"/>
 <plugin id="org.apache.commons.beanutils"/>
 <plugin id="org.apache.commons.codec"/>
-<plugin id="org.apache.commons.commons-pool2"/>
 <plugin id="org.apache.commons.compress" version="1.16.1"/>
-<plugin id="org.apache.commons.dbcp"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
 <plugin id="org.apache.commons.io"/>
@@ -127,7 +115,6 @@
 <plugin id="org.apache.felix.metatype"/>
 <plugin id="org.apache.felix.prefs"/>
 <plugin id="org.apache.felix.resolver"/>
-<plugin id="org.apache.felix.scr" version="2.1.12"/>
 <plugin id="org.apache.felix.servicediagnostics.plugin"/>
 <plugin id="org.apache.felix.shell"/>
 <plugin id="org.apache.felix.shell.remote"/>
@@ -143,24 +130,18 @@
 <plugin id="org.apache.httpcomponents.httpasyncclient"/>
 <plugin id="org.apache.httpcomponents.httpclient" version="4.5.3"/>
 <plugin id="org.apache.httpcomponents.httpcore" version="4.4.6"/>
-<plugin id="org.apache.james.protocols.api"/>
-<plugin id="org.apache.james.protocols.smtp"/>
 <plugin id="org.apache.mina.core"/>
 <plugin id="org.apache.pdfbox"/>
 <plugin id="org.apache.pdfbox.fontbox"/>
 <plugin id="org.apache.pdfbox.jempbox"/>
 <plugin id="org.apache.servicemix.bundles.ant"/>
 <plugin id="org.apache.servicemix.bundles.aopalliance"/>
-<plugin id="org.apache.servicemix.bundles.bcel"/>
 <plugin id="org.apache.servicemix.bundles.javax.mail"/>
 <plugin id="org.apache.servicemix.bundles.jcip-annotations"/>
 <plugin id="org.apache.servicemix.bundles.junit"/>
 <plugin id="org.apache.servicemix.bundles.jzlib"/>
 <plugin id="org.apache.servicemix.bundles.lucene"/>
 <plugin id="org.apache.servicemix.bundles.saaj-impl"/>
-<plugin id="org.apache.servicemix.bundles.xalan"/>
-<plugin id="org.apache.servicemix.bundles.xerces"/>
-<plugin id="org.apache.servicemix.bundles.xmlresolver"/>
 <plugin id="org.apache.servicemix.specs.activation-api-1.1"/>
 <plugin id="org.apache.servicemix.specs.saaj-api-1.3"/>
 <plugin id="org.apache.sshd.core"/>
@@ -189,46 +170,6 @@
 <plugin id="org.eclipse.equinox.simpleconfigurator"/>
 <plugin id="org.eclipse.equinox.supplement"/>
 <plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.jetty.alpn.client" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.alpn.server" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.alpn.server.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.annotations" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.client" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.continuation" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.continuation.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.deploy" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.deploy.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.client" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.client.http" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.common" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.hpack" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.hpack.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.server" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.http2.server.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.io" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.io.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.jaas" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.jmx" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.jmx.source" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.jndi" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.plus" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.proxy" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.reactive.client"/>
-<plugin id="org.eclipse.jetty.rewrite" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.security" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.server" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.servlet" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.servlets" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.util" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.webapp" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.api" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.client" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.common" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.javax.websocket.server" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.server" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.websocket.servlet" version="9.4.9.v20180320"/>
-<plugin id="org.eclipse.jetty.xml" version="9.4.9.v20180320"/>
 <plugin id="org.eclipse.jgit"/>
 <plugin id="org.eclipse.jgit.archive"/>
 <plugin id="org.eclipse.jgit.http.apache"/>
@@ -240,20 +181,12 @@
 <plugin id="org.eclipse.paho.client.mqttv3"/>
 <plugin id="org.freemarker.freemarker"/>
 <plugin id="org.h2"/>
-<plugin id="org.jctools.core"/>
 <plugin id="org.jvnet.mimepull"/>
 <plugin id="org.jvnet.staxex.stax-ex"/>
 <plugin id="org.mongodb.driver-async"/>
 <plugin id="org.mongodb.driver-reactivestreams"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
-<plugin id="org.objectweb.asm" version="6.1.1"/>
-<plugin id="org.objectweb.asm" version="5.0.3"/>
-<plugin id="org.objectweb.asm.commons" version="6.1.1"/>
-<plugin id="org.objectweb.asm.commons" version="5.0.3"/>
-<plugin id="org.objectweb.asm.tree" version="5.0.3"/>
-<plugin id="org.objectweb.asm.tree" version="6.1.1"/>
-<plugin id="org.objectweb.asm.util" version="6.1.1"/>
-<plugin id="org.objectweb.asm.util" version="5.0.3"/>
+<plugin id="org.objectweb.asm"/>
 <plugin id="org.openstreetmap.jmapviewer"/>
 <plugin id="org.ops4j.base.io"/>
 <plugin id="org.ops4j.base.lang"/>
@@ -288,7 +221,6 @@
 <plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.ops4j.pax.web.pax-web-spi"/>
 <plugin id="org.osgi.service.event"/>
-<plugin id="org.postgresql.jdbc42"/>
 <plugin id="org.reactivestreams.reactive-streams"/>
 <plugin id="org.scala-lang.modules.scala-xml"/>
 <plugin id="org.scala-lang.scala-compiler"/>
@@ -301,5 +233,44 @@
 <plugin id="slf4j.api"/>
 <plugin id="slf4j.simple"/>
 <plugin id="stax2-api"/>
+    <plugin id="org.apache.commons.commons-pool2"/>
+    <plugin id="org.postgresql.jdbc42"/>
+    <plugin id="javax.transaction-api"/>
+    <plugin id="org.apache.commons.dbcp"/>
+    <plugin id="javax.enterprise.cdi-api"/>
+    <plugin id="javax.interceptor-api"/>
+    <plugin id="javax.servlet"/>
+    <plugin id="com.ibm.icu"/>
+    <plugin id="javax.el-api"/>
+    <plugin id="org.eclipse.jetty.continuation" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.http" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.io" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.security" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.server" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.servlet" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.util" version="9.4.14.v20181113"/>
+    <plugin id="org.objectweb.asm.all"/>
+    <plugin id="org.eclipse.jetty.reactive.client"/>
+    <plugin id="org.eclipse.jetty.alpn.client" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.alpn.server" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.annotations" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.client" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.jaas" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.jmx" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.jndi" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.proxy" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.api" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.client" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.common" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.javax.websocket" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.javax.websocket.server" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.server" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.websocket.servlet" version="9.4.14.v20181113"/>
+    <plugin id="org.eclipse.jetty.servlets" version="9.4.14.v20181113"/>
+    <plugin id="org.apache.felix.scr" version="2.1.14"/>
+    <plugin id="org.objectweb.asm.commons"/>
+    <plugin id="org.objectweb.asm.tree"/>
+    <plugin id="org.objectweb.asm.tree.analysis"/>
+    <plugin id="org.objectweb.asm.util"/>
 </includeBundles>
 </target>

@@ -1,0 +1,3 @@
+single(count=2)
+ ->Filter(true)
+ ->Stream()

@@ -214,5 +214,9 @@ public abstract class SimpleNode implements Node {
     			problems.add(message);
     		}
     }
+    
+    protected boolean allLiteral(List<ContextExpression> in) {
+    	return in.stream().allMatch(e->e.isLiteral());
+    }
 }
 

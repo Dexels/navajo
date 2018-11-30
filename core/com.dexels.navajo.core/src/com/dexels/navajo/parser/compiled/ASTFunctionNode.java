@@ -23,6 +23,7 @@ import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -75,15 +76,16 @@ public final class ASTFunctionNode extends SimpleNode {
 		}
 
 		switch (mode) {
+			
 			case REACTIVE_HEADER:
 				
 				break;
 			case REACTIVE_SOURCE:
-				System.err.println("Creating reactive source: "+this.functionName);
-				return resolveReactiveSource(l, named, problems, expression);
+				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.SOURCE, named, l, expression);
+//				System.err.println("Creating reactive source: "+this.functionName);
+//				return resolveReactiveSource(l, named, problems, expression);
 			case REACTIVE_TRANSFORMER:
-				System.err.println("Creating reactive transformer: "+this.functionName);
-				return resolveReactiveTransformer(l, named, problems, expression);
+				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.TRANSFORMER, named, l, expression);
 	
 			case DEFAULT:
 				default:
@@ -91,82 +93,13 @@ public final class ASTFunctionNode extends SimpleNode {
 		return resolveNormalFunction(l, named, problems, expression);
 
 	}
-	private ContextExpression resolveReactiveSource(List<ContextExpression> l, Map<String, ContextExpression> named,
-			List<String> problems, String expression) {
-		return new ContextExpression() {
-			
-			@Override
-			public Optional<String> returnType() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public boolean isLiteral() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public String expression() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-					Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-
-	}
-	private ContextExpression resolveReactiveTransformer(List<ContextExpression> l, Map<String, ContextExpression> named,
-			List<String> problems, String expression) {
-		return new ContextExpression() {
-			
-			@Override
-			public Optional<String> returnType() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public boolean isLiteral() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public String expression() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-					Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-
-	}
-
 	
 	private ContextExpression resolveNormalFunction(List<ContextExpression> l, Map<String, ContextExpression> named,
 			List<String> problems, String expression) {
-		// BEWARE: Don't actually use this function object, as it might have threading conflicts
-
 		FunctionInterface typeCheckInstance = getFunction();
 		if(typeCheckInstance==null) {
 			throw new NullPointerException("Function: "+functionName+" can not be resolved!");
 		}
-//		System.err.println("# of operands: "+jjtGetNumChildren());
-		// TODO Type check input parameters
 
 		try {
 			List<String> typeProblems = typeCheckInstance.typeCheck(l,expression);
