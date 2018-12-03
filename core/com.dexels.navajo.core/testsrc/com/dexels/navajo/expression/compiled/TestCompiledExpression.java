@@ -16,6 +16,7 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -323,5 +324,17 @@ public class TestCompiledExpression {
         Assert.assertEquals("aap,noot", ss.apply());
 	}
 	
-
+	@Test
+	public void testUnicodeExpression() throws Exception {
+		Operand result = Expression.evaluate("'\u20AC2,29'", null,null,null);
+		System.err.println("Result:"+result.value);
+	}	
+	@Test
+	public void testUnicodeExpressionEscaped() throws Exception {
+		Operand result = Expression.evaluate("'\u20AC2,29'", null,null,null);
+		System.err.println("Result:"+result.value);
+	}	
+	
+	
+//	Unicode(hex-string)
 }

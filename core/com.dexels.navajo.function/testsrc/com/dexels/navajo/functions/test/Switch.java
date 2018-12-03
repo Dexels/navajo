@@ -6,10 +6,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
@@ -263,4 +265,17 @@ public class Switch extends AbstractFunction {
 			}
 	
 	}
+	
+	@Test
+	public void testUnicodeExpressionFunction() throws Exception {
+		Operand result = Expression.evaluate("Unicode('0x20AC')", null,null,null);
+		System.err.println("Result:"+result.value);
+	}	
+	
+	@Test
+	public void testDirectUnicodeExpressionFunction() throws Exception {
+		Operand result = Expression.evaluate("'€2,29'", null,null,null);
+		System.err.println("Result:"+result.value);
+	}	
+	
 }

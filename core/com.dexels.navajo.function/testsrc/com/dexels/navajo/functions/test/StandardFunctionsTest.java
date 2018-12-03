@@ -500,17 +500,6 @@ public class StandardFunctionsTest {
 
 	}
 
-	@Test
-	public void testToBinaryFromPath() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "ToBinaryFromPath");
-		fi.reset();
-		fi.insertOperand("/aeap");
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-
-	}
 
 	@Test
 	public void testToBinary() throws Exception {
