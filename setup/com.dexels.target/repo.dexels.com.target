@@ -125,7 +125,7 @@
 <plugin id="org.apache.felix.webconsole.plugins.scriptconsole"/>
 <plugin id="org.apache.felix.webconsole.plugins.upnp"/>
 <plugin id="org.apache.httpcomponents.httpasyncclient"/>
-<plugin id="org.apache.httpcomponents.httpcore" version="4.4.10"/>
+<plugin id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
 <plugin id="org.apache.mina.core"/>
 <plugin id="org.apache.pdfbox"/>
 <plugin id="org.apache.pdfbox.fontbox"/>
@@ -274,10 +274,14 @@
 	<plugin id="jaxb-api"/>
 	<plugin id="org.apache.commons.lang3"/>
 	<plugin id="org.apache.commons.lang"/>
-	<plugin id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
+	<plugin id="org.apache.httpcomponents.httpcore" version="4.4.10"/>
 	<plugin id="org.apache.httpcomponents.httpclient" version="4.5.6"/>
 	<plugin id="org.apache.servicemix.bundles.javax-inject"/>
 	<plugin id="javax.xml.soap-api"/>
 	<plugin id="org.apache.commons.collections"/>
+	<plugin id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
+	<plugin id="com.jcraft.jzlib"/>
+	<plugin id="org.osgi.service.cm"/>
+	<plugin id="org.osgi.service.component.annotations"/>
 </includeBundles>
 </target>
