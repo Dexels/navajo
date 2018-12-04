@@ -26,8 +26,8 @@
 		<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.14.v20181113"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.4.201811291621"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.4"/>
+		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.5.201811291621"/>
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.5"/>
 	</location>
 </locations>
 <includeBundles>
