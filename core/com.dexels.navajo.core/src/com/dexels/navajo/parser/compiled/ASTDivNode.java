@@ -3,9 +3,9 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTDivNode extends SimpleNode {

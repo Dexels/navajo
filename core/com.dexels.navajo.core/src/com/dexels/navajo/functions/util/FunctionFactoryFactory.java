@@ -8,7 +8,7 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 public class FunctionFactoryFactory {

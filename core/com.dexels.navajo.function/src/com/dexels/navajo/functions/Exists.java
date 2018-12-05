@@ -9,10 +9,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.script.api.SystemException;
 
 
@@ -36,7 +36,7 @@ public class Exists extends FunctionInterface {
 		return "Evaluates a condition (expression evaluating to a boolean) under any the messages of an array message. It will return a 'OR' of all the results";
 	}
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		/**@todo Implement this com.dexels.navajo.parser.FunctionInterface abstract method*/
         Message arrayMessage = null;
         String messagePath = null;

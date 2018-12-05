@@ -5,8 +5,8 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"unchecked","rawtypes"})

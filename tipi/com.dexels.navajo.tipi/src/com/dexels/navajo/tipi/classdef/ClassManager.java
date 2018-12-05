@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import navajo.ExtensionDefinition;

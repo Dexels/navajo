@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -18,7 +18,7 @@ public final class ParameterList extends FunctionInterface {
     public ParameterList() {}
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Integer count = (Integer) this.getOperands().get(0);
         StringBuffer result = new StringBuffer(count.intValue() * 2);
 

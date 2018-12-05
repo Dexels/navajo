@@ -9,11 +9,11 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public final class ASTFalseNode extends SimpleNode {
     public ASTFalseNode(int id) {

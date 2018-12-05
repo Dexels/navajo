@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class Age
     extends FunctionInterface {
@@ -11,8 +11,7 @@ public final class Age
   public Age() {}
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.
-      TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
     final Object o = this.getOperands().get(0);
     if (o == null | ! (o instanceof java.util.Date)) {

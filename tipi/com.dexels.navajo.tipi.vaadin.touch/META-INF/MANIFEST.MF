@@ -81,3 +81,4 @@ Export-Package: com.dexels.navajo.tipi.vaadin.touch,
 Service-Component: OSGI-INF/tipi.instance.touch.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Require-Bundle: com.dexels.navajo.tipi

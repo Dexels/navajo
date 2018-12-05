@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ public final class Trim extends FunctionInterface {
 
 	@Override
 	public final Object evaluate()
-			throws com.dexels.navajo.parser.TMLExpressionException {
+			throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		final Object op = this.getOperands().get(0);
 

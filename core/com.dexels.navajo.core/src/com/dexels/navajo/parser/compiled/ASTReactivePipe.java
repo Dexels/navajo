@@ -5,7 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.parser.compiled.api.ReactivePipe;
 

@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -42,7 +42,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 		return "Gets the type of property as a string";
 	}
 
-	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 
 		Property p = (getCurrentMessage() != null ? getCurrentMessage().getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
@@ -66,7 +66,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 	}
 
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}

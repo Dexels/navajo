@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.List;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -23,7 +23,7 @@ public String remarks() {
     return "Returns a random integer, between the given bounds";
   }
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
     List<?> operands = this.getOperands();
 

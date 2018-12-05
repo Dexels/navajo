@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -38,7 +38,7 @@ public String remarks() {
     return "Gets the description of property as a string";
   }
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     if (getOperands().size() != 1) {
       throw new TMLExpressionException(this, "Invalid function call");
     }

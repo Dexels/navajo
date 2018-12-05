@@ -6,7 +6,6 @@ Bundle-Version: 1.2.15.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
  javax.swing,
  navajoextension,

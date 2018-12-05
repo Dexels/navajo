@@ -4,7 +4,7 @@ import java.io.StringWriter;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -37,7 +37,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 public final class ToString extends FunctionInterface {
 
 @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object s = this.getOperands().get(0);
 
         if (s == null) {

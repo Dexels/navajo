@@ -1,4 +1,4 @@
-package com.dexels.navajo.parser;
+package com.dexels.navajo.expression.api;
 
 import java.util.List;
 import java.util.stream.Collectors;

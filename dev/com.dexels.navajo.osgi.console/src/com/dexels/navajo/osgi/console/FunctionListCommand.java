@@ -9,8 +9,8 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class FunctionListCommand implements CommandProvider {
 

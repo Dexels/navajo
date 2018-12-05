@@ -4,12 +4,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.json.JSONTMLFactory;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class JsonToTml extends FunctionInterface {
 
 @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object s = this.getOperands().get(0);
         Object m = null;
 		

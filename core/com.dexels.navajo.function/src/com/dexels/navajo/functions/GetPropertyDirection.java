@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -39,7 +39,7 @@ public class GetPropertyDirection extends GetPropertyAttribute {
 	}
 
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}

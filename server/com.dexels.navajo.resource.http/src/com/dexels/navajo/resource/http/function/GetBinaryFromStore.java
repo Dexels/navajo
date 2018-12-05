@@ -1,7 +1,7 @@
 package com.dexels.navajo.resource.http.function;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.resource.http.HttpResource;
 import com.dexels.navajo.resource.http.HttpResourceFactory;
 import com.dexels.navajo.script.api.Access;

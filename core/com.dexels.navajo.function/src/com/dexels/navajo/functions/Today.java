@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public final class Today extends FunctionInterface {
 
@@ -12,7 +12,7 @@ public String remarks() {
     return "Today() returns the current date, with time at 00:00";
   }
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Calendar c = Calendar.getInstance();
     c.set(Calendar.HOUR_OF_DAY, 0);
     c.set(Calendar.MINUTE, 0);

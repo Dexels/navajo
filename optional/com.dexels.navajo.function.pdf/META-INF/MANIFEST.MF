@@ -10,6 +10,7 @@ Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.expression.api,
  com.dexels.navajo.jdbc,
  com.dexels.navajo.parser,
  com.dexels.navajo.script.api;version="1.0.0",

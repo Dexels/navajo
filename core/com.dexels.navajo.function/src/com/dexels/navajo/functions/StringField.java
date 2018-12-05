@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * Title: Navajo Description: Copyright: Copyright (c) 2001 Company: Dexels
@@ -16,7 +16,7 @@ public final class StringField extends FunctionInterface {
 	}
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		Object a = this.getOperands().get( 0 );
 		Object b = this.getOperands().get( 1 );
 		Object c = this.getOperands().get( 2 );

@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ public final class CheckDate extends FunctionInterface {
 
 
 	@Override
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object o = this.getOperand(0);
         
         if (o instanceof java.util.Date) {

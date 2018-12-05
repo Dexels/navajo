@@ -2,13 +2,13 @@ package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class EqualsPattern extends FunctionInterface {
 
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		Object o1 = getOperand(0);
 		if (!(o1 instanceof String)) {
