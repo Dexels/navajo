@@ -186,7 +186,6 @@ public class KafenioPanel extends JPanel implements ActionListener,
         secManager = System.getSecurityManager();
         if (secManager != null) {
             try {
-                secManager.checkSystemClipboardAccess();
                 sysClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             } catch (SecurityException se) {
                 sysClipboard = null;

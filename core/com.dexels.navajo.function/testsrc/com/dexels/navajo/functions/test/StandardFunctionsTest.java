@@ -500,17 +500,6 @@ public class StandardFunctionsTest {
 
 	}
 
-	@Test
-	public void testToBinaryFromPath() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "ToBinaryFromPath");
-		fi.reset();
-		fi.insertOperand("/aeap");
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-
-	}
 
 	@Test
 	public void testToBinary() throws Exception {
@@ -1541,29 +1530,6 @@ public class StandardFunctionsTest {
 		assertEquals("true", o.toString());
 	}
 
-	@Test
-	public void testExecuteScript() throws Exception {
-
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
-
-		FunctionInterface fi = fff.getInstance(cl, "ExecuteScript");
-		fi.reset();
-		Navajo doc = createTestNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(doc, "aap", "noot",
-				"mies", -1);
-		doc.addHeader(h);
-
-		fi.setInMessage(doc);
-
-		fi.insertOperand("<tsl/>");
-
-		try {
-			Object o = fi.evaluateWithTypeChecking();
-		} catch (Exception cnfe) {
-		}
-
-	}
 
 	@Test
 	public void testEvaluateExpression() throws Exception {

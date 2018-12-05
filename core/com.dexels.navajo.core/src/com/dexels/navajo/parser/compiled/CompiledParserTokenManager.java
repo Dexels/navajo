@@ -418,7 +418,7 @@ static final long[] jjbitVec40 = {
    0xffffffff3f3fffffL, 0x3fffffffaaff3f3fL, 0x5fdfffffffffffffL, 0x1fdc1fff0fcf1fdcL
 };
 static final long[] jjbitVec41 = {
-   0x0L, 0x8002000000000000L, 0x0L, 0x0L
+   0x0L, 0x8002000000000000L, 0x300000000000L, 0x0L
 };
 static final long[] jjbitVec42 = {
    0xe3fbbd503e2ffc84L, 0x3e0L, 0x0L, 0x0L
