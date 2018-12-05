@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.StopwatchTime;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * <p>Title: </p>
@@ -18,7 +18,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class ToMilliseconds extends FunctionInterface{
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
 
@@ -35,7 +35,7 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
         	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
         }
 
-       throw new com.dexels.navajo.parser.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");
+       throw new com.dexels.navajo.expression.api.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");
 
     }
   @Override

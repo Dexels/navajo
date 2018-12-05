@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 public class QuotePattern extends FunctionInterface {
@@ -10,7 +10,7 @@ public class QuotePattern extends FunctionInterface {
   public QuotePattern() {}
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
       String s = (String) this.getOperands().get(0);
 
       if (s == null)

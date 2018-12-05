@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTNotNode extends SimpleNode {

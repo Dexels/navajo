@@ -47,23 +47,25 @@ public class TestReactiveParser {
 		try(Reader in = new InputStreamReader(this.getClass().getResourceAsStream("simple.rr"))) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactivePipe();
-			
-//			SimpleNode sn = (SimpleNode) cp.getJJTree().rootNode();
 	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
-
 	        ReactiveSourceFactory rsf = (ReactiveSourceFactory) ss.source.apply();
 	        List<ReactiveTransformerFactory> transfac = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
-//	        ReactiveParameters = 
-//	        rsf.build("", params, problems, transfac, Type.EVENT);
 	        System.err.println(ss.source.apply());
-	        
-//			ASTReactiveScriptNode n = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
-//			System.err.println("Count: "+n.jjtGetNumChildren());
-
-				
 		}
-		
-		
+	}
+
+	
+	@Test
+	public void readMoreComplicated() throws ParseException, IOException {
+		List<String> problems = new ArrayList<>();
+		try(Reader in = new InputStreamReader(this.getClass().getResourceAsStream("subsource.rr"))) {
+			CompiledParser cp = new CompiledParser(in);
+			cp.ReactivePipe();
+	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
+	        ReactiveSourceFactory rsf = (ReactiveSourceFactory) ss.source.apply();
+	        List<ReactiveTransformerFactory> transfac = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
+	        System.err.println(ss.source.apply());
+		}
 	}
 
 }

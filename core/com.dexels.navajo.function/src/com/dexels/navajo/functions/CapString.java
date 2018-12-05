@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ public final class CapString extends FunctionInterface {
     }
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");

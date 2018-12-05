@@ -8,8 +8,8 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class MergePDF extends FunctionInterface {
 

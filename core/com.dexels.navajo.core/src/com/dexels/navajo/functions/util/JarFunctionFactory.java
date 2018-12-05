@@ -7,16 +7,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import navajo.ExtensionDefinition;
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
+
+import navajo.ExtensionDefinition;
+import navajocore.Version;
 
 public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {
 

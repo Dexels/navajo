@@ -9,9 +9,9 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class EvaluateParameters extends FunctionInterface {
     private final static Logger logger = LoggerFactory.getLogger(EvaluateParameters.class);

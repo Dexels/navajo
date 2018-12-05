@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class ToList extends FunctionInterface {
     
     @SuppressWarnings("unchecked")
     @Override
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object elem1 = null;
         Object elem2 = null;
         Object transformer = null;

@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * Title: Navajo Description: Copyright: Copyright (c) 2001 Company: Dexels
@@ -27,7 +27,7 @@ public final class OffsetDate extends FunctionInterface {
 	}
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		java.util.Date date = ( java.util.Date ) this.getOperands().get( 0 );
 		int year = ( ( Integer ) getOperands().get( 1 ) ).intValue();
 		int month = ( ( Integer ) getOperands().get( 2 ) ).intValue();

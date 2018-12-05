@@ -16,18 +16,18 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
-import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.NamedExpression;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.version.AbstractVersion;
 
 

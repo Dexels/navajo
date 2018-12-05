@@ -1,4 +1,4 @@
-package com.dexels.navajo.parser;
+package com.dexels.navajo.expression.api;
 
 /**
  * Title:
@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings("rawtypes")

@@ -10,9 +10,9 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"rawtypes"})

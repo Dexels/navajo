@@ -5,10 +5,10 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.jdbc.JDBCMappable;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>Title: <h3>SingleValueQuery</h3><br></p>
@@ -37,7 +37,7 @@ public class SingleValueQuery extends FunctionInterface {
 	  super();
   }
   
-  protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
+  protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	  String query = "";
 	  JDBCMappable sql = null;
 
@@ -112,7 +112,7 @@ public class SingleValueQuery extends FunctionInterface {
   }
   
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	  JDBCMappable sql = evaluateQuery();
 	  setDbIdentifier(sql.getDbIdentifier());
 	  Object result = null;

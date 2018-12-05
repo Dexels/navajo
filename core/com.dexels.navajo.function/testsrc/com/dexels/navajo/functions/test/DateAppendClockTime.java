@@ -39,7 +39,7 @@ public class DateAppendClockTime {
 		assertEquals(o.getClass(), java.util.Date.class);
 	}
 
-	@Test(expected = com.dexels.navajo.parser.TMLExpressionException.class)
+	@Test(expected = com.dexels.navajo.expression.api.TMLExpressionException.class)
 	public void testInvalidNumArguements() throws Exception {
 		Date date = new Date();
 		ClockTime cTime = new ClockTime("11:28");
@@ -54,7 +54,7 @@ public class DateAppendClockTime {
 		Object o = da.evaluate();
 	}
 
-	@Test(expected = com.dexels.navajo.parser.TMLExpressionException.class)
+	@Test(expected = com.dexels.navajo.expression.api.TMLExpressionException.class)
 	public void testInvalidTypeArguements() throws Exception {
 		Date date = new Date();
 		ClockTime cTime = new ClockTime("11:28");

@@ -9,6 +9,7 @@ import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.expression.api.FunctionDefinition;
 
 public class TestFunctionFactory extends FunctionFactoryInterface {
 

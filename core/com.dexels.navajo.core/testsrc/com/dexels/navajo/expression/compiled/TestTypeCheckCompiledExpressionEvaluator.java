@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 

@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions.util;
+package com.dexels.navajo.expression.api;
 
 
 import java.io.Serializable;
@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.parser.FunctionInterface;
 
 public final class FunctionDefinition implements Serializable {
 

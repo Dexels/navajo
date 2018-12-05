@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 public class Unicode extends FunctionInterface {

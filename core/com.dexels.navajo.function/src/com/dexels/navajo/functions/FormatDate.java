@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.util.Locale;
 
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * Title: Navajo Description: Copyright: Copyright (c) 2002 Company: Dexels
@@ -30,7 +30,7 @@ public final class FormatDate extends FunctionInterface {
     }
 
     @Override
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
         if (this.getOperands().size() < 2 || this.getOperands().size() > 3)
             throw new TMLExpressionException(this.usage());

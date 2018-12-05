@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.classdef;
 import java.util.Map;
 import java.util.Set;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionResolver;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;

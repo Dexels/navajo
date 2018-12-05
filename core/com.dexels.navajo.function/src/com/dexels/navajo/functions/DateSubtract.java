@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -35,7 +35,7 @@ public final class DateSubtract extends FunctionInterface {
     }
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (this.getOperands().size() != 2)
 			throw new TMLExpressionException("DateSubtract(Date1, Date2) expected. Wrong no. of args.");
 

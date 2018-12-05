@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -30,7 +30,7 @@ public final class NextMonth extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
         java.util.Date datum = new java.util.Date();
         Calendar c = Calendar.getInstance();

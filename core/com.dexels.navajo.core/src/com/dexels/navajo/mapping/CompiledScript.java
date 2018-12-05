@@ -520,7 +520,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
             try {
                 valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition, inMessage, a);
-            } catch (com.dexels.navajo.parser.TMLExpressionException ee) {
+            } catch (com.dexels.navajo.expression.api.TMLExpressionException ee) {
                 throw new UserException(-1, "Invalid condition: " + ee.getMessage(), ee);
             }
 

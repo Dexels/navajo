@@ -11,10 +11,10 @@ import org.apache.pdfbox.util.PDFMergerUtility;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.jdbc.JDBCMappable;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class MergePDFsFromDatasource extends FunctionInterface {
 	

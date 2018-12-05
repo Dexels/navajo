@@ -37,6 +37,7 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class Utils extends Exception {
 

@@ -3,13 +3,13 @@ package com.dexels.navajo.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public final class ToListAll extends FunctionInterface {
     
     @SuppressWarnings("unchecked")
     @Override
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         List<Object> result = new ArrayList<>();
         
         for (int i=0;i<getOperands().size();i++) {

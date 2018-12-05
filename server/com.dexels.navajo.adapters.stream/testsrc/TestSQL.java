@@ -20,8 +20,8 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.SystemException;
 

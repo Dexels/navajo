@@ -4,9 +4,9 @@ package com.dexels.navajo.functions;
 import java.util.List;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**
@@ -24,7 +24,7 @@ public final class FormatStringList extends FunctionInterface {
 
     @Override
 	@SuppressWarnings("rawtypes")
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
 

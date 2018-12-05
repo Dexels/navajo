@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -20,7 +20,7 @@ public final class DateField extends FunctionInterface {
     public DateField() {}
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
         String field = (String) this.getOperands().get(1);
         Calendar cal = Calendar.getInstance();

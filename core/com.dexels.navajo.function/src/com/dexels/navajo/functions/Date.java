@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -33,7 +33,7 @@ public final class Date extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         String arg = (String) this.getOperands().get(0);
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.util.Date date = null;

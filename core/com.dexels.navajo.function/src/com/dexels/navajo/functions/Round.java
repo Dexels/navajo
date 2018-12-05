@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -57,7 +57,7 @@ public final class Round extends FunctionInterface {
     }
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		Object a = this.getOperands().get( 0 );
 		Object b = this.getOperands().get( 1 );
 

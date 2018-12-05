@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class GetRequestLocale  extends FunctionInterface {
 

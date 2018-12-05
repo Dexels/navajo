@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 

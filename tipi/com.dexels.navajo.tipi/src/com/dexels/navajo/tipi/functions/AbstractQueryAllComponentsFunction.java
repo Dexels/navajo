@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.tipi.TipiComponent;
 
 public abstract class AbstractQueryAllComponentsFunction extends FunctionInterface {

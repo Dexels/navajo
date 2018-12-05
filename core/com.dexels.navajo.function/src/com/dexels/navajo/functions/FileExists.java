@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.io.File;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -22,7 +22,7 @@ public String remarks() {
     return "Returns true if the filename exists. (Either as a file or as a directory";
   }
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     String path = (String) getOperand(0);
     if (path==null) {
       return Boolean.FALSE;

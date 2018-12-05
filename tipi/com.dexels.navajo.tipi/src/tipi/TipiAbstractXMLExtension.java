@@ -25,8 +25,6 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	private String requiresMain = null;
 	private String description = null;
 	private String project = "";
-	
-	
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiAbstractXMLExtension.class);

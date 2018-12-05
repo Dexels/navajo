@@ -6,8 +6,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class FunctionListCommand extends ConsoleCommand {
 

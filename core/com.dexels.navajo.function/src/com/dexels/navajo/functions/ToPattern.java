@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 public class ToPattern extends FunctionInterface {
@@ -12,7 +12,7 @@ public class ToPattern extends FunctionInterface {
   public ToPattern() {}
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
       String s = (String) this.getOperands().get(0);
       
       if (s == null)

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -52,7 +52,7 @@ public class GetSelectedValue extends FunctionInterface {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object evaluate()
-			throws com.dexels.navajo.parser.TMLExpressionException {
+			throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this,
 					"Invalid function call, need one parameter");
