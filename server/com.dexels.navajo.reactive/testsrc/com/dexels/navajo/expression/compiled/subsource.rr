@@ -1,0 +1,4 @@
+single(count=2)
+ ->CombineSomething(
+ 	mysource=Single()->Filter())
+ ->Stream()
