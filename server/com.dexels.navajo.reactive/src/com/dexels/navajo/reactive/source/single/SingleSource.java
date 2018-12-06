@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.source.single;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +11,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -21,19 +23,25 @@ import io.reactivex.Flowable;
 public class SingleSource implements ReactiveSource {
 
 	private final ReactiveParameters params;
-	private final List<ReactiveTransformer> transformers;
-	private Type finalType;
-	private final Optional<XMLElement> sourceElement;
-	private final String sourcePath;
+//	private final List<ReactiveTransformer> transformers;
+//	private Type finalType;
+//	private final Optional<XMLElement> sourceElement;
+//	private final String sourcePath;
 	private final SourceMetadata metadata;
 	
 	public SingleSource(SourceMetadata metadata, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.metadata = metadata;
 		this.params = params;
-		this.transformers = transformers;
-		this.finalType = finalType;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
+//		this.transformers = transformers;
+//		this.finalType = finalType;
+//		this.sourceElement = sourceElement;
+//		this.sourcePath = sourcePath;
+	}
+
+	public SingleSource(SourceMetadata metadata, Map<String, ContextExpression> namedParams,
+			List<ContextExpression> unnamedParams) {
+		this.metadata = metadata;
+		
 	}
 
 	@Override
