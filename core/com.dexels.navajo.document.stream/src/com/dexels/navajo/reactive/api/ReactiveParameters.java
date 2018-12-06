@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
 
 import io.reactivex.functions.Function3;
 
@@ -24,18 +25,26 @@ public class ReactiveParameters {
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveParameters.class);
 
 
-	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
-	public final List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamed;
+	public final Map<String, ContextExpression> named;
+	public final List<ContextExpression> unnamed;
+	private final ParameterValidator validator;
 
-	private ReactiveParameters(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters) {
+//	Map<String, ContextExpression> namedParams, List<ContextExpression> unnamedParams
+	private ReactiveParameters(ParameterValidator validator, Map<String,ContextExpression> namedParameters,List<ContextExpression> unnamedParameters) {
+		this.validator = validator;
 		this.named = namedParameters;
 		this.unnamed = unnamedParameters;
 	}
 	
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
+	public ReactiveResolvedParameters resolve(Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
+		return new ReactiveResolvedParameters(named,unnamed, currentMessage, paramMessage, validator);
+	}
+	
+	public List<Object> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
+		// TODO fix blocking
 		return unnamed.stream().map(e->{
 			try {
-				return e.apply(context, currentMessage,paramMessage);
+				return e.apply(context.getInput().blockingGet(), currentMessage,Optional.of(paramMessage));
 			} catch (Exception e1) {
 				logger.error("Error applying param function: ", e1);
 				return new Operand(null,"string",null);

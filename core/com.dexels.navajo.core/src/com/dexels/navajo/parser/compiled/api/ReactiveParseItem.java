@@ -41,7 +41,7 @@ public class ReactiveParseItem implements ContextExpression {
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		switch (type) {
 			case SOURCE:
-//				return Reactive.finderInstance().getSourceFactory(name).build(namedParams, unnamedParams);
+				return Reactive.finderInstance().getSourceFactory(name).build(namedParams, unnamedParams);
 		case HEADER:
 			break;
 		case MAPPER:

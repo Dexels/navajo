@@ -12,6 +12,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -26,11 +27,17 @@ public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadat
 	public SingleSourceFactory() {
 	}
 
+//	@Override
+//	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
+//			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
+//			) {
+//		return new SingleSource(this,params,transformers,finalType,x, relativePath);
+//	}
+
+
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
-			) {
-		return new SingleSource(this,params,transformers,finalType,x, relativePath);
+	public ReactiveSource build(Map<String, ContextExpression> namedParams, List<ContextExpression> unnamedParams) {
+		return new SingleSource(this,namedParams,unnamedParams);
 	}
 
 	@Override
