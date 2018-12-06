@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -255,7 +256,7 @@ public class TestCompiledExpression {
         System.err.println(">> "+o);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testReactiveFunctionCall() throws ParseException {
         FunctionInterface testFunction = new AddTestFunction();
         FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
