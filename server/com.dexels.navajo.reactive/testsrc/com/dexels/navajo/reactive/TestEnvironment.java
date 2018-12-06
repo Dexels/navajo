@@ -137,7 +137,7 @@ public class TestEnvironment {
 
 	@Test 
 	public void testParseJSON() throws IOException {
-		InputStream is = getClass().getClassLoader().getResourceAsStream("person.json");
+		InputStream is = getClass().getResourceAsStream("person.json");
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		ReplicationMessage rm = ReplicationJSON.parseReplicationMessage(is, Optional.empty(), new ObjectMapper());
 		System.err.println(ImmutableFactory.getInstance().describe(rm.message()));
