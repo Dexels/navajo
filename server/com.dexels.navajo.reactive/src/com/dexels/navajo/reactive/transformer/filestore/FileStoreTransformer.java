@@ -35,22 +35,16 @@ public class FileStoreTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 
-	private Optional<XMLElement> sourceElement;
-
-	private String sourcePath;
-
 	private final TransformerMetadata metadata;
 	
 	public FileStoreTransformer(TransformerMetadata metadata, ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 		this.metadata = metadata;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
+		ReactiveResolvedParameters parms = parameters.resolve(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
 		String path = parms.paramString("path");
 		return flow->flow.lift(flowableFile(path));
 	}

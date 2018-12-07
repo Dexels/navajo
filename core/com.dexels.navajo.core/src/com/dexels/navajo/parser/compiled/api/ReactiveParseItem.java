@@ -13,6 +13,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -40,8 +41,9 @@ public class ReactiveParseItem implements ContextExpression {
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		switch (type) {
-			case SOURCE:
-				return Reactive.finderInstance().getSourceFactory(name).build(namedParams, unnamedParams);
+		case SOURCE:
+			ReactiveSourceFactory sourceFactory = Reactive.finderInstance().getSourceFactory(name);
+			return sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams));
 		case HEADER:
 			break;
 		case MAPPER:

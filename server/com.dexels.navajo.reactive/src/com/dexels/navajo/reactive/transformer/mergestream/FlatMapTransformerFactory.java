@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
+import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -42,18 +43,10 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeMultiTransformerFactory: Can't build without XML element"));
+//		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeMultiTransformerFactory: Can't build without XML element"));
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-		Optional<ReactiveSource> subSource;
-		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext,Optional.of(parentType));
-		} catch (Exception e) {
-			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
-		}
-		if(!subSource.isPresent()) {
-			throw new NullPointerException("Missing sub source in xml: "+xml);
-		}
-		childSource = subSource.get();
+		
+		childSource = parameters.unnamed.stream().findFirst().map(e->e.apply()).map(e->(ReactiveSource)e).get();
 		logger.info("sub source type>>"+childSource.finalType());
 //		if(!childSource.finalType().equals(DataItem.Type.MESSAGE)) {
 //			throw new IllegalArgumentException("Wrong type of sub source: "+childSource.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);

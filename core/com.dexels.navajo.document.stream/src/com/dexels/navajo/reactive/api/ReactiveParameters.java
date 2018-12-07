@@ -11,13 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableTreeNode;
 
-import io.reactivex.functions.Function3;
+import io.reactivex.Single;
 
 public class ReactiveParameters {
 	
@@ -36,8 +41,8 @@ public class ReactiveParameters {
 		this.unnamed = unnamedParameters;
 	}
 	
-	public ReactiveResolvedParameters resolve(Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
-		return new ReactiveResolvedParameters(named,unnamed, currentMessage, paramMessage, validator);
+	public ReactiveResolvedParameters resolve(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
+		return new ReactiveResolvedParameters(context.getInput(), named,unnamed, currentMessage, paramMessage, validator);
 	}
 	
 	public List<Object> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
@@ -52,41 +57,66 @@ public class ReactiveParameters {
 		}).collect(Collectors.toList());
 	}
 	
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,DataItem paramMessage) {
-		return unnamed.stream().map(e->{
-			try {
-//				Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-				return e.apply(context,  Optional.of(currentMessage.message()),paramMessage.stateMessage());
-			} catch (Exception e1) {
-				logger.error("Error applying param function: ", e1);
-				return new Operand(null,"string",null);
-			}
-		}).collect(Collectors.toList());
-	}
+//	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,DataItem paramMessage) {
+//		return unnamed.stream().map(e->{
+//			try {
+////				Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
+//				return e.apply(context,  Optional.of(currentMessage.message()),paramMessage.stateMessage());
+//			} catch (Exception e1) {
+//				logger.error("Error applying param function: ", e1);
+//				return new Operand(null,"string",null);
+//			}
+//		}).collect(Collectors.toList());
+//	}
 
-	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
-		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
-	}
+//	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
+//		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
+//	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
-		return with(key,(context,input,param)->new Operand(value,type,null));
+		return withExpression(key, new ContextExpression() {
+
+			@Override
+			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access,
+					Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
+					throws TMLExpressionException {
+				return value;
+			}
+
+			@Override
+			public boolean isLiteral() {
+				return true;
+			}
+
+			@Override
+			public Optional<String> returnType() {
+				return Optional.of(type);
+			}
+
+			@Override
+			public String expression() {
+				return "";
+			}});
 	}
-	public ReactiveParameters with(String key, Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand> namedParam) {
-		Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> extended = new HashMap<>(named);
-		extended.put(key, namedParam);
-		return ReactiveParameters.of(extended);
-	}
-	
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters,List<Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> unnamedParameters) {
-		return new ReactiveParameters(namedParameters, unnamedParameters);
+	public ReactiveParameters withExpression(String key, ContextExpression expression) {
+		Map<String,ContextExpression> extended = new HashMap<>(named);
+		extended.put(key,expression);
+		return with(key,extended);
 	}
 
-	public static ReactiveParameters of(Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> namedParameters) {
-		return new ReactiveParameters(namedParameters, Collections.emptyList());
+	public ReactiveParameters with(String key, Map<String,ContextExpression> namedParameters) {
+		Map<String,ContextExpression> extended = new HashMap<>(named);
+		extended.putAll(namedParameters);
+		return ReactiveParameters.of(validator, extended,this.unnamed);
 	}
 	
-	public static ReactiveParameters empty() {
-		return ReactiveParameters.of(Collections.emptyMap());
+	public static ReactiveParameters of(ParameterValidator validator, Map<String,ContextExpression> namedParameters,List<ContextExpression> unnamedParameters) {
+		return new ReactiveParameters(validator,namedParameters,unnamedParameters);
+	}
+
+	public static ReactiveParameters empty(ParameterValidator validator) {
+		return ReactiveParameters.of(validator,Collections.emptyMap(),Collections.emptyList());
 	}
 
 }

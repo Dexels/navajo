@@ -11,13 +11,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.parser.compiled.api.ReactivePipe;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
 import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
@@ -48,7 +51,10 @@ public class TestReactiveParser {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactivePipe();
 	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
-	        ReactiveSourceFactory rsf = (ReactiveSourceFactory) ss.source.apply();
+	        int transformerCount =ss.transformers.size();
+	        ContextExpression contextExpression = ss.transformers.stream().findFirst().get();
+			System.err.println("Trans: "+contextExpression);
+	        ReactiveSource rsf = (ReactiveSource) ss.source.apply();
 	        List<ReactiveTransformerFactory> transfac = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
 	        System.err.println(ss.source.apply());
 		}
@@ -62,8 +68,11 @@ public class TestReactiveParser {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactivePipe();
 	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
-	        ReactiveSourceFactory rsf = (ReactiveSourceFactory) ss.source.apply();
-	        List<ReactiveTransformerFactory> transfac = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
+	        ReactiveSource rsf = (ReactiveSource) ss.source.apply();
+	        List<ReactiveTransformer> transfac = ss.transformers
+	        		.stream()
+	        		.map(e->(ReactiveTransformer)e.apply())
+	        		.collect(Collectors.toList());
 	        System.err.println(ss.source.apply());
 		}
 	}
