@@ -32,7 +32,7 @@ public class AsyncTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		StreamScriptContext cp = context.copyWithNewUUID();
 		RunningReactiveScripts rrs = context.runningScripts().get();
 		
@@ -47,7 +47,6 @@ public class AsyncTransformer implements ReactiveTransformer {
 			);
 //			StreamScriptContext withd = cp.withDispose(()->sub.dispose());
 			rrs.submit(cp.withDispose(()->sub.dispose()));
-			
 			return subSource.execute(context, Optional.empty());
 //			return Flowable.just(createOutputMessage(context))
 //					.map(DataItem::of);

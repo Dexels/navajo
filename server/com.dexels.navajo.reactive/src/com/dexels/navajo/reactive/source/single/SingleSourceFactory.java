@@ -8,19 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.SourceMetadata;
-
-import io.reactivex.functions.Function;
 
 public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadata {
 
@@ -36,8 +29,8 @@ public class SingleSourceFactory implements ReactiveSourceFactory, SourceMetadat
 
 
 	@Override
-	public ReactiveSource build(Map<String, ContextExpression> namedParams, List<ContextExpression> unnamedParams) {
-		return new SingleSource(this,namedParams,unnamedParams);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new SingleSource(this,parameters);
 	}
 
 	@Override

@@ -27,12 +27,11 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, 
+	public ReactiveTransformer build(Type parentType,List<ReactiveParseProblem> problems, 
 			ReactiveParameters parameters,
-			Optional<XMLElement> xml,
 			ReactiveBuildContext buildContext) {
 
-		return new FilterTransformer(this,parameters,xml);
+		return new FilterTransformer(this,parameters);
 	}
 
 

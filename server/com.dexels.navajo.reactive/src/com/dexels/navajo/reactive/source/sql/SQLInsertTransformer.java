@@ -45,8 +45,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
-//		int parallel = resolved.optionalInteger("parallel").orElse(1);
+		ReactiveResolvedParameters resolved = parameters.resolve(context, current, ImmutableFactory.empty(), metadata);
 		boolean debug = resolved.optionalBoolean("debug").orElse(false);
 		Map<String, Function3<StreamScriptContext, Optional<ImmutableMessage>, ImmutableMessage, Operand>> named = resolved.named;
 		try {
@@ -56,9 +55,8 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 				logger.info("Transforming to SQL. resource: {} query: {}",resource,query);
 			}
 			FlowableTransformer<DataItem, DataItem> result = flow->flow.map(m->{
-				List<Operand> operand = parameters.resolveUnnamed(context, DataItem.of(m.message()), DataItem.empty());
+				List<Object> operand = parameters.resolveUnnamed(context,m.message(), DataItem.empty());
 				Object[] params = operand.stream()
-						.map(e->e.value)
 						.toArray();
 				if(debug) {
 					logger.info("Transforming inputmessage {}",ImmutableFactory.createParser().describe(m.message()));

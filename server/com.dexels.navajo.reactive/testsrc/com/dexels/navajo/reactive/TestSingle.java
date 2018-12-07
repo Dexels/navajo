@@ -41,7 +41,7 @@ public class TestSingle {
 	@Test
 	public void testSingleSource() throws UnsupportedEncodingException, IOException {
 		SingleSourceFactory ssf = new SingleSourceFactory();
-		ReactiveParameters parameters = ReactiveParameters.empty()
+		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		List<ReactiveParseProblem> problems = new ArrayList<>();

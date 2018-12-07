@@ -11,8 +11,7 @@ import io.reactivex.FlowableTransformer;
 
 public interface ReactiveTransformer {
 
-	public FlowableTransformer<DataItem,DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current);
+	public FlowableTransformer<DataItem,DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current, ImmutableMessage param);
 	public TransformerMetadata metadata();
-	public Optional<XMLElement> sourceElement();
 
 }

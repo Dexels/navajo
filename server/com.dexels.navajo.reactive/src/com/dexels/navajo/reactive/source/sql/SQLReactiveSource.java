@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -36,16 +37,14 @@ public class SQLReactiveSource implements ReactiveSource {
 	public SQLReactiveSource(SourceMetadata metadata, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
 		this.metadata = metadata;
 		this.parameters = params;
-		this.transformers = transformers;
-		this.finalType = finalType;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 	}
 
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current) {
-		Object[] unnamedParams = evaluateParams(context, current);
-		ReactiveResolvedParameters params = parameters.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
+	public Flowable<DataItem> execute(StreamScriptContext context,  Optional<ImmutableMessage> current,
+			ImmutableMessage paramMessage) {
+		ReactiveResolvedParameters params = this.parameters.resolve(input, current, paramMessage);
+		List<Object> unnamedParams = params.unnamedParameters();
+//		Object[] unnamedParams = evaluateParams(context, current);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
 		Optional<String> queryTenant = params.optionalString("tenant");
@@ -84,14 +83,10 @@ public class SQLReactiveSource implements ReactiveSource {
 	}
 
 	@Override
-	public Type finalType() {
-		return finalType;
-	}
-
-	@Override
 	public boolean streamInput() {
 		return false;
 	}
+
 
 
 }
