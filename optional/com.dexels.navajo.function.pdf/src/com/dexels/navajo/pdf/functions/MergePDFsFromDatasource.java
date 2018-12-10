@@ -25,7 +25,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 	
 	@Override
 	public String usage() {
-        return "MergePDFsFromDatasource(String/List of Ids | Transaction Context | Datasource | Username | Key For Id | Type | Binay Column Name)";
+        return "MergePDFsFromDatasource(String/List of Ids | Transaction Context | Datasource | Username | Key For Id | Type | Binary Column Name)";
     }
 	
 	public MergePDFsFromDatasource() {
@@ -35,9 +35,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		
-		long start = System.currentTimeMillis();
-		
+				
 		if ( getOperands().size() != 7 ) {
 			throw new TMLExpressionException("Invalid number of operands.");
 		}
@@ -85,25 +83,30 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 		// Max in operator in oracle takes 1000 ites, but we need more ::
 		int numOfItems = items.size();
 		String queryPart = "";
-		int startPosition = 0;
-		int endPosition = 999;
-		if(startPosition + endPosition >= numOfItems) {
-			endPosition = numOfItems - 1;
+		if(numOfItems == 1) {
+			queryPart = " in "+ items.toString().replace("[", "('").replace("]","')").replace(" ", "");
 		} else {
-			endPosition = startPosition + 999;
-		}
-		while(endPosition <= numOfItems && startPosition != endPosition) {
-			queryPart = queryPart + " or "+ tableId +" in " + items.subList(startPosition, endPosition).toString().replace(",","','").replace("[", "('").replace("]","')").replace(" ", "");
-			startPosition = endPosition;
-			if(endPosition + 999 >= numOfItems) {
-				endPosition = numOfItems;
+			int startPosition = 0;
+			int endPosition = 999;
+			if(startPosition + endPosition >= numOfItems) {
+				endPosition = numOfItems - 1;
 			} else {
 				endPosition = startPosition + 999;
 			}
-			
+			while(endPosition <= numOfItems && startPosition != endPosition) {
+				queryPart = queryPart + " or "+ tableId +" in " + items.subList(startPosition, endPosition).toString().replace(",","','").replace("[", "('").replace("]","')").replace(" ", "");
+				startPosition = endPosition;
+				if(endPosition + 999 >= numOfItems) {
+					endPosition = numOfItems;
+				} else {
+					endPosition = startPosition + 999;
+				}
+				
+			}
+			queryPart = queryPart.substring(4).substring(tableId.length());
 		}
 		
-		queryPart = queryPart.substring(4).substring(tableId.length());
+		
 		
 		String query = "select * FROM document where " + tableId 
 						+	queryPart
@@ -176,7 +179,6 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 			sql.kill();
 			throw new TMLExpressionException(this, "Fatal error: " + e.getMessage() + ", query = " + query,e);
 		} finally {
-			long end = System.currentTimeMillis();
 			sql.kill();
 		}
 				
