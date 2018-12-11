@@ -303,7 +303,11 @@ public abstract class FunctionInterface {
 	}
 
 	public Optional<String> getReturnType() {
-		return Optional.ofNullable(returnType.get(this.getClass()));
+		String type = returnType.get(this.getClass());
+		if(type==null || type.equals("any")) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(type);
 	}
 
 	public boolean isInitialized() {

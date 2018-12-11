@@ -57,6 +57,7 @@ public final class ASTForAllNode extends SimpleNode {
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
+				// TODO make more efficient if we factor out the sub expressions
 				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,mode);
 				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,mode);
 				
