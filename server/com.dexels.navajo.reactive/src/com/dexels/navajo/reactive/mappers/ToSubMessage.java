@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -23,9 +22,9 @@ public class ToSubMessage implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
-			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			ReactiveResolvedParameters resolved = params.resolve(context, Optional.of(item.message()),item.stateMessage(), this);
 			boolean condition = resolved.optionalBoolean("condition").orElse(true);
 			if(!condition) {
 				return item;

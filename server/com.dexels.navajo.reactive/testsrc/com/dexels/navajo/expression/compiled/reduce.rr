@@ -1,0 +1,5 @@
+single(count=5,debug=true)
+	->set(id=[@index])
+	->reduce(set(sum=0),set(sum=[@sum]+[id]))
+	->set(sum=[@sum],aap='noot')
+	->stream(messageName='Bla', isArray=true)

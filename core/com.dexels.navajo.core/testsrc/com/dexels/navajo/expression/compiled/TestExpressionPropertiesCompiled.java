@@ -15,9 +15,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.SystemException;
 
 public class TestExpressionPropertiesCompiled {

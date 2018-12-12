@@ -3,12 +3,13 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 
 public final class ASTNegativeNode extends SimpleNode {
@@ -22,9 +23,9 @@ public final class ASTNegativeNode extends SimpleNode {
         if (a instanceof String)
             return "-" + ((String) a); // this is just silly
         else if (a instanceof Integer)
-            return new Integer(0 - ((Integer) a).intValue());
+            return Integer.valueOf(0 - ((Integer) a).intValue());
         else if (a instanceof Double)
-            return new Double(0 - ((Double) a).doubleValue());
+            return Double.valueOf(0 - ((Double) a).doubleValue());
         else if (a instanceof Money)
           return new Money(0 - ((Money) a).doubleValue());
         else if (a instanceof Percentage)
@@ -34,8 +35,8 @@ public final class ASTNegativeNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),functionClassifier);
 	}
 
 }

@@ -32,15 +32,15 @@ import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 public class TestSetup {
 
-	public static ReactiveScriptParser setup() {
+	public static ReactiveFinder setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		File root = new File("testscripts");
 //		env = new ReactiveScriptEnvironment(root);
-		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
+//		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
 		ReactiveFinder finder = new CoreReactiveFinder();
-		reactiveScriptParser = new ReactiveScriptParser();
-		reactiveScriptParser.setReactiveFinder(finder);
+//		reactiveScriptParser = new ReactiveScriptParser();
+//		reactiveScriptParser.setReactiveFinder(finder);
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 //		finder.a
@@ -63,7 +63,7 @@ public class TestSetup {
 		finder.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
 //		env.setReactiveScriptParser(reactiveScriptParser);
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
-		return reactiveScriptParser;
+		return finder;
 	}
 	
 	public static StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {

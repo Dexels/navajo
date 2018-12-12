@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -27,10 +26,6 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 
-	private final Optional<XMLElement> sourceElement;
-
-//	private final ReactiveParameters parameters;
-	
 	private final static Logger logger = LoggerFactory.getLogger(ReduceToListTransformer.class);
 
 	
@@ -38,11 +33,10 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 		this.metadata = metadata;
 		this.reducers = reducers;
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
 	}
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		// MUTABLE EDITION!
 			return flow->{
 			try {
@@ -63,9 +57,4 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
-
 }

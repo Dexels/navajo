@@ -6,6 +6,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +16,11 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -39,7 +40,7 @@ public final class ASTMappableNode extends SimpleNode {
     
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 			
 			@Override
@@ -64,7 +65,7 @@ public final class ASTMappableNode extends SimpleNode {
 		        }
 		        for (int i = 0; i < args; i++) {
 		        		List<String> problems = new ArrayList<>();
-		            Object a = jjtGetChild(i).interpretToLambda(problems, expression,mode).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            Object a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
 		            		throw new TMLExpressionException(problems,expression);
 		            }

@@ -25,6 +25,7 @@ public class ReactiveResolvedParameters {
 //	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
 	Map<String,Object> resolvedNamed = new HashMap<>();
 	List<Object> resolvedUnnamed = new ArrayList<>();
+	Map<String,String> resolvedTypes = new HashMap<>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
 //	private final StreamScriptContext context;
@@ -69,50 +70,14 @@ public class ReactiveResolvedParameters {
 		}
 		expectedTypes = validator.parameterTypes();		// TODO Auto-generated constructor stub
 	}
-
-//	public ReactiveResolvedParameters(StreamScriptContext context, Map<String,Function3<StreamScriptContext,
-//			Optional<ImmutableMessage>,ImmutableMessage,Operand>> named,
-//			Optional<ImmutableMessage> currentMessage,
-//			ImmutableMessage paramMessage, ParameterValidator validator, 
-//			Optional<XMLElement> sourceElement,
-//			String sourcePath) {
-//		this.named = named;
-//		this.context = context;
-//		this.currentMessage = currentMessage;
-//		this.paramMessage = paramMessage;
-////		this.sourceElement = sourceElement;
-////		this.sourcePath = sourcePath;
-//		Optional<List<String>> allowed = validator.allowedParameters();
-//		Optional<List<String>> required = validator.requiredParameters();
-//
-//		if(allowed.isPresent()) {
-//			List<String> al = allowed.get();
-//			named.entrySet().forEach(e->{
-//				if(!al.contains(e.getKey())) {
-//					throw new ReactiveParameterException("Parameter name: "+e.getKey()+" is not allowed for this entity. Allowed entities: "+al+" file: "+sourcePath+" line: "+sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>") );
-//				}
-//			});
-//		}
-//		if(required.isPresent()) {
-//			List<String> req = required.get();
-//			for (String requiredParam : req) {
-//				if(!named.containsKey(requiredParam)) {
-//					throw new ReactiveParameterException("Missing parameter name: "+requiredParam+". Supplied params: "+named.keySet()+" file: "+sourcePath+" line: "+sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>"));
-//				}
-//			}
-//		}
-//		expectedTypes = validator.parameterTypes();
-//	}
-
-//
-//	public boolean hasKey(String key) {
-//		return result.containsKey(key);
-//	}
 	
 	public List<Object> unnamedParameters() {
 		return this.resolvedUnnamed;
 	}
 	
+	public Map<String,Object> namedParameters() {
+		return this.resolvedNamed;
+	}
 	public Map<String,Object> resolveAllParams() {
 		if(!allResolved) {
 			resolveNamed();
@@ -120,7 +85,10 @@ public class ReactiveResolvedParameters {
 		}
 		return Collections.unmodifiableMap(resolvedNamed);
 	}
-	
+
+	public String namedParamType(String key) {
+		return this.resolvedTypes.get(key);
+	}
 	private Optional<Object> paramValue(String key) {
 		if(resolvedNamed.containsKey(key)) {
 			return Optional.of(resolvedNamed.get(key));
@@ -228,11 +196,10 @@ public class ReactiveResolvedParameters {
 	}
 	
 	private void resolveUnnamed() {
-		
-		List<? extends Object> resolved = unnamed.stream().map(e->{
-			return e.apply(this.input.blockingGet(), this.currentMessage, Optional.of(this.paramMessage));
-		}).collect(Collectors.toList());
-		
+		List<? extends Object> resolved = unnamed.stream()
+				.map(e->{
+					return e.apply(this.input.blockingGet(), this.currentMessage, Optional.of(this.paramMessage));
+				}).collect(Collectors.toList());
 		this.allResolved=true;
 		this.resolvedUnnamed.addAll(resolved);
 	}
@@ -249,8 +216,13 @@ public class ReactiveResolvedParameters {
 	private Object resolveParam(String key,Optional<String> expectedType, ContextExpression function) {
 		Object applied;
 		try {
-			applied = function.apply(input.blockingGet(), currentMessage,Optional.of(paramMessage));
+			// TODO test for streaming
+			Navajo in = input.blockingGet();
+			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);
+			if(expectedType.isPresent()) {
+				resolvedTypes.put(key, expectedType.get());
+			}
 			
 //			if(expectedType.isPresent() && !applied.type.equals(expectedType.get())) {
 //				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType.get()+" but of type: "+applied.type+" with value: "+applied.value+" path: "+sourcePath+" element: "+sourceElement+" -> "+ sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>")+" message: "+currentMessage+" statemessage: "+paramMessage);

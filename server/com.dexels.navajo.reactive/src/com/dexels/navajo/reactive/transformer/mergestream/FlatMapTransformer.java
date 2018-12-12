@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -24,8 +23,8 @@ public class FlatMapTransformer implements ReactiveTransformer {
 	private final ReactiveParameters parameters;
 	
 
-	public FlatMapTransformer(TransformerMetadata metadata, ReactiveParameters parameters, ReactiveSource source, Optional<XMLElement> sourceElement, Type parentType) {
-		this.source = source;
+	public FlatMapTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Type parentType) {
+		this.source = parameters.unnamed.stream().findFirst().map(e->e.apply()).map(e->(ReactiveSource)e).get();
 		this.metadata = metadata;
 		this.parentType = parentType;
 		this.parameters = parameters;

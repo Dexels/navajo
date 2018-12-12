@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -12,8 +13,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -24,7 +25,7 @@ public final class ASTTodayNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 
 			@Override

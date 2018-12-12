@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -25,19 +23,20 @@ public class StoreSingle implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
 			ImmutableMessage state = item.stateMessage();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s),state , this, xml, relativePath);
+			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(s),state , this);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
 			if(!condition) {
 				return item;
 			}			
-			Operand resolvedValue = parms.resolveAllParams().get("value");
+			Object resolvedValue = parms.namedParameters().get("value");
+			String type = parms.namedParamType("value");
 			String toValue = parms.paramString("to");
-			ImmutableMessage di = item.stateMessage().with(toValue, resolvedValue.value,resolvedValue.type);
+			ImmutableMessage di = item.stateMessage().with(toValue, resolvedValue,type);
 
 			return DataItem.of(s,di);
 		};

@@ -3,9 +3,10 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.FunctionClassification;
 
 public
 class ASTReactiveHeaderNode extends SimpleNode {
@@ -15,7 +16,7 @@ class ASTReactiveHeaderNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 	// TODO Auto-generated method stub
 	return null;
 }

@@ -4,10 +4,18 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
-import com.dexels.navajo.parser.compiled.api.ReactivePipe;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
+import com.dexels.navajo.reactive.api.ReactiveSource;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
+
 
 public
 class ASTReactivePipe extends SimpleNode {
@@ -16,21 +24,33 @@ class ASTReactivePipe extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 
 	int count = jjtGetNumChildren();
-	if(mode==ParseMode.DEFAULT) {
-		ContextExpression passthough = (ContextExpression) jjtGetChild(0).interpretToLambda(problems, originalExpression,ParseMode.DEFAULT);
-		return passthough;
-	}
-	List<ContextExpression> pipeElements = new ArrayList<>();
-	ContextExpression source = (ContextExpression) jjtGetChild(0).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_SOURCE);
+	Node sourceNode = jjtGetChild(0);
+	System.err.println("Nodeclass: "+sourceNode);
+//	if(mode==ParseMode.DEFAULT) {
+//		ContextExpression passthough = (ContextExpression) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier);
+//		return passthough;
+//	}
+	List<Object> pipeElements = new ArrayList<>();
+	ReactiveSource source = (ReactiveSource) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply();
 //	pipeElements.add(source);
 	for (int i = 1; i < count; i++) {
-		ContextExpression transformer = jjtGetChild(i).interpretToLambda(problems, originalExpression,ParseMode.REACTIVE_TRANSFORMER);
-		pipeElements.add(transformer);
+		ContextExpression interpretToLambda = jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
+		Object result = interpretToLambda.apply();
+		if(result instanceof io.reactivex.functions.Function) {
+			io.reactivex.functions.Function<StreamScriptContext,io.reactivex.functions.Function<DataItem,DataItem>> merger = (io.reactivex.functions.Function) result;
+			pipeElements.add(merger);
+
+		} else if(result instanceof ReactiveTransformer) {
+			ReactiveTransformer transformer = (ReactiveTransformer) interpretToLambda.apply();
+			pipeElements.add(transformer);
+		} else {
+			// something weird
+		}
 	}
-	ReactivePipe pipe = new ReactivePipe(source, pipeElements);
+	ReactivePipeNode pipe = new ReactivePipeNode(source, pipeElements);
 	return pipe;
 	
 }

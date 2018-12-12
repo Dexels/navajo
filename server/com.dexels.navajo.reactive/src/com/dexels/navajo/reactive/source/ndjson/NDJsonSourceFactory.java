@@ -4,16 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
-
-import io.reactivex.functions.Function;
 
 public class NDJsonSourceFactory implements ReactiveSourceFactory {
 
@@ -42,9 +36,7 @@ public class NDJsonSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems,
-			Optional<XMLElement> x, ReactiveParameters params, List<ReactiveTransformer> transformers, Type finalType,
-			Function<String, ReactiveMerger> reducerSupplier) {
+	public ReactiveSource build(ReactiveParameters parameters) {
 		// TODO Auto-generated method stub
 		return null;
 	}

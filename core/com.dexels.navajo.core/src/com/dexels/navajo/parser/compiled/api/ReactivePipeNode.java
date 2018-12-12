@@ -10,15 +10,17 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
+import com.dexels.navajo.reactive.api.ReactivePipe;
+import com.dexels.navajo.reactive.api.ReactiveSource;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public class ReactivePipe implements ContextExpression {
-	public final ContextExpression source;
-	public final List<ContextExpression> transformers;
+public class ReactivePipeNode implements ContextExpression {
+	public final ReactiveSource source;
+	public final List<Object> transformers;
 
-	public ReactivePipe(ContextExpression source, List<ContextExpression> transformers) {
+	public ReactivePipeNode(ReactiveSource source, List<Object> transformers) {
 		this.source = source;
 		this.transformers = transformers;
 	}
@@ -27,8 +29,7 @@ public class ReactivePipe implements ContextExpression {
 	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-//		ReactiveSourceFactory rsf = (ReactiveSourceFactory) source.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage);
-		throw new UnsupportedOperationException("Should not be called!");
+		return new ReactivePipe(source, transformers);
 	}
 
 	@Override

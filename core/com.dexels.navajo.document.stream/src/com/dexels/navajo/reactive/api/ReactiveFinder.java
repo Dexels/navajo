@@ -1,7 +1,9 @@
 package com.dexels.navajo.reactive.api;
 
 import java.util.Set;
+import java.util.function.Function;
 
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -27,4 +29,6 @@ public interface ReactiveFinder {
 	public void addReactiveSourceFactory(ReactiveSourceFactory factory, String name);
 
 	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, String name);
+	
+	public Function<String,FunctionClassification> functionClassifier();
 }

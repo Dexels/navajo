@@ -42,6 +42,7 @@ public class ReactiveParameters {
 	}
 	
 	public ReactiveResolvedParameters resolve(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
+		
 		return new ReactiveResolvedParameters(context.getInput(), named,unnamed, currentMessage, paramMessage, validator);
 	}
 	

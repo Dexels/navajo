@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -18,9 +19,9 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.util.Util;
@@ -49,7 +50,7 @@ public final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 	
 			@Override

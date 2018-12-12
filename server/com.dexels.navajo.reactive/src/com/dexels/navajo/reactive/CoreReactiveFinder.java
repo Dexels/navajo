@@ -3,10 +3,12 @@ package com.dexels.navajo.reactive;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -107,6 +109,20 @@ public class CoreReactiveFinder implements ReactiveFinder {
 
 	public void removeReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
 		reactiveOperatorFactory.remove((String) settings.get("name"));
+	}
+
+	@Override
+	public Function<String, FunctionClassification> functionClassifier() {
+		return name->{
+			if(factories.containsKey(name)) {
+				return FunctionClassification.REACTIVE_SOURCE;
+			} else if(reactiveOperatorFactory.containsKey(name)) {
+				return FunctionClassification.REACTIVE_TRANSFORMER;
+			} else if(reactiveReducer.containsKey(name)) {
+				return FunctionClassification.REACTIVE_REDUCER;
+			}
+			return FunctionClassification.DEFAULT;
+		};
 	}
 
 

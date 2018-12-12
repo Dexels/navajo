@@ -2,11 +2,12 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTDivNode extends SimpleNode {
     public ASTDivNode(int id) {
@@ -27,7 +28,7 @@ public final class ASTDivNode extends SimpleNode {
     }
     
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b),functionClassifier);
 	}
 }

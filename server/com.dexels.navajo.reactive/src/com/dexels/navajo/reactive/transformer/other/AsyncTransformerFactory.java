@@ -9,23 +9,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveParseException;
-import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.pubsub.rx2.api.TopicPublisher;
 import com.dexels.pubsub.rx2.api.TopicSubscriber;
-
-import io.reactivex.functions.Function;
 
 public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
@@ -38,36 +31,30 @@ public class AsyncTransformerFactory implements ReactiveTransformerFactory, Tran
     public void clearTopicSubscriber(TopicSubscriber topicSubscriber) {
         this.topicPublisher = null;
     }
+    
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, 
-			ReactiveParameters parameters,
-			Optional<XMLElement> xmlElement,
-			ReactiveBuildContext buildContext) {
-		
-//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), reducerSupplier,useGlobalInput);
-//		ReactiveScriptParser.parseTransformationsFromChildren(relativePath, problems, xml, sourceSupplier, factorySupplier, reducerSupplier, transformers, reducers, useGlobalInput);
-		//
-
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-		Optional<ReactiveSource> subSource;
-		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems,buildContext,Optional.of(Type.SINGLEMESSAGE));
-		} catch (Exception e) {
-			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
-		}
-		if(!subSource.isPresent()) {
-			throw new NullPointerException("Missing sub source in xml: "+xml);
-		}
-		ReactiveSource sub = subSource.get();
-		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
-			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
-		}
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+//		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
+//		Optional<ReactiveSource> subSource;
+//		try {
+//			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems,buildContext,Optional.of(Type.SINGLEMESSAGE));
+//		} catch (Exception e) {
+//			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
+//		}
+//		if(!subSource.isPresent()) {
+//			throw new NullPointerException("Missing sub source in xml: "+xml);
+//		}
+//		ReactiveSource sub = subSource.get();
+//		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
+//			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
+//		}
 //		return new MergeSingleTransformer(this,parameters,sub, joinermapper);
-				return new AsyncTransformer(this,parameters,sub, joinermapper,xmlElement);
+		// TODO
+		return new AsyncTransformer(this,parameters, context->item->item);
 	}
-
 
 	@Override
 	public Set<Type> inType() {
@@ -99,4 +86,5 @@ public class AsyncTransformerFactory implements ReactiveTransformerFactory, Tran
 	public String name() {
 		return "async";
 	}
+
 }

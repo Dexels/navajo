@@ -3,19 +3,20 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTModNode extends SimpleNode {
     public ASTModNode(int id) {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),functionClassifier);
 	}
 
 	public final Object interpret(Object a, Object b){

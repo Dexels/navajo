@@ -13,9 +13,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -133,12 +133,12 @@ public abstract class SimpleNode implements Node {
     		};
     }
     
-    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func,ParseMode mode) {
-    		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),mode);
+    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func,Function<String,FunctionClassification> functionClassifier) {
+    		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),functionClassifier);
 	}
-    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> aType = expA.returnType();
 		Optional<String> bType = expB.returnType();
 		boolean inputTypesValid = acceptTypes.apply(aType, bType);
@@ -173,8 +173,8 @@ public abstract class SimpleNode implements Node {
 		};
 	}
 	
-	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Object, Object> func, Optional<String> requiredReturnType, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
+	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Object, Object> func, Optional<String> requiredReturnType, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		if(requiredReturnType.isPresent() && expA.returnType().isPresent()) {
 			String expectedType = requiredReturnType.get();
 			String foundType = expA.returnType().get();

@@ -6,6 +6,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -13,9 +14,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -28,11 +29,11 @@ public final class ASTListNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		final List<ContextExpression> exprs = new ArrayList<>();
 		boolean onlyImmutable = true;
 		for (int i = 0; i < jjtGetNumChildren(); i++) {
-			ContextExpression lmb = jjtGetChild(i).interpretToLambda(problems,expression,mode);
+			ContextExpression lmb = jjtGetChild(i).interpretToLambda(problems,expression,functionClassifier);
 			exprs.add(lmb);
 			if(!onlyImmutable && !lmb.isLiteral()) {
 				onlyImmutable = false;

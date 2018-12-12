@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -27,11 +26,11 @@ public class SkipTransformerFactory implements ReactiveTransformerFactory, Trans
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
-
-		return new SkipTransformer(this,parameters,xml);
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+		return new SkipTransformer(this,parameters);
 	}
+	
 	@Override
 	public Set<Type> inType() {
 		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.MESSAGE}));
@@ -63,4 +62,5 @@ public class SkipTransformerFactory implements ReactiveTransformerFactory, Trans
 	public String name() {
 		return "skip";
 	}
+
 }

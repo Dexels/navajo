@@ -1,32 +1,38 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.NavajoDomStreamer;
+import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
-import com.dexels.navajo.parser.compiled.api.ReactivePipe;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
 import com.dexels.navajo.reactive.api.Reactive;
-import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
+import com.dexels.navajo.reactive.api.ReactiveBuildContext;
+import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
+
+import io.reactivex.Flowable;
 
 public class TestReactiveParser {
 	
@@ -37,27 +43,64 @@ public class TestReactiveParser {
 		finder = new CoreReactiveFinder();
 		finder.addReactiveSourceFactory(new SingleSourceFactory(), "single");
 		finder.addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
-		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "Stream");
-		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(), "Reduce");
-		finder.addReactiveTransformerFactory(new FilterTransformerFactory(), "Filter");
+		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
+		finder.addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
 		finder.activate();
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		Reactive.setFinderInstance(finder);
 	}
 
 	@Test
-	public void readScript() throws ParseException, IOException {
-		List<String> problems = new ArrayList<>();
-		try(Reader in = new InputStreamReader(this.getClass().getResourceAsStream("simple.rr"))) {
+	public void testFilter() throws ParseException, IOException {
+//		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
+			
+			Navajo n = runExpression(this.getClass().getResourceAsStream("filter.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
+				.map(e->e.event())
+				.toObservable()
+				.compose(StreamDocument.domStreamCollector())
+				.blockingFirst();
+			
+			int size = n.getMessage("Blem").getArraySize();
+			System.err.println("size: "+size);
+			n.write(System.err);
+			Assert.assertEquals(2, size);
+	}
+	
+	@Test
+	public void readSingleScript() throws ParseException, IOException {
+//		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
+			runExpression(this.getClass().getResourceAsStream("single.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
+				.map(e->e.event())
+				.lift(StreamDocument.serialize())
+				.map(e->new String(e))
+				.blockingForEach(e->System.err.print(e));
+	}
+
+
+	private static Navajo runBlockingEmpty(InputStream inExpression) throws ParseException, IOException {
+		return runExpression(inExpression, "tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
+				.map(e->e.event())
+				.toObservable()
+				.compose(StreamDocument.domStreamCollector())
+				.blockingFirst();
+	}
+
+	private static Flowable<DataItem> runExpression(InputStream inExpression, String tenant, String service, String deployment, Navajo input) throws ParseException, IOException {
+		StreamScriptContext context = new StreamScriptContext(tenant, service, deployment).withInputNavajo(input);
+		try(Reader in = new InputStreamReader(inExpression)) {
+ 
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactivePipe();
-	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
-	        int transformerCount =ss.transformers.size();
-	        ContextExpression contextExpression = ss.transformers.stream().findFirst().get();
-			System.err.println("Trans: "+contextExpression);
-	        ReactiveSource rsf = (ReactiveSource) ss.source.apply();
-	        List<ReactiveTransformerFactory> transfac = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
-	        System.err.println(ss.source.apply());
+			List<String> problems = new ArrayList<>();
+			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+			System.err.println("Sourcetype: "+src);
+			ReactivePipe pipe = (ReactivePipe) src.apply();
+			
+			Flowable<DataItem> flow = pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
+			return flow;
 		}
+
 	}
 
 	
@@ -67,14 +110,23 @@ public class TestReactiveParser {
 		try(Reader in = new InputStreamReader(this.getClass().getResourceAsStream("subsource.rr"))) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactivePipe();
-	        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,"",ParseMode.REACTIVE);
-	        ReactiveSource rsf = (ReactiveSource) ss.source.apply();
-	        List<ReactiveTransformer> transfac = ss.transformers
-	        		.stream()
-	        		.map(e->(ReactiveTransformer)e.apply())
-	        		.collect(Collectors.toList());
-	        System.err.println(ss.source.apply());
+			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+			System.err.println("Sourcetype: "+src);
+			ReactivePipe pipe = (ReactivePipe) src.apply();
+			
+			StreamScriptContext context = new StreamScriptContext("TENANT", "someservice", "somedeployment").withInputNavajo(NavajoFactory.getInstance().createNavajo());
+			pipe.execute(context, Optional.empty(), ImmutableFactory.empty())
+				.blockingForEach(e->System.err.println(e.event()));
+
 		}
+	}
+	
+	@Test
+	public void testReduce( ) throws ParseException, IOException {
+		try(InputStream in = this.getClass().getResourceAsStream("reduce.rr")) {
+			Navajo n = runBlockingEmpty(in);
+			n.write(System.err);
+		};
 	}
 
 }

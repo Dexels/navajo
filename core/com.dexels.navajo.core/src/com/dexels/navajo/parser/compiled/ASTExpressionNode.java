@@ -3,9 +3,10 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.FunctionClassification;
 
 public final class ASTExpressionNode extends SimpleNode {
     public ASTExpressionNode(int id) {
@@ -13,8 +14,8 @@ public final class ASTExpressionNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return  jjtGetChild(0).interpretToLambda(problems,expression,mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return  jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 	}
 
 }

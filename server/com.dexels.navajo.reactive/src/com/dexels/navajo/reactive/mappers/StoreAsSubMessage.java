@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -31,11 +30,11 @@ public class StoreAsSubMessage implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
 			ImmutableMessage message = item.message();
 			ImmutableMessage stateMessage = item.stateMessage();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(message),stateMessage, this, xml, relativePath);
+			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(message),stateMessage, this);
 			boolean debug = parms.optionalBoolean("debug").orElse(false);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
 			if(!condition) {

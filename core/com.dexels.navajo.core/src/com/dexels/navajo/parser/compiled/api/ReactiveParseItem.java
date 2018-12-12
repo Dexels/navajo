@@ -1,5 +1,6 @@
 package com.dexels.navajo.parser.compiled.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,12 +9,15 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
+import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -40,6 +44,10 @@ public class ReactiveParseItem implements ContextExpression {
 	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+		return materializeReactive();
+	}
+
+	private Object materializeReactive() {
 		switch (type) {
 		case SOURCE:
 			ReactiveSourceFactory sourceFactory = Reactive.finderInstance().getSourceFactory(name);
@@ -47,9 +55,15 @@ public class ReactiveParseItem implements ContextExpression {
 		case HEADER:
 			break;
 		case MAPPER:
-			return Reactive.finderInstance().getMergerFactory(name);
+			ReactiveMerger mergerFactory = Reactive.finderInstance().getMergerFactory(name);
+			ReactiveParameters mergeParameters = ReactiveParameters.of(mergerFactory, namedParams, unnamedParams);
+			return mergerFactory.execute(mergeParameters);
 		case TRANSFORMER:
-			return Reactive.finderInstance().getTransformerFactory(name);
+			ReactiveTransformerFactory transformerFactory = Reactive.finderInstance().getTransformerFactory(name);
+			ReactiveParameters transParameters = ReactiveParameters.of(transformerFactory, namedParams, unnamedParams);
+			List<ReactiveParseProblem> problems = new ArrayList<>();
+			// TODO problems?
+			return transformerFactory.build(problems, transParameters);
 		default:
 			break;
 

@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -82,7 +84,7 @@ public class ExpressionCache {
 			return cachedValue.get();
 		}
 		List<String> problems = new ArrayList<>();
-		ContextExpression parse = parse(problems,expression,ParseMode.DEFAULT);
+		ContextExpression parse = parse(problems,expression,functionName->FunctionClassification.DEFAULT);
 		if(!problems.isEmpty()) {
 			problems.forEach(problem->
 				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
@@ -94,10 +96,10 @@ public class ExpressionCache {
 		
 	}
 	
-	public ContextExpression parse(List<String> problems, String expression,ParseMode mode) {
-		return parse(problems, expression,mode,true);
+	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier) {
+		return parse(problems, expression,functionClassifier,true);
 	}
-	public ContextExpression parse(List<String> problems, String expression,ParseMode mode, boolean allowLiteralResolve) {
+	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier, boolean allowLiteralResolve) {
 		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
@@ -108,7 +110,7 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,mode);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);

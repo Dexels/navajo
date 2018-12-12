@@ -9,15 +9,12 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.SourceMetadata;
 
 import io.reactivex.Flowable;
@@ -28,13 +25,9 @@ public class SQLReactiveSource implements ReactiveSource {
 	private final static Logger logger = LoggerFactory.getLogger(SQLReactiveSource.class);
 
 	private final ReactiveParameters parameters;
-	private final List<ReactiveTransformer> transformers;
-	private final Type finalType;
-	private final Optional<XMLElement> sourceElement;
-	private final String sourcePath;
 	private final SourceMetadata metadata;
 	
-	public SQLReactiveSource(SourceMetadata metadata, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
+	public SQLReactiveSource(SourceMetadata metadata, ReactiveParameters params) {
 		this.metadata = metadata;
 		this.parameters = params;
 	}
@@ -42,7 +35,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context,  Optional<ImmutableMessage> current,
 			ImmutableMessage paramMessage) {
-		ReactiveResolvedParameters params = this.parameters.resolve(input, current, paramMessage);
+		ReactiveResolvedParameters params = this.parameters.resolve(context, current, paramMessage,metadata);
 		List<Object> unnamedParams = params.unnamedParameters();
 //		Object[] unnamedParams = evaluateParams(context, current);
 		String datasource = params.paramString("resource");
@@ -63,9 +56,7 @@ public class SQLReactiveSource implements ReactiveSource {
 				
 			});
 		}
-		for (ReactiveTransformer trans : transformers) {
-			flow = flow.compose(trans.execute(context,current));
-		}
+
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{
 				logger.info("After record: {}",ImmutableFactory.getInstance().describe(dataitem.message()));
@@ -77,14 +68,14 @@ public class SQLReactiveSource implements ReactiveSource {
 		return flow;
 	}
 
-
-	private Object[] evaluateParams(StreamScriptContext context, Optional<ImmutableMessage> immutable) {
-		return parameters.resolveUnnamed(context, immutable, ImmutableFactory.empty()).stream().map(e->e.value).toArray();
-	}
-
 	@Override
 	public boolean streamInput() {
 		return false;
+	}
+
+	@Override
+	public Type sourceType() {
+		return Type.MESSAGE;
 	}
 
 

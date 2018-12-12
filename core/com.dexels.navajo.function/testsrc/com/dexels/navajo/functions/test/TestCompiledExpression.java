@@ -18,9 +18,9 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.SystemException;
 
 public class TestCompiledExpression {
@@ -60,7 +60,7 @@ public class TestCompiledExpression {
 	@Test
 	public void testFunctionParamTypeError() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",ParseMode.DEFAULT);
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",name->FunctionClassification.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType());
 		if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
@@ -75,7 +75,7 @@ public class TestCompiledExpression {
 	@Test
 	public void testNestedFunctionType() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",ParseMode.DEFAULT);
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType().orElse("<unknown>"));
 		Assert.assertTrue("Expected a return type here", o.returnType().isPresent());
@@ -86,7 +86,7 @@ public class TestCompiledExpression {
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		List<String> problems = new ArrayList<>();
-		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",ParseMode.DEFAULT);
+		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",name->FunctionClassification.DEFAULT);
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
 	}
 	
@@ -98,7 +98,7 @@ public class TestCompiledExpression {
 		String ext ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
 //		String expression = "FORALL( '/Charges' , `! ?[Delete] OR ! [Delete]  OR [/__globals__/ApplicationInstance] != 'SOMETENANT' OR [SomeProperty] == 'SOMESTRING' `)";
 //		ce.parse(problems, expression, mode, allowLiteralResolve)
-		ContextExpression cx = ce.parse(problems,ext,ParseMode.DEFAULT,true);
+		ContextExpression cx = ce.parse(problems,ext,name->FunctionClassification.DEFAULT,true);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
 		cx.apply(input,Optional.empty(),Optional.empty());

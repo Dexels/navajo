@@ -48,12 +48,13 @@ public class SubscriberReactiveSourceFactory implements ReactiveSourceFactory, S
         this.offsetQuery = null;
     }
 
-    
+
+	
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier) {
-		return new SubscriberReactiveSource(this, topicSubscriber,Optional.ofNullable(this.offsetQuery), params,relativePath,x,finalType,transformers,reducerSupplier,subscriberSettings);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new SubscriberReactiveSource(this, topicSubscriber,Optional.ofNullable(this.offsetQuery), parameters,subscriberSettings);
 	}
+
 
 	@Override
 	public Type sourceType() {
@@ -84,6 +85,7 @@ public class SubscriberReactiveSourceFactory implements ReactiveSourceFactory, S
 		types.put("to", "string");
 		return Optional.of(Collections.unmodifiableMap(types));
 	}
+
 
 
 }

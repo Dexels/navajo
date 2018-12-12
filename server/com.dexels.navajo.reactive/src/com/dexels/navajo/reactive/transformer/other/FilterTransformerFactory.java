@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -47,12 +46,12 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override

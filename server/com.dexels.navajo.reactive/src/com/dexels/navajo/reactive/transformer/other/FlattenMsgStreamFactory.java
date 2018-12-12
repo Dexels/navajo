@@ -10,33 +10,26 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
-import io.reactivex.functions.Function;
-
 public class FlattenMsgStreamFactory implements ReactiveTransformerFactory, TransformerMetadata {
-
+	
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xmlElement,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+//		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-
-		return new FlattenMsgStream(this,parameters,joinermapper,xmlElement);
+		return new FlattenMsgStream(this,parameters,joinermapper);
 	}
-
+	
 
 	@Override
 	public Set<Type> inType() {
@@ -72,4 +65,7 @@ public class FlattenMsgStreamFactory implements ReactiveTransformerFactory, Tran
 	public String name() {
 		return "flattenmsg";
 	}
+
+
+
 }
