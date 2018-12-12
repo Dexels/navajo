@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
@@ -64,5 +65,11 @@ public class SingleSource implements ReactiveSource {
 	@Override
 	public boolean streamInput() {
 		return false;
+	}
+
+
+	@Override
+	public Type sourceType() {
+		return metadata.sourceType();
 	}	
 }

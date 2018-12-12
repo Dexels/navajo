@@ -23,13 +23,14 @@ public class StoreFactory implements ReactiveTransformerFactory {
 	}
 
 	// TODO fix, now broken. Do we need it?
+
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
-
-		return null; //new Store();
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
 	@Override
 	public Optional<List<String>> allowedParameters() {
 		return Optional.of(Arrays.asList(new String[]{"name","value"}));

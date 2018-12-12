@@ -32,12 +32,12 @@ public class Log implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
 			
 			return (item) -> {
-				ReactiveResolvedParameters named = params.resolveNamed(context,Optional.of(item.message()), item.stateMessage(), this,xml,relativePath);
+				ReactiveResolvedParameters named = params.resolve(context,Optional.of(item.message()), item.stateMessage(), this);
 				boolean condition = named.optionalBoolean("condition").orElse(true);
 				if(!condition) {
 					return item;
@@ -47,8 +47,8 @@ public class Log implements ReactiveMerger {
 				
 				String data = serialized ==null? "<empty>" : new String(serialized);
 				Map<String,String> previous = MDC.getCopyOfContextMap();
-				Map<String,String> map = context.createMDCMap(xml.map(e->e.getStartLineNr()).orElse(-1));
-				MDC.setContextMap(map);
+//				Map<String,String> map = context.createMDCMap(xml.map(e->e.getStartLineNr()).orElse(-1));
+//				MDC.setContextMap(map);
 				logger.info(data);
 				if(previous!=null) {
 					MDC.setContextMap(previous);

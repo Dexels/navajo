@@ -53,11 +53,10 @@ public class SQLInsertTransformerFactory implements ReactiveTransformerFactory {
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
 
-		return new SQLInsertTransformer(this,parameters,xml,relativePath);
+		return new SQLInsertTransformer(this,parameters);
 
 	}
 
@@ -65,4 +64,5 @@ public class SQLInsertTransformerFactory implements ReactiveTransformerFactory {
 	public String name() {
 		return "mongoinsert";
 	}
+
 }

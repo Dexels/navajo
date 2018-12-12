@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTSubtractNode extends SimpleNode {
@@ -20,8 +21,8 @@ public final class ASTSubtractNode extends SimpleNode {
     }
     
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypesOrDateWithDatePattern(),(a,b)->Optional.empty(),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypesOrDateWithDatePattern(),(a,b)->Optional.empty(),functionClassifier);
 	}
 	
     protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypesOrDateWithDatePattern() {

@@ -1,0 +1,4 @@
+single(count=12)
+ ->set(id=[@index])
+ ->filter([id]%3==0,[id]%2==0)
+ ->stream(messageName='Blem',isArray=true)

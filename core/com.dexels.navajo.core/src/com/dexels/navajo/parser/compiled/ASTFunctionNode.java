@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -17,13 +18,13 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
 import com.dexels.navajo.parser.NamedExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -57,7 +58,7 @@ public final class ASTFunctionNode extends SimpleNode {
 	}
 	
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
 
 
 		List<ContextExpression> l = new LinkedList<>();
@@ -66,7 +67,7 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);
-			ContextExpression cn = sn.interpretToLambda(problems, expression,mode);
+			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier);
 			if(cn instanceof NamedExpression) {
 				NamedExpression ne = (NamedExpression)cn;
 				named.put(ne.name, ne.expression);
@@ -74,7 +75,10 @@ public final class ASTFunctionNode extends SimpleNode {
 				l.add(cn);
 			}
 		}
+		
+		FunctionClassification mode = functionClassifier.apply(functionName);
 
+		System.err.println("Resolved function: "+functionName+" to type: "+mode);
 		switch (mode) {
 			
 			case REACTIVE_HEADER:
@@ -87,6 +91,8 @@ public final class ASTFunctionNode extends SimpleNode {
 			case REACTIVE_TRANSFORMER:
 				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.TRANSFORMER, named, l, expression);
 	
+			case REACTIVE_REDUCER:
+				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.MAPPER, named, l, expression);
 			case DEFAULT:
 				default:
 		}

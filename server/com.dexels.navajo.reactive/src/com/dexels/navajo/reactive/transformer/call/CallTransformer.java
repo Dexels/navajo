@@ -25,25 +25,21 @@ public class CallTransformer implements ReactiveTransformer {
 
 
 	private final ReactiveParameters parameters;
-	private Optional<XMLElement> sourceElement;
-	private String sourcePath;
 	private final TransformerMetadata metadata;
 	
 	private final static Logger logger = LoggerFactory.getLogger(CallTransformer.class);
 	
-	public CallTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
+	public CallTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 		this.metadata = metadata;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
 		return flow->
 			{
 				//TODO add messages? We have an event stream input, unsure how to deal with this.
-			ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
+			ReactiveResolvedParameters resolved = parameters.resolve(context, current,param,metadata);
 
 			final String service =  resolved.paramString("service");
 			final boolean debug = resolved.paramBoolean("debug", ()->false);
@@ -92,11 +88,4 @@ public class CallTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
-
-
 }

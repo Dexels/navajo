@@ -19,6 +19,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -31,8 +32,9 @@ import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.SimpleNode;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
-import com.dexels.navajo.parser.compiled.api.ReactivePipe;
+import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -65,8 +67,8 @@ public class TestCompiledExpression {
 	public void parseIntAddition() throws ParseException, TMLExpressionException {
 		List<String> problems = new ArrayList<>();
         String expression = "1+1";
-		ContextExpression ss =  ExpressionCache.getInstance().parse(problems,expression,ParseMode.DEFAULT);
-        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,expression,ParseMode.DEFAULT);
+		ContextExpression ss =  ExpressionCache.getInstance().parse(problems,expression,fn->FunctionClassification.DEFAULT);
+        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,expression,fn->FunctionClassification.DEFAULT);
         if(!problems.isEmpty()) {
         		throw new TMLExpressionException(problems,expression);
         }
@@ -87,7 +89,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         if(!problems.isEmpty()) {
     			throw new TMLExpressionException(problems,expression);
         }
@@ -194,7 +196,7 @@ public class TestCompiledExpression {
 		cp.Transformer();		
 		ASTTransformerNode atn = (ASTTransformerNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
-		ContextExpression ce = atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
+		ContextExpression ce = atn.interpretToLambda(problems, expression,fn->FunctionClassification.DEFAULT);
 		Function<ImmutableMessage,ImmutableMessage> trans = (Function<ImmutableMessage, ImmutableMessage>) ce.apply(input, input.getMessage("TestMessage"), null, null, null, null, null, Optional.empty(), Optional.empty());
 		
 		ImmutableMessage out = trans.apply(inMessage);
@@ -214,7 +216,7 @@ public class TestCompiledExpression {
 		cp.KeyValue();		
 		ASTKeyValueNode atn = (ASTKeyValueNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
-		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
+		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression,fn->FunctionClassification.DEFAULT);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
 		Assert.assertEquals("aap",ne.name);
@@ -232,7 +234,7 @@ public class TestCompiledExpression {
 		cp.Expression();
 		SimpleNode atn = (SimpleNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
-		ContextExpression ne = atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
+		ContextExpression ne = atn.interpretToLambda(problems, expression,fn->FunctionClassification.DEFAULT);
 		Object result = ne.apply();
 		System.err.println("Final: "+result);
 		Assert.assertEquals("monkey", result);
@@ -249,32 +251,12 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         Object o = ss.apply();
 		Assert.assertEquals("monkey", o);
         System.err.println(">> "+o);
 	}
 	
-	@Test
-	public void testReactiveFunctionCall() throws ParseException {
-        FunctionInterface testFunction = new AddTestFunction();
-        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
-        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
-
-		String expression = "addtest()->addtest()";
-		StringReader sr = new StringReader(expression);
-		CompiledParser cp = new CompiledParser(sr);
-		cp.ReactivePipe();
-		List<String> problems = new ArrayList<>();
-        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.REACTIVE);
-        ReactiveSourceFactory rs = (ReactiveSourceFactory) ss.source.apply();
-        List<ReactiveTransformerFactory> transformerFactories = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
-        Object o = ss.apply();
-		Assert.assertEquals("monkey", o);
-        System.err.println(">> "+o);
-	}
-
-
 	@Test
 	public void testMultiArgFunction() throws Exception {
         FunctionInterface testFunction = new AddTestFunction();
@@ -286,7 +268,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         System.err.println("ss: "+ss.getClass());
 	}
 
@@ -303,7 +285,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         System.err.println("ss: "+ss.apply().getClass());
 	}
 	
@@ -319,7 +301,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         System.err.println("ss: "+ss.apply());
         Assert.assertEquals("aap,noot", ss.apply());
 	}

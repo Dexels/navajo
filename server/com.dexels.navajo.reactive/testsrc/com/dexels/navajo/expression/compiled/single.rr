@@ -1,0 +1,4 @@
+single(count=5,debug=true)
+	->set(aap='noot',mies='wim',zus=1+2,jet=[@index]*2)
+	->set(upper=[mies])
+	->stream(messageName='Bla', isArray=true)

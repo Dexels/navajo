@@ -26,14 +26,13 @@ import io.reactivex.functions.Function;
 
 public class BufferMessageFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
+	
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xmlElement,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("BufferMessageFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-
-		return new BufferMessage(this,parameters,joinermapper,xmlElement);
+		return new BufferMessage(this,parameters);
 	}
 
 
@@ -70,4 +69,7 @@ public class BufferMessageFactory implements ReactiveTransformerFactory, Transfo
 	public String name() {
 		return "bufferMsg";
 	}
+
+
+
 }

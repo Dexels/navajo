@@ -19,6 +19,7 @@ import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.pubsub.rx2.api.TopicPublisher;
@@ -35,6 +36,13 @@ public class PersistentTransformerFactory implements ReactiveTransformerFactory,
     public void clearTopicPublisher(TopicSubscriber topicSubscriber) {
         this.topicPublisher = null;
     }
+    
+
+	@Override
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+		return new PersistentTransformer(this,problems,parameters, buildContext,topicPublisher,b,parentType);
+	}
 
 	@Override
 	public PersistentTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, 
@@ -42,22 +50,23 @@ public class PersistentTransformerFactory implements ReactiveTransformerFactory,
 			Optional<XMLElement> xmlElement,
 			ReactiveBuildContext buildContext) {
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("Persistent Transformer: Can't build without XML element"));
-//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-//		List<ReactiveTransformer> subtransformer = ReactiveScriptParser.parseTransformationsFromChildren(relativePath, problems, Optional.of(xml),buildContext);
-
-		// we don't really need to parse it now, but it is good to know if there is something wrong.
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			xml.write(new OutputStreamWriter(baos));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Binary b = new Binary(baos.toByteArray());
-
-		
-		return new PersistentTransformer(this,relativePath,problems,xmlElement,parameters, buildContext,topicPublisher,b,parentType);
+//
+//		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("Persistent Transformer: Can't build without XML element"));
+////		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
+////		List<ReactiveTransformer> subtransformer = ReactiveScriptParser.parseTransformationsFromChildren(relativePath, problems, Optional.of(xml),buildContext);
+//
+//		// we don't really need to parse it now, but it is good to know if there is something wrong.
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		try {
+//			xml.write(new OutputStreamWriter(baos));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Binary b = new Binary(baos.toByteArray());
+//
+//		
+//		return new PersistentTransformer(this,relativePath,problems,xmlElement,parameters, buildContext,topicPublisher,b,parentType);
 	}
 	
 //	private byte[] serializeScript(	)
@@ -94,4 +103,5 @@ public class PersistentTransformerFactory implements ReactiveTransformerFactory,
 	public String name() {
 		return "async";
 	}
+
 }

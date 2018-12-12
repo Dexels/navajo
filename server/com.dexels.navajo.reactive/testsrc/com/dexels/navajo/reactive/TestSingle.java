@@ -13,29 +13,39 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
+import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
+import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.SkipTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class TestSingle {
 	
-	private ReactiveScriptParser reactiveScriptParser;
+	private ReactiveFinder reactiveFinder;
 
 	@Before
 	public void setup() {
-		reactiveScriptParser = TestSetup.setup();
+		reactiveFinder = TestSetup.setup();
 	}
 
 	@Test
@@ -46,8 +56,10 @@ public class TestSingle {
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 		StreamScriptContext context = TestSetup.createContext("Single",Optional.empty());
-		ssf.build("",parameters, problems, Collections.emptyList(), DataItem.Type.MESSAGE)
-			.execute(context, Optional.empty())
+		ssf.build(parameters)
+			.execute(context, Optional.empty(), ImmutableFactory.empty())
+//		ssf.build("",parameters, problems, Collections.emptyList(), DataItem.Type.MESSAGE)
+//			.execute(context, Optional.empty())
 			.map(e->e.message())
 			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
 	}
@@ -55,22 +67,24 @@ public class TestSingle {
 	@Test
 	public void testTake() throws UnsupportedEncodingException, IOException {
 		SingleSourceFactory ssf = new SingleSourceFactory();
-		ReactiveParameters parameters = ReactiveParameters.empty()
+		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		StreamScriptContext context = TestSetup.createContext("Single",Optional.empty());
+		TakeTransformerFactory takeTransformerFactory = new TakeTransformerFactory();
 		
-		ReactiveParameters transformerParameter = ReactiveParameters.empty()
+		ReactiveParameters transformerParameter = ReactiveParameters.empty(takeTransformerFactory)
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 
-		ReactiveTransformer takeTransformer = new TakeTransformerFactory().build(problems,transformerParameter);
-		int lastIndex = ssf.build("",parameters, problems,Arrays.asList(new ReactiveTransformer[] {takeTransformer}), DataItem.Type.MESSAGE)
-			.execute(context, Optional.empty())
+		ReactiveTransformer takeTransformer = takeTransformerFactory.build(problems,transformerParameter);
+		int lastIndex = ssf.build(parameters)
+			.execute(context, Optional.empty(), ImmutableFactory.empty())
 			.map(e->e.stateMessage())
 			.lastOrError()
 			.map(msg->(Integer)msg.columnValue("index"))
 			.blockingGet();
+
 		System.err.println("Count: "+lastIndex);
 		Assert.assertEquals(4, lastIndex);
 //			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
@@ -78,25 +92,62 @@ public class TestSingle {
 
 	@Test
 	public void testFilter() throws UnsupportedEncodingException, IOException {
+		List<ReactiveParseProblem> problems = new ArrayList<>();
 		SingleSourceFactory ssf = new SingleSourceFactory();
-		ReactiveParameters parameters = ReactiveParameters.empty()
+		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		StreamScriptContext context = TestSetup.createContext("Single",Optional.empty());
 		
-		ReactiveParameters transformerParameter = ReactiveParameters.empty()
-				.with("filter", (cxt,msg,param)->{
-					int i = ((Integer)param.columnValue("index")).intValue();
-					boolean isEven = i % 2 == 0;
-					System.err.println("Even numer? "+i+" is even: "+isEven);
-					return new Operand( isEven,Property.BOOLEAN_PROPERTY);
+		ReactiveTransformerFactory filterFactory = new FilterTransformerFactory();
+		ReactiveParameters transformerParameter = ReactiveParameters.empty(filterFactory)
+				.withExpression("filter", new ContextExpression() {
+					
+					@Override
+					public Optional<String> returnType() {
+						return Optional.of("boolean");
+					}
+					
+					@Override
+					public boolean isLiteral() {
+						return false;
+					}
+					
+					@Override
+					public String expression() {
+						return "";
+					}
+					
+					@Override
+					public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+							MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+							Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+						try {
+							System.err.println(ImmutableFactory.ndJson(paramMessage.get()));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						int i = ((Integer)paramMessage.get().columnValue("index")).intValue();
+						boolean isEven = i % 2 == 0;
+						System.err.println("Even numer? "+i+" is even: "+isEven);
+						return isEven;
+					}
 				});
+		ReactiveTransformer filterTransformer = filterFactory.build(problems,transformerParameter);
 
 //		new FilterTransformerFactory().build(
-		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveTransformer filterTransformer = new FilterTransformerFactory().build(problems,transformerParameter);
-		long lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {filterTransformer}), DataItem.Type.MESSAGE)
-			.execute(context, Optional.empty())
+		long lastIndex = ssf.build(parameters)
+			.execute(context, Optional.empty(), ImmutableFactory.empty())
+			.doOnNext(item->{
+				try {
+					System.err.println(">>>> "+ImmutableFactory.ndJson(item.message()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			})
+			.compose(filterTransformer.execute(context, Optional.empty(), ImmutableFactory.empty()))
 			.doOnNext(e->System.err.println("<< "+e.stateMessage()))
 			.map(
 					e->e.message()
@@ -111,19 +162,21 @@ public class TestSingle {
 	@Test
 	public void testSkip() throws UnsupportedEncodingException, IOException {
 		SingleSourceFactory ssf = new SingleSourceFactory();
-		ReactiveParameters parameters = ReactiveParameters.empty()
+		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
 		StreamScriptContext context = TestSetup.createContext("Single",Optional.empty());
+		SkipTransformerFactory skipTransformerFactory = new SkipTransformerFactory();
 		
-		ReactiveParameters transformerParameter = ReactiveParameters.empty()
+		ReactiveParameters transformerParameter = ReactiveParameters.empty(skipTransformerFactory)
 				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 
 		List<ReactiveParseProblem> problems = new ArrayList<>();
-		ReactiveTransformer skipTransformer = new SkipTransformerFactory().build(problems,transformerParameter);
+		ReactiveTransformer skipTransformer = skipTransformerFactory.build(problems,transformerParameter);
 		
-		int lastIndex = ssf.build("",parameters, problems, Arrays.asList(new ReactiveTransformer[] {skipTransformer}), DataItem.Type.MESSAGE)
-			.execute(context, Optional.empty())
+		int lastIndex = ssf.build(parameters)
+			.execute(context, Optional.empty(),ImmutableFactory.empty())
+			.compose(skipTransformer.execute(context, Optional.empty(),ImmutableFactory.empty()))
 			.map(e->e.stateMessage())
 			.lastOrError()
 			.map(msg->(Integer)msg.columnValue("index"))
@@ -133,86 +186,4 @@ public class TestSingle {
 //			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
 	}
 	
-	@Test
-	public void testSingle() throws UnsupportedEncodingException, IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("single.xml")) {
-			StreamScriptContext myContext = TestSetup.createContext("Single",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"serviceName",Optional.of(Type.EVENT))
-				.execute(myContext)
-				.map(di->di.event())
-				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
-	
-	@Test
-	public void testStore() throws UnsupportedEncodingException, IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("teststore.xml")) {
-			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
-				.execute(myContext)
-				.map(di->di.event())
-				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
-	
-	@Test
-	public void testReduce() throws UnsupportedEncodingException, IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("testreduce.xml")) {
-			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
-				.execute(myContext)
-				.map(di->di.event())
-				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
-				.lift(StreamDocument.serialize())
-				.blockingForEach(e->System.err.print(new String(e)));
-		}
-	}
-	
-	@Test
-	public void testInputStream() throws UnsupportedEncodingException, IOException {
-		try( InputStream in = TestScript.class.getClassLoader().getResourceAsStream("inputstream.xml")) {
-			StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-			Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript",Optional.of(Type.EVENT))
-				.execute(myContext)
-				.map(di->di.event())
-				.compose(StreamDocument.inNavajo("Single", Optional.empty(), Optional.empty()))
-				.toObservable()
-				.compose(StreamDocument.domStreamCollector())
-//				.lift(StreamDocument.collectNew())
-				.firstOrError()
-				.blockingGet();
-			String firstName = (String) n.getMessage("Person").getProperty("firstname").getTypedValue();
-			Assert.assertEquals("Bertrand", firstName);
-		}
-	}
-	
-	@Test
-	public void testNavajoParseFromInputStream() throws IOException {
-		try( InputStream scriptInputStream = TestScript.class.getClassLoader().getResourceAsStream("eventstream.xml")) {
-				StreamScriptContext myContext = TestSetup.createContext("storeTestScript",Optional.empty());
-
-				int i = reactiveScriptParser.parse(myContext.getService(), scriptInputStream,"eventScript",Optional.of(Type.EVENT))
-				.execute(myContext)
-				.map(di->di.event())
-//				.lift(StreamDocument.serialize())
-//				.compose(StreamDocument.inNavajo("Event", Optional.empty(), Optional.empty()))
-//				.lift(StreamDocument.serialize())
-				.toObservable()
-				.compose(StreamDocument.domStreamCollector())
-				.map(e->e.getMessage("Person").getArraySize())
-				.blockingFirst();
-				
-				Assert.assertEquals(3, i);
-//				.blockingForEach(e->System.err.print(new String(e)));
-				
-//				Navajo n = reactiveScriptParser.parse(myContext.getService(), in,"storeTestScript")
-				
-				
-
-		}
-	}
 }

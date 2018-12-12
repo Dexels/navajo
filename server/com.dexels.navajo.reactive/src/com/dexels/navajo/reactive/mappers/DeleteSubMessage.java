@@ -23,9 +23,9 @@ public class DeleteSubMessage implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath,Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
-			ReactiveResolvedParameters resolved = params.resolveNamed(context, Optional.of(item.message()),item.stateMessage(), this, xml, relativePath);
+			ReactiveResolvedParameters resolved = params.resolve(context, Optional.of(item.message()),item.stateMessage(), this);
 			String name = resolved.paramString("name");	
 			// both singular and array submessages will be removed
 			// TODO this could be more efficient
@@ -57,4 +57,5 @@ public class DeleteSubMessage implements ReactiveMerger {
 		r.put("condition", Property.BOOLEAN_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+
 }

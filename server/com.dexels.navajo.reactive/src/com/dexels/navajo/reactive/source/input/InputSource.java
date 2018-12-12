@@ -18,16 +18,12 @@ import io.reactivex.Flowable;
 
 public class InputSource implements ReactiveSource {
 	
-	private Type finalType;
-	private final List<ReactiveTransformer> transformers;
 //	private final ReactiveParameters params;
 //	private final Optional<XMLElement> sourceElement;
 //	private final String sourcePath;
 //	private final SourceMetadata metadata;
 	
-	public InputSource(SourceMetadata metadata, ReactiveParameters params, List<ReactiveTransformer> transformers, DataItem.Type finalType, Optional<XMLElement> sourceElement, String sourcePath) {
-		this.transformers = transformers;
-		this.finalType = finalType;
+	public InputSource(SourceMetadata metadata, ReactiveParameters params) {
 //		this.metadata = metadata;
 //		this.params = params;
 //		this.sourceElement = sourceElement;
@@ -35,26 +31,25 @@ public class InputSource implements ReactiveSource {
 	}
 
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 //		ReactiveResolvedParameters parameters = this.params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
 
 		Flowable<DataItem> flow = context.inputFlowable()
 				.lift(StreamDocument.collectEventsToImmutable())
 				.map(DataItem::of);
-		for (ReactiveTransformer reactiveTransformer : transformers) {
-			flow = flow.compose(reactiveTransformer.execute(context,current));
-		}
+
 		return flow;
 	}
 
-	@Override
-	public Type finalType() {
-		return finalType;
-	}
 
 	@Override
 	public boolean streamInput() {
 		return true;
+	}
+
+	@Override
+	public Type sourceType() {
+		return Type.MESSAGE;
 	}
 
 }

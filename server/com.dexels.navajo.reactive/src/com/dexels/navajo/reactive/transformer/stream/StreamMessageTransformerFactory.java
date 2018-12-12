@@ -25,11 +25,10 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			Optional<XMLElement> xml, 
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
 			ReactiveBuildContext buildContext) {
 
-		return new StreamMessageTransformer(this,parameters,xml,relativePath);
+		return new StreamMessageTransformer(this,parameters);
 	}
 
 

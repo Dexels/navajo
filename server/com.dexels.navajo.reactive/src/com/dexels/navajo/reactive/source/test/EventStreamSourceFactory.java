@@ -45,10 +45,10 @@ public class EventStreamSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems,
-			Optional<XMLElement> x, ReactiveParameters params, List<ReactiveTransformer> transformers, Type finalType,
-			Function<String, ReactiveMerger> reducerSupplier) {
-		return new EventStreamSource(this,relativePath,type,problems,x,params,transformers,finalType,reducerSupplier);
+	public ReactiveSource build(ReactiveParameters parameters) {
+//		problems.add(ReactiveParseProblem.of("event source is missing a source ('classpath' only supported now)"));
+
+		return new EventStreamSource(this,parameters);
 	}
 
 }

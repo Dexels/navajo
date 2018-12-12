@@ -18,19 +18,10 @@ public class SkipTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Optional<XMLElement> sourceElement;
 
-	public SkipTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement) {
+	public SkipTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.metadata = metadata;
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-	}
-
-	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
-		int count = parms.paramInteger("count");
-		return e->e.skip(count);
 	}
 
 	@Override
@@ -39,8 +30,11 @@ public class SkipTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,
+			Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, Optional.empty(), ImmutableFactory.empty(), metadata);
+		int count = parms.paramInteger("count");
+		return e->e.skip(count);
 	}
 
 }

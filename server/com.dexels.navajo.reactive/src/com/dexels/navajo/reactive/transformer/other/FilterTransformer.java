@@ -1,10 +1,13 @@
 package com.dexels.navajo.reactive.transformer.other;
 
 import java.util.Optional;
+import java.util.Set;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
@@ -24,11 +27,23 @@ public class FilterTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current, ImmutableMessage param) {
-		return e->e.filter(item->{
-			ReactiveResolvedParameters parms = parameters.resolve(context, Optional.of(item.message()), item.stateMessage(), metadata);
-			return parms.paramBoolean("filter");
-
-		});
+//		ReactiveResolvedParameters parms = parameters.resolve(context,current, param, metadata);
+//		parms.unnamedParameters().forEach(unnamed->{
+//			System.err.println("Class: "+unnamed);
+//		});
+		return flow->{
+			for (ContextExpression unnamed  : parameters.unnamed) {
+				flow = flow.filter(item->{
+					boolean result = (boolean)unnamed.apply(null, Optional.of(item.message()),Optional.of(item.stateMessage()));
+					return result;
+				});
+			}
+			return flow;
+		};
+//		return e->e.filter(item->{
+//			return parms.paramBoolean("filter");
+//
+//		});
 	}
 
 	@Override

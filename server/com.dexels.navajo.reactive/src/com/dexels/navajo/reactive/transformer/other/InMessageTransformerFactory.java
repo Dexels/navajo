@@ -23,10 +23,9 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class InMessageTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType,List<ReactiveParseProblem> problems, ReactiveParameters parameters,ReactiveBuildContext buildContext) {
 
-		return new InMessageTransformer(this,parameters,xml);
+		return new InMessageTransformer(this,parameters);
 	}
 
 

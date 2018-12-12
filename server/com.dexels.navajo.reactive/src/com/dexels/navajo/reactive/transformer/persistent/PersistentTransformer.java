@@ -37,24 +37,20 @@ public class PersistentTransformer implements ReactiveTransformer {
 	private final PersistentTransformerFactory metadata;
 	private ReactiveSource reactiveSource;
 	private final TopicPublisher topicPublisher;
-	private final Optional<XMLElement> xml;
-	private final String relativePath;
 	private final Type parentType;
 
 	public PersistentTransformer(PersistentTransformerFactory metadata,
-			String relativePath, List<ReactiveParseProblem> problems, Optional<XMLElement> xmlElement,
+			List<ReactiveParseProblem> problems,
 			ReactiveParameters parameters,
 			ReactiveBuildContext buildContext
 			, TopicPublisher topicPublisher,Binary xmlCode,Type parentType) {
 		this.parameters = parameters;
 		this.metadata = metadata;
 		this.topicPublisher = topicPublisher;
-		this.xml = xmlElement;
-		this.relativePath = relativePath;
 		this.parentType = parentType;
 		
 		// Todo what to do with type?
-		ReactiveScriptParser.parseTransformationsFromChildren(Type.MESSAGE, "", problems, xmlElement,buildContext);
+		ReactiveScriptParser.parseTransformationsFromChildren(Type.MESSAGE, "", problems, ,buildContext);
 		
 		XMLElement xe = new CaseSensitiveXMLElement();
 		try {
@@ -72,7 +68,7 @@ public class PersistentTransformer implements ReactiveTransformer {
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		StreamScriptContext cp = context.copyWithNewUUID();
 		RunningReactiveScripts rrs = context.runningScripts().get();
 		return e->{
@@ -80,13 +76,13 @@ public class PersistentTransformer implements ReactiveTransformer {
 			DisposableSubscriber<PubSubMessage> subscriber = createPublishEndPoint("BLE");
 			e.doOnComplete(()->rrs.complete(cp.uuid()))
 				.map(item->{
-					ReactiveResolvedParameters resParams = this.parameters.resolveNamed(context, Optional.of(item.message()), item.stateMessage(), this.metadata, xml, relativePath);
+					ReactiveResolvedParameters resParams = this.parameters.resolve(context, Optional.of(item.message()), item.stateMessage(), this.metadata);
 					String topic = resParams.paramString("topic");
 					String key = resParams.paramString("key");
 					return new PersistentMessage(topic,key,item.message()).toPubSub();
 				}).subscribe(subscriber);
 
-			return this.reactiveSource.execute(context, Optional.empty());
+			return this.reactiveSource.execute(context, Optional.empty(),param);
 		};
 	}
 
@@ -119,11 +115,4 @@ public class PersistentTransformer implements ReactiveTransformer {
 		}
 		
 	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return this.xml;
-	}
-
-
 }

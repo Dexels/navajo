@@ -3,6 +3,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -10,9 +11,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -21,10 +22,10 @@ public final class ASTOrNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		checkOrAdd("Or expression failed, first expression is not a boolean but a "+expA.returnType().orElse("<unknown>"), problems, expA.returnType(), Property.BOOLEAN_PROPERTY);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		checkOrAdd("Or expression failed, second expression is not a boolean but a "+expB.returnType().orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 		return new ContextExpression() {
 			

@@ -23,10 +23,8 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class IntervalTransformerFactory  implements ReactiveTransformerFactory, TransformerMetadata {
 
     @Override
-    public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-            ReactiveBuildContext buildContext) {
-
-        return new IntervalTransformer(this,parameters,xml);
+    public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters,ReactiveBuildContext buildContext) {
+        return new IntervalTransformer(this,parameters);
     }
 
     @Override

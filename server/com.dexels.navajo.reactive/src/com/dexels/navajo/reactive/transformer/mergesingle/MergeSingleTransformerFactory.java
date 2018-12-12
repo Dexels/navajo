@@ -17,6 +17,7 @@ import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
+import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -34,28 +35,18 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			Optional<XMLElement> xmlElement,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+//		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
+//		parameters.unnamed.stream().findFirst()
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-		Optional<ReactiveSource> subSource;
-		try {
-			subSource = ReactiveScriptParser.findSubSource(relativePath, xml, problems, buildContext,Optional.of(Type.SINGLEMESSAGE));
-		} catch (Exception e) {
-			throw new ReactiveParseException("Unable to parse sub source in xml: "+xml,e);
-		}
-		if(!subSource.isPresent()) {
-			throw new NullPointerException("Missing sub source in xml: "+xml);
-		}
-		ReactiveSource sub = subSource.get();
-		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
-			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
-		}
-		return new MergeSingleTransformer(this,parameters,sub, joinermapper,xmlElement);
+//		if(!sub.finalType().equals(DataItem.Type.SINGLEMESSAGE)) {
+//			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
+//		}
+		// TODO
+		return new MergeSingleTransformer(this,parameters,context->item->item);
 	}
-	
 
 	@Override
 	public Set<Type> inType() {
@@ -87,6 +78,5 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 	public String name() {
 		return "mergesingle";
 	}
-
 
 }

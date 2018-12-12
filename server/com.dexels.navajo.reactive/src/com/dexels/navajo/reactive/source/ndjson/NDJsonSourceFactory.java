@@ -42,9 +42,7 @@ public class NDJsonSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems,
-			Optional<XMLElement> x, ReactiveParameters params, List<ReactiveTransformer> transformers, Type finalType,
-			Function<String, ReactiveMerger> reducerSupplier) {
+	public ReactiveSource build(ReactiveParameters parameters) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -172,8 +172,8 @@ void ReactivePipe() #void:
 {
 }
 {
-	(OrExpression()   (<PIPE> OrExpression() )*
-	) #ReactivePipe
+	OrExpression()
+	(<PIPE> OrExpression() #ReactivePipe(2))*
 } 
 
 void OrExpression() #void:

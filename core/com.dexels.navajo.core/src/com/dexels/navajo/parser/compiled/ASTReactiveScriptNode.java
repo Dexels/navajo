@@ -3,9 +3,11 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 
 public
 class ASTReactiveScriptNode extends SimpleNode {
@@ -16,12 +18,12 @@ class ASTReactiveScriptNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 	// TODO support headers;
 	
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		ASTReactivePipe pipe = (ASTReactivePipe) jjtGetChild(i);
-		pipe.interpretToLambda(problems,originalExpression,ParseMode.DEFAULT);
+		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
 		
 	}
 	return null;

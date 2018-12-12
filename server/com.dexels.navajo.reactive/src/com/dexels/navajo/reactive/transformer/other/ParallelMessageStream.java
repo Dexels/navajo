@@ -20,17 +20,15 @@ public class ParallelMessageStream implements ReactiveTransformer {
 //	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
 	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
-	private final Optional<XMLElement> sourceElement;
 	
-	public ParallelMessageStream(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper,Optional<XMLElement> sourceElement) {
+	public ParallelMessageStream(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
 //		this.parameters = parameters;
 		this.metadata = metadata;
 		this.joiner = joinermapper;
-		this.sourceElement = sourceElement;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 //		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
 //		int parallel = parms.optionalInteger("parallel").orElse(1);
 		try {
@@ -45,10 +43,5 @@ public class ParallelMessageStream implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
-	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
 	}
 }

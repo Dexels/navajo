@@ -3,9 +3,10 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.FunctionClassification;
 
 /* All AST nodes must implement this interface.  It provides basic
    machinery for constructing the parent and child relationships
@@ -43,7 +44,7 @@ interface Node {
 //	 return interpretToLambda(problems, originalExpression, ParseMode.DEFAULT);
 //  } 
   
-  ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode);
+  ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier);
 
 }
 /* JavaCC - OriginalChecksum=22197c64ec0b9502885f0a5dc1d3ddd7 (do not edit this line) */

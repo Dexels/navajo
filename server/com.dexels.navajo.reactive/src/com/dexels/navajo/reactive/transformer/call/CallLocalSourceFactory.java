@@ -44,13 +44,12 @@ public class CallLocalSourceFactory implements ReactiveSourceFactory {
 		r.put("service", Property.STRING_PROPERTY);
 		r.put("tenant", Property.STRING_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
-		return Optional.of(r);	}
+		return Optional.of(r);	
+	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems,
-			Optional<XMLElement> x, ReactiveParameters params, List<ReactiveTransformer> transformers, Type finalType,
-			Function<String, ReactiveMerger> reducerSupplier) {
-		return new CallLocalSource(this, relativePath,type,problems,x,params,transformers,finalType,reducerSupplier);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new CallLocalSource(this, parameters);
 	}
 
 }

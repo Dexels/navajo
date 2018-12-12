@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -45,7 +46,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 			
 			@Override
@@ -57,8 +58,8 @@ public final class ASTForAllNode extends SimpleNode {
 			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
-				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,mode);
-				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 				
 				if(!problems.isEmpty()) {
 					throw new TMLExpressionException(problems,expression);

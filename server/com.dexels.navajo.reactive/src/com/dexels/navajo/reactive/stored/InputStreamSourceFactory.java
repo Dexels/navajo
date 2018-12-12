@@ -27,9 +27,8 @@ public class InputStreamSourceFactory implements ReactiveSourceFactory, SourceMe
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier) {
-		return new InputStreamSource(this,params,relativePath,x,finalType,transformers);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new InputStreamSource(this,parameters);
 	}
 
 	@Override
@@ -54,6 +53,7 @@ public class InputStreamSourceFactory implements ReactiveSourceFactory, SourceMe
 		types.put("classpath", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(types));
 	}
+
 
 
 }

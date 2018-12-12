@@ -24,12 +24,10 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 
 	public TakeTransformerFactory() {
 	}
-
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
-
-		return new TakeTransformer(this,parameters,xml);
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+		return new TakeTransformer(this,parameters);
 	}
 	
 	@Override
@@ -64,4 +62,5 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 	public String name() {
 		return "take";
 	}
+
 }

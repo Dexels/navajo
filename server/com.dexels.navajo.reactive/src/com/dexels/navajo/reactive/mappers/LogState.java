@@ -31,12 +31,12 @@ public class LogState implements ReactiveMerger {
 	}
 
 	@Override
-	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
 			
 			return (item) -> {
-				ReactiveResolvedParameters named = params.resolveNamed(context,Optional.of(item.message()), item.stateMessage(), this,xml,relativePath);
+				ReactiveResolvedParameters named = params.resolve(context,Optional.of(item.message()), item.stateMessage(), this);
 				boolean condition = named.optionalBoolean("condition").orElse(true);
 				if(!condition) {
 					return item;

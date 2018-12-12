@@ -36,7 +36,6 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.reactive.api.ParameterValidator;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveFinder;

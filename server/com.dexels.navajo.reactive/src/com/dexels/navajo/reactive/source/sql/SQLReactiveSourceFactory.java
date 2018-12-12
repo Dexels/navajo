@@ -26,10 +26,8 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters parameters,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
-			) {
-		return new SQLReactiveSource(this,parameters, transformers,finalType,x, relativePath);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new SQLReactiveSource(this,parameters);
 	}
 
 	@Override
@@ -57,4 +55,5 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 		r.put("tenant", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+
 }

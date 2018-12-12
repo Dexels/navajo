@@ -30,11 +30,11 @@ public class ReduceToListTransformerFactory implements ReactiveTransformerFactor
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,ReactiveParameters parameters,
 			ReactiveBuildContext buildContext) {
 			
 		Function<StreamScriptContext,Function<DataItem,DataItem>> reducermapper = ReactiveScriptParser.parseReducerList(relativePath, problems,xml.map(e->(List<XMLElement>)e.getChildren()) , buildContext);
-		return new ReduceToListTransformer(this, reducermapper,parameters,xml);
+		return new ReduceToListTransformer(this, reducermapper,parameters);
 	}
 
 	@Override

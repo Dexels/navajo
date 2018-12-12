@@ -27,14 +27,13 @@ import io.reactivex.functions.Function;
 public class ParallelMessageStreamFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xmlElement,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters, ReactiveBuildContext buildContext) {
 
 
-		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
-		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
-
-		return new ParallelMessageStream(this,parameters,joinermapper,xmlElement);
+//		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
+		Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper = context->item->item;
+		// TODO
+		return new ParallelMessageStream(this,parameters,joinermapper);
 	}
 
 

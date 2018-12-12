@@ -47,12 +47,12 @@ public class FilterTransformerFactory implements ReactiveTransformerFactory, Tra
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"filter"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override

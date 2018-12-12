@@ -18,17 +18,15 @@ public class FlattenEventStream implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Optional<XMLElement> sourceElement;
 
-	public FlattenEventStream(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement) {
+	public FlattenEventStream(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.sourceElement = sourceElement;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		int parallel = parms.optionalInteger("parallel").orElse(1);
 		if (parallel < 2) {
 			return flow->flow.concatMap(e->e.eventStream()).map(DataItem::of)
@@ -43,8 +41,4 @@ public class FlattenEventStream implements ReactiveTransformer {
 		return metadata;
 	}
 
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
 }
