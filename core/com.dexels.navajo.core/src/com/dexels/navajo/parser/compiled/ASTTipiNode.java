@@ -9,6 +9,7 @@ import java.util.function.Function;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -36,10 +37,10 @@ public ContextExpression interpretToLambda(List<String> problems, String express
 		}
 		
 		@Override
-		public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 				 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		      try {
-				return tipiLink.evaluateExpression(val);
+				return Operand.ofCustom(tipiLink.evaluateExpression(val),"tipi");
 			} catch (Exception e) {
 				throw new TMLExpressionException("Error evaluating tipiLink: "+val, e);
 			}

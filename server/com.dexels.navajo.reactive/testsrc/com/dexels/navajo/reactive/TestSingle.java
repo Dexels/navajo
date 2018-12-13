@@ -1,11 +1,8 @@
 package com.dexels.navajo.reactive;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +17,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.document.stream.StreamDocument;
-import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -119,7 +113,7 @@ public class TestSingle {
 					}
 					
 					@Override
-					public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 							MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 							Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 						try {
@@ -131,7 +125,7 @@ public class TestSingle {
 						int i = ((Integer)paramMessage.get().columnValue("index")).intValue();
 						boolean isEven = i % 2 == 0;
 						System.err.println("Even numer? "+i+" is even: "+isEven);
-						return isEven;
+						return Operand.ofBoolean(isEven);
 					}
 				});
 		ReactiveTransformer filterTransformer = filterFactory.build(problems,transformerParameter);

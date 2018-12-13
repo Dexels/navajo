@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -49,7 +50,7 @@ public final class ASTMappableNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		        if (mapNode == null) {
 		            throw new TMLExpressionException("No known mapobject");
@@ -96,11 +97,11 @@ public final class ASTMappableNode extends SimpleNode {
 		            if (oValue == null)
 		                return null;
 		            else if (oValue instanceof Float) {
-		              return new Double(((Float) oValue).doubleValue());
+		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  new Double(((Float) oValue).doubleValue());
 		            } else if (oValue instanceof Long) {
-		              return new Integer(((Long) oValue).intValue());
+			              return Operand.ofLong(((Long) oValue).longValue()); //  new Double(((Float) oValue).doubleValue());
 		            } else
-		              return oValue;
+		              return Operand.ofDynamic(oValue);
 
 		        } catch (Exception me) {
 		            throw new TMLExpressionException(me.getMessage(),me);

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -41,14 +42,14 @@ public final class ASTOptionNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				return ASTOptionNode.this.option;
+				return Operand.ofString(ASTOptionNode.this.option);
 			}
 
 			@Override
 			public Optional<String> returnType() {
-				logger.warn("Sketchy type resolution of option. Assuming string.");
+				logger.warn("Sketchy type resolution of option. Assuming integer?!");
 				return Optional.of(Property.INTEGER_PROPERTY);
 			}
 			

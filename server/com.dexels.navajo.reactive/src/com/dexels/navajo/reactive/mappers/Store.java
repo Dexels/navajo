@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -33,9 +34,9 @@ public class Store implements ReactiveMerger {
 				return item;
 			}
 			ImmutableMessage di = item.stateMessage();
-			Set<Entry<String, Object>> entrySet = parms.namedParameters().entrySet();
-			for (Entry<String, Object> e : entrySet) {
-				di = di.with(e.getKey(), e.getValue(), parms.namedParamType(e.getKey()));
+			Set<Entry<String, Operand>> entrySet = parms.namedParameters().entrySet();
+			for (Entry<String, Operand> e : entrySet) {
+				di = di.with(e.getKey(), e.getValue().value,e.getValue().type);
 			}
 			return DataItem.of(s,di);
 		};

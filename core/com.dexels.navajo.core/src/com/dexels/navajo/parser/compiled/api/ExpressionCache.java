@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -113,7 +114,7 @@ public class ExpressionCache {
 	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
-	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
+	        		Operand result = parsed.apply(null, null, null, null, null, null, null,null,null);
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));
@@ -126,7 +127,7 @@ public class ExpressionCache {
 						}
 						
 						@Override
-						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+						public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 							return result;
 						}

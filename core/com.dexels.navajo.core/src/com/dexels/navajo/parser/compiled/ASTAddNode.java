@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.Utils;
@@ -23,13 +24,14 @@ public final class ASTAddNode extends SimpleNode {
 		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),functionClassifier);
 	}
 	
-	public final Object interpret(Object a,Object b, String expression) {
-
+	public final Operand interpret(Operand ao,Operand bo, String expression) {
+		Object a = ao.value;
+		Object b = bo.value;
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
-            return Utils.add(a, b, expression);
-        } else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {
-            ArrayList list = (ArrayList) a;
-            ArrayList result = new ArrayList();
+            return Operand.ofDynamic(Utils.add(a, b, expression));
+        } else if ((a instanceof List) && !(b instanceof List)) {
+        	List list = (List) a;
+        	List result = new ArrayList();
 
             for (int i = 0; i < list.size(); i++) {
                 Object val = list.get(i);
@@ -37,7 +39,7 @@ public final class ASTAddNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else if ((b instanceof ArrayList) && !(a instanceof ArrayList)) {
             ArrayList list = (ArrayList) b;
             ArrayList result = new ArrayList();
@@ -48,7 +50,7 @@ public final class ASTAddNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else if (a instanceof ArrayList && b instanceof ArrayList) {
             ArrayList list1 = (ArrayList) a;
             ArrayList list2 = (ArrayList) b;
@@ -64,7 +66,7 @@ public final class ASTAddNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else
             throw new RuntimeException("Unknown type");
     }

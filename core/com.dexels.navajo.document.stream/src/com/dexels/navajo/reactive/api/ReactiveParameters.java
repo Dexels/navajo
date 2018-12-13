@@ -43,7 +43,7 @@ public class ReactiveParameters {
 	
 	public ReactiveResolvedParameters resolve(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
 		
-		return new ReactiveResolvedParameters(context.getInput(), named,unnamed, currentMessage, paramMessage, validator);
+		return new ReactiveResolvedParameters(context, named,unnamed, currentMessage, paramMessage, validator);
 	}
 	
 	public List<Object> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
@@ -75,14 +75,15 @@ public class ReactiveParameters {
 //	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
+		final Operand op = Operand.ofCustom(value, type);
 		return withExpression(key, new ContextExpression() {
 
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access,
 					Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
 					throws TMLExpressionException {
-				return value;
+				return op;
 			}
 
 			@Override

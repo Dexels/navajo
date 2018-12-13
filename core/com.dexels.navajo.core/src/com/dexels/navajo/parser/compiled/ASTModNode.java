@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -19,7 +20,9 @@ public final class ASTModNode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),functionClassifier);
 	}
 
-	public final Object interpret(Object a, Object b){
+	public final Operand interpret(Operand ao, Operand bo){
+		Object a = ao.value;
+		Object b = bo.value;
 		if(a==null) {
             throw new TMLExpressionException("Modulo operator failed: First operand is null.");
 		}
@@ -30,6 +33,6 @@ public final class ASTModNode extends SimpleNode {
                 throw new TMLExpressionException("Modulo operator only defined for integers, not: "+a.getClass()+" and "+b.getClass());
         }
         	
-        return new Integer(((Integer) a).intValue() % ((Integer) b).intValue());
+        return Operand.ofInteger(((Integer) a).intValue() % ((Integer) b).intValue());
     }
 }

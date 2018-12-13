@@ -1,4 +1,4 @@
-package com.dexels.navajo.parser;
+package com.dexels.navajo.document.types;
 
 /**
  * Title:
