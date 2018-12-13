@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.TypeUtils;
 import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings("rawtypes")
@@ -272,11 +274,15 @@ public abstract class FunctionInterface {
 	}
 
 	public Object evaluateWithTypeChecking() throws TMLExpressionException {
+		return evaluate();
+	}
+	
+	public Operand evaluateWithTypeCheckingOperand() throws TMLExpressionException {
 		// Check types.
 		// checkTypes();
 		Object o = evaluate();
-		// checkReturnType(o);
-		return o;
+		String type = TypeUtils.determineNavajoType(o);
+		return new Operand(o,type);
 	}
 
 	public abstract Object evaluate() throws TMLExpressionException;

@@ -30,8 +30,6 @@ public class CallRemoteSource implements ReactiveSource {
 
 	private final ReactiveParameters params;
 	private final SourceMetadata metadata;
-	private final String relativePath;
-	private final Optional<XMLElement> sourceElement;
 	private final JettyClient client;
 	private final Type finalType;
 	private List<ReactiveTransformer> transformers;
@@ -42,15 +40,12 @@ public class CallRemoteSource implements ReactiveSource {
 		this.metadata = metadata;
 		this.client = client;
 		this.params = params;
-		this.relativePath = relativePath;
-		this.sourceElement = sourceElement;
-		this.transformers = transformers;
 		this.finalType = finalType;
 	}
 
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = params.resolveNamed(context, current, ImmutableFactory.empty(), metadata, sourceElement, relativePath);
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = params.resolve(context, current, ImmutableFactory.empty(), metadata);
 		String server = resolved.paramString("server");
 		String username = resolved.paramString("username");
 		String password = resolved.paramString("password");
@@ -75,23 +70,17 @@ public class CallRemoteSource implements ReactiveSource {
 
 	
 		Flowable<DataItem> fw =  Flowable.just(DataItem.ofEventStream(flow));
-
-//		.map(DataItem::ofEventStream);
-		
-		for (ReactiveTransformer reactiveTransformer : transformers) {
-			fw = fw.compose(reactiveTransformer.execute(context,current));
-		}
 		return fw;
-	}
-
-	@Override
-	public Type finalType() {
-		return finalType;
 	}
 
 	@Override
 	public boolean streamInput() {
 		return false;
+	}
+
+	@Override
+	public Type sourceType() {
+		return metadata.sourceType();
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
@@ -27,8 +28,9 @@ public final class ASTGTNode extends SimpleNode {
 		return lazyBiFunction(problems, expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    private final static Boolean compare(Object a, Object b, String expression) throws TMLExpressionException {
-
+    private final static Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
+    	Object a = ao.value;
+    	Object b = bo.value;
         if (a == null || b == null) {
             throw new TMLExpressionException(
                     "Illegal arguement for gt;. Cannot compare " + a + " > " + b + ". No null values are allowed: "+expression);
@@ -60,22 +62,22 @@ public final class ASTGTNode extends SimpleNode {
         // a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	private final Object interpret(Object a, Object b, String expression) throws TMLExpressionException {
+	private final Operand interpret(Operand a, Operand b, String expression) throws TMLExpressionException {
 
         if (a instanceof List) { // Compare all elements in the list.
             List list = (List) a;
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
-                boolean dum = compare(list.get(i), b,expression).booleanValue();
+                boolean dum = compare(Operand.ofDynamic(list.get(i)), b,expression).booleanValue();
 
                 if (!(dum))
-                    return Boolean.valueOf(false);
+                    return Operand.FALSE;
                 result = result && dum;
             }
-            return Boolean.valueOf(result);
+            return Operand.ofBoolean(result);
         } else {
-            return compare(a, b,expression);
+            return Operand.ofBoolean(compare(a, b,expression));
         }
     }
 }

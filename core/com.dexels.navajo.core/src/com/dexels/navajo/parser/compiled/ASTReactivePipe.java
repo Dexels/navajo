@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -34,17 +35,17 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 //		return passthough;
 //	}
 	List<Object> pipeElements = new ArrayList<>();
-	ReactiveSource source = (ReactiveSource) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply();
+	ReactiveSource source = (ReactiveSource) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply().value;
 //	pipeElements.add(source);
 	for (int i = 1; i < count; i++) {
 		ContextExpression interpretToLambda = jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
-		Object result = interpretToLambda.apply();
+		Object result = interpretToLambda.apply().value;
 		if(result instanceof io.reactivex.functions.Function) {
 			io.reactivex.functions.Function<StreamScriptContext,io.reactivex.functions.Function<DataItem,DataItem>> merger = (io.reactivex.functions.Function) result;
 			pipeElements.add(merger);
 
 		} else if(result instanceof ReactiveTransformer) {
-			ReactiveTransformer transformer = (ReactiveTransformer) interpretToLambda.apply();
+			ReactiveTransformer transformer = (ReactiveTransformer) result;
 			pipeElements.add(transformer);
 		} else {
 			// something weird

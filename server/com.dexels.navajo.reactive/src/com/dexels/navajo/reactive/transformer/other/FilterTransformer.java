@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.other;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -31,9 +32,9 @@ public class FilterTransformer implements ReactiveTransformer {
 		return flow->{
 			for (ContextExpression unnamed  : parameters.unnamed) {
 				flow = flow.filter(item->{
-					boolean result = (boolean)unnamed.apply(null, Optional.of(item.message()),Optional.of(item.stateMessage()));
-					return result;
-				});
+					Operand result = unnamed.apply(null, Optional.of(item.message()),Optional.of(item.stateMessage()));
+					return result.booleanValue();
+				}).doOnNext(e->System.err.println("Blob"));
 			}
 			return flow;
 		};

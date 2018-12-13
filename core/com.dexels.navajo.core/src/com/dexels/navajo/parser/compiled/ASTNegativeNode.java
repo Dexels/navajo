@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -17,19 +18,19 @@ public final class ASTNegativeNode extends SimpleNode {
         super(id);
     }
 
-	public final Object interpret(Object a) throws TMLExpressionException {
-
+	public final Operand interpret(Operand ao) throws TMLExpressionException {
+		Object a = ao.value;
 
         if (a instanceof String)
-            return "-" + ((String) a); // this is just silly
+            return Operand.ofString("-" + ((String) a)); // this is just silly
         else if (a instanceof Integer)
-            return Integer.valueOf(0 - ((Integer) a).intValue());
+            return Operand.ofInteger(0 - ((Integer) a).intValue());
         else if (a instanceof Double)
-            return Double.valueOf(0 - ((Double) a).doubleValue());
+            return Operand.ofFloat(0 - ((Double) a).doubleValue());
         else if (a instanceof Money)
-          return new Money(0 - ((Money) a).doubleValue());
+          return Operand.ofMoney(new Money(0 - ((Money) a).doubleValue()));
         else if (a instanceof Percentage)
-          return new Percentage(0 - ((Percentage) a).doubleValue());
+          return Operand.ofPercentage(new Percentage( new Percentage(0 - ((Percentage) a).doubleValue())));
         else
           throw new TMLExpressionException("Illegal type encountered before negation");
     }

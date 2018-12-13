@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -41,29 +42,29 @@ public class ReactiveParseItem implements ContextExpression {
 	}
 
 	@Override
-	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		return materializeReactive();
 	}
 
-	private Object materializeReactive() {
+	private Operand materializeReactive() {
 		switch (type) {
 		case SOURCE:
 			ReactiveSourceFactory sourceFactory = Reactive.finderInstance().getSourceFactory(name);
-			return sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams));
+			return new Operand(sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams)),Reactive.REACTIVE_SOURCE);
 		case HEADER:
 			break;
 		case MAPPER:
 			ReactiveMerger mergerFactory = Reactive.finderInstance().getMergerFactory(name);
 			ReactiveParameters mergeParameters = ReactiveParameters.of(mergerFactory, namedParams, unnamedParams);
-			return mergerFactory.execute(mergeParameters);
+			return new Operand(mergerFactory.execute(mergeParameters), Reactive.REACTIVE_MAPPER);
 		case TRANSFORMER:
 			ReactiveTransformerFactory transformerFactory = Reactive.finderInstance().getTransformerFactory(name);
 			ReactiveParameters transParameters = ReactiveParameters.of(transformerFactory, namedParams, unnamedParams);
 			List<ReactiveParseProblem> problems = new ArrayList<>();
 			// TODO problems?
-			return transformerFactory.build(problems, transParameters);
+			return new Operand(transformerFactory.build(problems, transParameters),Reactive.REACTIVE_TRANSFORMER);
 		default:
 			break;
 

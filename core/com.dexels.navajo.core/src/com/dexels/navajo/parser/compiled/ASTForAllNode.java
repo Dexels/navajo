@@ -14,6 +14,7 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -55,7 +56,7 @@ public final class ASTForAllNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
 				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
@@ -87,7 +88,7 @@ public final class ASTForAllNode extends SimpleNode {
      * @return
      * @throws TMLExpressionException
      */
-    public final Object interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+    public final Operand interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
 
         boolean matchAll = true;
@@ -97,7 +98,7 @@ public final class ASTForAllNode extends SimpleNode {
         else
             matchAll = false;
 
-        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
+        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value;
         try {
             List<Message> list = null;
 
@@ -122,9 +123,9 @@ public final class ASTForAllNode extends SimpleNode {
 				boolean result = (Boolean)apply;
 
                 if ((!(result)) && matchAll)
-                    return Boolean.FALSE;
+                    return Operand.ofBoolean(false);
                 if ((result) && !matchAll)
-                    return Boolean.TRUE;
+                    return Operand.ofBoolean(true);
             }
 
         } catch (NavajoException ne) {
@@ -133,9 +134,9 @@ public final class ASTForAllNode extends SimpleNode {
         }
 
         if (matchAll)
-            return Boolean.TRUE;
+            return Operand.ofBoolean(true);
         else
-            return Boolean.FALSE;
+            return Operand.ofBoolean(false);
     }
 
 }

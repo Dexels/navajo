@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -22,7 +23,7 @@ public class NamedExpression implements ContextExpression {
 	}
 
 	@Override
-	public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		return expression.apply(doc,parentMsg,parentParamMsg,parentSel,mapNode,tipiLink,access,immutableMessage,paramMessage);

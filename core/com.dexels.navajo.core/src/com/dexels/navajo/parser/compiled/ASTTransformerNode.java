@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -18,6 +19,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.parser.RenameTransformerFunction;
 import com.dexels.navajo.parser.TransformerFunction;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -57,13 +59,13 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		}
 		
 		@Override
-		public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 				MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 				Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 			List<Object> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
 			System.err.println(">>> "+transformerName);
 			TransformerFunction ff = new RenameTransformerFunction();
-			return ff.create(params, problems);
+			return Operand.ofCustom(ff.create(params, problems),Reactive.REACTIVE_TRANSFORMER);
 		}
 	};
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 
 import io.reactivex.Single;
@@ -23,8 +25,8 @@ import io.reactivex.Single;
 public class ReactiveResolvedParameters {
 
 //	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
-	Map<String,Object> resolvedNamed = new HashMap<>();
-	List<Object> resolvedUnnamed = new ArrayList<>();
+	Map<String,Operand> resolvedNamed = new HashMap<>();
+	List<Operand> resolvedUnnamed = new ArrayList<>();
 	Map<String,String> resolvedTypes = new HashMap<>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
@@ -42,13 +44,13 @@ public class ReactiveResolvedParameters {
 
 	private final Single<Navajo> input;
 	
-	public ReactiveResolvedParameters(Single<Navajo> single, Map<String, ContextExpression> named, List<ContextExpression> unnamed,
+	public ReactiveResolvedParameters(StreamScriptContext context, Map<String, ContextExpression> named, List<ContextExpression> unnamed,
 			Optional<ImmutableMessage> currentMessage, ImmutableMessage paramMessage, ParameterValidator validator) {
 		this.currentMessage = currentMessage;
 		this.paramMessage = paramMessage;
 		this.named = named;
 		this.unnamed = unnamed;
-		this.input = single;
+		this.input = context.getInput();
 		Optional<List<String>> allowed = validator.allowedParameters();
 		Optional<List<String>> required = validator.requiredParameters();
 
@@ -71,11 +73,11 @@ public class ReactiveResolvedParameters {
 		expectedTypes = validator.parameterTypes();		// TODO Auto-generated constructor stub
 	}
 	
-	public List<Object> unnamedParameters() {
+	public List<Operand> unnamedParameters() {
 		return this.resolvedUnnamed;
 	}
 	
-	public Map<String,Object> namedParameters() {
+	public Map<String,Operand> namedParameters() {
 		return this.resolvedNamed;
 	}
 	public Map<String,Object> resolveAllParams() {
@@ -89,9 +91,9 @@ public class ReactiveResolvedParameters {
 	public String namedParamType(String key) {
 		return this.resolvedTypes.get(key);
 	}
-	private Optional<Object> paramValue(String key) {
+	private Optional<Operand> paramValue(String key) {
 		if(resolvedNamed.containsKey(key)) {
-			return Optional.of(resolvedNamed.get(key));
+			return Optional.ofNullable(resolvedNamed.get(key));
 		}
 		Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(key)) : Optional.empty();
 		ContextExpression function = named.get(key);
@@ -101,61 +103,36 @@ public class ReactiveResolvedParameters {
 		return Optional.of(resolveParam(key,expectedType, function));
 	}
 	
-
-	private Object getCheckedValue(Optional<String> expectedType, String key, Optional<Object> res, Optional<Callable<? extends Object>> defaultValue) {
-		if(!res.isPresent()) {
-			if(defaultValue.isPresent()) {
-				try {
-					return new Operand(defaultValue.get().call(),expectedType.orElse("object"),null);
-				} catch (Exception e) {
-					throw new ReactiveParameterException("Error evaluating required key: "+key+" it threw an exception.",e);
-				}
-			}
-			throw new ReactiveParameterException("Error evaluating required key: "+key+" it is missing.");
-		}
-		return res.get();
-	}
-	
-	private Optional<Object> typeCheckedOperand(Optional<Object> res,String key, Optional<String> expectedType) {
-		return res;
-//		Optional<Operand> res = paramValue(key);
-//		if(res.isPresent()) {
-//			return res;
-//			Object p = res.get();
-//			if(expectedType.isPresent()) {
-//				if(expectedType.get().equals(p.type)) {
-//					return res;
-//				} else {
-//					throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType+" but of type: "+p.type+", which is demanded by the calling code");
-//				}
-//			} else {
-//				return res;
-//			}
-//		} else {
-//			return Optional.empty();
-//		}
-	}
-	
 	// Guarantees it's there, will fail otherwise
 	public String paramString(String key) {
-		return (String)getCheckedValue(Optional.of(Property.STRING_PROPERTY), key, paramValue(key), Optional.empty());
+		Operand operand = resolvedNamed.get(key);
+		return operand.stringValue();
 	}
 
 	public Optional<String> optionalString(String key) {
-		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.STRING_PROPERTY)).map(e->(String)e);
+		Operand res = resolvedNamed.get(key);
+		if(res==null) {
+			return Optional.empty(); 
+		}
+		return Optional.of(res.stringValue());
+//		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.STRING_PROPERTY)).map(e->(String)e);
 
 	}
 	public String paramString(String key,Callable<String> defaultValue) {
 		try {
-			return typeCheckedOperand(paramValue(key), key,Optional.of(Property.STRING_PROPERTY)).map(e->(String)e).orElse(defaultValue.call()) ;
+			return optionalString(key).orElse(defaultValue.call());
 		} catch (Exception e) {
-			throw new ReactiveParameterException("Default value failed",e);
+			throw new RuntimeException("Default value callable failed",e);
 		}
 	}
 
 	public Object paramObject(String key,Callable<Object> defaultValue) {
 		try {
-			return paramValue(key).orElse(defaultValue.call());
+			Operand res = resolvedNamed.get(key);
+			if(res==null) {
+				return defaultValue.call();
+			}
+			return res.value;
 		} catch (Exception e) {
 			throw new ReactiveParameterException("Default value failed",e);
 		}
@@ -163,40 +140,37 @@ public class ReactiveResolvedParameters {
 	}
 	
 	public int paramInteger(String key) {
-		return (int)getCheckedValue(Optional.of(Property.INTEGER_PROPERTY), key, paramValue(key), Optional.empty());
+		Optional<Operand> v = paramValue(key);
+		if(!v.isPresent()) {
+			throw new ReactiveParameterException("Missing value: "+key); 
+		}
+		return v.get().integerValue();
+		
 	}
 
 	public Optional<Integer> optionalInteger(String key) {
-		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.INTEGER_PROPERTY)).map(e->(Integer)e);
+		return paramValue(key).map(e->e.integerValue());
 	}
 
 
-	public int paramInteger(String key, Callable<Integer> defaultValue) {
-		try {
-			return typeCheckedOperand(paramValue(key), key,Optional.of(Property.INTEGER_PROPERTY)).map(e->(Integer)e).orElse(defaultValue.call()) ;
-		} catch (Exception e) {
-			throw new ReactiveParameterException("Default value failed",e);
-		}
-	}
-	
-	public boolean paramBoolean(String key) {
-		return (boolean)getCheckedValue(Optional.of(Property.BOOLEAN_PROPERTY), key, paramValue(key), Optional.empty());
+	public int paramInteger(String key, Supplier<Integer> defaultValue) {
+		return optionalInteger(key).orElseGet(()->defaultValue.get());
 	}
 
 	public Optional<Boolean> optionalBoolean(String key) {
-		return typeCheckedOperand(paramValue(key), key, Optional.of(Property.BOOLEAN_PROPERTY)).map(e->(Boolean)e);
+		return paramValue(key).map(e->e.booleanValue());
+	}
+	
+	public boolean paramBoolean(String key) {
+		return optionalBoolean(key).orElseThrow(()->new ReactiveParameterException("Missing key: "+key+" no value found."));
 	}
 
-	public boolean paramBoolean(String key, Callable<Boolean> defaultValue) {
-		try {
-			return typeCheckedOperand(paramValue(key), key,Optional.of(Property.BOOLEAN_PROPERTY)).map(e->(Boolean)e).orElse(defaultValue.call()) ;
-		} catch (Exception e) {
-			throw new ReactiveParameterException("Default value failed",e);
-		}
+	public boolean paramBoolean(String key, Supplier<Boolean> defaultValue) {
+		return optionalBoolean(key).orElseGet(()->defaultValue.get());
 	}
 	
 	private void resolveUnnamed() {
-		List<? extends Object> resolved = unnamed.stream()
+		List<? extends Operand> resolved = unnamed.stream()
 				.map(e->{
 					return e.apply(this.input.blockingGet(), this.currentMessage, Optional.of(this.paramMessage));
 				}).collect(Collectors.toList());
@@ -206,6 +180,9 @@ public class ReactiveResolvedParameters {
 	
 	private void resolveNamed() {
 		named.entrySet().forEach(e->{
+			if(e.getKey().equals("zus")) {
+				System.err.println("E: "+e.getValue());
+			}
 			Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(e.getKey())) : Optional.empty();
 			resolveParam(e.getKey(),expectedType,e.getValue());
 		});
@@ -213,8 +190,8 @@ public class ReactiveResolvedParameters {
 	}
 	
 
-	private Object resolveParam(String key,Optional<String> expectedType, ContextExpression function) {
-		Object applied;
+	private Operand resolveParam(String key,Optional<String> expectedType, ContextExpression function) {
+		Operand applied;
 		try {
 			// TODO test for streaming
 			Navajo in = input.blockingGet();

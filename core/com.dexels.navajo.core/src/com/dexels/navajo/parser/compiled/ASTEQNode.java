@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -16,8 +17,8 @@ public final class ASTEQNode extends SimpleNode {
         super(id);
     }
 
-	public final Object interpret( Object a, Object b, String expression) throws TMLExpressionException {
-        return Boolean.valueOf(Utils.equals(a, b,expression));
+	public final Operand interpret( Operand a, Operand b, String expression) throws TMLExpressionException {
+        return Operand.ofBoolean(Utils.equals(a.value, b.value,expression));
     }
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {

@@ -16,7 +16,6 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.NavajoDomStreamer;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.parser.compiled.CompiledParser;
@@ -24,7 +23,6 @@ import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
 import com.dexels.navajo.reactive.api.Reactive;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
@@ -58,6 +56,7 @@ public class TestReactiveParser {
 			Navajo n = runExpression(this.getClass().getResourceAsStream("filter.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
 				.map(e->e.event())
 				.toObservable()
+				.doOnNext(e->System.err.println("<<<<??"+e))
 				.compose(StreamDocument.domStreamCollector())
 				.blockingFirst();
 			
@@ -95,7 +94,7 @@ public class TestReactiveParser {
 			List<String> problems = new ArrayList<>();
 			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
 			System.err.println("Sourcetype: "+src);
-			ReactivePipe pipe = (ReactivePipe) src.apply();
+			ReactivePipe pipe = (ReactivePipe) src.apply().value;
 			
 			Flowable<DataItem> flow = pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
 			return flow;
@@ -112,7 +111,7 @@ public class TestReactiveParser {
 			cp.ReactivePipe();
 			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
 			System.err.println("Sourcetype: "+src);
-			ReactivePipe pipe = (ReactivePipe) src.apply();
+			ReactivePipe pipe = (ReactivePipe) src.apply().value;
 			
 			StreamScriptContext context = new StreamScriptContext("TENANT", "someservice", "somedeployment").withInputNavajo(NavajoFactory.getInstance().createNavajo());
 			pipe.execute(context, Optional.empty(), ImmutableFactory.empty())

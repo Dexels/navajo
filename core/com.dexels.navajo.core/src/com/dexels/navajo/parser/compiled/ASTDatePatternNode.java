@@ -8,13 +8,14 @@ import java.util.function.Function;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.DatePattern;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.parser.DatePattern;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -47,15 +48,15 @@ public final class ASTDatePatternNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        int yearT = ((Integer) y.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        int monthT = ((Integer)m.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        int dayT = ((Integer) d.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        int hourT = ((Integer) h.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        int minT = ((Integer) min.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        int secT = ((Integer) s.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage)).intValue();
-		        return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, true);
+		        int yearT = ((Integer) y.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        int monthT = ((Integer)m.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        int dayT = ((Integer) d.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        int hourT = ((Integer) h.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        int minT = ((Integer) min.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        int secT = ((Integer) s.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
+		        return Operand.ofDatePattern(new DatePattern(yearT, monthT, dayT, hourT, minT, secT, true));
 			}
 
 			@Override

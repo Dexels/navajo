@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
@@ -41,10 +42,11 @@ public final class ASTSubtractNode extends SimpleNode {
     }
 
 
-	public final Object interpret(Object a, Object b) {
-
+	public final Operand interpret(Operand ao, Operand bo) {
+		Object a = ao.value;
+		Object b = bo.value;
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
-            return Utils.subtract(a, b);
+            return Operand.ofDynamic(Utils.subtract(a, b));
         } else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {
             ArrayList list = (ArrayList) a;
             ArrayList result = new ArrayList();
@@ -55,7 +57,7 @@ public final class ASTSubtractNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else if ((b instanceof ArrayList) && !(a instanceof ArrayList)) {
             ArrayList list = (ArrayList) b;
             ArrayList result = new ArrayList();
@@ -66,7 +68,7 @@ public final class ASTSubtractNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else if (a instanceof ArrayList && b instanceof ArrayList) {
             ArrayList list1 = (ArrayList) a;
             ArrayList list2 = (ArrayList) b;
@@ -82,7 +84,7 @@ public final class ASTSubtractNode extends SimpleNode {
 
                 result.add(rel);
             }
-            return result;
+            return Operand.ofList(result);
         } else
             throw new TMLExpressionException("Unknown type");
     }
