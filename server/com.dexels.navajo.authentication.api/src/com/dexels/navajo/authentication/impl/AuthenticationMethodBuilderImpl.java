@@ -37,7 +37,7 @@ public class AuthenticationMethodBuilderImpl implements AuthenticationMethodBuil
         	
         	// If we are here the auth header should not contain bearer or basic
         	// Authorization header must be like "Authorization: <type> <credentials>" 
-            if( (header.toLowerCase().contains("bearer") || header.toLowerCase().contains("basic") ) 
+            if( header != null && (header.toLowerCase().contains("bearer") || header.toLowerCase().contains("basic") ) 
             		&& header.trim().split(" ").length != 2) {
             	throw new AuthorizationException(false, false, null, "Wrong authentication header provided");
             } 
