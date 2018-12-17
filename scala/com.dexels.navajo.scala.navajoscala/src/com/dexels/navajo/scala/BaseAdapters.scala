@@ -1,8 +1,8 @@
 package com.dexels.navajo.scala
 
 import com.dexels.navajo.scala.document.NavajoMessage
-import com.dexels.navajo.parser.FunctionInterface
 import com.dexels.navajo.script.api.Mappable
+import com.dexels.navajo.expression.api.FunctionInterface
 
 trait BaseAdapters {
   self: ScalaScript =>
@@ -18,7 +18,7 @@ trait BaseAdapters {
           println("Exception in the map!")
           println ("" + e)
       }
-      
+
     }
     map.store()
     return map.asInstanceOf[T]

@@ -64,7 +64,7 @@ public class IsValidXMLFile extends FunctionInterface {
 		
 		IsValidXMLFile i = new IsValidXMLFile();
 		i.reset();
-		i.insertOperand(b);
+		i.insertBinaryOperand(b);
 		Object o = i.evaluate();
 	
 		System.err.println("result valid xml file = " + o);

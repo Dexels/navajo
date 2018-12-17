@@ -119,8 +119,8 @@ public final class ASTForAllNode extends SimpleNode {
 
 //                String expr = (String) b;
 
-                Object apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
-				boolean result = (Boolean)apply;
+                Operand apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
+				boolean result = (Boolean)apply.value;
 
                 if ((!(result)) && matchAll)
                     return Operand.ofBoolean(false);

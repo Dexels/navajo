@@ -34,8 +34,8 @@ public class EncryptBinary extends FunctionInterface {
 		
 		EncryptBinary e = new EncryptBinary();
 		e.reset();
-		e.insertOperand("BBFW06E");
-		e.insertOperand(new Binary("Apenoot".getBytes()));
+		e.insertStringOperand("BBFW06E");
+		e.insertBinaryOperand(new Binary("Apenoot".getBytes()));
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
 	}

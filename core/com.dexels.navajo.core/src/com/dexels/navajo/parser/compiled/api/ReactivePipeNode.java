@@ -31,7 +31,7 @@ public class ReactivePipeNode implements ContextExpression {
 	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		return new Operand(new ReactivePipe(source, transformers),Reactive.REACTIVE_PIPE);
+		return new Operand(new ReactivePipe(source, transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ReactivePipeNode implements ContextExpression {
 
 	@Override
 	public Optional<String> returnType() {
-		return Optional.of("REACTIVEPIPE");
+		return Optional.of(Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
 	}
 
 	@Override

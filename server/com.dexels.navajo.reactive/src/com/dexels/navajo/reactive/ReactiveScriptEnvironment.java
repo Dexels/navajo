@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
@@ -15,17 +17,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.parser.compiled.CompiledParser;
+import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
+import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactiveFinder;
+import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
+
+import io.reactivex.Flowable;
 
 public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
 	private static final String REACTIVE_FOLDER = "reactive" + File.separator;
-	private ReactiveScriptParser scriptParser = null;
-	
+//	private ReactiveScriptParser scriptParser = null;
+	private ReactiveFinder reactiveFinder;
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveScriptEnvironment.class);
 
 	private final Map<String,ReactiveScript> scripts = new HashMap<>();
@@ -58,12 +71,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
 		this.navajoConfig = null;
 	}
-	public void setReactiveScriptParser(ReactiveScriptParser reactiveScriptParser) {
-		this.scriptParser = reactiveScriptParser;
+	public void setReactiveFinder(ReactiveFinder reactiveFinder) {
+		this.reactiveFinder = reactiveFinder;
 	}
 	
-	public void removeReactiveScriptParser(ReactiveScriptParser reactiveScriptParser) {
-		this.scriptParser = null;
+	public void clearReactiveFinder(ReactiveFinder reactiveFinder) {
+		this.reactiveFinder = null;
 	}
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
@@ -117,9 +130,48 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
-		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath,Optional.of(Type.EVENT));
-		scripts.put(serviceName, parsed);
-		return parsed;
+		// TODO not pretty:
+		Reactive.setFinderInstance(this.reactiveFinder);
+		CompiledParser cp = new CompiledParser(in);
+		try {
+			cp.ReactivePipe();
+		} catch (ParseException e) {
+			throw new IOException("Error parsing script: "+serviceName,e);
+		}
+		List<String> problems = new ArrayList<>();
+		ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+		ReactivePipe pipe = (ReactivePipe) src.apply().value;
+//		return new Reac
+		Type type = pipe.finalType();
+		
+		return new ReactiveScript() {
+			
+			@Override
+			public boolean streamInput() {
+				return false;
+			}
+			
+			@Override
+			public List<ReactiveParseProblem> problems() {
+				return problems.stream().map(ReactiveParseProblem::of).collect(Collectors.toList());
+			}
+			
+			@Override
+			public Flowable<DataItem> execute(StreamScriptContext context) {
+				return pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
+			}
+			
+			@Override
+			public Type dataType() {
+				return type;
+			}
+			
+			@Override
+			public Optional<String> binaryMimeType() {
+				// TODO implement again
+				return Optional.empty();
+			}
+		};
 	}
 	
 	@Override

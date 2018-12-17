@@ -3,9 +3,12 @@ package com.dexels.navajo.document;
 import java.util.Date;
 import java.util.List;
 
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.DatePattern;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.types.TypeUtils;
 
 /**
@@ -76,7 +79,7 @@ public static Operand ofDynamic(Object o) {
 	return new Operand(o,TypeUtils.determineNavajoType(o));
 }
 
-public static Operand ofList(List<Object> result) {
+public static Operand ofList(List<? extends Object> result) {
 	return new Operand(result,Property.LIST_PROPERTY);
 }
 
@@ -84,8 +87,8 @@ public static Operand ofLong(long longValue) {
 	return new Operand(longValue,Property.LONG_PROPERTY);
 }
 
-public static Operand nullOperand() {
-	return NULL;
+public static Operand nullOperand(String type) {
+	return new Operand(null,type);
 }
 
 public static Operand ofCustom(Object value, String type) {
@@ -123,6 +126,36 @@ public int integerValue() {
 		return (Integer) value;
 	}
 	throw new ClassCastException("Operand does not have the required integer type but: "+type);
+}
+
+public static Operand ofBinary(Binary o) {
+	return new Operand(o,Property.BINARY_PROPERTY);
+}
+
+public static Operand ofStopwatchTime(StopwatchTime stopwatchTime) {
+	return new Operand(stopwatchTime,Property.STOPWATCHTIME_PROPERTY);
+}
+
+public static Operand ofClockTime(ClockTime clockTime) {
+	return new Operand(clockTime,Property.CLOCKTIME_PROPERTY);
+}
+
+@Deprecated
+public static Operand ofMessage(Message message) {
+	return new Operand(message,"message");
+}
+
+public static Operand ofNavajo(Navajo createTestNavajo) {
+	return new Operand(createTestNavajo,"navajo");
+}
+
+public static Operand ofSelectionList(List<Selection> allSelectedSelections) {
+	return new Operand(allSelectedSelections,Property.SELECTION_PROPERTY);
+}
+
+@Deprecated
+public static Operand ofProperty(Property property) {
+	return new Operand(property,"property");
 }
 
 }

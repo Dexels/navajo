@@ -38,7 +38,7 @@ public final class Trunc extends FunctionInterface {
 		t.reset();
 		java.util.Date date = new java.util.Date();
 		System.err.println(date);
-		t.insertOperand(date);
+		t.insertDateOperand(date);
 		System.err.println(t.evaluate());
 	  }
 }

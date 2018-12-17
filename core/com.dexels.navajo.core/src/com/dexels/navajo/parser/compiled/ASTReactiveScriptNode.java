@@ -2,12 +2,24 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.dexels.navajo.parser.compiled;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
+import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
+import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableTreeNode;
 
 public
 class ASTReactiveScriptNode extends SimpleNode {
@@ -20,13 +32,36 @@ class ASTReactiveScriptNode extends SimpleNode {
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 	// TODO support headers;
-	
+	List<ReactivePipeNode> pipes = new ArrayList<>();
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		ASTReactivePipe pipe = (ASTReactivePipe) jjtGetChild(i);
 		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
-		
+		pipes.add(node);
 	}
-	return null;
+	return new ContextExpression() {
+		
+		@Override
+		public Optional<String> returnType() {
+			return Optional.of(Reactive.ReactiveItemType.REACTIVE_SCRIPT.toString());
+		}
+		
+		@Override
+		public boolean isLiteral() {
+			return true;
+		}
+		
+		@Override
+		public String expression() {
+			return "";
+		}
+		
+		@Override
+		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+				MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+				Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+			return Operand.ofCustom(pipes, Reactive.ReactiveItemType.REACTIVE_SCRIPT.toString());
+		}
+	};
 }
 
 

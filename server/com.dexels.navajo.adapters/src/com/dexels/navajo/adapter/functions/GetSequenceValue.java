@@ -65,12 +65,12 @@ public class GetSequenceValue extends FunctionInterface {
         // Reuse the query object for the actual work
         query.reset();
         if (transactionContext != -1) {
-            query.insertOperand(transactionContext);
+            query.insertIntegerOperand(transactionContext);
         }
         if (datasource != null) {
             sql = datasource + ":" + sql;
         }
-        query.insertOperand(sql);
+        query.insertStringOperand(sql);
         
         return query.evaluate();
     }

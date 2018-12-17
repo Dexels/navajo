@@ -73,8 +73,8 @@ public class MergePDF extends FunctionInterface {
 		
 		MergePDF m = new MergePDF();
 		m.reset();
-		m.insertOperand(b1);
-		m.insertOperand(b2);
+		m.insertBinaryOperand(b1);
+		m.insertBinaryOperand(b2);
 		
 		Object o = m.evaluate();
 		

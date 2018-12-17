@@ -27,16 +27,16 @@ public class DateAdd  {
 		da.reset();
 		
 		Date d = new java.util.Date();
-		da.insertOperand(d);
-		da.insertOperand(new Integer(100));
-		da.insertOperand("YEAR");
+		da.insertDateOperand(d);
+		da.insertIntegerOperand(Integer.valueOf(100));
+		da.insertStringOperand("YEAR");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
-		da.insertOperand(o);
-		da.insertOperand(new Integer(-100));
-		da.insertOperand("YEAR");
+		da.insertDateOperand((java.util.Date)o);
+		da.insertIntegerOperand(Integer.valueOf(-100));
+		da.insertStringOperand("YEAR");
 		Object o2 = da.evaluate();
 		
 		assertEquals(o2, d);
@@ -48,24 +48,24 @@ public class DateAdd  {
 		da.reset();
 		
 		Date d = new java.util.Date();
-		da.insertOperand(d);
-		da.insertOperand(new Integer(1));
-		da.insertOperand("WEEK");
+		da.insertDateOperand(d);
+		da.insertIntegerOperand(new Integer(1));
+		da.insertStringOperand("WEEK");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
-		da.insertOperand(o);
-		da.insertOperand(new Integer(-1));
-		da.insertOperand("WEEK");
+		da.insertDateOperand((java.util.Date)o);
+		da.insertIntegerOperand(new Integer(-1));
+		da.insertStringOperand("WEEK");
 		Object o2 = da.evaluate();
 		
 		assertEquals(o2, d);
 		
 		da.reset();
-		da.insertOperand(o2);
-		da.insertOperand(new Integer(7));
-		da.insertOperand("DAY");
+		da.insertDateOperand((java.util.Date)o2);
+		da.insertIntegerOperand(new Integer(7));
+		da.insertStringOperand("DAY");
 		Object o3 = da.evaluate();
 		
 		assertEquals(o3, o);
@@ -76,16 +76,16 @@ public class DateAdd  {
 		da.reset();
 		
 		Date d = new java.util.Date();
-		da.insertOperand(d);
-		da.insertOperand(new Integer(100));
-		da.insertOperand("MONTH");
+		da.insertDateOperand(d);
+		da.insertIntegerOperand(new Integer(100));
+		da.insertStringOperand("MONTH");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
-		da.insertOperand(o);
-		da.insertOperand(new Integer(-100));
-		da.insertOperand("MONTH");
+		da.insertDateOperand((java.util.Date)o);
+		da.insertIntegerOperand(new Integer(-100));
+		da.insertStringOperand("MONTH");
 		Object o2 = da.evaluate();
 		
 		assertEquals(o2, d);
@@ -96,16 +96,16 @@ public class DateAdd  {
 		da.reset();
 		
 		Date d = new java.util.Date();
-		da.insertOperand(d);
-		da.insertOperand(new Integer(100));
-		da.insertOperand("DAY");
+		da.insertDateOperand(d);
+		da.insertIntegerOperand(new Integer(100));
+		da.insertStringOperand("DAY");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
-		da.insertOperand(o);
-		da.insertOperand(new Integer(-100));
-		da.insertOperand("DAY");
+		da.insertDateOperand((java.util.Date)o);
+		da.insertIntegerOperand(new Integer(-100));
+		da.insertStringOperand("DAY");
 		Object o2 = da.evaluate();
 		
 		assertEquals(o2, d);

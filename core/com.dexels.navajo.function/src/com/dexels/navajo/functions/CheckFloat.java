@@ -75,27 +75,27 @@ public class CheckFloat extends FunctionInterface {
 		CheckFloat cf = new CheckFloat();
 
 		cf.reset();
-		cf.insertOperand(new Integer(1234));
+		cf.insertIntegerOperand(new Integer(1234));
 		Object result = cf.evaluate();
 		System.err.println("result = " + result);
 
 		cf.reset();
-		cf.insertOperand(new Double(5.67));
+		cf.insertFloatOperand(new Double(5.67));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
 
 		cf.reset();
-		cf.insertOperand(new Double(+7.98E4));
+		cf.insertFloatOperand(new Double(+7.98E4));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
 
 		cf.reset();
-		cf.insertOperand(new Double(-5.43E-2));
+		cf.insertFloatOperand(new Double(-5.43E-2));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
 
 		cf.reset();
-		cf.insertOperand("aap");
+		cf.insertStringOperand("aap");
 		result = cf.evaluate();
 		System.err.println("result = " + result);
 

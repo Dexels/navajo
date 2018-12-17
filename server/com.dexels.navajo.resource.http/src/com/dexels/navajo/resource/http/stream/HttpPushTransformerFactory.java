@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
@@ -22,10 +21,10 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class HttpPushTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems,ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
 
-		return new HttpPushTransformer(this,relativePath, problems, parameters, xml,buildContext.useGlobalInput);
+		return new HttpPushTransformer(this,parameters);
 	}
 
 	@Override
@@ -64,4 +63,5 @@ public class HttpPushTransformerFactory implements ReactiveTransformerFactory, T
 	public String name() {
 		return "httpstreampush";
 	}
+
 }

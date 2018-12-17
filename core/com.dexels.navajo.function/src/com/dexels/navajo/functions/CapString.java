@@ -74,8 +74,8 @@ public final class CapString extends FunctionInterface {
 	public static void main(String[] args) throws TMLExpressionException {
 		CapString t = new CapString();
 		t.reset();
-		t.insertOperand("012345678901234567890");
-		t.insertOperand(6);
+		t.insertStringOperand("012345678901234567890");
+		t.insertIntegerOperand(6);
 		String res = (String) t.evaluate();
 		System.err.println(">" + res + "<");
 	}

@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -44,11 +45,11 @@ public class IsDate extends FunctionInterface {
                 // Going to guess some formats now by using the navajo function ParseDate()
                 ParseDate td = new ParseDate();
                 td.reset();
-                td.insertOperand(o);
+                td.insertStringOperand((String) o);
                 // Check if a format is given
                 if (this.getOperands().size() > 1 && this.getOperand(1) != null)
                 {
-                    td.insertOperand(this.getOperand(1));
+                    td.insertDateOperand((Date) this.getOperand(1));
                 }
                 date = (java.util.Date)td.evaluate();
             }
@@ -82,7 +83,7 @@ public class IsDate extends FunctionInterface {
         IsDate id = new IsDate();
         for (String date : dates) {
             id.reset();
-            id.insertOperand(date);
+            id.insertStringOperand(date);
             System.err.println("Date (" + date + ") ok = " + id.evaluate());
         }
     }

@@ -79,8 +79,8 @@ public final class Round extends FunctionInterface {
 		Round r = new Round();
 
 		r.reset();
-		r.insertOperand( new Double( 3.141592 ) );
-		r.insertOperand( new Integer( 4 ) );
+		r.insertFloatOperand( new Double( 3.141592 ) );
+		r.insertIntegerOperand( new Integer( 4 ) );
 
 		System.err.println("Input " + r.getOperand( 0 ) + ", rounded to " + r.getOperand( 1 ) + " digits: " + r.evaluate() );
 	}

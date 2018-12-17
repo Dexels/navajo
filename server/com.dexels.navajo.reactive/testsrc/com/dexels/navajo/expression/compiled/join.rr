@@ -1,0 +1,7 @@
+single()
+	->join(single(count=3)
+			->set(id=[@index])
+			->reduce(saveall(sum=0),set(sum=[@sum]+[id]))
+		)
+	->set(sim=[@sum])
+	->stream(messageName='Test',isArray=true)

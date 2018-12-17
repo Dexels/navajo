@@ -36,7 +36,6 @@
       <plugin id="com.dexels.navajo.tipi"/>
       <plugin id="com.dexels.navajo.tipi.charting"/>
       <plugin id="com.dexels.navajo.tipi.facilityoccupation"/>
-      <plugin id="com.dexels.navajo.tipi.flickr"/>
       <plugin id="com.dexels.navajo.tipi.geo"/>
       <plugin id="com.dexels.navajo.tipi.jxlayer"/>
       <plugin id="com.dexels.navajo.tipi.mail"/>

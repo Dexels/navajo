@@ -71,13 +71,13 @@ public final class OffsetDate extends FunctionInterface {
 		java.util.Date output = null;
 
 		// offset date by two days, 3 hours, 15 minutes and 8 seconds
-		st.insertOperand( input );
-		st.insertOperand( 0 );
-		st.insertOperand( 0 );
-		st.insertOperand( 2 );
-		st.insertOperand( 3 );
-		st.insertOperand( 15 );
-		st.insertOperand( 8 );
+		st.insertDateOperand( input );
+		st.insertIntegerOperand( 0 );
+		st.insertIntegerOperand( 0 );
+		st.insertIntegerOperand( 2 );
+		st.insertIntegerOperand( 3 );
+		st.insertIntegerOperand( 15 );
+		st.insertIntegerOperand( 8 );
 
 		output = ( java.util.Date ) st.evaluate();
 

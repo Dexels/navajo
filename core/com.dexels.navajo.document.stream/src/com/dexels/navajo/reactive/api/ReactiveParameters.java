@@ -1,5 +1,6 @@
 package com.dexels.navajo.reactive.api;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +22,6 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-
-import io.reactivex.Single;
 
 public class ReactiveParameters {
 	
@@ -46,7 +45,7 @@ public class ReactiveParameters {
 		return new ReactiveResolvedParameters(context, named,unnamed, currentMessage, paramMessage, validator);
 	}
 	
-	public List<Object> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
+	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
 		// TODO fix blocking
 		return unnamed.stream().map(e->{
 			try {
@@ -75,15 +74,18 @@ public class ReactiveParameters {
 //	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
-		final Operand op = Operand.ofCustom(value, type);
-		return withExpression(key, new ContextExpression() {
+		return withExpression(key, constantExpression( Operand.ofCustom(value, type)));
+	}
+
+	private ContextExpression constantExpression(final Operand value) {
+		return new ContextExpression() {
 
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access,
 					Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
 					throws TMLExpressionException {
-				return op;
+				return value;
 			}
 
 			@Override
@@ -93,14 +95,25 @@ public class ReactiveParameters {
 
 			@Override
 			public Optional<String> returnType() {
-				return Optional.of(type);
+				return Optional.of(value.type);
 			}
 
 			@Override
 			public String expression() {
 				return "";
-			}});
+			}};
 	}
+	public ReactiveParameters withConstant(Operand constant) {
+		return withExpression(constantExpression(constant));
+	}
+
+	
+	public ReactiveParameters withExpression(ContextExpression expression) {
+		List<ContextExpression> list = new ArrayList<ContextExpression>(this.unnamed);
+		list.add(expression);
+		return new ReactiveParameters(validator, this.named, list);
+	}
+
 	public ReactiveParameters withExpression(String key, ContextExpression expression) {
 		Map<String,ContextExpression> extended = new HashMap<>(named);
 		extended.put(key,expression);

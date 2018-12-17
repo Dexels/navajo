@@ -63,7 +63,7 @@ public final class GetCents extends FunctionInterface {
 		// Tests.
 		GetCents tm = new GetCents();
 		tm.reset();
-		tm.insertOperand(new Money(10.55));
+		tm.insertMoneyOperand(new Money(10.55));
 		System.out.println("result = " + tm.evaluate());
 
 	}

@@ -36,7 +36,7 @@ public class MergeSingleTransformerFactory implements ReactiveTransformerFactory
 //			throw new IllegalArgumentException("Wrong type of sub source: "+sub.finalType()+ ", reduce or first maybe? It should be: "+Type.SINGLEMESSAGE+" at line: "+xml.getStartLineNr()+" xml: \n"+xml);
 //		}
 		// TODO
-		return new MergeSingleTransformer(this,parameters,context->item->item);
+		return new MergeSingleTransformer(this,parameters,problems);
 	}
 
 	@Override

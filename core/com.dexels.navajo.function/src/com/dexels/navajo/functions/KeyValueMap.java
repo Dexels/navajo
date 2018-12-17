@@ -51,9 +51,9 @@ public class KeyValueMap extends FunctionInterface {
 		
 		KeyValueMap kvm = new KeyValueMap();
 		kvm.reset();
-		kvm.insertOperand("personid=CHGP12Y;statuscode=21;organizationid=BBFW06E");
-		kvm.insertOperand(";");
-		kvm.insertOperand("organizationid");
+		kvm.insertStringOperand("personid=CHGP12Y;statuscode=21;organizationid=BBFW06E");
+		kvm.insertStringOperand(";");
+		kvm.insertStringOperand("organizationid");
 		
 		Object o = kvm.evaluate();
 		

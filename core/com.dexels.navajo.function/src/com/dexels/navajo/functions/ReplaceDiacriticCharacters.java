@@ -68,7 +68,7 @@ public final class ReplaceDiacriticCharacters extends FunctionInterface {
 	public static void main(String[] args) throws TMLExpressionException {
 		ReplaceDiacriticCharacters r = new ReplaceDiacriticCharacters();
 		r.reset();
-		r.insertOperand("àáõøōâãäĪĬåÄÅÎÏĨĪĬĀÝŸāăą");
+		r.insertStringOperand("àáõøōâãäĪĬåÄÅÎÏĨĪĬĀÝŸāăą");
 		String res = (String) r.evaluate();
 		System.err.println(">" + res + "<");
 	}

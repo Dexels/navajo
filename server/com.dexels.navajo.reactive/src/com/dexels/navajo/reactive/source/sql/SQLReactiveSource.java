@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -36,7 +37,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context,  Optional<ImmutableMessage> current,
 			ImmutableMessage paramMessage) {
 		ReactiveResolvedParameters params = this.parameters.resolve(context, current, paramMessage,metadata);
-		List<Object> unnamedParams = params.unnamedParameters();
+		List<Operand> unnamedParams = params.unnamedParameters();
 //		Object[] unnamedParams = evaluateParams(context, current);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");

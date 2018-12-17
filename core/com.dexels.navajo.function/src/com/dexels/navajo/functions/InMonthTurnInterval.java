@@ -45,16 +45,16 @@ public class InMonthTurnInterval extends FunctionInterface {
     
     if(fw){	
     	if(dim <= ds){
-    		return new java.lang.Boolean(true);
+    		return Boolean.TRUE;
     	}
-    	return new java.lang.Boolean(false);
+    	return Boolean.FALSE;
     }else{
     	int max = c.getMaximum(Calendar.DAY_OF_MONTH) - ds;
     	
     	if(dim > max){
-    		return new java.lang.Boolean(true);
+    		return Boolean.TRUE;
     	}
-    	return new java.lang.Boolean(false);
+    	return Boolean.FALSE;
     }
 	}
 
@@ -77,9 +77,9 @@ public class InMonthTurnInterval extends FunctionInterface {
 			java.util.Date d = sdf.parse("21122006");
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
-			function.insertOperand(c.getTime());
-			function.insertOperand(new Integer(22));
-			function.insertOperand(new java.lang.Boolean(true));
+			function.insertDateOperand(c.getTime());
+			function.insertIntegerOperand(Integer.valueOf(22));
+			function.insertBooleanOperand(Boolean.TRUE);
 		
 			Object result = function.evaluate();
 			if(result instanceof java.lang.Boolean){

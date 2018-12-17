@@ -75,7 +75,7 @@ public String usage() {
     String expression = "Hallo \n Hoe is het nou?";
     CreateExpression ce = new CreateExpression();
     ce.reset();
-    ce.insertOperand(expression);
+    ce.insertStringOperand(expression);
     String result = (String) ce.evaluate();
     System.err.println("result:");
     System.err.println(result);

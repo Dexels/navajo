@@ -21,6 +21,18 @@ public class ReactivePipe implements ReactiveSource {
 		this.source = source;
 		this.transformers = transformers;
 	}
+	
+	public DataItem.Type finalType() {
+		Type type = source.sourceType();
+		for (Object reactiveTransformer : transformers) {
+			if(reactiveTransformer instanceof ReactiveTransformer) {
+				type = ((ReactiveTransformer)reactiveTransformer).metadata().outType();
+			} else {
+				type = Type.MESSAGE;
+			}
+		}
+		return type;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

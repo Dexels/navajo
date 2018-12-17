@@ -118,9 +118,9 @@ public final class StringFunction extends FunctionInterface {
 		String noot = "06 - 2322 7572";
 		f.reset();
 
-		f.insertOperand("contains");
-		f.insertOperand(noot);
-		f.insertOperand("02");
+		f.insertStringOperand("contains");
+		f.insertStringOperand(noot);
+		f.insertStringOperand("02");
 		
 		Object o = f.evaluate();
 		System.out.println("o = " + o + ", type = " + o.getClass().getName());

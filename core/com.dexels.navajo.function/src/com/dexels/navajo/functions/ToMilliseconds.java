@@ -59,20 +59,22 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
     ToMilliseconds ts = new ToMilliseconds();
     ts.reset();
     System.err.println("Time: " + Calendar.getInstance().getTime());
-    ts.insertOperand(new StopwatchTime("01:22:45:234"));
+    ts.insertStopwatchOperand(new StopwatchTime("01:22:45:234"));
     try{
       Object o = ts.evaluate();
       System.err.println("Millis: " + ((Integer)o).intValue());
     }catch(Exception e){
+    	e.printStackTrace();
     }
 
     ts.reset();
     System.err.println("Time: " + Calendar.getInstance().getTime());
-    ts.insertOperand(new ClockTime("01:22"));
+    ts.insertClockTimeOperand(new ClockTime("01:22"));
     try{
       Object o = ts.evaluate();
-      System.err.println("Millis: " + ((Integer)o).intValue());
+      System.err.println("Millis: " + ((Long)o).longValue());
     }catch(Exception e){
+    	e.printStackTrace();
     }
 
 

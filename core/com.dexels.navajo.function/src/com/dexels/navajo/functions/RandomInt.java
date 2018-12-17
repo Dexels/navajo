@@ -42,8 +42,8 @@ public String usage() {
 public static void main(String[] args) throws Throwable {
   RandomInt r = new RandomInt();
   r.reset();
-  r.insertOperand(new Integer(2));
-  r.insertOperand(new Integer(26));
+  r.insertIntegerOperand(new Integer(2));
+  r.insertIntegerOperand(new Integer(26));
   System.err.println("Aap: "+r.evaluate());
 }
 }

@@ -5,10 +5,9 @@ public class Reactive {
 
 	private static ReactiveFinder finderInstance;
 
-	public static final String REACTIVE_SOURCE = "reactivesource";
-	public static final String REACTIVE_TRANSFORMER = "reactivetransformer";
-	public static final String REACTIVE_MAPPER = "reactivemapper";
-	public static final String REACTIVE_PIPE = "reactivepipe";
+	public static enum ReactiveItemType {
+		REACTIVE_HEADER,REACTIVE_SOURCE,REACTIVE_TRANSFORMER,REACTIVE_MAPPER, REACTIVE_PIPE, REACTIVE_SCRIPT
+	}
 	
 	public static void setFinderInstance(ReactiveFinder f) {
 		Reactive.finderInstance = f;

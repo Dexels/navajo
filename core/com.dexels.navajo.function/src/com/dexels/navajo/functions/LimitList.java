@@ -42,13 +42,13 @@ public class LimitList extends FunctionInterface {
         testlist.add("zus");
         LimitList id = new LimitList();
         id.reset();
-        id.insertOperand(testlist);
-        id.insertOperand(3);
+        id.insertListOperand(testlist);
+        id.insertIntegerOperand(3);
         System.err.println(id.evaluate());
         
         id.reset();
-        id.insertOperand(testlist);
-        id.insertOperand(15);
+        id.insertListOperand(testlist);
+        id.insertIntegerOperand(15);
         System.err.println(id.evaluate());
     }
 }

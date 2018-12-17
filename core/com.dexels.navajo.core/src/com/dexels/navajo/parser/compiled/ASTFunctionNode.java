@@ -27,6 +27,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
 import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -86,14 +87,14 @@ public final class ASTFunctionNode extends SimpleNode {
 				
 				break;
 			case REACTIVE_SOURCE:
-				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.SOURCE, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression);
 //				System.err.println("Creating reactive source: "+this.functionName);
 //				return resolveReactiveSource(l, named, problems, expression);
 			case REACTIVE_TRANSFORMER:
-				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.TRANSFORMER, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression);
 	
 			case REACTIVE_REDUCER:
-				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.MAPPER, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, l, expression);
 			case DEFAULT:
 				default:
 		}

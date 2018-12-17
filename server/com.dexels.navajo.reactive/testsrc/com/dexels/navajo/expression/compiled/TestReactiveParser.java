@@ -18,7 +18,9 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
+import com.dexels.navajo.parser.compiled.Node;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
@@ -26,6 +28,7 @@ import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
@@ -44,6 +47,8 @@ public class TestReactiveParser {
 		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
 		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		finder.addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
+		finder.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"join");
+
 		finder.activate();
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		Reactive.setFinderInstance(finder);
@@ -68,7 +73,6 @@ public class TestReactiveParser {
 	
 	@Test
 	public void readSingleScript() throws ParseException, IOException {
-//		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
 			runExpression(this.getClass().getResourceAsStream("single.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
 				.map(e->e.event())
 				.lift(StreamDocument.serialize())
@@ -76,10 +80,31 @@ public class TestReactiveParser {
 				.blockingForEach(e->System.err.print(e));
 	}
 
+	@Test
+	public void readMultipleScript() throws ParseException, IOException {
+			runExpression(this.getClass().getResourceAsStream("multiple.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
+				.map(e->e.event())
+				.lift(StreamDocument.serialize())
+				.map(e->new String(e))
+				.blockingForEach(e->System.err.print(e));
+	}
+
+	
+	
+	@Test
+	public void readJoinScript() throws ParseException, IOException {
+			runExpression(this.getClass().getResourceAsStream("join.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
+				.map(e->e.event())
+				.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty()))
+				.lift(StreamDocument.serialize())
+				.map(e->new String(e))
+				.blockingForEach(e->System.err.print(e));
+	}
 
 	private static Navajo runBlockingEmpty(InputStream inExpression) throws ParseException, IOException {
 		return runExpression(inExpression, "tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
 				.map(e->e.event())
+				.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty()))
 				.toObservable()
 				.compose(StreamDocument.domStreamCollector())
 				.blockingFirst();
@@ -90,35 +115,24 @@ public class TestReactiveParser {
 		try(Reader in = new InputStreamReader(inExpression)) {
  
 			CompiledParser cp = new CompiledParser(in);
-			cp.ReactivePipe();
+			cp.ReactiveScript();
 			List<String> problems = new ArrayList<>();
-			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+			Node rootNode = cp.getJJTree().rootNode();
+			System.err.println("Class: "+rootNode.getClass());
+//			List<ReactivePipeNode> pipes
+			List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
 			System.err.println("Sourcetype: "+src);
-			ReactivePipe pipe = (ReactivePipe) src.apply().value;
-			
-			Flowable<DataItem> flow = pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
-			return flow;
+			ReactivePipe pipe = (ReactivePipe) src.get(0).apply().value;
+//			return null;
+			return Flowable.fromIterable(src)
+				.map(e->((ReactivePipe)e.apply().value))
+				.concatMap(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()));
+//			Flowable<DataItem> flow = pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
+//			return flow;
 		}
 
 	}
 
-	
-	@Test
-	public void readMoreComplicated() throws ParseException, IOException {
-		List<String> problems = new ArrayList<>();
-		try(Reader in = new InputStreamReader(this.getClass().getResourceAsStream("subsource.rr"))) {
-			CompiledParser cp = new CompiledParser(in);
-			cp.ReactivePipe();
-			ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
-			System.err.println("Sourcetype: "+src);
-			ReactivePipe pipe = (ReactivePipe) src.apply().value;
-			
-			StreamScriptContext context = new StreamScriptContext("TENANT", "someservice", "somedeployment").withInputNavajo(NavajoFactory.getInstance().createNavajo());
-			pipe.execute(context, Optional.empty(), ImmutableFactory.empty())
-				.blockingForEach(e->System.err.println(e.event()));
-
-		}
-	}
 	
 	@Test
 	public void testReduce( ) throws ParseException, IOException {

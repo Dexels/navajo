@@ -78,9 +78,9 @@ public final class DateAdd extends FunctionInterface {
     	DateAdd da = new DateAdd();    	
     	Integer add = 365;
         da.reset();
-        da.insertOperand(new java.util.Date());
-    	da.insertOperand(add);
-    	da.insertOperand("DAY");
+        da.insertDateOperand(new java.util.Date());
+    	da.insertIntegerOperand(add);
+    	da.insertStringOperand("DAY");
     	Object o = da.evaluate();
     	System.err.println("begindate:  " + new java.util.Date() + " new date: " + o);
     	

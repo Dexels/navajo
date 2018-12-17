@@ -40,7 +40,7 @@ public class ExpressionCache {
 	private static ExpressionCache instance;
 
     private final LoadingCache<String, Optional<ContextExpression>> expressionCache;
-    private final LoadingCache<String, Optional<Object>> expressionValueCache;
+    private final LoadingCache<String, Optional<Operand>> expressionValueCache;
 
 	private final AtomicLong hitCount = new AtomicLong();
 	private final AtomicLong pureHitCount = new AtomicLong();
@@ -54,8 +54,8 @@ public class ExpressionCache {
 			}
 		});
 		
-		expressionValueCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<Object>>() {
-			public Optional<Object> load(String key) {
+		expressionValueCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<Operand>>() {
+			public Optional<Operand> load(String key) {
 				// Return empty optional and let the application handle it.
 				return Optional.empty();
 			}
@@ -77,9 +77,9 @@ public class ExpressionCache {
 		}
 	}
 
-	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+	public Operand evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
-		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
+		Optional<Operand> cachedValue = expressionValueCache.getUnchecked(expression);
 		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
 			return cachedValue.get();
@@ -134,7 +134,7 @@ public class ExpressionCache {
 
 						@Override
 						public Optional<String> returnType() {
-							return Optional.of(MappingUtils.determineNavajoType(result));
+							return Optional.ofNullable(result.type);
 						}
 						
 						@Override

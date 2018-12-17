@@ -27,7 +27,7 @@ public class FlattenMsgStreamFactory implements ReactiveTransformerFactory, Tran
 //		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
-		return new FlattenMsgStream(this,parameters,joinermapper);
+		return new FlattenMsgStream(this,parameters);
 	}
 	
 

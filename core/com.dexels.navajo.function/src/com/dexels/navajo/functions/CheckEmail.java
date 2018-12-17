@@ -74,7 +74,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 	Boolean b = null;
 	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("stefan@awesomo.amsterdam");
+    ce.insertStringOperand("stefan@awesomo.amsterdam");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }

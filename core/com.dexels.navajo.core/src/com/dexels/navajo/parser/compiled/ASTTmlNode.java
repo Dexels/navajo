@@ -345,7 +345,7 @@ public final class ASTTmlNode extends SimpleNode {
 		        else if (resultList.size() > 0)
 		            return Operand.ofDynamic(resultList.get(0));
 		        else if (!exists)
-		            throw new RuntimeException("Property does not exist: " + text);
+		            throw new TMLExpressionException("Property does not exist: " + text);
 		        else
 		            return Operand.FALSE;
 			}

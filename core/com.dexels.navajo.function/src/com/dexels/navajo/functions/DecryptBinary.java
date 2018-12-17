@@ -35,8 +35,8 @@ public class DecryptBinary extends FunctionInterface {
 		String s = "34PIf6+W/rTMIaGjBHVI4Q==";
 		DecryptBinary e = new DecryptBinary();
 		e.reset();
-		e.insertOperand("BBFW06E");
-		e.insertOperand(s);
+		e.insertStringOperand("BBFW06E");
+		e.insertStringOperand(s);
 		Binary result = (Binary) e.evaluate();
 		System.err.println("result: " + new String(result.getData()));
 	}

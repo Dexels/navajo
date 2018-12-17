@@ -84,9 +84,9 @@ public class FunctionFactoryFactory {
 	
 		FunctionInterface fi = fii.getInstance(cl, "SingleValueQuery");
 		fi.reset();
-		fi.insertOperand(new Integer(21210));
-		fi.insertOperand("SELECT * FROM AAP WHERE noot = ?");
-		fi.insertOperand("PIPO");
+		fi.insertIntegerOperand(new Integer(21210));
+		fi.insertStringOperand("SELECT * FROM AAP WHERE noot = ?");
+		fi.insertStringOperand("PIPO");
 		fi.evaluateWithTypeChecking();
 		
 	}

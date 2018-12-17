@@ -25,7 +25,6 @@ import com.dexels.navajo.reactive.transformer.other.SkipTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
-import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
@@ -53,7 +52,6 @@ public class TestSetup {
 		finder.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
 		finder.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
 		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
-		finder.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
 		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
 		finder.addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
 		finder.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
