@@ -56,7 +56,7 @@ public final class ASTMappableNode extends SimpleNode {
 		            throw new TMLExpressionException("No known mapobject");
 		        }
 
-		        ArrayList objects = null;
+		        List objects = null;
 
 		        // Parameter array may contain parameters that are used when calling the get method.
 		        Object[] parameterArray = null;
@@ -66,12 +66,12 @@ public final class ASTMappableNode extends SimpleNode {
 		        }
 		        for (int i = 0; i < args; i++) {
 		        		List<String> problems = new ArrayList<>();
-		            Object a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            Operand a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
 		            		throw new TMLExpressionException(problems,expression);
 		            }
 		            if(objects!=null) {
-		                objects.add(a);
+		                objects.add(a.value);
 		            }
 		        }
 
@@ -95,7 +95,7 @@ public final class ASTMappableNode extends SimpleNode {
 		        		}
 		        	}
 		            if (oValue == null)
-		                return null;
+		                return Operand.NULL;
 		            else if (oValue instanceof Float) {
 		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  new Double(((Float) oValue).doubleValue());
 		            } else if (oValue instanceof Long) {

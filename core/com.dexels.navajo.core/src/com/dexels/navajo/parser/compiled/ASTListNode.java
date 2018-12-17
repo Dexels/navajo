@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -51,11 +52,11 @@ public final class ASTListNode extends SimpleNode {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				List<Object> result = new ArrayList<>();
+				List<Operand> result = new ArrayList<>();
 				for (ContextExpression contextExpression : exprs) {
 					result.add(contextExpression.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage));
 				}
-				return Operand.ofList(result);
+				return Operand.ofList(result.stream().map(e->e.value).collect(Collectors.toList()));
 			}
 
 			@Override

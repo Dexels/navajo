@@ -102,7 +102,8 @@ public class TestCompiledExpression {
 		ContextExpression cx = ce.parse(problems,ext,name->FunctionClassification.DEFAULT,true);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
-		cx.apply(input,Optional.empty(),Optional.empty());
+		Operand result =  cx.apply(input,Optional.empty(),Optional.empty());
+		System.err.println("Result: "+result.type+" value: "+result.value);
 //		Operand result = Expression.evaluate(expression, testDoc,null,topMessage);
 		
 	}

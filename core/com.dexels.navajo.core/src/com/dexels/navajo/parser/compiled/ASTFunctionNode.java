@@ -39,6 +39,9 @@ public final class ASTFunctionNode extends SimpleNode {
 	
 	private final static Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(ASTFunctionNode.class);
+
 	String functionName;
 	int args = 0;
 	
@@ -132,7 +135,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				FunctionInterface f = getFunction();
-				Map<String,Object> resolvedNamed = named.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage)));
+				Map<String,Operand> resolvedNamed = named.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage)));
 				f.setInMessage(doc);
 				f.setNamedParameter(resolvedNamed);
 				f.setCurrentMessage(parentMsg);
@@ -141,7 +144,12 @@ public final class ASTFunctionNode extends SimpleNode {
 				l.stream()
 					.map(e->{
 						try {
-							return e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage);
+							Operand evaluated = e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage);
+							if(evaluated==null) {
+								logger.warn("Problematic expression returned null object. If you really insist, return an Operand.NULL. Evaluating expression: "+expression);
+								
+							}
+							return evaluated;
 						} catch (TMLExpressionException e1) {
 							throw new RuntimeException("Error parsing parameters for function: "+functionName, e1);
 						}

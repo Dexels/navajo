@@ -114,7 +114,7 @@ public class ExpressionCache {
 	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
-	        		Operand result = parsed.apply(null, null, null, null, null, null, null,null,null);
+	        		Operand result = parsed.apply();
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));

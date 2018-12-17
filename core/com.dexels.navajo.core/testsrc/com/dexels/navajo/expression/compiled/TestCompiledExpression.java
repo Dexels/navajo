@@ -64,9 +64,9 @@ public class TestCompiledExpression {
         }
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
-        System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value);
-        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value);
-        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value);
+        System.err.println("Result: "+ss.apply().value);
+        Assert.assertEquals(2, ss.apply().value);
+        Assert.assertEquals(2, ss2.apply().value);
         Assert.assertTrue(ss.isLiteral());
         Assert.assertTrue(ss2.isLiteral());
 
@@ -85,8 +85,8 @@ public class TestCompiledExpression {
         }
         
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value);
-        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value);
+        System.err.println("TMLVALUE: "+ss.apply().value);
+        Assert.assertEquals("TestValue", ss.apply().value);
         Assert.assertFalse(ss.isLiteral());
 	}
 

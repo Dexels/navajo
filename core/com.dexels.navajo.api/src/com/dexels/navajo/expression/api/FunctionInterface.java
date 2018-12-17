@@ -64,7 +64,7 @@ public abstract class FunctionInterface {
 	public abstract String remarks();
 
 	private Access access;
-	private Map<String, Object> namedParameters;
+	private Map<String, Operand> namedParameters;
 //	private Map<String, Object> params;
 
 	private final Optional<String> getMyReturnType() {
@@ -439,11 +439,11 @@ public abstract class FunctionInterface {
 		return rt.equals(inputType);
 	}
 
-	public void setNamedParameter(Map<String, Object> named) {
+	public void setNamedParameter(Map<String, Operand> named) {
 		this.namedParameters = named;
 	}
 	
-	protected Map<String,Object> getNamedParameters() {
+	protected Map<String,Operand> getNamedParameters() {
 		return Collections.unmodifiableMap(this.namedParameters);
 	}
 

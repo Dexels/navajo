@@ -12,7 +12,7 @@ public class ReactiveHeaderFunction extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		String mime = (String) super.getNamedParameters().get("mimeType");
+		String mime = (String) super.getNamedParameters().get("mimeType").value;
 		
 		
 		return null;

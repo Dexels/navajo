@@ -2,6 +2,7 @@ package com.dexels.navajo.expression.compiled;
 
 import java.util.Map;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
@@ -19,7 +20,7 @@ public class AddTestFunction extends FunctionInterface {
 		return "monkey";
 	}
 	
-	public Map<String,Object> namedOperands() {
+	public Map<String,Operand> namedOperands() {
 		return this.getNamedParameters();
 	}
 
