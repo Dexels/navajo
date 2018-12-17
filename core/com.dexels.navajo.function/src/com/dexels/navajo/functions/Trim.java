@@ -64,7 +64,7 @@ public final class Trim extends FunctionInterface {
 	public static void main(String[] args) throws TMLExpressionException {
 		Trim t = new Trim();
 		t.reset();
-		t.insertOperand("   aaap     ");
+		t.insertStringOperand("   aaap     ");
 		String res = (String) t.evaluate();
 		System.err.println(">" + res + "<");
 	}

@@ -2,11 +2,7 @@ package com.dexels.navajo.resource.http.stream;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
@@ -26,29 +22,24 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 
 
 	private final ReactiveParameters parameters;
-	private final Optional<XMLElement> sourceElement;
-	private final String sourcePath;
 	private final TransformerMetadata metadata;
 	private final JettyClient client;
 	
-	private final static Logger logger = LoggerFactory.getLogger(CallRemoteTransformer.class);
 	
-	public CallRemoteTransformer(TransformerMetadata metadata, JettyClient client, ReactiveParameters parameters,Optional<XMLElement> sourceElement, String sourcePath) {
+	public CallRemoteTransformer(TransformerMetadata metadata, JettyClient client, ReactiveParameters parameters) {
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 		this.metadata = metadata;
 		this.client = client;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(),metadata, sourceElement, sourcePath);
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,
+			Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = parameters.resolve(context, current,param,metadata);
 		String server = resolved.paramString("server");
 		String username = resolved.paramString("username");
 		String password = resolved.paramString("password");
 		final String service =  resolved.paramString("service");
-		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		return flow->
 			{
 				
@@ -78,11 +69,4 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
-
-
 }

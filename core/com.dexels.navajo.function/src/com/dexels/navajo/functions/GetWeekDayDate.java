@@ -3,6 +3,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
@@ -135,16 +136,16 @@ public String usage() {
   public static void main (String [] args) throws Exception {
     GetWeekDayDate f = new GetWeekDayDate();
     f.reset();
-    f.insertOperand("sun");
-    f.insertOperand("forwards");
+    f.insertStringOperand("sun");
+    f.insertStringOperand("forwards");
     Object o = f.evaluate();
     System.err.println("f = " + o);
 
   
       f.reset();
-    f.insertOperand("sat");
-    f.insertOperand(false);
-    f.insertOperand(o);
+    f.insertStringOperand("sat");
+    f.insertBooleanOperand(false);
+    f.insertOperand(Operand.ofDynamic(o));
     Object o2 = f.evaluate();
     System.err.println("f = " + o2);
   

@@ -1,6 +1,6 @@
 package com.dexels.navajo.scala
 import com.dexels.navajo.document.types.Binary
-import com.dexels.navajo.parser._
+import com.dexels.navajo.expression.api._
 import com.dexels.navajo.document.types.Money
 
 trait Base {

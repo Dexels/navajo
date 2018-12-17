@@ -74,6 +74,7 @@ public class TestSingle {
 		ReactiveTransformer takeTransformer = takeTransformerFactory.build(problems,transformerParameter);
 		int lastIndex = ssf.build(parameters)
 			.execute(context, Optional.empty(), ImmutableFactory.empty())
+			.compose(takeTransformer.execute(context, Optional.empty(), ImmutableFactory.empty()))
 			.map(e->e.stateMessage())
 			.lastOrError()
 			.map(msg->(Integer)msg.columnValue("index"))
@@ -95,7 +96,8 @@ public class TestSingle {
 		
 		ReactiveTransformerFactory filterFactory = new FilterTransformerFactory();
 		ReactiveParameters transformerParameter = ReactiveParameters.empty(filterFactory)
-				.withExpression("filter", new ContextExpression() {
+				
+				.withExpression(new ContextExpression() {
 					
 					@Override
 					public Optional<String> returnType() {

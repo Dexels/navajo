@@ -35,7 +35,7 @@ public class FunctionTest {
 
 	public String randomColor(Integer seed) throws TMLExpressionException {
 		FunctionInterface fi = instantiateFunction("com.dexels.navajo.functions.RandomColor");
-		fi.insertOperand(seed);
+		fi.insertIntegerOperand(seed);
 		return (String) fi.evaluate();
 	}
 

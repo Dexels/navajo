@@ -28,12 +28,10 @@ public class CallRemoteTransformerFactory implements ReactiveTransformerFactory 
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath,List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters,
-			Optional<XMLElement> xml, 
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
 
-		return new CallRemoteTransformer(this,client,parameters,xml,relativePath);
+		return new CallRemoteTransformer(this,client,parameters);
 	}
 	@Override
 	public Optional<List<String>> allowedParameters() {
@@ -70,5 +68,6 @@ public class CallRemoteTransformerFactory implements ReactiveTransformerFactory 
 	public String name() {
 		return "call";
 	}
+
 	
 }

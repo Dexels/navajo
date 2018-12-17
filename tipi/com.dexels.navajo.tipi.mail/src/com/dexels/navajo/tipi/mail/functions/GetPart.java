@@ -67,8 +67,8 @@ public class GetPart extends FunctionInterface {
 		logger.info("Length: "+b.getLength()+" type: "+b.guessContentType());
 		GetPart gp = new GetPart();
 		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(0);
+		gp.insertBinaryOperand(b);
+		gp.insertIntegerOperand(0);
 		Binary result = (Binary) gp.evaluate();
 		logger.info("Length of part 0: "+result.getLength());
 		

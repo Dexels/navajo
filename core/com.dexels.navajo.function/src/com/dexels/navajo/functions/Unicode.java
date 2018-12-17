@@ -38,7 +38,7 @@ public class Unicode extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		Unicode u = new Unicode();
 		u.reset();
-		u.insertOperand("0x2f");
+		u.insertStringOperand("0x2f");
 		
 		System.err.println(u.evaluate());
 	}

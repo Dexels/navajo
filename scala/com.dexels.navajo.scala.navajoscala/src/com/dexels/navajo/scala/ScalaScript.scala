@@ -12,9 +12,10 @@ import com.dexels.navajo.scala.document.NavajoMessage
 import com.dexels.navajo.scala.document.NavajoFactory
 import com.dexels.navajo.server.DispatcherFactory
 import scala.runtime
-import com.dexels.navajo.parser.FunctionInterface
+import com.dexels.navajo.expression.api.FunctionInterface
 import com.dexels.navajo.scala.document.ScalaMessage
 import com.dexels.navajo.document.json.conversion.JsonTmlFactory
+import com.dexels.navajo.document.Operand
 import com.dexels.navajo.document.base.BaseMessageImpl
 import com.dexels.navajo.scala.document.Validation
 
@@ -29,8 +30,8 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
   def addValidation(validation: NavajoDocument => Any) {
     validations.append(validation)
   }
-  
-  
+
+
 
   override def execute(a: Access) {
     myAccess = a
@@ -119,12 +120,12 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
       param match {
         case s: Option[Any] => {
           if (s.isDefined) {
-            f.insertOperand(s.get)
+            f.insertDynamicOperand(s.get)
           } else {
-            f.insertOperand(null)
+            f.insertOperand(Operand.NULL)
           }
         }
-        case _ => f.insertOperand(param)
+        case _ => f.insertDynamicOperand(param)
       }
     })
 
@@ -135,20 +136,20 @@ abstract class ScalaScript(var printRequest: Boolean = false, var printResponse:
   def global(key: String): String = input.message("__globals__").getString(key).getOrElse(null)
   def aaa(key: String): String = input.message("__aaa__").getString(key).getOrElse(null)
 
-  
+
   override def getScriptDebugMode() = {
     if (printRequest && printResponse) {
       "request,response"
     } else if (printRequest) {
       "request"
     } else if (printResponse) {
-      "response" 
+      "response"
     } else {
       ""
     }
   }
-  
-  
+
+
   override def finalBlock(a: Access) {
 
   }

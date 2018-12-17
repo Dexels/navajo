@@ -1,6 +1,6 @@
 Bundle-Name: Navajo Scala Connections
 Bundle-SymbolicName: com.dexels.navajo.scala.navajoscala
-Bundle-Description: 
+Bundle-Description: Navajo Scala
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.5.qualifier
 Include-Resource: lib
@@ -18,6 +18,7 @@ Import-Package: com.dexels.immutable.api,
  com.dexels.navajo.parser,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
+ com.dexels.navajo.expression.api,
  com.dexels.replication.api;version="9.1.0",
  com.dexels.replication.factory;version="1.1.0",
  org.junit;version="4.8.2";resolution:=optional,

@@ -68,7 +68,7 @@ public String usage() {
     // Tests.
     ToClockTime cct = new ToClockTime();
     cct.reset();
-    cct.insertOperand("12");
+    cct.insertStringOperand("12");
     System.out.println("cct = " + cct.evaluate());
 
     String expr = "ToClockTime('09:00') + ToClockTime('10')";

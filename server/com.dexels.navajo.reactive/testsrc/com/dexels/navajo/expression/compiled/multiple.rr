@@ -1,0 +1,7 @@
+single(count=5,debug=true)
+	->set(aap='noot',mies='wim')
+	->stream(messageName='FirstMessage', isArray=true)
+single(count=2,debug=true)
+	->set(teun='vuur')
+	->stream(messageName='SecondMessage', isArray=true)
+	

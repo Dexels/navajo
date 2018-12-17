@@ -14,8 +14,6 @@
 		<module>../../com.dexels.navajo.tipi.vaadin.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.css.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.echo.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.flickr.feature/allgit</module>
-		<!-- <module>../../com.dexels.navajo.tipi.jogl.feature/allgit</module>-->
 		<module>../../com.dexels.navajo.tipi.mail.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.ruby.feature/allgit</module>

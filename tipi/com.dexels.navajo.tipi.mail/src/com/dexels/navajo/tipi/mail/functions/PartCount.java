@@ -52,7 +52,7 @@ public class PartCount extends FunctionInterface {
 		logger.info("Length: "+b.getLength()+" type: "+b.guessContentType());
 		PartCount gp = new PartCount();
 		gp.reset();
-		gp.insertOperand(b);
+		gp.insertBinaryOperand(b);
 		Integer result = (Integer) gp.evaluate();
 		logger.info("Parts: "+result);
 

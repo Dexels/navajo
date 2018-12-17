@@ -23,17 +23,15 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class ReactiveParseItem implements ContextExpression {
-	public static enum ReactiveItemType {
-		HEADER,SOURCE,TRANSFORMER,MAPPER
-	}
+
 
 	public final String name;
-	public final ReactiveItemType type;
+	public final Reactive.ReactiveItemType type;
 	public final Map<String, ContextExpression> namedParams;
 	public final List<ContextExpression> unnamedParams;
 	public final String expression;
 	
-	public ReactiveParseItem(String name, ReactiveItemType type, Map<String,ContextExpression> namedParams, List<ContextExpression> unnamedParams, String expression) {
+	public ReactiveParseItem(String name, Reactive.ReactiveItemType type, Map<String,ContextExpression> namedParams, List<ContextExpression> unnamedParams, String expression) {
 		this.name = name;
 		this.type = type;
 		this.namedParams = namedParams;
@@ -50,21 +48,21 @@ public class ReactiveParseItem implements ContextExpression {
 
 	private Operand materializeReactive() {
 		switch (type) {
-		case SOURCE:
+		case REACTIVE_SOURCE:
 			ReactiveSourceFactory sourceFactory = Reactive.finderInstance().getSourceFactory(name);
-			return new Operand(sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams)),Reactive.REACTIVE_SOURCE);
-		case HEADER:
+			return new Operand(sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams)),Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
+		case REACTIVE_HEADER:
 			break;
-		case MAPPER:
+		case REACTIVE_MAPPER:
 			ReactiveMerger mergerFactory = Reactive.finderInstance().getMergerFactory(name);
 			ReactiveParameters mergeParameters = ReactiveParameters.of(mergerFactory, namedParams, unnamedParams);
-			return new Operand(mergerFactory.execute(mergeParameters), Reactive.REACTIVE_MAPPER);
-		case TRANSFORMER:
+			return new Operand(mergerFactory.execute(mergeParameters), Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
+		case REACTIVE_TRANSFORMER:
 			ReactiveTransformerFactory transformerFactory = Reactive.finderInstance().getTransformerFactory(name);
 			ReactiveParameters transParameters = ReactiveParameters.of(transformerFactory, namedParams, unnamedParams);
 			List<ReactiveParseProblem> problems = new ArrayList<>();
 			// TODO problems?
-			return new Operand(transformerFactory.build(problems, transParameters),Reactive.REACTIVE_TRANSFORMER);
+			return new Operand(transformerFactory.build(problems, transParameters),Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
 		default:
 			break;
 

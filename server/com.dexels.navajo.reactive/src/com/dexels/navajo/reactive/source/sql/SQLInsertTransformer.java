@@ -1,7 +1,6 @@
 package com.dexels.navajo.reactive.source.sql;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -21,7 +19,6 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 public class SQLInsertTransformer implements ReactiveTransformer {
@@ -51,7 +48,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 				logger.info("Transforming to SQL. resource: {} query: {}",resource,query);
 			}
 			FlowableTransformer<DataItem, DataItem> result = flow->flow.map(m->{
-				List<Object> operand = parameters.resolveUnnamed(context,Optional.of(m.message()), ImmutableFactory.empty());
+				List<Operand> operand = parameters.resolve(context,Optional.of(m.message()), ImmutableFactory.empty(),metadata).unnamedParameters();
 				Object[] params = operand.stream()
 						.toArray();
 				if(debug) {

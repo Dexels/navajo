@@ -117,7 +117,7 @@ public final class Max extends FunctionInterface {
         m.reset();
 //        m.insertOperand(a);
 //        m.insertOperand(b);
-        m.insertOperand(l);
+        m.insertListOperand(l);
 //        System.out.println("Max of " + a + " and " + b + " is " + m.evaluate() );
         System.out.println("Max of " + l + " is " + m.evaluate() );
     }

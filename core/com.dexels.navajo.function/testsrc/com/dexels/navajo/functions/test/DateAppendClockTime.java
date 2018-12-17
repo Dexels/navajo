@@ -31,8 +31,8 @@ public class DateAppendClockTime {
 		System.out.println("Sending ClockTime :: " + cTime);
 
 		da.reset();
-		da.insertOperand(date);
-		da.insertOperand(cTime);
+		da.insertDateOperand(date);
+		da.insertClockTimeOperand(cTime);
 		System.out.println(da.evaluate());
 
 		Object o = da.evaluate();
@@ -64,8 +64,8 @@ public class DateAppendClockTime {
 		System.out.println("Sending ClockTime :: " + cTime);
 
 		da.reset();
-		da.insertOperand(date);
-		da.insertOperand("11:28");
+		da.insertDateOperand(date);
+		da.insertStringOperand("11:28");
 		System.out.println(da.evaluate());
 
 		Object o = da.evaluate();

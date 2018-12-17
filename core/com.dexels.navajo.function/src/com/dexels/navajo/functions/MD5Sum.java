@@ -70,7 +70,7 @@ public class MD5Sum extends FunctionInterface {
 		String b = "Kroket";
 		MD5Sum fsc = new MD5Sum();
 		fsc.reset();
-		fsc.insertOperand(b);
+		fsc.insertStringOperand(b);
 		Object o = fsc.evaluate();
 		System.err.println("o  = " + o);
 
@@ -82,7 +82,7 @@ public class MD5Sum extends FunctionInterface {
 		nf.write(System.err);
 		
 		fsc.reset();
-		fsc.insertOperand(m);
+		fsc.insertMessageOperand(m);
 		Object mo = fsc.evaluate();
 		System.err.println("mo  = " + mo);
 		

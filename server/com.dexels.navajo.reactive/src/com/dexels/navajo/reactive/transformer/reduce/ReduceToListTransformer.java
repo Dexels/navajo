@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -17,11 +15,10 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 
 public class ReduceToListTransformer implements ReactiveTransformer {
 
-	private Function<StreamScriptContext, Function<DataItem, DataItem>> reducers;
+//	private Function<StreamScriptContext, Function<DataItem, DataItem>> reducers;
 
 	private final TransformerMetadata metadata;
 
@@ -30,9 +27,9 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 	private final static Logger logger = LoggerFactory.getLogger(ReduceToListTransformer.class);
 
 	
-	public ReduceToListTransformer(TransformerMetadata metadata, Function<StreamScriptContext,Function<DataItem,DataItem>> reducers,ReactiveParameters parameters, Optional<XMLElement> sourceElement) {
+	public ReduceToListTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.metadata = metadata;
-		this.reducers = reducers;
+//		this.reducers = reducers;
 		this.parameters = parameters;
 	}
 	@Override

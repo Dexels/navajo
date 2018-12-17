@@ -55,7 +55,7 @@ public class IsDateBetween extends FunctionInterface {
                 // Going to guess some formats now by using the navajo function ParseDate()
                 ParseDate td = new ParseDate();
                 td.reset();
-                td.insertOperand(o);
+                td.insertStringOperand((String) o);
                 return (java.util.Date)td.evaluate();
             }
             catch (TMLExpressionException tee)

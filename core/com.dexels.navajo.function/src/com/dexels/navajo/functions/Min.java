@@ -119,7 +119,7 @@ public String usage() {
         m.reset();
 //        m.insertOperand(a);
 //        m.insertOperand(b);
-        m.insertOperand(l);
+        m.insertListOperand(l);
 //        System.out.println("Min of " + a + " and " + b + " is " + m.evaluate() );
         System.out.println("Min of " + l + " is " + m.evaluate() );
     }

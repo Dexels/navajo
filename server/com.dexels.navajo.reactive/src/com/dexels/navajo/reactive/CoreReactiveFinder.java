@@ -50,6 +50,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
 	}
 
+	
 	public void activate() {
 		//
 	}

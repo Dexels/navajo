@@ -45,19 +45,19 @@ public final class ASTAndNode extends SimpleNode {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+				Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				if(a==null) {
 		        	return Operand.ofBoolean(Boolean.FALSE);
 		        }
-				Boolean ba = (Boolean)a;
+				Boolean ba = (Boolean)a.value;
 		        if (!(ba.booleanValue())) {
 	        		return Operand.ofBoolean(Boolean.FALSE);
 				}
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage,paramMessage);
+		        Operand b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage,paramMessage);
 		        if(b==null) {
 	        		return Operand.ofBoolean(Boolean.FALSE);
 		        }
-		        return Operand.ofBoolean((Boolean)b);
+		        return Operand.ofBoolean((Boolean)b.value);
 			}
 
 			@Override

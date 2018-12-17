@@ -28,15 +28,4 @@ public class FileSize extends FunctionInterface {
 	public String remarks() {
 	    return "Get the filesize of supplied Binary object in bytes.";
 	}
-	
-	public static void main(String args[]) throws Exception {
-		
-		Binary b = new Binary(new java.io.FileInputStream("C:/orion.bat"));
-		FileSize fsc = new FileSize();
-		fsc.reset();
-		fsc.insertOperand(b);
-		Object o = fsc.evaluate();
-		System.err.println("o = " + o);
-		
-    }
 }

@@ -57,8 +57,8 @@ public class StripTime extends FunctionInterface {
     	java.util.Date input = new java.util.Date();
     	java.util.Date output = null;
 //    	st.insertOperand(input);
-    	st.insertOperand("01-07-2012 12:00:10");
-    	st.insertOperand("dd-MM-yyyy hh:mm:ss");
+    	st.insertStringOperand("01-07-2012 12:00:10");
+    	st.insertStringOperand("dd-MM-yyyy hh:mm:ss");
     	output = (java.util.Date)st.evaluate();
     	System.out.println("Old date : " + input + " - New date : " + output);
     }

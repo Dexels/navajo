@@ -123,8 +123,8 @@ public class GetMailNavajo extends FunctionInterface {
 		logger.info("Length: "+b.getLength()+" type: "+b.guessContentType());
 		GetMailNavajo gp = new GetMailNavajo();
 		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(0);
+		gp.insertBinaryOperand(b);
+		gp.insertIntegerOperand(0);
 		Navajo result = (Navajo) gp.evaluate();
 		result.write(System.err);
 //		logger.info("Length of part 0: "+result.getLength());

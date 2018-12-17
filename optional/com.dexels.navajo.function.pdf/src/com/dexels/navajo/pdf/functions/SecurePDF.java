@@ -68,7 +68,7 @@ public final class SecurePDF extends FunctionInterface{
     		
     		SecurePDF pdf = new SecurePDF();
     		pdf.reset();
-    		pdf.insertOperand(input);
+    		pdf.insertBinaryOperand(input);
     		Binary result = (Binary)pdf.evaluate();
     		if(result != null){
     			result.write(new FileOutputStream(new File("/Users/arjenschoneveld/converted.pdf")));

@@ -9,23 +9,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.ReactiveScriptParser;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveParseException;
-import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.pubsub.rx2.api.TopicPublisher;
 import com.dexels.pubsub.rx2.api.TopicSubscriber;
-
-import io.reactivex.functions.Function;
 
 public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 

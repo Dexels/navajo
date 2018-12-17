@@ -53,10 +53,8 @@ public class CallRemoteSourceFactory implements ReactiveSourceFactory {
 		return Optional.of(r);	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems,
-			Optional<XMLElement> x, ReactiveParameters params, List<ReactiveTransformer> transformers, Type finalType,
-			Function<String, ReactiveMerger> reducerSupplier) {
-		return new CallRemoteSource(this, client, relativePath,type,problems,x,params,transformers,finalType,reducerSupplier);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new CallRemoteSource(this, client, parameters);
 	}
 
 }

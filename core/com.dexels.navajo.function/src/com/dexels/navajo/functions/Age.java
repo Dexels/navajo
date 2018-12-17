@@ -67,7 +67,7 @@ public String remarks() {
     c.set(1966, 11, 20);
     System.err.println("birth date is " + c.getTime());
     a.reset();
-    a.insertOperand(c.getTime());
+    a.insertDateOperand(c.getTime());
     Integer age = (Integer) a.evaluate();
 
     System.err.println("age = " + age.intValue() + ", as of " + now);
@@ -75,8 +75,8 @@ public String remarks() {
     final Calendar asof = Calendar.getInstance();
     asof.set(1972, 4, 14);
     a.reset();
-    a.insertOperand(c.getTime());
-    a.insertOperand(asof.getTime());
+    a.insertDateOperand(c.getTime());
+    a.insertDateOperand(asof.getTime());
     age = (Integer) a.evaluate();
     System.err.println("age = " + age.intValue() + ", as of " + asof.getTime());
 

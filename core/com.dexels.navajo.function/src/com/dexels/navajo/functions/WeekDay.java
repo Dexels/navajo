@@ -80,11 +80,11 @@ public String usage() {
     System.out.println("result = " + wd.evaluate().toString());
 
     wd.reset();
-    wd.insertOperand("2003-07-16");
+    wd.insertStringOperand("2003-07-16");
     System.out.println("result = " + wd.evaluate().toString());
 
     wd.reset();
-    wd.insertOperand(new java.util.Date(System.currentTimeMillis()));
+    wd.insertDateOperand(new java.util.Date(System.currentTimeMillis()));
     System.out.println("result = " + wd.evaluate().toString());
 
   }

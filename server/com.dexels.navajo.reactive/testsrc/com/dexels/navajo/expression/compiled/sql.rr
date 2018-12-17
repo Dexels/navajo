@@ -1,0 +1,3 @@
+sql(resource='default',query='select * from ORGANIZATION')
+	->take(10)
+	->stream(messageName='Club',isArray=true)

@@ -50,15 +50,15 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 		try {
 			ExpressionCache ce = ExpressionCache.getInstance();
 			Access access = params == null? null : (Access)params.get(Expression.ACCESS);
-			Object val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
+			Operand val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
 			String type = MappingUtils.determineNavajoType(val);
-			return new Operand(val, type, "");
+			return val;
 		} catch (TMLExpressionException e) {
 		    if (inMessage != null) {
 		        // Only log if we have useful context
 		        logger.error("TML parsing issue with expression: {} exception", clause, e );
 		    }
-			throw new TMLExpressionException("TML parsing issue", e);
+			throw new TMLExpressionException(e.getMessage(), e);
 		}
 	}
 
@@ -66,9 +66,7 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 	public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
 		try {
 			ExpressionCache ce = ExpressionCache.getInstance();
-			Object val =ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);
-			String type = MappingUtils.determineNavajoType(val);
-			return new Operand(val, type, "");
+			return ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);
 		} catch (TMLExpressionException e) {
 		    if (inMessage != null) {
                 // Only log if we have useful context

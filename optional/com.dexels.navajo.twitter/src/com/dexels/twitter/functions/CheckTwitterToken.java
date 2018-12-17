@@ -50,8 +50,8 @@ public class CheckTwitterToken  extends FunctionInterface {
         
         CheckTwitterToken ctt = new CheckTwitterToken();
         ctt.reset();
-        ctt.insertOperand(t1);
-        ctt.insertOperand(t2);
+        ctt.insertStringOperand(t1);
+        ctt.insertStringOperand(t2);
         
         Boolean result;
         try {

@@ -91,7 +91,7 @@ public class ZipArchive extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		ZipArchive za = new ZipArchive();
 		za.reset();
-		za.insertOperand("testzip");
+		za.insertStringOperand("testzip");
 		Binary o = (Binary) za.evaluate();
 		System.err.println("o =" + o);
 		File result = new File("result.zip");

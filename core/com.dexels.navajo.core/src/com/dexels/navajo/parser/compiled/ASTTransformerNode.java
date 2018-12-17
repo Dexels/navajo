@@ -62,10 +62,10 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 				MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 				Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-			List<Object> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
+			List<Operand> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
 			System.err.println(">>> "+transformerName);
 			TransformerFunction ff = new RenameTransformerFunction();
-			return Operand.ofCustom(ff.create(params, problems),Reactive.REACTIVE_TRANSFORMER);
+			return Operand.ofCustom(ff.create(params, problems),Reactive.ReactiveItemType.REACTIVE_TRANSFORMER.toString());
 		}
 	};
 }

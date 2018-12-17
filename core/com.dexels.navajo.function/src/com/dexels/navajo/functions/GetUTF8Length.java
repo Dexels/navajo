@@ -72,7 +72,7 @@ public final class GetUTF8Length extends FunctionInterface {
        // String diacritic = "Mart� is gek";
         GetUTF8Length e = new GetUTF8Length();
         e.reset();
-        e.insertOperand(simple);
+        e.insertStringOperand(simple);
         //e.insertOperand(diacritic);
         try {
             System.out.println(e.evaluate());

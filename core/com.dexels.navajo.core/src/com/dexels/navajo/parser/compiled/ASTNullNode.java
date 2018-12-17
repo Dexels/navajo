@@ -36,7 +36,7 @@ public final class ASTNullNode extends SimpleNode {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-				return Operand.nullOperand();
+				return Operand.NULL;
 			}
 
 			@Override

@@ -11,12 +11,14 @@ package com.dexels.navajo.expression.api;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +27,19 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.types.TypeUtils;
 import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings("rawtypes")
 public abstract class FunctionInterface {
 
-	private ArrayList<Object> operandList = null;
+	private ArrayList<Operand> operandList = null;
 	protected Navajo inMessage = null;
 	protected Message currentMessage = null;
 	protected FunctionDefinition myFunctionDefinition = null;
@@ -266,12 +274,34 @@ public abstract class FunctionInterface {
 	}
 
 	public final void reset() {
-		operandList = new ArrayList<Object>();
+		operandList = new ArrayList<Operand>();
 	}
 
-	public final void insertOperand(Object o) {
+	public final void insertOperand(Operand o) {
+		if(o==null) {
+			throw new NullPointerException("Don't add null operands, you can add Operand.NULL though.");
+		}
 		operandList.add(o);
 	}
+
+
+	public final void insertStringOperand(String o) {
+		insertOperand(Operand.ofString(o));
+	}
+
+	public final void insertIntegerOperand(Integer o) {
+		operandList.add(Operand.ofInteger(o));
+	}
+
+	public final void insertBinaryOperand(Binary o) {
+		operandList.add(Operand.ofBinary(o));
+	}
+	public final void insertFloatOperand(Double o) {
+		operandList.add(Operand.ofFloat(o));
+	}
+//	public final void insertIntegerOperand(Integer o) {
+//		operandList.add(Operand.ofInteger(o));
+//	}
 
 	public Object evaluateWithTypeChecking() throws TMLExpressionException {
 		return evaluate();
@@ -287,8 +317,8 @@ public abstract class FunctionInterface {
 
 	public abstract Object evaluate() throws TMLExpressionException;
 
-	protected final ArrayList<?> getOperands() {
-		return operandList;
+	protected final List<?> getOperands() {
+		return operandList.stream().map(e->e.value).collect(Collectors.toList());
 	}
 
 	protected final Navajo getNavajo() {
@@ -299,11 +329,12 @@ public abstract class FunctionInterface {
 		return this.currentMessage;
 	}
 
+	@Deprecated
 	protected final Object getOperand(int index) throws TMLExpressionException {
 		if (index >= operandList.size())
 			throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
 		else
-			return operandList.get(index);
+			return operandList.get(index).value;
 	}
 
 	public Optional<String> getReturnType() {
@@ -410,5 +441,60 @@ public abstract class FunctionInterface {
 	
 	protected Map<String,Object> getNamedParameters() {
 		return Collections.unmodifiableMap(this.namedParameters);
+	}
+
+	public void insertDateOperand(Date o) {
+		insertOperand(Operand.ofDate(o));
+	}
+
+	public void insertFloatOperand(Float o) {
+		insertOperand(Operand.ofFloat(o.doubleValue()));
+		
+	}
+
+	public void insertStopwatchOperand(StopwatchTime stopwatchTime) {
+		insertOperand(Operand.ofStopwatchTime(stopwatchTime));
+	}
+
+	public void insertClockTimeOperand(ClockTime clockTime) {
+		insertOperand(Operand.ofClockTime(clockTime));
+	}
+
+	public void insertMessageOperand(Message message) {
+		insertOperand(Operand.ofMessage(message));
+	}
+
+	public void insertBooleanOperand(boolean b) {
+		insertOperand(Operand.ofBoolean(b));
+	}
+
+	public void insertListOperand(List<? extends Object> list) {
+		insertOperand(Operand.ofList(list));
+	}
+
+	public void insertNavajoOperand(Navajo createTestNavajo) {
+		insertOperand(Operand.ofNavajo(createTestNavajo));
+	}
+
+	public void insertSelectionListOperand(List<Selection> allSelectedSelections) {
+		insertOperand(Operand.ofSelectionList(allSelectedSelections));
+	}
+
+	public void insertPropertyOperand(Property property) {
+		insertOperand(Operand.ofProperty(property));
+	}
+
+	public void insertMoneyOperand(Money money) {
+		insertOperand(Operand.ofMoney(money));
+		
+	}
+
+	public void insertLongOperand(long value) {
+		insertOperand(Operand.ofLong(value));		
+	}
+	
+
+	public void insertDynamicOperand(Object value) {
+		insertOperand(Operand.ofDynamic(value));		
 	}
 }

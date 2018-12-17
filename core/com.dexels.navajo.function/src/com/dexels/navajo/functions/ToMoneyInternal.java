@@ -48,7 +48,7 @@ public String usage() {
     // Tests.
    ToMoneyInternal tm = new ToMoneyInternal();
     tm.reset();
-    tm.insertOperand(new Money(3.4));
+    tm.insertMoneyOperand(new Money(3.4));
     
     System.out.println("result = " + tm.evaluate());
   }
