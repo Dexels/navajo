@@ -38,7 +38,7 @@ public final class ASTOrNode extends SimpleNode {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage).value;
 		        Boolean ba = (Boolean) a;
 		        if(a==null) {
 		        		ba = Boolean.FALSE;
@@ -46,7 +46,7 @@ public final class ASTOrNode extends SimpleNode {
 		        if (ba.booleanValue())
 		            return Operand.ofBoolean(true);
 
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage).value;
 		        Boolean bb = (Boolean) b;
 		        if(b==null) {
 		        		bb = Boolean.FALSE;

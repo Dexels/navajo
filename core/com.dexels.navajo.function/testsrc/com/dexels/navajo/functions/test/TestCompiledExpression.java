@@ -23,6 +23,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
+
 public class TestCompiledExpression {
 
 	private Navajo input;
@@ -88,6 +89,22 @@ public class TestCompiledExpression {
 		List<String> problems = new ArrayList<>();
 		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",name->FunctionClassification.DEFAULT);
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
+	}
+	
+
+	@Test
+	public void testForall() throws TMLExpressionException {
+		List<String> problems = new ArrayList<>();
+		ExpressionCache ce = ExpressionCache.getInstance();
+		String ext ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
+//		String expression = "FORALL( '/Charges' , `! ?[Delete] OR ! [Delete]  OR [/__globals__/ApplicationInstance] != 'SOMETENANT' OR [SomeProperty] == 'SOMESTRING' `)";
+//		ce.parse(problems, expression, mode, allowLiteralResolve)
+		ContextExpression cx = ce.parse(problems,ext,name->FunctionClassification.DEFAULT,true);
+		System.err.println("Problems: "+problems);
+		Assert.assertEquals(0, problems.size());
+		cx.apply(input,Optional.empty(),Optional.empty());
+//		Operand result = Expression.evaluate(expression, testDoc,null,topMessage);
+		
 	}
 
 }

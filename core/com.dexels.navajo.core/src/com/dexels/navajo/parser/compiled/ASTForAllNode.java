@@ -61,6 +61,7 @@ public final class ASTForAllNode extends SimpleNode {
 				List<String> problems = new ArrayList<>();
 				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
+
 				
 				if(!problems.isEmpty()) {
 					throw new TMLExpressionException(problems,expression);
