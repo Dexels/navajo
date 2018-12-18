@@ -25,6 +25,7 @@ public class DeleteSubMessage implements ReactiveMerger {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
 			ReactiveResolvedParameters resolved = params.resolve(context, Optional.of(item.message()),item.stateMessage(), this);
+			resolved.resolveAllParams();
 			String name = resolved.paramString("name");	
 			// both singular and array submessages will be removed
 			// TODO this could be more efficient

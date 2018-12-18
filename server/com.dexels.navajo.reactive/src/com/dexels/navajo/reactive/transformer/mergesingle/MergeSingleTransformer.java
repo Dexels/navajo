@@ -62,17 +62,18 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		}
 		ReactivePipe source = (ReactivePipe) params.unnamedParameters()
 				.stream()
+				.findFirst()
 				.map(o->{
 					System.err.println("<<>> PIPE? "+o.type+" val: "+o.value.getClass());
 					return o;
 				})
 				.map(e->e.value)
-				.findFirst()
 				.orElseThrow(()->new RuntimeException("Missing source"));
 		
-			return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty())))
+			return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty()))
+					)
 				.flatMap(item->
-					source.execute(context,  current, param)
+					source.execute(context,  Optional.of(item.message()), item.stateMessage())
 //							.map(reducedItem->joiner.apply(context)
 //							.apply(DataItem.of(item.message(), reducedItem.message()))
 //							)

@@ -41,18 +41,18 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"count"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {"count"}));
+		return Optional.of(Arrays.asList(new String[] {}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String, String> r = new HashMap<>();
-		r.put("count", Property.INTEGER_PROPERTY);
+//		r.put("count", Property.INTEGER_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 

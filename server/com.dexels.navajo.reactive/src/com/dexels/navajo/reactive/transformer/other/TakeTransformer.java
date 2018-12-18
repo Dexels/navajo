@@ -3,6 +3,7 @@ package com.dexels.navajo.reactive.transformer.other;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -25,7 +26,9 @@ public class TakeTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters parms = parameters.resolve(context, current, param, metadata);
-		int count = parms.paramInteger("count");
+		parms.resolveAllParams();
+		int count = parms.unnamedParameters().stream().findFirst().orElse(Operand.ofInteger(0)).integerValue(); //parms.paramInteger("count");
+		System.err.println(">>>> "+count);
 		return e->e.take(count);
 	}
 

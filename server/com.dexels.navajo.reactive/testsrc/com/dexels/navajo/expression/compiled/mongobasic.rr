@@ -1,4 +1,3 @@
 mongo(resource='mongoreplicate',collection='Club',operation='find',query='{}')
-	->deleteAll(name='Dispensation')
 	->stream(messageName='Club',isArray=true)
 	

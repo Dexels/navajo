@@ -26,6 +26,15 @@ import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
+import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
+import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FirstTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.reduce.ReduceToListTransformerFactory;
+import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
+import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 
 public class CoreReactiveFinder implements ReactiveFinder {
 	private final static Logger logger = LoggerFactory.getLogger(CoreReactiveFinder.class);
@@ -48,6 +57,18 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
+
+		addReactiveSourceFactory(new SingleSourceFactory(), "single");
+		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
+		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
+		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToList");
+		
+		addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
+		addReactiveTransformerFactory(new TakeTransformerFactory(), "take");
+		addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"join");
+		addReactiveTransformerFactory(new FirstTransformerFactory(),"first");
+
 	}
 
 	

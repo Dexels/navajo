@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
@@ -105,7 +106,11 @@ public class ReactiveResolvedParameters {
 	
 	// Guarantees it's there, will fail otherwise
 	public String paramString(String key) {
+		// TODO hard fail if null
 		Operand operand = resolvedNamed.get(key);
+		if(operand==null) {
+			logger.warn("Trouble retrieving key: {}, there is no such operand.",key);
+		}
 		return operand.stringValue();
 	}
 
@@ -170,6 +175,7 @@ public class ReactiveResolvedParameters {
 	}
 	
 	private void resolveUnnamed() {
+//		logger.info("Resolving unnamed. Input: "+ImmutableFactory.getInstance().describe(this.currentMessage.orElseThrow(()->new RuntimeException("whoops"))));
 		List<? extends Operand> resolved = unnamed.stream()
 				.map(e->{
 					return e.apply(this.input.blockingGet(), this.currentMessage, Optional.of(this.paramMessage));

@@ -126,7 +126,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	private File resolveFile(String serviceName) {
 		File root = testRoot!=null?testRoot:new File( navajoConfig.getRootPath());
 		File f = new File(root,"reactive");
-		return new File(f,serviceName+".xml");
+		return new File(f,serviceName+".rr");
 	}
 	
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
@@ -134,7 +134,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		Reactive.setFinderInstance(this.reactiveFinder);
 		CompiledParser cp = new CompiledParser(in);
 		try {
-			cp.ReactivePipe();
+			cp.ReactiveScript();
 		} catch (ParseException e) {
 			throw new IOException("Error parsing script: "+serviceName,e);
 		}
