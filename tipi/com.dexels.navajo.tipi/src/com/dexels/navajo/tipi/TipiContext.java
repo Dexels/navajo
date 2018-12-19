@@ -2542,7 +2542,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * @return
      */
     protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache, String id) {
-        return new FileResourceLoader(new File(loaderType));
+        return new ClassPathResourceLoader();
     }
 
     public OutputStream writeTipiResource(String resourceName) throws IOException {

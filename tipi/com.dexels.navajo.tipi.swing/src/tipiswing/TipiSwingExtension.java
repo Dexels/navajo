@@ -1,5 +1,6 @@
 package tipiswing;
 
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -91,12 +92,15 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	public void setLookAndFeel(String tipiLaf) {
 		if(getBundleContext()==null) {
 			// not OSGi, go vintage:
 			try {
-				UIManager.setLookAndFeel(tipiLaf);
+				Class<LookAndFeel> lafClass = (Class<LookAndFeel>) Class.forName(tipiLaf);
+				logger.info("lafclass resolved");
+				LookAndFeel laf = lafClass.newInstance();
+				UIManager.setLookAndFeel(laf);
 			} catch (ClassNotFoundException e) {
 				logger.error("Error setting look and feel: "+tipiLaf,e);
 			} catch (InstantiationException e) {
