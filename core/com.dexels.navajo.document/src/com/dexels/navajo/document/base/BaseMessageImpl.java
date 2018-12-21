@@ -1783,6 +1783,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
             
             p.setSubType(m_p.getSubType());
+            p.setDirection(m_p.getDirection());
             
             // A method that is null or "" is considered to always match
             boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")
