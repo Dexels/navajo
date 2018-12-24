@@ -589,13 +589,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
     public String getSystemProperty(String name) {
 
+    	logger.info("Looking for system property: {}",name);
         String value = systemPropertyMap.get(name);
+        logger.info("Fake system prop keys: "+systemPropertyMap);
         String sysVal = null;
         if (value != null) {
             return value;
         }
         try {
             sysVal = System.getProperty(name);
+            logger.info("Retrieved sysprop: {} with value: {}",name,sysVal);
             systemPropertyMap.put(name, sysVal);
             value = sysVal;
         } catch (SecurityException e) {
@@ -1020,6 +1023,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
             }
         }
         InputStream iss = getClass().getClassLoader().getResourceAsStream(location);
+        logger.info("Looking for resource in classpath: {}",location);
         if (iss != null) {
             logger.info("FALLBACK: Using TipiContext classloader to locate.");
             return iss;
@@ -2538,7 +2542,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
      * @return
      */
     protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache, String id) {
-        return new FileResourceLoader(new File(loaderType));
+        return new ClassPathResourceLoader();
     }
 
     public OutputStream writeTipiResource(String resourceName) throws IOException {

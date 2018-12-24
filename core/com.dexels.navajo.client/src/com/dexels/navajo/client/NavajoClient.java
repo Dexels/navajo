@@ -283,8 +283,8 @@ public abstract class NavajoClient implements ClientInterface{
             String currentServer = serverUrls[currentServerIndex];
             
             if (!currentServer.startsWith("http") && currentServer.length() > 0) {
-            	logger.warn("Server should contain protocol! Fallback to http");
-                return "http://" + currentServer;
+            	logger.warn("Server should contain protocol! Fallback to https");
+                return "https://" + currentServer;
             }
             return currentServer;
         }
