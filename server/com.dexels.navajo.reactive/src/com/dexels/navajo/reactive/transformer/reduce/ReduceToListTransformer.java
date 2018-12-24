@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -32,15 +33,25 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 //		this.reducers = reducers;
 		this.parameters = parameters;
 	}
+	
+	
+//	return DataItem.of(item.stateMessage().withSubMessages(resolved.paramString("name"), item.messageList()), item.stateMessage());
+	
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
+		parms.resolveAllParams();
 		// MUTABLE EDITION!
 			return flow->{
 			try {
 				flow = flow.reduce(DataItem.of(new ArrayList<>()), (state,message)->{
 					state.messageList().add(message.message());
 					return state;
+				})
+				.map(e->{
+					String field = parms.paramString("name");
+					return DataItem.of(ImmutableFactory.empty().withSubMessages(field, e.messageList()));
+
 				})
 				.toFlowable();
 				return flow;

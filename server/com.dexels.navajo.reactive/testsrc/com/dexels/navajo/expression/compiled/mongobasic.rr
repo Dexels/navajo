@@ -1,3 +1,0 @@
-mongo(resource='mongoreplicate',collection='Club',operation='find',query='{}')
-	->stream(messageName='Club',isArray=true)
-	

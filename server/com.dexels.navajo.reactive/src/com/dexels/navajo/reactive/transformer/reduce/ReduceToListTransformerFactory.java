@@ -31,18 +31,19 @@ public class ReduceToListTransformerFactory implements ReactiveTransformerFactor
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[] {"debug"}));
+		return Optional.of(Arrays.asList(new String[] {"name","debug"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[] {}));
+		return Optional.of(Arrays.asList(new String[] {"name"}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String, String> r = new HashMap<>();
 		r.put("debug", Property.BOOLEAN_PROPERTY);
+		r.put("name", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 

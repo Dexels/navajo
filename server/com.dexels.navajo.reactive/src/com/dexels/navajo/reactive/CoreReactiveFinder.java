@@ -26,6 +26,7 @@ import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
+import com.dexels.navajo.reactive.mappers.ToSubMessageList;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
@@ -58,11 +59,13 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("store", new StoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
 
+		reactiveReducer.put("toSubList", new ToSubMessageList());
+		
 		addReactiveSourceFactory(new SingleSourceFactory(), "single");
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
-		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToList");
+		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
 		
 		addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
 		addReactiveTransformerFactory(new TakeTransformerFactory(), "take");

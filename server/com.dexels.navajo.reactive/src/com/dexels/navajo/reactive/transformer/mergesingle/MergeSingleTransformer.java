@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -10,6 +11,7 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
@@ -17,6 +19,8 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 public class MergeSingleTransformer implements ReactiveTransformer {
 
@@ -60,6 +64,7 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		for (Operand oo : params.unnamedParameters()) {
 			System.err.println("Operand: "+oo.type+" >> "+oo.value);
 		}
+		List<Operand> mappers = params.unnamedParameters().stream().skip(1).collect(Collectors.toList());
 		ReactivePipe source = (ReactivePipe) params.unnamedParameters()
 				.stream()
 				.findFirst()
@@ -70,16 +75,41 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 				.map(e->e.value)
 				.orElseThrow(()->new RuntimeException("Missing source"));
 		
-			return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty()))
-					)
-				.flatMap(item->
-					source.execute(context,  Optional.of(item.message()), item.stateMessage())
+			return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty())))
+				.flatMap(item->{
+					Function<? super DataItem, ? extends DataItem> joiner = merge(context,item,mappers);
+					return source.execute(context,  Optional.of(item.message()), item.stateMessage())
+//						.map(e->e.message().merge(item.message(), Optional.empty()))
+						.firstElement()
+						
+						.map(ee->joiner.apply(ee))
+	//					.map(e->merge(item).apply(e))
+						.toFlowable();
+				}
+				
+					
 //							.map(reducedItem->joiner.apply(context)
 //							.apply(DataItem.of(item.message(), reducedItem.message()))
 //							)
 		,false,10);
+//		.map(e->DataItem.of(e));
 				
 				
+	}
+	
+	private static final Function<? super DataItem, ? extends DataItem> merge(StreamScriptContext context,DataItem with,List<Operand> mappers) {
+		if(mappers.isEmpty()) {
+			return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));
+		}
+		List<Function<DataItem,DataItem>> ll = mappers.stream()
+				.map(e->(Function<StreamScriptContext,Function<DataItem,DataItem>>)e.value)
+				.map(e->{
+					return e.apply(context);
+
+				})
+				.collect(Collectors.toList());
+		return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));
+		
 	}
 
 	@Override

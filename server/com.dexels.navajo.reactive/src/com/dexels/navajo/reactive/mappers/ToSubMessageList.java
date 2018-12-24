@@ -24,13 +24,14 @@ public class ToSubMessageList implements ReactiveMerger {
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
-			ReactiveResolvedParameters resolved = params.resolve(context, Optional.of(item.message()),item.stateMessage(), this);
+			ReactiveResolvedParameters resolved = params.resolve(context, Optional.empty(),item.stateMessage(), this);
+			resolved.resolveAllParams();
 			boolean condition = resolved.optionalBoolean("condition").orElse(true);
 			if(!condition) {
 				return item;
 			}
 			;
-			return DataItem.of(item.message().withSubMessage(resolved.paramString("name"), item.stateMessage()), item.stateMessage());
+			return DataItem.of(item.stateMessage().withSubMessages(resolved.paramString("name"), item.messageList()), item.stateMessage());
 		};
 	
 	}

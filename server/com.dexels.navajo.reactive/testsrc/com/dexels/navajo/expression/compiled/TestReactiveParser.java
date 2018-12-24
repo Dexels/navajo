@@ -92,5 +92,20 @@ public class TestReactiveParser {
 			n.write(System.err);
 		};
 	}
+	
+	@Test
+	public void testReduceToList( ) throws ParseException, IOException {
+		try(InputStream in = this.getClass().getResourceAsStream("reducetolist.rr")) {
+			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
+			n.write(System.err);
+		};
+	}
 
+	@Test
+	public void testJoinSpecific( ) throws ParseException, IOException {
+		try(InputStream in = this.getClass().getResourceAsStream("joinspecific.rr")) {
+			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
+			n.write(System.err);
+		};
+	}
 }

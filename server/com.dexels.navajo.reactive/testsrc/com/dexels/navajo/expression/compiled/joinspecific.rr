@@ -1,0 +1,7 @@
+single()
+	->set(somestring='blob')
+	->join(
+		single()
+			->set(sub='subprop')
+		,set(moved=[@sub]))
+	->stream(messageName='Test',isArray=false)
