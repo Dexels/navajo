@@ -19,7 +19,7 @@ import com.dexels.navajo.tester.js.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
 
 public class NavajoTesterHelper {
-    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala");
+    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala",".rr");
 
     private static final Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;

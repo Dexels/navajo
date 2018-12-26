@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.StreamDocument;
@@ -64,48 +65,48 @@ public class TestReactiveParser {
 
 	@Test
 	public void readMultipleScript() throws ParseException, IOException {
-		ReactiveStandalone.runExpression(this.getClass().getResourceAsStream("multiple.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
-				.map(e->e.event())
-				.lift(StreamDocument.serialize())
-				.map(e->new String(e))
-				.blockingForEach(e->System.err.print(e));
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/multiple.rr");
+		n.write(System.err);
 	}
 
 	
 	
+	
 	@Test
 	public void readJoinScript() throws ParseException, IOException {
-			ReactiveStandalone.runExpression(this.getClass().getResourceAsStream("join.rr"),"tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
-				.map(e->e.event())
-				.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty()))
-				.lift(StreamDocument.serialize())
-				.map(e->new String(e))
-				.blockingForEach(e->System.err.print(e));
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/join.rr");
+		n.write(System.err);
 	}
 
 
 	
 	@Test
 	public void testReduce( ) throws ParseException, IOException {
-		try(InputStream in = this.getClass().getResourceAsStream("reduce.rr")) {
-			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
-			n.write(System.err);
-		};
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reduce.rr");
+		n.write(System.err);
 	}
 	
 	@Test
 	public void testReduceToList( ) throws ParseException, IOException {
-		try(InputStream in = this.getClass().getResourceAsStream("reducetolist.rr")) {
-			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reducetolist.rr");
+		n.write(System.err);
+	}
+	
+	@Test
+	public void testJoinSpecific( ) throws ParseException, IOException {
+			Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/joinspecific.rr");
 			n.write(System.err);
-		};
+			Message m = n.getMessage("Test");
+			Assert.assertEquals(3, m.getProperty("someint").getTypedValue());
+			Assert.assertEquals("subprop", m.getProperty("sub").getTypedValue());
+			Assert.assertEquals("subprop", m.getProperty("moved").getTypedValue());
 	}
 
 	@Test
-	public void testJoinSpecific( ) throws ParseException, IOException {
-		try(InputStream in = this.getClass().getResourceAsStream("joinspecific.rr")) {
-			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
-			n.write(System.err);
-		};
+	public void testDelay( ) throws ParseException, IOException {
+		long now = System.currentTimeMillis();
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/delay.rr");
+		long elapsed = System.currentTimeMillis() - now;
+		Assert.assertTrue(elapsed>500);
 	}
 }

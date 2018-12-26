@@ -233,6 +233,7 @@ public class NonBlockingListener extends HttpServlet {
 				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
+					.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()), Optional.empty()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
 					.compose(StreamCompress.compress(responseEncoding))

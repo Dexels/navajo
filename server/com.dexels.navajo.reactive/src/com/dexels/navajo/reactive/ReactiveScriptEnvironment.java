@@ -23,6 +23,7 @@ import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
@@ -129,9 +130,10 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		return new File(f,serviceName+".rr");
 	}
 	
+	@SuppressWarnings("unchecked")
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
 		// TODO not pretty:
-		Reactive.setFinderInstance(this.reactiveFinder);
+//		Reactive.setFinderInstance(this.reactiveFinder);
 		CompiledParser cp = new CompiledParser(in);
 		try {
 			cp.ReactiveScript();
@@ -139,16 +141,21 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			throw new IOException("Error parsing script: "+serviceName,e);
 		}
 		List<String> problems = new ArrayList<>();
-		ReactivePipeNode src = (ReactivePipeNode) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
-		ReactivePipe pipe = (ReactivePipe) src.apply().value;
+		ContextExpression src = (ContextExpression) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+
+		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
 //		return new Reac
-		Type type = pipe.finalType();
+		final boolean streamInput = pipes.stream().anyMatch(e->e.source.streamInput());
+
+		List<ReactivePipe> resolvedPipes = pipes.stream().map(node->(ReactivePipe)node.apply().value).collect(Collectors.toList());
+//		ReactivePipe pipe = (ReactivePipe) pipes.stream().findAny().get().apply().value;
+		Type type = resolvedPipes.stream().findFirst().map(e->e.finalType()).orElse(Type.ANY);
 		
 		return new ReactiveScript() {
 			
 			@Override
 			public boolean streamInput() {
-				return false;
+				return streamInput;
 			}
 			
 			@Override
@@ -158,7 +165,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			
 			@Override
 			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
+				return Flowable.fromIterable(resolvedPipes).concatMapEager(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
+//				return pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
 			}
 			
 			@Override

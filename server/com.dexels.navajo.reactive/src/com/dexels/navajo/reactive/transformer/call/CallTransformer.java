@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.call;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,6 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 
 public class CallTransformer implements ReactiveTransformer {
 
@@ -46,7 +46,7 @@ public class CallTransformer implements ReactiveTransformer {
 				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
 			}
 			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
-			return ff.map(callService(context,service,debug)).concatMap(e->e);
+			return ff.map(ee->callService(context,service,debug).apply(ee)).concatMap(e->e);
 			
 //			return ff.map(fx->{
 //				StreamScriptContext ctx = context.withInput(fx)

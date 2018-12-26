@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
@@ -14,13 +15,12 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 
 
 public interface ReactiveMerger extends ParameterValidator {
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params);
 	default public ReactiveTransformer toReactiveTransformer(ReactiveParameters params) {
-		final Function<StreamScriptContext, Function<DataItem, DataItem>> merger = ReactiveMerger.this.execute(params);
+//		final Function<StreamScriptContext, Function<DataItem, DataItem>> merger = ReactiveMerger.this.execute(params);
 		return new ReactiveTransformer() {
 			
 			@Override
@@ -72,7 +72,7 @@ public interface ReactiveMerger extends ParameterValidator {
 					return item->Flowable.error(e);
 				}
 				return item->{
-					return item.map(mapper);
+					return item.map(e->mapper.apply(e));
 				};
 			}
 		};

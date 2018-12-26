@@ -40,8 +40,8 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	for (int i = 1; i < count; i++) {
 		ContextExpression interpretToLambda = jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
 		Object result = interpretToLambda.apply().value;
-		if(result instanceof io.reactivex.functions.Function) {
-			io.reactivex.functions.Function<StreamScriptContext,io.reactivex.functions.Function<DataItem,DataItem>> merger = (io.reactivex.functions.Function) result;
+		if(result instanceof Function) {
+			Function<StreamScriptContext,Function<DataItem,DataItem>> merger = (Function<StreamScriptContext,Function<DataItem,DataItem>>) result;
 			pipeElements.add(merger);
 
 		} else if(result instanceof ReactiveTransformer) {

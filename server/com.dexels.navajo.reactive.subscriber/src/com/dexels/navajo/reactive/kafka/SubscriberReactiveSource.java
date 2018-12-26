@@ -12,7 +12,6 @@ import com.dexels.kafka.api.OffsetQuery;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
@@ -22,7 +21,6 @@ import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.protobuf.FallbackReplicationMessageParser;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
 
 
 public class SubscriberReactiveSource implements ReactiveSource {

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream.json;
 
 import java.util.Iterator;
+import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.davidmoten.rx2.Bytes;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
 
 public class JSONObservableTest {
 

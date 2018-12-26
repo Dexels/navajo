@@ -5,10 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -38,7 +36,6 @@ import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 
 public class CoreReactiveFinder implements ReactiveFinder {
-	private final static Logger logger = LoggerFactory.getLogger(CoreReactiveFinder.class);
 
 	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
 	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
@@ -77,6 +74,11 @@ public class CoreReactiveFinder implements ReactiveFinder {
 	
 	public void activate() {
 		//
+		Reactive.setFinderInstance(this);
+	}
+	
+	public void deactivate() {
+		Reactive.setFinderInstance(null);
 	}
 
 	@Override

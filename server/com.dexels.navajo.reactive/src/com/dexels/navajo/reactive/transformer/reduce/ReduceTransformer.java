@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.transformer.reduce;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -13,7 +14,6 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 
 public class ReduceTransformer implements ReactiveTransformer {
 

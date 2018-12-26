@@ -25,6 +25,13 @@ import io.reactivex.Flowable;
 
 public class ReactiveStandalone {
 
+	public static Navajo runBlockingEmptyFromClassPath(String classPathPath) throws ParseException, IOException {
+		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream(classPathPath)) {
+			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
+			return n;
+		}
+	}
+	
 	public static Navajo runBlockingEmpty(InputStream inExpression) throws ParseException, IOException {
 		return runExpression(inExpression, "tenant","service","deployment",NavajoFactory.getInstance().createNavajo())
 				.map(e->e.event())

@@ -37,6 +37,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context,  Optional<ImmutableMessage> current,
 			ImmutableMessage paramMessage) {
 		ReactiveResolvedParameters params = this.parameters.resolve(context, current, paramMessage,metadata);
+		params.resolveAllParams();
 		List<Operand> unnamedParams = params.unnamedParameters();
 //		Object[] unnamedParams = evaluateParams(context, current);
 		String datasource = params.paramString("resource");

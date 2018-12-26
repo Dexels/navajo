@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive.transformer.mergesingle;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -11,7 +12,6 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.Reactive;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
@@ -19,8 +19,6 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 public class MergeSingleTransformer implements ReactiveTransformer {
 
@@ -75,14 +73,16 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 				.map(e->e.value)
 				.orElseThrow(()->new RuntimeException("Missing source"));
 		
-			return flow->flow.map(item->item.withStateMessage(current.orElse(ImmutableFactory.empty())))
+			return flow->flow.map(outerItem->outerItem.withStateMessage(current.orElse(ImmutableFactory.empty())))
 				.flatMap(item->{
+					System.err.println(">>> "+ImmutableFactory.getInstance().describe(item.stateMessage()));
+					System.err.println(">|> "+ImmutableFactory.getInstance().describe(item.message()));
 					Function<? super DataItem, ? extends DataItem> joiner = merge(context,item,mappers);
 					return source.execute(context,  Optional.of(item.message()), item.stateMessage())
 //						.map(e->e.message().merge(item.message(), Optional.empty()))
 						.firstElement()
 						
-						.map(ee->joiner.apply(ee))
+						.map(ee->joiner.apply(ee.withStateMessage(item.message())))
 	//					.map(e->merge(item).apply(e))
 						.toFlowable();
 				}
@@ -103,12 +103,18 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		}
 		List<Function<DataItem,DataItem>> ll = mappers.stream()
 				.map(e->(Function<StreamScriptContext,Function<DataItem,DataItem>>)e.value)
-				.map(e->{
-					return e.apply(context);
-
-				})
+				.map(e->e.apply(context))
 				.collect(Collectors.toList());
-		return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));
+		return mrg->{
+			DataItem result = mrg;
+			for (Function<DataItem, DataItem> function : ll) {
+				result = function.apply(result);
+			}
+			System.err.println(">>>>>>>>> "+ImmutableFactory.getInstance().describe(result.message()));
+			System.err.println(">>>>STATE>>>>> "+ImmutableFactory.getInstance().describe(mrg.stateMessage()));
+			return result;
+		};
+//		return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));
 		
 	}
 

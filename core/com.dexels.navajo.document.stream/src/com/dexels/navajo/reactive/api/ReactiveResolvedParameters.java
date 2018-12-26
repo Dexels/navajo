@@ -14,10 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 
@@ -71,7 +69,8 @@ public class ReactiveResolvedParameters {
 				}
 			}
 		}
-		expectedTypes = validator.parameterTypes();		// TODO Auto-generated constructor stub
+		expectedTypes = validator.parameterTypes();
+		resolveAllParams();
 	}
 	
 	public List<Operand> unnamedParameters() {
@@ -81,7 +80,7 @@ public class ReactiveResolvedParameters {
 	public Map<String,Operand> namedParameters() {
 		return this.resolvedNamed;
 	}
-	public Map<String,Object> resolveAllParams() {
+	private Map<String,Object> resolveAllParams() {
 		if(!allResolved) {
 			resolveNamed();
 			resolveUnnamed();
@@ -109,7 +108,7 @@ public class ReactiveResolvedParameters {
 		// TODO hard fail if null
 		Operand operand = resolvedNamed.get(key);
 		if(operand==null) {
-			logger.warn("Trouble retrieving key: {}, there is no such operand.",key);
+			logger.warn("Trouble retrieving key: {}, there is no such operand. Available: {}",key,resolvedNamed.keySet());
 		}
 		return operand.stringValue();
 	}
@@ -186,9 +185,9 @@ public class ReactiveResolvedParameters {
 	
 	private void resolveNamed() {
 		named.entrySet().forEach(e->{
-			if(e.getKey().equals("zus")) {
-				System.err.println("E: "+e.getValue());
-			}
+//			if(e.getKey().equals("zus")) {
+//				System.err.println("E: "+e.getValue());
+//			}
 			Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(e.getKey())) : Optional.empty();
 			resolveParam(e.getKey(),expectedType,e.getValue());
 		});

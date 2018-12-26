@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.transformer.other;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
@@ -11,7 +12,6 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ParallelMessageStream implements ReactiveTransformer {
@@ -32,7 +32,7 @@ public class ParallelMessageStream implements ReactiveTransformer {
 //		int parallel = parms.optionalInteger("parallel").orElse(1);
 		try {
 			Function<DataItem,DataItem> fi = joiner.apply(context);
-			return flow->flow.parallel().runOn(Schedulers.computation()) .map(fi).sequential();
+			return flow->flow.parallel().runOn(Schedulers.computation()).map(a->fi.apply(a)).sequential();
 		} catch (Exception e1) {
 			return flow->Flowable.error(e1);
 		}
