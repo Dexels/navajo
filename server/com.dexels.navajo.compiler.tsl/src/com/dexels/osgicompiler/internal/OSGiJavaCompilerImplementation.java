@@ -198,14 +198,14 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 				fileObjects);
 		boolean success = task.call();
 		if(!success) {
-			throw new CompilationException(sw.toString());
+			throw new CompilationException(sw.toString()+ "\n" + swe.toString());
 		}
 		
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager
 				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,
 						Kind.CLASS);
 		if (jfo == null) {
-			logger.error("Compilation failed: \n" + sw.toString());
+			logger.error("Compilation failed: \n" + sw.toString() + "\n" + swe.toString());
 			return null;
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
