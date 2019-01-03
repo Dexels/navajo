@@ -50,7 +50,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
       }
       fis.close();
       return new Binary(data);
-    } catch (Exception e) {
+    } catch (Throwable e) {
     	logger.error("Error: ", e);
       return null;
     }

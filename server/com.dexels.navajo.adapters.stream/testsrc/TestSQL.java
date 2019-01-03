@@ -52,7 +52,7 @@ public class TestSQL {
 	}
 
 	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
-		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.columnValue("ORGANIZATIONID"))
+		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", Operand.ofString((String)msg.columnValue("ORGANIZATIONID")))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));

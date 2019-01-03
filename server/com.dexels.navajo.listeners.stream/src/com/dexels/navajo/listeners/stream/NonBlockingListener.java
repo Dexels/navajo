@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.AsyncContext;
@@ -233,7 +234,7 @@ public class NonBlockingListener extends HttpServlet {
 				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
-					.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()), Optional.empty()))
+					.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()), Optional.empty(),rs.methods()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
 					.compose(StreamCompress.compress(responseEncoding))
@@ -409,7 +410,7 @@ public class NonBlockingListener extends HttpServlet {
 			.concatMap(e->e);
 		
 //	au
-        return new StreamScriptContext(tenant, access, attributes, Optional.of(input), Optional.of(this.reactiveScriptEnvironment),
+        return new StreamScriptContext(UUID.randomUUID().toString(), access, attributes, Optional.of(input), Optional.of(this.reactiveScriptEnvironment),
                 Collections.emptyList(), Optional.of(() -> {
                     responseSubscriber.dispose();
                     ac.complete();

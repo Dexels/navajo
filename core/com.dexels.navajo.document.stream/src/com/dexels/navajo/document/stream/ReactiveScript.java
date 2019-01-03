@@ -14,5 +14,6 @@ public interface ReactiveScript {
 	public boolean streamInput();
 //	public Optional<String> streamMessage();
 	public List<ReactiveParseProblem> problems();
+	public List<String> methods();
 	
 }

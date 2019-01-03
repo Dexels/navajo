@@ -85,8 +85,8 @@ public class TestCompiledExpression {
         }
         
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply().value);
-        Assert.assertEquals("TestValue", ss.apply().value);
+        System.err.println("TMLVALUE: "+ss.apply(input,Optional.empty(),Optional.empty()).value);
+        Assert.assertEquals("TestValue", ss.apply(input,Optional.empty(),Optional.empty()).value);
         Assert.assertFalse(ss.isLiteral());
 	}
 

@@ -11,79 +11,81 @@ public interface CompiledParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int AND = 6;
+  int SINGLE_LINE_COMMENT = 6;
   /** RegularExpression Id. */
-  int OR = 7;
+  int AND = 7;
   /** RegularExpression Id. */
-  int NOT = 8;
+  int OR = 8;
   /** RegularExpression Id. */
-  int EQUALS = 9;
+  int NOT = 9;
   /** RegularExpression Id. */
-  int NOT_EQUALS = 10;
+  int EQUALS = 10;
   /** RegularExpression Id. */
-  int TRUE = 11;
+  int NOT_EQUALS = 11;
   /** RegularExpression Id. */
-  int FALSE = 12;
+  int TRUE = 12;
   /** RegularExpression Id. */
-  int TODAY = 13;
+  int FALSE = 13;
   /** RegularExpression Id. */
-  int NAME_OPTION = 14;
+  int TODAY = 14;
   /** RegularExpression Id. */
-  int VALUE_OPTION = 15;
+  int NAME_OPTION = 15;
   /** RegularExpression Id. */
-  int BEGIN_LIST = 16;
+  int VALUE_OPTION = 16;
   /** RegularExpression Id. */
-  int END_LIST = 17;
+  int BEGIN_LIST = 17;
   /** RegularExpression Id. */
-  int LIST_SEPARATOR = 18;
+  int END_LIST = 18;
   /** RegularExpression Id. */
-  int ADD = 19;
+  int LIST_SEPARATOR = 19;
   /** RegularExpression Id. */
-  int MUL = 20;
+  int ADD = 20;
   /** RegularExpression Id. */
-  int MIN = 21;
+  int MUL = 21;
   /** RegularExpression Id. */
-  int DIV = 22;
+  int MIN = 22;
   /** RegularExpression Id. */
-  int MOD = 23;
+  int DIV = 23;
   /** RegularExpression Id. */
-  int NULL = 24;
+  int MOD = 24;
   /** RegularExpression Id. */
-  int PIPE = 25;
+  int NULL = 25;
   /** RegularExpression Id. */
-  int HEADER = 26;
+  int PIPE = 26;
   /** RegularExpression Id. */
-  int SARTRE = 27;
+  int HEADER = 27;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 28;
+  int SARTRE = 28;
   /** RegularExpression Id. */
-  int FLOAT_LITERAL = 29;
+  int INTEGER_LITERAL = 29;
   /** RegularExpression Id. */
-  int TML_IDENTIFIER = 30;
+  int FLOAT_LITERAL = 30;
   /** RegularExpression Id. */
-  int EXISTS_TML_IDENTIFIER = 31;
+  int TML_IDENTIFIER = 31;
   /** RegularExpression Id. */
-  int REGULAREXPRESSION = 32;
+  int EXISTS_TML_IDENTIFIER = 32;
   /** RegularExpression Id. */
-  int PARENT_MSG = 33;
+  int REGULAREXPRESSION = 33;
   /** RegularExpression Id. */
-  int REGULAR1 = 34;
+  int PARENT_MSG = 34;
   /** RegularExpression Id. */
-  int REGULAR2 = 35;
+  int REGULAR1 = 35;
   /** RegularExpression Id. */
-  int IDENTIFIER = 36;
+  int REGULAR2 = 36;
   /** RegularExpression Id. */
-  int LETTER = 37;
+  int IDENTIFIER = 37;
   /** RegularExpression Id. */
-  int DIGIT = 38;
+  int LETTER = 38;
   /** RegularExpression Id. */
-  int NORMAL_IDENTIFIER = 39;
+  int DIGIT = 39;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 40;
+  int NORMAL_IDENTIFIER = 40;
   /** RegularExpression Id. */
-  int EXPRESSION_LITERAL = 41;
+  int STRING_LITERAL = 41;
   /** RegularExpression Id. */
-  int TIPI_IDENTIFIER = 42;
+  int EXPRESSION_LITERAL = 42;
+  /** RegularExpression Id. */
+  int TIPI_IDENTIFIER = 43;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -96,6 +98,7 @@ public interface CompiledParserConstants {
     "\"\\r\"",
     "\"\\n\"",
     "\"\\f\"",
+    "<SINGLE_LINE_COMMENT>",
     "\"AND\"",
     "\"OR\"",
     "\"!\"",

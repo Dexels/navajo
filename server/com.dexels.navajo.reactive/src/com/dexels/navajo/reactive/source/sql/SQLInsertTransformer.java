@@ -49,8 +49,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 			}
 			FlowableTransformer<DataItem, DataItem> result = flow->flow.map(m->{
 				List<Operand> operand = parameters.resolve(context,Optional.of(m.message()), ImmutableFactory.empty(),metadata).unnamedParameters();
-				Object[] params = operand.stream()
-						.toArray();
+				Operand[] params = (Operand[]) operand.toArray();
 				if(debug) {
 					logger.info("Transforming inputmessage {}",ImmutableFactory.createParser().describe(m.message()));
 					logger.info("Unnamed params: {}",params);

@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
 
@@ -64,6 +65,7 @@ public class TestCompiledExpression {
 		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",name->FunctionClassification.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType());
+		System.err.println("immutable: "+o.isLiteral());
 		if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
 			Assert.assertEquals(1, problems.size());
 		} else {
@@ -81,8 +83,33 @@ public class TestCompiledExpression {
 		System.err.println("returntype: "+o.returnType().orElse("<unknown>"));
 		Assert.assertTrue("Expected a return type here", o.returnType().isPresent());
 		Assert.assertEquals("string", o.returnType().get());
+		System.err.println("immutable: "+o.isLiteral());
 	}
 	
+	@Test
+	public void testImmutablilityPropagation() throws TMLExpressionException {
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
+		System.err.println("problems: "+problems);
+		System.err.println("immutable: "+o.isLiteral());
+		Assert.assertTrue(o.isLiteral());
+	}
+	@Test
+	public void testImmutablilityPropagationPerformance() throws TMLExpressionException {
+		CacheSubexpression.setCacheSubExpression(true);;
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < 100000000; i++) {
+			String tr = (String) o.apply().value;
+//			System.err.println("tr:" +tr);
+		}
+		System.err.println("Now: "+(System.currentTimeMillis()-now));
+		System.err.println("problems: "+problems);
+		System.err.println("immutable: "+o.isLiteral());
+		Assert.assertTrue(o.isLiteral());
+	}
+		
 	@Test
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();

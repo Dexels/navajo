@@ -40,7 +40,6 @@ public class SetSingle implements ReactiveMerger {
 			if(!condition) {
 				return item;
 			}
-			parms.resolveAllParams();
 			// will use the second message as input, if not present, will use the source message
 			for (Entry<String,Operand> elt : parms.namedParameters().entrySet()) {
 				if(!elt.getKey().equals("condition")) {

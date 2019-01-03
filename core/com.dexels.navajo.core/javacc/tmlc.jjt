@@ -7,11 +7,14 @@ options {
    MULTI=true;
    LOOKAHEAD=2;
    STATIC=false;
+   TRACK_TOKENS=true;
    NODE_PACKAGE="com.dexels.navajo.parser.compiled";
 }
 
 PARSER_BEGIN(CompiledParser)
 package com.dexels.navajo.parser.compiled;
+
+import com.dexels.navajo.parser.*;
 
 public class CompiledParser {
 
@@ -26,6 +29,12 @@ SKIP:
 {
  " " | "\t" | "\r" | "\n" | "\f"
 }
+
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+}
+
 
 TOKEN:
 {
@@ -172,8 +181,8 @@ void ReactivePipe() #void:
 {
 }
 {
-	OrExpression()
-	(<PIPE> OrExpression() #ReactivePipe(2))*
+	OrExpression() 
+	(<PIPE> OrExpression() #ReactivePipe(2))* 
 } 
 
 void OrExpression() #void:
@@ -366,6 +375,7 @@ void ReactiveScript() #void:
 }
 {
 	(
+		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
 		(
 			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
 		) 

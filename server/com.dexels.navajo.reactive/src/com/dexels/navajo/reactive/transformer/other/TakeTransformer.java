@@ -26,7 +26,6 @@ public class TakeTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters parms = parameters.resolve(context, current, param, metadata);
-		parms.resolveAllParams();
 		int count = parms.unnamedParameters().stream().findFirst().orElse(Operand.ofInteger(0)).integerValue(); //parms.paramInteger("count");
 		System.err.println(">>>> "+count);
 		return e->e.take(count);

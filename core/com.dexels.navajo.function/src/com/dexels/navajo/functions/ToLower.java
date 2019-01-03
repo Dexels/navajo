@@ -37,7 +37,7 @@ public String remarks() {
   }
   @Override
 	public boolean isPure() {
-  		return false;
+   		return true;
   }
 
 }

@@ -27,10 +27,14 @@ import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.ToSubMessageList;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
+import com.dexels.navajo.reactive.transformer.eventstream.EventStreamMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FirstTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceToListTransformerFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
@@ -60,26 +64,20 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		
 		addReactiveSourceFactory(new SingleSourceFactory(), "single");
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
+		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
 		
+		addReactiveTransformerFactory(new ParseEventStreamFactory(), "streamtoimmutable");
 		addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
 		addReactiveTransformerFactory(new TakeTransformerFactory(), "take");
 		addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"join");
 		addReactiveTransformerFactory(new FirstTransformerFactory(),"first");
+		addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
 
 	}
 
-	
-	public void activate() {
-		//
-		Reactive.setFinderInstance(this);
-	}
-	
-	public void deactivate() {
-		Reactive.setFinderInstance(null);
-	}
 
 	@Override
 	public final Set<String> sourceFactories() {

@@ -26,6 +26,7 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
 import com.dexels.navajo.parser.NamedExpression;
+import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
@@ -82,8 +83,6 @@ public final class ASTFunctionNode extends SimpleNode {
 		}
 		
 		FunctionClassification mode = functionClassifier.apply(functionName);
-
-		System.err.println("Resolved function: "+functionName+" to type: "+mode);
 		switch (mode) {
 			
 			case REACTIVE_HEADER:
@@ -122,13 +121,14 @@ public final class ASTFunctionNode extends SimpleNode {
 		} catch (Throwable e2) {
 			typechecklogger.error("Typechecker itself failed when parsing: "+expression+" function definition: "+typeCheckInstance+" Error: ", e2);
 		}
-		
-		return new ContextExpression() {
+		boolean isImmutable = typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
+
+		ContextExpression dynamic = new ContextExpression() {
 			
 			@Override
 			public boolean isLiteral() {
 				// TODO also check named params
-				return typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
+				return isImmutable;
 			}
 			
 			@Override
@@ -167,6 +167,41 @@ public final class ASTFunctionNode extends SimpleNode {
 				return expression;
 			}
 		};
+		System.err.println(">||>>||>> "+CacheSubexpression.getCacheSubExpression());
+		if(isImmutable && CacheSubexpression.getCacheSubExpression()) {
+			Optional<String> returnType = dynamic.returnType();
+			String immutablExpression = dynamic.expression();
+			Operand resolved = dynamic.apply();
+//			Thread.dumpStack();
+//			logger.info("Returning pre-evaluated function call for: {} expression: {}",functionName,expression);
+			return new ContextExpression() {
+				
+				@Override
+				public Optional<String> returnType() {
+					return returnType;
+				}
+				
+				@Override
+				public boolean isLiteral() {
+					return true;
+				}
+				
+				@Override
+				public String expression() {
+					return immutablExpression;
+				}
+				
+				@Override
+				public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+						MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+						Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					return resolved;
+				}
+			};
+		} else {
+			return dynamic;
+		}
+
 	}
 
 }

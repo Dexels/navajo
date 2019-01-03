@@ -46,7 +46,8 @@ public class CallTransformer implements ReactiveTransformer {
 				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
 			}
 			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
-			return ff.map(ee->callService(context,service,debug).apply(ee)).concatMap(e->e);
+			return ff.map(ee->callService(context,service,debug).apply(ee))
+					.concatMap(e->e);
 			
 //			return ff.map(fx->{
 //				StreamScriptContext ctx = context.withInput(fx)

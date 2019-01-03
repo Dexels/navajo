@@ -106,6 +106,7 @@ public class StreamScriptContext {
 		Access a = this.access;
 		Access acc = new Access(a.userID, a.serviceID, a.getRpcUser(), service, a.userAgent, a.ipAddress, a.hostName, a.getUserCertificate(), a.betaUser, a.accessID);
 		acc.setInDoc(a.getInDoc());
+		acc.setTenant(a.getTenant());
 //		acc.setI
 		return new StreamScriptContext(this.uuid, acc, attributes, inputFlowable,runner, methods,onDispose,this.runningScripts);
 	}

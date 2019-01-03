@@ -6,14 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
@@ -24,6 +21,7 @@ class ASTReactivePipe extends SimpleNode {
     super(id);
   }
 
+@SuppressWarnings("unchecked")
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 

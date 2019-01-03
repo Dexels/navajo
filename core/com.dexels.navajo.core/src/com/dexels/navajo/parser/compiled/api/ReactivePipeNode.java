@@ -21,17 +21,19 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public class ReactivePipeNode implements ContextExpression {
 	public final ReactiveSource source;
 	public final List<Object> transformers;
+	private final Operand actual;
 
 	public ReactivePipeNode(ReactiveSource source, List<Object> transformers) {
 		this.source = source;
 		this.transformers = transformers;
+		this.actual = new Operand(new ReactivePipe(source, transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
 	}
 
 	@Override
 	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		return new Operand(new ReactivePipe(source, transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
+		return actual;
 	}
 
 	@Override

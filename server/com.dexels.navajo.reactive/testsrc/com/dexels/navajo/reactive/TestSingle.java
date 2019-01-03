@@ -68,7 +68,9 @@ public class TestSingle {
 		TakeTransformerFactory takeTransformerFactory = new TakeTransformerFactory();
 		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty(takeTransformerFactory)
-				.withConstant("count", 5, Property.INTEGER_PROPERTY);
+				.withConstant(Operand.ofInteger(5));
+//				.withConstant("count", 5, Property.INTEGER_PROPERTY);
+		
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 
 		ReactiveTransformer takeTransformer = takeTransformerFactory.build(problems,transformerParameter);

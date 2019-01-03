@@ -3,7 +3,10 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -16,6 +19,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
+import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
@@ -24,7 +28,10 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public
 class ASTReactiveScriptNode extends SimpleNode {
   public int args = 0;
+  public int headers = 0;
+  public boolean hasHeader = false;
   public ASTFunctionNode header = null;
+  private final Map<String,Operand> headerMap = new HashMap<>();
   public ASTReactiveScriptNode(int id) {
     super(id);
   }
@@ -33,8 +40,30 @@ class ASTReactiveScriptNode extends SimpleNode {
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 	// TODO support headers;
 	List<ReactivePipeNode> pipes = new ArrayList<>();
-	for (int i = 0; i < jjtGetNumChildren(); i++) {
-		ASTReactivePipe pipe = (ASTReactivePipe) jjtGetChild(i);
+	int start = hasHeader ? headers : 0;
+	
+	System.err.println(">>> "+hasHeader);
+	if(hasHeader) {
+		for (int i = 0; i < headers; i++) {
+			ASTKeyValueNode hdr = (ASTKeyValueNode) jjtGetChild(i);	
+			NamedExpression ne = (NamedExpression) hdr.interpretToLambda(problems, originalExpression, functionClassifier);
+			String key = ne.name;
+			headerMap.put(key, ne.apply());
+		}
+		System.err.println(">>> "+headerMap);
+//		Operand oo = context.apply();
+	}
+	System.err.println("Start@ "+start);
+	int count = jjtGetNumChildren();
+	for (int i = start; i < count; i++) {
+		Node child = jjtGetChild(i);
+		ASTReactivePipe pipe = null;
+		if(child instanceof ASTReactivePipe) {
+			pipe = (ASTReactivePipe) child;
+		} else {
+			pipe = new ASTReactivePipe(1);
+			pipe.jjtAddChild(child, 0);
+		}
 		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
 		pipes.add(node);
 	}
@@ -64,6 +93,10 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	};
 }
 
-
+	public List<String> methods() {
+		String methodStr = this.headerMap.getOrDefault("methods", Operand.ofString("")).stringValue();
+		return Arrays.asList(methodStr.split(","));
+		
+	}
 }
 /* JavaCC - OriginalChecksum=1b3774ce274fd31113ba44556c6878a0 (do not edit this line) */

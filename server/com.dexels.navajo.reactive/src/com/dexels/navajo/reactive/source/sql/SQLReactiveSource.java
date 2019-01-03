@@ -1,6 +1,5 @@
 package com.dexels.navajo.reactive.source.sql;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -37,8 +36,7 @@ public class SQLReactiveSource implements ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context,  Optional<ImmutableMessage> current,
 			ImmutableMessage paramMessage) {
 		ReactiveResolvedParameters params = this.parameters.resolve(context, current, paramMessage,metadata);
-		params.resolveAllParams();
-		List<Operand> unnamedParams = params.unnamedParameters();
+		Operand[] unnamedParams = params.unnamedParametersArray();
 //		Object[] unnamedParams = evaluateParams(context, current);
 		String datasource = params.paramString("resource");
 		String query = params.paramString("query");
@@ -46,11 +44,11 @@ public class SQLReactiveSource implements ReactiveSource {
 		boolean debug = params.optionalBoolean("debug").orElse(false);
 		if(debug) {
 			logger.info("Starting SQL query to resource: {} and query:\n{}",datasource,query);
-			for (Object object : unnamedParams) {
-				logger.info(" -> param : {}",object);
+			for (Operand object : unnamedParams) {
+				logger.info(" -> param : {} / {}",object.type,object.value);
 			}
 		}
-		Flowable<DataItem> flow = SQL.query(datasource, queryTenant.orElseGet(()->context.getTenant()), query, unnamedParams)
+		Flowable<DataItem> flow = SQL.query(datasource, queryTenant.orElseGet(()->context.getTenant()), query,unnamedParams)
 				.map(d->DataItem.of(d).withStateMessage(current.orElse(ImmutableFactory.empty())));
 		if(debug) {
 			flow = flow.doOnNext(dataitem->{

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
@@ -141,7 +143,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			throw new IOException("Error parsing script: "+serviceName,e);
 		}
 		List<String> problems = new ArrayList<>();
-		ContextExpression src = (ContextExpression) cp.getJJTree().rootNode().interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+		ASTReactiveScriptNode scriptNode = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
+		ContextExpression src = (ContextExpression) scriptNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
 
 		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
 //		return new Reac
@@ -178,6 +181,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			public Optional<String> binaryMimeType() {
 				// TODO implement again
 				return Optional.empty();
+			}
+
+			@Override
+			public List<String> methods() {
+				return scriptNode.methods();
+//				return Arrays.asList(new String[]{"aap/noot,mies/wim"});
 			}
 		};
 	}

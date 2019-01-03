@@ -77,6 +77,10 @@ public class ReactiveResolvedParameters {
 		return this.resolvedUnnamed;
 	}
 	
+	public Operand[] unnamedParametersArray() {
+		return this.resolvedUnnamed.toArray(new Operand[] {});
+	}
+	
 	public Map<String,Operand> namedParameters() {
 		return this.resolvedNamed;
 	}

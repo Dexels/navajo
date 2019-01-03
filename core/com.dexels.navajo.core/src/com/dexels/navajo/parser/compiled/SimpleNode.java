@@ -24,6 +24,8 @@ public abstract class SimpleNode implements Node {
     protected Node parent;
     protected Node[] children;
     protected int id;
+	private Token lastToken;
+	private Token firstToken;
 
     public SimpleNode(int i) {
         id = i;
@@ -218,6 +220,19 @@ public abstract class SimpleNode implements Node {
     
     protected boolean allLiteral(List<ContextExpression> in) {
     	return in.stream().allMatch(e->e.isLiteral());
+    }
+    
+    public Token jjtGetFirstToken() {
+    	return this.firstToken;
+    }
+    public void jjtSetFirstToken(Token token) {
+    	this.firstToken = token;
+    }
+    public Token jjtGetLastToken() {
+    	return this.lastToken;
+    }
+    public void jjtSetLastToken(Token token) {
+    	this.lastToken = token;
     }
 }
 

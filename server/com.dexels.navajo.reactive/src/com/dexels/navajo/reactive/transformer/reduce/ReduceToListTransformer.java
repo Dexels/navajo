@@ -40,7 +40,6 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
-		parms.resolveAllParams();
 		// MUTABLE EDITION!
 			return flow->{
 			try {

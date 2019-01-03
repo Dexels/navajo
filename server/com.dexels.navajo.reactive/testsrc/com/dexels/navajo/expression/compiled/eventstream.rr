@@ -1,0 +1,5 @@
+eventsource(classpath='tmlinput.xml')
+	->flatten()
+	->streamtoimmutable(path='/Bla')
+    ->stream(messageName='Oe',isArray=true)
+	

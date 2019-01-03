@@ -57,7 +57,6 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
 		ReactiveResolvedParameters params = parameters.resolve(context, current, param, metadata);
-		params.resolveAllParams();
 		System.err.println("unnamedcount: "+params.unnamedParameters().size());
 		for (Operand oo : params.unnamedParameters()) {
 			System.err.println("Operand: "+oo.type+" >> "+oo.value);
@@ -66,10 +65,6 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		ReactivePipe source = (ReactivePipe) params.unnamedParameters()
 				.stream()
 				.findFirst()
-				.map(o->{
-					System.err.println("<<>> PIPE? "+o.type+" val: "+o.value.getClass());
-					return o;
-				})
 				.map(e->e.value)
 				.orElseThrow(()->new RuntimeException("Missing source"));
 		

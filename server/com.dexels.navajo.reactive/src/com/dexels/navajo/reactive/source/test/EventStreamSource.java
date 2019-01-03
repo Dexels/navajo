@@ -57,8 +57,7 @@ public class EventStreamSource implements ReactiveSource {
 
 	@Override
 	public Type sourceType() {
-		// TODO Auto-generated method stub
-		return null;
+		return Type.EVENT;
 	}
 
 }

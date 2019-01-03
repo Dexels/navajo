@@ -28,7 +28,7 @@ public class IsDateBetween  {
 	    id.insertStringOperand("2018-06-01");
 
 		Object o = id.evaluate();
-		assertTrue((Boolean)o == true);
+		assertTrue((Boolean)o == false);
 	}
 	
 @Test

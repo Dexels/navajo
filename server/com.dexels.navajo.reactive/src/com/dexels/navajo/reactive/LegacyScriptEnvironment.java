@@ -89,6 +89,11 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			public boolean streamInput() {
 				return false;
 			}
+
+			@Override
+			public List<String> methods() {
+				return Collections.emptyList();
+			}
 		};
 //		
 	}
