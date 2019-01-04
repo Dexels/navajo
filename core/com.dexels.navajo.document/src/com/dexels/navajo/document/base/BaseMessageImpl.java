@@ -1662,6 +1662,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
     
     @Override
+    public List<Message> getSortedElements() {
+        if (messageList == null) {
+            return new ArrayList<Message>();
+        } else {
+        	ArrayList<Message> result = new ArrayList<Message>(messageList);
+        	if (!"".equals(orderBy)) {
+                Collections.sort(result);
+            }
+            return result;
+        }
+    }
+    
+    @Override
     public void merge(Message incoming, boolean preferThis) {
     	merge(incoming, preferThis, true);
     }
