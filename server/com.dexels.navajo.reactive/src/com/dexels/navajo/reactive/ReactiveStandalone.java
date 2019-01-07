@@ -29,19 +29,18 @@ public class ReactiveStandalone {
 
 	public static Navajo runBlockingEmptyFromClassPath(String classPathPath) throws ParseException, IOException {
 		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream(classPathPath)) {
-			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
+			Navajo n = ReactiveStandalone.runBlockingEmpty(in, Optional.empty());
 			return n;
 		}
 	}
-	public static Navajo runBlockingEmpty(String inExpression) throws ParseException, IOException {
-		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()));
+	public static Navajo runBlockingEmpty(String inExpression, Optional<String> binaryMime) throws ParseException, IOException {
+		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()),binaryMime);
 	}
-	public static Navajo runBlockingEmpty(InputStream inExpression) throws ParseException, IOException {
-		CompiledReactiveScript crs = compileReactiveScript(inExpression);
+	public static Navajo runBlockingEmpty(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
+		CompiledReactiveScript crs = compileReactiveScript(inExpression,binaryMime);
 		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInputNavajo(NavajoFactory.getInstance().createNavajo());
 
 		return Flowable.fromIterable(crs.pipes)
-//				.map(e->((ReactivePipe)e.apply().value))
 				.concatMap(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()))
 				.map(e->e.event())
 				.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),crs.methods))
@@ -49,7 +48,8 @@ public class ReactiveStandalone {
 				.compose(StreamDocument.domStreamCollector())
 				.blockingFirst();
 }
-	private static CompiledReactiveScript compileReactiveScript(InputStream inExpression) throws ParseException, IOException {
+	@SuppressWarnings("unchecked")
+	private static CompiledReactiveScript compileReactiveScript(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
 		try(Reader in = new InputStreamReader(inExpression)) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactiveScript();
@@ -60,7 +60,7 @@ public class ReactiveStandalone {
 			System.err.println("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
 			System.err.println("Sourcetype: "+src);
 			List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
-			return new CompiledReactiveScript(pp, rootNode.methods());
+			return new CompiledReactiveScript(pp, rootNode.methods(),binaryMime);
 		}
 	}
 

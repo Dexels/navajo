@@ -1,6 +1,7 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class TestReactiveParser {
 	public void testFilter() throws ParseException, IOException {
 //		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
 			
-			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"));
+			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
 			int size = n.getMessage("Blem").getArraySize();
 			System.err.println("size: "+size);
 			n.write(System.err);
@@ -39,7 +40,7 @@ public class TestReactiveParser {
 	
 	@Test
 	public void readSingleScript() throws ParseException, IOException {
-		Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("single.rr"));
+		Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("single.rr"),Optional.empty());
 		n.write(System.err);
 	}
 
@@ -107,4 +108,18 @@ public class TestReactiveParser {
 		Integer val = (Integer) m.getMessage(1).getProperty("jet").getTypedValue();
 		Assert.assertEquals(1, val.intValue());
 	}
+	
+	@Test
+	public void testStream( ) throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/impliciteventstreamparse.rr");
+		n.write(System.err);
+		Message m = n.getMessage("Oe");
+		int size = m.getArraySize();
+		Assert.assertEquals(2, size);
+		Integer val = (Integer) m.getMessage(1).getProperty("jet").getTypedValue();
+		Assert.assertEquals(1, val.intValue());
+	}
+	
+
+
 }

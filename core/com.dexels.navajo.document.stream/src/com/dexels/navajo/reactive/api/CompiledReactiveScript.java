@@ -21,8 +21,9 @@ public class CompiledReactiveScript implements ReactiveScript{
 	public final List<String> methods;
 	private final Type type;
 	private final boolean streamInput;
+	private Optional<String> binaryMime;
 
-	public CompiledReactiveScript(List<ReactivePipe> pipes, List<String> methods) {
+	public CompiledReactiveScript(List<ReactivePipe> pipes, List<String> methods, Optional<String> binaryMime) {
 		this.pipes = pipes;
 		this.methods = methods;
 		Set<Type> dataTypes = pipes.stream().map(p->p.finalType()).collect(Collectors.toSet());
@@ -31,6 +32,7 @@ public class CompiledReactiveScript implements ReactiveScript{
 		}
 		this.type = dataTypes.stream().findFirst().orElseThrow(()->new RuntimeException("Huh?"));
 		this.streamInput = pipes.stream().anyMatch(e->e.streamInput());
+		this.binaryMime = binaryMime;
 	}
 
 	@Override
@@ -45,8 +47,7 @@ public class CompiledReactiveScript implements ReactiveScript{
 
 	@Override
 	public Optional<String> binaryMimeType() {
-		// TODO Auto-generated method stub
-		return null;
+		return binaryMime;
 	}
 
 	@Override

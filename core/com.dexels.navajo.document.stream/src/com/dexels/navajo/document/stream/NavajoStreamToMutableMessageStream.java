@@ -31,23 +31,26 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	private final Stack<Message> messageStack = new Stack<Message>();
 	private final Stack<String> tagStack = new Stack<>();
 	private final Stack<String> matchStack = new Stack<>();
-
+	private final boolean hasPath;
 	public NavajoStreamToMutableMessageStream(Optional<String> path) {
 		super(10);
-		
+		this.hasPath = path.isPresent();
 		if(path.isPresent()) {
 			for (String element : path.get().split("/")) {
 				matchStack.push(element);
 			}
 		} else {
-			Message msg = NavajoFactory.getInstance().createMessage(null,"",Message.MSG_TYPE_SIMPLE);
-			messageStack.push(msg);
+//			Message msg = NavajoFactory.getInstance().createMessage(null,"",Message.MSG_TYPE_SIMPLE);
+//			messageStack.push(msg);
 		}
 		
 	}
 	
 	private boolean emitStack() {
-		return  this.tagStack.equals(this.matchStack);
+		boolean b = (this.matchStack.isEmpty() && this.tagStack.size()==1) || this.tagStack.equals(this.matchStack);
+		System.err.println("emit? "+b+" empty? "+this.matchStack.isEmpty());
+		System.err.println("tagStack: "+this.tagStack+" >> "+this.matchStack);
+		return  b;
 	}
 	
 	private Flowable<Message> navajoEventComplete() {
@@ -68,7 +71,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	}
 	
 	public Flowable<Message> processNavajoEvent(NavajoStreamEvent n)  {
-//		System.err.println("Processing event with type: "+n.type()+" path: "+n.path());
 		switch (n.type()) {
 		case NAVAJO_STARTED:
 			return Flowable.empty();
@@ -92,7 +94,13 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			tagStack.push(n.path());
 			return Flowable.empty();
 		case MESSAGE:
-			Message msgParent = messageStack.pop();
+//			if(messageStack.isEmpty())
+			Message msgParent = null;
+			if (messageStack.isEmpty()) {
+				msgParent = NavajoFactory.getInstance().createMessage(null, n.path(),Message.MSG_TYPE_SIMPLE);				
+			} else {
+				msgParent = messageStack.pop();
+			}
 			Msg mm = (Msg)n.body();
 			List<Prop> msgProps = mm.properties();
 			for (Prop e : msgProps) {
@@ -102,9 +110,11 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 				tagStack.pop();
 				return Flowable.just(msgParent);
 			}
+
 			tagStack.pop();
 			return Flowable.empty();
 		case ARRAY_STARTED:
+			System.err.println("n: "+n.path());
 			tagStack.push(n.path());
 //			String path = currentPath();
 //			AtomicInteger cnt = arrayCounts.get(path);
