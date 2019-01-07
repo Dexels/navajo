@@ -58,11 +58,10 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 		return new ReactiveScript() {
 			
 			@Override
-			public Flowable<DataItem> execute(StreamScriptContext context) {
+			public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
 				StreamScriptContext ctx = context.withService(service);
 				try {
-					Flowable<DataItem> map = Flowable.just(DataItem.ofEventStream(runLegacy(ctx,debug)));
-					return map;
+					return Flowable.just(Flowable.just(DataItem.ofEventStream(runLegacy(ctx,debug))));
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 					return Flowable.error(e);
@@ -156,6 +155,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	private final Navajo execute(StreamScriptContext context, Navajo in) throws IOException {
 		MDC.put("instance", context.getTenant());
+		in.removeHeader();
 		if(in.getHeader()==null) {
 			in.addHeader(NavajoFactory.getInstance().createHeader(in, context.getService(), context.getUsername(), "", -1));
 		}

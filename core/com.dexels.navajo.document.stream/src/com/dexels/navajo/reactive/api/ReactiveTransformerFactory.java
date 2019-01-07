@@ -10,15 +10,8 @@ import com.dexels.navajo.document.stream.ReactiveParseProblem;
 
 public interface ReactiveTransformerFactory extends TransformerMetadata {
 	public ReactiveTransformer build(
-			Type parentType,
 			List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters,
-			ReactiveBuildContext buildContext
+			ReactiveParameters parameters
 			);
-
-	default 	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
-		ReactiveBuildContext buildContext = ReactiveBuildContext.of(n->null,(n,type)->null,n->null,Collections.emptySet(),Collections.emptySet(),true);
-		return build(Type.ANY, problems,parameters,buildContext);
-	}
 
 }

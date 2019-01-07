@@ -24,8 +24,8 @@ public class StoreFactory implements ReactiveTransformerFactory {
 	// TODO fix, now broken. Do we need it?
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -34,8 +34,8 @@ public class AsyncTransformerFactory implements ReactiveTransformerFactory, Tran
     
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 //		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 //		Optional<ReactiveSource> subSource;

@@ -187,10 +187,12 @@ public class NonBlockingListener extends HttpServlet {
 //			if(!rs.streamInput()) {			}
 
 			Flowable<DataItem> execution = rs.streamInput() ? 
-					rs.execute(context) 
+					rs.execute(context).concatMapEager(e->e)
 					: context.getInput()
 						.map(n->context.withInputNavajo(n))
-						.map(ctx->rs.execute(ctx))
+						.map(ctx->rs.execute(ctx)
+								.concatMapEager(e->e)
+								)
 						.toFlowable()
 						.flatMap(elt->elt)
 						.doOnComplete(()->context.complete())

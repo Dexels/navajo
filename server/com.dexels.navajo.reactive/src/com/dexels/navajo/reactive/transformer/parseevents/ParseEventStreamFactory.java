@@ -24,10 +24,8 @@ public class ParseEventStreamFactory implements ReactiveTransformerFactory, Tran
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			ReactiveBuildContext buildContext) {
-
-		return new ParseEventStream(this,parameters,parentType);
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
+		return new ParseEventStream(this,parameters);
 	}
 
 

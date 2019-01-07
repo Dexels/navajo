@@ -23,8 +23,8 @@ public class BufferMessageFactory implements ReactiveTransformerFactory, Transfo
 
 	
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 
 		return new BufferMessage(this,parameters);

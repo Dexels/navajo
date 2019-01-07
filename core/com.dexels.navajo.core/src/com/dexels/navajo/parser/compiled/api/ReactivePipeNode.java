@@ -19,13 +19,9 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class ReactivePipeNode implements ContextExpression {
-	public final ReactiveSource source;
-	public final List<Object> transformers;
 	private final Operand actual;
 
 	public ReactivePipeNode(ReactiveSource source, List<Object> transformers) {
-		this.source = source;
-		this.transformers = transformers;
 		this.actual = new Operand(new ReactivePipe(source, transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
 	}
 
@@ -36,6 +32,9 @@ public class ReactivePipeNode implements ContextExpression {
 		return actual;
 	}
 
+	public boolean isStreamInput() {
+		return ((ReactivePipe)this.actual.value).source.streamInput();
+	}
 	@Override
 	public boolean isLiteral() {
 		return true;

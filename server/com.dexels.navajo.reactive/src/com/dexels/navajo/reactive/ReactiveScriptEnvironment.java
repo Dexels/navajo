@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +147,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 
 		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
 //		return new Reac
-		final boolean streamInput = pipes.stream().anyMatch(e->e.source.streamInput());
+		final boolean streamInput = pipes.stream().anyMatch(e->e.isStreamInput());
 
 		List<ReactivePipe> resolvedPipes = pipes.stream().map(node->(ReactivePipe)node.apply().value).collect(Collectors.toList());
 //		ReactivePipe pipe = (ReactivePipe) pipes.stream().findAny().get().apply().value;
@@ -167,8 +166,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			}
 			
 			@Override
-			public Flowable<DataItem> execute(StreamScriptContext context) {
-				return Flowable.fromIterable(resolvedPipes).concatMapEager(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
+			public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
+				return Flowable.fromIterable(resolvedPipes).map(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
 //				return pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
 			}
 			

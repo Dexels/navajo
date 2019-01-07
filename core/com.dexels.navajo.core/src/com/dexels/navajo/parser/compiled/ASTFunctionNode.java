@@ -167,7 +167,6 @@ public final class ASTFunctionNode extends SimpleNode {
 				return expression;
 			}
 		};
-		System.err.println(">||>>||>> "+CacheSubexpression.getCacheSubExpression());
 		if(isImmutable && CacheSubexpression.getCacheSubExpression()) {
 			Optional<String> returnType = dynamic.returnType();
 			String immutablExpression = dynamic.expression();

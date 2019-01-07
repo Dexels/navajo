@@ -46,8 +46,12 @@ public class CallTransformer implements ReactiveTransformer {
 				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
 			}
 			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
-			return ff.map(ee->callService(context,service,debug).apply(ee))
-					.concatMap(e->e);
+			Flowable<Flowable<DataItem>> concatMap = ff.concatMap(ee->callService(context,service,debug).apply(ee));
+			return concatMap.concatMap(e->e);
+			
+//			return ff.doOnNext(e->System.err.println("Calling service: "+service))
+//					.map(ee->callService(context,service,debug).apply(ee))
+//					.concatMap(e->e);
 			
 //			return ff.map(fx->{
 //				StreamScriptContext ctx = context.withInput(fx)
@@ -67,14 +71,21 @@ public class CallTransformer implements ReactiveTransformer {
 		};
 	}
 
-	private Function<Flowable<NavajoStreamEvent>,Flowable<DataItem>> callService(StreamScriptContext context, String service, boolean debug) {
+		
+	private Function<Flowable<NavajoStreamEvent>,Flowable<Flowable<DataItem>>> callService(StreamScriptContext context, String service, boolean debug) {
 		return fx->{
 			
 			StreamScriptContext ctx = context
 			        .withInput(fx)
 					.withService(service);
 			try {
-				Flowable<DataItem> x = context.runner().build(service, debug).execute(ctx);
+				Flowable<Flowable<DataItem>> x = Flowable.just(
+							context.runner()
+								.build(service, debug)
+								.execute(ctx)
+								.concatMap(e->e)
+								
+							);
 				return x;
 			} catch (IOException e1) {
 				e1.printStackTrace();

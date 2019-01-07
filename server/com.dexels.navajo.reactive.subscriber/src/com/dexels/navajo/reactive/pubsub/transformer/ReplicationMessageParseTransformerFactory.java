@@ -26,8 +26,7 @@ public class ReplicationMessageParseTransformerFactory implements ReactiveTransf
 	FallbackReplicationMessageParser parser = new FallbackReplicationMessageParser(true);
 
 	@Override
-	public ReactiveTransformer build(Type parentType,List<ReactiveParseProblem> problems,ReactiveParameters parameters,
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,ReactiveParameters parameters) {
 		return new ReplicationMessageParseTransformer(this, parser,parameters);
 	}
 

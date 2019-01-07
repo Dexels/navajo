@@ -22,8 +22,8 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class FlattenMsgStreamFactory implements ReactiveTransformerFactory, TransformerMetadata {
 	
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 //		XMLElement xml = xmlElement.orElseThrow(()->new RuntimeException("MergeSingleTransformerFactory: Can't build without XML element"));
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);
 

@@ -28,10 +28,6 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	int count = jjtGetNumChildren();
 	Node sourceNode = jjtGetChild(0);
 	System.err.println("Nodeclass: "+sourceNode);
-//	if(mode==ParseMode.DEFAULT) {
-//		ContextExpression passthough = (ContextExpression) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier);
-//		return passthough;
-//	}
 	List<Object> pipeElements = new ArrayList<>();
 	ReactiveSource source = (ReactiveSource) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply().value;
 //	pipeElements.add(source);

@@ -52,8 +52,8 @@ public class SQLInsertTransformerFactory implements ReactiveTransformerFactory {
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 
 		return new SQLInsertTransformer(this,parameters);
 

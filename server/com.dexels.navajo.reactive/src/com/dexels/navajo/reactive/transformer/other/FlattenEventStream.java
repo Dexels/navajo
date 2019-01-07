@@ -27,8 +27,7 @@ public class FlattenEventStream implements ReactiveTransformer {
 		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		int parallel = parms.optionalInteger("parallel").orElse(1);
 		if (parallel < 2) {
-			return flow->flow.concatMap(e->e.eventStream()).map(DataItem::of)
-					.doOnNext(e->System.err.println("Item detected: "+e));
+			return flow->flow.concatMap(e->e.eventStream()).map(DataItem::of);
 		} else {
 			return flow->flow.concatMapEager(e->e.eventStream()).map(DataItem::of);
 		}

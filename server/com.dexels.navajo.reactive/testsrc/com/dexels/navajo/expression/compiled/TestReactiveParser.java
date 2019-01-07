@@ -101,5 +101,10 @@ public class TestReactiveParser {
 	public void testEventStream( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/eventstream.rr");
 		n.write(System.err);
+		Message m = n.getMessage("Oe");
+		int size = m.getArraySize();
+		Assert.assertEquals(2, size);
+		Integer val = (Integer) m.getMessage(1).getProperty("jet").getTypedValue();
+		Assert.assertEquals(1, val.intValue());
 	}
 }

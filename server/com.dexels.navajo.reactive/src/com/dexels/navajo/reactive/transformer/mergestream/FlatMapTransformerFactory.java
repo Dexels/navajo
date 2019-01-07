@@ -35,9 +35,9 @@ public class FlatMapTransformerFactory implements ReactiveTransformerFactory, Tr
 	}
 	
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
-		return new FlatMapTransformer(this,parameters,parentType);
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
+		return new FlatMapTransformer(this,parameters);
 	}
 
 	@Override

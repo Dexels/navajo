@@ -9,11 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -24,8 +22,8 @@ public class TakeTransformerFactory implements ReactiveTransformerFactory, Trans
 	public TakeTransformerFactory() {
 	}
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 		return new TakeTransformer(this,parameters);
 	}
 	

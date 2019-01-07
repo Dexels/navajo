@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -18,36 +17,33 @@ public class ParseEventStream implements ReactiveTransformer {
 
 	private ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Type inferredType;
 //	private boolean isSingle;
 
-	public ParseEventStream(TransformerMetadata metadata, ReactiveParameters parameters, Type inferredType) {
+	public ParseEventStream(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.inferredType = inferredType;
 //		this.isSingle = isSingle;
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters resolved = parameters.resolve(context, current, param, metadata);
-		Optional<String> path = resolved.optionalString("path");
-		switch(inferredType) {
-		case EVENT:
+		Optional<String> path = resolved.optionalString("path").map(pth->pth.startsWith("/") ? pth.substring(1) : pth);
+//		switch(inferredType) {
+//		case EVENT:
 			return flow->flow.map(di->di.event())
 					.compose(StreamDocument.eventsToImmutable(path))
 //					.doOnNext(e->System.err.println("Element encountered: "+e))
 					.map(DataItem::of);
-		case EVENTSTREAM:
-			return flow->flow.map(di->di.eventStream())
-					.concatMap(e->e)
-					.compose(StreamDocument.eventsToImmutable(path))
-//					.doOnNext(e->System.err.println("Element encountered: "+e))
-					.map(DataItem::of);
-		default:
-			throw new RuntimeException("Unexpected type: "+inferredType+" in "+metadata.name());
-			
-		}
+//		case EVENTSTREAM:
+//			return flow->flow.map(di->di.eventStream())
+//					.concatMap(e->e)
+//					.compose(StreamDocument.eventsToImmutable(path))
+//					.map(DataItem::of);
+//		default:
+//			throw new RuntimeException("Unexpected type: "+inferredType+" in "+metadata.name());
+//			
+//		}
 	}
 
 	@Override

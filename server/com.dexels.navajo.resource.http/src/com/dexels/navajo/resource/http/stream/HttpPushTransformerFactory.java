@@ -21,8 +21,8 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class HttpPushTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 
 		return new HttpPushTransformer(this,parameters);
 	}

@@ -24,8 +24,7 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
 
 		return new StreamMessageTransformer(this,parameters);
 	}

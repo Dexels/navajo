@@ -22,8 +22,8 @@ public class FileStoreTransformerFactory implements ReactiveTransformerFactory, 
 	public FileStoreTransformerFactory() {} 
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems,
-			ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
 		return new FileStoreTransformer(this, parameters);
 	}
 	

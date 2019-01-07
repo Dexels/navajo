@@ -15,7 +15,6 @@ import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -25,7 +24,7 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class ParallelMessageStreamFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@Override
-	public ReactiveTransformer build(Type parentType, List<ReactiveParseProblem> problems, ReactiveParameters parameters, ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
 
 
 //		Function<StreamScriptContext,Function<DataItem,DataItem>> joinermapper = ReactiveScriptParser.parseReducerList(relativePath,problems, Optional.of(xml.getChildren()), buildContext);

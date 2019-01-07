@@ -32,7 +32,7 @@ public class ParallelMessageStream implements ReactiveTransformer {
 //		int parallel = parms.optionalInteger("parallel").orElse(1);
 		try {
 			Function<DataItem,DataItem> fi = joiner.apply(context);
-			return flow->flow.parallel().runOn(Schedulers.computation()).map(a->fi.apply(a)).sequential();
+			return flow->flow.parallel().runOn(Schedulers.io()).map(a->fi.apply(a)).sequential();
 		} catch (Exception e1) {
 			return flow->Flowable.error(e1);
 		}
