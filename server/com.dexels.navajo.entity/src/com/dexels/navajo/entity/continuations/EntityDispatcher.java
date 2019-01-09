@@ -256,6 +256,7 @@ public class EntityDispatcher {
             result = seo.perform(input);
 
             if (result.getMessage(entityMessage.getName()) == null) {
+            	logger.error("Entity message {} does not exist in the webservice output. Please check the OutDoc of the webservice.", entityMessage.getName());
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
