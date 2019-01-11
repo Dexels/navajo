@@ -192,7 +192,7 @@ public class Entity {
     private void setVersionMessages(Navajo n) {
         n.getAllMessages().stream().filter(m -> m.getName().contains(messageName)).forEach(m -> {
             if (!m.getName().matches("^[a-zA-Z0-9.]*$")) {
-                logger.error("Unsupported version name :: {}. Please use alphanumeric, -, _ or . characters. Version was not registered",
+                logger.error("Unsupported version name :: {}. Please use integer. Version was not registered",
                         m.getName());
             } else {
                 Message newMessage = m.copy();
