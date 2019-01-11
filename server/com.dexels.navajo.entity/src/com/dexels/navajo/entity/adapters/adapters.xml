@@ -150,4 +150,15 @@
             </method>
         </methods>
     </map>
+    <map>
+        <tagname>diff</tagname>
+        <object>com.dexels.navajo.entity.adapters.DiffMap</object>
+        <values>
+            <value name="previous" type="string" required="true" direction="in" />
+            <value name="current" type="string" required="true" direction="in" />
+            <value name="messageName" type="string" required="true" direction="in" />
+            <value name="appendTo" type="string" required="true" direction="in" />
+            <value name="keys" type="list" required="false" direction="in" />
+        </values>
+    </map>
 </adapterdef>
