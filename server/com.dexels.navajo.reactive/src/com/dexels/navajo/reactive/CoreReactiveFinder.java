@@ -25,9 +25,12 @@ import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.ToSubMessageList;
+import com.dexels.navajo.reactive.source.input.InputSourceFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
+import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
+import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.eventstream.EventStreamMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
@@ -59,12 +62,12 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
-
 		reactiveReducer.put("toSubList", new ToSubMessageList());
 		
 		addReactiveSourceFactory(new SingleSourceFactory(), "single");
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
+		addReactiveSourceFactory(new InputSourceFactory(),"input");
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
@@ -75,6 +78,8 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"join");
 		addReactiveTransformerFactory(new FirstTransformerFactory(),"first");
 		addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
+		addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		addReactiveTransformerFactory(new PipeTransformerFactory(),"pipe");
 
 	}
 

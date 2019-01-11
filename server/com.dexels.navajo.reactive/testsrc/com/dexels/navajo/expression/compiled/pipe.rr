@@ -1,0 +1,4 @@
+single(count=5,debug=true)
+	->set(number=[@index],test='hoppa')
+	->pipe(service='input',debug=true)
+	->stream(messageName='Blem',isArray=true)

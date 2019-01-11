@@ -206,6 +206,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			FunctionDefinition fd = getDef(functionName);
 			if(fd==null) {
 				logger.error("Missing function definition: {}",functionName);
+				return null;
 			}
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
 			FunctionInterface fi =myClass.newInstance();

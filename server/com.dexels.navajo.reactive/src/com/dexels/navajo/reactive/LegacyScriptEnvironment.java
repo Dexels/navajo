@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,13 @@ import com.dexels.navajo.document.stream.api.Prop;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
+import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class LegacyScriptEnvironment implements ReactiveScriptRunner {
@@ -104,7 +107,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 
 	private Flowable<NavajoStreamEvent> runLegacy(StreamScriptContext context, boolean debug) {
-		Single<Navajo> in = context.getInput();
+		Maybe<Navajo> in = context.collect();
 		Flowable<NavajoStreamEvent> flow = in
 			.doOnSuccess(nav->
 				{
@@ -114,7 +117,7 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 						logger.warn("=== END OF DEBUG REQUEST============");
 					}
 				})
-			.map(inputNav->executeLegacy(context,inputNav))
+			.map(inputNav->executeLegacy(context))
 			.toFlowable()
 			.concatMap(e->e);
 //		if(skipNavajoEvents) {
@@ -125,12 +128,14 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	}
 	 
 
-	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context, Navajo input) {
+	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context) {
+		String service = context.getService();
+		System.err.println("Service: "+service);
 		try {
-				context.resolvedNavajo().getAllMessages().forEach(message->{
-					input.addMessage(message);
-				});
-				Navajo result = execute(context, input);
+//				context.resolvedNavajo().getAllMessages().forEach(message->{
+//					input.addMessage(message);
+//				});
+				Navajo result = execute(context);
 				logIfError(result);
 				return Single.just(result)
 						.compose(StreamDocument.domStreamTransformer())
@@ -153,8 +158,9 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 		
 	}
 
-	private final Navajo execute(StreamScriptContext context, Navajo in) throws IOException {
+	private final Navajo execute(StreamScriptContext context) throws IOException {
 		MDC.put("instance", context.getTenant());
+		Navajo in = context.resolvedNavajo();
 		in.removeHeader();
 		if(in.getHeader()==null) {
 			in.addHeader(NavajoFactory.getInstance().createHeader(in, context.getService(), context.getUsername(), "", -1));
@@ -219,8 +225,19 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	}
 
 	@Override
-	public String deployment() {
-		// TODO
+	public Optional<String> deployment() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<InputStream> sourceForService(String service) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CompiledReactiveScript compiledScript(String service) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

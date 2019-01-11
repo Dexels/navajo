@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.script.api.Access;
@@ -23,16 +24,16 @@ import io.reactivex.Single;
 public class StreamScriptContext {
     private final Access access;
 	
-	private final Optional<Flowable<NavajoStreamEvent>> inputFlowable;
+	private final Optional<Flowable<DataItem>> inputFlowable;
+	private final Optional<Single<Navajo>> collectedInput;
 	public final Map<String, Object> attributes;
 
 	private final Optional<RunningReactiveScripts> runningScripts;
 	private final Optional<ReactiveScriptRunner> runner;
-	private String deployment;
+	private Optional<String> deployment;
 	private final List<String> methods;
 	private final String uuid;
 	private final Optional<Runnable> onDispose;
-    private boolean collectedInput = false;
     
 	
 	
@@ -42,10 +43,11 @@ public class StreamScriptContext {
 		Map<String,String> result = new HashMap<>();
 		result.put("tenant", access.getTenant());
 		result.put("service", access.getRpcName());
-		result.put("deployment", deployment);
+		if(deployment.isPresent()) {
+			result.put("deployment", deployment.get());
+		}
 		result.put("uuid", uuid);
 		result.put("username", access.getRpcUser());
-		
 		result.put("started", ""+ access.getCreated());
 		result.put("linenr", ""+linenr);
 
@@ -55,15 +57,17 @@ public class StreamScriptContext {
 	
 	// mostly for testing
 	public StreamScriptContext(String tenant, String service, String deployment) {
-		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),Optional.empty(),null,Collections.emptyMap(),Optional.empty(),Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty());
-		this.deployment = deployment;
+		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),Optional.empty(),null,Collections.emptyMap(),Optional.empty(),Optional.empty(),Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty());
+		this.deployment = Optional.ofNullable(deployment);
 	}
 
-	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<NavajoStreamEvent>> input, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose, Optional<RunningReactiveScripts> running) {
-       this(UUID.randomUUID().toString(),System.currentTimeMillis(), tenant,service,username,password,authNavajo,attributes,input,runner,addedMethods,onDispose,running);	
+	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password,Navajo authNavajo, Map<String,Object> attributes,Optional<Flowable<DataItem>> input, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose, Optional<RunningReactiveScripts> running) {
+       this(UUID.randomUUID().toString(),System.currentTimeMillis(), tenant,service,username,password,authNavajo,attributes,input,Optional.empty(), runner,addedMethods,onDispose,running);	
 	}
 
-	public StreamScriptContext(String uuid, Access access, Map<String, Object> attributes, Optional<Flowable<NavajoStreamEvent>> input,
+	public StreamScriptContext(String uuid, Access access, Map<String, Object> attributes,
+			Optional<Flowable<DataItem>> input,
+			Optional<Single<Navajo>> collectedInput,
 	            Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose,
 	            Optional<RunningReactiveScripts> running) {
 	        this.uuid = uuid;
@@ -71,15 +75,17 @@ public class StreamScriptContext {
 	        this.attributes = attributes;
 	        this.inputFlowable = input;
 	        this.runner = runner;
-	        this.deployment = runner.map(r->r.deployment()).orElse("");
+	        this.deployment = runner.flatMap(r->r.deployment());
 	        this.methods = addedMethods;
 	        this.onDispose = onDispose;
 	        this.runningScripts = running;
+	        this.collectedInput = collectedInput;
 //	      this.asyncContext = asyncContext;
 	    }
 	
    private StreamScriptContext(String uuid, long started, String tenant, String service, Optional<String> username,
-            Optional<String> password, Navajo authNavajo, Map<String, Object> attributes, Optional<Flowable<NavajoStreamEvent>> input,
+            Optional<String> password, Navajo authNavajo, Map<String, Object> attributes, Optional<Flowable<DataItem>> input,
+            Optional<Single<Navajo>> collectedInput,
             Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose,
             Optional<RunningReactiveScripts> running) {
         this.uuid = uuid;
@@ -89,8 +95,9 @@ public class StreamScriptContext {
         access.setTenant(tenant);
         this.attributes = attributes;
         this.inputFlowable = input;
+        this.collectedInput = collectedInput;
         this.runner = runner;
-        this.deployment = runner.map(r->r.deployment()).orElse("");
+        this.deployment = runner.flatMap(r->r.deployment());
         this.methods = addedMethods;
         this.onDispose = onDispose;
         this.runningScripts = running;
@@ -108,40 +115,50 @@ public class StreamScriptContext {
 		acc.setInDoc(a.getInDoc());
 		acc.setTenant(a.getTenant());
 //		acc.setI
-		return new StreamScriptContext(this.uuid, acc, attributes, inputFlowable,runner, methods,onDispose,this.runningScripts);
+		return new StreamScriptContext(this.uuid, acc, attributes, inputFlowable,this.collectedInput, runner, methods,onDispose,this.runningScripts);
 	}
 
 	public StreamScriptContext copyWithNewUUID() {
 		String uuid = UUID.randomUUID().toString();
-		StreamScriptContext streamScriptContext = new StreamScriptContext(uuid, access, attributes, inputFlowable,runner, methods,Optional.empty(),this.runningScripts);
+		StreamScriptContext streamScriptContext = new StreamScriptContext(uuid, access, attributes, inputFlowable,this.collectedInput,runner, methods,Optional.empty(),this.runningScripts);
 //		this.runningScripts.get().submit(streamScriptContext);
 		return streamScriptContext;
 	}
 
 	public StreamScriptContext withMethods(List<String> methods) {
-		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,runner, methods,onDispose,this.runningScripts);
+		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,this.collectedInput,runner, methods,onDispose,this.runningScripts);
 	}
 
 
-	public StreamScriptContext withInput(Flowable<NavajoStreamEvent> input) {
-		return new StreamScriptContext(this.uuid, access, attributes, Optional.of(input),runner, methods, onDispose,this.runningScripts);
+	public StreamScriptContext withInput(Flowable<DataItem> input) {
+		return new StreamScriptContext(this.uuid, access, attributes, Optional.of(input),this.collectedInput,runner, methods, onDispose,this.runningScripts);
+	}
+	public StreamScriptContext withRunner(ReactiveScriptRunner runner) {
+		return new StreamScriptContext(this.uuid, access, attributes, this.inputFlowable,this.collectedInput,Optional.of(runner), methods, onDispose,this.runningScripts);
 	}
 
+	public StreamScriptContext withoutInputNavajo() {
+	    Access newAccess = access.cloneWithoutNavajos();
+		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),this.collectedInput,runner, methods, onDispose,this.runningScripts);
+	}
 	public StreamScriptContext withInputNavajo(Navajo input) {
+		if(input==null) {
+			throw new NullPointerException("Can't pass null navajo into withInputNavajo");
+		}
 	    Access newAccess = access.cloneWithoutNavajos();
 	    newAccess.setInDoc(input);
-		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),runner, methods, onDispose,this.runningScripts);
+		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),this.collectedInput,runner, methods, onDispose,this.runningScripts);
 	}
 
 	public StreamScriptContext withTenant(String tenant) {
 	    Access newAccess = access.cloneWithoutNavajos();
 	    newAccess.setInDoc(access.getInDoc());
 	    newAccess.setTenant(tenant);
-		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),runner, methods, onDispose,this.runningScripts);
+		return new StreamScriptContext(this.uuid, newAccess, attributes, Optional.empty(),this.collectedInput,runner, methods, onDispose,this.runningScripts);
 	}
 	
 	public StreamScriptContext withDispose(Runnable disposer) {
-		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,runner, methods, Optional.of(disposer),this.runningScripts);
+		return new StreamScriptContext(this.uuid, access, attributes, inputFlowable,this.collectedInput,runner, methods, Optional.of(disposer),this.runningScripts);
 	}
 
 	public ReactiveScriptRunner runner() {
@@ -152,39 +169,51 @@ public class StreamScriptContext {
 		return this.runningScripts;
 	}
 
-	public String deployment() {
+	public Optional<String> deployment() {
 		return deployment;
 	}
 	
-	public Flowable<NavajoStreamEvent> inputFlowable() {
-		return inputFlowable.orElse(Flowable.empty());
+	public Optional<Flowable<DataItem>> inputFlowable() {
+		return inputFlowable;
 	}
 	
-	public Single<Navajo> getInput() {
-
-		return collect().toSingle(NavajoFactory.getInstance().createNavajo())
-		        .map(e-> {
-		            e.getAllMessages().forEach(message->{
-	                    access.getInDoc().addMessage(message);
-	                });
-		            return access.getInDoc();
-		        });
-				
-	}
+//	public Single<Navajo> getInput() {
+//
+//		return collect().toSingle(NavajoFactory.getInstance().createNavajo())
+//		        .map(e-> {
+//		            e.getAllMessages().forEach(message->{
+//	                    access.getInDoc().addMessage(message);
+//	                });
+//		            return access.getInDoc();
+//		        });
+//				
+//	}
 	
-	private Maybe<Navajo> collect() {
-	    
-		if(collectedInput ) {
-			return Maybe.empty();
+	public Maybe<Navajo> collect() {
+		System.err.println("Service = "+this.getService());
+		if(inputFlowable.isPresent()) {
+			return inputFlowable.get()
+					.toObservable()
+					.map(e->e.event())
+					.compose(StreamDocument.domStreamCollector())
+					.firstElement();
 		}
-		collectedInput = true;
-		if(!inputFlowable.isPresent()) {
-			return Maybe.just(NavajoFactory.getInstance().createNavajo());
-		}
-		return inputFlowable.get()
-				.toObservable()
-				.compose(StreamDocument.domStreamCollector())
-				.firstElement();
+	    if(this.access!=null && this.access.getInDoc()!=null) {
+	    	return Maybe.just(this.access.getInDoc());
+	    }
+//		if(collectedInput ) {
+//			return Maybe.empty();
+//		}
+		return Maybe.empty();
+//		collectedInput = true;
+//		if(!inputFlowable.isPresent()) {
+//			return Maybe.just(NavajoFactory.getInstance().createNavajo());
+//		}
+//		return inputFlowable.get()
+//				.toObservable()
+//				.map(e->e.event())
+//				.compose(StreamDocument.domStreamCollector())
+//				.firstElement();
 	}
 	
 	public void cancel() {

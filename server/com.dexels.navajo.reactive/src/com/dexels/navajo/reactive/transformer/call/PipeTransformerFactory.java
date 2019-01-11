@@ -11,24 +11,23 @@ import java.util.Set;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
-public class CallTransformerFactory implements ReactiveTransformerFactory {
+public class PipeTransformerFactory implements ReactiveTransformerFactory {
 
-	public CallTransformerFactory() {
+	public PipeTransformerFactory() {
 	}
 	
 	@Override
 	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
 			ReactiveParameters parameters) {
-		return new CallTransformer(this,parameters);
+		return new PipeTransformer(this,parameters);
 	}
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"service","debug","server","username","password"}));
+		return Optional.of(Arrays.asList(new String[]{"service","debug"}));
 	}
 
 	@Override
@@ -41,24 +40,21 @@ public class CallTransformerFactory implements ReactiveTransformerFactory {
 		Map<String,String> r = new HashMap<String, String>();
 		r.put("service", Property.STRING_PROPERTY);
 		r.put("debug", Property.BOOLEAN_PROPERTY);
-		r.put("server", Property.STRING_PROPERTY);
-		r.put("username", Property.STRING_PROPERTY);
-		r.put("password", Property.STRING_PROPERTY);
 		return Optional.of(r);
 	}
 	
 	@Override
 	public Set<Type> inType() {
-		return new HashSet<>(Arrays.asList(new Type[] {Type.EVENTSTREAM})) ;
+		return new HashSet<>(Arrays.asList(new Type[] {Type.MESSAGE})) ;
 	}
 
 	@Override
 	public Type outType() {
-		return Type.EVENT;
+		return Type.MESSAGE;
 	}
 
 	@Override
 	public String name() {
-		return "call";
+		return "pipe";
 	}
 }

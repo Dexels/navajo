@@ -49,7 +49,7 @@ public class ReactiveParameters {
 		// TODO fix blocking
 		return unnamed.stream().map(e->{
 			try {
-				return e.apply(context.getInput().blockingGet(), currentMessage,Optional.of(paramMessage));
+				return e.apply(context.collect().blockingGet(), currentMessage,Optional.of(paramMessage));
 			} catch (Exception e1) {
 				logger.error("Error applying param function: ", e1);
 				return new Operand(null,"string",null);

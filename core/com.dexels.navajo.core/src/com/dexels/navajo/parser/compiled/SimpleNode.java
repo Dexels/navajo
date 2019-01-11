@@ -222,16 +222,21 @@ public abstract class SimpleNode implements Node {
     	return in.stream().allMatch(e->e.isLiteral());
     }
     
-    public Token jjtGetFirstToken() {
+    
+	@Override
+	public Token jjtGetFirstToken() {
     	return this.firstToken;
     }
-    public void jjtSetFirstToken(Token token) {
+	@Override
+	public void jjtSetFirstToken(Token token) {
     	this.firstToken = token;
     }
-    public Token jjtGetLastToken() {
+	@Override
+	public Token jjtGetLastToken() {
     	return this.lastToken;
     }
-    public void jjtSetLastToken(Token token) {
+	@Override
+	public void jjtSetLastToken(Token token) {
     	this.lastToken = token;
     }
 }

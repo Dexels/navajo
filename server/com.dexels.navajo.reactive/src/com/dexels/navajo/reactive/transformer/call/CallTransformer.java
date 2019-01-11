@@ -2,7 +2,6 @@ package com.dexels.navajo.reactive.transformer.call;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,64 +33,58 @@ public class CallTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = parameters.resolve(context, current,param,metadata);
+
+		final String service =  resolved.paramString("service");
+		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		return flow->
 			{
 				//TODO add messages? We have an event stream input, unsure how to deal with this.
-			ReactiveResolvedParameters resolved = parameters.resolve(context, current,param,metadata);
-
-			final String service =  resolved.paramString("service");
-			final boolean debug = resolved.paramBoolean("debug", ()->false);
 	
 			if(debug) {
-				flow = flow.doOnNext(e->logger.info("calltransformerEvent: "+ e));
+				flow = flow.doOnNext(
+						e->logger.info("calltransformerEvent: "+ e)
+				);
 			}
-			Flowable<Flowable<NavajoStreamEvent>> ff = flow.map(e->e.eventStream());
-			Flowable<Flowable<DataItem>> concatMap = ff.concatMap(ee->callService(context,service,debug).apply(ee));
-			return concatMap.concatMap(e->e);
+			Flowable<NavajoStreamEvent> ff = flow.map(e->e.eventStream())
+					.concatMap(e->e)
+					.doOnNext(e->System.err.println("><> event: "+e));
+//			Flowable<DataItem> ddd = ff.concatMap(e->e)
+//					.doOnNext(
+//							e->System.err.println("Navajo Stream Event: "+e)
+//							)
+//					.map(DataItem::of);
 			
-//			return ff.doOnNext(e->System.err.println("Calling service: "+service))
-//					.map(ee->callService(context,service,debug).apply(ee))
-//					.concatMap(e->e);
-			
-//			return ff.map(fx->{
-//				StreamScriptContext ctx = context.withInput(fx)
-//						.withService(service)
-//						.withUsername(context.username)
-//						.withPassword(context.password);
-//				try {
-//					Flowable<DataItem> x = context.runner().build(service, debug).execute(ctx);
-//					return x;
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//					return Flowable.error(e1);
-//				}
-//			});
-//					
-//					; //.concatMap(e->e);
+			StreamScriptContext ctx = context
+			        .withoutInputNavajo()
+			        .withInput( ff.map(DataItem::of))
+					.withService(service);
+
+//			return ctx.inputFlowable().get();
+			return callService(ctx, service, debug).concatMap(e->e);
+//			return ff.map(DataItem::of);
+//			return callService(context,ff,service,debug).concatMap(e->e);
+
 		};
 	}
 
 		
-	private Function<Flowable<NavajoStreamEvent>,Flowable<Flowable<DataItem>>> callService(StreamScriptContext context, String service, boolean debug) {
-		return fx->{
+	private Flowable<Flowable<DataItem>> callService(StreamScriptContext ctx, String service, boolean debug) {
+//			StreamScriptContext ctx = context
+//			        .withoutInputNavajo()
+//			        .withInput(input.map(DataItem::of))
+//					.withService(service);
 			
-			StreamScriptContext ctx = context
-			        .withInput(fx)
-					.withService(service);
 			try {
-				Flowable<Flowable<DataItem>> x = Flowable.just(
-							context.runner()
+				return Flowable.just(
+							ctx.runner()
 								.build(service, debug)
 								.execute(ctx)
 								.concatMap(e->e)
-								
 							);
-				return x;
 			} catch (IOException e1) {
-				e1.printStackTrace();
 				return Flowable.error(e1);
 			}			
-		};
 	}
 	
 	@Override

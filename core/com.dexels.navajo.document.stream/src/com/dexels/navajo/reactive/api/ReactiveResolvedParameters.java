@@ -16,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 
-import io.reactivex.Single;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 public class ReactiveResolvedParameters {
 
@@ -41,7 +43,9 @@ public class ReactiveResolvedParameters {
 
 	private final List<ContextExpression> unnamed;
 
-	private final Single<Navajo> input;
+	private final Maybe<Navajo> input;
+	private final Optional<Flowable<DataItem>> inputFlowable;
+	private Navajo resolvedInput;
 	
 	public ReactiveResolvedParameters(StreamScriptContext context, Map<String, ContextExpression> named, List<ContextExpression> unnamed,
 			Optional<ImmutableMessage> currentMessage, ImmutableMessage paramMessage, ParameterValidator validator) {
@@ -49,7 +53,9 @@ public class ReactiveResolvedParameters {
 		this.paramMessage = paramMessage;
 		this.named = named;
 		this.unnamed = unnamed;
-		this.input = context.getInput();
+		this.resolvedInput = context.resolvedNavajo();
+		this.input = context.collect();
+		this.inputFlowable = context.inputFlowable();
 		Optional<List<String>> allowed = validator.allowedParameters();
 		Optional<List<String>> required = validator.requiredParameters();
 
@@ -203,7 +209,9 @@ public class ReactiveResolvedParameters {
 		Operand applied;
 		try {
 			// TODO test for streaming
-			Navajo in = input.blockingGet();
+			System.err.println("Present? "+inputFlowable.isPresent());
+			// TODO move this to constructor or something
+			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : input.blockingGet();
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);
 			if(expectedType.isPresent()) {

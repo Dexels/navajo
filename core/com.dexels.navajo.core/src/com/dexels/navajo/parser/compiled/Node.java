@@ -46,5 +46,9 @@ interface Node {
   
   ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier);
 
+  public Token jjtGetFirstToken();
+  public void jjtSetFirstToken(Token token);
+  public Token jjtGetLastToken();
+  public void jjtSetLastToken(Token token);
 }
 /* JavaCC - OriginalChecksum=22197c64ec0b9502885f0a5dc1d3ddd7 (do not edit this line) */

@@ -89,14 +89,14 @@ public final class ASTFunctionNode extends SimpleNode {
 				
 				break;
 			case REACTIVE_SOURCE:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression,this);
 //				System.err.println("Creating reactive source: "+this.functionName);
 //				return resolveReactiveSource(l, named, problems, expression);
 			case REACTIVE_TRANSFORMER:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression,this);
 	
 			case REACTIVE_REDUCER:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, l, expression,this);
 			case DEFAULT:
 				default:
 		}

@@ -116,13 +116,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 		case ARRAY_STARTED:
 			System.err.println("n: "+n.path());
 			tagStack.push(n.path());
-//			String path = currentPath();
-//			AtomicInteger cnt = arrayCounts.get(path);
-//			if(cnt==null) {
-//				cnt = new AtomicInteger();
-//				arrayCounts.put(path, cnt);
-//			}
-//			cnt.incrementAndGet();
 			Message parentMessage = null;
 			if(!messageStack.isEmpty()) {
 				parentMessage = messageStack.peek();

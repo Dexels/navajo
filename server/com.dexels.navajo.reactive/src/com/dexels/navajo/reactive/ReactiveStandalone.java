@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
@@ -33,13 +35,87 @@ public class ReactiveStandalone {
 			return n;
 		}
 	}
+	
+	public static Navajo runBlockingEmpty(ReactiveScriptEnvironment resolver, String service, Optional<String> binaryMime, List<String> methods) throws ParseException, IOException {
+		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment")
+				.withRunner(resolver)
+				.withInputNavajo(NavajoFactory.getInstance().createNavajo());
+		ReactiveScript compiledScript = resolver.compiledScript(service);
+		System.err.println("Data type: "+compiledScript.dataType());
+		Flowable<Flowable<DataItem>> execute = compiledScript.execute(context);
+
+		switch(compiledScript.dataType()) {
+		case ANY:
+			break;
+		case DATA:
+			break;
+		case EMPTY:
+			break;
+		case EVENT:
+			return execute
+					.flatMap(e->e)
+					.map(e->e.event())
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.toObservable()
+					.compose(StreamDocument.domStreamCollector())
+					.blockingFirst();
+		case EVENTSTREAM:
+			return execute
+					.flatMap(e->e)
+					.concatMap(e->e.eventStream())
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.toObservable()
+					.compose(StreamDocument.domStreamCollector())
+					.blockingFirst();
+		case MESSAGE:
+			return execute
+					.concatMap(e->e)
+					.map(e->e.message())
+					.compose(StreamDocument.toMessageEvent("Item",true))
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.toObservable()
+					.compose(StreamDocument.domStreamCollector())
+					.blockingFirst();
+					
+		case MSGLIST:
+			break;
+		case MSGSTREAM:
+			break;
+		case SINGLEMESSAGE:
+			break;
+		default:
+			break;
+		
+		}
+		return execute
+			.flatMap(e->e)
+			.map(e->e.event())
+			.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+			.toObservable()
+			.compose(StreamDocument.domStreamCollector())
+			.blockingFirst();
+//		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()),binaryMime);
+	}
 	public static Navajo runBlockingEmpty(String inExpression, Optional<String> binaryMime) throws ParseException, IOException {
 		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()),binaryMime);
 	}
 	public static Navajo runBlockingEmpty(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
-		CompiledReactiveScript crs = compileReactiveScript(inExpression,binaryMime);
-		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInputNavajo(NavajoFactory.getInstance().createNavajo());
+		return runBlockingInput(inExpression,binaryMime, NavajoFactory.getInstance().createNavajo());
+	}
 
+	public static Navajo runBlockingStream(InputStream inExpression, Optional<String> binaryMime, Flowable<DataItem> input) throws ParseException, IOException {
+		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInput(input);
+		return runContext(inExpression, binaryMime, context);
+	}
+
+	public static Navajo runBlockingInput(InputStream inExpression, Optional<String> binaryMime, Navajo input) throws ParseException, IOException {
+		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInputNavajo(input);
+		return runContext(inExpression, binaryMime, context);
+	}
+
+	private static Navajo runContext(InputStream inExpression, Optional<String> binaryMime, StreamScriptContext context)
+			throws ParseException, IOException {
+		CompiledReactiveScript crs = compileReactiveScript(inExpression,binaryMime);
 		return Flowable.fromIterable(crs.pipes)
 				.concatMap(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()))
 				.map(e->e.event())
@@ -47,9 +123,12 @@ public class ReactiveStandalone {
 				.toObservable()
 				.compose(StreamDocument.domStreamCollector())
 				.blockingFirst();
-}
+	}
+	
+	
+	
 	@SuppressWarnings("unchecked")
-	private static CompiledReactiveScript compileReactiveScript(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
+	public static CompiledReactiveScript compileReactiveScript(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
 		try(Reader in = new InputStreamReader(inExpression)) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactiveScript();

@@ -1,6 +1,8 @@
 package com.dexels.navajo.expression.compiled;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -10,8 +12,11 @@ import org.junit.Test;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.reactive.ClasspathReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
+import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.ReactiveStandalone;
 import com.dexels.navajo.reactive.api.Reactive;
 
@@ -30,12 +35,29 @@ public class TestReactiveParser {
 	@Test
 	public void testFilter() throws ParseException, IOException {
 //		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
+			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
 			
-			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
+			Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filter",Optional.empty(), Collections.emptyList());
+			
+//			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
 			int size = n.getMessage("Blem").getArraySize();
 			System.err.println("size: "+size);
 			n.write(System.err);
 			Assert.assertEquals(2, size);
+	}
+	
+	@Test
+	public void testPipe() throws ParseException, IOException {
+//		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
+			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+			
+			Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"pipe",Optional.empty(), Collections.emptyList());
+			n.write(System.err);
+//			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
+			int size = n.getMessage("Blem").getArraySize();
+			System.err.println("size: "+size);
+			n.write(System.err);
+			Assert.assertEquals(5, size);
 	}
 	
 	@Test
@@ -120,6 +142,15 @@ public class TestReactiveParser {
 		Assert.assertEquals(1, val.intValue());
 	}
 	
+	@Test
+	public void testInput() throws ParseException, IOException {
+		Navajo input = NavajoFactory.getInstance().createNavajo(ReactiveStandalone.class.getClassLoader().getResourceAsStream("tmlinput.xml"));
+		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream("com/dexels/navajo/expression/compiled/input.rr")) {
+			Navajo n = ReactiveStandalone.runBlockingInput(in, Optional.empty(),input);
+			n.write(System.err);
+		}
+		
+	}
 
 
 }

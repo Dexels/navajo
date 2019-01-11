@@ -66,7 +66,9 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 			StreamScriptContext ctx = e.getValue();
 			current.put("service", ctx.getService());
 			current.put("tenant", ctx.getTenant());
-			current.put("deployment", ctx.deployment());
+			if(ctx.deployment().isPresent()) {
+				current.put("deployment", ctx.deployment().get());
+			}
 			current.put("username", ctx.getUsername());
 			current.put("started", ctx.getStarted());
 			current.put("running", (now-ctx.getStarted()));
@@ -75,6 +77,7 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 		return list;
 	}
 	
+	@Override
 	public void complete(String uuid) {
 		StreamScriptContext ssc = this.scriptsInProgress.get(uuid);
 		if(ssc!=null) {

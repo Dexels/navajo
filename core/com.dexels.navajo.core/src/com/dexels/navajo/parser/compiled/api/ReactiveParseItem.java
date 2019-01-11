@@ -14,6 +14,7 @@ import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
+import com.dexels.navajo.parser.compiled.Node;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -30,13 +31,15 @@ public class ReactiveParseItem implements ContextExpression {
 	public final Map<String, ContextExpression> namedParams;
 	public final List<ContextExpression> unnamedParams;
 	public final String expression;
+	private final Node node;
 	
-	public ReactiveParseItem(String name, Reactive.ReactiveItemType type, Map<String,ContextExpression> namedParams, List<ContextExpression> unnamedParams, String expression) {
+	public ReactiveParseItem(String name, Reactive.ReactiveItemType type, Map<String,ContextExpression> namedParams, List<ContextExpression> unnamedParams, String expression, Node node) {
 		this.name = name;
 		this.type = type;
 		this.namedParams = namedParams;
 		this.unnamedParams = unnamedParams;
 		this.expression = expression;
+		this.node = node;
 	}
 
 	@Override

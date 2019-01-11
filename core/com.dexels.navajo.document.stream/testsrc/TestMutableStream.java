@@ -132,9 +132,5 @@ public class TestMutableStream {
 			.blockingGet();
 
 		Assert.assertEquals("Dmitri",m.toImmutableMessage().columnValue("Name"));
-//				.blockingForEach(e->{
-//					System.err.println("Body: "+e.type()+"->"+e.path()+" body: "+e.body());
-//				});
-		
 	}
 }

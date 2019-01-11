@@ -31,10 +31,7 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 		boolean isArray = resolved.paramBoolean("isArray");
 		// TODO remove duplication
 		return flow->flow.map(di->di.message())
-				.doOnNext(e->System.err.println(">>msg>> "+e))
 				.compose(StreamDocument.toMessageEvent(messageName,isArray))
-				.doOnNext(e->System.err.println(">ble> "+e))
-//				.doOnNext(e->System.err.println(">>>>>>>>>> propagating evnt: "+e))
 				.map(DataItem::of);
 	}
 

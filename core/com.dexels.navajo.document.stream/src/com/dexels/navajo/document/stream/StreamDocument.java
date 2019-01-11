@@ -287,149 +287,6 @@ public class StreamDocument {
 		};
 	}
 
-	public static FlowableOperator<ImmutableMessage, NavajoStreamEvent> collectEventsToImmutable() {
-		return new BaseFlowableOperator<ImmutableMessage, NavajoStreamEvent>(10) {
-
-			@Override
-			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
-				return new Subscriber<NavajoStreamEvent>() {
-					Stack<String> pathStack = new Stack<>();
-					AtomicInteger arrayCounter = new AtomicInteger();
-					List<ImmutableMessage> currentArray  = new ArrayList<>();
-
-					@Override
-					public void onComplete() {
-						operatorComplete(child);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						operatorError(t, child);
-					}
-
-					@Override
-					public void onNext(NavajoStreamEvent event) {
-						
-						switch(event.type()) {
-							case ARRAY_STARTED:
-								arrayCounter.set(0);
-								currentArray.clear();
-							case MESSAGE_STARTED:
-							case MESSAGE_DEFINITION_STARTED:
-								// TODO ignore definition messages?
-								pathStack.push(event.path());
-							case ARRAY_ELEMENT_STARTED:
-								
-								operatorRequest(1);
-								break;
-							case MESSAGE:
-							case ARRAY_ELEMENT:
-								Msg m = (Msg)event.body();
-								arrayCounter.incrementAndGet();
-								ImmutableMessage copy = m.toImmutableMessage();
-								operatorNext(event, e->copy, child);
-								break;
-								
-							case NAVAJO_DONE:
-							case NAVAJO_STARTED:
-							case BINARY_STARTED:
-							case BINARY_CONTENT:
-							case BINARY_DONE:
-							case ARRAY_DONE:
-							case MESSAGE_DEFINITION:
-//								currentMessage.add(event);
-								operatorRequest(1);
-								return;
-								
-							default:
-								throw new UnsupportedOperationException("Unknown event found in NAVADOC: "+event.type());
-							}
-//						}
-					}
-
-					@Override
-					public void onSubscribe(Subscription s) {
-						operatorSubscribe(s, child);
-					}
-						
-				};
-			}
-		};
-	}
-	
-	
-	public static FlowableOperator<ImmutableMessage, NavajoStreamEvent> collectEventsToImmutable2() {
-		return new BaseFlowableOperator<ImmutableMessage, NavajoStreamEvent>(10) {
-
-			@Override
-			public Subscriber<? super NavajoStreamEvent> apply(Subscriber<? super ImmutableMessage> child) throws Exception {
-				return new Subscriber<NavajoStreamEvent>() {
-					Stack<String> pathStack = new Stack<>();
-					AtomicInteger arrayCounter = new AtomicInteger();
-					List<ImmutableMessage> currentArray  = new ArrayList<>();
-					
-
-					@Override
-					public void onComplete() {
-						operatorComplete(child);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						operatorError(t, child);
-					}
-
-					@Override
-					public void onNext(NavajoStreamEvent event) {
-						
-						switch(event.type()) {
-							case ARRAY_STARTED:
-								arrayCounter.set(0);
-								currentArray.clear();
-							case MESSAGE_STARTED:
-							case MESSAGE_DEFINITION_STARTED:
-								// TODO ignore definition messages?
-								pathStack.push(event.path());
-							case ARRAY_ELEMENT_STARTED:
-								
-								operatorRequest(1);
-								break;
-							case MESSAGE:
-							case ARRAY_ELEMENT:
-								Msg m = (Msg)event.body();
-								arrayCounter.incrementAndGet();
-								ImmutableMessage copy = m.toImmutableMessage();
-								operatorNext(event, e->copy, child);
-								break;
-								
-							case NAVAJO_DONE:
-							case NAVAJO_STARTED:
-							case BINARY_STARTED:
-							case BINARY_CONTENT:
-							case BINARY_DONE:
-							case ARRAY_DONE:
-							case MESSAGE_DEFINITION:
-//								currentMessage.add(event);
-								operatorRequest(1);
-								return;
-								
-							default:
-								throw new UnsupportedOperationException("Unknown event found in NAVADOC: "+event.type());
-							}
-//						}
-					}
-
-					@Override
-					public void onSubscribe(Subscription s) {
-						operatorSubscribe(s, child);
-					}
-						
-				};
-			}
-		};
-	}
-
-	
 	
 	
 	public static FlowableOperator<NavajoStreamEvent, NavajoStreamEvent> filterMessageIgnore() {
@@ -1009,6 +866,71 @@ public class StreamDocument {
 			.map(e->Prop.create(e.getKey(), ""+e.getValue(), types.get(e.getKey())))
 			.collect(Collectors.toList());
 		return isArrayMessage ? Msg.createElement(properties) : Msg.create(properties);
+	}
+
+	public static ImmutableMessage toImmutable(Navajo n) {
+		Map<String,ImmutableMessage> subMessages = null;
+		Map<String,List<ImmutableMessage>> subMessageLists = null;
+//		Map<S>
+		for (Message msg : n.getAllMessages()) {
+			if (msg.isArrayMessage()) {
+				if(subMessageLists==null) {
+					subMessageLists = new HashMap<>();
+				}
+				subMessageLists.put(msg.getName(), toImmutableList(msg));
+			} else {
+				if(subMessages==null) {
+					subMessages = new HashMap<>();
+				}
+				subMessages.put(msg.getName(), toImmutable(n));
+			}
+		}
+		if(subMessageLists==null) {
+			subMessageLists = Collections.emptyMap();
+		}
+		if(subMessages==null) {
+			subMessages = Collections.emptyMap();
+		}
+		return ImmutableFactory.create(Collections.emptyMap(), Collections.emptyMap(), subMessages, subMessageLists);
+	}
+
+
+	public static ImmutableMessage toImmutable(Message m) {
+		Map<String,ImmutableMessage> subMessages = null;
+		Map<String,List<ImmutableMessage>> subMessageLists = null;
+//		Map<S>
+		for (Message msg : m.getAllMessages()) {
+			if (msg.isArrayMessage()) {
+				if(subMessageLists==null) {
+					subMessageLists = new HashMap<>();
+				}
+				subMessageLists.put(msg.getName(), toImmutableList(msg));
+			} else {
+				if(subMessages==null) {
+					subMessages = new HashMap<>();
+				}
+				subMessages.put(msg.getName(), toImmutable(m));
+			}
+		}
+		if(subMessageLists==null) {
+			subMessageLists = Collections.emptyMap();
+		}
+		if(subMessages==null) {
+			subMessages = Collections.emptyMap();
+		}
+		Map<String,Object> values = new HashMap<>();
+		Map<String,String> types = new HashMap<>();
+		for (Property item : m.getAllProperties()) {
+			String name = item.getName();
+			values.put(name, item.getTypedValue());
+			types.put(name, item.getType());
+		}
+		return ImmutableFactory.create(values, types, subMessages, subMessageLists);
+		//		n.getAllMessages()
+	}
+
+	public static List<ImmutableMessage> toImmutableList(Message n) {
+		return n.getElements().stream().map(StreamDocument::toImmutable).collect(Collectors.toList());
 	}
 
 	public static Flowable<byte[]> streamBinary(Binary binary, int bufferSize) {

@@ -57,8 +57,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	@Override
-	public String deployment() {
-		return navajoConfig.getDeployment();
+	public Optional<String> deployment() {
+		return Optional.ofNullable(navajoConfig).map(e->e.getDeployment());
 	}
 
 	public ReactiveScriptEnvironment(File testRoot) {
@@ -95,7 +95,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			return true;
 		}
 		// add negative cache if necessary?
-		return resolveFile(service).exists();
+		return resolveFile(service).isPresent();
 	}
 	
 	
@@ -112,23 +112,27 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			}
 			return parentRunnerEnvironment.build(service,debug);
 		}
-		File sf = resolveFile(service);
-		
-		try(InputStream is = new FileInputStream(sf)) {
-			rs = installScript(service, is,service+".xml");
-//		} catch (IOException ioe) {
-//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
+		Optional<InputStream> is = resolveFile(service);
+		try {
+			return ReactiveStandalone.compileReactiveScript(is.get(), Optional.empty());
+		} catch (ParseException e) {
+			throw new IOException("Error parsing script: "+service, e);
 		}
-//		if(rs==null) {
-//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
-//		}
-		return rs;
 	}
 
-	private File resolveFile(String serviceName) {
-		File root = testRoot!=null?testRoot:new File( navajoConfig.getRootPath());
-		File f = new File(root,"reactive");
-		return new File(f,serviceName+".rr");
+	protected Optional<InputStream> resolveFile(String serviceName) {
+		FileInputStream inputStream;
+		try {
+			File root = testRoot!=null?testRoot:new File( navajoConfig.getRootPath());
+			File f = new File(root,"reactive");
+			if(!f.exists()) {
+				return Optional.empty();
+			}
+			inputStream = new FileInputStream(new File(f,serviceName+".rr"));
+			return Optional.of(inputStream);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -146,11 +150,9 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		ContextExpression src = (ContextExpression) scriptNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
 
 		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
-//		return new Reac
 		final boolean streamInput = pipes.stream().anyMatch(e->e.isStreamInput());
 
 		List<ReactivePipe> resolvedPipes = pipes.stream().map(node->(ReactivePipe)node.apply().value).collect(Collectors.toList());
-//		ReactivePipe pipe = (ReactivePipe) pipes.stream().findAny().get().apply().value;
 		Type type = resolvedPipes.stream().findFirst().map(e->e.finalType()).orElse(Type.ANY);
 		
 		return new ReactiveScript() {
@@ -168,7 +170,6 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			@Override
 			public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(resolvedPipes).map(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
-//				return pipe.execute(context, Optional.empty(), ImmutableFactory.empty());
 			}
 			
 			@Override
@@ -185,7 +186,6 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			@Override
 			public List<String> methods() {
 				return scriptNode.methods();
-//				return Arrays.asList(new String[]{"aap/noot,mies/wim"});
 			}
 		};
 	}
@@ -204,6 +204,17 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 				
 			}
 		}
+	}
+
+	@Override
+	public Optional<InputStream> sourceForService(String service) {
+		return this.resolveFile(service);
+	}
+
+	@Override
+	public ReactiveScript compiledScript(String service) throws IOException {
+		return build(service, false);
+//		return ReactiveStandalone.compileReactiveScript(source, binaryMime);
 	}
 
 }

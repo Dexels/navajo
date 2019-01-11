@@ -22,12 +22,12 @@ public class InputSourceFactory implements ReactiveSourceFactory, SourceMetadata
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{"path"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name"}));
+		return Optional.of(Arrays.asList(new String[]{}));
 	}
 
 	@Override

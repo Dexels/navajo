@@ -34,7 +34,8 @@ public class CallLocalSource implements ReactiveSource {
 		final Optional<String> tenant =  resolved.optionalString("service");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		System.err.println("Calling local: "+service);
-		Flowable<NavajoStreamEvent> emptyInput = Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(service, Optional.of(context.getUsername()), Optional.empty()));
+		Flowable<DataItem> emptyInput = Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(service, Optional.of(context.getUsername()), Optional.empty()))
+				.map(DataItem::of);
 		StreamScriptContext ctx = context.withService(service)
 				.withInput(emptyInput)
 				.withInput(Flowable.empty());
@@ -57,27 +58,6 @@ public class CallLocalSource implements ReactiveSource {
 		} catch (IOException e) {
 			return Flowable.error(e);
 		}
-
-		
-//		Flowable<DataItem> flow = client.callWithBodyToStream(server, e->
-//		e.header("X-Navajo-Username", username)
-//		 .header("X-Navajo-Password", password)
-//		 .header("X-Navajo-Service", service)
-//		 .method(HttpMethod.POST)
-//		, Flowable.<NavajoStreamEvent>empty()
-//				.compose(StreamDocument.inNavajo(service, Optional.of(username), Optional.of(password)))
-//				.lift(StreamDocument.serialize())
-//		, "text/xml")
-//		.doOnNext(e->System.err.println(new String(e)))
-//		.lift(XML.parseFlowable(10))
-//		.concatMap(e->e)
-//		.lift(StreamDocument.parse())
-//		.map(DataItem::ofEventStream);
-//		
-//		for (ReactiveTransformer reactiveTransformer : transformers) {
-//			flow = flow.compose(reactiveTransformer.execute(context));
-//		}
-//		return flow;
 	}
 
 

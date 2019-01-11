@@ -4,6 +4,7 @@
       <callback/>
       <client/>
    </header>
+   
    <message name="Bla" type="array">
       <message name="Bla" index="0" type="array_element">
          <property name="jet" type="integer" value="0"/>
