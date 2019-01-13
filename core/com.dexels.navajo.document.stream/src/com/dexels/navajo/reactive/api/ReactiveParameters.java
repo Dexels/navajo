@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,34 +43,6 @@ public class ReactiveParameters {
 		
 		return new ReactiveResolvedParameters(context, named,unnamed, currentMessage, paramMessage, validator);
 	}
-	
-	public List<Operand> resolveUnnamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage) {
-		// TODO fix blocking
-		return unnamed.stream().map(e->{
-			try {
-				return e.apply(context.collect().blockingGet(), currentMessage,Optional.of(paramMessage));
-			} catch (Exception e1) {
-				logger.error("Error applying param function: ", e1);
-				return new Operand(null,"string",null);
-			}
-		}).collect(Collectors.toList());
-	}
-	
-//	public List<Operand> resolveUnnamed(StreamScriptContext context ,DataItem currentMessage,DataItem paramMessage) {
-//		return unnamed.stream().map(e->{
-//			try {
-////				Optional<ImmutableMessage> param = paramMessage.isPresent() ? Optional.of(paramMessage.get().message()) : Optional.empty();
-//				return e.apply(context,  Optional.of(currentMessage.message()),paramMessage.stateMessage());
-//			} catch (Exception e1) {
-//				logger.error("Error applying param function: ", e1);
-//				return new Operand(null,"string",null);
-//			}
-//		}).collect(Collectors.toList());
-//	}
-
-//	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context ,Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator validator, Optional<XMLElement> sourceElement, String sourcePath) {
-//		return new ReactiveResolvedParameters(context, named, currentMessage, paramMessage,validator, sourceElement, sourcePath);
-//	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {
 		return withExpression(key, constantExpression( Operand.ofCustom(value, type)));

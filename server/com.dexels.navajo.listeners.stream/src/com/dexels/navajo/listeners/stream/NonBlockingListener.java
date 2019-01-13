@@ -163,7 +163,7 @@ public class NonBlockingListener extends HttpServlet {
 			return;
 		}
 		ac.setTimeout(-1);
-		StreamScriptContext context;
+		Single<StreamScriptContext> context;
 		try {
 			context = createScriptContext(uuid, ac, responseSubscriber,rs.streamInput());
 		} catch (AuthorizationException e3) {
@@ -176,7 +176,7 @@ public class NonBlockingListener extends HttpServlet {
 			response.sendError(500,"Server error");
 			return;
 		}
-		runningReactiveScripts.submit(context);
+//		runningReactiveScripts.submit(context);
 		
 			
 		try {
@@ -190,26 +190,33 @@ public class NonBlockingListener extends HttpServlet {
 
 //			if(!rs.streamInput()) {			}
 
-			Flowable<DataItem> execution = rs.streamInput() ? 
-					rs.execute(context).concatMapEager(e->e)
-					: context.collect()
-						.map(n->context.withInputNavajo(n))
-						.map(ctx->rs.execute(ctx)
-								.concatMapEager(e->e)
-								)
-						.toFlowable()
-						.flatMap(elt->elt)
-						.doOnComplete(()->context.complete())
-		                .doOnError((e)->context.error(e))
-		                .doOnCancel(()->removeRunningScript(uuid));
-
+			Flowable<DataItem> execution = context
+					.map(ctx->rs.execute(ctx))
+					.toFlowable().flatMap(e->e).concatMapEager(e->e)
+					.doOnComplete(()->ac.complete())
+					.doOnCancel(()->ac.complete())
+	                .doOnError((e)->context.error(e))
+	                .doOnCancel(()->removeRunningScript(uuid));
+						
+//					: context.map(ctx->rs.execute(ctx)).toFlowable().
+//						
+//						context.collect()
+//						.map(n->context.withInputNavajo(n))
+//						.map(ctx->rs.execute(ctx)
+//								.concatMapEager(e->e)
+//								)
+//						.toFlowable()
+//						.flatMap(elt->elt)
+//						.doOnComplete(()->context.complete())
+//		                .doOnError((e)->context.error(e))
+//		                .doOnCancel(()->removeRunningScript(uuid));
+//
 			System.err.println(">>> DataType: "+rs.dataType());
 			switch(rs.dataType()) {
 			case DATA:
 				execution
 					.map(di->di.data())
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnCancel(()->context.complete())
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -219,7 +226,6 @@ public class NonBlockingListener extends HttpServlet {
 				.onErrorResumeNext(cc)
 				.map(di->di.message())
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
-				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -232,7 +238,6 @@ public class NonBlockingListener extends HttpServlet {
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))
-				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -240,7 +245,7 @@ public class NonBlockingListener extends HttpServlet {
 				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
-					.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()), Optional.empty(),rs.methods()))
+					.compose(StreamDocument.inNavajo(serviceHeader, Optional.empty(), Optional.empty(),rs.methods()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
 					.compose(StreamCompress.compress(responseEncoding))
@@ -252,7 +257,7 @@ public class NonBlockingListener extends HttpServlet {
 							.compose(StreamCompress.compress(responseEncoding));
 						}
 					})
-                    .doOnCancel(()->{logger.warn("AAA"); context.complete();})
+                    .doOnCancel(()->{logger.warn("AAA"); ac.complete();})
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -376,7 +381,7 @@ public class NonBlockingListener extends HttpServlet {
 		    return bytesArray;
 	}
 
-	private StreamScriptContext createScriptContext(String uuid, AsyncContext ac, Disposable responseSubscriber, boolean streamInput) throws IOException, AuthorizationException {
+	private Single<StreamScriptContext> createScriptContext(String uuid, AsyncContext ac, Disposable responseSubscriber, boolean streamInput) throws IOException, AuthorizationException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
@@ -393,16 +398,17 @@ public class NonBlockingListener extends HttpServlet {
 		if("GET".equals(req.getMethod())) {
 			Navajo in = NavajoFactory.getInstance().createNavajo();
 			in.addHeader(NavajoFactory.getInstance().createHeader(in, serviceHeader, null, null, -1));
-			return new StreamScriptContext(tenant,
-			        access,
+			return Single.just(new StreamScriptContext(tenant,
+					serviceHeader,
+					in,
 					attributes,
 					Optional.empty(),
-					Optional.of(Single.just(in)),
 					Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), 
 					Collections.emptyList(), 
 					Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),
-					Optional.ofNullable(this.runningReactiveScripts)
-				);
+					Optional.ofNullable(this.runningReactiveScripts),
+					Optional.empty()
+				));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
@@ -414,25 +420,31 @@ public class NonBlockingListener extends HttpServlet {
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
 		
+		
+		
 		if(streamInput) {
 			Flowable<DataItem> input = inputStream
 					.map(DataItem::of);
-			return new StreamScriptContext(uuid, access, attributes, Optional.of(input),Optional.empty(), Optional.of(this.reactiveScriptEnvironment),
-	                Collections.emptyList(), Optional.of(() -> {
-	                    responseSubscriber.dispose();
-	                    ac.complete();
-	                }), Optional.of(runningReactiveScripts));
+			return Single.just(
+					new StreamScriptContext(tenant,serviceHeader,NavajoFactory.getInstance().createNavajo(), 
+							attributes, 
+							Optional.of(input),Optional.of(this.reactiveScriptEnvironment),
+							Collections.emptyList(), Optional.of(() -> {responseSubscriber.dispose(); ac.complete();}), 
+							Optional.of(runningReactiveScripts),
+							Optional.of(access.getInDoc())));
 		} else {
 			Single<Navajo> inputNavajo = inputStream
 				.toObservable()
 				.compose(StreamDocument.domStreamCollector())
 				.firstOrError();
-				
-			return new StreamScriptContext(uuid, access, attributes, Optional.empty(), Optional.of(inputNavajo), Optional.of(this.reactiveScriptEnvironment),
-	                Collections.emptyList(), Optional.of(() -> {
-	                    responseSubscriber.dispose();
-	                    ac.complete();
-	                }), Optional.of(runningReactiveScripts));
+			
+			return inputNavajo.map(nav->{
+				return new StreamScriptContext(tenant,serviceHeader,nav, attributes, Optional.empty(), Optional.of(this.reactiveScriptEnvironment),
+		                Collections.emptyList(), Optional.of(() -> {
+		                    responseSubscriber.dispose();
+		                    ac.complete();
+		                }), Optional.of(runningReactiveScripts), Optional.of(access.getInDoc()));
+			});
 		}
 		
 		

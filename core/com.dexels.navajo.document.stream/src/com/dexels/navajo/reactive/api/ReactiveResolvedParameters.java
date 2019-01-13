@@ -21,7 +21,6 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 
 public class ReactiveResolvedParameters {
 
@@ -43,7 +42,6 @@ public class ReactiveResolvedParameters {
 
 	private final List<ContextExpression> unnamed;
 
-	private final Maybe<Navajo> input;
 	private final Optional<Flowable<DataItem>> inputFlowable;
 	private Navajo resolvedInput;
 	
@@ -54,7 +52,6 @@ public class ReactiveResolvedParameters {
 		this.named = named;
 		this.unnamed = unnamed;
 		this.resolvedInput = context.resolvedNavajo();
-		this.input = context.collect();
 		this.inputFlowable = context.inputFlowable();
 		Optional<List<String>> allowed = validator.allowedParameters();
 		Optional<List<String>> required = validator.requiredParameters();
@@ -184,15 +181,14 @@ public class ReactiveResolvedParameters {
 	}
 	
 	private void resolveUnnamed() {
-//		logger.info("Resolving unnamed. Input: "+ImmutableFactory.getInstance().describe(this.currentMessage.orElseThrow(()->new RuntimeException("whoops"))));
 		List<? extends Operand> resolved = unnamed.stream()
 				.map(e->{
-					return e.apply(this.input.blockingGet(), this.currentMessage, Optional.of(this.paramMessage));
+					return e.apply(this.resolvedInput, this.currentMessage, Optional.of(this.paramMessage));
 				}).collect(Collectors.toList());
 		this.allResolved=true;
 		this.resolvedUnnamed.addAll(resolved);
 	}
-	
+//	
 	private void resolveNamed() {
 		named.entrySet().forEach(e->{
 //			if(e.getKey().equals("zus")) {
@@ -211,7 +207,7 @@ public class ReactiveResolvedParameters {
 			// TODO test for streaming
 			System.err.println("Present? "+inputFlowable.isPresent());
 			// TODO move this to constructor or something
-			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : input.blockingGet();
+			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : resolvedInput;
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);
 			if(expectedType.isPresent()) {

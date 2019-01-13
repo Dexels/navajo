@@ -34,7 +34,7 @@ public class CallLocalSource implements ReactiveSource {
 		final Optional<String> tenant =  resolved.optionalString("service");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
 		System.err.println("Calling local: "+service);
-		Flowable<DataItem> emptyInput = Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(service, Optional.of(context.getUsername()), Optional.empty()))
+		Flowable<DataItem> emptyInput = Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(service, Optional.empty(), Optional.empty()))
 				.map(DataItem::of);
 		StreamScriptContext ctx = context.withService(service)
 				.withInput(emptyInput)

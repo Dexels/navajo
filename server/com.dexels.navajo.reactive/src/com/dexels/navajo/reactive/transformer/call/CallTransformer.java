@@ -56,7 +56,6 @@ public class CallTransformer implements ReactiveTransformer {
 //					.map(DataItem::of);
 			
 			StreamScriptContext ctx = context
-			        .withoutInputNavajo()
 			        .withInput( ff.map(DataItem::of))
 					.withService(service);
 

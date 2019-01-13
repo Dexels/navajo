@@ -30,7 +30,7 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 
 	@Override
 	public List<String> services() {
-		return scriptsInProgress.values().stream().map(e->e.getService() + " ("+ e.getAccessId() +")").collect(Collectors.toList());
+		return scriptsInProgress.values().stream().map(e->e.getService() + " ("+ e.uuid() +")").collect(Collectors.toList());
 	}
 	
 	@Override
@@ -69,7 +69,6 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 			if(ctx.deployment().isPresent()) {
 				current.put("deployment", ctx.deployment().get());
 			}
-			current.put("username", ctx.getUsername());
 			current.put("started", ctx.getStarted());
 			current.put("running", (now-ctx.getStarted()));
 			list.add(current);
