@@ -67,7 +67,7 @@ public final class Round extends FunctionInterface {
 			double dd = d.doubleValue();
 			int digits = i.intValue();
 
-			dd = ( (int) ( 0.5 + dd * Math.pow( 10.0, digits ) ) ) / Math.pow( 10.0, digits );
+			dd = (int) Math.signum(dd) * ( (int) ( 0.5 + Math.abs(dd) * Math.pow( 10.0, digits ) ) ) / Math.pow( 10.0, digits );
 
 			return new Double( dd );
 		} catch ( Exception e ) {
@@ -79,9 +79,11 @@ public final class Round extends FunctionInterface {
 		Round r = new Round();
 
 		r.reset();
-		r.insertOperand( new Double( 3.141592 ) );
-		r.insertOperand( new Integer( 4 ) );
+		r.insertOperand( new Double( -100.3 ) );
+		r.insertOperand( new Integer( 0 ) );
 
 		System.err.println("Input " + r.getOperand( 0 ) + ", rounded to " + r.getOperand( 1 ) + " digits: " + r.evaluate() );
+		
+				
 	}
 }
