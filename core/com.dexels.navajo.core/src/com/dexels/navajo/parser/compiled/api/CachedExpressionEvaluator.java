@@ -51,7 +51,10 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 			ExpressionCache ce = ExpressionCache.getInstance();
 			Access access = params == null? null : (Access)params.get(Expression.ACCESS);
 			Operand val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
-			String type = MappingUtils.determineNavajoType(val);
+//			String type = MappingUtils.determineNavajoType(val);
+			if(val==null) {
+				throw new TMLExpressionException("Clause resolved to null, shouldnt happen:  expression: "+clause);
+			}
 			return val;
 		} catch (TMLExpressionException e) {
 		    if (inMessage != null) {

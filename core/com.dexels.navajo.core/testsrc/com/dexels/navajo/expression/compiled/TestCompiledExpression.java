@@ -101,6 +101,16 @@ public class TestCompiledExpression {
         Assert.assertEquals(true, o);
 	}
 	
+	@Test(expected=TMLExpressionException.class)
+	public void testNonExistantTML() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "[/Blib/Blob]";
+		StringReader sr = new StringReader(clause);
+		CompiledParser cp = new CompiledParser(sr);
+		Object o = Expression.evaluate(clause,input, null, null, null).value;
+		cp.Expression();
+        Assert.assertEquals(true, o);
+	}
+	
 	@Test
 	public void testParseExistsCheckNotExisting() throws ParseException, TMLExpressionException, SystemException {
 		String clause = "?[/TestMessage/TestProperty2] AND [/TestMessage/TestProperty2] != ''";

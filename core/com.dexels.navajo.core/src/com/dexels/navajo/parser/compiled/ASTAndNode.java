@@ -57,7 +57,8 @@ public final class ASTAndNode extends SimpleNode {
 		        if(b==null) {
 	        		return Operand.ofBoolean(Boolean.FALSE);
 		        }
-		        return Operand.ofBoolean((Boolean)b.value);
+		        Boolean value = (Boolean)b.value;
+				return Operand.ofBoolean(value!=null?value:Boolean.FALSE);
 			}
 
 			@Override

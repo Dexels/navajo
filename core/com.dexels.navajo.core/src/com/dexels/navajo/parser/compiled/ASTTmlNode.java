@@ -253,7 +253,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                            Selection sel = (Selection) list.get(0);
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
-		                          return null;
+		                          return Operand.NULL;
 		                        }
 		                    } catch (com.dexels.navajo.document.NavajoException te) {
 		                        throw new RuntimeException(te.getMessage());
