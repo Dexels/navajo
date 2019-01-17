@@ -105,8 +105,6 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 			for (Function<DataItem, DataItem> function : ll) {
 				result = function.apply(result);
 			}
-			System.err.println(">>>>>>>>> "+ImmutableFactory.getInstance().describe(result.message()));
-			System.err.println(">>>>STATE>>>>> "+ImmutableFactory.getInstance().describe(mrg.stateMessage()));
 			return result;
 		};
 //		return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));

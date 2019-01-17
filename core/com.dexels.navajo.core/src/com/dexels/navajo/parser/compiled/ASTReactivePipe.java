@@ -17,6 +17,8 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 public
 class ASTReactivePipe extends SimpleNode {
+	
+public int args = 0;
   public ASTReactivePipe(int id) {
     super(id);
   }
@@ -24,14 +26,21 @@ class ASTReactivePipe extends SimpleNode {
 @SuppressWarnings("unchecked")
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+	ASTPipeline actual = (ASTPipeline) jjtGetChild(0);
 
-	int count = jjtGetNumChildren();
-	Node sourceNode = jjtGetChild(0);
+	int count = actual.jjtGetNumChildren();
+	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE).apply().value;
+	for (int i = 1; i < actual.jjtGetNumChildren(); i++) {
+		ASTFunctionNode sdn = (ASTFunctionNode)actual.jjtGetChild(i);
+//		sdn.interpretToLambda(problems, "", functionClassifier)
+	}
+//	ASTPipeline sourceNode = (ASTPipeline) jjtGetChild(0);
 	List<Object> pipeElements = new ArrayList<>();
-	ReactiveSource source = (ReactiveSource) sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply().value;
+//	Object value = sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply().value;
+//	ReactiveSource source = (ReactiveSource) value;
 //	pipeElements.add(source);
 	for (int i = 1; i < count; i++) {
-		ContextExpression interpretToLambda = jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
+		ContextExpression interpretToLambda = actual.jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
 		Object result = interpretToLambda.apply().value;
 		if(result instanceof Function) {
 			Function<StreamScriptContext,Function<DataItem,DataItem>> merger = (Function<StreamScriptContext,Function<DataItem,DataItem>>) result;
@@ -41,13 +50,35 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 			ReactiveTransformer transformer = (ReactiveTransformer) result;
 			pipeElements.add(transformer);
 		} else {
+			System.err.println("huh?"+result);
 			// something weird
 		}
 	}
-	ReactivePipeNode pipe = new ReactivePipeNode(source, pipeElements);
+	ReactivePipeNode pipe = new ReactivePipeNode(sourceNode, pipeElements);
 	return pipe;
-	
 }
+
+public void addSource() {
+	System.err.println("Adding source");
+	args++;
+}
+
+public void addTransformer() {
+	System.err.println("Adding transformer");
+	args++;
+}
+
+@Override
+public void jjtClose() {
+	super.jjtClose();
+//	System.err.println(">Children: "+jjtGetNumChildren());
+//	for (int i = 0; i < jjtGetNumChildren(); i++) {
+//		SimpleNode sn = (SimpleNode) jjtGetChild(i);
+//		System.err.println("Child: --> "+sn);
+//	}
+}
+
+
 
 }
 /* JavaCC - OriginalChecksum=dd1db8c7a34ea094a180c8dc73739db3 (do not edit this line) */

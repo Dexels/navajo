@@ -116,6 +116,7 @@ public class ReactiveStandalone {
 	private static Navajo runContext(InputStream inExpression, Optional<String> binaryMime, StreamScriptContext context)
 			throws ParseException, IOException {
 		CompiledReactiveScript crs = compileReactiveScript(inExpression,binaryMime);
+		crs.typecheck();
 		return Flowable.fromIterable(crs.pipes)
 				.concatMap(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()))
 				.map(e->e.event())
@@ -139,7 +140,9 @@ public class ReactiveStandalone {
 			System.err.println("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
 			System.err.println("Sourcetype: "+src);
 			List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
-			return new CompiledReactiveScript(pp, rootNode.methods(),binaryMime);
+			CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods(),binaryMime);
+			compiledReactiveScript.typecheck();
+			return compiledReactiveScript;
 		}
 	}
 

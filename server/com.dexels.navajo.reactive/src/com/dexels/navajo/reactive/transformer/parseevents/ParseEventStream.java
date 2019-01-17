@@ -31,7 +31,8 @@ public class ParseEventStream implements ReactiveTransformer {
 		Optional<String> path = resolved.optionalString("path").map(pth->pth.startsWith("/") ? pth.substring(1) : pth);
 //		switch(inferredType) {
 //		case EVENT:
-			return flow->flow.map(di->di.event())
+			return flow->flow.map(di->di.eventStream())
+					.concatMap(e->e)
 					.compose(StreamDocument.eventsToImmutable(path))
 //					.doOnNext(e->System.err.println("Element encountered: "+e))
 					.map(DataItem::of);

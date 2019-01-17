@@ -48,8 +48,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	
 	private boolean emitStack() {
 		boolean b = (this.matchStack.isEmpty() && this.tagStack.size()==1) || this.tagStack.equals(this.matchStack);
-		System.err.println("emit? "+b+" empty? "+this.matchStack.isEmpty());
-		System.err.println("tagStack: "+this.tagStack+" >> "+this.matchStack);
 		return  b;
 	}
 	

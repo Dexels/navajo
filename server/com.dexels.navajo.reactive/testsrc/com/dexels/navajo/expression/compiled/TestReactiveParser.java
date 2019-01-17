@@ -2,7 +2,10 @@ package com.dexels.navajo.expression.compiled;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -13,12 +16,18 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.parser.compiled.ASTPipeline;
+import com.dexels.navajo.parser.compiled.ASTReactivePipe;
+import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.reactive.ClasspathReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
 import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.ReactiveStandalone;
+import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactivePipe;
 
 public class TestReactiveParser {
 	
@@ -61,6 +70,15 @@ public class TestReactiveParser {
 	}
 	
 	@Test
+	public void testPipeParser() throws ParseException, IOException {
+			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+			CompiledReactiveScript rs = ReactiveStandalone.compileReactiveScript(TestReactiveParser.class.getResourceAsStream("pipe.rr"), Optional.empty());
+			int size = rs.pipes.stream().findFirst().get().transformers.size();
+			System.err.println("size: "+size);
+			Assert.assertEquals(3, size);
+	}
+	
+	@Test
 	public void readSingleScript() throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("single.rr"),Optional.empty());
 		n.write(System.err);
@@ -69,16 +87,19 @@ public class TestReactiveParser {
 	@Test
 	public void readMultipleScript() throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/multiple.rr");
+		int firstSize = n.getMessage("FirstMessage").getArraySize();
+		int secondSize = n.getMessage("SecondMessage").getArraySize();
+		Assert.assertEquals(5, firstSize);
+		Assert.assertEquals(2, secondSize);
 		n.write(System.err);
 	}
 
-	
-	
-	
 	@Test
 	public void readJoinScript() throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/join.rr");
+		int i = (Integer) n.getProperty("/Test/sum").getTypedValue();
 		n.write(System.err);
+		Assert.assertEquals(10, i);
 	}
 
 
@@ -86,12 +107,18 @@ public class TestReactiveParser {
 	@Test
 	public void testReduce( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reduce.rr");
+		int i = (Integer) n.getProperty("/Bla/sum").getTypedValue();
+		Assert.assertEquals(105, i);
 		n.write(System.err);
 	}
 	
 	@Test
 	public void testReduceToList( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reducetolist.rr");
+		Message m = n.getMessage("Test/SubMessage");
+		int i = m.getArraySize();
+		Assert.assertEquals(30, i);
+		
 		n.write(System.err);
 	}
 	
@@ -152,5 +179,35 @@ public class TestReactiveParser {
 		
 	}
 
+	@Test
+	public void testCallLocal( ) throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/calllocal.rr");
+	}
+	
+	@Test
+	public void testTypeCheck() throws ParseException, IOException {
+		ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("testtypecheck.rr"), Optional.empty()).typecheck();
+	}
 
+
+	@Test
+	public void testTransformerCount() throws ParseException {
+//		String exp = "eventsource(classpath='tmlinput.xml')->streamtoimmutable(path='/Bla')->stream(messageName='Oe',isArray=true)";
+		String exp = "->single(count=100)->filter([id]%3==0)->filter([id]%2==0)->filter([id]%2==0)";
+		CompiledParser cp = new CompiledParser(new StringReader(exp));
+		cp.Expression();
+		ASTReactivePipe rootNode = (ASTReactivePipe) cp.getJJTree().rootNode();
+		ASTPipeline rp = (ASTPipeline) rootNode.jjtGetChild(0);
+//		System.err.println("rootNode: "+rp.getClass());
+		List<String> problems = new ArrayList<>();
+		rootNode.interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE);
+//		List<ReactivePipeNode> pipes
+//		System.err.println("Args: "+rootNode.args);
+//		ReactivePipe src = (ReactivePipe) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
+//		System.err.println("Sourcetype: "+src.source);
+//		int transformers = src.transformers.size();
+//		System.err.println("Transformercount: "+transformers);
+//		List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
+
+	}
 }

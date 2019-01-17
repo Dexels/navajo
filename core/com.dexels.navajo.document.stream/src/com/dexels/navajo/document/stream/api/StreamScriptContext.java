@@ -10,11 +10,15 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.StreamDocument;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public class StreamScriptContext {
 //    private final Access access;
@@ -82,7 +86,7 @@ public class StreamScriptContext {
 //        this.access = new Access(-1, -1, username.orElse("placeholder"), service, "stream", "ip", "hostname", null, false, null);
         this.attributes = attributes;
         this.inputFlowable = input;
-        this.collectedInput = inputNavajo;
+        this.collectedInput = mergeNavajo(inputNavajo,authNavajo);
         this.runner = runner;
         this.deployment = runner.flatMap(r->r.deployment());
         this.methods = addedMethods;
@@ -92,8 +96,29 @@ public class StreamScriptContext {
 //      this.asyncContext = asyncContext;
     }
 	
+//	in = context.inputFlowable().get().map(e->e.event()).toObservable().compose(StreamDocument.domStreamCollector()).blockingFirst();
+
 	
+	private Navajo mergeNavajo(Navajo inputNavajo, Optional<Navajo> merging) {
+		Navajo in = inputNavajo.copy();
+		if(merging.isPresent()) {
+			List<Message> msgs = merging.get().getAllMessages();
+			msgs.forEach(e->{
+				// TODO is this copy necessary?
+				in.addMessage(e.copy());
+			});
+			
+		}
+		return in;
+	}
 	
+	public Maybe<Navajo> blockingNavajo() {
+		if(!this.inputFlowable.isPresent()) {
+			return Maybe.just(this.collectedInput);
+		}
+		Maybe<Navajo> collect = inputFlowable().get().map(e->e.event()).toObservable().compose(StreamDocument.domStreamCollector()).firstElement();
+		return collect.map(e->mergeNavajo(collectedInput, Optional.of(e))) ;
+	}
 	public String uuid() {
 		return uuid;
 	}
@@ -168,6 +193,8 @@ public class StreamScriptContext {
     }
 
 	public Navajo resolvedNavajo() {
+		Navajo resolved = this.collectedInput;
+		
 		return this.collectedInput;
 	}
 

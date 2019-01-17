@@ -40,40 +40,25 @@ public class CallTransformer implements ReactiveTransformer {
 		return flow->
 			{
 				//TODO add messages? We have an event stream input, unsure how to deal with this.
-	
 			if(debug) {
 				flow = flow.doOnNext(
 						e->logger.info("calltransformerEvent: "+ e)
 				);
 			}
-			Flowable<NavajoStreamEvent> ff = flow.map(e->e.eventStream())
-					.concatMap(e->e)
-					.doOnNext(e->System.err.println("><> event: "+e));
-//			Flowable<DataItem> ddd = ff.concatMap(e->e)
-//					.doOnNext(
-//							e->System.err.println("Navajo Stream Event: "+e)
-//							)
-//					.map(DataItem::of);
-			
-			StreamScriptContext ctx = context
-			        .withInput( ff.map(DataItem::of))
-					.withService(service);
-
-//			return ctx.inputFlowable().get();
-			return callService(ctx, service, debug).concatMap(e->e);
-//			return ff.map(DataItem::of);
-//			return callService(context,ff,service,debug).concatMap(e->e);
-
+			Flowable<DataItem> ff = flow.map(e->e.eventStream())
+					.map(callStream->{
+						StreamScriptContext ctx = context
+						        .withInput( callStream.map(DataItem::of))
+								.withService(service);
+						return callService(ctx, service, debug).concatMap(e->e);
+					}).concatMap(e->e);
+			return ff;
+//			return callService(ctx, service, debug).concatMap(e->e);
 		};
 	}
 
 		
 	private Flowable<Flowable<DataItem>> callService(StreamScriptContext ctx, String service, boolean debug) {
-//			StreamScriptContext ctx = context
-//			        .withoutInputNavajo()
-//			        .withInput(input.map(DataItem::of))
-//					.withService(service);
-			
 			try {
 				return Flowable.just(
 							ctx.runner()

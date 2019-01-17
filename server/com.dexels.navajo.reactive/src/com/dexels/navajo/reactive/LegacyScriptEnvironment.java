@@ -150,7 +150,12 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 
 	private final Navajo execute(StreamScriptContext context) throws IOException {
 		MDC.put("instance", context.getTenant());
-		Navajo in = context.resolvedNavajo();
+		Navajo in;
+		if(context.inputFlowable().isPresent()) {
+			in = context.blockingNavajo().blockingGet();
+		} else {
+			in = context.resolvedNavajo();
+		}
 		in.removeHeader();
 		if(in.getHeader()==null) {
 			in.addHeader(NavajoFactory.getInstance().createHeader(in, context.getService(), context.getUsername(), "", -1));
@@ -167,8 +172,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 			} else {
 				in.getHeader().setRPCUser(context.getUsername());
 				Navajo outDoc = getLocalClient().handleInternal(context.getTenant(), in, true);
-
-//				Navajo outDoc = getLocalClient().handleInternal(context.tenant, in, null, createClientInfo(context));
 				return outDoc;
 			}
 		} catch (Throwable e) {

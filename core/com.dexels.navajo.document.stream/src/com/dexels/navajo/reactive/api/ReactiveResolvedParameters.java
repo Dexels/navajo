@@ -205,7 +205,6 @@ public class ReactiveResolvedParameters {
 		Operand applied;
 		try {
 			// TODO test for streaming
-			System.err.println("Present? "+inputFlowable.isPresent());
 			// TODO move this to constructor or something
 			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : resolvedInput;
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));

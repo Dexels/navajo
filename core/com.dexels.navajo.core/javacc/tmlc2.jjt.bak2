@@ -182,14 +182,14 @@ void PossiblePipe() #void:
 }
 {
 	OrExpression() 
-	| <PIPE>  ReactivePipe()  #ReactivePipe
+	| <PIPE>  ReactivePipe() {} #ReactivePipe
 } 
 
 ASTPipeline ReactivePipe() #Pipeline:
 {
 }
 {
-	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+	(OrExpression() {} <PIPE> {}  ) + #Pipeline {return jjtThis; }
 }
 
 void OrExpression() #void:

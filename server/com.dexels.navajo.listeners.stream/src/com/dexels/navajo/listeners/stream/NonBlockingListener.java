@@ -158,11 +158,11 @@ public class NonBlockingListener extends HttpServlet {
 			if(responseEncoding.isPresent()) {
 				response.addHeader("Content-Encoding", responseEncoding.get());
 			}
-		} catch (ReactiveParseException e2) {
+		} catch (ReactiveParseException|IOException e2) {
 			respondError("Script compilation problem",serviceHeader,uuid, responseEncoding,response,  responseSubscriber, e2);	
 			return;
 		}
-		ac.setTimeout(-1);
+		ac.setTimeout(1000000);
 		Single<StreamScriptContext> context;
 		try {
 			context = createScriptContext(uuid, ac, responseSubscriber,rs.streamInput());
@@ -193,8 +193,8 @@ public class NonBlockingListener extends HttpServlet {
 			Flowable<DataItem> execution = context
 					.map(ctx->rs.execute(ctx))
 					.toFlowable().flatMap(e->e).concatMapEager(e->e)
-					.doOnComplete(()->ac.complete())
-					.doOnCancel(()->ac.complete())
+//					.doOnComplete(()->ac.complete())
+//					.doOnCancel(()->ac.complete())
 	                .doOnError((e)->context.error(e))
 	                .doOnCancel(()->removeRunningScript(uuid));
 						

@@ -174,22 +174,16 @@ void Expression() #void:
 }
 {
   /*AdditiveExpression()*/
-  PossiblePipe()
+  ReactivePipe()
 }
 
-void PossiblePipe() #void:
+void ReactivePipe() #void:
 {
 }
 {
-	OrExpression() 
-	| <PIPE>  ReactivePipe()  #ReactivePipe
-} 
-
-ASTPipeline ReactivePipe() #Pipeline:
-{
-}
-{
-	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+(	<PIPE> OrExpression() {jjtThis.addSource();}
+	(<PIPE> OrExpression() {jjtThis.addTransformer();})* 
+) #ReactivePipe
 }
 
 void OrExpression() #void:
@@ -290,11 +284,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( PossiblePipe() {jjtThis.args++;}
+        ( ReactivePipe() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	PossiblePipe() {jjtThis.args++;} 
+     		(	ReactivePipe() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]

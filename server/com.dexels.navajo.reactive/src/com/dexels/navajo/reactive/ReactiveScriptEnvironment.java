@@ -27,6 +27,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
@@ -115,7 +116,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		Optional<InputStream> is = resolveFile(service);
 		try {
 			return ReactiveStandalone.compileReactiveScript(is.get(), Optional.empty());
-		} catch (ParseException e) {
+		} catch (ParseException|TokenMgrError e) {
 			throw new IOException("Error parsing script: "+service, e);
 		}
 	}

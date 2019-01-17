@@ -36,6 +36,8 @@ import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformer
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FirstTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
+import com.dexels.navajo.reactive.transformer.other.InMessageTransformer;
+import com.dexels.navajo.reactive.transformer.other.InMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceToListTransformerFactory;
@@ -79,7 +81,10 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new FirstTransformerFactory(),"first");
 		addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
 		addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		addReactiveTransformerFactory(new CallTransformerFactory(),"callLocal");
 		addReactiveTransformerFactory(new PipeTransformerFactory(),"pipe");
+		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"eventstream");
+		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
 
 	}
 

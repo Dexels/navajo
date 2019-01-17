@@ -35,6 +35,11 @@ public class CompiledReactiveScript implements ReactiveScript{
 		this.binaryMime = binaryMime;
 	}
 
+	public void typecheck() {
+		for (ReactivePipe pipe : pipes) {
+			pipe.typecheck();
+		}
+	}
 	@Override
 	public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
 		return Flowable.fromIterable(pipes).map(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()));

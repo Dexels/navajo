@@ -1,7 +1,7 @@
 single()
 	->set(somestring='blob')
 	->join(
-		single()
+		    ->single()
 			->set(sub='subprop'),
 		set(moved=[sub],constant='iamconstant',tryagain=[@somestring]),
 		set(someint=3)
