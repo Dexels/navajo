@@ -1,5 +1,8 @@
 package de.xeinfach.kafenio.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <P>Created on: Jan 30, 2004, 6:36:09 PM</P>
  * <P>Description: a lean logger class that supports
@@ -19,6 +22,9 @@ public class LeanLogger {
 	private static int currentLogLevel = 1;
 	private String classToLog = null;
 	
+	
+	private final static Logger logger = LoggerFactory.getLogger(LeanLogger.class);
+
 	/**
 	 * creates a new instance of LeanLogger.
 	 * @param className the classname to log.
@@ -33,7 +39,7 @@ public class LeanLogger {
 	 */
 	public void debug(String message) {
 		if (getCurrentLogLevel() >= 4) {
-			System.out.println("[DEBUG]: (" + classToLog + ") " + message);
+			logger.debug("[DEBUG]: (" + classToLog + ") " + message);
 		}
 	}
 
@@ -43,7 +49,7 @@ public class LeanLogger {
 	 */
 	public void info(String message) {
 		if (getCurrentLogLevel() >= 3) {
-			System.out.println("[INFO]: (" + classToLog + ") " + message);
+			logger.info("[INFO]: (" + classToLog + ") " + message);
 		}
 	}
 	/**
@@ -52,7 +58,7 @@ public class LeanLogger {
 	 */
 	public void warn(String message) {
 		if (getCurrentLogLevel() >= 2) {
-			System.out.println("[WARN]: (" + classToLog + ") " + message);
+			logger.warn("[WARN]: (" + classToLog + ") " + message);
 		}
 	}
 	/**
@@ -61,7 +67,7 @@ public class LeanLogger {
 	 */
 	public void error(String message) {
 		if (getCurrentLogLevel() >= 1) {
-			System.out.println("[ERROR]: (" + classToLog + ") " + message);
+			logger.error("[ERROR]: (" + classToLog + ") " + message);
 		}
 	}
 
@@ -79,7 +85,7 @@ public class LeanLogger {
 		if (i >= 0 && i <= 4) {
 			currentLogLevel = i;
 		} else {
-			System.err.println("serCurrentLogLevel: invalid argument."); 
+			logger.warn("serCurrentLogLevel: invalid argument."); 
 		}
 	}
 }

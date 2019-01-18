@@ -40,10 +40,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 			metadata.put("encoding", uc.getContentEncoding());
 			metadata.put("type", uc.getContentType());
 			uc.connect();
-//			Map<String, List<String>> fields = uc.getHeaderFields();
-//			for (Entry<String,List<String>> e : fields.entrySet()) {
-//				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
-//			}
+
 			is = uc.getInputStream();
 			String enc = uc.getHeaderField("Content-Encoding");
 			if(enc!=null) {

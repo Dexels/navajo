@@ -84,21 +84,9 @@ private List<TipiExtension> extensionList = null;
 		Enumeration<String> en = req.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String header = en.nextElement();
-			System.err.println("HEADER: "+header+" : "+req.getHeader(header));
+//			System.err.println("HEADER: "+header+" : "+req.getHeader(header));
 		}
 		;
-		
-//		URL u = new URL(url);
-//		String contextname = con.getRequest().getContextPath();
-//		String host = con.getServlet().getInitParameter("host");
-//
-//		if(host==null) {
-//			host = u.getHost();
-//		}
-//
-//		URL rootURL = null;
-//		rootURL = new URL("http://docker.local:8080/logout?destination=Login");
-//		rootURL = new URL(u.getProtocol(),host, u.getPort(), contextname + "/logout?destination=" + u.getPath());
 
 		return extractURL(req,"/logout");
 	}

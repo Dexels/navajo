@@ -125,8 +125,7 @@ public class Msg {
 			default:
 			    logger.warn("Unsupported type {}", type);
 				break;
-		}
-//			System.err.println("Name: "+prop.name()+" -> "+prop.type()+" obje: "+prop.value().getClass());
+			}
 		}
 		// TODO
 		return ImmutableFactory.create(values, types);

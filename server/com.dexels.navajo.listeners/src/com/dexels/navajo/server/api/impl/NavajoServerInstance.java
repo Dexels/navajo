@@ -49,7 +49,7 @@ public class NavajoServerInstance implements NavajoServerContext {
 	public ResourceBundle getClientSettingsBundle() throws IOException {
 		File props = new File(getConfigRoot(), "client.properties");
 		if (!props.exists()) {
-			System.err.println("Not found.");
+			logger.warn("Not found.");
 			return null;
 		}
 		FileReader fr = null;

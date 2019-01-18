@@ -41,8 +41,7 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 					.getHttpResource(name)
 					.put(context.getTenant(), bucket, id,type, in)
 					.map(status->ImmutableFactory.empty().with("code", status, Property.INTEGER_PROPERTY)).map(DataItem::of)
-					.toFlowable()
-					.doOnComplete(()->System.err.println("EXE complete:"));
+					.toFlowable();
 		};
 	}
 

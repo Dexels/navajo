@@ -17,7 +17,6 @@ public class TipiNavigationButton extends TipiButton {
 			private static final long serialVersionUID = 4645763999780625837L;
 			@Override
 			protected void fireClick() {
-		    	System.err.println("KLIK!");
 		    }
 		    @Override
 		    public void changeVariables(Object source, Map<String, Object> variables) {
@@ -33,7 +32,6 @@ public class TipiNavigationButton extends TipiButton {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-System.err.println("KLIIIIK!");		
 
 			}
 			

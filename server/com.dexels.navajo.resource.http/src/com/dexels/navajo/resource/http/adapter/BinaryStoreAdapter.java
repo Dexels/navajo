@@ -81,7 +81,7 @@ public class BinaryStoreAdapter implements Mappable {
 //	}
 //	
 	public void setExpiration(Object expiration) {
-		System.err.println("Setting expiration: "+expiration);
+		logger.debug("Setting expiration: "+expiration);
 		if(expiration instanceof Long) {
 			this.expiration = (Long)expiration;
 			return;

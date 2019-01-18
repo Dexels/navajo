@@ -25,23 +25,15 @@ public class FilterTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current, ImmutableMessage param) {
-//		ReactiveResolvedParameters parms = parameters.resolve(context,current, param, metadata);
-//		parms.unnamedParameters().forEach(unnamed->{
-//			System.err.println("Class: "+unnamed);
-//		});
 		return flow->{
 			for (ContextExpression unnamed  : parameters.unnamed) {
 				flow = flow.filter(item->{
 					Operand result = unnamed.apply(null, Optional.of(item.message()),Optional.of(item.stateMessage()));
 					return result.booleanValue();
-				}).doOnNext(e->System.err.println("Blob"));
+				});
 			}
 			return flow;
 		};
-//		return e->e.filter(item->{
-//			return parms.paramBoolean("filter");
-//
-//		});
 	}
 
 	@Override

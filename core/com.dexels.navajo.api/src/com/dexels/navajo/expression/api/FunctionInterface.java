@@ -425,14 +425,11 @@ public abstract class FunctionInterface {
 				problems.add("Argument # "+argumentNumber+" of type: "+alternatives[argumentNumber]+" is incompatible with: "+rt);
 			}
 			argumentNumber++;
-			
-//			System.err.println("Checking context: "+);
 		}
 		return problems;
 	}
 
 	private boolean isCompatible(String rt, String inputType) {
-		System.err.println("Comparing: "+rt+" -> "+inputType);
 		if(rt==null || inputType==null) {
 			return true;
 		}

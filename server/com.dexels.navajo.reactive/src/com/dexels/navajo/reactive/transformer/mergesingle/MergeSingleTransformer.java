@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
@@ -25,6 +28,8 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 //	private final Function<StreamScriptContext,Function<DataItem,DataItem>> joiner;
 	private final TransformerMetadata metadata;
 	private final ReactiveParameters parameters;
+
+	private final static Logger logger = LoggerFactory.getLogger(MergeSingleTransformer.class);
 
 	public MergeSingleTransformer(TransformerMetadata metadata, ReactiveParameters parameters, List<ReactiveParseProblem> problems) {
 //		this.joiner = joiner;
@@ -50,17 +55,12 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		if(!isOk) {
 			problems.add(ReactiveParseProblem.of("All following types should be reactive mappers"));
 		}
-
-		parameters.unnamed.stream().skip(1).map(e->e.apply().value).forEach(e->System.err.println("THING: "+e));
 	}
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
 		ReactiveResolvedParameters params = parameters.resolve(context, current, param, metadata);
-		System.err.println("unnamedcount: "+params.unnamedParameters().size());
-		for (Operand oo : params.unnamedParameters()) {
-			System.err.println("Operand: "+oo.type+" >> "+oo.value);
-		}
+		logger.info("unnamedcount: "+params.unnamedParameters().size());
 		List<Operand> mappers = params.unnamedParameters().stream().skip(1).collect(Collectors.toList());
 		ReactivePipe source = (ReactivePipe) params.unnamedParameters()
 				.stream()
@@ -70,26 +70,13 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		
 			return flow->flow.map(outerItem->outerItem.withStateMessage(current.orElse(ImmutableFactory.empty())))
 				.flatMap(item->{
-					System.err.println(">>> "+ImmutableFactory.getInstance().describe(item.stateMessage()));
-					System.err.println(">|> "+ImmutableFactory.getInstance().describe(item.message()));
 					Function<? super DataItem, ? extends DataItem> joiner = merge(context,item,mappers);
 					return source.execute(context,  Optional.of(item.message()), item.stateMessage())
-//						.map(e->e.message().merge(item.message(), Optional.empty()))
 						.firstElement()
-						
 						.map(ee->joiner.apply(ee.withStateMessage(item.message())))
-	//					.map(e->merge(item).apply(e))
 						.toFlowable();
 				}
-				
-					
-//							.map(reducedItem->joiner.apply(context)
-//							.apply(DataItem.of(item.message(), reducedItem.message()))
-//							)
 		,false,10);
-//		.map(e->DataItem.of(e));
-				
-				
 	}
 	
 	private static final Function<? super DataItem, ? extends DataItem> merge(StreamScriptContext context,DataItem with,List<Operand> mappers) {
@@ -107,8 +94,6 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 			}
 			return result;
 		};
-//		return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));
-		
 	}
 
 	@Override

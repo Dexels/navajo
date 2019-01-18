@@ -112,7 +112,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			tagStack.pop();
 			return Flowable.empty();
 		case ARRAY_STARTED:
-			System.err.println("n: "+n.path());
 			tagStack.push(n.path());
 			Message parentMessage = null;
 			if(!messageStack.isEmpty()) {
@@ -134,15 +133,6 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 			return Flowable.empty();
 		case ARRAY_ELEMENT_STARTED:
 			String arrayElementName = tagStack.peek();
-//			String  arrayPath = currentPath();
-//			AtomicInteger currentCount = arrayCounts.get(arrayPath);
-//			if(currentCount!=null) {
-//				String ind = "@"+currentCount.getAndIncrement();
-//				tagStack.push(ind);
-//			} else {
-//				System.err.println("Huh?!");
-//			}
-//			arrayPath = currentPath();
 			Message newElt = NavajoFactory.getInstance().createMessage(null, arrayElementName, Message.MSG_TYPE_ARRAY_ELEMENT);
 			Message arrParent = messageStack.peek();
 			arrParent.addElement(newElt);

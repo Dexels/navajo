@@ -7,6 +7,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.kafka.api.OffsetQuery;
 import com.dexels.navajo.document.stream.DataItem;
@@ -30,7 +33,9 @@ public class SubscriberReactiveSource implements ReactiveSource {
 	private final Optional<OffsetQuery> offsetQuery;
 	private final SourceMetadata metadata;
 	
-// 	<source.kafka.message [resource="topicscubscriber"] topic="bla-bla" group="bla" from="bla-bla:0">
+	
+	private final static Logger logger = LoggerFactory.getLogger(SubscriberReactiveSource.class);
+
 
 	public SubscriberReactiveSource(SourceMetadata metadata, TopicSubscriber topicSubscriber, Optional<OffsetQuery> offsetQuery, ReactiveParameters params,
 		 Map<String, Object> subscriberSettings) {
@@ -67,7 +72,7 @@ public class SubscriberReactiveSource implements ReactiveSource {
 			.doOnRequest(e->totalRequest.addAndGet(e))
 			.map(e->DataItem.of(e.value()))
 			.doOnNext(e->outMessages.incrementAndGet())
-			.doOnComplete(()->System.err.println("Subscriber total: "+outMessages.get()));
+			.doOnComplete(()->logger.info("Subscriber total: "+outMessages.get()));
 		
 		return flow;
 			

@@ -114,7 +114,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 			u = parkSingle(emailNavajo, true);
 		} else {
 			String contentType = (String) emailNavajo.getProperty("Mail/ContentType").getTypedValue();
-			System.err.println("ContentType: "+contentType);
+			logger.info("ContentType: "+contentType);
 			if(contentType.startsWith("multipart/alternative")) {
 				u = parkAlternative(emailNavajo, true);
 			} else {

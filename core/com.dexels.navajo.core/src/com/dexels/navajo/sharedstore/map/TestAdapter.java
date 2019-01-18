@@ -3,6 +3,9 @@ package com.dexels.navajo.sharedstore.map;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -21,6 +24,8 @@ public class TestAdapter implements Mappable {
 	
 	public static HashSet preventCollection = new HashSet();
 	
+	private final static Logger logger = LoggerFactory.getLogger(TestAdapter.class);
+
 	@Override
 	public void kill() {
 	}
@@ -59,7 +64,7 @@ public class TestAdapter implements Mappable {
 			RemoteReference rr = (RemoteReference) stm.get(key);
 			return (String) rr.getObject();
 		} else {
-			System.err.println("Could not find sharedtribalmap with id: " + id);
+			logger.warn("Could not find sharedtribalmap with id: " + id);
 			return null;
 		}
 	}

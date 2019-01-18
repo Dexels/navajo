@@ -13,7 +13,6 @@ public class ClasspathReactiveScriptEnvironment extends ReactiveScriptEnvironmen
 	@Override
 	protected Optional<InputStream> resolveFile(String serviceName) {
 		InputStream resourceAsStream = clazz.getResourceAsStream(serviceName+".rr");
-		System.err.println("bb: "+resourceAsStream);
 		return Optional.ofNullable(resourceAsStream);
 	}
 

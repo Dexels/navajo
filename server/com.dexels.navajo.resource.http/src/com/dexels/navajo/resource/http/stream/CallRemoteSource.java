@@ -49,13 +49,11 @@ public class CallRemoteSource implements ReactiveSource {
 				.compose(StreamDocument.inNavajo(service, Optional.of(username), Optional.of(password)))
 				.lift(StreamDocument.serialize())
 		, "text/xml")
-		.doOnNext(e->System.err.println(new String(e)))
 		.lift(XML.parseFlowable(10))
 		.concatMap(e->e)
 		.lift(StreamDocument.parse())
 		.concatMap(e->e)
-		.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE)
-		.doOnNext(e->System.err.println("ITEMMMM: "+e));
+		.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE);
 
 	
 		Flowable<DataItem> fw =  Flowable.just(DataItem.ofEventStream(flow));

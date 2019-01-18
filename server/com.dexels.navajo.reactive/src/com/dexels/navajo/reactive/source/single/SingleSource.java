@@ -3,6 +3,9 @@ package com.dexels.navajo.reactive.source.single;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
@@ -23,6 +26,10 @@ public class SingleSource implements ReactiveSource {
 //	private final Optional<XMLElement> sourceElement;
 //	private final String sourcePath;
 	private final SourceMetadata metadata;
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(SingleSource.class);
+
 	
 	public SingleSource(SourceMetadata metadata, ReactiveParameters params) {
 		this.metadata = metadata;
@@ -48,14 +55,9 @@ public class SingleSource implements ReactiveSource {
 			Flowable<DataItem> flow = f.map(i->DataItem.of(ImmutableFactory.empty(),ImmutableFactory.empty().with("index", i.intValue(), "integer")));
 			
 			if(debug) {
-				flow = flow.doOnNext(di->System.err.println("Item: "+ImmutableFactory.getInstance().describe(di.message())));
-				flow = flow.doOnNext(di->System.err.println("State: "+ImmutableFactory.getInstance().describe(di.stateMessage())));
+				flow = flow.doOnNext(di->logger.info("Item: "+ImmutableFactory.getInstance().describe(di.message())));
+				flow = flow.doOnNext(di->logger.info("State: "+ImmutableFactory.getInstance().describe(di.stateMessage())));
 			}
-//			for (ReactiveTransformer reactiveTransformer : transformers) {
-//				flow = flow.compose(reactiveTransformer.execute(context,current));
-//			}
-//			flow = flow.doOnNext(e->System.err.println("Source delivered."))
-//					.doOnRequest(e->System.err.println("Source requested: "+e));
 			return flow;
 		} catch (Exception e) {
 			return Flowable.error(e);

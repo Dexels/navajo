@@ -3,6 +3,9 @@ package com.dexels.navajo.reactive.transformer.call;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
@@ -22,6 +25,10 @@ public class CallLocalSource implements ReactiveSource {
 	private final ReactiveParameters params;
 	private final SourceMetadata metadata;
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(CallLocalSource.class);
+
+	
 	public CallLocalSource(SourceMetadata metadata, ReactiveParameters params) {
 		this.metadata = metadata;
 		this.params = params;
@@ -33,7 +40,7 @@ public class CallLocalSource implements ReactiveSource {
 		final String service =  resolved.paramString("service");
 		final Optional<String> tenant =  resolved.optionalString("service");
 		final boolean debug = resolved.paramBoolean("debug", ()->false);
-		System.err.println("Calling local: "+service);
+		logger.info("Calling local: "+service);
 		Flowable<DataItem> emptyInput = Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(service, Optional.empty(), Optional.empty()))
 				.map(DataItem::of);
 		StreamScriptContext ctx = context.withService(service)

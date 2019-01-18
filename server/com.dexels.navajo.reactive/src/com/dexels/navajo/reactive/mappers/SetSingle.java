@@ -36,7 +36,6 @@ public class SetSingle implements ReactiveMerger {
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(s), item.stateMessage(), this);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
-//			System.err.println("Condition: "+item.message()+" parms present? "+parms.optionalBoolean("condition").isPresent());
 			if(!condition) {
 				return item;
 			}

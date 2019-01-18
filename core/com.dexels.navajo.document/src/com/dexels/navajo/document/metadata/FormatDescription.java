@@ -91,7 +91,6 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 		{
 			return;
 		}
-                //System.err.println("in addMimeTypes(" + mimeType + ")");
 		if (mimeType.indexOf(',') == -1)
 		{
 			addMimeType(mimeType);

@@ -340,7 +340,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
 
-		System.err.println("Call finished");
 	}
 
 	public boolean hasNavajo(String name) {
@@ -358,7 +357,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			logger.info("Navajo on top:");
 			n.write(System.err);
 		} else if (o instanceof Message) {
-			System.err.println("Message on top: "
+			logger.info("Message on top: "
 					+ ((Message) o).getFullMessageName());
 		} else if (o instanceof Property) {
 			logger.info("Property on top: "

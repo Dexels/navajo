@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -52,12 +51,10 @@ public class CallRemoteTransformer implements ReactiveTransformer {
 					.lift(StreamDocument.serialize())
 			, "text/xml")
 				.lift(XML.parseFlowable(10))
-//				.doOnNext(e->System.err.println("Element encountered"))
 				.concatMap(e->e)
 				.lift(StreamDocument.parse())
 				.concatMap(e->e)
-				.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE)
-				.doOnNext(e->System.err.println("ITEMMMM: "+e));
+				.filter(e->e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_STARTED && e.type()!=NavajoStreamEvent.NavajoEventTypes.NAVAJO_DONE);
 
 			
 			return Flowable.just(DataItem.ofEventStream(result));

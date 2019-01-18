@@ -39,7 +39,6 @@ public class LogTransformer implements ReactiveTransformer {
 			logger.info("Subscribed stream. ");
 		}
 		)
-//				.doOnNext(e->System.err.println("aaaaa!"))
 		.doOnNext(processElement(every))
 		.doOnComplete(()->{
 			logger.info("Completed stream.");
@@ -53,7 +52,6 @@ public class LogTransformer implements ReactiveTransformer {
 			long ev = every.get();
 			return e->{
 				long current = counter.incrementAndGet();
-//				System.err.println(">>>> "+current+" / "+ev);
 				if(current % ev == 0) {
 					logger.info("#: "+counter.get() +"Element content: {}",ImmutableFactory.getInstance().describe(e.message()));
 				}

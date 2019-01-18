@@ -49,7 +49,6 @@ public class RemoveLockRequest extends Request {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		SharedStoreLock ssl = ssi.getLock(parent, name, owner);
-		//System.err.println("IN RemoveLockRequest(), getAnswer().....: " + ssl);
 		if ( ssl != null ) {
 			ssi.release(ssl);
 		}

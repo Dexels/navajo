@@ -5,11 +5,16 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 
-public
-class ASTPipeline extends SimpleNode {
+public class ASTPipeline extends SimpleNode {
+	
+	private final static Logger logger = LoggerFactory.getLogger(ASTPipeline.class);
+
   public ASTPipeline(int id) {
     super(id);
   }
@@ -28,10 +33,10 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 @Override
 public void jjtClose() {
 	super.jjtClose();
-	System.err.println(">->Children: "+jjtGetNumChildren()+" > "+this);
+	logger.info(">->Children: "+jjtGetNumChildren()+" > "+this);
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		SimpleNode sn = (SimpleNode) jjtGetChild(i);
-		System.err.println("    Child: --> "+sn);
+		logger.info("    Child: --> "+sn);
 	}
 }
 

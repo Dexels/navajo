@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
@@ -14,6 +17,8 @@ import io.reactivex.Flowable;
 public class ReactivePipe implements ReactiveSource {
 	public final ReactiveSource source;
 	public final List<Object> transformers;
+	
+	private final static Logger logger = LoggerFactory.getLogger(ReactivePipe.class);
 
 	public ReactivePipe(ReactiveSource source, List<Object> transformers) {
 		this.source = source;
@@ -26,9 +31,9 @@ public class ReactivePipe implements ReactiveSource {
 		Optional<Type> last = Optional.empty();
 		Optional<String> lastTransformer = Optional.empty();
 		int index = 0;
-		System.err.println("# of transformers: "+transformers.size());
+		logger.info("# of transformers: "+transformers.size());
 		for (Object reactiveTransformer : transformers) {
-			System.err.println("index: "+index++);
+			logger.info("index: "+index++);
 			if(reactiveTransformer instanceof ReactiveTransformer) {
 				TransformerMetadata transformer = ((ReactiveTransformer)reactiveTransformer).metadata();
 				// maybe return implicit transformer
@@ -37,18 +42,18 @@ public class ReactivePipe implements ReactiveSource {
 				
 			} else {
 				current = matchType(last,lastTransformer,current, new ImplicitTransformerMetadata());
-				System.err.println("Type checking implicit");
+				logger.info("Type checking implicit");
 				lastTransformer = Optional.of("implicit");
 			}
 			last = Optional.of(current);
 		}
-		System.err.println("Final type: "+current);
+		logger.info("Final type: "+current);
 	}
 
 	private Type matchType(Optional<Type> last, Optional<String> lastTransformer, Type initial, TransformerMetadata metadata) {
-		System.err.println("Matching data for transformer: "+metadata.name()+" from previous transformer: "+lastTransformer.orElse("source"));
-		System.err.println("Moving from input: "+initial+" to in-type: "+metadata.inType()+" contains? "+metadata.inType().contains(initial));
-		System.err.println("Next type: "+metadata.outType());
+		logger.info("Matching data for transformer: "+metadata.name()+" from previous transformer: "+lastTransformer.orElse("source"));
+		logger.info("Moving from input: "+initial+" to in-type: "+metadata.inType()+" contains? "+metadata.inType().contains(initial));
+		logger.info("Next type: "+metadata.outType());
 		if(!metadata.inType().contains(initial)) {
 			throw new RuntimeException("Type mismatch. Outgoing type: "+initial+" from previous transformer: "+lastTransformer.orElse("source")+" does not match possible incoming types: "+metadata.inType()+" name: "+metadata.name()+" type: "+metadata.getClass().getName());
 		}

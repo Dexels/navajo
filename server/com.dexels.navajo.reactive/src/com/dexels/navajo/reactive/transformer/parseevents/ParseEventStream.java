@@ -29,22 +29,11 @@ public class ParseEventStream implements ReactiveTransformer {
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters resolved = parameters.resolve(context, current, param, metadata);
 		Optional<String> path = resolved.optionalString("path").map(pth->pth.startsWith("/") ? pth.substring(1) : pth);
-//		switch(inferredType) {
-//		case EVENT:
 			return flow->flow.map(di->di.eventStream())
 					.concatMap(e->e)
 					.compose(StreamDocument.eventsToImmutable(path))
-//					.doOnNext(e->System.err.println("Element encountered: "+e))
 					.map(DataItem::of);
-//		case EVENTSTREAM:
-//			return flow->flow.map(di->di.eventStream())
-//					.concatMap(e->e)
-//					.compose(StreamDocument.eventsToImmutable(path))
-//					.map(DataItem::of);
-//		default:
-//			throw new RuntimeException("Unexpected type: "+inferredType+" in "+metadata.name());
-//			
-//		}
+
 	}
 
 	@Override

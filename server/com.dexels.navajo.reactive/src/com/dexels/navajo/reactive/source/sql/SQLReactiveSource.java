@@ -63,8 +63,6 @@ public class SQLReactiveSource implements ReactiveSource {
 				
 			});
 		}
-//		flow = flow.doOnNext(e->System.err.println("TYPE: "+e.type+" msg: "+e));
-		
 		return flow;
 	}
 

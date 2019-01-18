@@ -211,7 +211,7 @@ public class NonBlockingListener extends HttpServlet {
 //		                .doOnError((e)->context.error(e))
 //		                .doOnCancel(()->removeRunningScript(uuid));
 //
-			System.err.println(">>> DataType: "+rs.dataType());
+			logger.info("Reactive script data type: "+rs.dataType());
 			switch(rs.dataType()) {
 			case DATA:
 				execution
@@ -234,7 +234,7 @@ public class NonBlockingListener extends HttpServlet {
 				.onErrorResumeNext(cc)
 				.map(e->e.eventStream())
 				.concatMap(e->e)
-				.doOnCancel(()->System.err.println("Cancel at toplevel"))
+				.doOnCancel(()->logger.warn("Cancel at toplevel"))
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))

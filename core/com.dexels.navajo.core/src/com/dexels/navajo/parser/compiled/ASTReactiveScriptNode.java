@@ -42,7 +42,6 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	List<ReactivePipeNode> pipes = new ArrayList<>();
 	int start = hasHeader ? headers : 0;
 	
-//	System.err.println(">>> "+hasHeader);
 	if(hasHeader) {
 		for (int i = 0; i < headers; i++) {
 			ASTKeyValueNode hdr = (ASTKeyValueNode) jjtGetChild(i);	
@@ -50,10 +49,7 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 			String key = ne.name;
 			headerMap.put(key, ne.apply());
 		}
-		System.err.println(">>> "+headerMap);
-//		Operand oo = context.apply();
 	}
-	System.err.println("Start@ "+start);
 	int count = jjtGetNumChildren();
 	for (int i = start; i < count; i++) {
 		Node child = jjtGetChild(i);
@@ -61,7 +57,6 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		if(child instanceof ASTReactivePipe) {
 			pipe = (ASTReactivePipe) child;
 		} else {
-			System.err.println("Child: "+child);
 			pipe = new ASTReactivePipe(1);
 			pipe.jjtAddChild(child, 0);
 		}

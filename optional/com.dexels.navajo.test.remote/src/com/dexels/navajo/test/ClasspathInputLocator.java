@@ -14,7 +14,6 @@ public class ClasspathInputLocator implements ScriptInputLocator {
 	@Override
 	public Navajo getInput(String scriptName) throws IOException {
 
-		System.err.println("Getting: "+scriptName+".xml");
 		InputStream is = getClass().getClassLoader().getResourceAsStream(scriptName+".xml");
 		if(is!=null) {
 			System.err.println("Resource found!");

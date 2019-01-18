@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -29,6 +32,9 @@ import io.reactivex.Flowable;
 
 public class ReactiveStandalone {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveStandalone.class);
+
 	public static Navajo runBlockingEmptyFromClassPath(String classPathPath) throws ParseException, IOException {
 		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream(classPathPath)) {
 			Navajo n = ReactiveStandalone.runBlockingEmpty(in, Optional.empty());
@@ -41,7 +47,6 @@ public class ReactiveStandalone {
 				.withRunner(resolver)
 				.withInputNavajo(NavajoFactory.getInstance().createNavajo());
 		ReactiveScript compiledScript = resolver.compiledScript(service);
-		System.err.println("Data type: "+compiledScript.dataType());
 		Flowable<Flowable<DataItem>> execute = compiledScript.execute(context);
 
 		switch(compiledScript.dataType()) {
@@ -137,8 +142,8 @@ public class ReactiveStandalone {
 			ASTReactiveScriptNode rootNode = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
 //			List<ReactivePipeNode> pipes
 			List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
-			System.err.println("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
-			System.err.println("Sourcetype: "+src);
+			logger.info("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
+			logger.info("Sourcetype: "+src);
 			List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
 			CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods(),binaryMime);
 			compiledReactiveScript.typecheck();

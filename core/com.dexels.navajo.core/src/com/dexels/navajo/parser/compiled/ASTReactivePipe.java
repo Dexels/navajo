@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -18,6 +21,9 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 public
 class ASTReactivePipe extends SimpleNode {
 	
+	
+	private final static Logger logger = LoggerFactory.getLogger(ASTReactivePipe.class);
+
 public int args = 0;
   public ASTReactivePipe(int id) {
     super(id);
@@ -50,7 +56,7 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 			ReactiveTransformer transformer = (ReactiveTransformer) result;
 			pipeElements.add(transformer);
 		} else {
-			System.err.println("huh?"+result);
+			logger.warn("huh?"+result);
 			// something weird
 		}
 	}
@@ -59,23 +65,17 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 }
 
 public void addSource() {
-	System.err.println("Adding source");
 	args++;
 }
 
 public void addTransformer() {
-	System.err.println("Adding transformer");
 	args++;
 }
 
 @Override
 public void jjtClose() {
 	super.jjtClose();
-//	System.err.println(">Children: "+jjtGetNumChildren());
-//	for (int i = 0; i < jjtGetNumChildren(); i++) {
-//		SimpleNode sn = (SimpleNode) jjtGetChild(i);
-//		System.err.println("Child: --> "+sn);
-//	}
+
 }
 
 

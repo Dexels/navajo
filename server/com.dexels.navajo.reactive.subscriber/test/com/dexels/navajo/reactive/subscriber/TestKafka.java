@@ -50,7 +50,6 @@ public class TestKafka {
 				.map(e->DataItem.of(e.message()))
 				.toList()
 				.blockingGet();
-		System.err.println("items::::: "+items.size());
 	}
 	
 	@Test @Ignore
@@ -90,7 +89,6 @@ public class TestKafka {
 			.blockingForEach(item->{
 			System.err.println("Item: "+item.message().toDataMap());
 		});
-		System.err.println("BLEEEEEE");
 		
 	}
 }

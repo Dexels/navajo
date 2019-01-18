@@ -151,9 +151,6 @@ public final class MappableTreeNode implements Mappable, Serializable {
                 for (Iterator<String> iter = elementCount.keySet().iterator(); iter.hasNext();) {
                     String mapName = iter.next();
                     ArrayChildStatistics acs = elementCount.get(mapName);
-                    // System.err.println("array child time: " + mapName +
-                    // ", count " + acs.elementCount + ", totaltime: " +
-                    // acs.totalTime );
                     MapStatistics childStatistics = myAccess.createStatistics();
                     myAccess.updateStatistics(childStatistics, childId, mapName, acs.totalTime, acs.elementCount, true, navajoLineNr);
                 }

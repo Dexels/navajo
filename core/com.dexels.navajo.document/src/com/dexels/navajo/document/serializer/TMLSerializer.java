@@ -297,8 +297,6 @@ public class TMLSerializer  {
 				Property p = parseProperty(Property.BINARY_PROPERTY, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT), propertyIndex, arrayEltIndex, is, true);
 				m.addProperty(p);
 				propertyIndex++;
-			} else {
-				//System.err.println("Unknown byte encountered: " + tagType);
 			}
 		}
 		return m;

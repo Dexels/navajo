@@ -69,20 +69,5 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		}
 	};
 }
-
-//public Function<ImmutableMessage,ImmutableMessage> evaluateTransformer(List<String> problems, String originalExpression) {
-//	
-//	System.err.println("transformername: "+transformerName);
-//	List<ContextExpression> parameters = new ArrayList<>();
-//	for (int i = 0; i < jjtGetNumChildren(); i++) {
-//		Node node = jjtGetChild(i);
-//		ASTExpressionNode expr = (ASTExpressionNode)node;
-//		parameters.add(expr.interpretToLambda(problems, originalExpression));
-//		System.err.println("NODE: "+node);
-//	}
-//	return null;
-//	
-//}
-
 }
 /* JavaCC - OriginalChecksum=1d2eb60a4b53e6f73d69612ad626466b (do not edit this line) */
