@@ -189,7 +189,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                    if (type.equals(Property.INTEGER_PROPERTY)) {
 		                       try {
 		                          Integer.parseInt(prop.getValue());
-		                          return Operand.FALSE;
+		                          return Operand.TRUE;
 		                       } catch (Exception e) {
 			                          return Operand.FALSE;
 		                       }
