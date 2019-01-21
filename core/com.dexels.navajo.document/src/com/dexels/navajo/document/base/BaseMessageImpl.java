@@ -1662,6 +1662,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
     
     @Override
+    public List<Message> getSortedElements() {
+        if (messageList == null) {
+            return new ArrayList<Message>();
+        } else {
+        	ArrayList<Message> result = new ArrayList<Message>(messageList);
+        	if (!"".equals(orderBy)) {
+                Collections.sort(result);
+            }
+            return result;
+        }
+    }
+    
+    @Override
     public void merge(Message incoming, boolean preferThis) {
     	merge(incoming, preferThis, true);
     }
@@ -1783,6 +1796,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
             
             p.setSubType(m_p.getSubType());
+            p.setDirection(m_p.getDirection());
             
             // A method that is null or "" is considered to always match
             boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")

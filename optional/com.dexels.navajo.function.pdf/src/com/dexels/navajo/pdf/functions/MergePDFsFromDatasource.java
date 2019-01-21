@@ -108,9 +108,9 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 		
 		
 		
-		String query = "select * FROM document where " + tableId 
+		String query = "select * FROM document where (" + tableId 
 						+	queryPart
-						+ " AND objectType  = '" + objectType +"'";
+						+ ") AND objectType  = '" + objectType +"'";
 
 		JDBCMappable sql = null;
 		ArrayList result = new ArrayList();

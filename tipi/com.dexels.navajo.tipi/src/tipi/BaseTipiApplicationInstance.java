@@ -125,17 +125,6 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 
 
-	protected Map<String, String> parseProperties(String gsargs)
-			throws IOException {
-		StringTokenizer st = new StringTokenizer(gsargs);
-		ArrayList<String> a = new ArrayList<String>();
-		while (st.hasMoreTokens()) {
-			String next = st.nextToken();
-			a.add(next);
-		}
-		return parseProperties(a);
-	}
-
 	protected Map<String, String> parseProperties(List<String> args)
 			throws IOException {
 		

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.NavajoMap;
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
@@ -52,6 +53,17 @@ public class EntityMap extends NavajoMap {
 			if ( request.getHeader() == null ) {
 				Header h = NavajoFactory.getInstance().createHeader(request, myEntity.getName(), access.rpcUser, access.rpcName, -1);
 				request.addHeader(h);
+			}
+			
+			// If we do not have an input we add it. Because not all entities 
+			// need an input but the perform requires a message with the entity
+			// name.
+			if (method.equals("GET")) {
+				Message inputEntity = request.getMessage(myEntity.getMessageName());
+				if (inputEntity == null) {
+					inputEntity = NavajoFactory.getInstance().createMessage(request, myEntity.getMessageName());
+					request.addMessage(inputEntity);
+				}
 			}
 
 			Navajo result;

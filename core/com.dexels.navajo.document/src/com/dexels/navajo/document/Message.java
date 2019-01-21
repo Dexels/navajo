@@ -491,7 +491,7 @@ public interface Message
   public Message copy() throws NavajoException;
 
   /**
-   * Compare the contect of a message with another Message o.
+   * Compare the content of a message with another Message o.
    *
    * @param o
    * @return true if content is the same, false otherwise.
@@ -499,7 +499,7 @@ public interface Message
   public boolean isEqual(Message o);
 
   /**
-   * As isEqual(Message). A ";" seperated string of property names can be supplied, that need to be excluded from the comparison.
+   * As isEqual(Message). A ";" separated string of property names can be supplied, that need to be excluded from the comparison.
    *
    * @param o
    * @param skipProperties
@@ -614,6 +614,8 @@ public interface Message
 	public Map<String, Message> getMessages();
 
 	public List<Message> getElements();
+	
+	public List<Message> getSortedElements();
 
 	/**
 	 * Returns a map of names->property values.
