@@ -52,7 +52,7 @@ public class SetSingle implements ReactiveMerger {
 	}
 	
 	private ImmutableMessage addColumn(ImmutableMessage input, String name, Operand value, String type) {
-		return addColumn(input, Arrays.asList(name.split("\\.")), value, type);
+		return addColumn(input, Arrays.asList(name.split("/")), value, type);
 	}
 
 	private ImmutableMessage addColumn(ImmutableMessage input, List<String> path, Operand value, String type) {

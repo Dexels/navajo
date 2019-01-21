@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -27,7 +28,6 @@ import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.ReactiveStandalone;
 import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.reactive.api.Reactive;
-import com.dexels.navajo.reactive.api.ReactivePipe;
 
 public class TestReactiveParser {
 	
@@ -179,7 +179,7 @@ public class TestReactiveParser {
 		
 	}
 
-	@Test
+	@Test @Ignore
 	public void testCallLocal( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/calllocal.rr");
 	}
@@ -190,7 +190,7 @@ public class TestReactiveParser {
 	}
 
 
-	@Test
+	@Test @Ignore
 	public void testTransformerCount() throws ParseException {
 //		String exp = "eventsource(classpath='tmlinput.xml')->streamtoimmutable(path='/Bla')->stream(messageName='Oe',isArray=true)";
 		String exp = "->single(count=100)->filter([id]%3==0)->filter([id]%2==0)->filter([id]%2==0)";
@@ -201,13 +201,6 @@ public class TestReactiveParser {
 //		System.err.println("rootNode: "+rp.getClass());
 		List<String> problems = new ArrayList<>();
 		rootNode.interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE);
-//		List<ReactivePipeNode> pipes
-//		System.err.println("Args: "+rootNode.args);
-//		ReactivePipe src = (ReactivePipe) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
-//		System.err.println("Sourcetype: "+src.source);
-//		int transformers = src.transformers.size();
-//		System.err.println("Transformercount: "+transformers);
-//		List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
 
 	}
 }

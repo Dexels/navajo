@@ -38,13 +38,9 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE).apply().value;
 	for (int i = 1; i < actual.jjtGetNumChildren(); i++) {
 		ASTFunctionNode sdn = (ASTFunctionNode)actual.jjtGetChild(i);
-//		sdn.interpretToLambda(problems, "", functionClassifier)
 	}
-//	ASTPipeline sourceNode = (ASTPipeline) jjtGetChild(0);
 	List<Object> pipeElements = new ArrayList<>();
-//	Object value = sourceNode.interpretToLambda(problems, originalExpression,functionClassifier).apply().value;
-//	ReactiveSource source = (ReactiveSource) value;
-//	pipeElements.add(source);
+
 	for (int i = 1; i < count; i++) {
 		ContextExpression interpretToLambda = actual.jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
 		Object result = interpretToLambda.apply().value;
