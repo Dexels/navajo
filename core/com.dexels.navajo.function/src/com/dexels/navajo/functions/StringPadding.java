@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * @author: Matthijs Philip.
@@ -18,7 +18,7 @@ public class StringPadding extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	
     	if (this.getOperands().size() < 2) {
     		throw new TMLExpressionException(this, "Wrong number of arguments");
@@ -67,10 +67,10 @@ public class StringPadding extends FunctionInterface {
     public static void main(String[] args) throws Exception {
         StringPadding f = new StringPadding();
         f.reset();        
-        f.insertOperand("Voetbal");
-        f.insertOperand(new Integer(12));
-        f.insertOperand("l");
-        f.insertOperand("1");
+        f.insertStringOperand("Voetbal");
+        f.insertIntegerOperand(new Integer(12));
+        f.insertStringOperand("l");
+        f.insertStringOperand("1");
         Object o = f.evaluate();
         String apenoot = o.toString();
         System.out.println("o.length : " + apenoot.length());

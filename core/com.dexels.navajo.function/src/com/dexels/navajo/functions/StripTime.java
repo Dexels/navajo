@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.text.ParseException;
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class StripTime extends FunctionInterface {
 	public StripTime() {}
@@ -15,7 +15,7 @@ public class StripTime extends FunctionInterface {
 	}
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		Object o = getOperand(0);
 		java.util.Date date = null;
 		if (o instanceof java.util.Date) {
@@ -57,8 +57,8 @@ public class StripTime extends FunctionInterface {
     	java.util.Date input = new java.util.Date();
     	java.util.Date output = null;
 //    	st.insertOperand(input);
-    	st.insertOperand("01-07-2012 12:00:10");
-    	st.insertOperand("dd-MM-yyyy hh:mm:ss");
+    	st.insertStringOperand("01-07-2012 12:00:10");
+    	st.insertStringOperand("dd-MM-yyyy hh:mm:ss");
     	output = (java.util.Date)st.evaluate();
     	System.out.println("Old date : " + input + " - New date : " + output);
     }

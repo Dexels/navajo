@@ -6,6 +6,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +14,16 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTMappableNode extends SimpleNode {
@@ -39,7 +41,7 @@ public final class ASTMappableNode extends SimpleNode {
     
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 			
 			@Override
@@ -48,13 +50,13 @@ public final class ASTMappableNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 		        if (mapNode == null) {
 		            throw new TMLExpressionException("No known mapobject");
 		        }
 
-		        ArrayList objects = null;
+		        List objects = null;
 
 		        // Parameter array may contain parameters that are used when calling the get method.
 		        Object[] parameterArray = null;
@@ -64,12 +66,12 @@ public final class ASTMappableNode extends SimpleNode {
 		        }
 		        for (int i = 0; i < args; i++) {
 		        		List<String> problems = new ArrayList<>();
-		            Object a = jjtGetChild(i).interpretToLambda(problems, expression,mode).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            Operand a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
 		            		throw new TMLExpressionException(problems,expression);
 		            }
 		            if(objects!=null) {
-		                objects.add(a);
+		                objects.add(a.value);
 		            }
 		        }
 
@@ -93,13 +95,13 @@ public final class ASTMappableNode extends SimpleNode {
 		        		}
 		        	}
 		            if (oValue == null)
-		                return null;
+		                return Operand.NULL;
 		            else if (oValue instanceof Float) {
-		              return new Double(((Float) oValue).doubleValue());
+		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  new Double(((Float) oValue).doubleValue());
 		            } else if (oValue instanceof Long) {
-		              return new Integer(((Long) oValue).intValue());
+			              return Operand.ofLong(((Long) oValue).longValue()); //  new Double(((Float) oValue).doubleValue());
 		            } else
-		              return oValue;
+		              return Operand.ofDynamic(oValue);
 
 		        } catch (Exception me) {
 		            throw new TMLExpressionException(me.getMessage(),me);

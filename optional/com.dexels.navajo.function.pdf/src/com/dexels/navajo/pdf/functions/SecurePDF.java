@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public final class SecurePDF extends FunctionInterface{
 
@@ -32,7 +32,7 @@ public final class SecurePDF extends FunctionInterface{
     }
     
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Binary b = (Binary)getOperand(0);
         if(b!=null){
         	try{
@@ -68,7 +68,7 @@ public final class SecurePDF extends FunctionInterface{
     		
     		SecurePDF pdf = new SecurePDF();
     		pdf.reset();
-    		pdf.insertOperand(input);
+    		pdf.insertBinaryOperand(input);
     		Binary result = (Binary)pdf.evaluate();
     		if(result != null){
     			result.write(new FileOutputStream(new File("/Users/arjenschoneveld/converted.pdf")));

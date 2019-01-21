@@ -25,22 +25,21 @@ import com.dexels.navajo.reactive.transformer.other.SkipTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
 import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
-import com.dexels.navajo.reactive.transformer.single.SingleMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 public class TestSetup {
 
-	public static ReactiveScriptParser setup() {
+	public static ReactiveFinder setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		File root = new File("testscripts");
 //		env = new ReactiveScriptEnvironment(root);
-		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
+//		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
 		ReactiveFinder finder = new CoreReactiveFinder();
-		reactiveScriptParser = new ReactiveScriptParser();
-		reactiveScriptParser.setReactiveFinder(finder);
+//		reactiveScriptParser = new ReactiveScriptParser();
+//		reactiveScriptParser.setReactiveFinder(finder);
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
 //		finder.a
@@ -53,7 +52,6 @@ public class TestSetup {
 		finder.addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"mergeSingle");
 		finder.addReactiveTransformerFactory(new CallTransformerFactory(),"call");
 		finder.addReactiveTransformerFactory(new StreamMessageTransformerFactory(),"stream");
-		finder.addReactiveTransformerFactory(new SingleMessageTransformerFactory(),"single");
 		finder.addReactiveTransformerFactory(new ReduceTransformerFactory(),"reduce");
 		finder.addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
 		finder.addReactiveTransformerFactory(new TakeTransformerFactory(),"take");
@@ -63,7 +61,7 @@ public class TestSetup {
 		finder.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
 //		env.setReactiveScriptParser(reactiveScriptParser);
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
-		return reactiveScriptParser;
+		return finder;
 	}
 	
 	public static StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {

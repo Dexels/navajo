@@ -45,7 +45,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
-import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;

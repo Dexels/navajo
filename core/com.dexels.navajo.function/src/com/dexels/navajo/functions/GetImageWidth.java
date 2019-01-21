@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -27,7 +27,7 @@ public final class GetImageWidth extends FunctionInterface {
     public GetImageWidth() {}
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	if(this.getOperands().size() == 0) {
     		return new Integer(0);
     	}

@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -46,7 +46,7 @@ public String remarks() {
   }
 
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
     Object o = getOperand(0);
     if (!(o instanceof String)) {
@@ -74,7 +74,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	Boolean b = null;
 	CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("stefan@awesomo.amsterdam");
+    ce.insertStringOperand("stefan@awesomo.amsterdam");
     b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }

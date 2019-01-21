@@ -6,40 +6,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.Function;
 
 public class SetSingle implements ReactiveMerger {
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(SetSingle.class);
 
 	
 	public SetSingle() {
 	}
 
 	@Override
-	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
 		return context->(item)->{
 			ImmutableMessage s = item.message();
-			ReactiveResolvedParameters parms = params.resolveNamed(context, Optional.of(s), item.stateMessage(), this, xml, relativePath);
+			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(s), item.stateMessage(), this);
 			boolean condition = parms.optionalBoolean("condition").orElse(true);
-//			System.err.println("Condition: "+item.message()+" parms present? "+parms.optionalBoolean("condition").isPresent());
 			if(!condition) {
 				return item;
 			}
 			// will use the second message as input, if not present, will use the source message
-			
-			for (Entry<String,Operand> elt : parms.resolveAllParams().entrySet()) {
+			for (Entry<String,Operand> elt : parms.namedParameters().entrySet()) {
 				if(!elt.getKey().equals("condition")) {
-					s = addColumn(s, elt.getKey(), elt.getValue().value, elt.getValue().type);
+					String type = parms.namedParamType(elt.getKey());
+					s = addColumn(s, elt.getKey(), elt.getValue(), type);
 				}
 			}
 			return DataItem.of(s);
@@ -47,11 +51,12 @@ public class SetSingle implements ReactiveMerger {
 	
 	}
 	
-	private ImmutableMessage addColumn(ImmutableMessage input, String name, Object value, String type) {
-		return addColumn(input, Arrays.asList(name.split("\\.")), value, type);
+	private ImmutableMessage addColumn(ImmutableMessage input, String name, Operand value, String type) {
+		return addColumn(input, Arrays.asList(name.split("/")), value, type);
 	}
 
-	private ImmutableMessage addColumn(ImmutableMessage input, List<String> path, Object value, String type) {
+	private ImmutableMessage addColumn(ImmutableMessage input, List<String> path, Operand value, String type) {
+		logger.info("Setting path: {} value: {} type: {}",path,value.value,type);
 		if(path.size()>1) {
 			String submessage = path.get(0);
 			Optional<ImmutableMessage> im = input.subMessage(submessage);
@@ -64,7 +69,7 @@ public class SetSingle implements ReactiveMerger {
 				return input.withSubMessage(submessage, nw);
 			}
 		} else {
-			return input.with(path.get(0), value, type);
+			return input.with(path.get(0), value.value, value.type);
 		}
 		
 	}

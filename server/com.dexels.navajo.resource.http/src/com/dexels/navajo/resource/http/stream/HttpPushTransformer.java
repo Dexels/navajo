@@ -1,13 +1,10 @@
 package com.dexels.navajo.resource.http.stream;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -25,20 +22,17 @@ public class HttpPushTransformer implements ReactiveTransformer {
 
 	private final TransformerMetadata metadata;
 	private final ReactiveParameters parameters;
-	private Optional<XMLElement> sourceElement;
 
-	public HttpPushTransformer(TransformerMetadata metadata, String relativePath,
-			List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			boolean useGlobalInput) {
+	public HttpPushTransformer(TransformerMetadata metadata,
+			ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.sourceElement = xml;
 	}
 
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = parameters.resolve(context, current,param, metadata);
 		String name = resolved.paramString("name");
 		int parallel = resolved.optionalInteger("parallel").orElse(1);
 		HttpResource res = HttpResourceFactory.getInstance().getHttpResource(name);
@@ -50,7 +44,7 @@ public class HttpPushTransformer implements ReactiveTransformer {
 			return flow.map(f->f.message())
 					.observeOn(Schedulers.io())
 					.map(msg->{
-						ReactiveResolvedParameters resInMsg = parameters.resolveNamed(context, Optional.of(msg), ImmutableFactory.empty(), metadata, sourceElement, "");
+						ReactiveResolvedParameters resInMsg = parameters.resolve(context, Optional.of(msg), ImmutableFactory.empty(), metadata);
 						String id = resInMsg.paramString("id");
 						String bucket = resInMsg.paramString("bucket");
 						String property = resInMsg.paramString("property");
@@ -74,9 +68,5 @@ public class HttpPushTransformer implements ReactiveTransformer {
 	}
 
 
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
 
 }

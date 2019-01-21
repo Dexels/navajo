@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -18,37 +17,27 @@ import io.reactivex.FlowableTransformer;
 public class StreamMessageTransformer implements ReactiveTransformer {
 
 	private ReactiveParameters parameters;
-	private Optional<XMLElement> sourceElement;
-	private String sourcePath;
 	private final TransformerMetadata metadata;
 
-	public StreamMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
+	public StreamMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 		this.metadata = metadata;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata,sourceElement,sourcePath);
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = parameters.resolve(context, Optional.empty(), ImmutableFactory.empty(), metadata);
 		String messageName = resolved.paramString("messageName");
 		boolean isArray = resolved.paramBoolean("isArray");
 		// TODO remove duplication
 		return flow->flow.map(di->di.message())
 				.compose(StreamDocument.toMessageEvent(messageName,isArray))
-//				.doOnNext(e->System.err.println(">>>>>>>>>> propagating evnt: "+e))
 				.map(DataItem::of);
 	}
 
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
-	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return this.sourceElement;
 	}
 
 }

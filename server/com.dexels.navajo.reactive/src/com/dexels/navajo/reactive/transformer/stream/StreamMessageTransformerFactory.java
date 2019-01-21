@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
@@ -25,11 +24,9 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			Optional<XMLElement> xml, 
-			ReactiveBuildContext buildContext) {
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems, ReactiveParameters parameters) {
 
-		return new StreamMessageTransformer(this,parameters,xml,relativePath);
+		return new StreamMessageTransformer(this,parameters);
 	}
 
 

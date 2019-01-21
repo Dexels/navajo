@@ -38,7 +38,6 @@ public class PerformanceTest {
 			process.write(System.out);
 		}
 		long after = System.currentTimeMillis();
-		System.err.println("elapsed: "+(after-start));
 	}
 	
 

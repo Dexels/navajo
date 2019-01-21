@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -82,7 +83,7 @@ public class RandomColor extends FunctionInterface {
 	}
 	
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		int rnd = 0;
 		if ( getOperands().size() > 0 && getOperand(0) != null ) {
 			Integer seed = (Integer) getOperand(0);
@@ -129,12 +130,12 @@ public class RandomColor extends FunctionInterface {
 		System.err.println("Aap: "+r.evaluate());
 		
 		r.reset();
-		r.insertOperand(15);
+		r.insertIntegerOperand(15);
 		System.err.println("Aap: "+r.evaluate());
 		
 		r.reset();
-		r.insertOperand(null);
-		r.insertOperand(false);
+		r.insertOperand(Operand.NULL);
+		r.insertBooleanOperand(false);
 		System.err.println("Aap: "+r.evaluate());
 		
 	}

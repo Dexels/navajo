@@ -8,7 +8,7 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 public class FunctionFactoryFactory {
@@ -84,9 +84,9 @@ public class FunctionFactoryFactory {
 	
 		FunctionInterface fi = fii.getInstance(cl, "SingleValueQuery");
 		fi.reset();
-		fi.insertOperand(new Integer(21210));
-		fi.insertOperand("SELECT * FROM AAP WHERE noot = ?");
-		fi.insertOperand("PIPO");
+		fi.insertIntegerOperand(new Integer(21210));
+		fi.insertStringOperand("SELECT * FROM AAP WHERE noot = ?");
+		fi.insertStringOperand("PIPO");
 		fi.evaluateWithTypeChecking();
 		
 	}

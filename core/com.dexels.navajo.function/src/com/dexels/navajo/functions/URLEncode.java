@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 public class URLEncode extends FunctionInterface {
@@ -51,7 +51,7 @@ public class URLEncode extends FunctionInterface {
 		URLEncode u = new URLEncode();
 		u.reset();
 		final String original = "BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtITou59LFX0wECDlTR7xMD+72GyA8cLC3uq3nu/Jwxg8=";
-		u.insertOperand(original);
+		u.insertStringOperand(original);
 		//u.insertOperand(false);
 //		BZ2kTR4xD1Yqrkr0PlHP%2B3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtITou59LFX0wECDlTR7xMD%2B72GyA8cLC3uq3nu%2FJwxg8%3D
 	

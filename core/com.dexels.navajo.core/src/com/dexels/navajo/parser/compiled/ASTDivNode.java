@@ -2,11 +2,13 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTDivNode extends SimpleNode {
     public ASTDivNode(int id) {
@@ -14,20 +16,21 @@ public final class ASTDivNode extends SimpleNode {
         // System.out.println("in ASTDivNode()");
     }
 
-	public final Object interpret(Object a, Object b) throws TMLExpressionException {
-
+	public final Operand interpret(Operand ao, Operand bo) throws TMLExpressionException {
+		Object a = ao.value;
+		Object b = bo.value;
         if (a instanceof String || b instanceof String)
             throw new TMLExpressionException("Division not defined for strings");
         if (a instanceof Integer && b instanceof Integer)
-            return new Integer(((Integer) a).intValue() / ((Integer) b).intValue());
+            return Operand.ofInteger(Integer.valueOf(((Integer) a).intValue() / ((Integer) b).intValue()));
         double dA = Utils.getDoubleValue(a);
         double dB = Utils.getDoubleValue(b);
 
-        return new Double(dA / dB);
+        return Operand.ofFloat(Double.valueOf(dA / dB));
     }
     
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b),functionClassifier);
 	}
 }

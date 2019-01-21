@@ -116,8 +116,6 @@ public class NavajoLaszloConverter {
 			for (int i = 0; i < l.size(); i++) {
 				appendMessage(l.get(i), tml, doc, includeSelections);
 			}
-			// System.err.println("Created doc: " +
-			// XMLDocumentUtils.toString(doc));
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}

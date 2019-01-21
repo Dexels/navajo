@@ -68,10 +68,7 @@ public class JettyClient {
 		}
 		ReactiveRequest request = requestBuilder.build();
 		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content,b->this.sent.addAndGet(b.length)))))
-				.doOnNext(reply->{
-//					System.err.println("Calling URI: "+uri+" headers: "+reqProcessed.getHeaders()+" method: "+reqProcessed.getMethod()+" -> "+reqProcessed.getURI());
-//					System.err.println("Reply. Result: "+reply.status()+" headers: "+reply.responseHeaders());
-				}).doOnComplete(
+				.doOnComplete(
 						()->logger.info("HTTP Client to {}: sent: {} received: {}",uri,sent.get(),received.get())
 					);
 	}

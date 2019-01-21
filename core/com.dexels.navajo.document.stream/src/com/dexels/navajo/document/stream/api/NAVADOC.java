@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.stream.api;
 
 import java.util.Stack;
+import java.util.function.Function;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -9,7 +10,6 @@ import com.dexels.navajo.document.stream.events.Events;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
 import io.reactivex.FlowableOperator;
-import io.reactivex.functions.Function;
 
 
 public class NAVADOC {

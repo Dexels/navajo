@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -23,13 +22,12 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 	public FirstTransformerFactory() {
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
-		return new FirstTransformer(this,xml);
-	}
 	
+	@Override
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
+		return new FirstTransformer(this);
+	}
 	@Override
 	public Set<Type> inType() {
 		return new HashSet<>(Arrays.asList(new Type[] {DataItem.Type.MESSAGE}));
@@ -59,4 +57,6 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 	public String name() {
 		return "first";
 	}
+
+
 }

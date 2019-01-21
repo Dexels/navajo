@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.api;
 
 import java.util.Set;
+import java.util.function.Function;
 
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -8,7 +9,6 @@ import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 
 import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 public class ReactiveBuildContext {
 

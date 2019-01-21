@@ -2,8 +2,8 @@ package com.dexels.navajo.tipi.swing.functions;
 
 import java.awt.Color;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
 public class CreateTipiPaint extends FunctionInterface {

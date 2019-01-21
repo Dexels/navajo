@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class TestGatherEvents {
 //					.map(e->e.)
 					.concatMap(e->e)
 					.toFlowable(BackpressureStrategy.BUFFER)
-					.lift(StreamDocument.collectEventsToImmutable())
+					.compose(StreamDocument.eventsToImmutable(Optional.empty()))
 					.doOnNext(e->ImmutableFactory.createParser().describe(e))
 					.count()
 					.blockingGet();

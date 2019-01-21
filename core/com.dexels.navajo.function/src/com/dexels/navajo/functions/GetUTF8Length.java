@@ -6,8 +6,8 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -28,7 +28,7 @@ public final class GetUTF8Length extends FunctionInterface {
     public GetUTF8Length() {}
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	if(this.getOperands().size()==0) {
     		return new Integer(0);
     	}
@@ -72,7 +72,7 @@ public final class GetUTF8Length extends FunctionInterface {
        // String diacritic = "Mart� is gek";
         GetUTF8Length e = new GetUTF8Length();
         e.reset();
-        e.insertOperand(simple);
+        e.insertStringOperand(simple);
         //e.insertOperand(diacritic);
         try {
             System.out.println(e.evaluate());

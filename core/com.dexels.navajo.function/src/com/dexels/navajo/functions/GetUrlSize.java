@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class GetUrlSize extends GetUrlBase {
 

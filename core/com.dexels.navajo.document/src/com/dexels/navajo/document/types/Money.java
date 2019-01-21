@@ -287,7 +287,7 @@ public final int compareTo(Money o) {
     if (other.doubleValue() == this.doubleValue()) {
       return 0;
     }
-    if (this.doubleValue() < other.doubleValue()) {
+    if (this.doubleValue() > other.doubleValue()) {
       return 1;
     }
     return -1;

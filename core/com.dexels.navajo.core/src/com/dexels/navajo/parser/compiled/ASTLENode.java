@@ -5,15 +5,17 @@ package com.dexels.navajo.parser.compiled;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 @SuppressWarnings({"rawtypes"})
 
@@ -22,12 +24,13 @@ public final class ASTLENode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    public final static Boolean compare(Object a, Object b, String expression) throws TMLExpressionException {
-
+    public final static Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
+    	Object a = ao.value;
+    	Object b = bo.value;
         if (a == null || b == null) {
             throw new TMLExpressionException(
                     "Illegal arguement for le;. Cannot compare " + a + " <= " + b + ". No null values are allowed. Expression: "+expression);
@@ -53,7 +56,7 @@ public final class ASTLENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for le; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	public final Object interpret(Object a, Object b, String expression)  {
+	public final Operand interpret(Operand a, Operand b, String expression)  {
         // System.out.println("Got second argument");
 
         if (a instanceof List) { // Compare all elements in the list.
@@ -61,15 +64,15 @@ public final class ASTLENode extends SimpleNode {
             boolean result = true;
 
             for (int i = 0; i < list.size(); i++) {
-                boolean dum = compare(list.get(i), b, expression).booleanValue();
+                boolean dum = compare(Operand.ofDynamic(list.get(i)), b, expression).booleanValue();
 
                 if (!(dum))
-                    return Boolean.valueOf(false);
+                    return Operand.FALSE;
                 result = result && dum;
             }
-            return Boolean.valueOf(result);
+            return Operand.ofBoolean(result);
         } else {
-            return compare(a, b,expression);
+            return Operand.ofBoolean(compare(a, b,expression));
         }
     }
 }

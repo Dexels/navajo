@@ -29,7 +29,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     private ExecutorService executor;
     private DependencyAnalyzer depanalyzer;
     
-    private boolean keepIntermediateFiles = false;
+    private boolean keepIntermediateFiles = true;
 
     private final static Logger logger = LoggerFactory.getLogger(BundleQueueComponent.class);
 

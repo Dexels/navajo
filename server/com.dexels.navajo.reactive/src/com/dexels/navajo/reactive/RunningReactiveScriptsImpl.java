@@ -30,7 +30,7 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 
 	@Override
 	public List<String> services() {
-		return scriptsInProgress.values().stream().map(e->e.getService() + " ("+ e.getAccessId() +")").collect(Collectors.toList());
+		return scriptsInProgress.values().stream().map(e->e.getService() + " ("+ e.uuid() +")").collect(Collectors.toList());
 	}
 	
 	@Override
@@ -66,8 +66,9 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 			StreamScriptContext ctx = e.getValue();
 			current.put("service", ctx.getService());
 			current.put("tenant", ctx.getTenant());
-			current.put("deployment", ctx.deployment());
-			current.put("username", ctx.getUsername());
+			if(ctx.deployment().isPresent()) {
+				current.put("deployment", ctx.deployment().get());
+			}
 			current.put("started", ctx.getStarted());
 			current.put("running", (now-ctx.getStarted()));
 			list.add(current);
@@ -75,6 +76,7 @@ public class RunningReactiveScriptsImpl implements RunningReactiveScripts {
 		return list;
 	}
 	
+	@Override
 	public void complete(String uuid) {
 		StreamScriptContext ssc = this.scriptsInProgress.get(uuid);
 		if(ssc!=null) {

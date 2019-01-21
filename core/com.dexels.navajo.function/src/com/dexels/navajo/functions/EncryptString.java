@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.functions.security.Security;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class EncryptString extends FunctionInterface {
 
@@ -32,8 +32,8 @@ public class EncryptString extends FunctionInterface {
 	static String encrypt(String key, String message) throws TMLExpressionException {
 		EncryptString e = new EncryptString();
 		e.reset();
-		e.insertOperand(key);
-		e.insertOperand(message);
+		e.insertStringOperand(key);
+		e.insertStringOperand(message);
 		String result = (String) e.evaluate();
 		return result;
 	}

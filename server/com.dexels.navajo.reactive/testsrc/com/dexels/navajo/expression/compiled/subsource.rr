@@ -1,0 +1,4 @@
+single(count=2)
+ ->CombineSomething(
+ 	Single()->Filter())
+ ->Stream()

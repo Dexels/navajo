@@ -5,20 +5,23 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.parser.RenameTransformerFunction;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.TransformerFunction;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public class ASTTransformerNode extends SimpleNode {
 
@@ -29,13 +32,13 @@ public class ASTTransformerNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, ParseMode mode) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
 	// TODO do something prettier
 	List<ContextExpression> parameters = new ArrayList<>();
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		Node node = jjtGetChild(i);
 //		SimpleNode expr = (SimpleNode)node;
-		parameters.add(node.interpretToLambda(problems, originalExpression,mode));
+		parameters.add(node.interpretToLambda(problems, originalExpression,functionClassifier));
 		System.err.println("NODE: "+node);
 	}
 	return new ContextExpression() {
@@ -56,30 +59,15 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		}
 		
 		@Override
-		public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 				MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
 				Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-			List<Object> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
+			List<Operand> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
 			System.err.println(">>> "+transformerName);
 			TransformerFunction ff = new RenameTransformerFunction();
-			return ff.create(params, problems);
+			return Operand.ofCustom(ff.create(params, problems),Reactive.ReactiveItemType.REACTIVE_TRANSFORMER.toString());
 		}
 	};
 }
-
-//public Function<ImmutableMessage,ImmutableMessage> evaluateTransformer(List<String> problems, String originalExpression) {
-//	
-//	System.err.println("transformername: "+transformerName);
-//	List<ContextExpression> parameters = new ArrayList<>();
-//	for (int i = 0; i < jjtGetNumChildren(); i++) {
-//		Node node = jjtGetChild(i);
-//		ASTExpressionNode expr = (ASTExpressionNode)node;
-//		parameters.add(expr.interpretToLambda(problems, originalExpression));
-//		System.err.println("NODE: "+node);
-//	}
-//	return null;
-//	
-//}
-
 }
 /* JavaCC - OriginalChecksum=1d2eb60a4b53e6f73d69612ad626466b (do not edit this line) */

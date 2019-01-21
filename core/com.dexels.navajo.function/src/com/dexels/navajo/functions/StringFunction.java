@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class StringFunction extends FunctionInterface {
 
@@ -26,7 +26,7 @@ public final class StringFunction extends FunctionInterface {
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final Object evaluate()
-			throws com.dexels.navajo.parser.TMLExpressionException {
+			throws com.dexels.navajo.expression.api.TMLExpressionException {
 		String methodName = (String) getOperand(0);
 		if (methodName == null) {
 			throw new TMLExpressionException(
@@ -118,9 +118,9 @@ public final class StringFunction extends FunctionInterface {
 		String noot = "06 - 2322 7572";
 		f.reset();
 
-		f.insertOperand("contains");
-		f.insertOperand(noot);
-		f.insertOperand("02");
+		f.insertStringOperand("contains");
+		f.insertStringOperand(noot);
+		f.insertStringOperand("02");
 		
 		Object o = f.evaluate();
 		System.out.println("o = " + o + ", type = " + o.getClass().getName());

@@ -20,8 +20,8 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.SystemException;
 
@@ -52,7 +52,7 @@ public class TestSQL {
 	}
 
 	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
-		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", msg.columnValue("ORGANIZATIONID"))
+		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", Operand.ofString((String)msg.columnValue("ORGANIZATIONID")))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));

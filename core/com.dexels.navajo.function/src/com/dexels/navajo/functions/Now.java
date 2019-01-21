@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public final class Now extends FunctionInterface {
 
@@ -12,7 +12,7 @@ public String remarks() {
     return "Now() returns the current timestamp as a string in the following format: yyyy/MM/dd HH:uu:mm";
   }
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Date today = new Date();
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     return format.format(today);

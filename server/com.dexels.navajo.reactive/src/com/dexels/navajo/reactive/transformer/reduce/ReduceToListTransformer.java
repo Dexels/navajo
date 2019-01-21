@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -17,38 +16,41 @@ import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 
 public class ReduceToListTransformer implements ReactiveTransformer {
 
-	private Function<StreamScriptContext, Function<DataItem, DataItem>> reducers;
+//	private Function<StreamScriptContext, Function<DataItem, DataItem>> reducers;
 
 	private final TransformerMetadata metadata;
 
 	private final ReactiveParameters parameters;
 
-	private final Optional<XMLElement> sourceElement;
-
-//	private final ReactiveParameters parameters;
-	
 	private final static Logger logger = LoggerFactory.getLogger(ReduceToListTransformer.class);
 
 	
-	public ReduceToListTransformer(TransformerMetadata metadata, Function<StreamScriptContext,Function<DataItem,DataItem>> reducers,ReactiveParameters parameters, Optional<XMLElement> sourceElement) {
+	public ReduceToListTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.metadata = metadata;
-		this.reducers = reducers;
+//		this.reducers = reducers;
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
 	}
+	
+	
+//	return DataItem.of(item.stateMessage().withSubMessages(resolved.paramString("name"), item.messageList()), item.stateMessage());
+	
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		// MUTABLE EDITION!
 			return flow->{
 			try {
 				flow = flow.reduce(DataItem.of(new ArrayList<>()), (state,message)->{
 					state.messageList().add(message.message());
 					return state;
+				})
+				.map(e->{
+					String field = parms.paramString("name");
+					return DataItem.of(ImmutableFactory.empty().withSubMessages(field, e.messageList()));
+
 				})
 				.toFlowable();
 				return flow;
@@ -63,9 +65,4 @@ public class ReduceToListTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
-
 }

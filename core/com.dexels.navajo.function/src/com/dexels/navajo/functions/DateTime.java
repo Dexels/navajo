@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class DateTime extends FunctionInterface {
 
@@ -20,7 +20,7 @@ public final class DateTime extends FunctionInterface {
     }
 
     @Override
-	public final String evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final String evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     		
     		String pattern = "";
     		DateTimeFormatter dtf;
@@ -62,7 +62,7 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing invalid arguments 1---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand(1);
+			dateTime.insertIntegerOperand(1);
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,8 +72,8 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing multiple arguments---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand("yyyy/MM/dd HH:mm:ss");
-			dateTime.insertOperand("yyyy/MM/dd HH:mm:ss");
+			dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
+			dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,7 +92,7 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing valid pattern yyyy/MM/dd HH:mm:ss---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand("\"yyyy/MM/dd HH:mm:ss\"");
+			dateTime.insertStringOperand("\"yyyy/MM/dd HH:mm:ss\"");
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +102,7 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing valid pattern dd-mm-yyyy ---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand("\"dd-mm-yyyy\"");
+			dateTime.insertStringOperand("\"dd-mm-yyyy\"");
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,7 +112,7 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing valid pattern HH:mm:ss ---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand("\"HH:mm:ss\"");
+			dateTime.insertStringOperand("\"HH:mm:ss\"");
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,7 +122,7 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println("--------- Testing invalid pattern cc---------");
 	    	try {
 			dateTime.reset();
-			dateTime.insertOperand("cc");
+			dateTime.insertStringOperand("cc");
 			dateTime.evaluate();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -25,6 +25,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.tipi.PropertyHandler;
 import com.dexels.navajo.tipi.PropertyLinkRequest;
 import com.dexels.navajo.tipi.PropertyValidatable;
@@ -47,7 +48,6 @@ import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.tipilink.TipiLink;
 
 import tipi.TipiExtension;
 

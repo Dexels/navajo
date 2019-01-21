@@ -85,7 +85,7 @@ public final class DatePropertyField extends PropertyField implements PropertyCo
             return;
         }
         if (!p.getType().equals(Property.DATE_PROPERTY)) {
-            System.err.println("Warning: Setting date field to non date property of type: " + p.getType());
+            logger.debug("Warning: Setting date field to non date property of type: " + p.getType());
         }
         initProperty = p;
 

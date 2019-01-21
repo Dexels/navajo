@@ -554,7 +554,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     public long getLength() {
     	if(urlMetaData!=null && !isResolved()) {
-    		System.err.println("URLMETA: "+urlMetaData);
     		List<String> lengthHeaders = urlMetaData.get("Content-Length");
     		if(lengthHeaders!=null && !lengthHeaders.isEmpty()) {
     			return Long.parseLong(lengthHeaders.get(0));

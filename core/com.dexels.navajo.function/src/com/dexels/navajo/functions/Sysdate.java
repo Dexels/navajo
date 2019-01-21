@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Date;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 public final class Sysdate extends FunctionInterface {
 
@@ -11,7 +11,7 @@ public String remarks() {
     return "Sysdate() returns the current date, with time";
   }
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {	 
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {	 
     return new Date();
   }
   @Override

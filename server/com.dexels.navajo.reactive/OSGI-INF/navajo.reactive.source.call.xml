@@ -4,5 +4,5 @@
    <service>
       <provide interface="com.dexels.navajo.reactive.api.ReactiveSourceFactory"/>
    </service>
-   <property name="name" type="String" value="call"/>
+   <property name="name" type="String" value="callSource"/>
 </scr:component>

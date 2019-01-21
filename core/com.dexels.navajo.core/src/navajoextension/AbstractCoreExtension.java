@@ -10,11 +10,11 @@ import navajo.ExtensionDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVersion {
 	

@@ -1,6 +1,7 @@
 package com.dexels.navajo.reactive.mappers;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,43 +9,50 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessageParser;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-import io.reactivex.functions.Function;
 
 public class JsonFileAppender implements ReactiveMerger {
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(JsonFileAppender.class);
 
 	public JsonFileAppender() {
 	}
 
 	@Override
-	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params, String relativePath, Optional<XMLElement> xml) {
+	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params) {
 		ImmutableMessageParser parser = ImmutableFactory.createParser();
 		return context -> {
 			
 			return (item) -> {
-				ReactiveResolvedParameters named = params.resolveNamed(context,Optional.of(item.message()), item.stateMessage(), this,xml,relativePath);
+				ReactiveResolvedParameters named = params.resolve(context,Optional.of(item.message()), item.stateMessage(), this);
 				String  path = named.paramString("path");
 				boolean condition = named.optionalBoolean("condition").orElse(true);
 				if(!condition) {
 					return item;
 				}
-				
-				FileOutputStream fw = new FileOutputStream(path,true);
+				try(FileOutputStream fw = new FileOutputStream(path,true)) {
+					byte[] data = parser.serialize(item.message());
+					fw.write(data);
+					fw.write("\n".getBytes(Charset.forName("UTF-8")));
+					fw.close();
+				} catch(IOException e) {
+					logger.error("Error writing to file: "+path,e);
+				}
 				// TODO Fix
-				byte[] data = parser.serialize(item.message());
-				fw.write(data);
-				fw.write("\n".getBytes(Charset.forName("UTF-8")));
-				fw.close();
 				return item;
 			};
 		};

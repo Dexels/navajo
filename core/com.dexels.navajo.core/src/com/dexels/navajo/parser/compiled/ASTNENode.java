@@ -4,24 +4,26 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.Utils;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTNENode extends SimpleNode {
     public ASTNENode(int id) {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-	public final Object interpret(Object a, Object b, String expression) {
+	public final Operand interpret(Operand a, Operand b, String expression) {
 
-        return Boolean.valueOf(!Utils.equals(a, b,expression));
+        return Operand.ofBoolean(!Utils.equals(a.value, b.value,expression));
 
     }
 }

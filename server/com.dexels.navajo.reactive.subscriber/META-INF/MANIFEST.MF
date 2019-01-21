@@ -23,6 +23,7 @@ Import-Package: com.dexels.immutable.api;version="2.0.0",
  io.reactivex.functions;version="2.1.9",
  net.jpountz.lz4,
  org.junit;version="4.10.0";resolution:=optional,
- org.reactivestreams;version="1.0.2"
+ org.reactivestreams;version="1.0.2",
+ org.slf4j;version="1.7.2"
 Service-Component: OSGI-INF/*
 Bundle-ActivationPolicy: lazy

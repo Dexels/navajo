@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**
@@ -29,7 +29,7 @@ public String remarks() {
   }
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null) {
      return new Money( (Money)null);
@@ -50,7 +50,7 @@ public String usage() {
     // Tests.
    ToMoney tm = new ToMoney();
     tm.reset();
-    tm.insertOperand(new Double(1024.4990));
+    tm.insertFloatOperand(new Double(1024.4990));
     System.out.println("result = " + ((Money) tm.evaluate()).formattedString());
 
     // Using expressions.

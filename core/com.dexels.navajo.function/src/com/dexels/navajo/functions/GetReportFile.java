@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.server.DispatcherFactory;
 
 
@@ -26,7 +26,7 @@ public String remarks() {
   }
 
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	 String script = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     String reportName = (String) getOperand(0);
 	 java.io.File scriptDir = new java.io.File(script); 

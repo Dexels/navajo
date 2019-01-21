@@ -3,18 +3,20 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public final class ASTAndNode extends SimpleNode {
     public ASTAndNode(int id) {
@@ -22,9 +24,9 @@ public final class ASTAndNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> expressionA = expA.returnType();
 		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 //		
@@ -41,22 +43,22 @@ public final class ASTAndNode extends SimpleNode {
 
 		return new ContextExpression() {
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+				Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				if(a==null) {
-		        		return Boolean.FALSE;
+		        	return Operand.ofBoolean(Boolean.FALSE);
 		        }
-				Boolean ba = (Boolean)a;
+				Boolean ba = (Boolean)a.value;
 		        if (!(ba.booleanValue())) {
-					return Boolean.FALSE;
+	        		return Operand.ofBoolean(Boolean.FALSE);
 				}
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage,paramMessage);
+		        Operand b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access, immutableMessage,paramMessage);
 		        if(b==null) {
-		        		return Boolean.FALSE;
+	        		return Operand.ofBoolean(Boolean.FALSE);
 		        }
-		        Boolean bb = (Boolean)b;
-		        return bb.booleanValue();
+		        Boolean value = (Boolean)b.value;
+				return Operand.ofBoolean(value!=null?value:Boolean.FALSE);
 			}
 
 			@Override

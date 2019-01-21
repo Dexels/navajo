@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
@@ -15,17 +17,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
+import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
+import com.dexels.navajo.document.stream.api.StreamScriptContext;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
+import com.dexels.navajo.parser.compiled.CompiledParser;
+import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.parser.compiled.TokenMgrError;
+import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
+import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.reactive.api.ReactiveFinder;
+import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
+
+import io.reactivex.Flowable;
 
 public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
 	private static final String REACTIVE_FOLDER = "reactive" + File.separator;
-	private ReactiveScriptParser scriptParser = null;
-	
+//	private ReactiveScriptParser scriptParser = null;
+	private ReactiveFinder reactiveFinder;
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveScriptEnvironment.class);
 
 	private final Map<String,ReactiveScript> scripts = new HashMap<>();
@@ -42,8 +58,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	}
 	
 	@Override
-	public String deployment() {
-		return navajoConfig.getDeployment();
+	public Optional<String> deployment() {
+		return Optional.ofNullable(navajoConfig).map(e->e.getDeployment());
 	}
 
 	public ReactiveScriptEnvironment(File testRoot) {
@@ -58,12 +74,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
 		this.navajoConfig = null;
 	}
-	public void setReactiveScriptParser(ReactiveScriptParser reactiveScriptParser) {
-		this.scriptParser = reactiveScriptParser;
+	public void setReactiveFinder(ReactiveFinder reactiveFinder) {
+		this.reactiveFinder = reactiveFinder;
 	}
 	
-	public void removeReactiveScriptParser(ReactiveScriptParser reactiveScriptParser) {
-		this.scriptParser = null;
+	public void clearReactiveFinder(ReactiveFinder reactiveFinder) {
+		this.reactiveFinder = null;
 	}
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
@@ -80,7 +96,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			return true;
 		}
 		// add negative cache if necessary?
-		return resolveFile(service).exists();
+		return resolveFile(service).isPresent();
 	}
 	
 	
@@ -97,29 +113,82 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			}
 			return parentRunnerEnvironment.build(service,debug);
 		}
-		File sf = resolveFile(service);
-		
-		try(InputStream is = new FileInputStream(sf)) {
-			rs = installScript(service, is,service+".xml");
-//		} catch (IOException ioe) {
-//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
+		Optional<InputStream> is = resolveFile(service);
+		try {
+			return ReactiveStandalone.compileReactiveScript(is.get(), Optional.empty());
+		} catch (ParseException|TokenMgrError e) {
+			throw new IOException("Error parsing script: "+service, e);
 		}
-//		if(rs==null) {
-//			return Flowable.error(new RuntimeException("Can't seem to find script: "+context.service));
-//		}
-		return rs;
 	}
 
-	private File resolveFile(String serviceName) {
-		File root = testRoot!=null?testRoot:new File( navajoConfig.getRootPath());
-		File f = new File(root,"reactive");
-		return new File(f,serviceName+".xml");
+	protected Optional<InputStream> resolveFile(String serviceName) {
+		FileInputStream inputStream;
+		try {
+			File root = testRoot!=null?testRoot:new File( navajoConfig.getRootPath());
+			File f = new File(root,"reactive");
+			if(!f.exists()) {
+				return Optional.empty();
+			}
+			inputStream = new FileInputStream(new File(f,serviceName+".rr"));
+			return Optional.of(inputStream);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
-		ReactiveScript parsed = scriptParser.parse(serviceName, in,relativeScriptPath,Optional.of(Type.EVENT));
-		scripts.put(serviceName, parsed);
-		return parsed;
+		// TODO not pretty:
+//		Reactive.setFinderInstance(this.reactiveFinder);
+		CompiledParser cp = new CompiledParser(in);
+		try {
+			cp.ReactiveScript();
+		} catch (ParseException e) {
+			throw new IOException("Error parsing script: "+serviceName,e);
+		}
+		List<String> problems = new ArrayList<>();
+		ASTReactiveScriptNode scriptNode = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
+		ContextExpression src = (ContextExpression) scriptNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+
+		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
+		final boolean streamInput = pipes.stream().anyMatch(e->e.isStreamInput());
+
+		List<ReactivePipe> resolvedPipes = pipes.stream().map(node->(ReactivePipe)node.apply().value).collect(Collectors.toList());
+		Type type = resolvedPipes.stream().findFirst().map(e->e.finalType()).orElse(Type.ANY);
+		
+		return new ReactiveScript() {
+			
+			@Override
+			public boolean streamInput() {
+				return streamInput;
+			}
+			
+			@Override
+			public List<ReactiveParseProblem> problems() {
+				return problems.stream().map(ReactiveParseProblem::of).collect(Collectors.toList());
+			}
+			
+			@Override
+			public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
+				return Flowable.fromIterable(resolvedPipes).map(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
+			}
+			
+			@Override
+			public Type dataType() {
+				return type;
+			}
+			
+			@Override
+			public Optional<String> binaryMimeType() {
+				// TODO implement again
+				return Optional.empty();
+			}
+
+			@Override
+			public List<String> methods() {
+				return scriptNode.methods();
+			}
+		};
 	}
 	
 	@Override
@@ -136,6 +205,17 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 				
 			}
 		}
+	}
+
+	@Override
+	public Optional<InputStream> sourceForService(String service) {
+		return this.resolveFile(service);
+	}
+
+	@Override
+	public ReactiveScript compiledScript(String service) throws IOException {
+		return build(service, false);
+//		return ReactiveStandalone.compileReactiveScript(source, binaryMime);
 	}
 
 }

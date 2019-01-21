@@ -3,11 +3,11 @@ package tipicss;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import tipi.TipiAbstractXMLExtension;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.css.CssFactory;
 import com.dexels.navajo.tipi.css.impl.CssComponentResponderImpl;
+
+import tipi.TipiAbstractXMLExtension;
 
 	public class TipiCssExtension extends TipiAbstractXMLExtension implements BundleActivator {
 

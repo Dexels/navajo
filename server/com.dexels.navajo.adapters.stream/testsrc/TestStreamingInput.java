@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapters.stream.SQL;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.StreamDocument;
 
 public class TestStreamingInput  {
@@ -22,7 +23,7 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'", new Object[]{})
+		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'", new Operand[]{})
 			.doOnNext(m->System.err.println("Message: "+m))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
@@ -68,7 +69,7 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'",new Object[] {})
+		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'",new Operand[] {})
 			.doOnNext(m->System.err.println("Message: "+m))
 			.doOnComplete(()->System.err.println("Done!"))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))

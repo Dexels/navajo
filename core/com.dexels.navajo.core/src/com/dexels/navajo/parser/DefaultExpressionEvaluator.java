@@ -21,8 +21,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 /**
  * <p>

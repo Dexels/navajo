@@ -1,0 +1,4 @@
+=>(methods='baaap')
+single()
+	->set(aap='noot')
+	->stream(messageName='Bla', isArray=true)

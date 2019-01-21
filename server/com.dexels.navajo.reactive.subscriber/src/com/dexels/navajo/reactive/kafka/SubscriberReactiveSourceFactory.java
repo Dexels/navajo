@@ -8,18 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.kafka.api.OffsetQuery;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.SourceMetadata;
 import com.dexels.pubsub.rx2.api.TopicSubscriber;
 
-import io.reactivex.functions.Function;
 
 public class SubscriberReactiveSourceFactory implements ReactiveSourceFactory, SourceMetadata {
 
@@ -48,12 +43,13 @@ public class SubscriberReactiveSourceFactory implements ReactiveSourceFactory, S
         this.offsetQuery = null;
     }
 
-    
+
+	
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters params,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier) {
-		return new SubscriberReactiveSource(this, topicSubscriber,Optional.ofNullable(this.offsetQuery), params,relativePath,x,finalType,transformers,reducerSupplier,subscriberSettings);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new SubscriberReactiveSource(this, topicSubscriber,Optional.ofNullable(this.offsetQuery), parameters,subscriberSettings);
 	}
+
 
 	@Override
 	public Type sourceType() {
@@ -84,6 +80,7 @@ public class SubscriberReactiveSourceFactory implements ReactiveSourceFactory, S
 		types.put("to", "string");
 		return Optional.of(Collections.unmodifiableMap(types));
 	}
+
 
 
 }

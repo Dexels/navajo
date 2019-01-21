@@ -693,22 +693,10 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 		}
 		Iterator<String> i = names.iterator();
 		while ( i.hasNext() ) {
-			System.err.println(i.next());
+			logger.info(i.next());
 		}
 	}
 	
-	public static void main (String [] args) throws Exception {
-		SharedFileStore sfs = new SharedFileStore();
-		for (int i = 0; i < 1500*1000; i++) {
-		sfs.store("aap", "noot", new Access(), false, false);
-		if ( i % 10000 == 0 ) {
-			System.err.println("10000 done.");
-		}
-		}
-		String s = (String) sfs.get("aap", "noot");
-		System.err.println("result = " + s);
-	}
-
 	@Override
 	public void removeAll(String parent) {
 		AuditLog.log("SharedFileStore", "in removeAll("  + parent + ")");

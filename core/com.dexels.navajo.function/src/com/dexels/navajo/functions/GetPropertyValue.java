@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public class GetPropertyValue extends FunctionInterface {
 	}
 
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}

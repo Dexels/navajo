@@ -3,8 +3,6 @@ package com.dexels.navajo.reactive.transformer.other;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -20,17 +18,15 @@ public class InMessageTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Optional<XMLElement> sourceElement;
 
-	public InMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters,Optional<XMLElement> sourceElement) {
+	public InMessageTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.sourceElement = sourceElement;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		boolean isArray = parms.paramBoolean("isArrayElement");
 		String name = parms.paramString("name");
 		if(isArray) {
@@ -51,10 +47,5 @@ public class InMessageTransformer implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
-	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
 	}
 }

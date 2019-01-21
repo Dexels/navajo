@@ -104,7 +104,7 @@ public void testMongo() throws Exception {
 
 
 public void testMysqlService() throws SQLException, InvalidSyntaxException {
-	ServiceReference<DataSource> dref =  getDataSourceReference("mysql_swingstreet"); // dlist.iterator().next();
+	ServiceReference<DataSource> dref =  getDataSourceReference(""); // dlist.iterator().next();
 	DataSource d = bundleContext.getService(dref);
 	Connection connection = d.getConnection();
 	PreparedStatement s2 = connection.prepareStatement("select name from jos_components");

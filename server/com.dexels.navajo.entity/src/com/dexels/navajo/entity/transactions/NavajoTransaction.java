@@ -14,6 +14,9 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.EntityException;
@@ -31,6 +34,9 @@ public class NavajoTransaction implements Transaction {
 	private Set<TransactionalAdapter> transactionalResources = new HashSet<TransactionalAdapter>();
 	private Map<String,Object> transactionAttributes = new HashMap<String, Object>();
 	
+	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoTransaction.class);
+
 	/**
 	 * Add an attribute specific to this transaction context. For example: database connection identifier.
 	 * 
@@ -122,7 +128,7 @@ public class NavajoTransaction implements Transaction {
 				try {
 					ro.rollback();
 				} catch (EntityException e) {
-					System.err.println("Could not perform rollback: " + e.getMessage());
+					logger.warn("Could not perform rollback: " + e.getMessage());
 					//throw new SystemException("Could not perform rollback:" + e.getMessage());
 				}
 			}

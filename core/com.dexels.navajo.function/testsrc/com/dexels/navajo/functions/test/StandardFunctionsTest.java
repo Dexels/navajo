@@ -20,6 +20,7 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
@@ -27,10 +28,10 @@ import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -100,15 +101,15 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FindElement");
 		doc.write(System.err);
 		fi.reset();
-		fi.insertOperand("Noot");
-		fi.insertOperand("pam");
-		fi.insertOperand(array);
+		fi.insertStringOperand("Noot");
+		fi.insertStringOperand("pam");
+		fi.insertMessageOperand(array);
 		Message result = (Message) fi.evaluate();
 		assertEquals(array2, result);
 		fi.reset();
 		fi.setCurrentMessage(array3);
-		fi.insertOperand("Noot");
-		fi.insertOperand("pam");
+		fi.insertStringOperand("Noot");
+		fi.insertStringOperand("pam");
 		assertEquals(array2, result);
 	}
 	@Test
@@ -118,14 +119,14 @@ public class StandardFunctionsTest {
 
 		// Test Integer.
 		fi.reset();
-		fi.insertOperand(new Integer(-10));
+		fi.insertIntegerOperand(new Integer(-10));
 		Object o = fi.evaluateWithTypeChecking();
 		assertEquals(o.getClass(), Integer.class);
 		assertEquals(((Integer) o).intValue(), 10);
 
 		// Test Double.
 		fi.reset();
-		fi.insertOperand(new Double(-10));
+		fi.insertFloatOperand(new Double(-10));
 		o = fi.evaluateWithTypeChecking();
 		assertEquals(o.getClass(), Double.class);
 		assertEquals(((Double) o).intValue(), 10);
@@ -133,7 +134,7 @@ public class StandardFunctionsTest {
 		// Test bogus.
 		boolean bogus = false;
 		fi.reset();
-		fi.insertOperand("-10");
+		fi.insertStringOperand("-10");
 		try {
 			o = fi.evaluateWithTypeChecking();
 		} catch (TMLExpressionException e) {
@@ -143,7 +144,7 @@ public class StandardFunctionsTest {
 
 		// Test null.
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 		o = fi.evaluateWithTypeChecking();
 		assertNull(o);
 
@@ -169,7 +170,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ZipArchive");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNull(o);
 
@@ -181,8 +182,8 @@ public class StandardFunctionsTest {
 		Binary b = new Binary(new byte[] { 1, 1, 1 });
 		FunctionInterface fi = fff.getInstance(cl, "Zip");
 		fi.reset();
-		fi.insertOperand(b);
-		fi.insertOperand("aap");
+		fi.insertBinaryOperand(b);
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(o.getClass(), Binary.class);
@@ -193,7 +194,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "XmlUnescape");
 		fi.reset();
-		fi.insertOperand("<><>");
+		fi.insertStringOperand("<><>");
 		Object o = fi.evaluate();
 		assertNotNull(o);
 		assertEquals(o.getClass(), String.class);
@@ -201,7 +202,7 @@ public class StandardFunctionsTest {
 		boolean exception = false;
 		try {
 			fi.reset();
-			fi.insertOperand(new Integer(10));
+			fi.insertIntegerOperand(new Integer(10));
 			fi.evaluateWithTypeChecking();
 		} catch (Exception e) {
 			exception = true;
@@ -215,7 +216,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "XmlEscape");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(o.getClass(), String.class);
@@ -227,7 +228,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "WeekDay");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(o.getClass(), String.class);
@@ -246,7 +247,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Wait");
 		fi.reset();
-		fi.insertOperand(new Integer(10));
+		fi.insertIntegerOperand(new Integer(10));
 		Object o = fi.evaluateWithTypeChecking();
 		assertNull(o);
 
@@ -257,7 +258,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Unicode");
 		fi.reset();
-		fi.insertOperand("10");
+		fi.insertStringOperand("10");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 
@@ -268,7 +269,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "URLEncode");
 		fi.reset();
-		fi.insertOperand("10");
+		fi.insertStringOperand("10");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(o.getClass(), String.class);
@@ -280,7 +281,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Trim");
 		fi.reset();
-		fi.insertOperand(" aap ");
+		fi.insertStringOperand(" aap ");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("aap", o.toString());
@@ -292,7 +293,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToUpper");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("AAP", o.toString());
@@ -304,19 +305,19 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToString");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("aap", o.toString());
 
 		fi.reset();
-		fi.insertOperand(new Integer(10));
+		fi.insertIntegerOperand(new Integer(10));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10", o.toString());
 
 		fi.reset();
-		fi.insertOperand(new Float(10));
+		fi.insertFloatOperand(new Float(10));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10.0", o.toString());
@@ -328,7 +329,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToStopwatchTime");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(StopwatchTime.class, o.getClass());
@@ -340,13 +341,13 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToSecureImage");
 		fi.reset();
-		fi.insertOperand("SECURE");
+		fi.insertStringOperand("SECURE");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Binary.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 		o = fi.evaluateWithTypeChecking();
 		assertNull(o);
 
@@ -364,19 +365,19 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToPercentage");
 		fi.reset();
-		fi.insertOperand("80");
+		fi.insertStringOperand("80");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Percentage.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(new Integer(80));
+		fi.insertIntegerOperand(new Integer(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Percentage.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(new Double(80));
+		fi.insertFloatOperand(new Double(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Percentage.class, o.getClass());
@@ -388,19 +389,19 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMoney");
 		fi.reset();
-		fi.insertOperand("80");
+		fi.insertStringOperand("80");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Money.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(new Integer(80));
+		fi.insertIntegerOperand(new Integer(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Money.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(new Double(80));
+		fi.insertFloatOperand(new Double(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Money.class, o.getClass());
@@ -412,13 +413,13 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMilliseconds");
 		fi.reset();
-		fi.insertOperand(new StopwatchTime(20));
+		fi.insertStopwatchOperand(new StopwatchTime(20));
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Integer.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand(new ClockTime(new java.util.Date()));
+		fi.insertClockTimeOperand(new ClockTime(new java.util.Date()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Long.class, o.getClass());
@@ -430,7 +431,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMemo");
 		fi.reset();
-		fi.insertOperand("20");
+		fi.insertStringOperand("20");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Memo.class, o.getClass());
@@ -442,7 +443,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToLower");
 		fi.reset();
-		fi.insertOperand("AAP");
+		fi.insertStringOperand("AAP");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("aap", o.toString());
@@ -454,7 +455,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToInteger");
 		fi.reset();
-		fi.insertOperand("10");
+		fi.insertStringOperand("10");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10", o.toString());
@@ -467,7 +468,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToDouble");
 		fi.reset();
-		fi.insertOperand("10.0");
+		fi.insertStringOperand("10.0");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10.0", o.toString());
@@ -480,7 +481,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToClockTime");
 		fi.reset();
-		fi.insertOperand("10:00");
+		fi.insertStringOperand("10:00");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10:00:00", o.toString());
@@ -493,7 +494,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToBinaryFromUrl");
 		fi.reset();
-		fi.insertOperand("http://www.google.com/google.jpg");
+		fi.insertStringOperand("http://www.google.com/google.jpg");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Binary.class, o.getClass());
@@ -506,7 +507,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToBinary");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		Object o = fi.evaluateWithTypeChecking();
 
 		assertNotNull(o);
@@ -520,8 +521,8 @@ public class StandardFunctionsTest {
 		fi.setInMessage(createTestNavajo());
 
 		fi.reset();
-		fi.insertOperand("Aap");
-		fi.insertOperand("Noot");
+		fi.insertStringOperand("Aap");
+		fi.insertStringOperand("Noot");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -539,8 +540,8 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand(doc.getMessage("Aap"));
-		fi.insertOperand("Noot");
+		fi.insertMessageOperand(doc.getMessage("Aap"));
+		fi.insertStringOperand("Noot");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -558,8 +559,8 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand("Aap");
-		fi.insertOperand("[Noot]+10");
+		fi.insertStringOperand("Aap");
+		fi.insertStringOperand("[Noot]+10");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -579,7 +580,7 @@ public class StandardFunctionsTest {
 		list.add(new Integer(10));
 
 		fi.reset();
-		fi.insertOperand(list);
+		fi.insertOperand(Operand.ofList(list));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -594,9 +595,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand(new Integer(10));
-		fi.insertOperand("*");
+		fi.insertStringOperand("aap");
+		fi.insertIntegerOperand(new Integer(10));
+		fi.insertStringOperand("*");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -611,10 +612,10 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand(new Integer(10));
-		fi.insertOperand("*");
-		fi.insertOperand(true);
+		fi.insertStringOperand("aap");
+		fi.insertIntegerOperand(new Integer(10));
+		fi.insertStringOperand("*");
+		fi.insertBooleanOperand(true);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -629,8 +630,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand(new Integer(10));
+		fi.insertStringOperand("aap");
+		fi.insertIntegerOperand(new Integer(10));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -645,9 +646,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringFunction");
 		fi.reset();
-		fi.insertOperand("indexOf");
-		fi.insertOperand("Apenoot");
-		fi.insertOperand("n");
+		fi.insertStringOperand("indexOf");
+		fi.insertStringOperand("Apenoot");
+		fi.insertStringOperand("n");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -655,10 +656,10 @@ public class StandardFunctionsTest {
 		assertEquals(Integer.class, o.getClass());
 
 		fi.reset();
-		fi.insertOperand("substring");
-		fi.insertOperand("Apenoot");
-		fi.insertOperand(new Integer(0));
-		fi.insertOperand(new Integer(4));
+		fi.insertStringOperand("substring");
+		fi.insertStringOperand("Apenoot");
+		fi.insertIntegerOperand(new Integer(0));
+		fi.insertIntegerOperand(new Integer(4));
 
 		o = fi.evaluateWithTypeChecking();
 
@@ -672,9 +673,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringField");
 		fi.reset();
-		fi.insertOperand("aap,noot,mies");
-		fi.insertOperand(",");
-		fi.insertOperand(new Integer(2));
+		fi.insertStringOperand("aap,noot,mies");
+		fi.insertStringOperand(",");
+		fi.insertIntegerOperand(new Integer(2));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -690,8 +691,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringDistance");
 		fi.reset();
-		fi.insertOperand("AAP");
-		fi.insertOperand("NOOT");
+		fi.insertStringOperand("AAP");
+		fi.insertStringOperand("NOOT");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -705,7 +706,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Size");
 		fi.reset();
-		fi.insertOperand("NOOT");
+		fi.insertStringOperand("NOOT");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -714,7 +715,7 @@ public class StandardFunctionsTest {
 		assertEquals("4", o.toString());
 
 		fi.reset();
-		fi.insertOperand(createTestNavajo().getMessage("Aap"));
+		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
 
 		o = fi.evaluateWithTypeChecking();
 
@@ -726,7 +727,7 @@ public class StandardFunctionsTest {
 		list.add(new Integer(10));
 		list.add(new Integer(10));
 		fi.reset();
-		fi.insertOperand(list);
+		fi.insertListOperand(list);
 
 		o = fi.evaluateWithTypeChecking();
 
@@ -742,9 +743,9 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "SetAllProperties");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand(createTestNavajo().getMessage("Aap"));
-		fi.insertOperand("Noot");
-		fi.insertOperand(new Integer(2));
+		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
+		fi.insertStringOperand("Noot");
+		fi.insertIntegerOperand(new Integer(2));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -757,9 +758,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ScaleImageMin");
 		fi.reset();
-		fi.insertOperand(null);
-		fi.insertOperand(10);
-		fi.insertOperand(10);
+		fi.insertOperand(Operand.NULL);
+		fi.insertIntegerOperand(10);
+		fi.insertIntegerOperand(10);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -772,9 +773,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ScaleImageFree");
 		fi.reset();
-		fi.insertOperand(null);
-		fi.insertOperand(10);
-		fi.insertOperand(10);
+		fi.insertOperand(Operand.NULL);
+		fi.insertIntegerOperand(10);
+		fi.insertIntegerOperand(10);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -787,8 +788,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Round");
 		fi.reset();
-		fi.insertOperand(new Double(10.5));
-		fi.insertOperand(0);
+		fi.insertFloatOperand(new Double(10.5));
+		fi.insertIntegerOperand(0);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -801,7 +802,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomString");
 		fi.reset();
-		fi.insertOperand(10);
+		fi.insertIntegerOperand(10);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -814,8 +815,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomString");
 		fi.reset();
-		fi.insertOperand(10);
-		fi.insertOperand("abcdef");
+		fi.insertIntegerOperand(10);
+		fi.insertStringOperand("abcdef");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -829,8 +830,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomInt");
 		fi.reset();
-		fi.insertOperand(10);
-		fi.insertOperand(11);
+		fi.insertIntegerOperand(10);
+		fi.insertIntegerOperand(11);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -857,8 +858,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseStringList");
 		fi.reset();
-		fi.insertOperand("aap,noot,mies");
-		fi.insertOperand(",");
+		fi.insertStringOperand("aap,noot,mies");
+		fi.insertStringOperand(",");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -872,7 +873,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseSelection");
 		fi.reset();
-		fi.insertOperand("aap,noot,mies");
+		fi.insertStringOperand("aap,noot,mies");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -886,13 +887,13 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseDate");
 		fi.reset();
-		fi.insertOperand("2008-08-28");
-		fi.insertOperand("yyyy-MM-dd");
+		fi.insertStringOperand("2008-08-28");
+		fi.insertStringOperand("yyyy-MM-dd");
 
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-		assertEquals(java.util.Date.class, o.getClass());
+		Operand o = fi.evaluateWithTypeCheckingOperand();
+		assertEquals(Property.DATE_PROPERTY,o.type);
+		assertNotNull(o.value);
+		assertEquals(java.util.Date.class, o.value.getClass());
 
 	}
 
@@ -901,7 +902,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParameterList");
 		fi.reset();
-		fi.insertOperand(5);
+		fi.insertIntegerOperand(5);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -915,13 +916,13 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "OffsetDate");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand(10);
-		fi.insertOperand(6);
-		fi.insertOperand(17);
-		fi.insertOperand(12);
-		fi.insertOperand(0);
-		fi.insertOperand(0);
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertIntegerOperand(10);
+		fi.insertIntegerOperand(6);
+		fi.insertIntegerOperand(17);
+		fi.insertIntegerOperand(12);
+		fi.insertIntegerOperand(0);
+		fi.insertIntegerOperand(0);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -948,7 +949,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "NextMonth");
 		fi.reset();
-		fi.insertOperand(0);
+		fi.insertIntegerOperand(0);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -962,8 +963,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Min");
 		fi.reset();
-		fi.insertOperand(20);
-		fi.insertOperand(10);
+		fi.insertIntegerOperand(20);
+		fi.insertIntegerOperand(10);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -977,8 +978,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Max");
 		fi.reset();
-		fi.insertOperand(20);
-		fi.insertOperand(10);
+		fi.insertIntegerOperand(20);
+		fi.insertIntegerOperand(10);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -992,8 +993,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "MergeNavajo");
 		fi.reset();
-		fi.insertOperand(createTestNavajo());
-		fi.insertOperand(createTestNavajo());
+		fi.insertNavajoOperand(createTestNavajo());
+		fi.insertNavajoOperand(createTestNavajo());
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1007,8 +1008,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsServiceCached");
 		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand("noot");
+		fi.insertStringOperand("aap");
+		fi.insertStringOperand("noot");
 
 		try {
 			Object o = fi.evaluateWithTypeChecking();
@@ -1025,7 +1026,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsNull");
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1039,9 +1040,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "InMonthTurnInterval");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand(5);
-		fi.insertOperand(true);
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertIntegerOperand(5);
+		fi.insertBooleanOperand(true);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1055,9 +1056,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetWeekDayDate");
 		fi.reset();
-		fi.insertOperand("SUN");
-		fi.insertOperand("forward");
-		fi.insertOperand(new java.util.Date());
+		fi.insertStringOperand("SUN");
+		fi.insertStringOperand("forward");
+		fi.insertDateOperand(new java.util.Date());
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1071,8 +1072,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetWeekDayDate");
 		fi.reset();
-		fi.insertOperand("SUN");
-		fi.insertOperand("forward");
+		fi.insertStringOperand("SUN");
+		fi.insertStringOperand("forward");
 		// fi.insertOperand(new java.util.Date());
 
 		Object o = fi.evaluateWithTypeChecking();
@@ -1087,7 +1088,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlTime");
 		fi.reset();
-		fi.insertOperand("http://www.dexels.com/index.php");
+		fi.insertStringOperand("http://www.dexels.com/index.php");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1100,7 +1101,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlModificationTime");
 		fi.reset();
-		fi.insertOperand("http://www.dexels.com/index.php");
+		fi.insertStringOperand("http://www.dexels.com/index.php");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1113,7 +1114,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlMimeType");
 		fi.reset();
-		fi.insertOperand("http://www.dexels.com/index.php");
+		fi.insertStringOperand("http://www.dexels.com/index.php");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1127,7 +1128,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "GetSelectedValue");
 		fi.reset();
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(doc.getProperty("/Single/Selectie")
+		fi.insertSelectionListOperand(doc.getProperty("/Single/Selectie")
 				.getAllSelectedSelections());
 
 		Object o = fi.evaluateWithTypeChecking();
@@ -1142,7 +1143,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "GetSelectedName");
 		fi.reset();
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(doc.getProperty("/Single/Selectie")
+		fi.insertSelectionListOperand(doc.getProperty("/Single/Selectie")
 				.getAllSelectedSelections());
 
 		Object o = fi.evaluateWithTypeChecking();
@@ -1158,8 +1159,8 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(doc.getMessage("Single"));
-		fi.insertOperand("Selectie");
+		fi.insertMessageOperand(doc.getMessage("Single"));
+		fi.insertStringOperand("Selectie");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1174,7 +1175,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Selectie");
+		fi.insertStringOperand("/Single/Selectie");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1189,7 +1190,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Selectie");
+		fi.insertStringOperand("/Single/Selectie");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1205,7 +1206,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Vuur");
+		fi.insertStringOperand("/Single/Vuur");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1214,40 +1215,6 @@ public class StandardFunctionsTest {
 
 	}
 
-//	@Test
-//	public void testGetPropertyAttribute1() throws Exception {
-//
-//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-//		fi.reset();
-//		fi.setInMessage(createTestNavajo());
-//		Navajo doc = createTestNavajo();
-//		fi.insertOperand("/Single/Vuur");
-//		fi.insertOperand("direction");
-//
-//		Object o = fi.evaluateWithTypeChecking();
-//
-//		assertNotNull(o);
-//		assertEquals("out", o.toString());
-//
-//	}
-//
-//	@Test
-//	public void testGetPropertyAttribute2() throws Exception {
-//
-//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-//		fi.reset();
-//		fi.setInMessage(createTestNavajo());
-//		Navajo doc = createTestNavajo();
-//		fi.insertOperand("/Single/Vuur");
-//		fi.insertOperand("type");
-//
-//		Object o = fi.evaluateWithTypeChecking();
-//
-//		assertNotNull(o);
-//		assertEquals("integer", o.toString());
-//
-//	}
-
 	@Test
 	public void testGetPropertySubType() throws Exception {
 
@@ -1255,8 +1222,8 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Selectie");
-		fi.insertOperand("testsub");
+		fi.insertStringOperand("/Single/Selectie");
+		fi.insertStringOperand("testsub");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1271,8 +1238,8 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(doc.getMessage("Single"));
-		fi.insertOperand("Selectie");
+		fi.insertMessageOperand(doc.getMessage("Single"));
+		fi.insertStringOperand("Selectie");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1285,7 +1252,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetMimeType");
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1300,8 +1267,8 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand(doc.getMessage("Aap"));
-		fi.insertOperand(0);
+		fi.insertMessageOperand(doc.getMessage("Aap"));
+		fi.insertIntegerOperand(0);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1316,7 +1283,7 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand("Logo");
+		fi.insertStringOperand("Logo");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1332,7 +1299,7 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand("aap noot mies");
+		fi.insertStringOperand("aap noot mies");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1348,7 +1315,7 @@ public class StandardFunctionsTest {
 		fi.setInMessage(doc);
 
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1363,7 +1330,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(doc.getProperty("/Single/Selectie"));
+		fi.insertPropertyOperand(doc.getProperty("/Single/Selectie"));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1392,7 +1359,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		Navajo doc = createTestNavajo();
-		fi.insertOperand(new Money(100.50));
+		fi.insertMoneyOperand(new Money(100.50));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1408,8 +1375,8 @@ public class StandardFunctionsTest {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("10");
 		list.add("20");
-		fi.insertOperand(list);
-		fi.insertOperand("&");
+		fi.insertListOperand(list);
+		fi.insertStringOperand("&");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1424,8 +1391,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FormatDecimal");
 		fi.reset();
 
-		fi.insertOperand(10.5);
-		fi.insertOperand("##");
+		fi.insertFloatOperand(10.5);
+		fi.insertStringOperand("##");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1439,8 +1406,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FormatDate");
 		fi.reset();
 
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand("yyyy-MM-dd");
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertStringOperand("yyyy-MM-dd");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1454,8 +1421,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "ForAll");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand("/Aap");
-		fi.insertOperand("[Noot] != 20");
+		fi.insertStringOperand("/Aap");
+		fi.insertStringOperand("[Noot] != 20");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1469,7 +1436,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FileSize");
 		fi.reset();
 
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1483,7 +1450,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "FileExists");
 		fi.reset();
 
-		fi.insertOperand("noot");
+		fi.insertStringOperand("noot");
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -1496,7 +1463,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "File");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNull(o);
@@ -1509,7 +1476,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "ExistsProperty");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand("/Single/Selectie");
+		fi.insertStringOperand("/Single/Selectie");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1522,8 +1489,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "Exists");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand(createTestNavajo().getMessage("Aap"));
-		fi.insertOperand("true");
+		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
+		fi.insertStringOperand("true");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1546,7 +1513,7 @@ public class StandardFunctionsTest {
 
 		fi.setInMessage(doc);
 
-		fi.insertOperand("true");
+		fi.insertStringOperand("true");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1572,8 +1539,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "EqualsPattern");
 		fi.reset();
-		fi.insertOperand("apenoot");
-		fi.insertOperand("[A-z]*");
+		fi.insertStringOperand("apenoot");
+		fi.insertStringOperand("[A-z]*");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1586,8 +1553,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "EqualsIgnoreCase");
 		fi.reset();
-		fi.insertOperand("apenoot");
-		fi.insertOperand("APeNOoT");
+		fi.insertStringOperand("apenoot");
+		fi.insertStringOperand("APeNOoT");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1601,7 +1568,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "DecimalChar");
 		fi.reset();
-		fi.insertOperand(10046);
+		fi.insertIntegerOperand(10046);
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1614,8 +1581,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateSubtract");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1628,8 +1595,8 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateField");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand("YEAR");
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertStringOperand("YEAR");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1642,9 +1609,9 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateAdd");
 		fi.reset();
-		fi.insertOperand(new java.util.Date());
-		fi.insertOperand(2);
-		fi.insertOperand("YEAR");
+		fi.insertDateOperand(new java.util.Date());
+		fi.insertIntegerOperand(2);
+		fi.insertStringOperand("YEAR");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1657,7 +1624,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Date");
 		fi.reset();
-		fi.insertOperand("2008-01-01");
+		fi.insertStringOperand("2008-01-01");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1682,7 +1649,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "CreateExpression");
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1698,8 +1665,8 @@ public class StandardFunctionsTest {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("10");
 		list.add("20");
-		fi.insertOperand(list);
-		fi.insertOperand("10");
+		fi.insertListOperand(list);
+		fi.insertStringOperand("10");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1712,7 +1679,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckUrl");
 		fi.reset();
-		fi.insertOperand("http://www.dexels.com");
+		fi.insertStringOperand("http://www.dexels.com");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1726,8 +1693,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "CheckUniqueness");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand("Aap");
-		fi.insertOperand("Noot");
+		fi.insertStringOperand("Aap");
+		fi.insertStringOperand("Noot");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1746,8 +1713,8 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand(list);
-		fi.insertOperand(30);
+		fi.insertListOperand(list);
+		fi.insertIntegerOperand(30);
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1762,7 +1729,7 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 
-		fi.insertOperand(30);
+		fi.insertIntegerOperand(30);
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1777,7 +1744,7 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 
-		fi.insertOperand(30.0);
+		fi.insertFloatOperand(30.0);
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1792,7 +1759,7 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 
-		fi.insertOperand("arjen@dexels.com");
+		fi.insertStringOperand("arjen@dexels.com");
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1807,7 +1774,7 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 
-		fi.insertOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1823,7 +1790,7 @@ public class StandardFunctionsTest {
 		String b = Base64.encode(bytes);
 		fi.reset();
 
-		fi.insertOperand(b);
+		fi.insertStringOperand(b);
 
 		Object o = fi.evaluateWithTypeChecking();
 		Binary oo = (Binary) o;
@@ -1838,9 +1805,9 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand("Aap");
-		fi.insertOperand("Noot");
-		fi.insertOperand("10");
+		fi.insertStringOperand("Aap");
+		fi.insertStringOperand("Noot");
+		fi.insertStringOperand("10");
 
 		try {
 			Object o = fi.evaluateWithTypeChecking();
@@ -1855,8 +1822,8 @@ public class StandardFunctionsTest {
 
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand(createTestNavajo().getMessage("Aap"));
-		fi.insertOperand(createTestNavajo().getMessage("Aap"));
+		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
+		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
 
 		try {
 			Object o = fi.evaluateWithTypeChecking();
@@ -1870,7 +1837,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "Age");
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
-		fi.insertOperand(new java.util.Date());
+		fi.insertDateOperand(new java.util.Date());
 
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
@@ -1885,11 +1852,11 @@ public class StandardFunctionsTest {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date d1 = sdf.parse("2009-12-01 12:34");
 		Date d2 = sdf.parse("2009-12-01 14:54");
-		fi.insertOperand(d1);
+		fi.insertDateOperand(d1);
 		Date d3 = (Date) fi.evaluate();
 
 		fi.reset();
-		fi.insertOperand(d2);
+		fi.insertDateOperand(d2);
 		Date d4 = (Date) fi.evaluate();
 
 		assertEquals(sdf.format(d3), sdf.format(d4));
@@ -1913,56 +1880,57 @@ public class StandardFunctionsTest {
 
 		// Empty String.
 		fi.reset();
-		fi.insertOperand("");
+		fi.insertStringOperand("");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty String.
 		fi.reset();
-		fi.insertOperand("aap");
+		fi.insertStringOperand("aap");
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);
 
 		// Null value.
 		fi.reset();
-		fi.insertOperand(null);
+		fi.insertOperand(Operand.NULL);
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, o);
 
 		// Empty list
 		fi.reset();
-		fi.insertOperand(new ArrayList<Object>());
+		fi.insertListOperand(new ArrayList<Object>());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty list.
 		fi.reset();
-		fi.insertOperand(new ArrayList<String>().add("noot"));
+		boolean thing = new ArrayList<String>().add("noot");
+		fi.insertBooleanOperand(thing);
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);
 
 		// Empty Binary.
 		fi.reset();
-		fi.insertOperand(new Binary());
+		fi.insertBinaryOperand(new Binary());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty Binary.
 		fi.reset();
-		fi.insertOperand(new Binary("aap".getBytes()));
+		fi.insertBinaryOperand(new Binary("aap".getBytes()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);
 
 		// Non empty Clocktime.
 		fi.reset();
-		fi.insertOperand(new ClockTime(new java.util.Date()));
+		fi.insertClockTimeOperand(new ClockTime(new java.util.Date()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, o);

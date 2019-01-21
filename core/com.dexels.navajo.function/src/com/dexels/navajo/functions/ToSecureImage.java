@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>Title: ToSecureImage.java</p>
@@ -158,20 +158,16 @@ public String usage() {
 	      tm.reset();
 	      RandomString rs = new RandomString();
 	      rs.reset();
-	      rs.insertOperand(6);
+	      rs.insertIntegerOperand(6);
 	      String random = (String)rs.evaluate();
 	      System.err.println("String["+i+"]: " + random);
 	      // lala
 	      
-	      tm.insertOperand(new String(random));
-	      tm.insertOperand(110);
-	      tm.insertOperand(30);
+	      tm.insertStringOperand(new String(random));
+	      tm.insertIntegerOperand(110);
+	      tm.insertIntegerOperand(30);
 	      Binary b = (Binary) tm.evaluate();
 	
-	      FileOutputStream fos = new FileOutputStream(new java.io.File("/Users/arnoud/secureimg/IMG_" + i + ".png"));
-	      fos.write(b.getData());
-	      fos.flush();
-	      fos.close();
       }
 
      }catch(Exception e){

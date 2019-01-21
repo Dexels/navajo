@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * Title:        Navajo
@@ -29,8 +29,7 @@ public String usage() {
   }
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.
-      TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     String s1 = (String)this.getOperands().get(0);
     String s2 = (String)this.getOperands().get(1);
 

@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -17,29 +15,26 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class BufferMessage implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
-	private final Optional<XMLElement> sourceElement;
 //	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(BufferMessage.class);
 
-	public BufferMessage(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper, Optional<XMLElement> sourceElement) {
+	public BufferMessage(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.sourceElement = sourceElement;
 //		this.joiner = joinermapper;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, Optional.empty(), "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		int count = parms.paramInteger("count");
 		try {
 //			Function<DataItem,DataItem> fi = joiner.apply(context);
@@ -61,8 +56,4 @@ public class BufferMessage implements ReactiveTransformer {
 		return metadata;
 	}
 
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
 }

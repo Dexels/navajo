@@ -84,6 +84,15 @@ public class MainApplication {
 	}
 	
 	public static SwingTipiApplicationInstance runApp( String[] args) {
+		for (String arg : args) {
+			System.err.println("Arg: "+arg);
+		}
+		System.getProperties().forEach((key,value)->{
+			System.err.println("Key: "+key+" value: "+value);
+		});
+		System.getenv().forEach((key,value)->{
+			System.err.println("EnvKey: "+key+" value: "+value);
+		});
 		logger.debug("Startup NONOSGi");
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));

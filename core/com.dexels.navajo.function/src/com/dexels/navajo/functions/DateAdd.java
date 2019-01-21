@@ -4,8 +4,8 @@ package com.dexels.navajo.functions;
 import java.util.Calendar;
 
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -38,7 +38,7 @@ public final class DateAdd extends FunctionInterface {
 
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		if (getOperands().size() > 2) {
 			java.util.Date datum = (java.util.Date) this.getOperands().get(0);
 			Integer arg = (Integer) this.getOperands().get(1);
@@ -78,9 +78,9 @@ public final class DateAdd extends FunctionInterface {
     	DateAdd da = new DateAdd();    	
     	Integer add = 365;
         da.reset();
-        da.insertOperand(new java.util.Date());
-    	da.insertOperand(add);
-    	da.insertOperand("DAY");
+        da.insertDateOperand(new java.util.Date());
+    	da.insertIntegerOperand(add);
+    	da.insertStringOperand("DAY");
     	Object o = da.evaluate();
     	System.err.println("begindate:  " + new java.util.Date() + " new date: " + o);
     	

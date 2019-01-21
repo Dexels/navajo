@@ -24,8 +24,8 @@
  */
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.version.AbstractVersion;
 
@@ -65,7 +65,7 @@ public final class GetVersionInfo extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		GetVersionInfo v = new GetVersionInfo();
 		v.reset();
-		v.insertOperand("navajo");
+		v.insertStringOperand("navajo");
 		System.err.println(v.evaluate());
 	}
 

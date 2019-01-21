@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public final class DayOfWeek extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object o = this.getOperand(0);
         Object f = this.getOperand(1);
         if (!(o instanceof Integer)) throw new TMLExpressionException(
@@ -83,8 +83,8 @@ public final class DayOfWeek extends FunctionInterface {
     public static void main(String[] args) throws Exception {
         DayOfWeek f = new DayOfWeek();
         f.reset();
-        f.insertOperand(new Integer(6));
-        f.insertOperand(new Boolean(false));
+        f.insertIntegerOperand(new Integer(6));
+        f.insertBooleanOperand(new Boolean(false));
         Object o = f.evaluate();
         System.err.println("f = " + o);
     }

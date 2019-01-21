@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class DateAppendClockTime extends FunctionInterface {
 
@@ -20,7 +20,7 @@ public final class DateAppendClockTime extends FunctionInterface {
 	}
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		// Arguments number check
 		if (this.getOperands().size() != 2) {

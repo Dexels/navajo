@@ -1,13 +1,13 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class ReplaceDiacriticCharacters extends FunctionInterface {
 
 	@Override
 	public final Object evaluate()
-			throws com.dexels.navajo.parser.TMLExpressionException {
+			throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		final Object op = this.getOperands().get(0);
 
@@ -68,7 +68,7 @@ public final class ReplaceDiacriticCharacters extends FunctionInterface {
 	public static void main(String[] args) throws TMLExpressionException {
 		ReplaceDiacriticCharacters r = new ReplaceDiacriticCharacters();
 		r.reset();
-		r.insertOperand("àáõøōâãäĪĬåÄÅÎÏĨĪĬĀÝŸāăą");
+		r.insertStringOperand("àáõøōâãäĪĬåÄÅÎÏĨĪĬĀÝŸāăą");
 		String res = (String) r.evaluate();
 		System.err.println(">" + res + "<");
 	}

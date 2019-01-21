@@ -1,14 +1,11 @@
 package com.dexels.navajo.resource.http.stream;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
@@ -24,20 +21,16 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 
 	private final TransformerMetadata metadata;
 	private final ReactiveParameters parameters;
-	private Optional<XMLElement> sourceElement;
 
-	public HttpPushStreamTransformer(TransformerMetadata metadata, String relativePath,
-			List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			boolean useGlobalInput) {
+	public HttpPushStreamTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
 		this.metadata = metadata;
-		this.sourceElement = xml;
 	}
 
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, "");
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,ImmutableMessage param) {
+		ReactiveResolvedParameters resolved = parameters.resolve(context,current,param,metadata);
 		String name = resolved.paramString("name");
 		String id = resolved.paramString("id");
 		String bucket = resolved.paramString("bucket");
@@ -48,20 +41,13 @@ public class HttpPushStreamTransformer implements ReactiveTransformer {
 					.getHttpResource(name)
 					.put(context.getTenant(), bucket, id,type, in)
 					.map(status->ImmutableFactory.empty().with("code", status, Property.INTEGER_PROPERTY)).map(DataItem::of)
-					.toFlowable()
-					.doOnComplete(()->System.err.println("EXE complete:"));
+					.toFlowable();
 		};
 	}
 
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
-	}
-
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
 	}
 
 }

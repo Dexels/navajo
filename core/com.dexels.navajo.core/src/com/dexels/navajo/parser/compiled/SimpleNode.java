@@ -10,19 +10,22 @@ import java.util.function.Function;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public abstract class SimpleNode implements Node {
     protected Node parent;
     protected Node[] children;
     protected int id;
+	private Token lastToken;
+	private Token firstToken;
 
     public SimpleNode(int i) {
         id = i;
@@ -133,12 +136,12 @@ public abstract class SimpleNode implements Node {
     		};
     }
     
-    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func,ParseMode mode) {
-    		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),mode);
+    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Operand, Operand, Operand> func,Function<String,FunctionClassification> functionClassifier) {
+    		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),functionClassifier);
 	}
-    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Object, Object, Object> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Operand, Operand, Operand> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> aType = expA.returnType();
 		Optional<String> bType = expB.returnType();
 		boolean inputTypesValid = acceptTypes.apply(aType, bType);
@@ -149,10 +152,10 @@ public abstract class SimpleNode implements Node {
 		Optional<String> returnType = returnTypeResolver.apply(aType, bType);
 		return new ContextExpression() {
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
-		        Object b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+		        Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
+		        Operand b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				return func.apply(a, b);
 			}
 
@@ -173,8 +176,8 @@ public abstract class SimpleNode implements Node {
 		};
 	}
 	
-	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Object, Object> func, Optional<String> requiredReturnType, ParseMode mode) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,mode);
+	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Operand, Operand> func, Optional<String> requiredReturnType, Function<String, FunctionClassification> functionClassifier) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		if(requiredReturnType.isPresent() && expA.returnType().isPresent()) {
 			String expectedType = requiredReturnType.get();
 			String foundType = expA.returnType().get();
@@ -185,9 +188,9 @@ public abstract class SimpleNode implements Node {
 		}
 		return new ContextExpression() {
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-		        Object a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+				Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 				return func.apply(a);
 			}
 
@@ -217,6 +220,24 @@ public abstract class SimpleNode implements Node {
     
     protected boolean allLiteral(List<ContextExpression> in) {
     	return in.stream().allMatch(e->e.isLiteral());
+    }
+    
+    
+	@Override
+	public Token jjtGetFirstToken() {
+    	return this.firstToken;
+    }
+	@Override
+	public void jjtSetFirstToken(Token token) {
+    	this.firstToken = token;
+    }
+	@Override
+	public Token jjtGetLastToken() {
+    	return this.lastToken;
+    }
+	@Override
+	public void jjtSetLastToken(Token token) {
+    	this.lastToken = token;
     }
 }
 

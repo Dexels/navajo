@@ -7,6 +7,7 @@ import java.util.Map;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.tipi.components.core.TipiSupportOverlayPane;
 import com.dexels.navajo.tipi.internal.AttributeRef;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
@@ -14,7 +15,6 @@ import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.tipilink.TipiLink;
 
 /**
  * <p>

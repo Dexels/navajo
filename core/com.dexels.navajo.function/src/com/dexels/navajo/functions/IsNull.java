@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.NavajoType;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class IsNull extends FunctionInterface {
     }
 
     @Override
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object arg = this.getOperands().get(0);
         if (arg == null) {
             return Boolean.TRUE;

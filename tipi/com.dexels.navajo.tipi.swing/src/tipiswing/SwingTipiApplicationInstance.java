@@ -153,7 +153,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		if (tipiResourceStream == null) {
 			logger.warn("Error starting up: Can not load tipi. Resource not found: "
 							+ definitionPath);
-			logger.debug("Codebase: " + context.getTipiResourceLoader());
+			logger.info("Codebase: " + context.getTipiResourceLoader());
 			String fatalErrorMsg = "No connection allowed to server by security software, check your connection and security settings.";
 			try {
 				String msg = System.getProperty("fatalSystemErrorMessage");

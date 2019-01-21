@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ValidatePhoneNumber extends FunctionInterface {
     
@@ -50,10 +50,10 @@ public class ValidatePhoneNumber extends FunctionInterface {
 
         ValidatePhoneNumber e1 = new ValidatePhoneNumber();
         e1.reset();
-        e1.insertOperand("+31 (0)20 490 4977");
+        e1.insertStringOperand("+31 (0)20 490 4977");
         ValidatePhoneNumber e2 = new ValidatePhoneNumber();
         e2.reset();
-        e2.insertOperand("020-4904977");
+        e2.insertStringOperand("020-4904977");
         try {
             System.out.println(e1.getOperand(0) + " - " + e1.evaluate());
             System.out.println(e2.getOperand(0) + " - " + e2.evaluate());

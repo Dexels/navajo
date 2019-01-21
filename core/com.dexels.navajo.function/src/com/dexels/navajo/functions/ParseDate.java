@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class ParseDate extends FunctionInterface {
 
@@ -22,7 +22,7 @@ public final class ParseDate extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         if (this.getOperand(0) == null) {
             throw new TMLExpressionException(this, "error: null value in first operand of ParseDate(String s|Date d [, pattern]).");
         }
@@ -128,9 +128,9 @@ public final class ParseDate extends FunctionInterface {
     public static void main(String[] args) throws Exception {
         ParseDate pd = new ParseDate();
         pd.reset();
-        pd.insertOperand("01/01/1978");
+        pd.insertStringOperand("01/01/1978");
 //        pd.insertOperand("");
-        pd.insertOperand("dd/MM/yy");
+        pd.insertStringOperand("dd/MM/yy");
         java.util.Date d1 = (java.util.Date) pd.evaluate();
         System.err.println(d1);
 
@@ -153,7 +153,7 @@ public final class ParseDate extends FunctionInterface {
         ParseDate td = new ParseDate();
         for (String date : dates) {
             td.reset();
-            td.insertOperand(date);
+            td.insertStringOperand(date);
             java.util.Date d = (java.util.Date)td.evaluate();
             System.err.println("Date = " + d == null ? "null" : d);
         }

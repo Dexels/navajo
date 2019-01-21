@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core.adapter;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class FunctionTest {
 
@@ -35,7 +35,7 @@ public class FunctionTest {
 
 	public String randomColor(Integer seed) throws TMLExpressionException {
 		FunctionInterface fi = instantiateFunction("com.dexels.navajo.functions.RandomColor");
-		fi.insertOperand(seed);
+		fi.insertIntegerOperand(seed);
 		return (String) fi.evaluate();
 	}
 

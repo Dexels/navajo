@@ -58,7 +58,6 @@ public class BackpressureAdministrator implements Subscription {
 	public void requestIfNeeded() {
 		// locking incorrect I think
 		long req = amountToRequest(incoming, requested.get());
-//		System.err.println("Request name: "+this.operatorName+" incoming: "+incoming+" requested: "+requested.get()+" requesting more: "+req);
 		if(req>0) {
 			downstreamSubsciption.request(req);
 			requested.addAndGet(req);
@@ -73,9 +72,6 @@ public class BackpressureAdministrator implements Subscription {
 	}
 
 	public void registerEmission(int i) {
-//		System.err.println("WHOOP!");
-//		emitted+=i;
-//		System.err.println("Emitted new items: "+i+" name: "+this.operatorName+" requested: "+requested.get()+" incoming: "+incoming);
 	}
 
 }

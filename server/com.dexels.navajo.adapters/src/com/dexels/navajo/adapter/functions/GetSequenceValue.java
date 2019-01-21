@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.script.api.UserException;
 
 public class GetSequenceValue extends FunctionInterface {
@@ -26,7 +26,7 @@ public class GetSequenceValue extends FunctionInterface {
     }
 
     @Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Integer transactionContext = -1;
         String datasource = null;
         String sequencename = null;
@@ -65,12 +65,12 @@ public class GetSequenceValue extends FunctionInterface {
         // Reuse the query object for the actual work
         query.reset();
         if (transactionContext != -1) {
-            query.insertOperand(transactionContext);
+            query.insertIntegerOperand(transactionContext);
         }
         if (datasource != null) {
             sql = datasource + ":" + sql;
         }
-        query.insertOperand(sql);
+        query.insertStringOperand(sql);
         
         return query.evaluate();
     }

@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
@@ -25,14 +24,12 @@ public class EventStreamMessageTransformerFactory implements ReactiveTransformer
 	}
 
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, 
-			Optional<XMLElement> xml, 
-			ReactiveBuildContext buildContext) {
-
-		return new EventStreamMessageTransformer(this,parameters,xml,relativePath);
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
+		return new EventStreamMessageTransformer(this,parameters);
 	}
 
-
+	
 	@Override
 	public Set<Type> inType() {
 		return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{Type.SINGLEMESSAGE,Type.MESSAGE}))); // Type.SINGLEMESSAGE;
@@ -65,5 +62,6 @@ public class EventStreamMessageTransformerFactory implements ReactiveTransformer
 	public String name() {
 		return "eventstream";
 	}
+
 
 }

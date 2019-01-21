@@ -8,21 +8,23 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.NavajoType;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.util.Util;
 
 /**
@@ -49,7 +51,7 @@ public final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 	
 			@Override
@@ -58,7 +60,7 @@ public final class ASTTmlNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<Object>();
@@ -75,11 +77,11 @@ public final class ASTTmlNode extends SimpleNode {
 						}
 					}
 					if (dum.equals("name") || selectionOption.equals("name")) {
-						return parentSel.getName();
+						return Operand.ofString(parentSel.getName());
 					} else if (dum.equals("value") || selectionOption.equals("value")) {
-						return parentSel.getValue();
+						return Operand.ofString(parentSel.getValue());
 					} else if (dum.equals("selected") || selectionOption.equals("selected")) {
-						return Boolean.valueOf(parentSel.isSelected());
+						return Operand.ofBoolean(Boolean.valueOf(parentSel.isSelected()));
 					}
 				}
 
@@ -181,47 +183,47 @@ public final class ASTTmlNode extends SimpleNode {
 		                    // I changed getValue into getTypedValue, as it resulted in a serialization
 		                    // of binary properties. Should be equivalent, and MUCH faster.
 		                    if (prop.getTypedValue() == null && !type.equals(Property.SELECTION_PROPERTY)) {
-		                        return Boolean.valueOf(false);
+		                        return Operand.FALSE;
 		                    }
 
 		                    if (type.equals(Property.INTEGER_PROPERTY)) {
 		                       try {
 		                          Integer.parseInt(prop.getValue());
-		                          return Boolean.valueOf(true);
+		                          return Operand.TRUE;
 		                       } catch (Exception e) {
-		                          return Boolean.valueOf(false);
+			                          return Operand.FALSE;
 		                       }
 		                    } else if (type.equals(Property.FLOAT_PROPERTY)) {
 		                      try {
 		                          Double.parseDouble(prop.getValue());
-		                          return Boolean.valueOf(true);
+		                          return Operand.TRUE;
 		                       } catch (Exception e) {
-		                          return Boolean.valueOf(false);
+			                          return Operand.FALSE;
 		                       }
 		                    } else if (type.equals(Property.DATE_PROPERTY)) {
 		                    	try {
 		                    		if ( prop.getTypedValue() instanceof Date ) {
-		                    			return Boolean.valueOf(true);
+				                          return Operand.TRUE;
 		                    		} else {
-		                    			return Boolean.valueOf(false);
+		                    			return Operand.FALSE;
 		                    		}
 		                    	} catch (Exception e) {
-		                    		return Boolean.valueOf(false);
+		                    		return Operand.FALSE;
 		                    	}
 		                    } else if ( type.equals(Property.CLOCKTIME_PROPERTY)) {
 		                    	try {
 		                            ClockTime ct = new ClockTime(prop.getValue());
 		                            if ( ct.calendarValue() == null ) {
-		                            	return Boolean.valueOf(false);
+		                            	return Operand.FALSE;
 		                            }
-		                            return Boolean.valueOf(true);
+		                            return Operand.TRUE;
 		                         } catch (Exception e) {
-		                            return Boolean.valueOf(false);
+		                            return Operand.FALSE;
 		                         }
 		                    } else
-		                        return Boolean.valueOf(true);
+		                        return Operand.TRUE;
 		                } else
-		                    return Boolean.valueOf(false);
+		                    return Operand.FALSE;
 		            }
 		              
 		              
@@ -251,7 +253,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                            Selection sel = (Selection) list.get(0);
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
-		                          return null;
+		                          return Operand.NULL;
 		                        }
 		                    } catch (com.dexels.navajo.document.NavajoException te) {
 		                        throw new RuntimeException(te.getMessage());
@@ -339,22 +341,22 @@ public final class ASTTmlNode extends SimpleNode {
 		        }
 
 		        if (!singleMatch)
-		            return resultList;
+		            return Operand.ofList(resultList);
 		        else if (resultList.size() > 0)
-		            return resultList.get(0);
+		            return Operand.ofDynamic(resultList.get(0));
 		        else if (!exists)
-		            throw new RuntimeException("Property does not exist: " + text);
+		            throw new TMLExpressionException("Property does not exist: " + text);
 		        else
-		            return Boolean.valueOf(false);
+		            return Operand.FALSE;
 			}
 
 			// TODO support actual path parser
-			private Object parseImmutablePath(String text, ImmutableMessage rm) {
+			private Operand parseImmutablePath(String text, ImmutableMessage rm) {
 				List<String> parts = Arrays.asList(text.split("/"));
 				return parseImmutablePath(parts, rm);
 			}
 
-			private Object parseImmutablePath(List<String> path, ImmutableMessage rm) {
+			private Operand parseImmutablePath(List<String> path, ImmutableMessage rm) {
 				if(path.size()>1) {
 					Optional<ImmutableMessage> imm = rm.subMessage(path.get(0));
 					if(imm.isPresent()) {
@@ -364,7 +366,11 @@ public final class ASTTmlNode extends SimpleNode {
 					}
 					return null;
 				}
-				return rm.columnValue(path.get(0));
+				String type = rm.columnType(path.get(0));
+				if(type!=null) {
+					return Operand.ofCustom(rm.columnValue(path.get(0)), type);
+				}
+				return Operand.ofDynamic(rm.columnValue(path.get(0)));
 			}
 
 			

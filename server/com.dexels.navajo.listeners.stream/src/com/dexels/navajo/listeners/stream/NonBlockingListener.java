@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.AsyncContext;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
@@ -49,6 +51,7 @@ import com.dexels.navajo.script.api.LocalClient;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
@@ -119,11 +122,12 @@ public class NonBlockingListener extends HttpServlet {
 		return Collections.unmodifiableMap(attributes);
 	}
 	
-	private void removeRunningScript(StreamScriptContext context) {
-		runningReactiveScripts.completed(context);
+	private void removeRunningScript(String uuid) {
+		runningReactiveScripts.complete(uuid);;
 	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uuid = UUID.randomUUID().toString();
 		String cancel = request.getParameter("cancel");
 		if(cancel!=null) {
 			cancel(cancel,request,response);
@@ -140,10 +144,28 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		AsyncContext ac = request.startAsync();
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
-		StreamScriptContext context;
-		ac.setTimeout(-1);
+		String debugString = request.getHeader("X-Navajo-Debug");
+		Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
+		boolean debug = debugString != null;
+		ReactiveScript rs;
 		try {
-			context = createScriptContext(ac, responseSubscriber);
+			rs = buildScript(serviceHeader,debug);
+			if(rs.binaryMimeType().isPresent()) {
+				response.addHeader("Content-Type", rs.binaryMimeType().get());
+			} else {
+				response.addHeader("Content-Type", "text/xml;charset=utf-8");
+			}
+			if(responseEncoding.isPresent()) {
+				response.addHeader("Content-Encoding", responseEncoding.get());
+			}
+		} catch (ReactiveParseException|IOException e2) {
+			respondError("Script compilation problem",serviceHeader,uuid, responseEncoding,response,  responseSubscriber, e2);	
+			return;
+		}
+		ac.setTimeout(1000000);
+		Single<StreamScriptContext> context;
+		try {
+			context = createScriptContext(uuid, ac, responseSubscriber,rs.streamInput());
 		} catch (AuthorizationException e3) {
 			logger.error("Authorization problem: ",e3);
 			response.sendError(401,"Not authorized");
@@ -154,55 +176,47 @@ public class NonBlockingListener extends HttpServlet {
 			response.sendError(500,"Server error");
 			return;
 		}
-		runningReactiveScripts.submit(context);
+//		runningReactiveScripts.submit(context);
 		
-		Optional<String> responseEncoding = decideEncoding(request.getHeader("Accept-Encoding"));
 			
 		try {
-			String debugString = request.getHeader("X-Navajo-Debug");
-			boolean debug = debugString != null;
-			ReactiveScript rs;
-			try {
-				rs = buildScript(context,debug);
-				if(rs.binaryMimeType().isPresent()) {
-					response.addHeader("Content-Type", rs.binaryMimeType().get());
-				} else {
-					response.addHeader("Content-Type", "text/xml;charset=utf-8");
-				}
-				if(responseEncoding.isPresent()) {
-					response.addHeader("Content-Encoding", responseEncoding.get());
-				}
-			} catch (ReactiveParseException e2) {
-				respondError("Script compilation problem",context, responseEncoding,response,  responseSubscriber, e2);	
-				return;
-			}
+
 
 			// TODO Cache file exists result + Flush on change
 			Function<? super Throwable,? extends Publisher<? extends DataItem>> cc = e->{
 				logger.error("Error detected: {}",e);
-				return errorMessage(true,context,Optional.of(e), e.getMessage()).map(DataItem::of);
+				return errorMessage(true,serviceHeader,Optional.of(e), e.getMessage()).map(DataItem::of);
 			};
 
 //			if(!rs.streamInput()) {			}
 
-			Flowable<DataItem> execution = rs.streamInput() ? 
-					rs.execute(context) 
-					: context.getInput()
-						.map(n->context.withInputNavajo(n))
-						.map(ctx->rs.execute(ctx))
-						.toFlowable()
-						.flatMap(elt->elt)
-						.doOnComplete(()->context.complete())
-		                .doOnError((e)->context.error(e))
-		                .doOnCancel(()->removeRunningScript(context));
-
-			System.err.println(">>> DataType: "+rs.dataType());
+			Flowable<DataItem> execution = context
+					.map(ctx->rs.execute(ctx))
+					.toFlowable().flatMap(e->e).concatMapEager(e->e)
+//					.doOnComplete(()->ac.complete())
+//					.doOnCancel(()->ac.complete())
+	                .doOnError((e)->context.error(e))
+	                .doOnCancel(()->removeRunningScript(uuid));
+						
+//					: context.map(ctx->rs.execute(ctx)).toFlowable().
+//						
+//						context.collect()
+//						.map(n->context.withInputNavajo(n))
+//						.map(ctx->rs.execute(ctx)
+//								.concatMapEager(e->e)
+//								)
+//						.toFlowable()
+//						.flatMap(elt->elt)
+//						.doOnComplete(()->context.complete())
+//		                .doOnError((e)->context.error(e))
+//		                .doOnCancel(()->removeRunningScript(uuid));
+//
+			logger.info("Reactive script data type: "+rs.dataType());
 			switch(rs.dataType()) {
 			case DATA:
 				execution
 					.map(di->di.data())
 					.compose(StreamCompress.compress(responseEncoding))
-					.doOnCancel(()->context.complete())
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -212,7 +226,6 @@ public class NonBlockingListener extends HttpServlet {
 				.onErrorResumeNext(cc)
 				.map(di->di.message())
 				.map(msg->msg.toFlatString(ImmutableFactory.getInstance()).getBytes())
-				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -221,11 +234,10 @@ public class NonBlockingListener extends HttpServlet {
 				.onErrorResumeNext(cc)
 				.map(e->e.eventStream())
 				.concatMap(e->e)
-				.doOnCancel(()->System.err.println("Cancel at toplevel"))
+				.doOnCancel(()->logger.warn("Cancel at toplevel"))
 				.lift(StreamDocument.filterMessageIgnore())
 				.lift(StreamDocument.serialize())
 				.compose(StreamCompress.compress(responseEncoding))
-				.doOnCancel(()->context.complete())
 				.map(ByteBuffer::wrap)
 				.subscribe(responseSubscriber);
 				break;
@@ -233,18 +245,19 @@ public class NonBlockingListener extends HttpServlet {
 				execution
 					.onErrorResumeNext(cc)
 					.map(di->di.event())
+					.compose(StreamDocument.inNavajo(serviceHeader, Optional.empty(), Optional.empty(),rs.methods()))
 					.lift(StreamDocument.filterMessageIgnore())
 					.lift(StreamDocument.serialize())
 					.compose(StreamCompress.compress(responseEncoding))
 					.onErrorResumeNext(new Function<Throwable, Publisher<? extends byte[]>>() {
 						@Override
 						public Publisher<? extends byte[]> apply(Throwable e1) throws Exception {
-							return errorMessage(true,context, Optional.of(e1), e1.getMessage())
+							return errorMessage(true,serviceHeader, Optional.of(e1), e1.getMessage())
 							.lift(StreamDocument.serialize())
 							.compose(StreamCompress.compress(responseEncoding));
 						}
 					})
-                    .doOnCancel(()->{logger.warn("AAA"); context.complete();})
+                    .doOnCancel(()->{logger.warn("AAA"); ac.complete();})
 					.map(ByteBuffer::wrap)
 					.subscribe(responseSubscriber);
 				break;
@@ -259,7 +272,7 @@ public class NonBlockingListener extends HttpServlet {
 
 			}
 		} catch (Throwable e1) {
-			respondError("General error", context, responseEncoding, response, responseSubscriber, e1);
+			respondError("General error", serviceHeader,uuid, responseEncoding, response, responseSubscriber, e1);
 			return;
 		}
 	}
@@ -291,24 +304,24 @@ public class NonBlockingListener extends HttpServlet {
 //		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
 //	}
 
-	private void respondError(String message, StreamScriptContext context, Optional<String> responseEncoding, HttpServletResponse response,
+	private void respondError(String message, String service, String uuid, Optional<String> responseEncoding, HttpServletResponse response,
 			Subscriber<ByteBuffer> responseSubscriber, Throwable e1) {
 		logger.error("Returning error with message: "+message+" with responseEncoding: "+responseEncoding,e1);
 		response.addHeader("Content-Type", "text/xml;charset=utf-8");
 		if(responseEncoding.isPresent()) {
 			response.addHeader("Content-Encoding", responseEncoding.get());
 		}
-		errorMessage(true,context, Optional.of(e1), message)
+		errorMessage(true,service, Optional.of(e1), message)
 			.lift(StreamDocument.serialize())
 			.compose(StreamCompress.compress(responseEncoding))
-			.doOnTerminate(()->removeRunningScript(context))
+			.doOnTerminate(()->removeRunningScript(uuid))
 			.map(ByteBuffer::wrap)
 			.subscribe(responseSubscriber);
 	}
 
 
-	private ReactiveScript buildScript(StreamScriptContext context, boolean debug) throws IOException {
-		return reactiveScriptEnvironment.build(context.getService(), debug);
+	private ReactiveScript buildScript(String service, boolean debug) throws IOException {
+		return reactiveScriptEnvironment.build(service, debug);
 
 	}
 
@@ -325,9 +338,8 @@ public class NonBlockingListener extends HttpServlet {
 		return a;
 	}
 
-	private static Flowable<NavajoStreamEvent> errorMessage(boolean wrapNavajo, StreamScriptContext context, Optional<Throwable> throwable, String message) {
+	private static Flowable<NavajoStreamEvent> errorMessage(boolean wrapNavajo, String service, Optional<Throwable> throwable, String message) {
 
-		String service = context.getService();
 		Flowable<NavajoStreamEvent> result = Msg.create("error")
 				.with(Prop.create("code","-1","integer" ))
 				.with(Prop.create("description", message))
@@ -337,7 +349,7 @@ public class NonBlockingListener extends HttpServlet {
 //				.concatWith(Observable.just(Events.done()))
 				.toFlowable(BackpressureStrategy.BUFFER);
 		if(wrapNavajo) {
-			result = result.compose(StreamDocument.inNavajo(context.getService(), Optional.of(context.getUsername()),Optional.of("")));
+			result = result.compose(StreamDocument.inNavajo(service, Optional.empty(),Optional.of("")));
 		}
 		return result;
 	}
@@ -369,7 +381,7 @@ public class NonBlockingListener extends HttpServlet {
 		    return bytesArray;
 	}
 
-	private StreamScriptContext createScriptContext(AsyncContext ac, Disposable responseSubscriber) throws IOException, AuthorizationException {
+	private Single<StreamScriptContext> createScriptContext(String uuid, AsyncContext ac, Disposable responseSubscriber, boolean streamInput) throws IOException, AuthorizationException {
 		final HttpServletRequest req = (HttpServletRequest) ac.getRequest();
 		Map<String, Object> attributes = extractHeaders(req);
 		String tenant = determineTenantFromRequest(req);
@@ -383,23 +395,24 @@ public class NonBlockingListener extends HttpServlet {
 			throw new NullPointerException("Missing tenant header. Streaming Endpoint requires a tenant");
 		}
 		Access access = authenticate(serviceHeader, authorizationHeader, tenant);
-
 		if("GET".equals(req.getMethod())) {
-			return new StreamScriptContext(tenant,
-			        access,
-					attributes,Optional.of(
-					        // TODO?
-							Flowable.<NavajoStreamEvent>empty().compose(StreamDocument.inNavajo(serviceHeader, Optional.of(""), Optional.of("")))
-							),
+			Navajo in = NavajoFactory.getInstance().createNavajo();
+			in.addHeader(NavajoFactory.getInstance().createHeader(in, serviceHeader, null, null, -1));
+			return Single.just(new StreamScriptContext(tenant,
+					serviceHeader,
+					in,
+					attributes,
+					Optional.empty(),
 					Optional.of((ReactiveScriptRunner)this.reactiveScriptEnvironment), 
 					Collections.emptyList(), 
 					Optional.of(()->{responseSubscriber.dispose(); ac.complete();}),
-					Optional.ofNullable(this.runningReactiveScripts)
-				);
+					Optional.ofNullable(this.runningReactiveScripts),
+					Optional.empty()
+				));
 		}
 		String requestEncoding = (String) attributes.get("Content-Encoding");
 		RequestPublisher rp = new RequestPublisher(ac, 8192);
-		Flowable<NavajoStreamEvent> input = Flowable.fromPublisher(rp)
+		Flowable<NavajoStreamEvent> inputStream = Flowable.fromPublisher(rp)
 			.map(e->getByteArrayFromByteBuffer(e))
 			.compose(StreamCompress.decompress(Optional.ofNullable(requestEncoding)))
 			.lift(XML.parseFlowable(50))
@@ -407,12 +420,35 @@ public class NonBlockingListener extends HttpServlet {
 			.lift(StreamDocument.parse())
 			.concatMap(e->e);
 		
+		
+		
+		if(streamInput) {
+			Flowable<DataItem> input = inputStream
+					.map(DataItem::of);
+			return Single.just(
+					new StreamScriptContext(tenant,serviceHeader,NavajoFactory.getInstance().createNavajo(), 
+							attributes, 
+							Optional.of(input),Optional.of(this.reactiveScriptEnvironment),
+							Collections.emptyList(), Optional.of(() -> {responseSubscriber.dispose(); ac.complete();}), 
+							Optional.of(runningReactiveScripts),
+							Optional.of(access.getInDoc())));
+		} else {
+			Single<Navajo> inputNavajo = inputStream
+				.toObservable()
+				.compose(StreamDocument.domStreamCollector())
+				.firstOrError();
+			
+			return inputNavajo.map(nav->{
+				return new StreamScriptContext(tenant,serviceHeader,nav, attributes, Optional.empty(), Optional.of(this.reactiveScriptEnvironment),
+		                Collections.emptyList(), Optional.of(() -> {
+		                    responseSubscriber.dispose();
+		                    ac.complete();
+		                }), Optional.of(runningReactiveScripts), Optional.of(access.getInDoc()));
+			});
+		}
+		
+		
 //	au
-        return new StreamScriptContext(tenant, access, attributes, Optional.of(input), Optional.of(this.reactiveScriptEnvironment),
-                Collections.emptyList(), Optional.of(() -> {
-                    responseSubscriber.dispose();
-                    ac.complete();
-                }), Optional.of(runningReactiveScripts));
 	}
 
 	// warn: Duplicated code

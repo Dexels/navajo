@@ -3,10 +3,11 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.function.Function;
 
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
 
 public final class ASTExpressionLiteralNode extends SimpleNode {
 
@@ -18,10 +19,10 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
-        return ExpressionCache.getInstance().parse(problems,value,mode);
+        return ExpressionCache.getInstance().parse(problems,value,functionClassifier);
 
 	}
 }

@@ -16,8 +16,8 @@ import java.util.Date;
 
 import java.util.List;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 
@@ -119,7 +119,7 @@ public String usage() {
         m.reset();
 //        m.insertOperand(a);
 //        m.insertOperand(b);
-        m.insertOperand(l);
+        m.insertListOperand(l);
 //        System.out.println("Min of " + a + " and " + b + " is " + m.evaluate() );
         System.out.println("Min of " + l + " is " + m.evaluate() );
     }

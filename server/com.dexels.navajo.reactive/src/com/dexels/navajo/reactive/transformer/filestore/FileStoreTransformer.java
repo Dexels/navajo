@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
@@ -35,22 +34,16 @@ public class FileStoreTransformer implements ReactiveTransformer {
 
 	private final ReactiveParameters parameters;
 
-	private Optional<XMLElement> sourceElement;
-
-	private String sourcePath;
-
 	private final TransformerMetadata metadata;
 	
-	public FileStoreTransformer(TransformerMetadata metadata, ReactiveParameters parameters, Optional<XMLElement> sourceElement, String sourcePath) {
+	public FileStoreTransformer(TransformerMetadata metadata, ReactiveParameters parameters) {
 		this.parameters = parameters;
-		this.sourceElement = sourceElement;
-		this.sourcePath = sourcePath;
 		this.metadata = metadata;
 	}
 
 	@Override
-	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		ReactiveResolvedParameters parms = parameters.resolveNamed(context, Optional.empty(), ImmutableFactory.empty(), metadata, sourceElement, sourcePath);
+	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
+		ReactiveResolvedParameters parms = parameters.resolve(context, current,param, metadata);
 		String path = parms.paramString("path");
 		return flow->flow.lift(flowableFile(path));
 	}
@@ -129,10 +122,4 @@ public class FileStoreTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
-
-	@Override
-	public Optional<XMLElement> sourceElement() {
-		return sourceElement;
-	}
-	
 }

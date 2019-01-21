@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ZipArchive extends FunctionInterface {
 
@@ -91,7 +91,7 @@ public class ZipArchive extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		ZipArchive za = new ZipArchive();
 		za.reset();
-		za.insertOperand("testzip");
+		za.insertStringOperand("testzip");
 		Binary o = (Binary) za.evaluate();
 		System.err.println("o =" + o);
 		File result = new File("result.zip");

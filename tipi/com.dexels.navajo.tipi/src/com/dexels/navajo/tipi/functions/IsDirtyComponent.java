@@ -4,7 +4,7 @@
  */
 package com.dexels.navajo.tipi.functions;
 
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.tipi.QueryableComponent;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.internal.PropertyComponent;

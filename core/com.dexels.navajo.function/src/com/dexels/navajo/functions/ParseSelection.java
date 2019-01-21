@@ -29,8 +29,8 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ParseSelection extends FunctionInterface {
 
@@ -68,7 +68,7 @@ public class ParseSelection extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		ParseSelection p = new ParseSelection();
 		p.reset();
-		p.insertOperand("A;B;C");
+		p.insertStringOperand("A;B;C");
 		Object o = p.evaluate();
 		System.err.println("o = " + ((Selection []) o)[2]);
 	}

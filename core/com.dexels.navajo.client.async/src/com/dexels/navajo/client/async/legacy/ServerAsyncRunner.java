@@ -196,7 +196,7 @@ private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.c
       }
     }
     else {
-      System.err.println("Received no header. returning and killing thread");
+      logger.info("Received no header. returning and killing thread");
       throw new ClientException( -1, -1, "No async header!");
     }
     return null;

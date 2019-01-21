@@ -4,41 +4,32 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.FunctionDefinition;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.NamedExpression;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
-import com.dexels.navajo.parser.compiled.ASTTransformerNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.SimpleNode;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
-import com.dexels.navajo.parser.compiled.api.ReactivePipe;
-import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
-import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.script.api.SystemException;
+
 
 public class TestCompiledExpression {
 
@@ -66,16 +57,16 @@ public class TestCompiledExpression {
 	public void parseIntAddition() throws ParseException, TMLExpressionException {
 		List<String> problems = new ArrayList<>();
         String expression = "1+1";
-		ContextExpression ss =  ExpressionCache.getInstance().parse(problems,expression,ParseMode.DEFAULT);
-        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,expression,ParseMode.DEFAULT);
+		ContextExpression ss =  ExpressionCache.getInstance().parse(problems,expression,fn->FunctionClassification.DEFAULT);
+        ContextExpression ss2 =  ExpressionCache.getInstance().parse(problems,expression,fn->FunctionClassification.DEFAULT);
         if(!problems.isEmpty()) {
         		throw new TMLExpressionException(problems,expression);
         }
         System.err.println("ss: "+ss.isLiteral());
         System.err.println("ss2: "+ss2.isLiteral());
-        System.err.println("Result: "+ss.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
-        Assert.assertEquals(2, ss.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
-        Assert.assertEquals(2, ss2.apply(null, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
+        System.err.println("Result: "+ss.apply().value);
+        Assert.assertEquals(2, ss.apply().value);
+        Assert.assertEquals(2, ss2.apply().value);
         Assert.assertTrue(ss.isLiteral());
         Assert.assertTrue(ss2.isLiteral());
 
@@ -88,14 +79,14 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         if(!problems.isEmpty()) {
     			throw new TMLExpressionException(problems,expression);
         }
         
         System.err.println("tml: "+ss.isLiteral());
-        System.err.println("TMLVALUE: "+ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
-        Assert.assertEquals("TestValue", ss.apply(input, null, null, null, null, null,null,Optional.empty(),Optional.empty()));
+        System.err.println("TMLVALUE: "+ss.apply(input,Optional.empty(),Optional.empty()).value);
+        Assert.assertEquals("TestValue", ss.apply(input,Optional.empty(),Optional.empty()).value);
         Assert.assertFalse(ss.isLiteral());
 	}
 
@@ -106,6 +97,16 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		Object o = Expression.evaluate(clause,input, null, null, null).value;
 		System.err.println("<o>"+o);
+		cp.Expression();
+        Assert.assertEquals(true, o);
+	}
+	
+	@Test(expected=TMLExpressionException.class)
+	public void testNonExistantTML() throws ParseException, TMLExpressionException, SystemException {
+		String clause = "[/Blib/Blob]";
+		StringReader sr = new StringReader(clause);
+		CompiledParser cp = new CompiledParser(sr);
+		Object o = Expression.evaluate(clause,input, null, null, null).value;
 		cp.Expression();
         Assert.assertEquals(true, o);
 	}
@@ -135,25 +136,26 @@ public class TestCompiledExpression {
 	
 	@Test
 	public void parseExpressionLiteral() throws ParseException, TMLExpressionException {
-		Object o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
+		Operand o = ExpressionCache.getInstance().evaluate("FORALL( '/TestArrayMessageMessage', `?[Property]`)", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
         System.err.println("ss: "+o);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 	@Test
 	public void parseExpressionWithParam() throws ParseException, TMLExpressionException {
 //		Object o = CachedExpression.getInstance().evaluate("?[/@ClubId] AND Trim([/@ClubId]) != ''", input, null, null, null, null, null, null,null);
-		Object o = ExpressionCache.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
+		Object o = ExpressionCache.getInstance().evaluate("?[/@Param]", input, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value;
 		Assert.assertEquals(true, o);
-		Object o2 = ExpressionCache.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
+		Object o2 = ExpressionCache.getInstance().evaluate("?[/@Paramzz]", input, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value;
 		Assert.assertFalse((Boolean)o2);
-		Object o3 = ExpressionCache.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,Optional.empty(),Optional.empty());
+		Object o3 = ExpressionCache.getInstance().evaluate("?[/@Param] AND [/@Param] != ''", input, null, null, null, null, null,null,Optional.empty(),Optional.empty()).value;
 		Assert.assertTrue((Boolean)o3);
 		System.err.println("ss: "+o3);
 //        System.err.println("Result: "+ss.apply(input, null, null, null, null, null, null,null));
 	}
 
 	@SuppressWarnings("unused")
-	@Test
+	@Test @Ignore
+
 	public void parsePerformanceTest() throws TMLExpressionException, SystemException {
 		long before = System.currentTimeMillis();
 		for (int i = 0; i < 100000; i++) {
@@ -185,28 +187,6 @@ public class TestCompiledExpression {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testExpressionExtentions() throws ParseException {
-		String expression = "rename('aap','noot')";
-		StringReader sr = new StringReader(expression);
-		ImmutableMessage inMessage = ImmutableFactory.empty().with("aap", "abc", "string");
-		CompiledParser cp = new CompiledParser(sr);
-		cp.Transformer();		
-		ASTTransformerNode atn = (ASTTransformerNode) cp.getJJTree().rootNode();
-		List<String> problems = new ArrayList<>();
-		ContextExpression ce = atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
-		Function<ImmutableMessage,ImmutableMessage> trans = (Function<ImmutableMessage, ImmutableMessage>) ce.apply(input, input.getMessage("TestMessage"), null, null, null, null, null, Optional.empty(), Optional.empty());
-		
-		ImmutableMessage out = trans.apply(inMessage);
-		String s = ImmutableFactory.createParser().describe(out);
-		System.err.println("s: "+s);
-//		atn.evaluateTransformer();
-		Assert.assertEquals("abc", out.columnValue("noot"));
-		Assert.assertNull(out.columnValue("aap"));
-//        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression);
-	}
-	
 	@Test
 	public void testNamedExpression() throws ParseException {
 		String expression = "aap=1+1";
@@ -215,11 +195,11 @@ public class TestCompiledExpression {
 		cp.KeyValue();		
 		ASTKeyValueNode atn = (ASTKeyValueNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
-		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
+		NamedExpression ne = (NamedExpression) atn.interpretToLambda(problems, expression,fn->FunctionClassification.DEFAULT);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
 		Assert.assertEquals("aap",ne.name);
-		Assert.assertEquals(2, ne.apply());
+		Assert.assertEquals(2, ne.apply().value);
 	}
 
 	@Test
@@ -233,10 +213,10 @@ public class TestCompiledExpression {
 		cp.Expression();
 		SimpleNode atn = (SimpleNode) cp.getJJTree().rootNode();
 		List<String> problems = new ArrayList<>();
-		ContextExpression ne = atn.interpretToLambda(problems, expression,ParseMode.DEFAULT);
-		Object result = ne.apply();
-		System.err.println("Final: "+result);
-		Assert.assertEquals("monkey", result);
+		ContextExpression ne = atn.interpretToLambda(problems, expression,fn->FunctionClassification.DEFAULT);
+		Operand result = ne.apply();
+		System.err.println("Final: "+result.value);
+		Assert.assertEquals("monkey", result.value);
 	}
 
 	@Test
@@ -250,32 +230,12 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		cp.Expression();
 		List<String> problems = new ArrayList<>();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
-        Object o = ss.apply();
-		Assert.assertEquals("monkey", o);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
+        Operand o = ss.apply();
+		Assert.assertEquals("monkey", o.value);
         System.err.println(">> "+o);
 	}
 	
-	@Test @Ignore
-	public void testReactiveFunctionCall() throws ParseException {
-        FunctionInterface testFunction = new AddTestFunction();
-        FunctionDefinition fd = new FunctionDefinition(testFunction.getClass().getName(), "blib", "bleb", "blab");
-        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("addtest",fd);
-
-		String expression = "addtest()->addtest()";
-		StringReader sr = new StringReader(expression);
-		CompiledParser cp = new CompiledParser(sr);
-		cp.ReactivePipe();
-		List<String> problems = new ArrayList<>();
-        ReactivePipe ss = (ReactivePipe) cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.REACTIVE);
-        ReactiveSourceFactory rs = (ReactiveSourceFactory) ss.source.apply();
-        List<ReactiveTransformerFactory> transformerFactories = ss.transformers.stream().map(e->(ReactiveTransformerFactory)e.apply()).collect(Collectors.toList());
-        Object o = ss.apply();
-		Assert.assertEquals("monkey", o);
-        System.err.println(">> "+o);
-	}
-
-
 	@Test
 	public void testMultiArgFunction() throws Exception {
         FunctionInterface testFunction = new AddTestFunction();
@@ -287,7 +247,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         System.err.println("ss: "+ss.getClass());
 	}
 
@@ -304,7 +264,7 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
         System.err.println("ss: "+ss.apply().getClass());
 	}
 	
@@ -320,9 +280,9 @@ public class TestCompiledExpression {
 		CompiledParser cp = new CompiledParser(sr);
 		List<String> problems = new ArrayList<>();
 		cp.Expression();
-        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),ParseMode.DEFAULT);
-        System.err.println("ss: "+ss.apply());
-        Assert.assertEquals("aap,noot", ss.apply());
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
+        System.err.println("ss: "+ss.apply().value);
+        Assert.assertEquals("aap,noot", ss.apply().value);
 	}
 	
 	@Test

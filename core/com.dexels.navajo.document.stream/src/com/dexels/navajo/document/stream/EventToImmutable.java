@@ -22,7 +22,6 @@ public class EventToImmutable implements FlowableTransformer<NavajoStreamEvent,I
 	@Override
 	public Publisher<ImmutableMessage> apply(Flowable<NavajoStreamEvent> flow) {
 			return flow
-//					.doOnNext(e->System.err.println("Input: "+e))
 					.lift(NavajoStreamToMutableMessageStream.toMutable(this.path))
 					.concatMap(e->e)
 					.map(StreamDocument::messageToReplication);

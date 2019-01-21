@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.StopwatchTime;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>Title: </p>
@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class ToStopwatchTime extends FunctionInterface{
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
         if (o == null)
@@ -53,11 +53,11 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
 	public static void main(String[] args) throws TMLExpressionException {
 		ToStopwatchTime ts = new ToStopwatchTime();
 		ts.reset();
-		ts.insertOperand(new Integer(4965234)); // 09:45:08:234
+		ts.insertIntegerOperand(new Integer(4965234)); // 09:45:08:234
 		Object o = ts.evaluate();
 		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
 		ts.reset();
-		ts.insertOperand(new Integer(4920000)); // 09:45
+		ts.insertIntegerOperand(new Integer(4920000)); // 09:45
 		o = ts.evaluate();
 		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
 

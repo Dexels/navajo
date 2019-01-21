@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class LimitList extends FunctionInterface {
     @Override
@@ -42,13 +42,13 @@ public class LimitList extends FunctionInterface {
         testlist.add("zus");
         LimitList id = new LimitList();
         id.reset();
-        id.insertOperand(testlist);
-        id.insertOperand(3);
+        id.insertListOperand(testlist);
+        id.insertIntegerOperand(3);
         System.err.println(id.evaluate());
         
         id.reset();
-        id.insertOperand(testlist);
-        id.insertOperand(15);
+        id.insertListOperand(testlist);
+        id.insertIntegerOperand(15);
         System.err.println(id.evaluate());
     }
 }

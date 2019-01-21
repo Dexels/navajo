@@ -15,13 +15,15 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
-import com.dexels.navajo.script.api.SystemException;
+
 
 public class TestCompiledExpression {
 
@@ -52,17 +54,18 @@ public class TestCompiledExpression {
 	@Test
 	public void parseFunction() throws TMLExpressionException {
 
-		Object o = ExpressionCache.getInstance().evaluate("ToUpper('ble')", input,(Message)null, (Message)null, (Selection)null, null, null,null,Optional.<ImmutableMessage>empty(),Optional.<ImmutableMessage>empty());
+		Operand o = ExpressionCache.getInstance().evaluate("ToUpper('ble')", input,(Message)null, (Message)null, (Selection)null, null, null,null,Optional.<ImmutableMessage>empty(),Optional.<ImmutableMessage>empty());
 		System.err.println(": "+o);
-		Assert.assertEquals("BLE", o);
+		Assert.assertEquals("BLE", o.value);
 	}
 	
 	@Test
 	public void testFunctionParamTypeError() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",ParseMode.DEFAULT);
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(1)",name->FunctionClassification.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType());
+		System.err.println("immutable: "+o.isLiteral());
 		if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
 			Assert.assertEquals(1, problems.size());
 		} else {
@@ -75,33 +78,59 @@ public class TestCompiledExpression {
 	@Test
 	public void testNestedFunctionType() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
-		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",ParseMode.DEFAULT);
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
 		System.err.println("problems: "+problems);
 		System.err.println("returntype: "+o.returnType().orElse("<unknown>"));
 		Assert.assertTrue("Expected a return type here", o.returnType().isPresent());
 		Assert.assertEquals("string", o.returnType().get());
+		System.err.println("immutable: "+o.isLiteral());
 	}
 	
+	@Test
+	public void testImmutablilityPropagation() throws TMLExpressionException {
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
+		System.err.println("problems: "+problems);
+		System.err.println("immutable: "+o.isLiteral());
+		Assert.assertTrue(o.isLiteral());
+	}
+	@Test
+	public void testImmutablilityPropagationPerformance() throws TMLExpressionException {
+		CacheSubexpression.setCacheSubExpression(true);;
+		List<String> problems = new ArrayList<>();
+		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < 100000000; i++) {
+			String tr = (String) o.apply().value;
+//			System.err.println("tr:" +tr);
+		}
+		System.err.println("Now: "+(System.currentTimeMillis()-now));
+		System.err.println("problems: "+problems);
+		System.err.println("immutable: "+o.isLiteral());
+		Assert.assertTrue(o.isLiteral());
+	}
+		
 	@Test
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		List<String> problems = new ArrayList<>();
-		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",ParseMode.DEFAULT);
+		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",name->FunctionClassification.DEFAULT);
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
 	}
 	
 
 	@Test
-	public void testForall() throws TMLExpressionException, SystemException {
+	public void testForall() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
 		ExpressionCache ce = ExpressionCache.getInstance();
 		String ext ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
 //		String expression = "FORALL( '/Charges' , `! ?[Delete] OR ! [Delete]  OR [/__globals__/ApplicationInstance] != 'SOMETENANT' OR [SomeProperty] == 'SOMESTRING' `)";
 //		ce.parse(problems, expression, mode, allowLiteralResolve)
-		ContextExpression cx = ce.parse(problems,ext,ParseMode.DEFAULT,true);
+		ContextExpression cx = ce.parse(problems,ext,name->FunctionClassification.DEFAULT,true);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
-		cx.apply(input,Optional.empty(),Optional.empty());
+		Operand result =  cx.apply(input,Optional.empty(),Optional.empty());
+		System.err.println("Result: "+result.type+" value: "+result.value);
 //		Operand result = Expression.evaluate(expression, testDoc,null,topMessage);
 		
 	}

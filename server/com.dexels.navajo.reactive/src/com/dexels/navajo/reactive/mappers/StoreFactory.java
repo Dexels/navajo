@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveBuildContext;
@@ -23,13 +22,14 @@ public class StoreFactory implements ReactiveTransformerFactory {
 	}
 
 	// TODO fix, now broken. Do we need it?
+
 	@Override
-	public ReactiveTransformer build(Type parentType, String relativePath, List<ReactiveParseProblem> problems, ReactiveParameters parameters, Optional<XMLElement> xml,
-			ReactiveBuildContext buildContext) {
-
-		return null; //new Store();
+	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
+			ReactiveParameters parameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
 	@Override
 	public Optional<List<String>> allowedParameters() {
 		return Optional.of(Arrays.asList(new String[]{"name","value"}));

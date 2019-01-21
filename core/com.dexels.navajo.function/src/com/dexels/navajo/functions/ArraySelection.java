@@ -11,8 +11,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -44,7 +44,7 @@ public class ArraySelection extends FunctionInterface {
 	}
 
 	@Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		if (getOperands().size() < 3) {
 			throw new TMLExpressionException(this, usage());

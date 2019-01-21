@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import java.text.ParseException;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class Trunc extends FunctionInterface {
 
@@ -38,7 +38,7 @@ public final class Trunc extends FunctionInterface {
 		t.reset();
 		java.util.Date date = new java.util.Date();
 		System.err.println(date);
-		t.insertOperand(date);
+		t.insertDateOperand(date);
 		System.err.println(t.evaluate());
 	  }
 }

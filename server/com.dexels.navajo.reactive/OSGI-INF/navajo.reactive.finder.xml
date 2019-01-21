@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.reactive.finder">
+   <implementation class="com.dexels.navajo.reactive.impl.OSGiReactiveFinder"/>
+   <service>
+      <provide interface="com.dexels.navajo.reactive.api.ReactiveFinder"/>
+   </service>
+   <reference bind="addReactiveTransformerFactory" cardinality="0..n" interface="com.dexels.navajo.reactive.api.ReactiveTransformerFactory" name="ReactiveTransformerFactory" policy="dynamic" unbind="removeReactiveTransformerFactory"/>
+   <reference bind="addReactiveSourceFactory" cardinality="0..n" interface="com.dexels.navajo.reactive.api.ReactiveSourceFactory" name="ReactiveSourceFactory" policy="dynamic" unbind="removeReactiveSourceFactory"/>
+</scr:component>

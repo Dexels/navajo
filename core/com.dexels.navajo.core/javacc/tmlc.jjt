@@ -7,11 +7,14 @@ options {
    MULTI=true;
    LOOKAHEAD=2;
    STATIC=false;
+   TRACK_TOKENS=true;
    NODE_PACKAGE="com.dexels.navajo.parser.compiled";
 }
 
 PARSER_BEGIN(CompiledParser)
 package com.dexels.navajo.parser.compiled;
+
+import com.dexels.navajo.parser.*;
 
 public class CompiledParser {
 
@@ -26,6 +29,12 @@ SKIP:
 {
  " " | "\t" | "\r" | "\n" | "\f"
 }
+
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+}
+
 
 TOKEN:
 {
@@ -165,16 +174,23 @@ void Expression() #void:
 }
 {
   /*AdditiveExpression()*/
-  ReactivePipe()
+  PossiblePipe()
 }
 
-void ReactivePipe() #void:
+void PossiblePipe() #void:
 {
 }
 {
-	(OrExpression()   (<PIPE> OrExpression() )*
-	) #ReactivePipe
+	OrExpression() 
+	| <PIPE>  ReactivePipe()  #ReactivePipe
 } 
+
+ASTPipeline ReactivePipe() #Pipeline:
+{
+}
+{
+	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+}
 
 void OrExpression() #void:
 {}
@@ -274,11 +290,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( ReactivePipe() {jjtThis.args++;}
+        ( PossiblePipe() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	ReactivePipe() {jjtThis.args++;} 
+     		(	PossiblePipe() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]
@@ -361,21 +377,12 @@ void KeyValue() #void:
   ) #KeyValueNode
 }
 
-void Transformer() #void:
-{Token t;
-}
-{
-  (t = <NORMAL_IDENTIFIER> 
-     "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
-    {jjtThis.transformerName = t.image;    	}
-  ) #TransformerNode
-}
-
 void ReactiveScript() #void:
 {
 }
 {
 	(
+		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
 		(
 			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
 		) 

@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.config.runtime.TestConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 
@@ -77,27 +80,29 @@ public class SQL {
 		return Optional.of(source);
 	}
 	
-	public static Flowable<ImmutableMessage> query(String datasource, String tenant, String query, Object... params) {
+	public static Flowable<ImmutableMessage> query(String datasource, String tenant, String query, Operand... params) {
 		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
 //		Pool<Connection> pool =  getPoolForDataSource(ds);
 		if(!ds.isPresent()) {
 			return Flowable.error(new NullPointerException("Datasource missing for datasource: "+datasource+" with tenant: "+tenant));
 		}
+		List<Object> valueList = Arrays.asList(params).stream().map(e->e.value).collect(Collectors.toList());
 		return Database.fromBlocking(ds.get())
 			.select(query)
-			.parameters(Arrays.asList(params))
+			.parameters(valueList)
 			.get(SQL::resultSet);
 	}
 	
-	public static Flowable<ImmutableMessage> update(String datasource, String tenant, String query, Object... params) {
+	public static Flowable<ImmutableMessage> update(String datasource, String tenant, String query, Operand... params) {
 		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
 //		Pool<Connection> pool =  getPoolForDataSource(ds);
 		if(!ds.isPresent()) {
 			return Flowable.error(new NullPointerException("Datasource missing for datasource: "+datasource+" with tenant: "+tenant));
 		}
+		List<Object> valueList = Arrays.asList(params).stream().map(e->e.value).collect(Collectors.toList());
 		return Database.fromBlocking(ds.get())
 			.update(query)
-			.parameters(Arrays.asList(params))
+			.parameters(valueList)
 			.counts()
 			.map(count->ImmutableFactory.empty().with("count", count, Property.INTEGER_PROPERTY));
 //			.complete().toFlowable();

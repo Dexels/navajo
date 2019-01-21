@@ -116,7 +116,7 @@ public class SwingEditor extends KafenioPanel {
 				while (names.hasMoreElements()) {
 					Object name = names.nextElement();
 					Object value = attributes.getAttribute(name);
-					System.err.println(name + " is: " + value);
+					logger.info(name + " is: " + value);
 
 					if ("src".equals(name.toString())) {
 						String imgPath = value.toString();
@@ -166,8 +166,8 @@ public class SwingEditor extends KafenioPanel {
 				try {
 					result = extendedHtmlDoc.getText(0,
 							extendedHtmlDoc.getLength());
-					System.err.println("Result: " + kp.getProcessedText());
-					System.err.println("Result2: "+result);
+					logger.info("Result: " + kp.getProcessedText());
+					logger.info("Result2: "+result);
 				} catch (BadLocationException e1) {
 					logger.error("Error: ", e1);
 				}
@@ -177,7 +177,7 @@ public class SwingEditor extends KafenioPanel {
 		kp.addPropertyChangeListener(new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("Log: " + evt.getPropertyName() + " val: "
+				logger.info("Log: " + evt.getPropertyName() + " val: "
 						+ evt.getNewValue());
 
 			}

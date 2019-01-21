@@ -3,12 +3,14 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 public final class ASTNegativeNode extends SimpleNode {
@@ -16,26 +18,26 @@ public final class ASTNegativeNode extends SimpleNode {
         super(id);
     }
 
-	public final Object interpret(Object a) throws TMLExpressionException {
-
+	public final Operand interpret(Operand ao) throws TMLExpressionException {
+		Object a = ao.value;
 
         if (a instanceof String)
-            return "-" + ((String) a); // this is just silly
+            return Operand.ofString("-" + ((String) a)); // this is just silly
         else if (a instanceof Integer)
-            return new Integer(0 - ((Integer) a).intValue());
+            return Operand.ofInteger(0 - ((Integer) a).intValue());
         else if (a instanceof Double)
-            return new Double(0 - ((Double) a).doubleValue());
+            return Operand.ofFloat(0 - ((Double) a).doubleValue());
         else if (a instanceof Money)
-          return new Money(0 - ((Money) a).doubleValue());
+          return Operand.ofMoney(new Money(0 - ((Money) a).doubleValue()));
         else if (a instanceof Percentage)
-          return new Percentage(0 - ((Percentage) a).doubleValue());
+          return Operand.ofPercentage(new Percentage( new Percentage(0 - ((Percentage) a).doubleValue())));
         else
           throw new TMLExpressionException("Illegal type encountered before negation");
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
-		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),mode);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),functionClassifier);
 	}
 
 }

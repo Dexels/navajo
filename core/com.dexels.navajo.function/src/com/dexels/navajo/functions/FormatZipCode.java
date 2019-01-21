@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>
@@ -17,7 +17,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 public final class FormatZipCode extends FunctionInterface {
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Object o = getOperand(0);
     // reverse?
     Boolean b = (getOperands().size() > 1) ? (Boolean) getOperand(1) : null;

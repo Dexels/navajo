@@ -162,7 +162,6 @@ public class Generate {
     		  return;
     	  }
     	  
-          //System.out.println("offset = " + offset + ", tagname = " + offset.getNodeName() + ", parent = " + parent);
           String propertyName = ((Element) offset).getAttribute("name");
           Property prop = parent.getProperty(propertyName);
           if (prop == null) {

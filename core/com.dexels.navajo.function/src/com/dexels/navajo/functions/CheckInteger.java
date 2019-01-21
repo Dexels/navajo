@@ -2,7 +2,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.expression.api.FunctionInterface;
 
 
 /**
@@ -38,7 +38,7 @@ public String remarks() {
   }
 
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 //    boolean force = false;
     Object o = getOperand(0);
@@ -73,7 +73,7 @@ public String usage() {
   public static void main(String [] args) throws Exception {
     CheckInteger ci = new CheckInteger();
     ci.reset();
-    ci.insertOperand("aap");
+    ci.insertStringOperand("aap");
     Object result = ci.evaluate();
     System.err.println("result = " + result);
 

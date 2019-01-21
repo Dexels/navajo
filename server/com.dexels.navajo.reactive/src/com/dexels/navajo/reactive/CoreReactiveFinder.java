@@ -3,10 +3,10 @@ package com.dexels.navajo.reactive;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -24,9 +24,27 @@ import com.dexels.navajo.reactive.mappers.StoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.StoreAsSubMessageList;
 import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
+import com.dexels.navajo.reactive.mappers.ToSubMessageList;
+import com.dexels.navajo.reactive.source.input.InputSourceFactory;
+import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
+import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
+import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
+import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
+import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.eventstream.EventStreamMessageTransformerFactory;
+import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FirstTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
+import com.dexels.navajo.reactive.transformer.other.InMessageTransformer;
+import com.dexels.navajo.reactive.transformer.other.InMessageTransformerFactory;
+import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
+import com.dexels.navajo.reactive.transformer.reduce.ReduceToListTransformerFactory;
+import com.dexels.navajo.reactive.transformer.reduce.ReduceTransformerFactory;
+import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFactory;
 
 public class CoreReactiveFinder implements ReactiveFinder {
-	private final static Logger logger = LoggerFactory.getLogger(CoreReactiveFinder.class);
 
 	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
 	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
@@ -46,11 +64,30 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
+		reactiveReducer.put("toSubList", new ToSubMessageList());
+		
+		addReactiveSourceFactory(new SingleSourceFactory(), "single");
+		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
+		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
+		addReactiveSourceFactory(new InputSourceFactory(),"input");
+		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
+		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
+		
+		addReactiveTransformerFactory(new ParseEventStreamFactory(), "streamtoimmutable");
+		addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
+		addReactiveTransformerFactory(new TakeTransformerFactory(), "take");
+		addReactiveTransformerFactory(new MergeSingleTransformerFactory(),"join");
+		addReactiveTransformerFactory(new FirstTransformerFactory(),"first");
+		addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
+		addReactiveTransformerFactory(new CallTransformerFactory(),"call");
+		addReactiveTransformerFactory(new CallTransformerFactory(),"callLocal");
+		addReactiveTransformerFactory(new PipeTransformerFactory(),"pipe");
+		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"eventstream");
+		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
+
 	}
 
-	public void activate() {
-		//
-	}
 
 	@Override
 	public final Set<String> sourceFactories() {
@@ -107,6 +144,20 @@ public class CoreReactiveFinder implements ReactiveFinder {
 
 	public void removeReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
 		reactiveOperatorFactory.remove((String) settings.get("name"));
+	}
+
+	@Override
+	public Function<String, FunctionClassification> functionClassifier() {
+		return name->{
+			if(factories.containsKey(name)) {
+				return FunctionClassification.REACTIVE_SOURCE;
+			} else if(reactiveOperatorFactory.containsKey(name)) {
+				return FunctionClassification.REACTIVE_TRANSFORMER;
+			} else if(reactiveReducer.containsKey(name)) {
+				return FunctionClassification.REACTIVE_REDUCER;
+			}
+			return FunctionClassification.DEFAULT;
+		};
 	}
 
 

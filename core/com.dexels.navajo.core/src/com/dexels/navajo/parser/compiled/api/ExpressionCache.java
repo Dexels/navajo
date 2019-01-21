@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +17,17 @@ import org.slf4j.LoggerFactory;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -36,7 +40,7 @@ public class ExpressionCache {
 	private static ExpressionCache instance;
 
     private final LoadingCache<String, Optional<ContextExpression>> expressionCache;
-    private final LoadingCache<String, Optional<Object>> expressionValueCache;
+    private final LoadingCache<String, Optional<Operand>> expressionValueCache;
 
 	private final AtomicLong hitCount = new AtomicLong();
 	private final AtomicLong pureHitCount = new AtomicLong();
@@ -50,8 +54,8 @@ public class ExpressionCache {
 			}
 		});
 		
-		expressionValueCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<Object>>() {
-			public Optional<Object> load(String key) {
+		expressionValueCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<Operand>>() {
+			public Optional<Operand> load(String key) {
 				// Return empty optional and let the application handle it.
 				return Optional.empty();
 			}
@@ -73,15 +77,15 @@ public class ExpressionCache {
 		}
 	}
 
-	public Object evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+	public Operand evaluate(String expression,Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
-		Optional<Object> cachedValue = expressionValueCache.getUnchecked(expression);
+		Optional<Operand> cachedValue = expressionValueCache.getUnchecked(expression);
 		if(cachedValue.isPresent()) {
 			pureHitCount.incrementAndGet();
 			return cachedValue.get();
 		}
 		List<String> problems = new ArrayList<>();
-		ContextExpression parse = parse(problems,expression,ParseMode.DEFAULT);
+		ContextExpression parse = parse(problems,expression,functionName->FunctionClassification.DEFAULT);
 		if(!problems.isEmpty()) {
 			problems.forEach(problem->
 				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
@@ -93,10 +97,10 @@ public class ExpressionCache {
 		
 	}
 	
-	public ContextExpression parse(List<String> problems, String expression,ParseMode mode) {
-		return parse(problems, expression,mode,true);
+	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier) {
+		return parse(problems, expression,functionClassifier,true);
 	}
-	public ContextExpression parse(List<String> problems, String expression,ParseMode mode, boolean allowLiteralResolve) {
+	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier, boolean allowLiteralResolve) {
 		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
@@ -107,10 +111,10 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,mode);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier);
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
-	        		Object result = parsed.apply(null, null, null, null, null, null, null,null,null);
+	        		Operand result = parsed.apply();
 	        		expressionCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));
@@ -123,14 +127,14 @@ public class ExpressionCache {
 						}
 						
 						@Override
-						public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+						public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 								 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 							return result;
 						}
 
 						@Override
 						public Optional<String> returnType() {
-							return Optional.of(MappingUtils.determineNavajoType(result));
+							return Optional.ofNullable(result.type);
 						}
 						
 						@Override

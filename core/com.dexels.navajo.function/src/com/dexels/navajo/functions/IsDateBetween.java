@@ -3,8 +3,8 @@ package com.dexels.navajo.functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * Title:        Navajo
@@ -30,7 +30,7 @@ public class IsDateBetween extends FunctionInterface {
     }
 
     @Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	    if (getOperands().size() != 3) {
             throw new TMLExpressionException(this, "Three operands expected. ");
         }
@@ -55,7 +55,7 @@ public class IsDateBetween extends FunctionInterface {
                 // Going to guess some formats now by using the navajo function ParseDate()
                 ParseDate td = new ParseDate();
                 td.reset();
-                td.insertOperand(o);
+                td.insertStringOperand((String) o);
                 return (java.util.Date)td.evaluate();
             }
             catch (TMLExpressionException tee)

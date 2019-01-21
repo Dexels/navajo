@@ -2,9 +2,9 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**
@@ -42,7 +42,7 @@ public String remarks() {
   }
 
   @Override
-public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Object o = getOperand(0);
     if (o instanceof java.util.Date) {
       return new ClockTime((java.util.Date) o);
@@ -68,7 +68,7 @@ public String usage() {
     // Tests.
     ToClockTime cct = new ToClockTime();
     cct.reset();
-    cct.insertOperand("12");
+    cct.insertStringOperand("12");
     System.out.println("cct = " + cct.evaluate());
 
     String expr = "ToClockTime('09:00') + ToClockTime('10')";

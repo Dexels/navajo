@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**
@@ -34,7 +34,7 @@ public String remarks() {
   }
 
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
     String fileName = (String) getOperand(0);
 
@@ -50,7 +50,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
       }
       fis.close();
       return new Binary(data);
-    } catch (Exception e) {
+    } catch (Throwable e) {
     	logger.error("Error: ", e);
       return null;
     }

@@ -12,8 +12,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class IsValidXMLFile extends FunctionInterface {
     private final static Logger logger = LoggerFactory.getLogger(IsValidXMLFile.class);
@@ -64,7 +64,7 @@ public class IsValidXMLFile extends FunctionInterface {
 		
 		IsValidXMLFile i = new IsValidXMLFile();
 		i.reset();
-		i.insertOperand(b);
+		i.insertBinaryOperand(b);
 		Object o = i.evaluate();
 	
 		System.err.println("result valid xml file = " + o);

@@ -3,8 +3,9 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 /**
@@ -39,7 +40,7 @@ public String remarks() {
   }
 
   @Override
-public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     Object o = this.getOperand(0);
     Object f = this.getOperand(1);
     Object reference = null;
@@ -123,7 +124,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
 	  if (w.startsWith("fri")) {
 			return Calendar.FRIDAY;
 		}
-	  throw new  com.dexels.navajo.parser.TMLExpressionException("Illegal weekday: "+weekday);
+	  throw new  com.dexels.navajo.expression.api.TMLExpressionException("Illegal weekday: "+weekday);
 	  
 }
 
@@ -135,16 +136,16 @@ public String usage() {
   public static void main (String [] args) throws Exception {
     GetWeekDayDate f = new GetWeekDayDate();
     f.reset();
-    f.insertOperand("sun");
-    f.insertOperand("forwards");
+    f.insertStringOperand("sun");
+    f.insertStringOperand("forwards");
     Object o = f.evaluate();
     System.err.println("f = " + o);
 
   
       f.reset();
-    f.insertOperand("sat");
-    f.insertOperand(false);
-    f.insertOperand(o);
+    f.insertStringOperand("sat");
+    f.insertBooleanOperand(false);
+    f.insertOperand(Operand.ofDynamic(o));
     Object o2 = f.evaluate();
     System.err.println("f = " + o2);
   

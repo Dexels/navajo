@@ -13,21 +13,19 @@ import io.reactivex.Flowable;
 public class NDJsonSource implements ReactiveSource {
 
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Type finalType() {
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean streamInput() {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Type sourceType() {
+		return null;
 	}
 
 }

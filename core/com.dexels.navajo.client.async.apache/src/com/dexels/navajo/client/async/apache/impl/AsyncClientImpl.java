@@ -531,10 +531,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 //					.getInstance(algorithm);
 //			keyManagerFactory.init(keyStore, password);
 //			final KeyManager keyManager = keyManagerFactory.getKeyManagers()[0];
-//			System.err.println("mana: " + (keyManager));
 //			//
 //			client = new HttpClient(socketFactory);
-//			System.err.println("booom");
 //			client.start();
 //			return;
 //		} catch (UnrecoverableKeyException e) {

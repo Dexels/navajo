@@ -1,9 +1,9 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.functions.security.Security;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class EncryptBinary extends FunctionInterface {
 
@@ -34,8 +34,8 @@ public class EncryptBinary extends FunctionInterface {
 		
 		EncryptBinary e = new EncryptBinary();
 		e.reset();
-		e.insertOperand("BBFW06E");
-		e.insertOperand(new Binary("Apenoot".getBytes()));
+		e.insertStringOperand("BBFW06E");
+		e.insertBinaryOperand(new Binary("Apenoot".getBytes()));
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
 	}

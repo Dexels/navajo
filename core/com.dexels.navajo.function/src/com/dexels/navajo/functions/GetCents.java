@@ -1,8 +1,8 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ public final class GetCents extends FunctionInterface {
 
 	@Override
 	public final Object evaluate()
-			throws com.dexels.navajo.parser.TMLExpressionException {
+			throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 		final Object op = this.getOperands().get(0);
 
@@ -63,7 +63,7 @@ public final class GetCents extends FunctionInterface {
 		// Tests.
 		GetCents tm = new GetCents();
 		tm.reset();
-		tm.insertOperand(new Money(10.55));
+		tm.insertMoneyOperand(new Money(10.55));
 		System.out.println("result = " + tm.evaluate());
 
 	}

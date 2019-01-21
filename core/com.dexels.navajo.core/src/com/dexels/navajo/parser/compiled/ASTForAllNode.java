@@ -5,6 +5,7 @@ package com.dexels.navajo.parser.compiled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +14,14 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
-import com.dexels.navajo.tipilink.TipiLink;
 
 public final class ASTForAllNode extends SimpleNode {
 
@@ -45,7 +47,7 @@ public final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
 		return new ContextExpression() {
 			
 			@Override
@@ -54,12 +56,12 @@ public final class ASTForAllNode extends SimpleNode {
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				List<String> problems = new ArrayList<>();
-				// TODO make more efficient if we factor out the sub expressions
-				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,mode);
-				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,mode);
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
+
 				
 				if(!problems.isEmpty()) {
 					throw new TMLExpressionException(problems,expression);
@@ -87,7 +89,7 @@ public final class ASTForAllNode extends SimpleNode {
      * @return
      * @throws TMLExpressionException
      */
-    public final Object interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+    public final Operand interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
 
         boolean matchAll = true;
@@ -97,7 +99,7 @@ public final class ASTForAllNode extends SimpleNode {
         else
             matchAll = false;
 
-        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
+        String msgList = (String) a.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value;
         try {
             List<Message> list = null;
 
@@ -118,13 +120,13 @@ public final class ASTForAllNode extends SimpleNode {
 
 //                String expr = (String) b;
 
-                Object apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
-				boolean result = (Boolean)apply;
+                Operand apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
+				boolean result = (Boolean)apply.value;
 
                 if ((!(result)) && matchAll)
-                    return Boolean.FALSE;
+                    return Operand.ofBoolean(false);
                 if ((result) && !matchAll)
-                    return Boolean.TRUE;
+                    return Operand.ofBoolean(true);
             }
 
         } catch (NavajoException ne) {
@@ -133,9 +135,9 @@ public final class ASTForAllNode extends SimpleNode {
         }
 
         if (matchAll)
-            return Boolean.TRUE;
+            return Operand.ofBoolean(true);
         else
-            return Boolean.FALSE;
+            return Operand.ofBoolean(false);
     }
 
 }

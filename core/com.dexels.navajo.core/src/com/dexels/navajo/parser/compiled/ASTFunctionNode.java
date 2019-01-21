@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -15,19 +16,22 @@ import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.ContextExpression;
+import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
-import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.NamedExpression;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.parser.compiled.api.ContextExpression;
-import com.dexels.navajo.parser.compiled.api.ParseMode;
+import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
+import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.tipilink.TipiLink;
 import com.dexels.navajo.version.AbstractVersion;
 
 
@@ -35,6 +39,9 @@ public final class ASTFunctionNode extends SimpleNode {
 
 	
 	private final static Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");
+
+	
+	private final static Logger logger = LoggerFactory.getLogger(ASTFunctionNode.class);
 
 	String functionName;
 	int args = 0;
@@ -57,7 +64,7 @@ public final class ASTFunctionNode extends SimpleNode {
 	}
 	
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, ParseMode mode) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
 
 
 		List<ContextExpression> l = new LinkedList<>();
@@ -66,7 +73,7 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);
-			ContextExpression cn = sn.interpretToLambda(problems, expression,mode);
+			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier);
 			if(cn instanceof NamedExpression) {
 				NamedExpression ne = (NamedExpression)cn;
 				named.put(ne.name, ne.expression);
@@ -74,19 +81,21 @@ public final class ASTFunctionNode extends SimpleNode {
 				l.add(cn);
 			}
 		}
-
+		
+		FunctionClassification mode = functionClassifier.apply(functionName);
 		switch (mode) {
 			
 			case REACTIVE_HEADER:
 				
 				break;
 			case REACTIVE_SOURCE:
-				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.SOURCE, named, l, expression);
-//				System.err.println("Creating reactive source: "+this.functionName);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression,this);
 //				return resolveReactiveSource(l, named, problems, expression);
 			case REACTIVE_TRANSFORMER:
-				return new ReactiveParseItem(functionName, ReactiveParseItem.ReactiveItemType.TRANSFORMER, named, l, expression);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression,this);
 	
+			case REACTIVE_REDUCER:
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, l, expression,this);
 			case DEFAULT:
 				default:
 		}
@@ -111,20 +120,21 @@ public final class ASTFunctionNode extends SimpleNode {
 		} catch (Throwable e2) {
 			typechecklogger.error("Typechecker itself failed when parsing: "+expression+" function definition: "+typeCheckInstance+" Error: ", e2);
 		}
-		
-		return new ContextExpression() {
+		boolean isImmutable = typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
+
+		ContextExpression dynamic = new ContextExpression() {
 			
 			@Override
 			public boolean isLiteral() {
 				// TODO also check named params
-				return typeCheckInstance.isPure() && l.stream().allMatch(e->e.isLiteral());
+				return isImmutable;
 			}
 			
 			@Override
-			public Object apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
 				FunctionInterface f = getFunction();
-				Map<String,Object> resolvedNamed = named.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage)));
+				Map<String,Operand> resolvedNamed = named.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage)));
 				f.setInMessage(doc);
 				f.setNamedParameter(resolvedNamed);
 				f.setCurrentMessage(parentMsg);
@@ -133,13 +143,18 @@ public final class ASTFunctionNode extends SimpleNode {
 				l.stream()
 					.map(e->{
 						try {
-							return e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage);
+							Operand evaluated = e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage);
+							if(evaluated==null) {
+								logger.warn("Problematic expression returned null object. If you really insist, return an Operand.NULL. Evaluating expression: "+expression);
+								
+							}
+							return evaluated;
 						} catch (TMLExpressionException e1) {
 							throw new RuntimeException("Error parsing parameters for function: "+functionName, e1);
 						}
 					})
 					.forEach(e->f.insertOperand(e));
-				return f.evaluateWithTypeChecking();
+				return f.evaluateWithTypeCheckingOperand();
 			}
 
 			@Override
@@ -151,6 +166,40 @@ public final class ASTFunctionNode extends SimpleNode {
 				return expression;
 			}
 		};
+		if(isImmutable && CacheSubexpression.getCacheSubExpression()) {
+			Optional<String> returnType = dynamic.returnType();
+			String immutablExpression = dynamic.expression();
+			Operand resolved = dynamic.apply();
+//			Thread.dumpStack();
+//			logger.info("Returning pre-evaluated function call for: {} expression: {}",functionName,expression);
+			return new ContextExpression() {
+				
+				@Override
+				public Optional<String> returnType() {
+					return returnType;
+				}
+				
+				@Override
+				public boolean isLiteral() {
+					return true;
+				}
+				
+				@Override
+				public String expression() {
+					return immutablExpression;
+				}
+				
+				@Override
+				public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+						MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+						Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					return resolved;
+				}
+			};
+		} else {
+			return dynamic;
+		}
+
 	}
 
 }

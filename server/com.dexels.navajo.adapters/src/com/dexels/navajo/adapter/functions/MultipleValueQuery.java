@@ -3,14 +3,14 @@ package com.dexels.navajo.adapter.functions;
 import java.util.ArrayList;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.jdbc.JDBCMappable;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class MultipleValueQuery extends SingleValueQuery {
 
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 
 		JDBCMappable sql = evaluateQuery();

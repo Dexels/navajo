@@ -8,17 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
-import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
-
-import io.reactivex.functions.Function;
 
 public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 
@@ -26,10 +20,8 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 	}
 
 	@Override
-	public ReactiveSource build(String relativePath, String type, List<ReactiveParseProblem> problems, Optional<XMLElement> x, ReactiveParameters parameters,
-			List<ReactiveTransformer> transformers, Type finalType, Function<String, ReactiveMerger> reducerSupplier
-			) {
-		return new SQLReactiveSource(this,parameters, transformers,finalType,x, relativePath);
+	public ReactiveSource build(ReactiveParameters parameters) {
+		return new SQLReactiveSource(this,parameters);
 	}
 
 	@Override
@@ -57,4 +49,5 @@ public class SQLReactiveSourceFactory implements ReactiveSourceFactory {
 		r.put("tenant", Property.STRING_PROPERTY);
 		return Optional.of(Collections.unmodifiableMap(r));
 	}
+
 }
