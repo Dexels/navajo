@@ -41,14 +41,22 @@ public class ReactiveStandalone {
 			return n;
 		}
 	}
-	
-	public static Navajo runBlockingEmpty(ReactiveScriptEnvironment resolver, String service, Optional<String> binaryMime, List<String> methods) throws ParseException, IOException {
+
+	public static Flowable<DataItem> runStream(ReactiveScriptEnvironment resolver, String service) throws IOException {
+		ReactiveScript compiledScript = resolver.compiledScript(service);
+		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment")
+				.withRunner(resolver)
+				.withInputNavajo(NavajoFactory.getInstance().createNavajo());
+		return compiledScript.execute(context)
+				.flatMap(e->e);
+
+	}
+	public static Navajo runBlockingEmpty(ReactiveScriptEnvironment resolver, String service) throws ParseException, IOException {
 		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment")
 				.withRunner(resolver)
 				.withInputNavajo(NavajoFactory.getInstance().createNavajo());
 		ReactiveScript compiledScript = resolver.compiledScript(service);
 		Flowable<Flowable<DataItem>> execute = compiledScript.execute(context);
-
 		switch(compiledScript.dataType()) {
 		case ANY:
 			break;
@@ -60,7 +68,7 @@ public class ReactiveStandalone {
 			return execute
 					.flatMap(e->e)
 					.map(e->e.event())
-					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),compiledScript.methods()))
 					.toObservable()
 					.compose(StreamDocument.domStreamCollector())
 					.blockingFirst();
@@ -68,7 +76,7 @@ public class ReactiveStandalone {
 			return execute
 					.flatMap(e->e)
 					.concatMap(e->e.eventStream())
-					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),compiledScript.methods()))
 					.toObservable()
 					.compose(StreamDocument.domStreamCollector())
 					.blockingFirst();
@@ -77,7 +85,7 @@ public class ReactiveStandalone {
 					.concatMap(e->e)
 					.map(e->e.message())
 					.compose(StreamDocument.toMessageEvent("Item",true))
-					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+					.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),compiledScript.methods()))
 					.toObservable()
 					.compose(StreamDocument.domStreamCollector())
 					.blockingFirst();
@@ -95,7 +103,7 @@ public class ReactiveStandalone {
 		return execute
 			.flatMap(e->e)
 			.map(e->e.event())
-			.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),methods))
+			.compose(StreamDocument.inNavajo("service", Optional.empty(), Optional.empty(),compiledScript.methods()))
 			.toObservable()
 			.compose(StreamDocument.domStreamCollector())
 			.blockingFirst();

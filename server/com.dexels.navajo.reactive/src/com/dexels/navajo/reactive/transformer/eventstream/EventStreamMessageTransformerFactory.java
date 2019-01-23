@@ -60,7 +60,7 @@ public class EventStreamMessageTransformerFactory implements ReactiveTransformer
 
 	@Override
 	public String name() {
-		return "eventstream";
+		return "tmlstream";
 	}
 
 

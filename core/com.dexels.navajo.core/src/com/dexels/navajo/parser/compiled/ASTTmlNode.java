@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -140,7 +141,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                    }
 		                }
 		                else {
-		                   throw new RuntimeException("No parent message present for property: " + text);
+		                   throw new RuntimeException("No parent message present for property: " + text+" -> "+ImmutableFactory.getInstance().describe(immutableMessage.orElse(ImmutableFactory.empty())));
 		                }
 		            } else if (parentParamMsg == null && isParam) {
 		            	parentParamMsg = doc.getMessage("__parms__");

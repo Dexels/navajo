@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
@@ -52,7 +53,14 @@ public class CompiledReactiveScript implements ReactiveScript{
 
 	@Override
 	public Optional<String> binaryMimeType() {
-		return binaryMime;
+		for (ReactivePipe p : pipes) {
+			if(p.finalType()==Type.DATA) {
+				if(p.mimeType().isPresent()) {
+					return p.mimeType();
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override

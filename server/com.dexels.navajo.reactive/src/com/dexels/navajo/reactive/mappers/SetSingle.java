@@ -56,14 +56,14 @@ public class SetSingle implements ReactiveMerger {
 	}
 
 	private ImmutableMessage addColumn(ImmutableMessage input, List<String> path, Operand value, String type) {
-		logger.info("Setting path: {} value: {} type: {}",path,value.value,type);
+//		logger.info("Setting path: {} value: {} type: {}",path,value.value,type);
 		if(path.size()>1) {
 			String submessage = path.get(0);
 			Optional<ImmutableMessage> im = input.subMessage(submessage);
 			List<String> popped = new ArrayList<>(path);
 			popped.remove(0);
 			if(im.isPresent()) {
-				return addColumn(im.get(),popped,value,type);
+				return input.withSubMessage(submessage, addColumn(im.get(),popped,value,type));
 			} else {
 				ImmutableMessage nw = addColumn(ImmutableFactory.empty(), popped, value, type);
 				return input.withSubMessage(submessage, nw);

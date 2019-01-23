@@ -62,8 +62,8 @@ public class ReactiveParseItem implements ContextExpression {
 			return new Operand(mergerFactory.execute(mergeParameters), Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
 		case REACTIVE_TRANSFORMER:
 			ReactiveTransformerFactory transformerFactory = Reactive.finderInstance().getTransformerFactory(name);
-			ReactiveParameters transParameters = ReactiveParameters.of(transformerFactory, namedParams, unnamedParams);
 			List<ReactiveParseProblem> problems = new ArrayList<>();
+			ReactiveParameters transParameters = ReactiveParameters.of(transformerFactory, namedParams, unnamedParams);
 			// TODO problems?
 			return new Operand(transformerFactory.build(problems, transParameters),Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
 		default:

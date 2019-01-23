@@ -1,5 +1,7 @@
 package com.dexels.navajo.expression.compiled;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -17,6 +19,8 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.stream.DataItem;
+import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.compiled.ASTPipeline;
 import com.dexels.navajo.parser.compiled.ASTReactivePipe;
@@ -28,6 +32,9 @@ import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.ReactiveStandalone;
 import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.reactive.api.Reactive;
+
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class TestReactiveParser {
 	
@@ -43,16 +50,12 @@ public class TestReactiveParser {
 
 	@Test
 	public void testFilter() throws ParseException, IOException {
-//		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
-			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
-			
-			Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filter",Optional.empty(), Collections.emptyList());
-			
-//			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
-			int size = n.getMessage("Blem").getArraySize();
-			System.err.println("size: "+size);
-			n.write(System.err);
-			Assert.assertEquals(2, size);
+		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+		Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filter");
+		int size = n.getMessage("Blem").getArraySize();
+		System.err.println("size: "+size);
+		n.write(System.err);
+		Assert.assertEquals(2, size);
 	}
 	
 	@Test
@@ -60,10 +63,10 @@ public class TestReactiveParser {
 //		ReactiveBuildContext buildContext = ReactiveBuildContext.of(source->finder.getSourceFactory(source), (transformer,type)->finder.getTransformerFactory(transformer), reducer->finder.getMergerFactory(reducer), finder.transformerFactories(), finder.reactiveMappers(), true);
 			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
 			
-			Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"pipe",Optional.empty(), Collections.emptyList());
+			Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"pipe");
 			n.write(System.err);
 //			Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("filter.rr"),Optional.empty());
-			int size = n.getMessage("Blem").getArraySize();
+			int size = n.getMessage("Result").getArraySize();
 			System.err.println("size: "+size);
 			n.write(System.err);
 			Assert.assertEquals(5, size);
@@ -201,6 +204,25 @@ public class TestReactiveParser {
 //		System.err.println("rootNode: "+rp.getClass());
 		List<String> problems = new ArrayList<>();
 		rootNode.interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE);
+	}
+	
+	@Test
+	public void testCSV( ) throws ParseException, IOException {
+		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+		ReactiveScript compiledScript = rse.compiledScript("csv");
+		Assert.assertTrue(compiledScript.binaryMimeType().isPresent());
+		Assert.assertEquals("text/csv",compiledScript.binaryMimeType().get());
+		byte[] n = ReactiveStandalone.runStream(rse,"csv")
+				.map(e->e.data())
+				.reduce(new ByteArrayOutputStream(),(str,b)->{
+					str.write(b);
+					return str;
+				})
+				.map(e->e.toByteArray())
+				.blockingGet();
 
+		String resultString = new String(n);
+		System.err.println(resultString);
+		Assert.assertTrue(n.length>40);
 	}
 }
