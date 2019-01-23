@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Reactive Kafka
 Bundle-SymbolicName: com.dexels.navajo.reactive.subscriber
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.1.2
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.immutable.api;version="2.0.0",
