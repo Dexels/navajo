@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi Swinglabs extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.jxlayer
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.12
+Bundle-Version: 1.0.13.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
