@@ -1556,8 +1556,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             serviceFinished = true;
             serviceCalled = true;
 
-
-
+            continueAfterRun();
         } catch (Exception e) {
             setException(e);
         } finally {
