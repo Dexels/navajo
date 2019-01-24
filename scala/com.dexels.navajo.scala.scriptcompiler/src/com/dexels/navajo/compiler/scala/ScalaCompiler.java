@@ -35,7 +35,7 @@ public class ScalaCompiler extends ScriptCompiler {
     Set<String> whitelist = new HashSet<>();
     
     String[] standardPackages = new String[] {"com.dexels.navajo.document", "com.dexels.navajo.document.types",
-            "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
+            "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping", "com.dexels.navajo.expression.api",
             "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta",
             "com.dexels.navajo.parser", "com.dexels.navajo.loader", "org.osgi.framework",
             "com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional",
