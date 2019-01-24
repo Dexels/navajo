@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,9 +91,18 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 }
 
 	public List<String> methods() {
-		String methodStr = this.headerMap.getOrDefault("methods", Operand.ofString("")).stringValue();
-		return Arrays.asList(methodStr.split(","));
+		Operand methodStr = this.headerMap.get("methods");
+		if(methodStr==null) {
+			return Collections.emptyList();
+		}
+		return Arrays.asList(((String)methodStr.value).split(","));
 		
 	}
+
+	public Optional<String> mime() {
+		Optional<Operand> mime = Optional.ofNullable(this.headerMap.get("mime"));
+		return mime.map(e->(String)e.value);
+	}
+
 }
 /* JavaCC - OriginalChecksum=1b3774ce274fd31113ba44556c6878a0 (do not edit this line) */

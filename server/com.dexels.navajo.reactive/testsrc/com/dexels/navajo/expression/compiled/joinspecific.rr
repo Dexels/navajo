@@ -6,4 +6,4 @@ single()
 		set(moved=[sub],constant='iamconstant',tryagain=[@somestring]),
 		set(someint=3)
 	)
-	->stream(messageName='Test',isArray=false)
+	->tml(messageName='Test',isArray=false)

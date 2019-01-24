@@ -17,7 +17,8 @@ import io.reactivex.Flowable;
 public class ReactivePipe implements ReactiveSource {
 	public final ReactiveSource source;
 	public final List<Object> transformers;
-	
+	Optional<String> binaryMime = Optional.empty();
+
 	private final static Logger logger = LoggerFactory.getLogger(ReactivePipe.class);
 
 	public ReactivePipe(ReactiveSource source, List<Object> transformers) {
@@ -39,6 +40,9 @@ public class ReactivePipe implements ReactiveSource {
 				// maybe return implicit transformer
 				current = matchType(last,lastTransformer,current,transformer);
 				lastTransformer = Optional.of(transformer.name());
+				if(transformer.outType()==Type.DATA) {
+					binaryMime = ((ReactiveTransformer)reactiveTransformer).mimeType();
+				}
 				
 			} else {
 				current = matchType(last,lastTransformer,current, new ImplicitTransformerMetadata());
@@ -71,6 +75,10 @@ public class ReactivePipe implements ReactiveSource {
 			}
 		}
 		return type;
+	}
+	
+	public Optional<String> mimeType() {
+		return binaryMime;
 	}
 
 	@SuppressWarnings("unchecked")

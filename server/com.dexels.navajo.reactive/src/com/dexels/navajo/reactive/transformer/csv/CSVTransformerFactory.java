@@ -11,7 +11,6 @@ import java.util.Set;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -40,18 +39,17 @@ public class CSVTransformerFactory implements ReactiveTransformerFactory, Transf
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"columns","labels","delimiter"}));
+		return Optional.of(Arrays.asList(new String[]{"labels","delimiter"}));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"columns","delimiter"}));
+		return Optional.of(Arrays.asList(new String[]{"delimiter"}));
 	}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
 		Map<String,String> r = new HashMap<String, String>();
-		r.put("columns", Property.STRING_PROPERTY);
 		r.put("labels", Property.STRING_PROPERTY);
 		r.put("delimiter", Property.STRING_PROPERTY);
 		return Optional.of(r);

@@ -40,8 +40,14 @@ public class ReactiveParameters {
 	}
 	
 	public ReactiveResolvedParameters resolve(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
-		
 		return new ReactiveResolvedParameters(context, named,unnamed, currentMessage, paramMessage, validator);
+	}
+	public ReactiveResolvedParameters resolveNamed(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
+		return new ReactiveResolvedParameters(context, named,Collections.emptyList(), currentMessage, paramMessage, validator);
+	}
+
+	public ReactiveResolvedParameters resolveUnnamed(StreamScriptContext context, Optional<ImmutableMessage> currentMessage,ImmutableMessage paramMessage, ParameterValidator metadata) {
+		return new ReactiveResolvedParameters(context, Collections.emptyMap(),unnamed, currentMessage, paramMessage, validator);
 	}
 
 	public ReactiveParameters withConstant(String key, Object value, String type) {

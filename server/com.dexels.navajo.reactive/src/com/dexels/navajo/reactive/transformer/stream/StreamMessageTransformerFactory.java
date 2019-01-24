@@ -61,7 +61,7 @@ public class StreamMessageTransformerFactory implements ReactiveTransformerFacto
 
 	@Override
 	public String name() {
-		return "stream";
+		return "tml";
 	}
 
 }

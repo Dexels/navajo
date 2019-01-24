@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi Ruby
 Bundle-SymbolicName: com.dexels.navajo.tipi.ruby
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.0.7.qualifier
 Bundle-Activator: tipiruby.TipiRubyExtension
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43"

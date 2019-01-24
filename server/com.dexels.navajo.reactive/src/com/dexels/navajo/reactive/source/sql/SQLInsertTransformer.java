@@ -39,7 +39,7 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context,
 			Optional<ImmutableMessage> current, ImmutableMessage param) {
-		ReactiveResolvedParameters resolved = parameters.resolve(context, current, ImmutableFactory.empty(), metadata);
+		ReactiveResolvedParameters resolved = parameters.resolveNamed(context, current, ImmutableFactory.empty(), metadata);
 		boolean debug = resolved.optionalBoolean("debug").orElse(false);
 		try {
 			String resource = resolved.paramString("resource");
@@ -48,15 +48,17 @@ public class SQLInsertTransformer implements ReactiveTransformer {
 				logger.info("Transforming to SQL. resource: {} query: {}",resource,query);
 			}
 			FlowableTransformer<DataItem, DataItem> result = flow->flow.map(m->{
+				System.err.println("<< INSERTING >> "+ImmutableFactory.getInstance().describe(m.message()));
 				List<Operand> operand = parameters.resolve(context,Optional.of(m.message()), ImmutableFactory.empty(),metadata).unnamedParameters();
-				Operand[] params = (Operand[]) operand.toArray();
+//				Operand[] params = (Operand[]) operand.toArray();
 				if(debug) {
 					logger.info("Transforming inputmessage {}",ImmutableFactory.createParser().describe(m.message()));
-					logger.info("Unnamed params: {}",params);
+//					logger.info("Unnamed params: {}",params);
 					logger.info("Current thread: "+Thread.currentThread().getName());
 				}
+				Operand[] params = operand.stream().toArray(Operand[]::new);
 				
-				return DataItem.of(SQL.update(resource, context.getTenant(), query, params)
+				return DataItem.of(SQL.update(resource, context.getTenant(), query,params)
 						.subscribeOn(Schedulers.io(), true));
 //						.map(DataItem::of);
 			});

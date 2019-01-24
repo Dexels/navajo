@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Set of Stream Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters.stream
-Bundle-Version: 2.0.19.qualifier
+Bundle-Version: 2.0.21.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.config.runtime;resolution:=optional,
@@ -42,9 +42,9 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
 Export-Package: com.dexels.navajo.adapters.stream,
  hu.akarnokd.rxjava2.debug
 Bundle-ClassPath: .,
- lib/guava-mini-0.1.1.jar,
+ lib/guava-mini-0.1.2.jar,
  lib/rxjava2-extensions-0.17.5.jar,
- lib/rxjava2-pool-0.1-RC38.jar,
- lib/rxjava2-jdbc-0.1-RC38.jar
+ lib/rxjava2-pool-0.2.1.jar,
+ lib/rxjava2-jdbc-0.2.1.jar
 Require-Bundle: com.oracle.jdbc.driver;bundle-version="11.2.31";resolution:=optional
 Automatic-Module-Name: com.dexels.navajo.adapters.stream

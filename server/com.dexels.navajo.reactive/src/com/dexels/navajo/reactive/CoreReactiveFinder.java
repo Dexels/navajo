@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-
+import org.osgi.framework.BundleContext;
 import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
@@ -31,6 +32,7 @@ import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
+import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
 import com.dexels.navajo.reactive.transformer.eventstream.EventStreamMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
@@ -70,7 +72,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
 		addReactiveSourceFactory(new InputSourceFactory(),"input");
-		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "stream");
+		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
 		
@@ -83,9 +85,16 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new CallTransformerFactory(),"call");
 		addReactiveTransformerFactory(new CallTransformerFactory(),"callLocal");
 		addReactiveTransformerFactory(new PipeTransformerFactory(),"pipe");
-		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"eventstream");
+		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"tmlstream");
 		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
-
+		addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+//		FunctionFactoryFactory.getInstance().addFunctionResolver(fr);
+		try {
+			new navajofunctions.Version().start((BundleContext)null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

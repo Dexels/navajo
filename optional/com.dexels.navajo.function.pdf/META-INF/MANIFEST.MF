@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Functions PDF
 Bundle-SymbolicName: com.dexels.navajo.function.pdf
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.27.qualifier
+Bundle-Version: 1.0.29.qualifier
 Bundle-Activator: navajofunctionspdf.Version
 Bundle-Vendor: Dexels
 Navajo-Extension: com/dexels/navajo/pdf/functions/functions.xml

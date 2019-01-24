@@ -1,4 +1,4 @@
 single()
 	->set(ClubIdentifier='BBFW63X')
-	->eventstream(messageName='Club', isArray=false)
+	->tmlstream(messageName='Club', isArray=false)
 	->callLocal(service='club/ProcessQueryClub',debug=true)

@@ -1,2 +1,2 @@
 single(count=5,debug=true,delay=100)
-	->stream(messageName='Item', isArray=true)
+	->tml(messageName='Item', isArray=true)
