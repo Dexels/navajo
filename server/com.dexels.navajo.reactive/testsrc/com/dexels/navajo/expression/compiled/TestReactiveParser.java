@@ -1,12 +1,10 @@
 package com.dexels.navajo.expression.compiled;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +17,6 @@ import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.compiled.ASTPipeline;
@@ -32,9 +29,6 @@ import com.dexels.navajo.reactive.ReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.ReactiveStandalone;
 import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.reactive.api.Reactive;
-
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 public class TestReactiveParser {
 	
@@ -111,9 +105,18 @@ public class TestReactiveParser {
 	public void testReduce( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reduce.rr");
 		int i = (Integer) n.getProperty("/Bla/sum").getTypedValue();
-		Assert.assertEquals(105, i);
+		Assert.assertEquals(56, i);
 		n.write(System.err);
 	}
+	
+	@Test
+	public void testReduceSimple( ) throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/reducesimple.rr");
+		int i = (Integer) n.getProperty("/Bla/sum").getTypedValue();
+		Assert.assertEquals(15, i);
+		n.write(System.err);
+	}
+	
 	
 	@Test
 	public void testReduceToList( ) throws ParseException, IOException {
