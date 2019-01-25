@@ -1,7 +1,11 @@
 package com.dexels.navajo.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 
 
@@ -17,6 +21,9 @@ import com.dexels.navajo.server.DispatcherFactory;
 public class GetReportFile extends FunctionInterface {
 
 	
+	
+	private final static Logger logger = LoggerFactory.getLogger(GetReportFile.class);
+
   public GetReportFile() {
   }
 
@@ -35,7 +42,9 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
    	 Binary b = new Binary(report);
    	 return b;
     } catch (Exception e) {
-      return null;
+    	logger.error("File issue: {}",report.getAbsolutePath());
+    	logger.error("Error resolving report: "+reportName+" from script path: "+script, e);
+    	throw new TMLExpressionException("Wrapping: "+script, e);
     }
   }
 
