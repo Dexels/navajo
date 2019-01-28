@@ -353,8 +353,27 @@ public final class ASTTmlNode extends SimpleNode {
 
 			// TODO support actual path parser
 			private Operand parseImmutablePath(String text, ImmutableMessage rm) {
+				if(text.endsWith("/")) {
+					String trunc = text.substring(0,text.length()-1);
+					List<String> parts = Arrays.asList(trunc.split("/"));
+					return parseImmutableMessagePath(parts, rm);
+				}
 				List<String> parts = Arrays.asList(text.split("/"));
 				return parseImmutablePath(parts, rm);
+			}
+
+			private Operand parseImmutableMessagePath(List<String> path, ImmutableMessage rm) {
+				if(path.size()==0) {
+					return Operand.ofImmutable(rm);
+				}
+				String first = path.get(0);
+				Optional<ImmutableMessage> sub = rm.subMessage(first);
+				if(!sub.isPresent()) {
+					throw new TMLExpressionException("Missing submessage: "+first);
+				}
+				List<String> copy = new ArrayList<>(path);
+				copy.remove(0);
+				return parseImmutableMessagePath(copy, sub.get());
 			}
 
 			private Operand parseImmutablePath(List<String> path, ImmutableMessage rm) {

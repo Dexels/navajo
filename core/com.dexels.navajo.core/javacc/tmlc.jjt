@@ -78,7 +78,7 @@ TOKEN:
 
 TOKEN:
 {
-  <TML_IDENTIFIER: ("[")((<IDENTIFIER>)("|"))?("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
+  <TML_IDENTIFIER: ("[")((<IDENTIFIER>)("|"))?("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)*("/")? > |
   <EXISTS_TML_IDENTIFIER: ("?[")("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
   <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"@"|"="|"_"|"("|")"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
   <#PARENT_MSG: "../"> |
@@ -349,7 +349,13 @@ void TmlLiteral() #void:
 {Token t;
 }
 {
-  (t = <TML_IDENTIFIER> ( (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+  (t = <TML_IDENTIFIER> (
+  	(
+  		<NAME_OPTION>  {jjtThis.selectionOption = "name";}   
+  			| <VALUE_OPTION> {jjtThis.selectionOption = "value";}
+  	)
+  )?  "]" 
+  ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
     { jjtThis.exists = false; jjtThis.val = t.image;}
   ) #TmlNode
 }

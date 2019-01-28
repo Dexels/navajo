@@ -14,6 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -293,6 +294,41 @@ public class ExpressionTest {
 		assertEquals("chicken", s);
 	}
 
+	@Test
+	public void testImmutableTMLPath() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		ImmutableMessage inner = ImmutableFactory.empty().with("innerint", 3, "integer");
+		
+		ImmutableMessage combined = outer.withSubMessage("sub", inner);
+		Operand o = Expression.evaluateImmutable("[sub/innerint]", null, Optional.of(combined), Optional.empty());
+		int s = o.integerValue();
+		assertEquals(3, s);
+	}
+
+	@Test
+	public void testTrailingTMLPath() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		ImmutableMessage inner = ImmutableFactory.empty().with("innerint", 3, "integer");
+		
+		ImmutableMessage combined = outer.withSubMessage("sub", inner);
+		Operand o = Expression.evaluateImmutable("[sub/]", null, Optional.of(combined), Optional.empty());
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(3, s.value("innerint").get());
+	}
+
+	@Test
+	public void testTrailingTMLPathParam() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		ImmutableMessage inner = ImmutableFactory.empty().with("innerint", 3, "integer");
+		
+		ImmutableMessage combined = outer.withSubMessage("sub", inner);
+		Operand o = Expression.evaluateImmutable("[@sub/]", null, Optional.empty(), Optional.of(combined));
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(3, s.value("innerint").get());
+	}
 
 }
 

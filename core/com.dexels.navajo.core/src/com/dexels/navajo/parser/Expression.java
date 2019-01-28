@@ -40,6 +40,9 @@ public final class Expression {
 		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
 	}
 
+	public final static Operand evaluateImmutable(String clause, Navajo in, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException, SystemException {
+		return evaluate(clause, in, null, null, null, null, null, null, immutableMessage, paramMessage);
+	}
 	
 	
 	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
