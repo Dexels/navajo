@@ -3,8 +3,6 @@ package com.dexels.navajo.document.stream.json;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.NavajoStreamToMutableMessageStream;
@@ -13,9 +11,6 @@ import com.dexels.navajo.document.stream.xml.XML;
 import com.github.davidmoten.rx2.Bytes;
 
 public class TestImmutableSingle {
-
-	
-	private final static Logger logger = LoggerFactory.getLogger(TestImmutableSingle.class);
 
 	
 	@Test

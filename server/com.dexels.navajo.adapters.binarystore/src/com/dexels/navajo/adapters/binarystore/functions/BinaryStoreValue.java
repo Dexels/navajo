@@ -18,8 +18,8 @@ public class BinaryStoreValue extends FunctionInterface {
   @Override
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	String tenant = super.getInstance();
-	String resourceName = (String) super.getOperand(0);
-	BinaryDigest binaryDigest = (BinaryDigest) super.getOperand(1);
+	String resourceName = getStringOperand(0);
+	BinaryDigest binaryDigest = getBinaryDigestOperand(1);
 	BinaryStore os = BinaryStoreFactory.getInstance().getBinaryStore(resourceName, tenant);
 	return os.resolve(binaryDigest);
   }

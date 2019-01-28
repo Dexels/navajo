@@ -37,7 +37,7 @@ public class ReactiveStandalone {
 
 	public static Navajo runBlockingEmptyFromClassPath(String classPathPath) throws ParseException, IOException {
 		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream(classPathPath)) {
-			Navajo n = ReactiveStandalone.runBlockingEmpty(in, Optional.empty());
+			Navajo n = ReactiveStandalone.runBlockingEmpty(in);
 			return n;
 		}
 	}
@@ -109,26 +109,26 @@ public class ReactiveStandalone {
 			.blockingFirst();
 //		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()),binaryMime);
 	}
-	public static Navajo runBlockingEmpty(String inExpression, Optional<String> binaryMime) throws ParseException, IOException {
-		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()),binaryMime);
+	public static Navajo runBlockingEmpty(String inExpression) throws ParseException, IOException {
+		return runBlockingEmpty(new ByteArrayInputStream(inExpression.getBytes()));
 	}
-	public static Navajo runBlockingEmpty(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
-		return runBlockingInput(inExpression,binaryMime, NavajoFactory.getInstance().createNavajo());
+	public static Navajo runBlockingEmpty(InputStream inExpression) throws ParseException, IOException {
+		return runBlockingInput(inExpression, NavajoFactory.getInstance().createNavajo());
 	}
 
-	public static Navajo runBlockingStream(InputStream inExpression, Optional<String> binaryMime, Flowable<DataItem> input) throws ParseException, IOException {
+	public static Navajo runBlockingStream(InputStream inExpression, Flowable<DataItem> input) throws ParseException, IOException {
 		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInput(input);
-		return runContext(inExpression, binaryMime, context);
+		return runContext(inExpression, context);
 	}
 
-	public static Navajo runBlockingInput(InputStream inExpression, Optional<String> binaryMime, Navajo input) throws ParseException, IOException {
+	public static Navajo runBlockingInput(InputStream inExpression, Navajo input) throws ParseException, IOException {
 		StreamScriptContext context = new StreamScriptContext("tenant","service","deployment").withInputNavajo(input);
-		return runContext(inExpression, binaryMime, context);
+		return runContext(inExpression, context);
 	}
 
-	private static Navajo runContext(InputStream inExpression, Optional<String> binaryMime, StreamScriptContext context)
+	private static Navajo runContext(InputStream inExpression,StreamScriptContext context)
 			throws ParseException, IOException {
-		CompiledReactiveScript crs = compileReactiveScript(inExpression,binaryMime);
+		CompiledReactiveScript crs = compileReactiveScript(inExpression);
 		crs.typecheck();
 		return Flowable.fromIterable(crs.pipes)
 				.concatMap(e->e.execute(context, Optional.empty(), ImmutableFactory.empty()))
@@ -142,7 +142,7 @@ public class ReactiveStandalone {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static CompiledReactiveScript compileReactiveScript(InputStream inExpression, Optional<String> binaryMime) throws ParseException, IOException {
+	public static CompiledReactiveScript compileReactiveScript(InputStream inExpression) throws ParseException, IOException {
 		try(Reader in = new InputStreamReader(inExpression)) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactiveScript();
@@ -153,7 +153,7 @@ public class ReactiveStandalone {
 			logger.info("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
 			logger.info("Sourcetype: "+src);
 			List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
-			CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods(),binaryMime);
+			CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods());
 			compiledReactiveScript.typecheck();
 			return compiledReactiveScript;
 		}

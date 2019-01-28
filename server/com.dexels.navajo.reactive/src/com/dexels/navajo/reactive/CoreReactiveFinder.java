@@ -18,6 +18,7 @@ import com.dexels.navajo.reactive.mappers.JsonFileAppender;
 import com.dexels.navajo.reactive.mappers.Log;
 import com.dexels.navajo.reactive.mappers.LogState;
 import com.dexels.navajo.reactive.mappers.Rename;
+import com.dexels.navajo.reactive.mappers.ReverseStoreAsSubMessage;
 import com.dexels.navajo.reactive.mappers.SetSingle;
 import com.dexels.navajo.reactive.mappers.SetSingleKeyValue;
 import com.dexels.navajo.reactive.mappers.Store;
@@ -65,6 +66,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("saveall", new Store());
 		reactiveReducer.put("save", new StoreSingle());
 		reactiveReducer.put("store", new StoreAsSubMessage());
+		reactiveReducer.put("storereverse", new ReverseStoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
 		reactiveReducer.put("toSubList", new ToSubMessageList());
 		

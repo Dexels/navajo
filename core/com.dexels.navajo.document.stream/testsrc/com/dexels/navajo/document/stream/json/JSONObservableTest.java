@@ -1,8 +1,5 @@
 package com.dexels.navajo.document.stream.json;
 
-import java.util.Iterator;
-import java.util.function.Function;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,35 +39,5 @@ public class JSONObservableTest {
 		Assert.assertEquals(5, size);
 		//			.blockingForEach(e->System.err.println("Element: "+e+" -> "));
 	}
-	
-	private Iterable<JsonNode> listIterable(Function<Integer,Flowable<byte[]>> creator) {
-		return new Iterable<JsonNode>() {
 
-			@Override
-			public Iterator<JsonNode> iterator() {
-				return new Iterator<JsonNode>() {
-
-					@Override
-					public boolean hasNext() {
-						// TODO Auto-generated method stub
-						return false;
-					}
-
-					@Override
-					public JsonNode next() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-				};
-			}
-			
-		};
-	}
-	private boolean mightHaveMore(JsonNode node) {
-		ArrayNode nde = (ArrayNode) node.get("Objects");
-		int size = nde.size();
-		return size >= 500;
-		
-	}
 }

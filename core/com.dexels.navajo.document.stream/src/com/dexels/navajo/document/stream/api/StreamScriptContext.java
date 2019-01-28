@@ -18,7 +18,6 @@ import com.dexels.navajo.document.stream.StreamDocument;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 public class StreamScriptContext {
 //    private final Access access;

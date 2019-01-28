@@ -11,14 +11,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -1046,9 +1044,11 @@ public class StreamDocument {
 			.stream()
 			.map(e->{
 				String type = msg.columnType(e);
-				Object value = msg.columnValue(e);
+				Optional<Object> value = msg.value(e);
 				Property p = NavajoFactory.getInstance().createProperty(n, e, type, "", 0, "", Property.DIR_OUT);
-				p.setAnyValue(value);
+				if(value.isPresent()) {
+					p.setAnyValue(value.get());
+				}
 				return p;
 			})
 			.collect(Collectors.toList());

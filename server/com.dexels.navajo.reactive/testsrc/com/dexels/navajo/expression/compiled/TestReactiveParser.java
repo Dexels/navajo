@@ -69,7 +69,7 @@ public class TestReactiveParser {
 	@Test
 	public void testPipeParser() throws ParseException, IOException {
 			ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
-			CompiledReactiveScript rs = ReactiveStandalone.compileReactiveScript(TestReactiveParser.class.getResourceAsStream("pipe.rr"), Optional.empty());
+			CompiledReactiveScript rs = ReactiveStandalone.compileReactiveScript(TestReactiveParser.class.getResourceAsStream("pipe.rr"));
 			int size = rs.pipes.stream().findFirst().get().transformers.size();
 			System.err.println("size: "+size);
 			Assert.assertEquals(3, size);
@@ -77,7 +77,7 @@ public class TestReactiveParser {
 	
 	@Test
 	public void readSingleScript() throws ParseException, IOException {
-		Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("single.rr"),Optional.empty());
+		Navajo n = ReactiveStandalone.runBlockingEmpty(this.getClass().getResourceAsStream("single.rr"));
 		n.write(System.err);
 	}
 
@@ -99,6 +99,16 @@ public class TestReactiveParser {
 		Assert.assertEquals(10, i);
 	}
 
+	@Test
+	public void readJoinSimpleScript() throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/joinsimple.rr");
+		n.write(System.err);
+		Assert.assertEquals("outer", n.getProperty("Test/outer").getTypedValue());
+		Assert.assertEquals("inner", n.getProperty("Test/inner").getTypedValue());
+		Assert.assertEquals("inner", n.getProperty("Test/innername").getTypedValue());
+//		Assert.assertEquals(10, i);
+	}
+	
 
 	
 	@Test
@@ -154,6 +164,13 @@ public class TestReactiveParser {
 	}
 	
 	@Test
+	public void testAddressSubMessage( ) throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/addresssubmessage.rr");
+		n.write(System.err);
+		Assert.assertEquals(1,n.getAllMethods().size());
+	}
+	
+	@Test
 	public void testEventStream( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/eventstream.rr");
 		n.write(System.err);
@@ -179,31 +196,26 @@ public class TestReactiveParser {
 	public void testInput() throws ParseException, IOException {
 		Navajo input = NavajoFactory.getInstance().createNavajo(ReactiveStandalone.class.getClassLoader().getResourceAsStream("tmlinput.xml"));
 		try(InputStream in = ReactiveStandalone.class.getClassLoader().getResourceAsStream("com/dexels/navajo/expression/compiled/input.rr")) {
-			Navajo n = ReactiveStandalone.runBlockingInput(in, Optional.empty(),input);
+			Navajo n = ReactiveStandalone.runBlockingInput(in, input);
 			n.write(System.err);
 		}
 		
 	}
 
-	@Test @Ignore
-	public void testCallLocal( ) throws ParseException, IOException {
-		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/calllocal.rr");
-	}
-	
 	@Test
 	public void testTypeCheck() throws ParseException, IOException {
-		ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("testtypecheck.rr"), Optional.empty()).typecheck();
+		ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("testtypecheck.rr")).typecheck();
 	}
 
-
-	@Test @Ignore
+//	public void testJoinToSubMessage
+	@Test
 	public void testTransformerCount() throws ParseException {
 //		String exp = "eventsource(classpath='tmlinput.xml')->streamtoimmutable(path='/Bla')->stream(messageName='Oe',isArray=true)";
 		String exp = "->single(count=100)->filter([id]%3==0)->filter([id]%2==0)->filter([id]%2==0)";
 		CompiledParser cp = new CompiledParser(new StringReader(exp));
 		cp.Expression();
 		ASTReactivePipe rootNode = (ASTReactivePipe) cp.getJJTree().rootNode();
-		ASTPipeline rp = (ASTPipeline) rootNode.jjtGetChild(0);
+//		ASTPipeline rp = (ASTPipeline) rootNode.jjtGetChild(0);
 //		System.err.println("rootNode: "+rp.getClass());
 		List<String> problems = new ArrayList<>();
 		rootNode.interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE);

@@ -1,0 +1,7 @@
+single()
+	->set(outername='outer')
+	->join( ->single()
+			->set(innername='inner')
+			, set(outer=[@outername],inner=[innername])
+		)
+	->tml(messageName='Test',isArray=false)

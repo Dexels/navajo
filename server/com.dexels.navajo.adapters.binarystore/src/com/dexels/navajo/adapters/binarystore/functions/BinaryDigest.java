@@ -12,7 +12,7 @@ public class BinaryDigest extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Binary b = (Binary) getOperand(0);
+		Binary b = getBinaryOperand(0);
 		return b.getDigest().toString();
 	}
 

@@ -115,7 +115,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		}
 		Optional<InputStream> is = resolveFile(service);
 		try {
-			return ReactiveStandalone.compileReactiveScript(is.get(), Optional.empty());
+			return ReactiveStandalone.compileReactiveScript(is.get());
 		} catch (ParseException|TokenMgrError e) {
 			throw new IOException("Error parsing script: "+service, e);
 		}

@@ -31,10 +31,10 @@ public class NavajoStreamToMutableMessageStream  extends BaseFlowableOperator<Fl
 	private final Stack<Message> messageStack = new Stack<Message>();
 	private final Stack<String> tagStack = new Stack<>();
 	private final Stack<String> matchStack = new Stack<>();
-	private final boolean hasPath;
+//	private final boolean hasPath;
 	public NavajoStreamToMutableMessageStream(Optional<String> path) {
 		super(10);
-		this.hasPath = path.isPresent();
+//		this.hasPath = path.isPresent();
 		if(path.isPresent()) {
 			for (String element : path.get().split("/")) {
 				matchStack.push(element);

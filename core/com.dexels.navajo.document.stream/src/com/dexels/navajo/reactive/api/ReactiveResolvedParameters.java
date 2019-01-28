@@ -203,6 +203,7 @@ public class ReactiveResolvedParameters {
 		try {
 			// TODO test for streaming
 			// TODO move this to constructor or something
+			System.err.println("Resoving: "+key);
 			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : resolvedInput;
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);

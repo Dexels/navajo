@@ -3,7 +3,6 @@ package com.dexels.navajo.document.stream.api;
 import java.util.Collection;
 import java.util.List;
 
-import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public interface RunningReactiveScripts {

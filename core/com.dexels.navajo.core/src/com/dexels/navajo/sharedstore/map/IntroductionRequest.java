@@ -22,6 +22,7 @@ public class IntroductionRequest extends Request {
 	private SharedTribalMap<?,?> stm = null;
 	private boolean hasSoftReferences = false;
 	
+	@SuppressWarnings("rawtypes")
 	public IntroductionRequest(SharedTribalMap<?,?> stm) {
 		
 		boolean hasRemoteReferences = false;
@@ -69,6 +70,7 @@ public class IntroductionRequest extends Request {
 	 * The getAnswer() is ALWAYS executed on the new member to register a tribal map.
 	 * 
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Answer getAnswer() {
 		if ( !hasSoftReferences ) {

@@ -131,6 +131,6 @@ public class TestMutableStream {
 			.cast(Msg.class)
 			.blockingGet();
 
-		Assert.assertEquals("Dmitri",m.toImmutableMessage().columnValue("Name"));
+		Assert.assertEquals("Dmitri",m.toImmutableMessage().value("Name").get());
 	}
 }

@@ -3,6 +3,7 @@ package com.dexels.navajo.document;
 import java.util.Date;
 import java.util.List;
 
+import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.DatePattern;
@@ -128,6 +129,14 @@ public int integerValue() {
 	throw new ClassCastException("Operand does not have the required integer type but: "+type);
 }
 
+public ImmutableMessage immutableMessageValue() {
+	if(value instanceof ImmutableMessage) {
+		return (ImmutableMessage) value;
+	}
+	throw new ClassCastException("Operand does not have the required immutablemessage type but: "+type);
+}
+
+
 public static Operand ofBinary(Binary o) {
 	return new Operand(o,Property.BINARY_PROPERTY);
 }
@@ -157,5 +166,10 @@ public static Operand ofSelectionList(List<Selection> allSelectedSelections) {
 public static Operand ofProperty(Property property) {
 	return new Operand(property,"property");
 }
+
+public static Operand ofImmutable(ImmutableMessage rm) {
+	return new Operand(rm,"immutable");
+}
+
 
 }

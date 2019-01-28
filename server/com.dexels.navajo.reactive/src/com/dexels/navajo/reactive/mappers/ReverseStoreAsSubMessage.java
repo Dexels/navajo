@@ -20,12 +20,12 @@ import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
-public class StoreAsSubMessage implements ReactiveMerger {
+public class ReverseStoreAsSubMessage implements ReactiveMerger {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(StoreAsSubMessage.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReverseStoreAsSubMessage.class);
 
-	public StoreAsSubMessage() {
+	public ReverseStoreAsSubMessage() {
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.StopwatchTime;
@@ -39,7 +40,7 @@ import com.dexels.navajo.script.api.Access;
 @SuppressWarnings("rawtypes")
 public abstract class FunctionInterface {
 
-	private ArrayList<Operand> operandList = null;
+	private List<Operand> operandList = null;
 	protected Navajo inMessage = null;
 	protected Message currentMessage = null;
 	protected FunctionDefinition myFunctionDefinition = null;
@@ -331,10 +332,22 @@ public abstract class FunctionInterface {
 
 	@Deprecated
 	protected final Object getOperand(int index) throws TMLExpressionException {
+		return operand(index).value;
+	}
+
+	public Object operandWithType(int index, String type) {
+		Operand d = operand(index);
+		if(d.type.equals(type)) {
+			return d.value;
+		}
+		throw new TMLExpressionException("Illegal operand type operand (index = " + index + ") should be of type: "+type+" but was of type: "+d.type);
+
+	}
+	protected Operand operand(int index) {
 		if (index >= operandList.size())
 			throw new TMLExpressionException("Function Exception: Missing operand (index = " + index + ")");
 		else
-			return operandList.get(index).value;
+			return operandList.get(index);
 	}
 
 	public Optional<String> getReturnType() {
@@ -442,6 +455,18 @@ public abstract class FunctionInterface {
 	
 	protected Map<String,Operand> getNamedParameters() {
 		return Collections.unmodifiableMap(this.namedParameters);
+	}
+
+	public String getStringOperand(int index) {
+		return (String) operandWithType(index, "string");
+	}
+	
+	public Binary getBinaryOperand(int index) {
+		return (Binary) operandWithType(index, "binary");
+	}
+	public BinaryDigest getBinaryDigestOperand(int index) {
+		return (BinaryDigest) operandWithType(index, "binary_digest");
+		
 	}
 
 	public void insertDateOperand(Date o) {

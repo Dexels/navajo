@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.DataItem;
@@ -13,7 +12,6 @@ import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.reactive.api.ReactivePipe;
 
 import io.reactivex.Flowable;
 
@@ -22,9 +20,8 @@ public class CompiledReactiveScript implements ReactiveScript{
 	public final List<String> methods;
 	private final Type type;
 	private final boolean streamInput;
-	private Optional<String> binaryMime;
 
-	public CompiledReactiveScript(List<ReactivePipe> pipes, List<String> methods, Optional<String> binaryMime) {
+	public CompiledReactiveScript(List<ReactivePipe> pipes, List<String> methods) {
 		this.pipes = pipes;
 		this.methods = methods;
 		Set<Type> dataTypes = pipes.stream().map(p->p.finalType()).collect(Collectors.toSet());
@@ -33,7 +30,6 @@ public class CompiledReactiveScript implements ReactiveScript{
 		}
 		this.type = dataTypes.stream().findFirst().orElseThrow(()->new RuntimeException("Huh?"));
 		this.streamInput = pipes.stream().anyMatch(e->e.streamInput());
-		this.binaryMime = binaryMime;
 	}
 
 	public void typecheck() {

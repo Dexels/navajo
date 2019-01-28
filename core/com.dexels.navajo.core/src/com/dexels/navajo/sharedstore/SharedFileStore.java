@@ -42,12 +42,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoObjectInputStream;
@@ -56,6 +53,8 @@ import com.dexels.navajo.server.enterprise.statistics.MetricsManager;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
+
+import navajocore.Version;
 
 /**
  * LockFiles is used to filter lock files.
@@ -100,7 +99,7 @@ class FileComparator implements Comparator<File>{
 		if(f1.isFile() && f2.isDirectory())
 			return 1;
 
-		return (new Long(f1.lastModified())).compareTo(new Long(f2.lastModified()));
+		return (Long.valueOf(f1.lastModified())).compareTo(Long.valueOf(f2.lastModified()));
 	}
 }
 
@@ -769,7 +768,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 				store("__SEQUENCES__", id, l, false, false);
 				return l;
 			} else {
-				Long l = new Long(0);
+				Long l = Long.valueOf(0);
 				store("__SEQUENCES__", id, l, false, false);
 				return l;
 			}

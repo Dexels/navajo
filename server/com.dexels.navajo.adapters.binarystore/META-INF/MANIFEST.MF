@@ -16,3 +16,4 @@ Import-Package: com.dexels.navajo.document.types;version="2.2.1",
  org.slf4j;version="1.4.3"
 Bundle-Activator: navajobinarystore.Version
 Export-Package: com.dexels.navajo.adapters.binarystore
+Automatic-Module-Name: com.dexels.navajo.adapters.binarystore
