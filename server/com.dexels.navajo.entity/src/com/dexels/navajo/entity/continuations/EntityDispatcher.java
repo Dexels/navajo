@@ -363,6 +363,16 @@ public class EntityDispatcher {
 
         // Add to runner httpResponse
         runner.getHttpResponse().setHeader("Cache-Control", cacheHeader);
+        // The Vary HTTP response header determines how to match future request headers to 
+        // decide whether a cached response can be used rather than requesting a fresh one 
+        // from the origin server. It is used by the server to indicate which headers it used 
+        // when selecting a representation of a resource in a content negotiation algorithm.
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+        //
+        // We set "Vary" to "X-Navajo-Version" to help clients to ask for a fresh response when it
+        // has an older version in its cache. Not all networking libraries have support for this 
+        // header.
+        runner.getHttpResponse().setHeader("Vary", "X-Navajo-Version");
     }
 
     private void processGetOptions(Entity e, HttpServletResponse response) {
