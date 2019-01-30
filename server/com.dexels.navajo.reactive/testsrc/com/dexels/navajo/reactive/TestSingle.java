@@ -48,7 +48,6 @@ public class TestSingle {
 		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
 				.withConstant("count", 10, Property.INTEGER_PROPERTY);
-		List<ReactiveParseProblem> problems = new ArrayList<>();
 		StreamScriptContext context = TestSetup.createContext("Single",Optional.empty());
 		ssf.build(parameters)
 			.execute(context, Optional.empty(), ImmutableFactory.empty())
@@ -79,7 +78,7 @@ public class TestSingle {
 			.compose(takeTransformer.execute(context, Optional.empty(), ImmutableFactory.empty()))
 			.map(e->e.stateMessage())
 			.lastOrError()
-			.map(msg->(Integer)msg.columnValue("index"))
+			.map(msg->(Integer)msg.value("index").get())
 			.blockingGet();
 
 		System.err.println("Count: "+lastIndex);
@@ -126,7 +125,7 @@ public class TestSingle {
 							e.printStackTrace();
 						}
 						
-						int i = ((Integer)paramMessage.get().columnValue("index")).intValue();
+						int i = ((Integer)paramMessage.get().value("index").get()).intValue();
 						boolean isEven = i % 2 == 0;
 						System.err.println("Even numer? "+i+" is even: "+isEven);
 						return Operand.ofBoolean(isEven);
@@ -177,7 +176,7 @@ public class TestSingle {
 			.compose(skipTransformer.execute(context, Optional.empty(),ImmutableFactory.empty()))
 			.map(e->e.stateMessage())
 			.lastOrError()
-			.map(msg->(Integer)msg.columnValue("index"))
+			.map(msg->(Integer)msg.value("index").get())
 			.blockingGet();
 		System.err.println("Count: "+lastIndex);
 		Assert.assertEquals(9, lastIndex);

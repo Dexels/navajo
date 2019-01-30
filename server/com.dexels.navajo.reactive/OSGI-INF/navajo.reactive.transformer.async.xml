@@ -5,5 +5,5 @@
    <service>
       <provide interface="com.dexels.navajo.reactive.api.ReactiveTransformerFactory"/>
    </service>
-   <reference bind="setTopicPublisher" cardinality="1..1" interface="com.dexels.pubsub.rx2.api.TopicPublisher" name="TopicPublisher" policy="dynamic" unbind="clearTopicSubscriber"/>
+   <reference bind="setTopicPublisher" cardinality="1..1" interface="com.dexels.pubsub.rx2.api.TopicPublisher" name="TopicPublisher" policy="dynamic" unbind="clearTopicPublisher"/>
 </scr:component>

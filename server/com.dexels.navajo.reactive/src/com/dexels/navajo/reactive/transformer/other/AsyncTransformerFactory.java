@@ -12,23 +12,21 @@ import java.util.Set;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 import com.dexels.pubsub.rx2.api.TopicPublisher;
-import com.dexels.pubsub.rx2.api.TopicSubscriber;
 
 public class AsyncTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	@SuppressWarnings("unused")
 	private TopicPublisher topicPublisher;
-    public void setTopicSubscriber(TopicPublisher topicPublisher, Map<String,Object> settings) {
+    public void setTopicPublisher(TopicPublisher topicPublisher, Map<String,Object> settings) {
         this.topicPublisher = topicPublisher;
     }
 
-    public void clearTopicSubscriber(TopicSubscriber topicSubscriber) {
+    public void clearTopicPublisher(TopicPublisher topicSubscriber) {
         this.topicPublisher = null;
     }
     

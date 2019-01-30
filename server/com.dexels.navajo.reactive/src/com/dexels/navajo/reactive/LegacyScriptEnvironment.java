@@ -119,7 +119,6 @@ public class LegacyScriptEnvironment implements ReactiveScriptRunner {
 	 
 
 	private final Flowable<NavajoStreamEvent> executeLegacy(StreamScriptContext context) {
-		String service = context.getService();
 		try {
 //				context.resolvedNavajo().getAllMessages().forEach(message->{
 //					input.addMessage(message);

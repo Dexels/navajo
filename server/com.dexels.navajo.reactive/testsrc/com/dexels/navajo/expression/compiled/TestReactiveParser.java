@@ -6,11 +6,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -19,7 +17,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.parser.compiled.ASTPipeline;
 import com.dexels.navajo.parser.compiled.ASTReactivePipe;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.ParseException;
@@ -167,7 +164,9 @@ public class TestReactiveParser {
 	public void testAddressSubMessage( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/addresssubmessage.rr");
 		n.write(System.err);
-		Assert.assertEquals(1,n.getAllMethods().size());
+		String val = (String) n.getMessage("Test/bla").getProperty("prop2").getTypedValue();
+		
+		Assert.assertEquals("prop2value",val);
 	}
 	
 	@Test
@@ -207,20 +206,6 @@ public class TestReactiveParser {
 		ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("testtypecheck.rr")).typecheck();
 	}
 
-//	public void testJoinToSubMessage
-	@Test
-	public void testTransformerCount() throws ParseException {
-//		String exp = "eventsource(classpath='tmlinput.xml')->streamtoimmutable(path='/Bla')->stream(messageName='Oe',isArray=true)";
-		String exp = "->single(count=100)->filter([id]%3==0)->filter([id]%2==0)->filter([id]%2==0)";
-		CompiledParser cp = new CompiledParser(new StringReader(exp));
-		cp.Expression();
-		ASTReactivePipe rootNode = (ASTReactivePipe) cp.getJJTree().rootNode();
-//		ASTPipeline rp = (ASTPipeline) rootNode.jjtGetChild(0);
-//		System.err.println("rootNode: "+rp.getClass());
-		List<String> problems = new ArrayList<>();
-		rootNode.interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE);
-	}
-	
 	@Test
 	public void testCSV( ) throws ParseException, IOException {
 		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);

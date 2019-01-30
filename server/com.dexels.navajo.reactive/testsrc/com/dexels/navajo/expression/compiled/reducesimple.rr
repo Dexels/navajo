@@ -1,3 +1,3 @@
 single(count=15,debug=true)
-	->reduce(saveall(sum=0),set(sum=[@sum]+1))
+	->reduce(@sum=0,set(sum=[@sum]+1))
 	->tml(messageName='Bla', isArray=false)

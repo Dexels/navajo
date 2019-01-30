@@ -1,6 +1,5 @@
 package com.dexels.navajo.reactive;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class TestSetup {
 	public static ReactiveFinder setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 //		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
-		File root = new File("testscripts");
+//		File root = new File("testscripts");
 //		env = new ReactiveScriptEnvironment(root);
 //		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
 		ReactiveFinder finder = new CoreReactiveFinder();

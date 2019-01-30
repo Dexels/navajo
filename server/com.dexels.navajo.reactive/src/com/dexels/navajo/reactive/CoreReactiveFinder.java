@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+
 import org.osgi.framework.BundleContext;
+
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveMerger;
 import com.dexels.navajo.reactive.api.ReactiveSourceFactory;
@@ -39,7 +39,6 @@ import com.dexels.navajo.reactive.transformer.mergesingle.MergeSingleTransformer
 import com.dexels.navajo.reactive.transformer.other.FilterTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FirstTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory;
-import com.dexels.navajo.reactive.transformer.other.InMessageTransformer;
 import com.dexels.navajo.reactive.transformer.other.InMessageTransformerFactory;
 import com.dexels.navajo.reactive.transformer.other.TakeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.parseevents.ParseEventStreamFactory;
