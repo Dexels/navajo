@@ -31,6 +31,7 @@ import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 public class NavajoConfigComponent implements NavajoConfigInterface {
@@ -47,6 +48,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
 	private SharedStoreInterface sharedStore;
+	private TribeManagerInterface tribeManager;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
@@ -90,7 +92,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		try {
 			this.properties = props;
 			this.bundleContext = bundleContext;
-			this.persistenceManager = new PersistenceManagerImpl();
+			this.persistenceManager = new PersistenceManagerImpl(this.tribeManager);
 			if(bundleContext==null) {
 				// just for non-osgi, to be sure
 				this.persistenceManager.setSharedStore(getSharedStore());
@@ -266,6 +268,13 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		desciptionProviders.remove(dpi.getClass().getName());
 	}
 
+	public void setTribeManager(TribeManagerInterface tmi) {
+		tribeManager = tmi;
+	}
+	
+	public void clearTribeManager(TribeManagerInterface tmi) {
+		tribeManager = null;
+	}
 	
 	public void clearIntegrityWorker(WorkerInterface dpi) {
 		this.integrityWorker = null;

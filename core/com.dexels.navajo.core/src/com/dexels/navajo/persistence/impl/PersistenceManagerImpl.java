@@ -29,6 +29,7 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
@@ -103,7 +104,9 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	private static final String MEMORY_CACHE_ID = "inMemoryCache";
 	private static final String FREQUENCE_MAP_ID = "accessFrequency";
 	
-	public PersistenceManagerImpl() throws InstantiationException {
+	private final TribeManagerInterface tribeManager;
+	public PersistenceManagerImpl(TribeManagerInterface tribeManager) throws InstantiationException {
+		this.tribeManager = tribeManager;
 		try {
 			Class.forName("com.dexels.navajo.sharedstore.map.SharedTribalMap");
 		} catch (ClassNotFoundException e) {
@@ -125,7 +128,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 						// just ignore?
 						return;
 					}
-					if ( TribeManagerFactory.getInstance().getIsChief() ) {
+					if ( tribeManager.getIsChief() ) {
 						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
 					}
 					inMemoryCache = new SharedTribalMap<String,PersistentEntry>(MEMORY_CACHE_ID);
@@ -414,7 +417,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			// No idea what this is about. Todo remove?
 			PersistenceManagerImpl p;
 			try {
-				p = new PersistenceManagerImpl();
+				p = new PersistenceManagerImpl(this.tribeManager);
 				p.setKey(ncse.getWebservice());
 				p.setDoClear(true);
 			} catch (InstantiationException e) {
