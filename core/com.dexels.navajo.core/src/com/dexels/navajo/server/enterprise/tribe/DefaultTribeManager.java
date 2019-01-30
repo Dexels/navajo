@@ -38,7 +38,6 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	private Map<String,TribalNumber> counters = new ConcurrentHashMap<String,TribalNumber>();
 	private Map<String,Map> distributedMaps = new ConcurrentHashMap<String,Map>();
 	private Map<String,Set> distributedSets = new ConcurrentHashMap<String,Set>();
-	private NavajoConfigInterface navajoConfig = null;
 	private ConfigurationAdmin configAdmin;
 	private final Map<String, Configuration> resourcePids = new HashMap<String, Configuration>();
 	
@@ -69,13 +68,6 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	public void clearConfigAdmin(ConfigurationAdmin ca) {
 		this.configAdmin = null;
-	}
-	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
-		this.navajoConfig  = navajoConfig;
-	}
-
-	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
-		this.navajoConfig = null;
 	}
 
 	@Override
@@ -229,11 +221,6 @@ public class DefaultTribeManager implements TribeManagerInterface {
 			topics.put(name, dt);
 			return dt;
 		}
-	}
-
-	@Override
-	public String getTribalId() {
-		return navajoConfig.getInstanceGroup();
 	}
 
 	@Override
