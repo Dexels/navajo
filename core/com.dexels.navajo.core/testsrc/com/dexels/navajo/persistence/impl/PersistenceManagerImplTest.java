@@ -1,6 +1,5 @@
 package com.dexels.navajo.persistence.impl;
 
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,10 +25,9 @@ class ConstructorTest implements Constructor {
 	public ConstructorTest(String myId) {
 		this.myId = myId;
 	}
-	
-    @Rule
-    public TemporaryFolder folder= new TemporaryFolder();
-   
+
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Override
 	public Persistable construct() throws Exception {
@@ -85,16 +83,14 @@ public class PersistenceManagerImplTest {
 
 	@Test
 	public void testSimple() throws Exception {
-		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"), "aap.noot",
-				"aap/noot", 10000, true);
+		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"), "aap.noot", "aap/noot", 10000, true);
 		Assert.assertNotNull(p);
 		Assert.assertNotNull(p.getMessage("1234"));
 	}
 
 	@Test
 	public void testClearCacheKey() throws Exception {
-		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"),
-				"aap.noot-23232", "aap/noot", 10000, true);
+		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"), "aap.noot-23232", "aap/noot", 10000, true);
 		Assert.assertNotNull(p);
 		p.write(System.err);
 		pi.setKey("aap/noot");
@@ -107,16 +103,14 @@ public class PersistenceManagerImplTest {
 
 	@Test
 	public void testCached1() throws Exception {
-		pi.get(new ConstructorTest("12345"), "aap.noot", "aap/noot", 10000,
-				true);
+		pi.get(new ConstructorTest("12345"), "aap.noot", "aap/noot", 10000, true);
 		boolean b = pi.isCached("aap/noot", "");
 		Assert.assertTrue(b);
 	}
 
 	@Test
 	public void testCached2() throws Exception {
-		pi.get(new ConstructorTest("12345"), "aap.noot", "aap/noot", 10000,
-				true);
+		pi.get(new ConstructorTest("12345"), "aap.noot", "aap/noot", 10000, true);
 		pi.setKey("aap/noot");
 		pi.clearCache();
 		boolean b = pi.isCached("aap/noot", "");
@@ -125,8 +119,7 @@ public class PersistenceManagerImplTest {
 
 	@Test
 	public void testRead() throws Exception {
-		pi.get(new ConstructorTest("123456"), "aap.noot", "aap/noot", 10000,
-				true);
+		pi.get(new ConstructorTest("123456"), "aap.noot", "aap/noot", 10000, true);
 		Navajo n = (Navajo) pi.read("aap.noot", "aap/noot", 213232);
 		Assert.assertNotNull(n);
 		Assert.assertNotNull(n.getMessage("123456"));
