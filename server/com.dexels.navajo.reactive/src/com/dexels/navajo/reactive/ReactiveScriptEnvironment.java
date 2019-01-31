@@ -30,7 +30,6 @@ import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.parser.compiled.TokenMgrError;
 import com.dexels.navajo.parser.compiled.api.ReactivePipeNode;
 import com.dexels.navajo.reactive.api.Reactive;
-import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -40,8 +39,6 @@ import io.reactivex.Flowable;
 public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptRunner {
 
 	private static final String REACTIVE_FOLDER = "reactive" + File.separator;
-//	private ReactiveScriptParser scriptParser = null;
-	private ReactiveFinder reactiveFinder;
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveScriptEnvironment.class);
 
 	private final Map<String,ReactiveScript> scripts = new HashMap<>();
@@ -73,13 +70,6 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 	
 	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
 		this.navajoConfig = null;
-	}
-	public void setReactiveFinder(ReactiveFinder reactiveFinder) {
-		this.reactiveFinder = reactiveFinder;
-	}
-	
-	public void clearReactiveFinder(ReactiveFinder reactiveFinder) {
-		this.reactiveFinder = null;
 	}
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
