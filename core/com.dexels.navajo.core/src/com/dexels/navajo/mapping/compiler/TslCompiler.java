@@ -3433,7 +3433,7 @@ public class TslCompiler {
 
 			result.append(classDef);
 
-			result.append("private volatile static ArrayList<Dependency> dependentObjects = null;\n\n");
+			result.append("private volatile ArrayList<Dependency> dependentObjects = null;\n\n");
 
 			// Add constructor.
 			String constructorDef = "  public "
