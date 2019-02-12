@@ -32,7 +32,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
  */
 
 public class CheckEmail extends FunctionInterface {
-	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,9}$";
+	private static final String EMAIL_PATTERN = "^[\\w!#$%&�*+/=?`{|}~^-]+(?:\\.[\\w!#$%&�*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,12}$";
 	
 	
   @Override
