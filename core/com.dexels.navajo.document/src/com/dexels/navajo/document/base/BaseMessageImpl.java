@@ -637,7 +637,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                     for (int i = 0; i < messageList.size(); i++) {
                         BaseMessageImpl m = (BaseMessageImpl) messageList.get(i);
                         String name = m.getName();
-                        if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
+                        String type = m.getType();
+						if (type.equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
                             // message is array type add all children.
                             if (index == null) {
                                 if (m.messageList != null) {

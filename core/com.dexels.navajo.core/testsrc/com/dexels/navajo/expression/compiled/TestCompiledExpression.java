@@ -49,7 +49,7 @@ public class TestCompiledExpression {
 		Message params = NavajoFactory.getInstance().createMessage(input, "__parms__");
 		params.addProperty(NavajoFactory.getInstance().createProperty(input,"Param",Property.STRING_PROPERTY,"SomeParam",99,"",Property.DIR_IN));
 		input.addMessage(params);
-		//		element2.addProperty(NavajoFactory.getInstance().createProperty(input,"Property",Property.STRING_PROPERTY,"Prop2",99,"",Property.DIR_IN));
+		element2.addProperty(NavajoFactory.getInstance().createProperty(input,"Property",Property.STRING_PROPERTY,"Prop2",99,"",Property.DIR_IN));
 		createMessage.addElement(element1);
 		createMessage.addElement(element2);
 	}
@@ -89,7 +89,46 @@ public class TestCompiledExpression {
         Assert.assertEquals("TestValue", ss.apply(input,Optional.empty(),Optional.empty()).value);
         Assert.assertFalse(ss.isLiteral());
 	}
+	
+	@Test
+	public void testParseTmlComplex() throws ParseException, TMLExpressionException {
+		String expression = "[TestArrayMessageMessage@Property=Prop2/Property]";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Expression();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
+        if(!problems.isEmpty()) {
+    			throw new TMLExpressionException(problems,expression);
+        }
+        
+        Navajo copy = NavajoFactory.getInstance().createNavajo();
+        Message rootMessage = NavajoFactory.getInstance().createMessage(copy, "TopMessage");
+        copy.addMessage(rootMessage);
+        rootMessage.addMessage(input.getMessage("TestArrayMessageMessage"));
+        System.err.println("tml: "+ss.isLiteral());
+        Object value = ss.apply(copy,rootMessage,null,null,null,null,null, Optional.empty(),Optional.empty()).value;
+		System.err.println("TMLVALUE: "+value.getClass());
+        Assert.assertEquals("Prop2", value);
+        Assert.assertFalse(ss.isLiteral());
+	}
 
+	@Test
+	public void testParseTmlConditionalComplex() throws ParseException, TMLExpressionException {
+		String expression = "{request@.:!?[/NewMemberFunction/FromUnion]} AND {response@.:!?[/ExistingClubFunction/PersonId]}";
+		StringReader sr = new StringReader(expression);
+		CompiledParser cp = new CompiledParser(sr);
+		cp.Expression();
+		List<String> problems = new ArrayList<>();
+        ContextExpression ss = cp.getJJTree().rootNode().interpretToLambda(problems,sr.toString(),fn->FunctionClassification.DEFAULT);
+        if(!problems.isEmpty()) {
+    			throw new TMLExpressionException(problems,expression);
+        }
+        ss.apply();
+	}
+
+	
+	
 	@Test
 	public void testParseExistsCheck() throws ParseException, TMLExpressionException, SystemException {
 		String clause = "?[/TestMessage/TestProperty] AND [/TestMessage/TestProperty] != ''";
