@@ -76,12 +76,12 @@ public class DiffMap implements Mappable {
 			// make a copy to leave the original untouched
 			Message resultElement = element.copy(myAccess.getOutputDoc());
 			try {
-				String diff = getDiffForMatchingKeys(currentMessage, element);
+				String diff = getDiffForMatchingKeys(currentMessage, resultElement);
 				if ("".equals(diff)) {
 					// nothing
 					continue;
 				} else {
-					// modify
+					// modify, should take the properties from the new message!
 					resultElement.addProperty(NavajoFactory.getInstance().createProperty(myAccess.getOutputDoc(), "Modify", Property.BOOLEAN_PROPERTY, String.valueOf(true), 0, null, Property.DIR_OUT));
 					resultElement.addProperty(NavajoFactory.getInstance().createProperty(myAccess.getOutputDoc(), "Diff", Property.STRING_PROPERTY, String.valueOf(diff), 0, null, Property.DIR_OUT));
 				}
@@ -135,6 +135,8 @@ public class DiffMap implements Mappable {
 			}
 			if (!previousProperty.isEqual(currentProperty)) {
 				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> " + (currentProperty == null ? "null" : currentProperty.getValue()) + ");";
+				// IMPORTANT: As a side effect set the previous property to the value of the current property
+				previousProperty.setAnyValue(currentProperty == null ? null : currentProperty.getValue());
 			}
 		}
 		for (Message previousMessage : previous.getAllMessages()) {
