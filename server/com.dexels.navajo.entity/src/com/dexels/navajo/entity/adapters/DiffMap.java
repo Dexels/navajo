@@ -136,7 +136,7 @@ public class DiffMap implements Mappable {
 			if (!previousProperty.isEqual(currentProperty)) {
 				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> " + (currentProperty == null ? "null" : currentProperty.getValue()) + ");";
 				// IMPORTANT: As a side effect set the previous property to the value of the current property
-				previousProperty.setAnyValue(currentProperty == null ? null : currentProperty.getValue());
+				previousProperty.setAnyValue(currentProperty == null ? null : currentProperty.getTypedValue());
 			}
 		}
 		for (Message previousMessage : previous.getAllMessages()) {
