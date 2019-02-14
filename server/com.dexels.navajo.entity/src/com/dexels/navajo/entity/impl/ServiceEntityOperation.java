@@ -539,7 +539,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		
 		if (hasExtraMessageMongo()) {
 			if (currentEntity == null || currentEntity.getMessage(myEntity.getMessageName()) == null) {
-				// TODO: Mongo backend does not support PUT for inserts. Thus we give an
+				// TODO: Monogo backend does not support PUT for inserts. Thus we give an
 				// exception
 				throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Entity not found - use POST for insert");
 			}
@@ -803,6 +803,13 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 
         clean(result, "response", true, true, entityVersion);
+        try {
+        	checkSubTypes(result.getRootMessage());
+        } catch (Exception e) {
+        	logger.error("Subtypes check failed {}",e);
+        	throw new EntityException(EntityException.SERVER_ERROR, e);
+        }
+
 		return result;
 
 	}
