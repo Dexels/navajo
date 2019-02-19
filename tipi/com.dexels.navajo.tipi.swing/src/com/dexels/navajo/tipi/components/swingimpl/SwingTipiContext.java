@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -97,7 +96,6 @@ public class SwingTipiContext extends TipiContext {
 	private final LastActivityMonitor lam;
 	private boolean debugMode = false;
 
-	private TipiApplet myAppletRoot;
 	private TipiSwingDesktop defaultDesktop = null;
 
 	private RootPaneContainer myOtherRoot;
@@ -213,12 +211,6 @@ public class SwingTipiContext extends TipiContext {
 	@Override
 	public synchronized void setWaiting(boolean b) {
 
-		if (getAppletRoot() != null) {
-
-			getAppletRoot().setCursor(
-					b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor
-							.getDefaultCursor());
-		}
 		for (TipiActivityListener ta : myActivityListeners) {
 			ta.setActive(b);
 		}
@@ -233,19 +225,15 @@ public class SwingTipiContext extends TipiContext {
 	public void setSplashInfo(final String info) {
 		// logger.debug("Splash: "+info);
 		logger.debug("Splash: "+info);
-		if (getAppletRoot() != null) {
-			getAppletRoot().showStatus(info);
-		} else {
-			if (splash != null) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						splash.setInfoText(info);
-					}
-				});
-			}
-
+		if (splash != null) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					splash.setInfoText(info);
+				}
+			});
 		}
+
 
 	}
 
@@ -402,14 +390,6 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
-	public void setAppletRoot(TipiApplet appletRoot) {
-		myAppletRoot = appletRoot;
-	}
-
-	public TipiApplet getAppletRoot() {
-		return myAppletRoot;
-	}
-
 	public void setOtherRoot(RootPaneContainer otherRoot) {
 		myOtherRoot = otherRoot;
 	}
@@ -420,15 +400,11 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	public void doExit() {
-		if (myAppletRoot != null) {
-			myAppletRoot.reload();
-		} else {
-			shutdown();
+		shutdown();
 
-			super.doExit();
-			// Should not be necessary anymore, but for safety reasons...
-			System.exit(0);
-		}
+		super.doExit();
+		// Should not be necessary anymore, but for safety reasons...
+		System.exit(0);
 	}
 
 	public void setDefaultDesktop(TipiSwingDesktop jp) {
@@ -731,14 +707,6 @@ public class SwingTipiContext extends TipiContext {
 				jd.setTitle(title);
 
 				((JComponent) jd.getContentPane()).setOpaque(false);
-				dialogStack.push(jd);
-				return jd;
-			}
-			if (getAppletRoot() != null) {
-				JFrame rootFrame = (JFrame) JOptionPane
-						.getFrameForComponent(getAppletRoot());
-				JDialog jd = new TipiSwingDialog(rootFrame, d);
-				jd.setTitle(title);
 				dialogStack.push(jd);
 				return jd;
 			}

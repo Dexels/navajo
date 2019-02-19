@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
-import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 
 import tipiswing.SwingTipiApplicationInstance;
 import tipiswing.TipiSwingExtension;
@@ -113,7 +112,7 @@ public class MainApplication {
 			}
 		}
 		return initializeSwingApplication(null,arrrgs, definition,
-				null, null);
+				 null);
 	}
 
 
@@ -125,7 +124,7 @@ public class MainApplication {
 	public static SwingTipiApplicationInstance initializeSwingApplication(
 			final BundleContext bundleContext,
 			final List<String> arrrgs,
-			final String def, final TipiApplet appletRoot,
+			final String def,
 			final RootPaneContainer otherRoot) {
 
 //		RepaintManager
@@ -141,17 +140,17 @@ public class MainApplication {
 					try {
 							if (def == null) {
 								myApplication = new SwingTipiApplicationInstance(
-										"init", "init.xml", arrrgs, appletRoot,
+										"init", "init.xml", arrrgs,
 										otherRoot);
 							} else {
 								if (def.endsWith(".xml")) {
 									myApplication = new SwingTipiApplicationInstance(
-											"init", def, arrrgs, appletRoot,
+											"init", def, arrrgs,
 											otherRoot);
 								} else {
 									myApplication = new SwingTipiApplicationInstance(
 											def, "start.xml", arrrgs,
-											appletRoot, otherRoot);
+											otherRoot);
 								}
 							}
 //						}

@@ -34,8 +34,8 @@ public class CreateTipiPaint extends FunctionInterface {
      */
     @Override
     public Object evaluate() throws TMLExpressionException {
-        Object color1 = getOperand(0);
-        Object color2 = getOperand(1);
+        Object color1 = operand(0).value;
+        Object color2 = operand(1).value;
         Color startGradientColor = null;
         Color endGradientColor = null;
 
@@ -52,7 +52,7 @@ public class CreateTipiPaint extends FunctionInterface {
 
         String gradientLayout = "vertical";
         if (getOperands().size() >= 3) {
-            gradientLayout = (String) getOperand(2);
+            gradientLayout = (String) operand(2).value;
         }
 
         // See what type of border we are going to create

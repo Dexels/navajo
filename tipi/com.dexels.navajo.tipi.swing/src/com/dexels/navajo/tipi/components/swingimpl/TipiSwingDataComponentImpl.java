@@ -122,7 +122,7 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 	protected Object getComponentValue(String name) {
 		if (name != null) {
 			if (name.equals("currentPage")) {
-				return new Integer(currentPage);
+				return Integer.valueOf(currentPage);
 			}
 		}
 		return super.getComponentValue(name);

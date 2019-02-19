@@ -14,7 +14,6 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.event.InternalFrameListener;
@@ -153,9 +152,6 @@ public class TipiSwingHelper implements TipiHelper {
 						}
 					});
 				}
-			} else if (JApplet.class.isInstance(c)) {
-				// do nothing.
-
 			} else {
 				throw new RuntimeException(
 						"Can not fire onWindowClosed event from class: "
@@ -167,10 +163,10 @@ public class TipiSwingHelper implements TipiHelper {
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					Map<String, Object> m = new HashMap<String, Object>();
-					m.put("x", new Integer(e.getX()));
-					m.put("y", new Integer(e.getY()));
-					m.put("button", new Integer(e.getButton()));
-					m.put("clickCount", new Integer(e.getClickCount()));
+					m.put("x", Integer.valueOf(e.getX()));
+					m.put("y", Integer.valueOf(e.getY()));
+					m.put("button", Integer.valueOf(e.getButton()));
+					m.put("clickCount", Integer.valueOf(e.getClickCount()));
 					try {
 						myComponent.performTipiEvent("onMouseEntered", m,
 								te.isSync());
@@ -186,8 +182,8 @@ public class TipiSwingHelper implements TipiHelper {
 				public void mouseExited(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
-						m.put("x", new Integer(e.getX()));
-						m.put("y", new Integer(e.getY()));
+						m.put("x", Integer.valueOf(e.getX()));
+						m.put("y", Integer.valueOf(e.getY()));
 						myComponent.performTipiEvent("onMouseExited", m,
 								te.isSync());
 					} catch (TipiException ex) {
@@ -202,10 +198,10 @@ public class TipiSwingHelper implements TipiHelper {
 				public void mouseClicked(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
-						m.put("x", new Integer(e.getX()));
-						m.put("y", new Integer(e.getY()));
-						m.put("button", new Integer(e.getButton()));
-						m.put("clickCount", new Integer(e.getClickCount()));
+						m.put("x", Integer.valueOf(e.getX()));
+						m.put("y", Integer.valueOf(e.getY()));
+						m.put("button", Integer.valueOf(e.getButton()));
+						m.put("clickCount", Integer.valueOf(e.getClickCount()));
 						myComponent.performTipiEvent("onMouseClicked", m,
 								te.isSync());
 					} catch (TipiException ex) {
@@ -220,9 +216,9 @@ public class TipiSwingHelper implements TipiHelper {
 				public void mouseReleased(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
-						m.put("x", new Integer(e.getX()));
-						m.put("y", new Integer(e.getY()));
-						m.put("button", new Integer(e.getButton()));
+						m.put("x", Integer.valueOf(e.getX()));
+						m.put("y", Integer.valueOf(e.getY()));
+						m.put("button", Integer.valueOf(e.getButton()));
 						myComponent.performTipiEvent("onMousePressed", m,
 								te.isSync());
 					} catch (TipiException ex) {
@@ -237,9 +233,9 @@ public class TipiSwingHelper implements TipiHelper {
 				public void mouseReleased(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
-						m.put("x", new Integer(e.getX()));
-						m.put("y", new Integer(e.getY()));
-						m.put("button", new Integer(e.getButton()));
+						m.put("x", Integer.valueOf(e.getX()));
+						m.put("y", Integer.valueOf(e.getY()));
+						m.put("button", Integer.valueOf(e.getButton()));
 						myComponent.performTipiEvent("onMouseReleased", m,
 								te.isSync());
 					} catch (TipiException ex) {

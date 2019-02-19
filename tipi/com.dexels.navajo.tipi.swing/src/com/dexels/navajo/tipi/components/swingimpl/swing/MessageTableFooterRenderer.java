@@ -90,7 +90,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 					return this;
 				} else {
 					setupProp(mm, o, column);
-					aggregateValueMap.put(new Integer(column), o);
+					aggregateValueMap.put(Integer.valueOf(column), o);
 					myPropComponent.hideBorder();
 					return myPropComponent;
 				}
@@ -122,7 +122,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 	}
 
 	public void addAggregate(int columnIndex, String expression) {
-		aggregateMap.put(new Integer(columnIndex), expression);
+		aggregateMap.put(Integer.valueOf(columnIndex), expression);
 	}
 
 	public void flushAggregateValues() {
@@ -130,7 +130,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 	}
 
 	public void removeAggregate(int columnIndex) {
-		aggregateMap.remove(new Integer(columnIndex));
+		aggregateMap.remove(Integer.valueOf(columnIndex));
 	}
 
 	public void removeAllAggregate() {
@@ -138,7 +138,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 	}
 
 	public String getAggregateFunction(int column) {
-		return aggregateMap.get(new Integer(column));
+		return aggregateMap.get(Integer.valueOf(column));
 	}
 
 	public Set<Integer> getAggregateFunctions() {

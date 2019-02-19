@@ -67,26 +67,26 @@ public class CreateTitledBorder extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object pp = getOperand(0);
+		Object pp = operand(0).value;
 		String bordertype = null;
 		Color linecolor = this.defaultLineColor;
 		Color shadowcolor = this.defaultShadowColor;
 		String titlealignment = null;
 		final Object ss;
 		if (getOperands().size() >= 2) {
-			bordertype = (String)getOperand(1);
+			bordertype = getStringOperand(1);
 		}
 		if (getOperands().size() >= 3) {
-			linecolor = (Color)getOperand(2);
+			linecolor = (Color)operand(2).value;
 		}
 		if (getOperands().size() >= 4) {
-			shadowcolor = (Color)getOperand(3);
+			shadowcolor = (Color)operand(3).value;
 		}
 		if (getOperands().size() >= 5) {
-			titlealignment = (String)getOperand(4);
+			titlealignment = (String)operand(4).value;
 		}
 		if (getOperands().size() >= 6) {
-			ss = getOperand(5);
+			ss = operand(5).value;
 		} else {
 		    ss = null;
 		}

@@ -12,7 +12,6 @@ import java.awt.Rectangle;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
-import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
@@ -49,28 +48,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 	@Override
 	public Object createContainer() {
 		boolean internal = (getContext() instanceof SwingEmbeddedContext)
-				|| ((SwingTipiContext) getContext()).getAppletRoot() != null;
+				;
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 
 		addHelper(th);
 		if (internal) {
-			TipiApplet ta = ((SwingTipiContext) getContext()).getAppletRoot();
-			if (ta != null) {
-				myToplevel = ta;
-				ta.getContentPane().setLayout(new BorderLayout());
-				mySuperPanel = new JPanel();
-				mySuperPanel.setLayout(new BorderLayout());
-				// mySuperPanel.addPropertyChangeListener(new
-				// PropertyChangeListener(){
-				// public void propertyChange(PropertyChangeEvent evt) {
-				// logger.debug("Changed: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
-				// }});
-				ta.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
-				mySuperPanel.setOpaque(false);
-				return ta;
-			}
-
 			RootPaneContainer or = ((SwingTipiContext) getContext())
 					.getOtherRoot();
 			myToplevel = or;
@@ -119,10 +102,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 						((JFrame) myToplevel).repaint();
 						((JMenuBar) c).revalidate();
 					}
-					if (myToplevel instanceof JApplet) {
-						((JApplet) myToplevel).getRootPane().setJMenuBar(
-								(JMenuBar) c);
-					}
+
 					if (myToplevel instanceof JInternalFrame) {
 						((JInternalFrame) myToplevel).getRootPane()
 								.setJMenuBar((JMenuBar) c);
@@ -318,12 +298,6 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 			((JFrame) myToplevel).setBackground(object);
 			return;
 		}
-		if (myToplevel instanceof JApplet) {
-			((JApplet) myToplevel).setBackground(object);
-			// not pretty. eat me.
-			((JApplet) myToplevel).getContentPane().setBackground(object);
-			return;
-		}
 		if (myToplevel instanceof Container) {
 			((Container) myToplevel).setBackground(object);
 		}
@@ -333,30 +307,27 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 	public Object getComponentValue(String name) {
 		if ("visible".equals(name)) {
 			if (myToplevel instanceof JFrame) {
-				return new Boolean(((JFrame) myToplevel).isVisible());
-			}
-			if (myToplevel instanceof JApplet) {
-				return new Boolean(((JFrame) myToplevel).isVisible());
+				return Boolean.valueOf(((JFrame) myToplevel).isVisible());
 			}
 		}
 
 		if (name.equals("resizable")) {
 			if (myToplevel instanceof JFrame) {
-				return new Boolean(((JFrame) myToplevel).isResizable());
+				return Boolean.valueOf(((JFrame) myToplevel).isResizable());
 			}
 		}
 
 		if (name.equals("fullscreen")) {
-			return new Boolean(
+			return Boolean.valueOf(
 					Frame.MAXIMIZED_BOTH == ((JFrame) myToplevel)
 							.getExtendedState());
 
-			// new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
+			// Boolean.valueOf(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
 		}
 
 		if (name.equals("title")) {
 			if (myToplevel instanceof JFrame) {
-				return new Boolean(((JFrame) myToplevel).getTitle());
+				return Boolean.valueOf(((JFrame) myToplevel).getTitle());
 			}
 			// return myFrame.getTitle();
 		}
@@ -365,16 +336,16 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 			return super.getComponentValue(name);
 		}
 		if (name.equals("x")) {
-			return new Integer(r.x);
+			return Integer.valueOf(r.x);
 		}
 		if (name.equals("y")) {
-			return new Integer(r.y);
+			return Integer.valueOf(r.y);
 		}
 		if (name.equals("w")) {
-			return new Integer(r.width);
+			return Integer.valueOf(r.width);
 		}
 		if (name.equals("h")) {
-			return new Integer(r.height);
+			return Integer.valueOf(r.height);
 		}
 
 		// Watch out: Jump exit at getBounds

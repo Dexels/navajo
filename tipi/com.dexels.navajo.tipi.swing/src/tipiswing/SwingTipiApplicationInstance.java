@@ -28,7 +28,6 @@ import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
-import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
@@ -49,7 +48,6 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	private String definitionPath;
 	private List<String> args;
-	private TipiApplet appletRoot;
 	private RootPaneContainer otherRoot;
 	private BundleContext bundleContext;
 
@@ -60,12 +58,11 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 	private final static Logger logger = LoggerFactory.getLogger(SwingTipiApplicationInstance.class);
 	
 	public SwingTipiApplicationInstance(String definition,
-			String definitionPath, List<String> args, TipiApplet appletRoot,
+			String definitionPath, List<String> args,
 			RootPaneContainer otherRoot) {
 		this.definition = definition;
 		this.definitionPath = definitionPath;
 		this.args = args;
-		this.appletRoot = appletRoot;
 		this.otherRoot = otherRoot;
 	}
 
@@ -110,7 +107,6 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 			context.setActionManager(new OSGiActionManager(this.bundleContext));
 		}
 
-		context.setAppletRoot(appletRoot);
 		context.setOtherRoot(otherRoot);
 
 		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);

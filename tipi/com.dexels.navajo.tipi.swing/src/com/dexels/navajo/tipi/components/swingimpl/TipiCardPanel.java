@@ -100,7 +100,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 			return selectedComponent;
 		}
 		if (name.equals("selectedindex")) {
-			return new Integer(myComponentList.indexOf(selectedComponent));
+			return Integer.valueOf(myComponentList.indexOf(selectedComponent));
 		}
 		return super.getComponentValue(name);
 	}

@@ -132,6 +132,7 @@ public class DialogFooter extends JPanel {
 	}
 	
 	private static KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+	@SuppressWarnings("deprecation")
 	private static KeyStroke commandPeriodKey = KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
 
 	/** The localized strings used in dialogs. */
@@ -278,7 +279,7 @@ public class DialogFooter extends JPanel {
     public static JButton createCancelButton(boolean escapeKeyIsTrigger) {
     	JButton button = new JButton(strings.getString("dialogCancelButton"));
     	button.setMnemonic( strings.getString("dialogCancelMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(CANCEL_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(CANCEL_OPTION));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -312,7 +313,7 @@ public class DialogFooter extends JPanel {
     public static JButton createOKButton(boolean escapeKeyIsTrigger) {
     	JButton button = new JButton(strings.getString("dialogOKButton"));
     	button.setMnemonic( strings.getString("dialogOKMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(OK_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(OK_OPTION));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -334,7 +335,7 @@ public class DialogFooter extends JPanel {
     public static JButton createYesButton(boolean escapeKeyIsTrigger) {
     	JButton button = new JButton(strings.getString("dialogYesButton"));
     	button.setMnemonic( strings.getString("dialogYesMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(YES_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(YES_OPTION));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -357,7 +358,7 @@ public class DialogFooter extends JPanel {
     public static JButton createNoButton(boolean escapeKeyIsTrigger) {
     	JButton button = new JButton(strings.getString("dialogNoButton"));
     	button.setMnemonic( strings.getString("dialogNoMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(NO_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(NO_OPTION));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -379,7 +380,7 @@ public class DialogFooter extends JPanel {
     public static JButton createSaveButton(boolean escapeKeyIsTrigger) {
     	JButton button = new JButton(strings.getString("dialogSaveButton"));
     	button.setMnemonic( strings.getString("dialogSaveMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(SAVE_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(SAVE_OPTION));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -402,9 +403,9 @@ public class DialogFooter extends JPanel {
     	String text = strings.getString("dialogDontSaveButton");
     	JButton button = new JButton(text);
     	button.setMnemonic( strings.getString("dialogDontSaveMnemonic").charAt(0) );
-    	button.putClientProperty(PROPERTY_OPTION, new Integer(DONT_SAVE_OPTION));
+    	button.putClientProperty(PROPERTY_OPTION, Integer.valueOf(DONT_SAVE_OPTION));
     	//Don't know if this documented by Apple, but command-D usually triggers "Don't Save" buttons:
-    	button.putClientProperty(DialogFooter.PROPERTY_META_SHORTCUT,new Character(text.charAt(0)));
+    	button.putClientProperty(DialogFooter.PROPERTY_META_SHORTCUT,Character.valueOf(text.charAt(0)));
     	if(escapeKeyIsTrigger)
     		makeEscapeKeyActivate(button);
     	return button;
@@ -644,6 +645,7 @@ public class DialogFooter extends JPanel {
 			processRootPane();
 			processWindow();
 		}
+		@SuppressWarnings("deprecation")
 		private void processRootPane() {
 			JRootPane root = SwingUtilities.getRootPane(DialogFooter.this);
 			if(root==null) return;
@@ -712,7 +714,7 @@ public class DialogFooter extends JPanel {
 		this.defaultButton = defaultButton;
 		
 		for(int a = 0; a<dismissControls.length; a++) {
-			dismissControls[a].putClientProperty("dialog.footer.index", new Integer(a));
+			dismissControls[a].putClientProperty("dialog.footer.index", Integer.valueOf(a));
 			if(dismissControls[a] instanceof JButton) {
 				((JButton)dismissControls[a]).addActionListener(innerActionListener);
 			} else {
@@ -919,7 +921,7 @@ public class DialogFooter extends JPanel {
 	/** This sets the unsafe flag for buttons.
 	 */
 	public static void setUnsafe(JComponent c,boolean b) {
-		c.putClientProperty(PROPERTY_UNSAFE, new Boolean(b));
+		c.putClientProperty(PROPERTY_UNSAFE, Boolean.valueOf(b));
 	}
 	
 	private Vector<ActionListener> listeners;

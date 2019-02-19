@@ -133,7 +133,8 @@ public class LockableDemo extends JFrame {
         });
     }
 
-    private JMenuBar createMenuBar() {
+    @SuppressWarnings("deprecation")
+	private JMenuBar createMenuBar() {
         JMenu menu = new JMenu("Menu");
 
         disablingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_MASK));

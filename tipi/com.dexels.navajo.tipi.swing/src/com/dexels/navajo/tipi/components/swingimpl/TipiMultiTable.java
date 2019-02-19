@@ -71,7 +71,7 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 				String name = (String) child.getAttribute("name");
 				columns.add(name);
 				int size = child.getIntAttribute("size", -1);
-				columnSize.add(new Integer(size));
+				columnSize.add(Integer.valueOf(size));
 			}
 		}
 	}
@@ -101,19 +101,19 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 	public Object getComponentValue(String name) {
 		logger.debug("In getter of multitable: name: " + name);
 		if (name.equals("columnsButtonVisible")) {
-			return new Boolean(columnsButtonVisible);
+			return Boolean.valueOf(columnsButtonVisible);
 		}
 		if (name.equals("filtersVisible")) {
-			return new Boolean(filtersVisible);
+			return Boolean.valueOf(filtersVisible);
 		}
 		if (name.equals("useScrollBars")) {
-			return new Boolean(useScrollBars);
+			return Boolean.valueOf(useScrollBars);
 		}
 		if (name.equals("headerVisible")) {
-			return new Boolean(headerVisible);
+			return Boolean.valueOf(headerVisible);
 		}
 		if (name.equals("useTabs")) {
-			return new Boolean(useTabs);
+			return Boolean.valueOf(useTabs);
 		}
 		if (name.equals("outerMessageName")) {
 			return outerMessageName;

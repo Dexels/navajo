@@ -110,7 +110,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 			if (child.getName().equals("columndivider")) {
 				double width = child.getDoubleAttribute("width");
 				int index = child.getIntAttribute("index");
-				columnDividers.put(new Integer(index), new Double(width));
+				columnDividers.put(Integer.valueOf(index), Double.valueOf(width));
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		int size = child.getIntAttribute("size", -1);
 		String aggr = child.getStringAttribute("aggregate");
 		if (aggr != null) {
-			aggregateMap.put(new Integer(index), aggr);
+			aggregateMap.put(Integer.valueOf(index), aggr);
 		}
 		String label = child.getStringAttribute("label");
 		String typeHint = child.getStringAttribute("typeHint");
@@ -162,7 +162,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 
 		columnTypes.add(typeHint);
 		columnName.add(label);
-		columnSize.add(new Integer(size));
+		columnSize.add(Integer.valueOf(size));
 	}
 
 	private final void updateTableColumns(final MessageTablePanel mtp) {
@@ -340,7 +340,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 			if (label != null) {
 				xxx.setAttribute("label", label);
 			}
-			String aggr = aggregateMap.get(new Integer(i));
+			String aggr = aggregateMap.get(Integer.valueOf(i));
 			if (aggr != null) {
 				xxx.setAttribute("aggregate", aggr);
 			}

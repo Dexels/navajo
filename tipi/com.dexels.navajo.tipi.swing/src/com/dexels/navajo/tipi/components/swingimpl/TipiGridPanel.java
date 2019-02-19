@@ -324,7 +324,7 @@ public class TipiGridPanel extends TipiPanel {
 	private void addHeightStrut(int y, int height, JComponent current) {
 		int actualHeight = height;
 		Component existingComponent = heightStrutComponentMap
-				.get(new Integer(y));
+				.get(Integer.valueOf(y));
 
 		if (existingComponent != null) {
 			if (existingComponent.getHeight() > height) {
@@ -333,7 +333,7 @@ public class TipiGridPanel extends TipiPanel {
 			gridComponent.remove(existingComponent);
 		}
 		Component c = Box.createVerticalStrut(actualHeight);
-		heightStrutComponentMap.put(new Integer(y), c);
+		heightStrutComponentMap.put(Integer.valueOf(y), c);
 		gridComponent.add(c, new GridBagConstraints(0, y, 1, 1, 0, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
 						0, 0, 0, 0), 0, 0));
@@ -353,7 +353,7 @@ public class TipiGridPanel extends TipiPanel {
 				// logger.debug("Starr. reuslt: "+element);
 			}
 			int val = Integer.parseInt(element);
-			myWidths.add(new Integer(val));
+			myWidths.add(Integer.valueOf(val));
 			addColumnStrut(count, val);
 			count++;
 		}
@@ -361,11 +361,11 @@ public class TipiGridPanel extends TipiPanel {
 	}
 
 	private void setFixed(int count) {
-		fixedSet.add(new Integer(count));
+		fixedSet.add(Integer.valueOf(count));
 	}
 
 	private boolean isFixed(int count) {
-		return fixedSet.contains(new Integer(count));
+		return fixedSet.contains(Integer.valueOf(count));
 	}
 
 	private void addColumnStrut(int x, int val) {

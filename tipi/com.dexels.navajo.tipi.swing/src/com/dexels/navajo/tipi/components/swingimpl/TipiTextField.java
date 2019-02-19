@@ -85,7 +85,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 
 			public Map<String, Object> getEventMap(KeyEvent e) {
 				Map<String, Object> hm = new HashMap<String, Object>();
-				hm.put("code", new Integer(e.getKeyCode()));
+				hm.put("code", Integer.valueOf(e.getKeyCode()));
 				hm.put("modifiers",
 						KeyEvent.getKeyModifiersText(e.getModifiers()));
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));

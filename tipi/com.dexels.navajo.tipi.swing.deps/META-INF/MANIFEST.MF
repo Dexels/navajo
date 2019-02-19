@@ -11,7 +11,7 @@ Export-Package: javax.jnlp;version="2.0.0",
  org.jdesktop.animation.timing.triggers;version="1.1.0",
  org.jdesktop.animation.transitions;version="1.1.0",
  org.jdesktop.animation.transitions.effects;version="1.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.swing,
  javax.swing.border,
  javax.swing.colorchooser,
@@ -24,3 +24,4 @@ Import-Package: javax.swing,
  javax.swing.text.rtf,
  javax.swing.tree,
  javax.swing.undo
+Automatic-Module-Name: com.dexels.navajo.tipi.swing.deps

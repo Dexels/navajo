@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -130,9 +131,9 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 			public Map<String, Object> getEventMap(KeyEvent e) {
 				Map<String, Object> hm = new HashMap<String, Object>();
-				hm.put("code", new Integer(e.getKeyCode()));
+				hm.put("code", Integer.valueOf(e.getKeyCode()));
 				hm.put("modifiers",
-						KeyEvent.getKeyModifiersText(e.getModifiers()));
+						InputEvent.getModifiersExText(e.getModifiersEx()));
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
 				return hm;
 			}
@@ -309,7 +310,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				m.put("propertyType", p.getType());
 				m.put("internalChange", internal);
 				m.put("old", oldValue);
-				m.put("propertyLength", new Integer(p.getLength()));
+				m.put("propertyLength", Integer.valueOf(p.getLength()));
 				if (!internal){
 					for (int i = 0; i < myListeners.size(); i++) {
 						TipiEventListener current = myListeners.get(i);
@@ -325,7 +326,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				m.put("propertyName", p.getFullPropertyName());
 				m.put("propertyValue", p.getTypedValue());
 				m.put("propertyType", p.getType());
-				m.put("propertyLength", new Integer(p.getLength()));
+				m.put("propertyLength", Integer.valueOf(p.getLength()));
 				performTipiEvent(eventType, m, false);
 			} catch (Exception ex) {
 				logger.error("Error detected",ex);

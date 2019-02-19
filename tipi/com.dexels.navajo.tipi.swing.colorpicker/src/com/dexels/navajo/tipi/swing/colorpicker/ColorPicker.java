@@ -694,9 +694,9 @@ public class ColorPicker extends JPanel {
         adjustingOpacity++;
         try {
             opacitySlider.setValue(v);
-            alpha.spinner.setValue(new Integer(v));
+            alpha.spinner.setValue(Integer.valueOf(v));
             if (lastOpacity != v) {
-                firePropertyChange(OPACITY_PROPERTY, new Integer(lastOpacity), new Integer(v));
+                firePropertyChange(OPACITY_PROPERTY, Integer.valueOf(lastOpacity), Integer.valueOf(v));
                 Color c = preview.getForeground();
                 preview.setForeground(new Color(c.getRed(), c.getGreen(), c.getBlue(), v));
             }
@@ -715,7 +715,7 @@ public class ColorPicker extends JPanel {
     public void setMode(int mode) {
         if (!(mode == HUE || mode == SAT || mode == BRI || mode == RED || mode == GREEN || mode == BLUE))
             throw new IllegalArgumentException("mode must be HUE, SAT, BRI, REd, GREEN, or BLUE");
-        putClientProperty(MODE_PROPERTY, new Integer(mode));
+        putClientProperty(MODE_PROPERTY, Integer.valueOf(mode));
         hue.radioButton.setSelected(mode == HUE);
         sat.radioButton.setSelected(mode == SAT);
         bri.radioButton.setSelected(mode == BRI);
@@ -761,7 +761,7 @@ public class ColorPicker extends JPanel {
         red.radioButton.setVisible(b && red.isVisible());
         green.radioButton.setVisible(b && green.isVisible());
         blue.radioButton.setVisible(b && blue.isVisible());
-        putClientProperty(MODE_CONTROLS_VISIBLE_PROPERTY, new Boolean(b));
+        putClientProperty(MODE_CONTROLS_VISIBLE_PROPERTY, Boolean.valueOf(b));
     }
 
     /**
@@ -1036,7 +1036,7 @@ public class ColorPicker extends JPanel {
                 slider.setValue(i);
             }
             if (spinner != null) {
-                spinner.setValue(new Integer(i));
+                spinner.setValue(Integer.valueOf(i));
             }
         }
 
