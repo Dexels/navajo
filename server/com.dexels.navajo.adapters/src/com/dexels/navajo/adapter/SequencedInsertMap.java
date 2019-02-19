@@ -86,7 +86,7 @@ public class SequencedInsertMap extends SQLMap {
         final PreparedStatement prepared = this.getConnection().prepareStatement(qStr);
         final ResultSet rs = prepared.executeQuery();
         if (rs.next()) {
-          this.identity = new Integer(rs.getInt(1));
+          this.identity = Integer.valueOf(rs.getInt(1));
         }
         rs.close();
         prepared.close();
@@ -127,7 +127,7 @@ public class SequencedInsertMap extends SQLMap {
         	this.getConnection().prepareStatement(SequencedInsertMap.SELIDENTITYSQL);
         final ResultSet rs = prepared.executeQuery();
         if (rs.next()) {
-          this.identity = new Integer(rs.getInt(1));
+          this.identity = Integer.valueOf(rs.getInt(1));
         }
         rs.close();
         prepared.close();

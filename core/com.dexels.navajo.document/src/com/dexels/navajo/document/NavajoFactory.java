@@ -143,7 +143,7 @@ public abstract class NavajoFactory {
 				} else {
 					try {
 						impl = (NavajoFactory) Class.forName(name)
-								.newInstance();
+								.getDeclaredConstructor().newInstance();
 						impl.sandboxMode = sbmode;
 					} catch (Exception e) {
 						logger.error("Error: ", e);
@@ -188,7 +188,7 @@ public abstract class NavajoFactory {
 
 			}
 			try {
-				NavajoFactory alt = (NavajoFactory) Class.forName(className)
+				NavajoFactory alt = (NavajoFactory) Class.forName(className).getDeclaredConstructor()
 						.newInstance();
 				alternativeFactories.put(className, alt);
 				return alt;

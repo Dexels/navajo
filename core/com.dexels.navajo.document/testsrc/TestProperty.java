@@ -90,22 +90,22 @@ public class TestProperty {
 		assertTrue(p1.getTypedValue().equals("Apenoot"));
 
 		// Integer
-		p1.setAnyValue(new Integer(50));
+		p1.setAnyValue(Integer.valueOf(50));
 		assertEquals("integer", p1.getType());
 		assertEquals("50", p1.getValue());
-		assertTrue(p1.getTypedValue().equals(new Integer(50)));
+		assertTrue(p1.getTypedValue().equals(Integer.valueOf(50)));
 
 		// Double
-		p1.setAnyValue(new Double(50));
+		p1.setAnyValue(Double.valueOf(50));
 		assertEquals("float", p1.getType());
 		assertEquals("50.0", p1.getValue());
-		assertTrue(p1.getTypedValue().equals(new Double(50)));
+		assertTrue(p1.getTypedValue().equals(Double.valueOf(50)));
 
 		// Float
-		p1.setAnyValue(new Float(50));
+		p1.setAnyValue(Float.valueOf(50));
 		assertEquals("float", p1.getType());
 		assertEquals("50.0", p1.getValue());
-		assertTrue(p1.getTypedValue().equals(new Double(50)));
+		assertTrue(p1.getTypedValue().equals(Double.valueOf(50)));
 
 		// Date
 		Date d = new java.util.Date();
@@ -117,10 +117,10 @@ public class TestProperty {
 		assertTrue(p1.getTypedValue().equals(d));
 
 		// Long
-		p1.setAnyValue(new Long(10));
+		p1.setAnyValue(Long.valueOf(10));
 		assertEquals("long", p1.getType());
 		assertEquals("10", p1.getValue());
-		assertTrue(p1.getTypedValue().equals(new Long(10)));
+		assertTrue(p1.getTypedValue().equals(Long.valueOf(10)));
 
 		// Boolean
 		p1.setAnyValue(Boolean.TRUE);

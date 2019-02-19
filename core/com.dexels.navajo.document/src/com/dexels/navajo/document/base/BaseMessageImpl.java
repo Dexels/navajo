@@ -44,7 +44,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.comparatormanager.ComparatorManager;
 import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
-import com.dexels.navajo.document.types.Binary;
 
 public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message> {
 
@@ -907,13 +906,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return cp;
     }
 
-    private Map<String,String> getSubTypesMap() {
-		return this.subtypeMap;
-	}
-
-	private void setSubTypesMap(Map<String, String> subTypes) {
-		this.subtypeMap = subTypes;
-	}
+//    private Map<String,String> getSubTypesMap() {
+//		return this.subtypeMap;
+//	}
 
 	public final void prune() {
 

@@ -19,3 +19,4 @@ Navajo-Name: EventEmitter
 Navajo-Extension: com/dexels/navajo/adapter/eventemitter/adapters.xml
 Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajoadaptersevent.Version
+Automatic-Module-Name: com.dexels.navajo.adapters.eventemitter

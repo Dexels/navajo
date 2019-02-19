@@ -41,3 +41,4 @@ Export-Package: com.dexels.navajo.adapter.resource,
  com.dexels.navajo.adapter.resource.jdbcbroker
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.adapters.resource

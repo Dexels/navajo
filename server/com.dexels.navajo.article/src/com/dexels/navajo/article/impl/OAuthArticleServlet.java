@@ -23,6 +23,7 @@ import com.dexels.oauth.api.OAuthToken;
 import com.dexels.oauth.api.TokenStore;
 import com.dexels.oauth.api.exception.TokenStoreException;
 
+@Deprecated
 public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
     private static final String ACCESS_PREFIX = "article/";
 

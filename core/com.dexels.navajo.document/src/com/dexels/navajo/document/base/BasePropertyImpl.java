@@ -770,7 +770,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			try {
 				// Added a trim. Frank.
-				return new Integer(Integer.parseInt(getValue().trim()));
+				return Integer.valueOf(Integer.parseInt(getValue().trim()));
 			} catch (NumberFormatException ex3) {
 				logger.info("Numberformat exception...:"+getValue().trim());
 				return null;
@@ -781,7 +781,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			try {
 				// Added a trim. Frank.
-				return new Long(Long.parseLong(getValue().trim()));
+				return Long.valueOf(Long.parseLong(getValue().trim()));
 			} catch (NumberFormatException ex3) {
 				logger.info("Numberformat exception...");
 				return null;
@@ -798,7 +798,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			Double d;
 			try {
-				d = new Double(Double.parseDouble(w));
+				d = Double.valueOf(Double.parseDouble(w));
 			} catch (NumberFormatException ex) {
 				logger.info("Can not format double with: " + w);
 				return null;
@@ -1798,7 +1798,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			// Get first argument.
 			if (getType().equals(Property.SELECTION_PROPERTY)) {
 				if (getSubType("name") != null && getSubType("name").equals("integer")) {
-					ob1 = new Integer(getSelected().getName());
+					ob1 = Integer.valueOf(getSelected().getName());
 				} else {
 					ob1 = getSelected().getName();
 				}
@@ -1810,7 +1810,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			if (((BasePropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
 				BasePropertyImpl cp = (BasePropertyImpl) p;
 				if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
-					ob2 = new Integer(cp.getSelected().getName());
+					ob2 = Integer.valueOf(cp.getSelected().getName());
 				} else {
 					ob2 = ((BasePropertyImpl) p).getSelected().getName();
 				}

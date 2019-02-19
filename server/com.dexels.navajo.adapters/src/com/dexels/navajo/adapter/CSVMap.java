@@ -242,7 +242,7 @@ public class CSVMap implements Mappable {
                     for (int i = 0; i < entries.length; i++) {
                         CSVEntryMap e = entries[i];
                         for (int j = 0; j < e.entries.length; j++) {
-                            writer.write(e.getEntry(new Integer(j)));
+                            writer.write(e.getEntry(Integer.valueOf(j)));
                             if (j < (e.entries.length - 1))
                                 writer.write(separator);
                         }
@@ -274,12 +274,12 @@ public class CSVMap implements Mappable {
         for (int i = 0; i < all.length; i++) {
             CSVEntryMap entryMap = ((CSVEntryMap) all[i]);
             logger.info(
-                    "a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + entryMap.getEntry(new Integer(1)) + "< - >"
-                            + entryMap.getEntry(new Integer(2)) + "< - >" + entryMap.getEntry(new Integer(3)) + "< - >"
-                            + entryMap.getEntry(new Integer(4)) + "< - >" + entryMap.getEntry(new Integer(5)) + "< - >"
-                            + entryMap.getEntry(new Integer(6)) + "< - >" + entryMap.getEntry(new Integer(7)) + "< - >"
-                            + entryMap.getEntry(new Integer(8)) + "< - >" + entryMap.getEntry(new Integer(9)) + "< - >"
-                            + entryMap.getEntry(new Integer(10)) + "< - >" + entryMap.getEntry(new Integer(11)) + "<");
+                    "a = >" + entryMap.getEntry(Integer.valueOf(0)) + "< - >" + entryMap.getEntry(Integer.valueOf(1)) + "< - >"
+                            + entryMap.getEntry(Integer.valueOf(2)) + "< - >" + entryMap.getEntry(Integer.valueOf(3)) + "< - >"
+                            + entryMap.getEntry(Integer.valueOf(4)) + "< - >" + entryMap.getEntry(Integer.valueOf(5)) + "< - >"
+                            + entryMap.getEntry(Integer.valueOf(6)) + "< - >" + entryMap.getEntry(Integer.valueOf(7)) + "< - >"
+                            + entryMap.getEntry(Integer.valueOf(8)) + "< - >" + entryMap.getEntry(Integer.valueOf(9)) + "< - >"
+                            + entryMap.getEntry(Integer.valueOf(10)) + "< - >" + entryMap.getEntry(Integer.valueOf(11)) + "<");
         }
     }
 

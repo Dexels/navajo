@@ -67,7 +67,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private String errorText = null;
 
   // indent while transforming?
-  private Integer indent = new Integer( 0 );
+  private Integer indent = Integer.valueOf( 0 );
 
   public NavaDocTransformer( File styPath, File svcPath )
     throws TransformerConfigurationException,
@@ -170,7 +170,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    */
 
   public void setIndent( String i ) {
-    this.indent = new Integer(Integer.parseInt(i));
+    this.indent = Integer.valueOf(Integer.parseInt(i));
   }
 
   /**

@@ -20,7 +20,7 @@ public final class MultipleValueQuery extends SingleValueQuery {
 			ResultSetMap [] resultSet = sql.getResultSet();
 			if (resultSet.length > 0) {
 				for (int i = 0; i < resultSet.length; i++ ) {
-					result.add(resultSet[i].getColumnValue(new Integer(0)));
+					result.add(resultSet[i].getColumnValue(Integer.valueOf(0)));
 				}
 			} else {
 			}

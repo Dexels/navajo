@@ -19,7 +19,7 @@ public class AsyncClientFactory {
         synchronized (AsyncClientFactory.class) {
             try {
             	logger.info("Instantiation manual client instance to class: "+asyncClientClass);
-                ManualAsyncClient newInstance = asyncClientClass.newInstance();
+                ManualAsyncClient newInstance = asyncClientClass.getDeclaredConstructor().newInstance();
                 newInstance.setCloseAfterUse(true);
                 logger.info("Instance complete: "+newInstance);
 				return newInstance;

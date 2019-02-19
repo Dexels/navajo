@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -100,7 +101,7 @@ private void setValue(Double d) {
       setValue((Double) o);
     }
     else if (o instanceof Integer) {
-      setValue(new Double( ( (Integer) o).intValue()));
+      setValue(Double.valueOf( ( (Integer) o).intValue()));
     }
     else if (o instanceof String && ! ( (String) o).trim().equals("")) {
       Pattern p = Pattern.compile("-?[0-9]+[.,]?[0-9]{0,2}");
@@ -108,9 +109,9 @@ private void setValue(Double d) {
       boolean isMoneyFormat = m.find();
 
       if (isMoneyFormat) {
-        setValue(new Double(((String) o).substring(m.start(), m.end()) + ""));
+        setValue(Double.valueOf(((String) o).substring(m.start(), m.end()) + ""));
       } else {
-        setValue(new Double(o + ""));
+        setValue(Double.valueOf(o + ""));
       }
     }
     else {
@@ -126,7 +127,7 @@ private void setValue(Double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     if (d != null) {
-    	setValue( new Double(d.intValue()));
+    	setValue( Double.valueOf(d.intValue()));
     }
   
   }
@@ -138,7 +139,7 @@ private void setValue(Double d) {
   public Money(int d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    setValue(new Double(d));
+    setValue(Double.valueOf(d));
  }
 
   /**
@@ -176,7 +177,7 @@ private void setValue(Double d) {
     }
     try {
       if (d != null && !d.trim().equals("")) {
-        setValue(new Double(d));
+        setValue(Double.valueOf(d));
       }
     }
     catch (Throwable t) {
@@ -195,7 +196,7 @@ private void setValue(Double d) {
 	    // see the Javadoc about why we use a String in the constructor
 	    // http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html#BigDecimal(double)
 	    BigDecimal bd = new BigDecimal(Double.toString(d));
-	    bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
+	    bd = bd.setScale(decimalPlace,RoundingMode.HALF_UP);
 	    return bd.doubleValue();
 	  }
   

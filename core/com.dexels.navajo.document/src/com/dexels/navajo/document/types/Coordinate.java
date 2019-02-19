@@ -4,16 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Coordinate extends NavajoType implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 3899354902954075174L;
-    private final static Logger logger = LoggerFactory.getLogger(Coordinate.class);
     public final static String VERSION = "$Id$";
 
     private Double latitude = null;
@@ -69,9 +65,9 @@ public class Coordinate extends NavajoType implements Serializable {
         } else if (latitude instanceof Double) {
             this.latitude = (Double) latitude;
         } else if (latitude instanceof Integer) {
-            this.latitude = new Double(((Integer) latitude).intValue() + "");
+            this.latitude = Double.valueOf(((Integer) latitude).intValue() + "");
         } else {
-            this.latitude = new Double(latitude + "");
+            this.latitude = Double.valueOf(latitude + "");
         }
         verifyCoordinates();
 
@@ -83,9 +79,9 @@ public class Coordinate extends NavajoType implements Serializable {
         } else if (longitude instanceof Double) {
             this.longitude = (Double) longitude;
         } else if (longitude instanceof Integer) {
-            this.longitude = new Double(((Integer) longitude).intValue() + "");
+            this.longitude = Double.valueOf(((Integer) longitude).intValue() + "");
         } else {
-            this.longitude = new Double(longitude + "");
+            this.longitude = Double.valueOf(longitude + "");
         }
         verifyCoordinates();
     }

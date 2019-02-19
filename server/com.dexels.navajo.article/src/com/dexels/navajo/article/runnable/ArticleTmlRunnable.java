@@ -4,9 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +37,7 @@ import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.oauth.api.Client;
 
+@Deprecated
 public class ArticleTmlRunnable implements TmlRunnable{
     private final static Logger logger = LoggerFactory.getLogger(ArticleTmlRunnable.class);
 

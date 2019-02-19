@@ -181,7 +181,7 @@ public class SQLMapHelper {
 					params[0] = InputStream.class;
 					String className = classHoldingBinaryStreamList.getName();
 					Class cls = Class.forName(className);
-					Object obj = cls.newInstance();
+					Object obj = cls.getDeclaredConstructor().newInstance();
 					Method method = cls.getDeclaredMethod("addToBinaryStreamList", params);
 					method.invoke(obj, is);
 				} catch (ClassNotFoundException e) {
@@ -242,7 +242,7 @@ public class SQLMapHelper {
 		    int tmpValue = rs.getInt(columnIndex);
 		    if (rs.wasNull()) {
 		    } else {
-		        value = new Integer(tmpValue);
+		        value = Integer.valueOf(tmpValue);
 		    }
 			break;
 
@@ -263,12 +263,12 @@ public class SQLMapHelper {
 			if (scale <= 0) {
 	            int tmpValueNumeric = rs.getInt(columnIndex);
 	            if (!rs.wasNull()) {
-	                value = new Integer(tmpValueNumeric);
+	                value = Integer.valueOf(tmpValueNumeric);
 	            }
 			} else {
 	            double tmpValueDouble = rs.getDouble(columnIndex);
 	            if (!rs.wasNull()) {
-	                value = new Double(tmpValueDouble);
+	                value = Double.valueOf(tmpValueDouble);
 	            }
 			}
 			break;
@@ -278,7 +278,7 @@ public class SQLMapHelper {
 		case Types.DOUBLE:
             double tmpValueDouble = rs.getDouble(columnIndex);
             if (!rs.wasNull()) {
-                value = new Double(tmpValueDouble);
+                value = Double.valueOf(tmpValueDouble);
             }
 			break;
 
@@ -335,7 +335,7 @@ public class SQLMapHelper {
 		case Types.BIT:
             boolean tmpValueBoolean = rs.getBoolean(columnIndex);
             if (!rs.wasNull()) {
-                value = new Boolean(tmpValueBoolean);
+                value = Boolean.valueOf(tmpValueBoolean);
             }
 			break;
 

@@ -486,6 +486,7 @@ public abstract class FunctionInterface {
 		insertOperand(Operand.ofClockTime(clockTime));
 	}
 
+	@Deprecated
 	public void insertMessageOperand(Message message) {
 		insertOperand(Operand.ofMessage(message));
 	}

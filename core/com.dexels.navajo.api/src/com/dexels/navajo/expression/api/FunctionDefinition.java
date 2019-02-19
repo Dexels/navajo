@@ -2,6 +2,7 @@ package com.dexels.navajo.expression.api;
 
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,18 +91,25 @@ public final class FunctionDefinition implements Serializable {
 				logger.debug("No function class found for function with name: "+getDescription());
 				return null;
 			}
-			FunctionInterface osgiResolution = fc.newInstance();
+			FunctionInterface osgiResolution = fc.getDeclaredConstructor().newInstance();
 			if (!osgiResolution.isInitialized()) {
 				osgiResolution.setTypes(getInputParams(), getResultParam());
 			}
 			return osgiResolution;
 		} catch (InstantiationException e) {
 			logger.debug("OSGi failed (InstantiationException). Going old skool",e);
-			return null;
 		} catch (IllegalAccessException e) {
 			logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
-			return null;
+		} catch (IllegalArgumentException e) {
+			logger.warn("Function instantiation issue.",e);
+		} catch (InvocationTargetException e) {
+			logger.warn("Function instantiation issue.",e);
+		} catch (NoSuchMethodException e) {
+			logger.warn("Function instantiation issue.",e);
+		} catch (SecurityException e) {
+			logger.warn("Function instantiation issue.",e);
 		}
+		return null;
 
 	}
 }

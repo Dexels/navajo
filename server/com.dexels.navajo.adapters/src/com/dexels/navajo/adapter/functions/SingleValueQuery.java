@@ -44,11 +44,11 @@ public class SingleValueQuery extends FunctionInterface {
 	  int transactionContext = -1;
 
 	  // String read query.
-	  Object o1 = getOperand(0);
+	  Object o1 = operand(0).value;
 	  query = "";
 	  if (o1 instanceof Integer) {  // TransactionContext set.
 		  transactionContext = ((Integer) o1).intValue();
-		  Object o2 = getOperand(1);
+		  Object o2 = operand(1).value;
 		  if (!(o2 instanceof String))
 			  throw new TMLExpressionException(this, "Invalid argument: " + o2);
 		  query = (String) o2;
@@ -100,7 +100,7 @@ public class SingleValueQuery extends FunctionInterface {
 		  sql.setQuery(query);
 		  int offset = (transactionContext == -1) ? 1 : 2;
 		  for (int i = 0; i < parameterCount; i++) {
-			  Object o = getOperand(i+offset);
+			  Object o = operand(i+offset).value;
 			  sql.setParameter(o);
 		  }
 	  } catch (Exception e) {
@@ -119,7 +119,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 	  try {
 		  
 		  if (sql.getRowCount() > 0) {
-			  result = sql.getColumnValue(new Integer(0));
+			  result = sql.getColumnValue(Integer.valueOf(0));
 		  } else {
 		  }
 	  } catch (Exception e) {

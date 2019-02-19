@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -52,7 +53,7 @@ public class JsonTmlConverterImpl implements JsonTmlConverter {
 				
 		for (String columnName : message.columnNames()) {
 			String type = message.columnType(columnName);
-			Object value = message.columnValue(columnName);
+			Object value = message.value(columnName).orElse(null);
 			Property colProp = NavajoFactory.getInstance().createProperty(rootNavajo, columnName, 
 					type, null, 0, "", Property.DIR_OUT);
 			switch (type) {

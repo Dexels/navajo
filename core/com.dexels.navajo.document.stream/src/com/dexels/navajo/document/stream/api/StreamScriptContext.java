@@ -37,7 +37,6 @@ public class StreamScriptContext {
     private final String service;
     private final long started;
 	private Optional<String> username;
-	private Optional<String> password;
 	
 	
 	private final static Logger logger = LoggerFactory.getLogger(StreamScriptContext.class);
@@ -59,21 +58,21 @@ public class StreamScriptContext {
 	
 	// mostly for testing
 	public StreamScriptContext(String tenant, String service, String deployment) {
-		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),Optional.empty(),NavajoFactory.getInstance().createNavajo(),Collections.emptyMap(),Optional.empty(),Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty(),Optional.empty());
+		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),NavajoFactory.getInstance().createNavajo(),Collections.emptyMap(),Optional.empty(),Optional.empty(),Collections.emptyList(),Optional.empty(),Optional.empty(),Optional.empty());
 		this.deployment = Optional.ofNullable(deployment);
 	}
 
 	public StreamScriptContext(String tenant, String service, Optional<String> username, Optional<String> password,Navajo inputNavajo, Map<String,Object> attributes,Optional<Flowable<DataItem>> input, Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose, Optional<RunningReactiveScripts> running) {
-       this(UUID.randomUUID().toString(),System.currentTimeMillis(), tenant,service,username,password,inputNavajo,attributes,input, runner,addedMethods,onDispose,running, Optional.empty());	
+       this(UUID.randomUUID().toString(),System.currentTimeMillis(), tenant,service,username,inputNavajo,attributes,input, runner,addedMethods,onDispose,running, Optional.empty());	
 	}
 
 	public StreamScriptContext(String tenant, String service, Navajo inputNavajo, Map<String, Object> attributes, Optional<Flowable<DataItem>> input,
             Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose,
             Optional<RunningReactiveScripts> running, Optional<Navajo> authNavajo) {
-		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),Optional.empty(),inputNavajo,attributes,input,runner,addedMethods,onDispose,running,authNavajo);
+		this(UUID.randomUUID().toString(),System.currentTimeMillis(),tenant,service,Optional.empty(),inputNavajo,attributes,input,runner,addedMethods,onDispose,running,authNavajo);
 	}
 	private StreamScriptContext(String uuid, long started, String tenant, String service, Optional<String> username,
-            Optional<String> password, Navajo inputNavajo, Map<String, Object> attributes, Optional<Flowable<DataItem>> input,
+            Navajo inputNavajo, Map<String, Object> attributes, Optional<Flowable<DataItem>> input,
             Optional<ReactiveScriptRunner> runner, List<String> addedMethods, Optional<Runnable> onDispose,
             Optional<RunningReactiveScripts> running, Optional<Navajo> authNavajo) {
         this.uuid = uuid;
@@ -81,7 +80,6 @@ public class StreamScriptContext {
         this.tenant = tenant;
         this.service = service;
         this.username = username;
-        this.password = password;
 //        this.access = new Access(-1, -1, username.orElse("placeholder"), service, "stream", "ip", "hostname", null, false, null);
         this.attributes = attributes;
         this.inputFlowable = input;
@@ -122,31 +120,31 @@ public class StreamScriptContext {
 		return uuid;
 	}
 	public StreamScriptContext withService(String service) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 
 	public StreamScriptContext copyWithNewUUID() {
-		return new StreamScriptContext(UUID.randomUUID().toString(), this.started, this.tenant, this.service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(UUID.randomUUID().toString(), this.started, this.tenant, this.service, Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 
 	public StreamScriptContext withMethods(List<String> methods) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),this.collectedInput, this.attributes, this.inputFlowable, this.runner, methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 
 
 	public StreamScriptContext withInput(Flowable<DataItem> input) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, Optional.of(input), this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(), this.collectedInput, this.attributes, Optional.of(input), this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 	public StreamScriptContext withRunner(ReactiveScriptRunner runner) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, Optional.of(runner), this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, Optional.of(runner), this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 
 	public StreamScriptContext withTenant(String tenant) {
-		return new StreamScriptContext(this.uuid, this.started, tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, tenant, service, Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 	
 	public StreamScriptContext withDispose(Runnable disposer) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, Optional.of(disposer), this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),this.collectedInput, this.attributes, this.inputFlowable, this.runner, this.methods, Optional.of(disposer), this.runningScripts, this.authNavajo);
 	}
 
 	public ReactiveScriptRunner runner() {
@@ -192,13 +190,11 @@ public class StreamScriptContext {
     }
 
 	public Navajo resolvedNavajo() {
-		Navajo resolved = this.collectedInput;
-		
 		return this.collectedInput;
 	}
 
 	public StreamScriptContext withInputNavajo(Navajo createNavajo) {
-		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(),Optional.empty(), createNavajo, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
+		return new StreamScriptContext(this.uuid, this.started, this.tenant, service, Optional.empty(), createNavajo, this.attributes, this.inputFlowable, this.runner, this.methods, this.onDispose, this.runningScripts, this.authNavajo);
 	}
 
 	public String getUsername() {

@@ -3,9 +3,6 @@ package com.dexels.navajo.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -80,10 +77,6 @@ public class PropertyMap implements Mappable {
 	public List<Option> optionList = new ArrayList<Option>();
 	public Option currentOption = new Option();
 
-
-	private final static Logger logger = LoggerFactory
-			.getLogger(PropertyMap.class);
-	
 
 	@Override
 	public void load(Access access) throws MappableException, UserException {
