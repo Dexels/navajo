@@ -129,12 +129,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					getAttributeProperty("selectedindex").setAnyValue(tabbedpane.getSelectedIndex());
 					lastSelectedTab.doLayout();
 				}
-				if (myContext.getTopLevel() instanceof TipiApplet) {
-//					TipiApplet ta = (TipiApplet) myContext.getTopLevel();
-//					JPanel component = (JPanel) ta.getContentPane()
-//							.getComponent(0);
-				    
-				}
+
 			}
 		});
 		return tabbedpane;
@@ -399,7 +394,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			return tc;
 		}
 		if (name.equals("selectedindex")) {
-			return new Integer(
+			return Integer.valueOf(
 					((JTabbedPane) getContainer()).getSelectedIndex());
 		}
 		if (name.equals("selectedorder")) {
@@ -407,7 +402,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			return childList.indexOf(c);
 		}
 		if (name.equals("lastselectedindex")) {
-			return new Integer(getIndexOfTab(lastSelectedTab));
+			return Integer.valueOf(getIndexOfTab(lastSelectedTab));
 		}
 
 		return super.getComponentValue(name);

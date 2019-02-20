@@ -48,7 +48,7 @@ public void load(Access access) throws MappableException, UserException {
   }
 
   public void setEntry(String value) {
-    newEntries.put(new Integer(column), value);
+    newEntries.put(Integer.valueOf(column), value);
     update = true;
   }
 
@@ -68,7 +68,7 @@ public void store() throws MappableException, UserException {
       if (update) {
           entries = new String[max+1];
           for (int i = 0; i < max+1; i++) {
-            String value = newEntries.get(new Integer(i));
+            String value = newEntries.get(Integer.valueOf(i));
             if (value == null)
               value = "";
             entries[i] = value;

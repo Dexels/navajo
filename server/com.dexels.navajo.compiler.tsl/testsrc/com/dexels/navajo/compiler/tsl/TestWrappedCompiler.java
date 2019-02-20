@@ -14,8 +14,6 @@ import org.junit.Test;
 import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.osgicompiler.internal.OSGiJavaCompilerImplementation;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-
 public class TestWrappedCompiler {
 
 	@Test
@@ -58,7 +56,7 @@ public class TestWrappedCompiler {
 		ByteClassLoader bcl = new ByteClassLoader(new URL[] {}, this.getClass().getClassLoader(), definitions);
 		Class<Callable<Integer>> clz = (Class<Callable<Integer>>) Class.forName("Example",true,bcl);
 		
-		Callable<Integer> c = clz.newInstance();
+		Callable<Integer> c = clz.getDeclaredConstructor().newInstance();
 		int i = c.call();
 		Assert.assertEquals(13, i);
 

@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Component;
 import java.awt.Window;
 
-import javax.swing.JApplet;
 import javax.swing.JInternalFrame;
 import javax.swing.RootPaneContainer;
 
@@ -63,13 +62,9 @@ public class TipiScreen extends TipiSwingDataComponentImpl{
 					// logger.debug("Not null, and window");
 					current.setVisible(true);
 				} else {
-					if (c instanceof JApplet) {
-						// ok
-					} else {
 						logger.error("**************** SHOULD NOT REALLY BE HERE: "
 										+ current);
 						Thread.dumpStack();
-					}
 				}
 			}
 		});

@@ -17,12 +17,12 @@ public class CreateEchoUrl extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException("CreateEchoUrl needs two parameters");
 		}
-		Object oo = getOperand(0);
+		Object oo = operand(0).value;
 		if(!(oo instanceof EchoTipiContext)) {
 			throw new TMLExpressionException("CreateEchoUrl: param one should be an EchoTipiContext");
 		}
-		EchoTipiContext ee = (EchoTipiContext)getOperand(0);
-		String expression = (String)getOperand(1);
+		EchoTipiContext ee = (EchoTipiContext)oo;
+		String expression = getStringOperand(1) ;
 		String result = ee.createExpressionUrl(expression);
 		logger.info("Result: "+result);
 		return result;

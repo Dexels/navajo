@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.resource.jdbcbroker.JdbcResourceComponent;
-import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
 import com.dexels.navajo.adapter.sqlmap.ResultSetIterator;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
@@ -531,13 +530,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 			}
 		}
 	}
-
-	private DatabaseInfo getMetaData(Connection c) throws SQLException {
-		DatabaseMetaData dbmd = c.getMetaData();
-		boolean supportsAutocommit = dbmd.supportsTransactions();
-		return new DatabaseInfo(dbmd, this.datasource);
-	}
-
 
 	private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
 		if (parameters != null) {

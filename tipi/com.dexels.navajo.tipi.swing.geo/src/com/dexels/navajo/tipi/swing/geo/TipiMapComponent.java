@@ -110,8 +110,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				});
 				// myMapKit.getMainMap().setOverlayPainter(painter);
 				// myMapKit.setBounds(new Rectangle(0,0, 100,100));
-				jp.add(myMapKit, new Integer(100));
-				jp.add(overlayPanel, new Integer(101));
+				jp.add(myMapKit, Integer.valueOf(100));
+				jp.add(overlayPanel, Integer.valueOf(101));
 
 				SwingUtilities.invokeLater(new Runnable(){
 

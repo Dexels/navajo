@@ -86,7 +86,7 @@ public class EchoTipiHelper implements TipiHelper {
         // }
         // }
         if (name.equals("visible")) {
-            return new Boolean(((Component) myComponent.getActualComponent()).isVisible());
+            return Boolean.valueOf(((Component) myComponent.getActualComponent()).isVisible());
         }
         if (name.equals("background")) {
             return c.getBackground();
@@ -98,7 +98,7 @@ public class EchoTipiHelper implements TipiHelper {
             return c.getFont();
         }
         if (name.equals("enabled")) {
-            return new Boolean(c.isEnabled());
+            return Boolean.valueOf(c.isEnabled());
         }
         return null;
     }

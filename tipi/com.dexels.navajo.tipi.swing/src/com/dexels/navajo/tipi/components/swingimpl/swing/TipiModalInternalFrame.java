@@ -39,8 +39,8 @@ public class TipiModalInternalFrame extends JExtendedInternalFrame {
 		final JDesktopPane desktop = new JDesktopPane();
 
 		ActionListener showModal = new ActionListener() {
-			Integer ZERO = new Integer(0);
-			Integer ONE = new Integer(1);
+			Integer ZERO = Integer.valueOf(0);
+			Integer ONE = Integer.valueOf(1);
 
 			@Override
 			public void actionPerformed(ActionEvent e) {

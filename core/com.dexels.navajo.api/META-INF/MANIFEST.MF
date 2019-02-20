@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo API package
 Bundle-SymbolicName: com.dexels.navajo.api
-Bundle-Version: 3.2.11.qualifier
+Bundle-Version: 3.2.13.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.immutable.api;version="2.1.0",
@@ -17,4 +17,5 @@ Export-Package: com.dexels.navajo.expression.api,
  com.dexels.navajo.script.api;version="1.0.0"
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.api
 

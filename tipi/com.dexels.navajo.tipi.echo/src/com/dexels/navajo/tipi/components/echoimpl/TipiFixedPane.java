@@ -51,7 +51,7 @@ public final class TipiFixedPane extends TipiEchoDataComponentImpl {
 
     public Object getComponentValue(String name) {
         if ("visible".equals(name)) {
-            return new Boolean(innerContainer.isVisible());
+            return Boolean.valueOf(innerContainer.isVisible());
         }
         return super.getComponentValue(name);
     }

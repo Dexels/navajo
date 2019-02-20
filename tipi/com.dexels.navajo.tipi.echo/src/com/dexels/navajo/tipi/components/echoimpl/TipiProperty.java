@@ -58,7 +58,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
             m.put("propertyName", myProperty.getFullPropertyName());
             m.put("propertyValue", myProperty.getTypedValue());
             m.put("propertyType", myProperty.getType());
-            m.put("propertyLength", new Integer(myProperty.getLength()));
+            m.put("propertyLength", Integer.valueOf(myProperty.getLength()));
             for (int i = 0; i < myListeners.size(); i++) {
                 TipiEventListener tel = (TipiEventListener) myListeners.get(i);
                 tel.performTipiEvent(eventType, m, false);
@@ -146,32 +146,32 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         return myPropertyName;
       }
 //      if ("use_checkbox".equals(name)) {
-//        return new Boolean("checkbox".equals(selectionType));
+//        return Boolean.valueOf("checkbox".equals(selectionType));
 //      }
 //      if ("selectiontype".equals(name)) {
 //        return selectionType;
 //      }
 //      if ("showlabel".equals(name)) {
-//        return new Boolean(isLabelVisible());
+//        return Boolean.valueOf(isLabelVisible());
 //      }
 //      if ("label_valign".equals(name)) {
 //        return vAlign;
 //      }
 //      if ("enabled".equals(name)) {
 //          if (myEnableState!=null) {
-//              return new Boolean(myEnableState.booleanValue());
+//              return Boolean.valueOf(myEnableState.booleanValue());
 //          } else {
-//              return new Boolean( ( (GenericPropertyComponent) getContainer()).isEnabled());
+//              return Boolean.valueOf( ( (GenericPropertyComponent) getContainer()).isEnabled());
 //          }
 //        }
 //      if ("visible".equals(name)) {
-//        return new Boolean( ( (GenericPropertyComponent) getContainer()).isVisible());
+//        return Boolean.valueOf( ( (GenericPropertyComponent) getContainer()).isVisible());
 //      }
 //      if ("label_halign".equals(name)) {
 //        return hAlign;
 //      }
 //      if ("label_indent".equals(name)) {
-//        return new Integer( ( (GenericPropertyComponent) getContainer()).getLabelIndent());
+//        return Integer.valueOf( ( (GenericPropertyComponent) getContainer()).getLabelIndent());
 //      }
 //      if ("capitalization".equals(name)) {
 //        return myCapitalization;

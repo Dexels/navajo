@@ -69,7 +69,7 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 		  logger.warn("non-OSGi Extension shutdown of: "+name);
 		  try {
 			Class <? extends AbstractVersion> version = (Class<? extends AbstractVersion>) Class.forName(name.toLowerCase()+".Version");
-			AbstractVersion v = version.newInstance();
+			AbstractVersion v = version.getDeclaredConstructor().newInstance();
 			v.shutdown();
 		  } catch (Throwable e) {
 				logger.warn("Extension shutdown failed.",e);

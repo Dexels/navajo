@@ -14,15 +14,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tipi.BaseTipiApplicationInstance;
-import tipi.TipiApplicationInstance;
-import tipipackage.TipiManualExtensionRegistry;
-import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiContextListener;
@@ -41,6 +34,12 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+
+import navajo.ExtensionDefinition;
+import tipi.BaseTipiApplicationInstance;
+import tipi.TipiApplicationInstance;
+import tipipackage.TipiManualExtensionRegistry;
+import tipivaadin.TipiVaadinExtension;
 
 public class TipiVaadinApplication extends Application implements TipiApplicationInstance, HttpServletRequestListener,
 		Serializable {

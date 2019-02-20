@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
 public class TipiLabel extends TipiVaadinComponentImpl {

@@ -127,8 +127,8 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	            } else {
 	                element = element.substring(0,element.length()-1);
 	            }
-	            int val = new Integer(element).intValue();
-				myWidths.add(new Integer(val));
+	            int val = Integer.valueOf(element).intValue();
+				myWidths.add(Integer.valueOf(val));
 //				addColumnStrut(count, val);
 //				count++;
 			}

@@ -128,7 +128,8 @@ private void saveConfigFile(boolean copy) throws MappableException {
   }
 
 
-  public synchronized void setDatasources(SQLMapDatasourceMap [] datasources) throws UserException, NavajoException, MappableException {
+  @SuppressWarnings("deprecation")
+public synchronized void setDatasources(SQLMapDatasourceMap [] datasources) throws UserException, NavajoException, MappableException {
 
 	  if (noAccess)
 	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
@@ -177,7 +178,7 @@ private void saveConfigFile(boolean copy) throws MappableException {
         msg.getProperty("driver").setValue(datasource.driver);
       }
 
-        if (dirty) {
+      if (dirty) {
         saveConfigFile(false);
         // reload sqlmap.xml
         SQLMap sqlMap = new SQLMap();

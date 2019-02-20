@@ -46,7 +46,7 @@ public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
 			@Override
 			public void run() {
 				amIActive = state;
-				// setComponentValue("indeterminate", new Boolean(amIActive));
+				// setComponentValue("indeterminate", Boolean.valueOf(amIActive));
 				if (amIActive) {
 					((JLabel) getSwingContainer()).setIcon(busyIcon);
 				} else {

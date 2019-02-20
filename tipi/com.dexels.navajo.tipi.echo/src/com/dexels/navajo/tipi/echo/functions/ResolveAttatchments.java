@@ -33,10 +33,10 @@ public class ResolveAttatchments extends FunctionInterface {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException("ResolveAttatchments needs (String, String) parameter");
 		}
-		Object oo = getOperand(0);
-		Object pp = getOperand(1);
-		String text = (String)oo;
-		String expression = (String)pp;
+//		Object oo = getOperand(0);
+//		Object pp = getOperand(1);
+		String text = getStringOperand(0);
+		String expression = getStringOperand(1);
 		resolve(text,expression);
 		throw new TMLExpressionException("StripProlog needs ONE string parameter.");
 	}

@@ -60,7 +60,7 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 	}
 
 	
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> T getComponent( final String name, String serviceKey, Class<T> interfaceClass)  {
 		BundleContext context = Version.getDefaultBundleContext();
 		try {

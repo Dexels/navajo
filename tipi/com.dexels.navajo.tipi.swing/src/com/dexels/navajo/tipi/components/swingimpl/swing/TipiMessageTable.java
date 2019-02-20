@@ -41,6 +41,7 @@ public class TipiMessageTable extends MessageTable {
 		myContext = tc;
 		// myDndManager = new TipiDndManager(this,component);
 		addMouseListener(new MouseAdapter() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {

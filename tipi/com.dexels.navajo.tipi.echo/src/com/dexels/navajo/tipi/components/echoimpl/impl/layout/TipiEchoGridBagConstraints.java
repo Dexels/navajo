@@ -35,7 +35,7 @@ public class TipiEchoGridBagConstraints extends GridLayoutData {
 			throw new RuntimeException("Gridbag for: " + cs + " is invalid!");
 		} else {
 			for (int i = 0; i < 14; i++) {
-				// int con = new Integer(tok.nextToken()).intValue();
+				// int con = Integer.valueOf(tok.nextToken()).intValue();
 				myConstraints[i] = tok.nextToken();
 			}
 

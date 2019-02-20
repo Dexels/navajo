@@ -329,7 +329,7 @@ public final class SaxHandler implements DocHandler {
         try {
           if (sLength != null) {
             length = Integer.parseInt(sLength);
-            plength = new Integer(length);
+            plength = Integer.valueOf(length);
           }
         }
         catch (Exception e1) {

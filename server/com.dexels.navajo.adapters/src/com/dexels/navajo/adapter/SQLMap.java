@@ -71,80 +71,7 @@ import com.dexels.navajo.version.Version;
  *
  */
 
-/**
- * This built in mappable class should be used as a general class for using arbitrary SQL queries and processing the ResultSet
- *
- * SQLMap can use multiple datasource which are defined in the sqlmap.xml configuration file.
- * The configuration file can contain a "default" datasource in which case datasources need to be defined in the script
- * (using the datasource field!)>
- * An example configuration file:
- *
- * <tml>
- * <message name="datasources">
- *  <message name="default">
- *     <property name="driver" value="com.sybase.jdbc2.jdbc.SybDriver"/>
-     *     <property name="url" value="jdbc:sybase:Tds:cerberus.knvb.nl:5001/knvb"/>
- *     <property name="username" value="dexels"/>
- *     <property name="password" value="dexels"/>
- *     <property name="logfile" value="default.sqlmap"/>
- *     <property name="refresh" type="float" value="0.1"/>
- *     <property name="min_connections" type="integer" value="10"/>
- *     <property name="max_connections" type="integer" value="50"/>
- *  </message>
- * </message>
- * </tml>
- *
- * Other datasource are defined as "default" except with a unique message name identifying the datasource. *
- * A single SQLMap instance can be used to run multiple queries. If a single transaction context is required multiple SQLMap instances
- * can be used if the transactionContext is the same.
- *
- * TODO Use property "timeout" to solve busy waiting bug (see below)
- * Introduce option to set autocommit mode
- *
- * BUGS
- *
- * Change DbConnectionBroker such that it throws an exception if after some specified timeout a connection cannot be made.
- * Currently the connectionbroker keeps waiting until a connection can be created. This leads to deadlocks if nested SQLMap
- * instances are used!!
- *
- * Already closed connection appeared. Were does this come from: see following stack trace:
- *
- * 2002-12-03 21:40:41,174 DEBUG [ApplicationServerThread] mapping.XmlMapperInterpreter (XmlMapperInterpreter.java:123) - in XMlMapperInterpreter(), XMLfile:/home/dexels/projecten/SportLink/sportlink-serv/navajo-tester/auxilary/scripts//ProcessInsertClubMembership.xsl :
- 2002-12-03 21:40:59,701 ERROR [ApplicationServerThread] adapter.SPMap (SPMap.java:273) - JZ0C0: Connection is already closed.
- java.sql.SQLException: JZ0C0: Connection is already closed.
-        at com.sybase.jdbc2.jdbc.ErrorMessage.raiseError(ErrorMessage.java:500)
-     at com.sybase.jdbc2.jdbc.SybConnection.checkConnection(SybConnection.java:1731)
-        at com.sybase.jdbc2.jdbc.SybStatement.checkDead(SybStatement.java:1792)
-        at com.sybase.jdbc2.jdbc.SybPreparedStatement.setNull(SybPreparedStatement.java:107)
-        at com.dexels.navajo.adapter.SPMap.getResultSet(SPMap.java:151)
-        at com.dexels.navajo.adapter.SQLMap.setDoUpdate(SQLMap.java:303)
-        at java.lang.reflect.Method.invoke(Native Method)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.setAttribute(XmlMapperInterpreter.java:1198)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.setSimpleAttribute(XmlMapperInterpreter.java:1245)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.executeSimpleMap(XmlMapperInterpreter.java:1340)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.createMapping(XmlMapperInterpreter.java:685)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.doMapping(XmlMapperInterpreter.java:1422)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.createMapping(XmlMapperInterpreter.java:466)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.doMapping(XmlMapperInterpreter.java:1422)
-        at com.dexels.navajo.mapping.XmlMapperInterpreter.interpret(XmlMapperInterpreter.java:1635)
-     at com.dexels.navajo.server.GenericHandler.doService(GenericHandler.java:62)
-     at com.dexels.navajo.server.ServiceHandler.construct(ServiceHandler.java:39)
-        at com.dexels.navajo.persistence.impl.PersistenceManagerImpl.get(PersistenceManagerImpl.java:168)
-        at com.dexels.navajo.server.Dispatcher.dispatch(Dispatcher.java:232)
-        at com.dexels.navajo.server.Dispatcher.handle(Dispatcher.java:672)
-     at com.dexels.navajo.server.TmlHttpServlet.doPost(TmlHttpServlet.java:187)
-        at javax.servlet.http.HttpServlet.service(HttpServlet.java:211)
-        at javax.servlet.http.HttpServlet.service(HttpServlet.java:309)
-        at javax.servlet.http.HttpServlet.service(HttpServlet.java:336)
-        at com.evermind._deb._lnc(.:514)
-        at com.evermind._deb._wmb(.:170)
-        at com.evermind._co._wbb(.:581)
-        at com.evermind._co._fs(.:189)
-        at com.evermind._bt.run(.:62)
- *
- */
-
-@SuppressWarnings({"rawtypes", "unchecked", "unused"})
+@SuppressWarnings({"rawtypes", "unchecked", "unused", "deprecation"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
 	protected final static int INFINITE = 10000;
@@ -897,7 +824,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
-    protected final void createConnection() throws SQLException, UserException {
+	protected final void createConnection() throws SQLException, UserException {
 
         if (this.debug) {
             Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
@@ -1400,10 +1327,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return fixedBroker.getMetaData(this.datasource, null, null);
 	}
 
-	public DatabaseInfo getDatabaseInfo() throws UserException {
-		DatabaseInfo dmd = getMetaData();
-		return dmd;
-	}
 
 	public String getDatabaseVersion() throws UserException {
 

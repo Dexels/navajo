@@ -357,7 +357,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 						.hasNext();) {
 					TipiTableBaseLayer element = iter.next();
 					int i = element.getCurrentSelection();
-					result.add(new Integer(i));
+					result.add(Integer.valueOf(i));
 				}
 			}
 		});
@@ -401,9 +401,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
 	public static void main(String[] args) {
 		Stack<Integer> s = new Stack<Integer>();
-		s.push(new Integer(1));
-		s.push(new Integer(2));
-		s.push(new Integer(3));
+		s.push(Integer.valueOf(1));
+		s.push(Integer.valueOf(2));
+		s.push(Integer.valueOf(3));
 		logger.debug("Stack: " + s);
 		int i = 0;
 		for (Iterator<Integer> iter = s.iterator(); iter.hasNext();) {

@@ -9,6 +9,8 @@ import com.dexels.navajo.document.types.Binary;
 
 public class DummyAttachmentMap extends AttachementMap implements AttachmentMapInterface {
 
+	private static final long serialVersionUID = 3502052945214585999L;
+
 	private String attachFile;
 	
 	private final static Logger logger = LoggerFactory

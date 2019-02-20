@@ -39,7 +39,7 @@ public class GetMailNavajo extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Binary b = (Binary) getOperand(0);
+		Binary b = getBinaryOperand(0);
 		DataSource ds = new BinaryDataSource(b);
 		Navajo result = NavajoFactory.getInstance().createNavajo();
 		Message mail = NavajoFactory.getInstance().createMessage(result, "Mail");

@@ -84,7 +84,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Map<String, Object> tempMap = new HashMap<String, Object>();
-					tempMap.put("selectedIndex", new Integer(myTable.getSelectedIndex()));
+					tempMap.put("selectedIndex", Integer.valueOf(myTable.getSelectedIndex()));
 					tempMap.put("selectedMessage", myTable.getSelectedMessage());
 					performTipiEvent("onSelectionChanged", tempMap, false);
 
@@ -98,8 +98,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 
 			public void propertyChanged(Property p, String eventType, int column, int row) {
 				Map event = new HashMap();
-				event.put("column", new Integer(column));
-				event.put("row", new Integer(row));
+				event.put("column", Integer.valueOf(column));
+				event.put("row", Integer.valueOf(row));
 				event.put("new", p.getValue());
 				event.put("message", p.getParentMessage());
 				event.put("name", p.getName());
@@ -183,7 +183,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			return mm.getSelectedMessage();
 		}
 		if (name.equals("selectedIndex")) {
-			return new Integer(mm.getSelectedIndex());
+			return Integer.valueOf(mm.getSelectedIndex());
 		}
 		return super.getComponentValue(name);
 	}

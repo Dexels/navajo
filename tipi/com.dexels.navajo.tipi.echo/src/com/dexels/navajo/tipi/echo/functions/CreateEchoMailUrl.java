@@ -27,20 +27,20 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		if (getOperands().size() != 3) {
 			throw new TMLExpressionException("CreateEchoUrl needs three parameters");
 		}
-		Object oo = getOperand(0);
+		Object oo = operand(0).value;
 		if(!(oo instanceof EchoTipiContext)) {
 			throw new TMLExpressionException("CreateEchoUrl: param one should be an EchoTipiContext");
 		}
-		EchoTipiContext ee = (EchoTipiContext)getOperand(0);
+		EchoTipiContext ee = (EchoTipiContext)oo;
 //		String expression = (String)getOperand(1);
 
 		
-		Navajo input = (Navajo) getOperand(1) ;//("navajo", event);
+		Navajo input = (Navajo) operand(1).value ;//("navajo", event);
 		Navajo inputCopy = input.copy();
 		
 		
 //		String urlTemplate = (String)getOperand(2); // getEvaluatedParameterValue("urlTemplate", event);
-		String navajoName = (String) getOperand(2); //getEvaluatedParameterValue("navajoName", event);
+		String navajoName = getStringOperand(2); //getEvaluatedParameterValue("navajoName", event);
 		
 		//String externalUrlTemplate = ee.createExpressionUrl(urlTemplate);
 		try {

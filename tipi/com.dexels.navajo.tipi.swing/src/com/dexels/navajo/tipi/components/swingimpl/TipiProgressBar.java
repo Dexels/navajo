@@ -108,7 +108,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 			return myProgressBar.getString();
 		}
 		if (name.equals("value")) {
-			return new Integer(myProgressBar.getValue());
+			return Integer.valueOf(myProgressBar.getValue());
 		}
 		if (name.equals("orientation")) {
 			int orientation = myProgressBar.getOrientation();

@@ -40,7 +40,7 @@ public class PropertyAggregate {
 			if ( minDate != null ) {
 				return minDate;
 			} else if ( min != Double.MAX_VALUE ) {
-				return new Double(min);
+				return Double.valueOf(min);
 			} else {
 				return null;
 			}
@@ -50,7 +50,7 @@ public class PropertyAggregate {
 			if ( maxDate != null ) {
 				return maxDate;
 			} else if ( max != Double.MIN_VALUE ) {
-				return new Double(max);
+				return Double.valueOf(max);
 			} else {
 				return null;
 			}
@@ -59,7 +59,7 @@ public class PropertyAggregate {
 		public void addProperty(Property myProp) {
 			count++;
 			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) || myProp.getType().equals(Property.MONEY_PROPERTY) ) ) {
-				Double value = new Double(myProp.getTypedValue()+"");
+				Double value = Double.valueOf(myProp.getTypedValue()+"");
 				if ( value < min ) {
 					min = value;
 				}

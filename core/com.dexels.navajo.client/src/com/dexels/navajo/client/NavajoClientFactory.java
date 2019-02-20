@@ -1,5 +1,7 @@
 package com.dexels.navajo.client;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +42,9 @@ public class NavajoClientFactory {
 			}
 			ClientInterface client = null;
 			try {
-				client = (ClientInterface) defaultClient.getClass().newInstance();
+				client = (ClientInterface) defaultClient.getClass().getDeclaredConstructor().newInstance();
 			
-			} catch (InstantiationException |IllegalAccessException ex) {
+			} catch (InstantiationException |IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
 				logger.error("Error: ", ex);
 			}
 			

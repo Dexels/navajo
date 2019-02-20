@@ -162,7 +162,7 @@ public class StrangeTipiGridPanel extends TipiEchoDataComponentImpl {
         ArrayList al = new ArrayList();
         while (st.hasMoreTokens()) {
             String element = (String) st.nextElement();
-            al.add(new Integer(element));
+            al.add(Integer.valueOf(element));
         }
         return al.toArray();
     }

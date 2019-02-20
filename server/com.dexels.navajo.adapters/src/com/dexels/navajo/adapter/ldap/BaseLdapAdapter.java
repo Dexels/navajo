@@ -72,13 +72,13 @@ public class BaseLdapAdapter implements Mappable {
 		env.put(Context.SECURITY_CREDENTIALS, password);
 		// Create the initial context
 		initialDir = new InitialDirContext(env);
-		Integer i = new Integer(28420);
+		Integer i = Integer.valueOf(28420);
 
 		logger.debug("Adding " + i + " to directory...");
 
 		initialDir.bind(principal + ",cn=myRandomInt", i);
 		// ctx.bind(arg0, i)
-		i = new Integer(98765);
+		i = Integer.valueOf(98765);
 		logger.debug("i is now: " + i);
 
 		i = (Integer) initialDir.lookup("cn=myRandomInt");

@@ -2885,11 +2885,11 @@ public class XMLElement implements java.io.Serializable {
 
 
 	public void setAttributeOffset(String attributeName, int value) {
-		startOffsetMap.put(attributeName, new Integer(value));
+		startOffsetMap.put(attributeName, Integer.valueOf(value));
 	}
 
 	public void setAttributeEndOffset(String attributeName, int value) {
-		endOffsetMap.put(attributeName, new Integer(value));
+		endOffsetMap.put(attributeName, Integer.valueOf(value));
 	}
 
 	public int getAttributeOffset(String attributeName) {

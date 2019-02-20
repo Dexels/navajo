@@ -41,7 +41,7 @@ public class TestProtobufConversion {
         assertNotNull(serializedMessage);
         // parse protobuf
         
-        ReplicationMessage rmsg = ReplicationFactory.getInstance().parseBytes(serializedMessage);
+        ReplicationMessage rmsg = ReplicationFactory.getInstance().parseBytes(Optional.empty(), serializedMessage);
         System.err.println("Rescribe: " + new String(rmsg.toBytes(new JSONReplicationMessageParserImpl())));
         Navajo rr = JsonTmlFactory.getInstance().toReplicationNavajo(rmsg, "Tenant", "Table",
                 Optional.of("Datasource"));

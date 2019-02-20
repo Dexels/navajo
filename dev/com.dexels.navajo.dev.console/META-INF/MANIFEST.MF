@@ -26,4 +26,5 @@ Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.dev.console
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.dev.console
 

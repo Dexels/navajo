@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,10 +21,6 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class ReactiveParameters {
 	
-	
-	private final static Logger logger = LoggerFactory.getLogger(ReactiveParameters.class);
-
-
 	public final Map<String, ContextExpression> named;
 	public final List<ContextExpression> unnamed;
 	private final ParameterValidator validator;

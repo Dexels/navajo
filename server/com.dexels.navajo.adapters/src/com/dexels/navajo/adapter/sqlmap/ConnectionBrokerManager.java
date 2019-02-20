@@ -22,7 +22,7 @@ import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
 
-@SuppressWarnings({ "unused" })
+@SuppressWarnings({ "unused", "deprecation" })
 public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {
 
     private Map<String, SQLMapBroker> brokerMap = Collections.synchronizedMap(new HashMap<String, SQLMapBroker>());
@@ -365,7 +365,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static int getInstances() {
         return LegacyDbConnectionBroker.getInstances();
     }
@@ -445,7 +444,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
         return maxHealth;
     }
 
-    @Override
+	@Override
     public int getHealth(String datasource) {
         SQLMapBroker broker = (this.brokerMap.get(datasource.replaceAll("'", "")));
         if (broker == null) {
@@ -528,6 +527,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
         return currentWaitingTime;
     }
 
+    
     private class SQLMapBroker extends Object implements Cloneable {
         public String datasource;
         public String driver;
@@ -564,7 +564,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
         }
 
-        private void createBroker() throws ClassNotFoundException {
+		private void createBroker() throws ClassNotFoundException {
             this.broker = new LegacyDbConnectionBroker(this.driver, this.url, this.username, this.password,
                     this.minconnections, this.maxconnections, this.logFile, this.refresh);
             this.broker.setDbIdentifier(this.type);

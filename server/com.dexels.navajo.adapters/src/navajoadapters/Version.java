@@ -1,7 +1,5 @@
 package navajoadapters;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
@@ -9,6 +7,8 @@ import com.dexels.navajo.adapter.StandardAdapterLibrary;
 import com.dexels.navajo.adapter.functions.StandardAdapterFunctionLibrary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+
+import navajoextension.AbstractCoreExtension;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -36,6 +36,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
  */
 
 
+@SuppressWarnings("deprecation")
 public class Version extends AbstractCoreExtension {
 
 

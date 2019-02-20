@@ -113,10 +113,10 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
             return tc;
         }
         if (name.equals("selectedindex")) {
-            return new Integer(myTabbedPane.getActiveTabIndex());
+            return Integer.valueOf(myTabbedPane.getActiveTabIndex());
         }
         if (name.equals("lastselectedindex")) {
-            return new Integer(getIndexOfTab(lastSelectedTab));
+            return Integer.valueOf(getIndexOfTab(lastSelectedTab));
         }
 
         return super.getComponentValue(name);

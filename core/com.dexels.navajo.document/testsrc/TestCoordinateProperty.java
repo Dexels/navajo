@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -69,32 +70,31 @@ public class TestCoordinateProperty {
     @Test
     public void testinValidPropertyCreation() {
         try {
-            Coordinate c = new Coordinate("[-1s,3]");
-            assertTrue(false);
+            new Coordinate("[-1s,3]");
         } catch (Exception e) {
             System.out.println(e);
             assertTrue(true);
         }
 
         try {
-            Coordinate c = new Coordinate("-1s,/3");
-            assertTrue(false);
+            new Coordinate("-1s,/3");
+            fail();
         } catch (Exception e) {
             System.out.println(e);
             assertTrue(true);
         }
 
         try {
-            Coordinate c = new Coordinate("-1000,3");
-            assertTrue(false);
+            new Coordinate("-1000,3");
+            fail();
         } catch (Exception e) {
             System.out.println(e);
             assertTrue(true);
         }
 
         try {
-            Coordinate c = new Coordinate("-12.89", -800);
-            assertTrue(false);
+            new Coordinate("-12.89", -800);
+            fail();
         } catch (Exception e) {
             System.out.println(e);
             assertTrue(true);

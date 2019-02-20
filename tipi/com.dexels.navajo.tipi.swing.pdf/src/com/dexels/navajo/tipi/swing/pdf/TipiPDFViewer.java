@@ -12,7 +12,7 @@ public class TipiPDFViewer extends TipiSwingDataComponentImpl {
 
     private JPanel viewerComponentPanel;
 
-    private Binary pdfBinary;
+//    private Binary pdfBinary;
 
     private SwingController controller;
 
@@ -32,7 +32,7 @@ public class TipiPDFViewer extends TipiSwingDataComponentImpl {
     }
     
     private void setPdfBinary(Binary pdfBinary) {
-        this.pdfBinary = pdfBinary;
+//        this.pdfBinary = pdfBinary;
         controller.openDocument(pdfBinary.getTempFileName(false));
     }
 

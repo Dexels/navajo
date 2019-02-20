@@ -2902,16 +2902,16 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	private void setAttributeLineNr(String attributeName, int value) {
-		attributeLineNrMap.put(attributeName, new Integer(value));
+		attributeLineNrMap.put(attributeName, Integer.valueOf(value));
 	}
 
 
 	private void setAttributeOffset(String attributeName, int value) {
-		startOffsetMap.put(attributeName, new Integer(value));
+		startOffsetMap.put(attributeName, Integer.valueOf(value));
 	}
 
 	public void setAttributeEndOffset(String attributeName, int value) {
-		endOffsetMap.put(attributeName, new Integer(value));
+		endOffsetMap.put(attributeName, Integer.valueOf(value));
 	}
 	
 	public int getAttributeLineNr(String attributeName) {

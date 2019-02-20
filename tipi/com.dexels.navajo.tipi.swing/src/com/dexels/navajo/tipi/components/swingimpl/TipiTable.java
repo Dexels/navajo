@@ -191,7 +191,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
             public Map<String, Object> getEventMap(KeyEvent e) {
                 Map<String, Object> hm = new HashMap<String, Object>();
                 hm.put("code", Integer.valueOf(e.getKeyCode()));
-                hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+                hm.put("modifiers", KeyEvent.getModifiersExText(e.getModifiersEx()));
                 hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
                 return hm;
             }
@@ -457,7 +457,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     public void messageTableActionPerformed(ActionEvent ae) {
         MessageTablePanel mm = (MessageTablePanel) getContainer();
         Map<String, Object> tempMap = new HashMap<String, Object>();
-        tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
+        tempMap.put("selectedIndex", Integer.valueOf(mm.getSelectedRow()));
         tempMap.put("selectedMessage", mm.getSelectedMessage());
         if (!busyWithOnActionPerformed) {
             setWaitCursor(true);
@@ -595,7 +595,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     public void setComponentValue(final String name, final Object object) {
         runSyncInEventThread(new Runnable() {
             @Override
-            @SuppressWarnings("unchecked")
             public void run() {
                 if (name.equals("filtersvisible")) {
                     setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());

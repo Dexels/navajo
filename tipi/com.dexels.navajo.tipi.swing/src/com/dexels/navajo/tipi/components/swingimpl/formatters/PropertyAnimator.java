@@ -60,13 +60,13 @@ public class PropertyAnimator {
 			// Integer e = (Integer)end;
 			// int diff = e-s;
 			double diff = endN.doubleValue() - startN.doubleValue();
-			int res = new Integer(
+			int res = Integer.valueOf(
 					(int) (startN.doubleValue() + diff * fraction));
 			myProperty.setAnyValue(res);
 		}
 		if (animationClass.equals(Double.class)) {
 			double diff = endN.doubleValue() - startN.doubleValue();
-			double res = new Double((startN.doubleValue() + diff * fraction));
+			double res = Double.valueOf((startN.doubleValue() + diff * fraction));
 			myProperty.setAnyValue(res);
 		}
 	}

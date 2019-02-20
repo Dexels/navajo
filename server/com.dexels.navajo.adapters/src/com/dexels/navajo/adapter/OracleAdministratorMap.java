@@ -184,7 +184,7 @@ public class OracleAdministratorMap extends SQLMap {
 		for (int i = 0; i < this.rsMap.length; i++) {
 			final StringBuffer s =
 				new StringBuffer(
-					(String) this.rsMap[i].getColumnValue(new Integer(0)));
+					(String) this.rsMap[i].getColumnValue(Integer.valueOf(0)));
 			s.append(" " + modeClause);
 			if (this.debug) {
 				logger.info(
@@ -207,7 +207,7 @@ public class OracleAdministratorMap extends SQLMap {
 			this.rsMap = this.getResultSet();
 			if (rsMap != null && rsMap.length > 0) {
 				final String s =
-					(String) this.rsMap[0].getColumnValue(new Integer(0));
+					(String) this.rsMap[0].getColumnValue(Integer.valueOf(0));
 				this.schemaOwner = s.trim().toUpperCase();
 				if (this.debug) {
 					logger.debug(

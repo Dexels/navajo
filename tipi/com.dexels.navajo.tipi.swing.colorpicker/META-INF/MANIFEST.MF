@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Swing Tipi ColorPicker
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.colorpicker
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.3.qualifier
+Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

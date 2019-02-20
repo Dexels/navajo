@@ -1,5 +1,6 @@
 package com.dexels.navajo.document;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,14 +58,10 @@ public class PropertyTypeChecker {
       return;
     }
     try {
-      TypeChecker tc = (TypeChecker) c.newInstance();
+      TypeChecker tc = (TypeChecker) c.getDeclaredConstructor().newInstance();
       propertyTypeCheckMap.put(type,tc);
     }
-    catch (IllegalAccessException ex1) {
-      propertyTypeCheckMap.put(type,null);
-      return;
-    }
-    catch (InstantiationException ex1) {
+    catch (IllegalAccessException|InstantiationException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException ex1) {
       propertyTypeCheckMap.put(type,null);
       return;
     }

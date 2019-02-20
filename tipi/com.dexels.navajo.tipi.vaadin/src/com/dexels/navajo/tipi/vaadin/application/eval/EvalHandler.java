@@ -8,13 +8,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiApplicationInstance;
-
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
+
+import tipi.TipiApplicationInstance;
 
 public class EvalHandler implements URIHandler, ParameterHandler {
 

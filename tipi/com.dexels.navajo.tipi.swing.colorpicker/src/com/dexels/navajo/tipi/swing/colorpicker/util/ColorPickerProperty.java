@@ -48,14 +48,14 @@ public class ColorPickerProperty<T> {
         if (b == isEnabled)
             return;
         isEnabled = b;
-        firePropertyChangeListeners(name + ".enabled", new Boolean(!b), new Boolean(b));
+        firePropertyChangeListeners(name + ".enabled", Boolean.valueOf(!b), Boolean.valueOf(b));
     }
 
     public void setUserAdjustable(boolean b) {
         if (b == isUserAdjustable)
             return;
         isUserAdjustable = b;
-        firePropertyChangeListeners(name + ".adjustable", new Boolean(!b), new Boolean(b));
+        firePropertyChangeListeners(name + ".adjustable", Boolean.valueOf(!b), Boolean.valueOf(b));
     }
 
     public final T getValue() {

@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +37,8 @@ public class ArticleClient {
 	private String baseurl = "http://localhost:9090/article/";
 	private String username = "@BBFW06E";
 	private String token = "epPm/1NY+hygYpOpGDHB2aMEjSJ558CNywPLwd/KA4nOV4Fkh9vtuSJGQZqsEJDpMdf/MhkOcqNO6LGdYH4tWxBIZo3niZKOkK+6gD61U8g=";
-	private long started = System.currentTimeMillis();
-	private int count = 0;
+//	private long started = System.currentTimeMillis();
+//	private int count = 0;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 //	private ExecutorService executor = Executors.newCachedThreadPool();
 	
@@ -49,9 +47,9 @@ public class ArticleClient {
 		meta = (ObjectNode)getJSONFromURL("list");
 	}
 	
-	private Iterator<String> getArticleNames() {
-		return meta.fieldNames();
-	}
+//	private Iterator<String> getArticleNames() {
+//		return meta.fieldNames();
+//	}
 
 	private JsonNode getJSONFromURL(String item) throws IOException {
 		return getJSONFromURL(item, Collections.<String, String> emptyMap());
@@ -87,7 +85,7 @@ public class ArticleClient {
 			
 		}
 		final URL url = new URL(base,item+paramString);
-		count++;
+//		count++;
 		return mapper.readTree(url);
 	}
 	
@@ -114,14 +112,6 @@ public class ArticleClient {
 		writer.writeValue(sw, an);
 	}
 	
-	private void testAll() throws IOException {
-		Iterator<String> names = getArticleNames();
-		while (names.hasNext()) {
-			String c = names.next();
-			testArticle(c);
-			
-		}
-	}
 
 	protected void testArticle(final String article) throws IOException {
 		Map<String,Set<String>> res = getArticleParameters(article);

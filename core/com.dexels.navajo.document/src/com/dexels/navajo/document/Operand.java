@@ -162,7 +162,6 @@ public static Operand ofSelectionList(List<Selection> allSelectedSelections) {
 	return new Operand(allSelectedSelections,Property.SELECTION_PROPERTY);
 }
 
-@Deprecated
 public static Operand ofProperty(Property property) {
 	return new Operand(property,"property");
 }

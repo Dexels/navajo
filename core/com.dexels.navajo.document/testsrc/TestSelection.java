@@ -138,7 +138,7 @@ public class TestSelection {
 	@Test
 	public void testIsSelectedWithObject0() {
 		Selection selectionRet = NavajoFactory.getInstance().createSelection(
-				testDoc, "firstselection", "0", new Integer(1));
+				testDoc, "firstselection", "0", Integer.valueOf(1));
 		selectionRet.setValue("1");
 		Assert.assertTrue(selectionRet.isSelected());
 	}
@@ -146,7 +146,7 @@ public class TestSelection {
 	@Test
 	public void testIsSelectedWithObject1() {
 		Selection selectionRet = NavajoFactory.getInstance().createSelection(
-				testDoc, "firstselection", "0", new Integer(0));
+				testDoc, "firstselection", "0", Integer.valueOf(0));
 		selectionRet.setValue("1");
 		Assert.assertTrue(!selectionRet.isSelected());
 	}
@@ -154,7 +154,7 @@ public class TestSelection {
 	@Test
 	public void testIsSelectedWithObject2() {
 		Selection selectionRet = NavajoFactory.getInstance().createSelection(
-				testDoc, "firstselection", "0", new Integer(11));
+				testDoc, "firstselection", "0", Integer.valueOf(11));
 		selectionRet.setValue("1");
 		Assert.assertTrue(selectionRet.isSelected());
 	}
@@ -162,7 +162,7 @@ public class TestSelection {
 	@Test
 	public void testIsSelectedWithObject3() {
 		Selection selectionRet = NavajoFactory.getInstance().createSelection(
-				testDoc, "firstselection", "0", new Boolean(true));
+				testDoc, "firstselection", "0", Boolean.valueOf(true));
 		selectionRet.setValue("1");
 		Assert.assertTrue(selectionRet.isSelected());
 	}
@@ -170,7 +170,7 @@ public class TestSelection {
 	@Test
 	public void testIsSelectedWithObject4() {
 		Selection selectionRet = NavajoFactory.getInstance().createSelection(
-				testDoc, "firstselection", "0", new Boolean(false));
+				testDoc, "firstselection", "0", Boolean.valueOf(false));
 		selectionRet.setValue("1");
 		Assert.assertTrue(!selectionRet.isSelected());
 	}

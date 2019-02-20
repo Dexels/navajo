@@ -38,8 +38,8 @@ public class GetPart extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Binary b = (Binary) getOperand(0);
-		int index = (Integer) getOperand(1);
+		Binary b = getBinaryOperand(0);
+		int index = (Integer) operand(1).value;
 		DataSource ds = new BinaryDataSource(b);
 		try {
 			MimeMultipart mmp = new MimeMultipart(ds);

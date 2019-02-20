@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
-import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -64,22 +62,13 @@ public class TipiPlaySound extends TipiAction {
 	 * @param urlVal
 	 */
 	private void playUrl(URL urlVal) {
-		TipiApplet rr = null;
-		if (myContext != null) {
-			rr = ((SwingTipiContext) myContext).getAppletRoot();
-		}
-		if (rr != null) {
-			rr.play(urlVal);
-		} else {
-			try {
-				AudioInputStream ais = AudioSystem.getAudioInputStream(urlVal);
-				playAudioStream(ais);
-			} catch (UnsupportedAudioFileException e) {
-				logger.error("Error detected",e);
-			} catch (IOException e) {
-				logger.error("Error detected",e);
-			}
-
+		try {
+			AudioInputStream ais = AudioSystem.getAudioInputStream(urlVal);
+			playAudioStream(ais);
+		} catch (UnsupportedAudioFileException e) {
+			logger.error("Error detected",e);
+		} catch (IOException e) {
+			logger.error("Error detected",e);
 		}
 	}
 

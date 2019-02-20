@@ -46,12 +46,12 @@ public class PersistenceManagerFactory {
 
 			if ( instance == null ) {
 				try {
-					instance = (PersistenceManager) Class.forName(className).newInstance();
+					instance = (PersistenceManager) Class.forName(className).getDeclaredConstructor().newInstance();
 
 				} catch (Exception e) {
 					logger.info("Could NOT FIND PersistenceManager: " + className + ", trying SimplePersistenceManagerImpl..");
 					try {
-						instance = (PersistenceManager) Class.forName("com.dexels.navajo.persistence.SimplePersistenceManagerImpl").newInstance();
+						instance = (PersistenceManager) Class.forName("com.dexels.navajo.persistence.SimplePersistenceManagerImpl").getDeclaredConstructor().newInstance();
 					} catch (Exception  e1) {
 						throw new RuntimeException(e1);
 					} 

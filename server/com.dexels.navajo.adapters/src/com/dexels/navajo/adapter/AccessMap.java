@@ -87,7 +87,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
     Mappable myMap = (Mappable) m.myObject;
 
     addProperty(parent, "Map", m.getMapName(), Property.STRING_PROPERTY, 50);
-    addProperty(parent, "Totaltime", new Integer(m.getTotaltime()), Property.STRING_PROPERTY, 50);
+    addProperty(parent, "Totaltime", Integer.valueOf(m.getTotaltime()) , Property.STRING_PROPERTY, 50);
 
     Class<?> ccc = null;
 	try {
@@ -119,7 +119,7 @@ public void store() throws MappableException, UserException {
       try {
         Message user = getMessage(null, "User");
         addProperty(user, "Starttime", getCreated(), Property.DATE_PROPERTY, 10);
-        addProperty(user, "Totaltime", new Integer(getTotaltime()), Property.INTEGER_PROPERTY, 10);
+        addProperty(user, "Totaltime", Integer.valueOf(getTotaltime()), Property.INTEGER_PROPERTY, 10);
         addProperty(user, "ClientIP", getIpAddress(), Property.STRING_PROPERTY, 50);
         addProperty(user, "ClientHostname", getHost(), Property.STRING_PROPERTY, 50);
         addProperty(user, "User", myAccess.rpcUser, Property.STRING_PROPERTY, 50);

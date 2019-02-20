@@ -25,10 +25,9 @@ public class StripBody extends FunctionInterface {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException("StripBody needs ONE parameter");
 		}
-		Object oo = getOperand(0);
-		if (oo != null && oo instanceof String) {
-			String s = (String) oo;
-			return stripBody(s);
+		String oo = getStringOperand(0);
+		if (oo != null) {
+			return stripBody(oo);
 		}
 		throw new TMLExpressionException("StripBody needs ONE string parameter.");
 	}

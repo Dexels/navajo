@@ -78,8 +78,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 			String description = p.getDescription();
 			descIdMap.put(description, name);
 			descPropMap.put(description, p);
-			DefaultListModel<Object> am = (DefaultListModel<Object>) availableColumnsList
-					.getModel();
+//			DefaultListModel<Object> am = (DefaultListModel<Object>) availableColumnsList.getModel();
             // if (!description.equals("")) {
             // am.addElement(description);
             // }

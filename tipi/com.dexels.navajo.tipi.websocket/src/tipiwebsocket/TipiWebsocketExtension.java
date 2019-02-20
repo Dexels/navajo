@@ -24,6 +24,7 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 	
 	public TipiWebsocketExtension() {
 	}
+	@SuppressWarnings("unused")
 	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
@@ -47,12 +48,7 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 		
 	}
 
-	
-	public static void main(String[] args) throws Exception {
-		URI uri = new URI("ws://localhost:8080/websocket");
-        TipiWebSocket socket = new TipiWebSocket(uri,"blib;blab;blob",null);
-        System.out.printf("Connecting to : %s%n", uri);
-    }
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		registerTipiExtension(context);

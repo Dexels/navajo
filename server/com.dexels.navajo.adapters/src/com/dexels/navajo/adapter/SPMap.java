@@ -71,14 +71,14 @@ public void load(Access access) throws UserException, MappableException {
 	  synchronized ( semaphore  ) {
 		  if (lookupTable == null) {
 			  lookupTable = new HashMap();
-			  lookupTable.put("VARCHAR", new Integer(java.sql.Types.VARCHAR));
-			  lookupTable.put("DOUBLE", new Integer(java.sql.Types.DOUBLE));
-			  lookupTable.put("BIT", new Integer(java.sql.Types.BIT));
-			  lookupTable.put("INTEGER", new Integer(java.sql.Types.INTEGER));
-			  lookupTable.put("TINYINT", new Integer(java.sql.Types.TINYINT));
-			  lookupTable.put("DATE", new Integer(java.sql.Types.TIMESTAMP));
-			  lookupTable.put("SMALLINT", new Integer(java.sql.Types.SMALLINT));
-			  lookupTable.put("NUMBER", new Integer(java.sql.Types.NUMERIC));
+			  lookupTable.put("VARCHAR", Integer.valueOf(java.sql.Types.VARCHAR));
+			  lookupTable.put("DOUBLE", Integer.valueOf(java.sql.Types.DOUBLE));
+			  lookupTable.put("BIT", Integer.valueOf(java.sql.Types.BIT));
+			  lookupTable.put("INTEGER", Integer.valueOf(java.sql.Types.INTEGER));
+			  lookupTable.put("TINYINT", Integer.valueOf(java.sql.Types.TINYINT));
+			  lookupTable.put("DATE", Integer.valueOf(java.sql.Types.TIMESTAMP));
+			  lookupTable.put("SMALLINT", Integer.valueOf(java.sql.Types.SMALLINT));
+			  lookupTable.put("NUMBER", Integer.valueOf(java.sql.Types.NUMERIC));
 		  }
 	  }
 	  // logger.info("lookupTable = " + lookupTable);
@@ -86,6 +86,7 @@ public void load(Access access) throws UserException, MappableException {
 
  
 
+@SuppressWarnings("deprecation")
 @Override
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
     if (debug) {
@@ -285,7 +286,7 @@ public void setQuery(String newQuery) throws UserException {
 public void setParameter(Object param) {
     // logger.info("in setParameter(),");
     super.setParameter(param);
-    parameterTypes.add(new Integer(INPUT_PARAM));
+    parameterTypes.add(Integer.valueOf(INPUT_PARAM));
     // logger.info("Leaving setParameter() in SPMap");
   }
 
@@ -295,7 +296,7 @@ public void setParameter(Object param) {
 
   public void setOutputParameterType(String type) {
     super.setParameter( type);
-    parameterTypes.add(new Integer(OUTPUT_PARAM));
+    parameterTypes.add(Integer.valueOf(OUTPUT_PARAM));
   }
 
   public Object getOutputParameter(Integer i) throws UserException {
@@ -325,7 +326,7 @@ public void setParameter(Object param) {
             break;
 
           case Types.BIT:
-            value = new Boolean(callStatement.getBoolean(index));
+            value =  Boolean.valueOf(callStatement.getBoolean(index));
             break;
 
           case Types.DATE:
@@ -355,7 +356,7 @@ public void setParameter(Object param) {
             break;
 
           case Types.INTEGER:
-            value = new Integer(callStatement.getInt(index));
+            value = Integer.valueOf(callStatement.getInt(index));
             break;
 
           case Types.NUMERIC:
@@ -365,21 +366,21 @@ public void setParameter(Object param) {
             int scale = meta.getScale(index);
 
             if (scale == 0) {
-              value = new Integer(callStatement.getInt(index));
+              value = Integer.valueOf(callStatement.getInt(index));
             }
             else {
-              value = new Double(callStatement.getString(index));
+              value = Double.valueOf(callStatement.getString(index));
             }
             break;
 
           case Types.SMALLINT:
           case Types.TINYINT:
-            value = new Integer(callStatement.getInt(index));
+            value = Integer.valueOf(callStatement.getInt(index));
             break;
 
           case Types.DOUBLE:
           case Types.FLOAT:
-            value = new Double(callStatement.getDouble(index));
+            value = Double.valueOf(callStatement.getDouble(index));
             break;
 
           default:
