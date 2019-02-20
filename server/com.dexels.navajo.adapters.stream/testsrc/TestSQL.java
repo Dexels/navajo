@@ -52,7 +52,7 @@ public class TestSQL {
 	}
 
 	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
-		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", Operand.ofString((String)msg.columnValue("ORGANIZATIONID")))
+		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", Operand.ofString((String)msg.value("ORGANIZATIONID").orElse("")))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
 			.reduce(msg, set("[ATTRIBNAME]", "[ATTRIBVALUE]"));
@@ -97,10 +97,13 @@ public class TestSQL {
 
 	public Function<ImmutableMessage,ImmutableMessage> rename(String key, String to) throws TMLExpressionException, SystemException {
 		return in->{
-			Object value = in.columnValue(key);
+			Optional<Object> value = in.value(key);
+			if(!value.isPresent()) {
+				return in;
+			}
 			String type = in.columnType(key);
 			return in.without(key)
-					.with(key, value, type);
+					.with(key, value.get(), type);
 		};
 	}
 	

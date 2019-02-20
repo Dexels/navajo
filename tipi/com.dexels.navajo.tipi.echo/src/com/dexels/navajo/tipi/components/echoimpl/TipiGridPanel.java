@@ -258,7 +258,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     // ArrayList al = new ArrayList();
     // while (st.hasMoreTokens()) {
     // String element = (String) st.nextElement();
-    // al.add(new Integer(element));
+    // al.add(Integer.valueOf(element));
     // }
     // return al.toArray();
     // }
@@ -278,7 +278,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
                 // logger.info("Starr. reuslt: "+element);
             }
             int val = Integer.parseInt(element);
-            myWidths.add(new Integer(val));
+            myWidths.add(Integer.valueOf(val));
             // addColumnStrut(count, val);
             count++;
         }

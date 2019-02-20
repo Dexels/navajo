@@ -75,8 +75,9 @@ public abstract class BaseVersion {
 	
 	private void addInclude(String versionClass) {
 		try {
-			Class<?> c = Class.forName(versionClass);
-			AbstractVersion v = (AbstractVersion) c.newInstance();
+			@SuppressWarnings("unchecked")
+			Class<? extends AbstractVersion> c = (Class<? extends AbstractVersion>) Class.forName(versionClass);
+			AbstractVersion v =  c.getDeclaredConstructor().newInstance();
 			// Check if v is not already included in chain.
 			if (!checkInclude(versionClass)) {
 				//logger.info(this.getClass().getName() + ": Adding " + versionClass);

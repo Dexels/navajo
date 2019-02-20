@@ -101,7 +101,7 @@ private CheckBox myButton;
       return myButton.getText();
     }
     if (name.equals("selected")) {
-      return new Boolean(myButton.isSelected());
+      return Boolean.valueOf(myButton.isSelected());
     }
 
     return super.getComponentValue(name);

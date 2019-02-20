@@ -31,7 +31,7 @@ public class PartCount extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Binary b = (Binary) getOperand(0);
+		Binary b = (Binary) getBinaryOperand(0);
 		DataSource ds = new BinaryDataSource(b);
 		try {
 			MimeMultipart mmp = new MimeMultipart(ds);

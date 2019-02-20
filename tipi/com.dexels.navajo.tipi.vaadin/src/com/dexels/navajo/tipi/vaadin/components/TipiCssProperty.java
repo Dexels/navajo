@@ -112,7 +112,7 @@ public class TipiCssProperty extends TipiVaadinComponentImpl implements Property
             m.put("propertyValue", property.getTypedValue());
             m.put("new", property.getTypedValue());
             m.put("propertyType", property.getType());
-            m.put("propertyLength", new Integer(property.getLength()));
+            m.put("propertyLength", Integer.valueOf(property.getLength()));
             
             for (int i = 0; i < myListeners.size(); i++) {
                 TipiEventListener tel = myListeners.get(i);

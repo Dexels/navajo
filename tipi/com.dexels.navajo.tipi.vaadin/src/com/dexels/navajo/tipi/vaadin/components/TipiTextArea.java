@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.vaadin.components;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.document.AdHocProperty;
 import com.vaadin.data.Property;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.TextArea;
 
 public class TipiTextArea extends TipiVaadinComponentImpl {
@@ -15,6 +14,8 @@ public class TipiTextArea extends TipiVaadinComponentImpl {
 	@Override
 	public Object createContainer() {
 		p = new AdHocProperty("", String.class) {
+			private static final long serialVersionUID = -8607024176202410618L;
+
 			@Override
 			public String toString() {
 				return (String) getValue();

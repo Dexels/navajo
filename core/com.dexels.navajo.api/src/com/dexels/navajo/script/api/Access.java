@@ -195,7 +195,7 @@ public final class Access implements java.io.Serializable, Mappable {
         if (mapStatistics == null) { // First map.
             mapStatistics = new HashMap<Integer, MapStatistics>();
         }
-        Integer count = new Integer(mapStatistics.size());
+        Integer count = Integer.valueOf(mapStatistics.size());
         mapStatistics.put(count, ms);
 
         return ms;

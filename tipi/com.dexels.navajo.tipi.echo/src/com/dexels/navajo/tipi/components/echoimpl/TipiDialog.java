@@ -214,24 +214,24 @@ public class TipiDialog extends TipiEchoDataComponentImpl{
     public Object getComponentValue(String name) {
         /** @todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method */
         if ("isShowing".equals(name)) {
-            // return new Boolean( ( (JDialog) getContainer()).isVisible());
-            return new Boolean(showing);
+            // return Boolean.valueOf( ( (JDialog) getContainer()).isVisible());
+            return Boolean.valueOf(showing);
         }
         if ("title".equals(name)) {
             // return ( (JDialog) getContainer()).getTitle();
             return title;
         }
         // if (name.equals("x")) {
-        // return new Integer(myBounds.x);
+        // return Integer.valueOf(myBounds.x);
         // }
         // if (name.equals("y")) {
-        // return new Integer(myBounds.y);
+        // return Integer.valueOf(myBounds.y);
         // }
         // if (name.equals("w")) {
-        // return new Integer(myBounds.width);
+        // return Integer.valueOf(myBounds.width);
         // }
         // if (name.equals("h")) {
-        // return new Integer(myBounds.height);
+        // return Integer.valueOf(myBounds.height);
         // }
         return super.getComponentValue(name);
     }

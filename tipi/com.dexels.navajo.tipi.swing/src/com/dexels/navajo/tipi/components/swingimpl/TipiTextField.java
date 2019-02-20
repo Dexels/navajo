@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
@@ -87,7 +88,8 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				Map<String, Object> hm = new HashMap<String, Object>();
 				hm.put("code", Integer.valueOf(e.getKeyCode()));
 				hm.put("modifiers",
-						KeyEvent.getKeyModifiersText(e.getModifiers()));
+						InputEvent.getModifiersExText(e.getModifiersEx())
+						);
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
 				return hm;
 			}

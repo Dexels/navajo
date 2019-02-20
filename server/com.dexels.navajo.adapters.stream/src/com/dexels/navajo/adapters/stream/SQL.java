@@ -114,7 +114,7 @@ public class SQL {
 		Map<String,Object> values = new HashMap<>();
 		Map<String,String> types = new HashMap<>();
 		names.forEach(e->{
-			values.put(e.toLowerCase(), m.columnValue(e));
+			values.put(e.toLowerCase(), m.value(e).orElse(null));
 			types.put(e.toLowerCase(), m.columnType(e));
 		});
 		return ImmutableFactory.create(values, types, Collections.emptyMap(), Collections.emptyMap());

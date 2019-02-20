@@ -18,16 +18,16 @@ public class CreateExpressionUrl extends FunctionInterface {
 		if (getOperands().size() < 2) {
 			throw new TMLExpressionException("CreateEchoUrl needs two parameters");
 		}
-		Object oo = getOperand(0);
+		Object oo = operand(0).value;
 		if(!(oo instanceof VaadinTipiContext)) {
 			throw new TMLExpressionException("CreateEchoUrl: param one should be an VaadinTipiContext");
 		}
 		String mime = null;
 		if(getOperands().size()>2) {
-			mime = (String) getOperand(2);
+			mime = getStringOperand(2);
 		}
-		VaadinTipiContext ee = (VaadinTipiContext)getOperand(0);
-		String expression = (String)getOperand(1);
+		VaadinTipiContext ee = (VaadinTipiContext)operand(0).value;
+		String expression = (String)getStringOperand(1);
 		String result = ee.createExpressionUrl(expression,mime);
 		logger.info("Expression result: "+result);
 		return result;

@@ -16,19 +16,19 @@ public class CheckTwitterToken  extends FunctionInterface {
 
     @Override
     public Object evaluate() throws TMLExpressionException {
-        if (getOperand(0) == null)
+        if (operand(0) == null)
             return null;
         
-        Object token1 = getOperand(0);
-        Object token2 = getOperand(1);
+        String token1 = getStringOperand(0);
+        String token2 = getStringOperand(1);
         
         if (token1 == null || token2 == null) {
             return false;
         }
         
         TwitterAdapter ta = new TwitterAdapter();
-        ta.setToken1((String) token1);
-        ta.setToken2((String) token2);
+        ta.setToken1(token1);
+        ta.setToken2(token2);
         
         try {
             ta.getStatus();

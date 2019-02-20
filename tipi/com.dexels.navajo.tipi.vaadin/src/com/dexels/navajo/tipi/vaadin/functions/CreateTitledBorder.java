@@ -7,7 +7,7 @@ public class CreateTitledBorder extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		String expression = (String)getOperand(0);
+		String expression = getStringOperand(0);
 		return expression;
 	}
 

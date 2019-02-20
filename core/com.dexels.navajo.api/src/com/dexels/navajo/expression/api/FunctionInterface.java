@@ -60,7 +60,7 @@ public abstract class FunctionInterface {
 	private final static Map<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<>();
 	private final static Map<Class<? extends FunctionInterface>, String> returnType = new HashMap<>();
 	private Class[][] myinputtypes;
-	private Optional<String> myreturntypes;
+//	private Optional<String> myreturntypes;
 
 	public abstract String remarks();
 
@@ -386,6 +386,7 @@ public abstract class FunctionInterface {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public List<String> typeCheck(List<ContextExpression> l, String expression) {
 		// Disabled for now
 		
@@ -460,6 +461,11 @@ public abstract class FunctionInterface {
 	public String getStringOperand(int index) {
 		return (String) operandWithType(index, "string");
 	}
+	
+	public Integer getIntegerOperand(int index) {
+		return (Integer) operandWithType(index, "integer");
+	}
+	
 	
 	public Binary getBinaryOperand(int index) {
 		return (Binary) operandWithType(index, "binary");

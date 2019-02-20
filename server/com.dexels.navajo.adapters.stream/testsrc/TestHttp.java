@@ -33,14 +33,16 @@ public class TestHttp {
 	@Test
 	public void testBiggerDownload() throws Exception {
 //		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
-		String url = "http://10.0.0.1:9090/nexus/content/repositories/obr2/.meta/obr.xml";
+		String url = "https://www.ad.nl/home/rss.xml";
 //		String url = "http://localhost:8080/clubs.xml";
+
 		JettyClient jc = new JettyClient();
 		long l = jc.callWithoutBodyToStream(url,e->e)
 			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
 			.count().blockingGet();
-		Assert.assertTrue(l>90000);
+		System.err.println("> "+l);
+		Assert.assertTrue(l>1000);
 	}
 	
 	@Test

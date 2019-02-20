@@ -12,9 +12,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiApplicationInstance;
-import tipi.TipiExtension;
-
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -27,6 +24,9 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
+
+import tipi.TipiApplicationInstance;
+import tipi.TipiExtension;
 
 public class VaadinTipiContext extends TipiContext {
  

@@ -93,7 +93,7 @@ public class TipiLayeredPanel extends TipiPanel {
 				JLayeredPane myPanel = (JLayeredPane) getContainer();
 				Component comp = (Component) c;
 				try {
-					Integer ii = new Integer(Integer.parseInt((String) constraints));
+					Integer ii = Integer.valueOf(Integer.parseInt((String) constraints));
 					myPanel.add(comp, ii);
 					comp.setBounds(new Rectangle(new Point(0, 0), myPanel.getSize()));
 				} catch (NumberFormatException e) {

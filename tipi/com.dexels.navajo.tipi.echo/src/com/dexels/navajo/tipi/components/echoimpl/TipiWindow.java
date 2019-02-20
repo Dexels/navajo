@@ -91,35 +91,35 @@ public final class TipiWindow extends TipiEchoDataComponentImpl{
 
     public Object getComponentValue(String name) {
         if ("visible".equals(name)) {
-            return new Boolean(myWindow.isVisible());
+            return Boolean.valueOf(myWindow.isVisible());
         }
         // if("title".equals(name)){
         // return myWindow.getTitle();
         // }
         // Rectangle r = myWindow.getBounds();
         // if (name.equals("x")) {
-        // return new Integer(r.x);
+        // return Integer.valueOf(r.x);
         // }
         // if (name.equals("y")) {
-        // return new Integer(r.y);
+        // return Integer.valueOf(r.y);
         // }
         // if (name.equals("w")) {
-        // return new Integer(r.width);
+        // return Integer.valueOf(r.width);
         // }
         // if (name.equals("h")) {
-        // return new Integer(r.height);
+        // return Integer.valueOf(r.height);
         // }
         // if (name.equals("iconifiable")) {
-        // return new Boolean(myWindow.isIconifiable());
+        // return Boolean.valueOf(myWindow.isIconifiable());
         // }
         // if (name.equals("maximizable")) {
-        // return new Boolean(myWindow.isMaximizable());
+        // return Boolean.valueOf(myWindow.isMaximizable());
         // }
         if (name.equals("closable")) {
-            return new Boolean(myWindow.isClosable());
+            return Boolean.valueOf(myWindow.isClosable());
         }
         if (name.equals("resizable")) {
-            return new Boolean(myWindow.isResizable());
+            return Boolean.valueOf(myWindow.isResizable());
         }
         if (name.equals("title")) {
             return myWindow.getTitle();

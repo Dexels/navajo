@@ -9,8 +9,6 @@ import org.icepdf.core.pobjects.Document;
 import org.icepdf.core.pobjects.graphics.text.LineText;
 import org.icepdf.core.pobjects.graphics.text.PageText;
 import org.icepdf.core.pobjects.graphics.text.WordText;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -20,8 +18,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiPDFSearch extends TipiHeadlessComponentImpl {
     private static final long serialVersionUID = 4898398670800512047L;
-
-    private final static Logger logger = LoggerFactory.getLogger(TipiPDFSearch.class);
 
     private Binary binary;
     private String searchString;

@@ -23,7 +23,7 @@ public class SelectionBridge implements Item {
 //		this.parent = parent;
 		name = new ObjectProperty<String>(src.getName(),String.class,true);
 		value = new ObjectProperty<String>(src.getValue(),String.class,true);
-		isSelected = new ObjectProperty<Boolean>(new Boolean(src.isSelected()),Boolean.class,false);
+		isSelected = new ObjectProperty<Boolean>(Boolean.valueOf(src.isSelected()),Boolean.class,false);
 	}
 
 	
