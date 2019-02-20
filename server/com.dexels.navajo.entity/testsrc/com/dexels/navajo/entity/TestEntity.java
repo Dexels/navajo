@@ -15,7 +15,7 @@ import com.dexels.navajo.document.Property;
 public class TestEntity {
 
     // static Message entity;
-    static EntityManager manager;
+    EntityManager manager;
 
     @Before
     public void setup() throws Exception {
@@ -172,7 +172,8 @@ public class TestEntity {
         e.startEntity();
         Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
-        Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
+        Navajo generateRequestMessage = k.generateRequestMessage();
+		Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/ActivityId"));
     }
 
     @Test
@@ -213,9 +214,12 @@ public class TestEntity {
         e.startEntity();
         Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
-        Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
-        Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/ExternalMatchId"));
-        Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/OrganizingDistrictId"));
+        Navajo generateRequestMessage = k.generateRequestMessage();
+        Assert.assertNotNull(generateRequestMessage);
+        generateRequestMessage.write(System.err);
+		Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/SeasonId"));
+        Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/ExternalMatchId"));
+        Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/OrganizingDistrictId"));
 
     }
 
