@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi Mail extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.mail
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.3.qualifier
+Bundle-Version: 1.2.4
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43"
 Bundle-ClassPath: .,
