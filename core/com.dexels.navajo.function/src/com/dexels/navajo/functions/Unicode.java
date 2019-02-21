@@ -7,18 +7,10 @@ public class Unicode extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
-		if (o == null) {
-			return null;
-		}
-		if (o instanceof String) {
-			String s = (String)o;
-			int i = Integer.decode(s).intValue();
-			Character c = new Character((char) i);
-			return ""+c;
-		} else {
-			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
-		}
+		String s = getStringOperand(0);
+		int i = Integer.decode(s).intValue();
+		Character c = Character.valueOf((char) i);
+		return ""+c;
 	}
 
 	@Override

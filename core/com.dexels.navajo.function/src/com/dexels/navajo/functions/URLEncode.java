@@ -1,4 +1,5 @@
 package com.dexels.navajo.functions;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
@@ -10,31 +11,21 @@ public class URLEncode extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
-		if (o == null) {
-			return null;
-		}
+		String stringToEncode = getStringOperand(0);
 		boolean space_as_plus = false;
 		if(getOperands().size() > 1){
-			Object b = getOperand(1);
-			if(b != null){
-				space_as_plus = (Boolean)b;
-			}
+			space_as_plus = getBooleanOperand(1);
 		}
-		if (o instanceof String) {
-			try{
-				String source = (String) o;				
-				String encoded = URLEncoder.encode(source, "UTF-8");
-				if(!space_as_plus){
-					encoded = encoded.replace("+", "%20");
-				}
-				return encoded;
-			}catch(Exception e){
-				throw new TMLExpressionException(this, "Can not parse URL: " + o.getClass().getName());
-			}
-		} else {
-			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
+		String encoded;
+		try {
+			encoded = URLEncoder.encode(stringToEncode, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new TMLExpressionException(this, "Can not parse URL: " + stringToEncode,e);
 		}
+		if(!space_as_plus){
+			encoded = encoded.replace("+", "%20");
+		}
+		return encoded;
 	}
 
 	@Override

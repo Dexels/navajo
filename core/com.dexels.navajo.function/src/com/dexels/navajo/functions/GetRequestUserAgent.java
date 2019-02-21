@@ -18,7 +18,7 @@ public class GetRequestUserAgent  extends FunctionInterface {
             return userAgent;
        }
        if ((getOperands().size() > 0)) {
-           return getOperand(0).toString();
+           return getStringOperand(0);
        }
       
         return DEFAULT_USER_AGENT;

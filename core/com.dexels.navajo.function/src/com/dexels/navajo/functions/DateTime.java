@@ -22,7 +22,7 @@ public final class DateTime extends FunctionInterface {
     @Override
 	public final String evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     		
-    		String pattern = "";
+    		String pattern;
     		DateTimeFormatter dtf;
     		
     		if(this.getOperands().isEmpty()){
@@ -31,11 +31,7 @@ public final class DateTime extends FunctionInterface {
     			pattern = "dd-MM-yyyy HH:mm:ss";
     		}else {
     			if(this.getOperands().size() == 1) {
-    				Object o = this.getOperand(0);
-    				if(o instanceof String)
-    					pattern = (String) this.getOperand(0);
-    				else
-    					throw new TMLExpressionException(this, "error: arguments must be a String ");
+    				pattern = this.getStringOperand(0);
     			}else
     				throw new TMLExpressionException(this, "error: can take 0 or 1 arguments ");
     		}
@@ -52,81 +48,5 @@ public final class DateTime extends FunctionInterface {
 	    	System.out.println(dtf.format(now));
 	    	
 	    	return dtf.format(now);
-    }
-
-    public static void main(String[] args) throws Exception {
-	    	
-	    	DateTime dateTime = new DateTime();
-	    	
-	    	// Test using invalid arguments
-	    	System.out.println("--------- Testing invalid arguments 1---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertIntegerOperand(1);
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-	    	
-	    	// Test using multiple arguments
-	    	System.out.println("--------- Testing multiple arguments---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
-			dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-	    	
-	    	// Test using default parameter
-	    	System.out.println("--------- Testing default pattern ---------");
-	    	try {
-			dateTime.reset();
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    	
-	    	// Test using valid pattern
-	    	System.out.println("--------- Testing valid pattern yyyy/MM/dd HH:mm:ss---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertStringOperand("\"yyyy/MM/dd HH:mm:ss\"");
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    	
-	    	// Test using valid pattern
-	    	System.out.println("--------- Testing valid pattern dd-mm-yyyy ---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertStringOperand("\"dd-mm-yyyy\"");
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    	
-	    	// Test using valid pattern
-	    	System.out.println("--------- Testing valid pattern HH:mm:ss ---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertStringOperand("\"HH:mm:ss\"");
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    	
-	    	// Test using invalid pattern
-	    	System.out.println("--------- Testing invalid pattern cc---------");
-	    	try {
-			dateTime.reset();
-			dateTime.insertStringOperand("cc");
-			dateTime.evaluate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}     	
-	    	
     }
 }

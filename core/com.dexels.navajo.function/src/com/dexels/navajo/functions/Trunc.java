@@ -14,7 +14,7 @@ public final class Trunc extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		java.util.Date date = (java.util.Date)this.getOperand(0);
+		java.util.Date date = getDateOperand(0);
 		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		try {
 			date = formatter.parse(formatter.format(date));
@@ -23,7 +23,8 @@ public final class Trunc extends FunctionInterface {
 		}
 		return date;
 	}
-    @Override
+
+	@Override
 	public boolean isPure() {
     		return false;
     }

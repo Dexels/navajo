@@ -57,7 +57,7 @@ public class GetSelectedValue extends FunctionInterface {
 			throw new TMLExpressionException(this,
 					"Invalid function call, need one parameter");
 		}
-		Object o = getOperand(0);
+		Object o = operand(0).value;
 		if (o == null) {
 			throw new TMLExpressionException(this,
 					"Invalid function call in GetSelectedValue: Parameter null");

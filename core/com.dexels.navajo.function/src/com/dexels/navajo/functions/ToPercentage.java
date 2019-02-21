@@ -50,7 +50,7 @@ public String usage() {
     // Tests.
     ToPercentage tm = new ToPercentage();
     tm.reset();
-    tm.insertFloatOperand(new Double(1.5));
+    tm.insertFloatOperand(Double.valueOf(1.5));
     System.out.println("result = " + ((Percentage) tm.evaluate()).formattedString());
 
     // Using expressions.

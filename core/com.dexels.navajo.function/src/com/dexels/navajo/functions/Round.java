@@ -69,7 +69,7 @@ public final class Round extends FunctionInterface {
 
 			dd = (int) Math.signum(dd) * ( (int) ( 0.5 + Math.abs(dd) * Math.pow( 10.0, digits ) ) ) / Math.pow( 10.0, digits );
 
-			return new Double( dd );
+			return Double.valueOf( dd );
 		} catch ( Exception e ) {
 			throw new TMLExpressionException( this, "Illegal type specified in Round() function: " + e.getMessage() );
 		}
@@ -79,8 +79,8 @@ public final class Round extends FunctionInterface {
 		Round r = new Round();
 
 		r.reset();
-		r.insertFloatOperand( new Double( -100.3 ) );
-		r.insertIntegerOperand( new Integer( 0 ) );
+		r.insertFloatOperand( Double.valueOf( -100.3 ) );
+		r.insertIntegerOperand( Integer.valueOf( 0 ) );
 
 		System.err.println("Input " + r.getOperand( 0 ) + ", rounded to " + r.getOperand( 1 ) + " digits: " + r.evaluate() );
 		

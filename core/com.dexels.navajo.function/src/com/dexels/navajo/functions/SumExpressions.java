@@ -100,7 +100,7 @@ public class SumExpressions extends FunctionInterface {
 		        }
 		      }
 		      if (sumType.equals("int")) {
-		        return new Integer( (int) sum);
+		        return Integer.valueOf( (int) sum);
 		      }
 		      else if (sumType.equals("money")) {
 		        return new Money(sum);
@@ -110,7 +110,7 @@ public class SumExpressions extends FunctionInterface {
 		        return new Percentage(sum);
 		      }
 		      else {
-		        return new Double(sum);
+		        return Double.valueOf(sum);
 		      }
 		    }
 		    catch (NavajoException ne) {

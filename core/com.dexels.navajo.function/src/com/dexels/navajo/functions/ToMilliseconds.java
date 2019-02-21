@@ -26,13 +26,13 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
           return null;
 
         if (o instanceof StopwatchTime){ // ClockTime does not support seconds correctly
-        	return new Integer((int) ( (StopwatchTime) o).getMillis());
+        	return Integer.valueOf((int) ( (StopwatchTime) o).getMillis());
         }
         if(o instanceof ClockTime){
         	if (((ClockTime) o).calendarValue()==null) {
-				    return new Long(0);
+				    return Long.valueOf(0);
 			    }
-        	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
+        	return Long.valueOf(((ClockTime) o).calendarValue().getTimeInMillis());
         }
 
        throw new com.dexels.navajo.expression.api.TMLExpressionException(this, "Expected one of: ClockTime, StopwatchTime");

@@ -41,12 +41,12 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     if (getOperands().size() == 1) {
-   	 return getMessageFromNavajo((String)getOperand(0));
+   	 return getMessageFromNavajo(getStringOperand(0));
     }
     if (getOperands().size() != 2) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
-    Object m = getOperand(0);
+    Object m = operand(0).value;
     if (m==null) {
         throw new TMLExpressionException(this, "Message argument expected. This one is null");
     }
@@ -54,12 +54,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
       throw new TMLExpressionException(this, "Message argument expected");
     }
 
-    Object o = getOperand(1);
-   if (!(o instanceof Integer)) {
-     throw new TMLExpressionException(this, "Integer argument expected");
-   }
-
-   Integer index = (Integer) o;
+   Integer index = getIntegerOperand(1);
    Message message = (Message)m;
    return message.getMessage(index.intValue());
   }

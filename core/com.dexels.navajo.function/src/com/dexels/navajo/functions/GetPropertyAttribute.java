@@ -70,17 +70,8 @@ public class GetPropertyAttribute extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		Object o = getOperand(0);
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "String argument expected");
-		}
-		Object o2 = getOperand(1);
-		if (!(o2 instanceof String)) {
-			throw new TMLExpressionException(this, "String argument expected");
-		}
-
-		String propertyName = (String) o;
-		String attribute = (String) o2;
+		String propertyName = getStringOperand(0);
+		String attribute = getStringOperand(1);
 
 		return getAttribute(propertyName, attribute);
 	}

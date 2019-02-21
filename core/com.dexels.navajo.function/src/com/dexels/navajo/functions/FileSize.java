@@ -16,12 +16,12 @@ public class FileSize extends FunctionInterface {
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		
 		if (getOperand(0) == null) {
-			return new Integer(0);
+			return Integer.valueOf(0);
 		}
 		
 		Binary binaryFile = (Binary)getOperand(0);
 		
-		return new Integer( (int) binaryFile.getLength());
+		return Integer.valueOf( (int) binaryFile.getLength());
     }
 	
 	@Override

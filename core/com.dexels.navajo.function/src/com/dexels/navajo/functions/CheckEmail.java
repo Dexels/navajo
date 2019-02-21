@@ -48,7 +48,7 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
-    Object o = getOperand(0);
+    Object o = operand(0).value;
     if (!(o instanceof String)) {
     	return Boolean.FALSE;
       //throw new TMLExpressionException(this, "Invalid email address, string expected");

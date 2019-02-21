@@ -33,10 +33,10 @@ public final class Size extends FunctionInterface {
 	@SuppressWarnings("rawtypes")
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	if(this.getOperands().size()==0) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}
     	if(this.getOperands().size()==1 && this.getOperands().get(0)==null) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}    	
     	
     	Object arg = this.getOperands().get(0);
@@ -46,16 +46,16 @@ public final class Size extends FunctionInterface {
             throw new TMLExpressionException("Argument expected for Size() function.");
         }
         else if (arg instanceof java.lang.String) {
-            return new Integer(((String) arg).length());
+            return Integer.valueOf(((String) arg).length());
         }
         else if (arg instanceof Binary) {
-        	return new Integer( (int) ((Binary) arg).getLength());
+        	return Integer.valueOf( (int) ((Binary) arg).getLength());
         } 
         else if (arg instanceof Message) {
-        	return new Integer( ((Message) arg).getArraySize());
+        	return Integer.valueOf( ((Message) arg).getArraySize());
         } 
         else if (arg instanceof Object[]) {
-          	return new Integer( ((Object[]) arg).length);
+          	return Integer.valueOf( ((Object[]) arg).length);
           } 
           
         else if (!(arg instanceof List)) {
@@ -64,7 +64,7 @@ public final class Size extends FunctionInterface {
         
         List list = (List) arg;
 
-        return new Integer(list.size());
+        return Integer.valueOf(list.size());
     }
 
     @Override

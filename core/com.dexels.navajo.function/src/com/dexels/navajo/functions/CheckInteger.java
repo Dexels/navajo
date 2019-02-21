@@ -41,7 +41,7 @@ public String remarks() {
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
 //    boolean force = false;
-    Object o = getOperand(0);
+    Object o = operand(0).value;
 
     // If strict flag is set, properties can be passed as string values.
     if (getOperands().size() > 1) {
@@ -70,17 +70,5 @@ public String usage() {
     return "CheckInteger(argument)";
   }
 
-  public static void main(String [] args) throws Exception {
-    CheckInteger ci = new CheckInteger();
-    ci.reset();
-    ci.insertStringOperand("aap");
-    Object result = ci.evaluate();
-    System.err.println("result = " + result);
 
-    ci.reset();
-    ci.insertOperand(null);
-    result = ci.evaluate();
-    System.err.println("result = " + result);
-
-  }
 }

@@ -52,14 +52,9 @@ public class GetProperty extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		Object o = getOperand(1);
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "String argument expected");
-		}
+		String propertyName = getStringOperand(1);
 
-		String propertyName = (String) o;
-
-		Object m = getOperand(0);
+		Object m = operand(0).value;
 		if (m == null) {
 			throw new TMLExpressionException(this, "Message or Navajo argument expected. This one is null");
 		}

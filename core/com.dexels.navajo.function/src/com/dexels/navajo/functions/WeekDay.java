@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
@@ -76,11 +77,11 @@ public String usage() {
     WeekDay wd = new WeekDay();
 
     wd.reset();
-    wd.insertOperand(null);
+    wd.insertOperand(Operand.NULL);
     System.out.println("result = " + wd.evaluate().toString());
 
     wd.reset();
-    wd.insertStringOperand("2003-07-16");
+    wd.insertStringOperand("2013-07-16");
     System.out.println("result = " + wd.evaluate().toString());
 
     wd.reset();

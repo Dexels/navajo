@@ -83,7 +83,7 @@ public final class DayOfWeek extends FunctionInterface {
     public static void main(String[] args) throws Exception {
         DayOfWeek f = new DayOfWeek();
         f.reset();
-        f.insertIntegerOperand(new Integer(6));
+        f.insertIntegerOperand(Integer.valueOf(6));
         f.insertBooleanOperand(new Boolean(false));
         Object o = f.evaluate();
         System.err.println("f = " + o);

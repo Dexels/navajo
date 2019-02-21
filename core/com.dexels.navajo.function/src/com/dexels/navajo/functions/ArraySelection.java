@@ -3,9 +3,6 @@ package com.dexels.navajo.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -35,7 +32,6 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 public class ArraySelection extends FunctionInterface {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(ArraySelection.class);
 
 	@Override
 	public String remarks() {
@@ -50,17 +46,9 @@ public class ArraySelection extends FunctionInterface {
 			throw new TMLExpressionException(this, usage());
 		}
 
-		for (int i = 0; i < getOperands().size(); i++) {
-			Object o = getOperands().get(i);
-			logger.info("Operand # " + i + " is: " + o.toString() + " - " + o.getClass());
-		}
-
-		if (!(getOperand(0) instanceof String && getOperand(1) instanceof String && getOperand(2) instanceof String)) {
-			throw new TMLExpressionException(this, usage());
-		}
-		String messageName = (String) getOperand(0);
-		String propertyName = (String) getOperand(1);
-		String valuePropertyName = (String) getOperand(2);
+		String messageName = getStringOperand(0);
+		String propertyName = getStringOperand(1);
+		String valuePropertyName = getStringOperand(2);
 
 //		Message parent = getCurrentMessage();
 		Navajo doc = getNavajo();

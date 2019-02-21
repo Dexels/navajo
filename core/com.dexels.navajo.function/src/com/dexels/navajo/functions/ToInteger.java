@@ -16,10 +16,10 @@ public final class ToInteger extends FunctionInterface {
           return null;
 
         if (o instanceof Double)
-          return new Integer( (int) ((Double) o).doubleValue() );
+          return Integer.valueOf( (int) ((Double) o).doubleValue() );
 
 
-        return new Integer(Integer.parseInt(o + ""));
+        return Integer.valueOf(Integer.parseInt(o + ""));
 
     }
 

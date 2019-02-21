@@ -50,7 +50,7 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
       result--;
     }
 
-    return new Integer(result);
+    return Integer.valueOf(result);
   }
 
   @Override

@@ -29,10 +29,10 @@ public final class GetImageWidth extends FunctionInterface {
     @Override
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	if(this.getOperands().size() == 0) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}
     	if(this.getOperands().size() == 1 && this.getOperands().get(0) == null) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}    	
     	
     	Object arg = this.getOperands().get(0);
@@ -68,7 +68,7 @@ public final class GetImageWidth extends FunctionInterface {
             	}
             }
         } else {
-        	return new Integer(0);
+        	return Integer.valueOf(0);
         }
         
     }

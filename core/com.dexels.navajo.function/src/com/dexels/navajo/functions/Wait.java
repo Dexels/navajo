@@ -20,15 +20,11 @@ public final class Wait extends FunctionInterface {
 		if ( getOperands().size() == 0) {
 			throw new TMLExpressionException(this, "Missing argument");
 		}
-		Object w = getOperand(0);
-		if ( w instanceof Integer ) {
-			try {
-				Thread.sleep(((Integer) w).intValue());
-			} catch (InterruptedException e) {
-				logger.error("Error: ", e);
-			}
-		} else {
-			throw new TMLExpressionException(this, "Expected integer argument");
+		int w = getIntegerOperand(0);
+		try {
+			Thread.sleep(((Integer) w).intValue());
+		} catch (InterruptedException e) {
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

@@ -72,7 +72,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), result);
+		assertEquals(Integer.valueOf(-10), result);
 		
 	}
 	
@@ -88,7 +88,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), result);
+		assertEquals(Integer.valueOf(0), result);
 		
 	}
 	
@@ -106,7 +106,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), result);
+		assertEquals(Integer.valueOf(-10), result);
 		
 	}
 	
@@ -127,7 +127,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), result);
+		assertEquals(Integer.valueOf(-10), result);
 		
 	}
 	
@@ -147,7 +147,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), result);
+		assertEquals(Integer.valueOf(0), result);
 		
 	}
 	
@@ -167,7 +167,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), result);
+		assertEquals(Integer.valueOf(-10), result);
 		
 	}
 	
@@ -187,7 +187,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), result);
+		assertEquals(Integer.valueOf(0), result);
 		
 	}
 	

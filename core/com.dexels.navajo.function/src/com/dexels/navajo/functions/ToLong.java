@@ -19,13 +19,13 @@ public final class ToLong extends FunctionInterface {
       	  return o;
         }
         if(o instanceof java.util.Date) {
-        	  return new Long(((java.util.Date)o).getTime());
+        	  return Long.valueOf(((java.util.Date)o).getTime());
           }
         if (o instanceof Double)
-          return new Long( (int) ((Double) o).doubleValue() );
+          return Long.valueOf( (int) ((Double) o).doubleValue() );
 
 
-        return new Long(Long.parseLong(o + ""));
+        return Long.valueOf(Long.parseLong(o + ""));
 
     }
 

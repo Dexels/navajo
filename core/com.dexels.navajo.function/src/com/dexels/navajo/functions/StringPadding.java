@@ -68,7 +68,7 @@ public class StringPadding extends FunctionInterface {
         StringPadding f = new StringPadding();
         f.reset();        
         f.insertStringOperand("Voetbal");
-        f.insertIntegerOperand(new Integer(12));
+        f.insertIntegerOperand(Integer.valueOf(12));
         f.insertStringOperand("l");
         f.insertStringOperand("1");
         Object o = f.evaluate();

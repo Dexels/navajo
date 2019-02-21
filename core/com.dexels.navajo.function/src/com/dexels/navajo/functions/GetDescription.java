@@ -42,11 +42,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
     if (getOperands().size() != 1) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
-   Object o = getOperand(0);
-   if (!(o instanceof Property)) {
-     throw new TMLExpressionException(this, "Property argument expected");
-   }
-   Property p = (Property) o ;
+   Property p = getPropertyOperand(0);
    return p.getDescription();
   }
   @Override

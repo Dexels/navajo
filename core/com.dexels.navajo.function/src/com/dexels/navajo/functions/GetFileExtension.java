@@ -8,7 +8,7 @@ public class GetFileExtension extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Binary b = (Binary) getOperand(0);
+		Binary b = getBinaryOperand(0);
 		if ( b != null ) {
 			return b.getExtension();
 		} else {

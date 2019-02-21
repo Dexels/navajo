@@ -30,7 +30,7 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
             return new StopwatchTime( ((java.util.Date) o).getTime());
         }
 
-      return new Integer(-1);
+      return Integer.valueOf(-1);
 
     }
 
@@ -53,11 +53,11 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
 	public static void main(String[] args) throws TMLExpressionException {
 		ToStopwatchTime ts = new ToStopwatchTime();
 		ts.reset();
-		ts.insertIntegerOperand(new Integer(4965234)); // 09:45:08:234
+		ts.insertIntegerOperand(Integer.valueOf(4965234)); // 09:45:08:234
 		Object o = ts.evaluate();
 		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
 		ts.reset();
-		ts.insertIntegerOperand(new Integer(4920000)); // 09:45
+		ts.insertIntegerOperand(Integer.valueOf(4920000)); // 09:45
 		o = ts.evaluate();
 		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
 

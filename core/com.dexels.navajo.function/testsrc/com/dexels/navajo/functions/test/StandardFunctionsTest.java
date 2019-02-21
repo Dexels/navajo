@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.dexels.utils.Base64;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +31,16 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.functions.CapString;
+import com.dexels.navajo.functions.CheckFloat;
+import com.dexels.navajo.functions.CheckInteger;
+import com.dexels.navajo.functions.CreateExpression;
+import com.dexels.navajo.functions.DateTime;
+import com.dexels.navajo.functions.ValidatePhoneNumber;
+import com.dexels.navajo.functions.WeekDay;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -119,14 +128,14 @@ public class StandardFunctionsTest {
 
 		// Test Integer.
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(-10));
+		fi.insertIntegerOperand(Integer.valueOf(-10));
 		Object o = fi.evaluateWithTypeChecking();
 		assertEquals(o.getClass(), Integer.class);
 		assertEquals(((Integer) o).intValue(), 10);
 
 		// Test Double.
 		fi.reset();
-		fi.insertFloatOperand(new Double(-10));
+		fi.insertFloatOperand(Double.valueOf(-10));
 		o = fi.evaluateWithTypeChecking();
 		assertEquals(o.getClass(), Double.class);
 		assertEquals(((Double) o).intValue(), 10);
@@ -202,7 +211,7 @@ public class StandardFunctionsTest {
 		boolean exception = false;
 		try {
 			fi.reset();
-			fi.insertIntegerOperand(new Integer(10));
+			fi.insertIntegerOperand(Integer.valueOf(10));
 			fi.evaluateWithTypeChecking();
 		} catch (Exception e) {
 			exception = true;
@@ -247,7 +256,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Wait");
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(10));
+		fi.insertIntegerOperand(Integer.valueOf(10));
 		Object o = fi.evaluateWithTypeChecking();
 		assertNull(o);
 
@@ -311,13 +320,13 @@ public class StandardFunctionsTest {
 		assertEquals("aap", o.toString());
 
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(10));
+		fi.insertIntegerOperand(Integer.valueOf(10));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10", o.toString());
 
 		fi.reset();
-		fi.insertFloatOperand(new Float(10));
+		fi.insertFloatOperand(Float.valueOf(10));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals("10.0", o.toString());
@@ -371,13 +380,13 @@ public class StandardFunctionsTest {
 		assertEquals(Percentage.class, o.getClass());
 
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(80));
+		fi.insertIntegerOperand(Integer.valueOf(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Percentage.class, o.getClass());
 
 		fi.reset();
-		fi.insertFloatOperand(new Double(80));
+		fi.insertFloatOperand(Double.valueOf(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Percentage.class, o.getClass());
@@ -395,13 +404,13 @@ public class StandardFunctionsTest {
 		assertEquals(Money.class, o.getClass());
 
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(80));
+		fi.insertIntegerOperand(Integer.valueOf(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Money.class, o.getClass());
 
 		fi.reset();
-		fi.insertFloatOperand(new Double(80));
+		fi.insertFloatOperand(Double.valueOf(80));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Money.class, o.getClass());
@@ -576,8 +585,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "Sum");
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(new Integer(10));
-		list.add(new Integer(10));
+		list.add(Integer.valueOf(10));
+		list.add(Integer.valueOf(10));
 
 		fi.reset();
 		fi.insertOperand(Operand.ofList(list));
@@ -596,7 +605,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
 		fi.insertStringOperand("aap");
-		fi.insertIntegerOperand(new Integer(10));
+		fi.insertIntegerOperand(Integer.valueOf(10));
 		fi.insertStringOperand("*");
 
 		Object o = fi.evaluateWithTypeChecking();
@@ -613,7 +622,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
 		fi.insertStringOperand("aap");
-		fi.insertIntegerOperand(new Integer(10));
+		fi.insertIntegerOperand(Integer.valueOf(10));
 		fi.insertStringOperand("*");
 		fi.insertBooleanOperand(true);
 
@@ -631,7 +640,7 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
 		fi.insertStringOperand("aap");
-		fi.insertIntegerOperand(new Integer(10));
+		fi.insertIntegerOperand(Integer.valueOf(10));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -658,8 +667,8 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.insertStringOperand("substring");
 		fi.insertStringOperand("Apenoot");
-		fi.insertIntegerOperand(new Integer(0));
-		fi.insertIntegerOperand(new Integer(4));
+		fi.insertIntegerOperand(Integer.valueOf(0));
+		fi.insertIntegerOperand(Integer.valueOf(4));
 
 		o = fi.evaluateWithTypeChecking();
 
@@ -675,7 +684,7 @@ public class StandardFunctionsTest {
 		fi.reset();
 		fi.insertStringOperand("aap,noot,mies");
 		fi.insertStringOperand(",");
-		fi.insertIntegerOperand(new Integer(2));
+		fi.insertIntegerOperand(Integer.valueOf(2));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -724,8 +733,8 @@ public class StandardFunctionsTest {
 		assertEquals("1", o.toString());
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(new Integer(10));
-		list.add(new Integer(10));
+		list.add(Integer.valueOf(10));
+		list.add(Integer.valueOf(10));
 		fi.reset();
 		fi.insertListOperand(list);
 
@@ -745,7 +754,7 @@ public class StandardFunctionsTest {
 		fi.setInMessage(createTestNavajo());
 		fi.insertMessageOperand(createTestNavajo().getMessage("Aap"));
 		fi.insertStringOperand("Noot");
-		fi.insertIntegerOperand(new Integer(2));
+		fi.insertIntegerOperand(Integer.valueOf(2));
 
 		Object o = fi.evaluateWithTypeChecking();
 
@@ -788,7 +797,7 @@ public class StandardFunctionsTest {
 
 		FunctionInterface fi = fff.getInstance(cl, "Round");
 		fi.reset();
-		fi.insertFloatOperand(new Double(10.5));
+		fi.insertFloatOperand(Double.valueOf(10.5));
 		fi.insertIntegerOperand(0);
 
 		Object o = fi.evaluateWithTypeChecking();
@@ -1708,8 +1717,8 @@ public class StandardFunctionsTest {
 		FunctionInterface fi = fff.getInstance(cl, "CheckRange");
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(new Integer(10));
-		list.add(new Integer(10));
+		list.add(Integer.valueOf(10));
+		list.add(Integer.valueOf(10));
 
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
@@ -1936,4 +1945,178 @@ public class StandardFunctionsTest {
 		assertEquals(Boolean.FALSE, o);
 	}
 
+	@Test
+	public void testPhone() throws Exception {
+	    ValidatePhoneNumber e1 = new ValidatePhoneNumber();
+	    e1.reset();
+	    e1.insertStringOperand("+31 (0)20 490 4977");
+	    ValidatePhoneNumber e2 = new ValidatePhoneNumber();
+	    e2.reset();
+	    e2.insertStringOperand("020-4904977");
+        System.out.println(e1.getStringOperand(0) + " - " + e1.evaluate());
+        Assert.assertTrue((Boolean)e1.evaluate());
+        System.out.println(e2.getStringOperand(0) + " - " + e2.evaluate());
+        Assert.assertTrue((Boolean)e2.evaluate());
+	}
+
+	@Test
+	public void testWeekDay() throws Exception {
+
+		    // Tests.
+		    WeekDay wd = new WeekDay();
+
+		    wd.reset();
+		    wd.insertOperand(Operand.NULL);
+//		    System.out.println("result = " + wd.evaluate().toString());
+		    Assert.assertEquals("THU", wd.evaluate().toString());
+		    wd.reset();
+		    wd.insertStringOperand("2013-07-16");
+//		    System.out.println("result = " + wd.evaluate().toString());
+		    Assert.assertEquals("TUE", wd.evaluate().toString());
+
+		    wd.reset();
+		    wd.insertDateOperand(new java.util.Date(System.currentTimeMillis()));
+//		    System.out.println("result = " + wd.evaluate().toString());
+		    Assert.assertEquals("THU", wd.evaluate().toString());
+
+		  }
+
+	@Test
+	public  void testCapString() throws TMLExpressionException {
+		CapString t = new CapString();
+		t.reset();
+		t.insertStringOperand("012345678901234567890");
+		t.insertIntegerOperand(6);
+		String res = (String) t.evaluate();
+		System.err.println(">" + res + "<");
+		Assert.assertEquals("012345", res);
+	}
+	
+	@Test
+	public void testCheckFloatExtended() throws Exception {
+		CheckFloat cf = new CheckFloat();
+
+		cf.reset();
+		cf.insertIntegerOperand(Integer.valueOf(1234));
+		Object result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
+		cf.reset();
+		cf.insertFloatOperand(Double.valueOf(5.67));
+		result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
+
+		cf.reset();
+		cf.insertFloatOperand(Double.valueOf(+7.98E4));
+		result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
+
+		cf.reset();
+		cf.insertFloatOperand(Double.valueOf(-5.43E-2));
+		result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
+
+		cf.reset();
+		cf.insertStringOperand("aap");
+		result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertFalse((boolean) result);
+
+		cf.reset();
+		cf.insertOperand(Operand.NULL);
+		result = cf.evaluate();
+		System.err.println("result = " + result);
+		Assert.assertFalse((boolean) result);
+	}
+	
+	@Test
+	  public void testCheckIntegerExtended() throws Exception {
+		    CheckInteger ci = new CheckInteger();
+		    ci.reset();
+		    ci.insertStringOperand("aap");
+		    Object result = ci.evaluate();
+		    System.err.println("result = " + result);
+		Assert.assertFalse((boolean) result);
+		    ci.reset();
+		    ci.insertOperand(Operand.NULL);
+		    result = ci.evaluate();
+		    System.err.println("result = " + result);
+		    Assert.assertFalse((boolean) result);
+		  }
+	
+	@Test
+	  public void testCheckUniquenessExtended() throws Exception {
+		    String expression = "Hallo \n Hoe is het nou?";
+		    CreateExpression ce = new CreateExpression();
+		    ce.reset();
+		    ce.insertStringOperand(expression);
+		    String result = (String) ce.evaluate();
+		    System.err.println("result:");
+		    System.err.println(result);
+		    Operand o = Expression.evaluate(result, null);
+		    System.err.println("Evaluated to: ");
+		    System.err.println(o.value);
+		    Assert.assertEquals(2, ((String)o.value).split("\n").length);
+		  }
+	
+	@Test(expected=TMLExpressionException.class)
+	public void testDateTimeInvalidArgument() {
+		DateTime dateTime = new DateTime();
+		dateTime.reset();
+		dateTime.insertIntegerOperand(1);
+		dateTime.evaluate();
+	}
+
+	@Test(expected=TMLExpressionException.class)
+	public void testDateTimeMoreInvalidArgument() {
+		DateTime dateTime = new DateTime();
+		dateTime.reset();
+		dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
+		dateTime.insertStringOperand("yyyy/MM/dd HH:mm:ss");
+		dateTime.evaluate();
+	}
+
+	@Test(expected=TMLExpressionException.class)
+	public void testDateTimeAnotherInvalidArgument() {
+		DateTime dateTime = new DateTime();
+		dateTime.reset();
+		dateTime.reset();
+		dateTime.insertStringOperand("cc");
+		dateTime.evaluate();
+	}
+	@Test
+	public void testDateTime() {
+		// Test using default parameter
+		DateTime dateTime = new DateTime();
+		System.out.println("--------- Testing default pattern ---------");
+		dateTime.reset();
+		String res = dateTime.evaluate();
+		System.err.println("res1: " + res);
+
+		// Test using valid pattern
+		System.out.println("--------- Testing valid pattern yyyy/MM/dd HH:mm:ss---------");
+		dateTime.reset();
+		dateTime.insertStringOperand("\"yyyy/MM/dd HH:mm:ss\"");
+		String res2 = dateTime.evaluate();
+		System.err.println("res2: " + res2);
+
+		// Test using valid pattern
+		System.out.println("--------- Testing valid pattern dd-mm-yyyy ---------");
+		dateTime.reset();
+		dateTime.insertStringOperand("\"dd-mm-yyyy\"");
+		String res3 = dateTime.evaluate();
+		System.err.println("res3: " + res3);
+
+		// Test using valid pattern
+		System.out.println("--------- Testing valid pattern HH:mm:ss ---------");
+		dateTime.reset();
+		dateTime.insertStringOperand("\"HH:mm:ss\"");
+		String res4 = dateTime.evaluate();
+		System.err.println("res4: " + res4);
+
+
+	}
 }
