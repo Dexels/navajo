@@ -363,7 +363,7 @@ public class TslCompiler {
 								objectizedParams.append("new Integer(" + v
 										+ ")");
 							} else if (v instanceof Long) {
-								objectizedParams.append("new Long(" + v + ")");
+								objectizedParams.append("Long.valueOf(" + v + ")");
 							} else if (v instanceof Float) {
 								objectizedParams.append("new Float(" + v + ")");
 							} else if (v instanceof Boolean) {
@@ -371,7 +371,7 @@ public class TslCompiler {
 										+ ")");
 							} else if (v instanceof Double) {
 								objectizedParams
-										.append("new Double(" + v + ")");
+										.append("Double.valueOf(" + v + ")");
 							} else if (v == null) {
 							    // Null support
 							    objectizedParams.append(v);
@@ -417,11 +417,11 @@ public class TslCompiler {
 							call = "new Integer(" + call + ")";
 						} else if (attrType.equals("float")
 								|| attrType.equals("double")) {
-							call = "new Double(" + call + ")";
+							call = "Double.valueOf(" + call + ")";
 						} else if (attrType.equals("boolean")) {
 							call = "new Boolean(" + call + ")";
 						} else if (attrType.equals("long")) {
-							call = "new Long(" + call + ")";
+							call = "Long.valueOf(" + call + ")";
 						}
 					} catch (ClassNotFoundException cnfe) {
 						if (expressionContextClass == null) {
@@ -457,13 +457,13 @@ public class TslCompiler {
 				} else if (v instanceof Integer) {
 					call = "new Integer(" + v + ")";
 				} else if (v instanceof Long) {
-					call = "new Long(" + v + ")";
+					call = "Long.valueOf(" + v + ")";
 				} else if (v instanceof Float) {
 					call = "new Float(" + v + ")";
 				} else if (v instanceof Boolean) {
 					call = "new Boolean(" + v + ")";
 				} else if (v instanceof Double) {
-					call = "new Double(" + v + ")";
+					call = "Double.valueOf(" + v + ")";
 				} else
 					throw new UserException(-1,
 							"Unknown type encountered during compile time: "
@@ -949,7 +949,7 @@ public class TslCompiler {
 		                    superEntity = superEntity.split("\\?")[0];
 		                }
 		                addDependency(
-		        				"dependentObjects.add( new ExtendDependency( new Long(\""
+		        				"dependentObjects.add( new ExtendDependency( Long.valueOf(\""
 		        						+ ExtendDependency.getScriptTimeStamp(superEntity)
 		        						+ "\"), \"" + superEntity + "\"));\n", "EXTEND" + superEntity);
 		                
@@ -2956,7 +2956,7 @@ public class TslCompiler {
 
 		// Add dependency.
 		addDependency(
-				"dependentObjects.add( new IncludeDependency( new Long(\""
+				"dependentObjects.add( new IncludeDependency( Long.valueOf(\""
 						+ IncludeDependency.getFileTimeStamp(includedFile)
 						+ "\"), \"" + fileName + "\"));\n", "INCLUDE" + script);
 		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), fileName , fileName));
@@ -3593,7 +3593,7 @@ public class TslCompiler {
 			for (int i = 0; i < inheritedScripts.size(); i++) {
 			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
 				addDependency(
-						"dependentObjects.add( new InheritDependency( new Long(\""
+						"dependentObjects.add( new InheritDependency( Long.valueOf(\""
 								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));

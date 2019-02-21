@@ -97,9 +97,9 @@ public final class ASTMappableNode extends SimpleNode {
 		            if (oValue == null)
 		                return Operand.NULL;
 		            else if (oValue instanceof Float) {
-		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  new Double(((Float) oValue).doubleValue());
+		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  Double.valueOf(((Float) oValue).doubleValue());
 		            } else if (oValue instanceof Long) {
-			              return Operand.ofLong(((Long) oValue).longValue()); //  new Double(((Float) oValue).doubleValue());
+			              return Operand.ofLong(((Long) oValue).longValue()); //  Double.valueOf(((Float) oValue).doubleValue());
 		            } else
 		              return Operand.ofDynamic(oValue);
 

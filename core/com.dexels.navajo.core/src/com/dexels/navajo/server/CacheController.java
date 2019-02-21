@@ -137,7 +137,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 				expirations.clear();
 				for (int i = 0; i < messages.size(); i++) {
 					String webservice = messages.get(i).getProperty("Webservice").getValue();
-					Long expir = new Long( messages.get(i).getProperty("Timeout").getValue() );
+					Long expir = Long.valueOf( messages.get(i).getProperty("Timeout").getValue() );
 					boolean userSpecific = (  messages.get(i).getProperty("UserCache") != null ? 
 							messages.get(i).getProperty("UserCache").getValue().equals("true") : false );
 					String serviceKeys = ( messages.get(i).getProperty("CacheKeys") != null ? messages.get(i).getProperty("CacheKeys").getValue() : null );

@@ -337,10 +337,15 @@ public abstract class FunctionInterface {
 
 	public Object operandWithType(int index, String type) {
 		Operand d = operand(index);
+		if(d.value==null) {
+			return null;
+		}
 		if(d.type.equals(type)) {
 			return d.value;
 		}
-		throw new TMLExpressionException("Illegal operand type operand (index = " + index + ") should be of type: "+type+" but was of type: "+d.type);
+		Object value = d.value;
+		Class<?> valueClass = value == null ? null : value.getClass();
+		throw new TMLExpressionException("Illegal operand type operand (index = " + index + ") should be of type: "+type+" but was of type: "+d.type+" the value class is: "+valueClass);
 
 	}
 	protected Operand operand(int index) {
@@ -465,7 +470,13 @@ public abstract class FunctionInterface {
 	public Integer getIntegerOperand(int index) {
 		return (Integer) operandWithType(index, "integer");
 	}
+	public Boolean getBooleanOperand(int index) {
+		return (Boolean) operandWithType(index, "boolean");
+	}
 	
+	public Property getPropertyOperand(int index) {
+		return (Property) operandWithType(index, "property");
+	}
 	
 	public Binary getBinaryOperand(int index) {
 		return (Binary) operandWithType(index, "binary");
@@ -474,6 +485,10 @@ public abstract class FunctionInterface {
 		return (BinaryDigest) operandWithType(index, "binary_digest");
 		
 	}
+    public Date getDateOperand(int index) {
+		return (Date) operandWithType(index, "date");
+	}
+
 
 	public void insertDateOperand(Date o) {
 		insertOperand(Operand.ofDate(o));
@@ -492,7 +507,6 @@ public abstract class FunctionInterface {
 		insertOperand(Operand.ofClockTime(clockTime));
 	}
 
-	@Deprecated
 	public void insertMessageOperand(Message message) {
 		insertOperand(Operand.ofMessage(message));
 	}

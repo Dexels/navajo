@@ -55,7 +55,7 @@ public class IncludeDependency extends Dependency {
 	}
 	
 	public static void main(String [] args) {
-		Long l = new Long("32323232");
+		Long l = Long.valueOf("32323232");
 		new IncludeDependency(l, "ssa");
 	}
 	

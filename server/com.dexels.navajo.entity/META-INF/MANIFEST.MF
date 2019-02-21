@@ -49,3 +49,4 @@ Export-Package: com.dexels.navajo.entity,
  com.dexels.navajo.entity.transactions,
  com.dexels.navajo.entity.util
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.entity

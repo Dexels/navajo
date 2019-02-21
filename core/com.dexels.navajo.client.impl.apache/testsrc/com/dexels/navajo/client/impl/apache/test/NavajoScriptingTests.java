@@ -119,7 +119,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 		Assert.assertEquals(fl.getProperty("FullTestFloatProperty").getValue(),
 				"10.0");
 		Assert.assertEquals(fl.getProperty("FullTestFloatProperty")
-				.getTypedValue(), new Double(10.0));
+				.getTypedValue(), Double.valueOf(10.0));
 
 		Assert.assertEquals(
 				fl.getProperty("WrongTestFloatProperty").getValue(), "aap");
