@@ -79,7 +79,6 @@ public class DiffMap implements Mappable {
 				String diff = getDiffForMatchingKeys(currentMessage, resultElement);
 				if ("".equals(diff)) {
 					// nothing
-					break;
 				} else {
 					// modify, should take the properties from the new message!
 					resultElement.addProperty(NavajoFactory.getInstance().createProperty(myAccess.getOutputDoc(), "Modify", Property.BOOLEAN_PROPERTY, String.valueOf(true), 0, null, Property.DIR_OUT));
