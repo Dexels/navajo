@@ -30,7 +30,6 @@ public class ChangeNotificationEvent implements NavajoEvent {
 	
 	@Override
 	public Navajo getEventNavajo() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

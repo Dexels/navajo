@@ -458,7 +458,6 @@ public abstract class ScriptCompiler {
 
     /**
      * Takes care of any script-language specific compilation. Returns a set of required packages
-     * @param scriptPath TODO
      */
     protected abstract Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
             String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;

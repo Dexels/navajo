@@ -277,19 +277,16 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 
 	@Override
 	public Navajo createNavajo(Object representation) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Message createMessage(Object representation) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Property createProperty(Object representation) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

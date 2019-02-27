@@ -30,7 +30,7 @@ public class Rename implements ReactiveMerger {
 				return item;
 			}
 			String fromKey = parms.paramString("from");
-			Object oldValue = item.message().columnValue(fromKey);
+			Object oldValue = item.message().value(fromKey).orElse(null);
 			String oldType = item.message().columnType(fromKey);
 			
 			return DataItem.of(item.message().without(fromKey ).with(parms.paramString("to"),oldValue, oldType));

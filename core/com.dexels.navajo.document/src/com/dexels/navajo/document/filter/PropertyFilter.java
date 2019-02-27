@@ -34,7 +34,6 @@ public final class PropertyFilter {
 
     public PropertyFilter(String propName, String value, String type, String operator) throws NavajoException {
         myPropertyName = propName;
-        // TODO: Add support for
         myValue = NavajoFactory.getInstance().createProperty(null, "unknown", type, value, 0, "", Property.DIR_IN);
         myOperator = operator;
     }

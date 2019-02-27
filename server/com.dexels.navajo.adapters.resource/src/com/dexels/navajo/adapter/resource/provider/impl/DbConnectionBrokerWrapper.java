@@ -90,7 +90,6 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -105,7 +104,6 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 
 	@Override
 	public void setCloseAll() {
-		// TODO Auto-generated method stub
 
 	}
 

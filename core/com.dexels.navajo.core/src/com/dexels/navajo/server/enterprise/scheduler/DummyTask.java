@@ -127,7 +127,6 @@ public class DummyTask implements TaskInterface {
 
 	@Override
 	public String getTenant() {
-		// TODO Auto-generated method stub
 		return this.tenant;
 	}
 

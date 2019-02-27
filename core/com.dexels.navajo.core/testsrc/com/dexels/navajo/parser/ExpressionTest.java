@@ -233,7 +233,7 @@ public class ExpressionTest {
 		assertEquals("option1", o.value);
 	}
 
-	// TODO: Re-enable if I backport this to non-compiled expressions.
+	// Re-enable if I backport this to non-compiled expressions.
 	@Test @Ignore
 	public void testExpressionWithDocSpecWithoutCompiled() throws Exception {
 		Expression.compileExpressions = false;
@@ -248,7 +248,7 @@ public class ExpressionTest {
 		assertEquals("option1", o.value);
 	}
 
-	// TODO: Re-enable if I backport this to non-compiled expressions.
+	// Re-enable if I backport this to non-compiled expressions.
 	@Test @Ignore
 	public void testExpressionWithDocSpecWithinSelectionWithoutCompiled() throws Exception {
 		Expression.compileExpressions = false;

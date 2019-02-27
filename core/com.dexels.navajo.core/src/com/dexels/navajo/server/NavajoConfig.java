@@ -43,7 +43,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public String hibernatePath;
 	public String scriptPath;
 	
-	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
 	private String sharedStoreClass;
 	
 	private String auditLevel;
@@ -79,7 +78,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     private float asyncTimeout;
 	private File rootFile;
 
-    private static volatile NavajoConfig instance = null;
 	private File jarFolder;
 	private String instanceName;
 	private String instanceGroup;
@@ -113,7 +111,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 		adapterClassloader = ncs;
 		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
 		// called during loadConfig()!!
-		instance = this;
 		loadConfig(in, externalRootPath,servletContextRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
 
@@ -230,7 +227,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 					Class<? extends DescriptionProviderInterface> cc = (Class<? extends DescriptionProviderInterface>) Class.forName(descriptionProviderClass);
 					if (cc!=null) {
 						if (myDescriptionProvider==null) {
-							myDescriptionProvider = cc.newInstance();
+							myDescriptionProvider = cc.getDeclaredConstructor().newInstance();
 							myDescriptionProvider.setDescriptionConfigMessage(descriptionMessage);
 						} else {
 							logger.warn("Warning: Resetting description provider.");
@@ -241,10 +238,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 					}
 				}
 			} 
-					
-			if ( body.getProperty("repository/class") != null ) {
-				repositoryClass = body.getProperty("repository/class").getValue();
-			}
 			
 			if ( body.getProperty("sharedstore/class") != null ) {
 				sharedStoreClass = body.getProperty("sharedstore/class").getValue();
@@ -263,7 +256,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		}
     		
     		if (dbPort != -1) {
-    			dbProperties.put("port", new Integer(dbPort));
+    			dbProperties.put("port", Integer.valueOf(dbPort));
     		}
     		
     		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
@@ -500,7 +493,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	try {
     		if ( sharedStoreClass != null ) {
     			Class<?> c = Class.forName(sharedStoreClass);
-    			SharedStoreInterface ssi = (SharedStoreInterface) c.newInstance();
+    			SharedStoreInterface ssi = (SharedStoreInterface) c.getDeclaredConstructor().newInstance();
     			return ssi;
     		} else {
     			logger.warn("No SharedStore implementation defined, using default: SharedFileStore");

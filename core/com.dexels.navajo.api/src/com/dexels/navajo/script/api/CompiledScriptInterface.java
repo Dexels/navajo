@@ -66,8 +66,6 @@ public interface CompiledScriptInterface {
 
 	/**
 	 * Pool for use of Navajo functions.
-	 * TODO rewrite to OSGi services
-	 * TODO use generics and stronger typing
 	 * @param name
 	 * @return
 	 */

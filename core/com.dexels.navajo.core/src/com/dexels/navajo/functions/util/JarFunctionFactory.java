@@ -95,7 +95,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		String inputParams = null;
 		String resultParam = null;
 		for (int j = 0; j < def.size(); j++) {
-			// TODO Check tag name?
 			if ( def.get(j).getName().equals("description")) {
 				description =  def.get(j).getContent();
 			}
@@ -131,7 +130,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		
 		
 		try {
-			// TODO Detect OSGi mode
 			Iterator<?> iter = java.util.ServiceLoader.load(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), myClassLoader).iterator();
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();

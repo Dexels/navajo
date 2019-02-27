@@ -222,7 +222,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public Message addMessage(Message m) {
-        // Would prefer to throw a NPE TODO do it.
         if (m == null) {
             return null;
         }
@@ -375,8 +374,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             propertyList.add(q);
             propertyMap.put(p.getName(), p);
         }
-        // #TODO: MAYBE THIS IS NOT CORRRECT FOR FINANCIAL FORMS IN SLC...
-        // initPropertyFromDefinition(q);
     }
 
     /**
@@ -960,7 +957,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     public final Message getByPath(String path) {
-        /** @todo ARRAY SUPPORT */
         if (path.startsWith("../")) {
             Message m = getParentMessage().getMessage(path.substring(3));
             // I THINK! It did not make sense at all
@@ -1083,13 +1079,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         endIndex = i;
     }
 
-    /**
-     * UPDATE: This is
-     * 
-     * @todo Beware, the functionality is different than the jaxpimpl version If
-     *       this is an array element, it will return the array. The jaxpimpl
-     *       will never return an array msg, it will return its parent
-     */
     @Override
     public final Message getParentMessage() {
         if (myParent == null) {
@@ -1166,26 +1155,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (propertyMap != null) {
             propertyMap.remove(p.getName());
         }
-        /**
-         * @todo Implement this com.dexels.navajo.document.Message abstract
-         *       method
-         */
     }
 
     @Override
     public final void setLazyRemaining(int c) {
-        /**
-         * @todo Implement this com.dexels.navajo.document.Message abstract
-         *       method
-         */
     }
 
     @Override
     public final void setLazyTotal(int c) {
-        /**
-         * @todo Implement this com.dexels.navajo.document.Message abstract
-         *       method
-         */
     }
 
     @Override
@@ -1404,7 +1381,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                             }
 
                             // Check whether oV is a function instead of a property.
-                            // TODO IS THIS NECESSARY?
                             if (oV.indexOf("(") != -1) {
                                 // It is a function.
 

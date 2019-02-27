@@ -6,10 +6,6 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class BinaryDigest extends FunctionInterface {
 
-	public BinaryDigest() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Binary b = getBinaryOperand(0);

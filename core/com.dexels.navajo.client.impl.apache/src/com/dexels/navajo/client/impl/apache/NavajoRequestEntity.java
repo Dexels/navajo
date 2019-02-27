@@ -36,7 +36,6 @@ public class NavajoRequestEntity extends AbstractHttpEntity {
     @Override
     public InputStream getContent() throws IOException, UnsupportedOperationException {
         StringWriter sw = new StringWriter();
-        // TODO compression?
         this.n.write(sw);
         return new ByteArrayInputStream(sw.toString().getBytes());
     }

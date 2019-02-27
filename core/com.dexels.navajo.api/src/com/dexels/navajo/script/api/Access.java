@@ -148,7 +148,7 @@ public final class Access implements java.io.Serializable, Mappable {
     private String scriptLogging = null;
     
     /**
-     * Create a private logging console for this access object. TODO: Maybe
+     * Create a private logging console for this access object. Maybe
      * restrict maximum size of console... or use Binary...
      */
     private transient StringWriter consoleContent = new StringWriter();

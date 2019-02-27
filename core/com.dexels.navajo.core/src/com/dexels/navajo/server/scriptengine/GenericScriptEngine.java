@@ -61,7 +61,6 @@ public class GenericScriptEngine extends JavaPlugin {
 		
 		String adapterPath = DispatcherFactory.getInstance().getNavajoConfig().getAdapterPath();
 		String includePath = adapterPath + se.getFactory().getLanguageName()+"/include";
-		// TODO rewrite to OSGi services
 		Class<? extends IncludeManager> manager = (Class<? extends IncludeManager>) Class.forName("com.dexels.navajo.server.scriptengine.include."+se.getFactory().getLanguageName());
 		IncludeManager incl = manager.newInstance();
 		incl.loadIncludes(se, includePath);

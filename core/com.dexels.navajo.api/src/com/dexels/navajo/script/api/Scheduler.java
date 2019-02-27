@@ -31,7 +31,6 @@ public interface Scheduler {
 	
 	/**
 	 * The runner object is complete, so we can schedule it now.
-	 * TODO Huh? Why an IO exception?
 	 * @param myRunner
 	 * @throws IOException 
 	 */

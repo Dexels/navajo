@@ -79,6 +79,7 @@ public class MergeSingleTransformer implements ReactiveTransformer {
 		,false,10);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static final Function<? super DataItem, ? extends DataItem> merge(StreamScriptContext context,DataItem with,List<Operand> mappers) {
 		if(mappers.isEmpty()) {
 			return (a)->DataItem.of(a.message().merge(with.message(),Optional.empty()));

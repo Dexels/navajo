@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
@@ -23,10 +20,6 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 public class SetSingle implements ReactiveMerger {
 
-	
-	private final static Logger logger = LoggerFactory.getLogger(SetSingle.class);
-
-	
 	public SetSingle() {
 	}
 

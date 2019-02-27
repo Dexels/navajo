@@ -96,7 +96,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		this.username = username;
 	}
 	
-	// TODO: Stream this.
 	@Override
 	public void commit() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();

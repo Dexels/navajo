@@ -70,7 +70,7 @@ public class TestNavaDocIndexDOM
     fixture.tearDown();
 
     if (!this.captureOn) {
-      // @todo: this will get factored into the fixture sometime
+      // this will get factored into the fixture sometime
       File r = (File)this.resultsMap.get("index");
 
       if (r != null) {
@@ -111,7 +111,7 @@ public class TestNavaDocIndexDOM
 
   }
 
-  // todo: factor this into some kind of generic text fixture super class
+  // factor this into some kind of generic text fixture super class
   private File capture(NavaDocIndexDOM dom) {
     NavaDocOutputter o = new NavaDocOutputter(dom, this.targetPath);
 

@@ -30,8 +30,9 @@ public class RequestResponseQueueFactory {
 				if ( instance == null ) {
 					try {
 						
+						@SuppressWarnings("unchecked")
 						Class<RequestResponseQueueInterface> c = (Class<RequestResponseQueueInterface>) Class.forName("com.dexels.navajo.adapter.queue.RequestResponseQueue");
-						RequestResponseQueueInterface dummy = c.newInstance();
+						RequestResponseQueueInterface dummy = c.getDeclaredConstructor().newInstance();
 						Method m = c.getMethod("getInstance", (Class[])null);
 						instance = (RequestResponseQueueInterface) m.invoke(dummy,(Object[]) null);
 					} catch (Exception e) {

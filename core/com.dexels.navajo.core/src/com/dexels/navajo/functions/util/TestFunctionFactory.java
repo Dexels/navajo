@@ -65,7 +65,6 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 	@Override
 	public void readDefinitionFile(Map<String, FunctionDefinition> fuds,
 			ExtensionDefinition fd) {
-		// TODO Auto-generated method stub
 		
 	}
 

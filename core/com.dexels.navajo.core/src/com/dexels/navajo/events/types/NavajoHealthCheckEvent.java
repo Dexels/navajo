@@ -27,7 +27,6 @@ public class NavajoHealthCheckEvent implements NavajoEvent, LevelEvent {
 
 	@Override
 	public Navajo getEventNavajo() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

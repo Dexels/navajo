@@ -178,7 +178,7 @@ public class SunJavaCompiler implements JavaCompiler {
             else
                 compilerClass=loader.loadClass("com.sun.tools.javac.Main");
 
-            Object compiler = compilerClass.newInstance();
+            Object compiler = compilerClass.getDeclaredConstructor().newInstance();
 
             // Call the compile() method
             Method compile = compilerClass.getMethod("compile",

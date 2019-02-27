@@ -17,3 +17,4 @@ Import-Package: javax.servlet;version="3.0.0",
  org.slf4j;version="1.7.7"
 Bundle-ClassPath: lib/jetty-proxy-9.3.11.v20160721.jar,
  .
+Automatic-Module-Name: com.dexels.navajo.proxy

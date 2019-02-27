@@ -154,7 +154,6 @@ public abstract class TestContextImpl extends BaseContextImpl {
 		final TableCommand table = new TableCommand("table");
 		addCommand(table);
 		ServiceCommand service = new TestServiceCommand();
-		//TODO: add dispatcher?
 		addCommand(service);
 	}
 	

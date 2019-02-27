@@ -150,7 +150,6 @@ public final String getIPAddress() {
   
   @Override
 public final String getCallBackInterupt(String object) {
-    /**@TODO Implement this com.dexels.navajo.document.Header abstract method*/
 //    throw new java.lang.UnsupportedOperationException(
 //        "Method getCallBackInterupt() not yet implemented.");
 	
@@ -328,7 +327,7 @@ public int getCallBackProgress() {
 
   /**
    * Returns whether the asynchronous server process has completed
-   * TODO: Add object ref for supporting multiple async objects!
+   * Add object ref for supporting multiple async objects!
    */
   @Override
 public boolean isCallBackFinished() {
@@ -346,7 +345,6 @@ public Map<String,String> getHeaderAttributes() {
 
 @Override
 public List<BaseNode> getChildren() {
-    // TODO Auto-generated method stub
 	List<BaseNode> al = new ArrayList<BaseNode>();
     if (myTransaction!=null) {
         al.add(myTransaction);
@@ -365,13 +363,11 @@ public List<BaseNode> getChildren() {
 
 @Override
 public String getTagName() {
-    // TODO Auto-generated method stub
     return "header";
 }
 
 @Override
 public Object getRef() {
-    // TODO Auto-generated method stub
     return null;
 }
 

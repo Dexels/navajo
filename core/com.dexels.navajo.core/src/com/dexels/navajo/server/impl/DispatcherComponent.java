@@ -31,8 +31,7 @@ public class DispatcherComponent extends Dispatcher implements
 			    simulationMode = true;
 			}
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	public void deactivate() {

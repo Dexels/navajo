@@ -438,10 +438,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             ServiceHandler sh = createHandler(access);
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
-            // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT
-            // GENERICHANDLER DEPENDENCY @ THIS
-            // POINT... ALSO THE CURRENT NEEDSRECOMPILE DOES NOT CHECK DIRTY
-            // DEPENDENCIES!!
             // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
             long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
             if (expirationInterval > 0 && sh.needsRecompile()) {

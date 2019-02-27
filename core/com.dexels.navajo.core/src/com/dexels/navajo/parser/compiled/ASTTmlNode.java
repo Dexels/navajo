@@ -351,7 +351,6 @@ public final class ASTTmlNode extends SimpleNode {
 		            return Operand.FALSE;
 			}
 
-			// TODO support actual path parser
 			private Operand parseImmutablePath(String text, ImmutableMessage rm) {
 				if(text.endsWith("/")) {
 					String trunc = text.substring(0,text.length()-1);
@@ -388,9 +387,9 @@ public final class ASTTmlNode extends SimpleNode {
 				}
 				String type = rm.columnType(path.get(0));
 				if(type!=null) {
-					return Operand.ofCustom(rm.columnValue(path.get(0)), type);
+					return Operand.ofCustom(rm.value(path.get(0)).orElse(null), type);
 				}
-				return Operand.ofDynamic(rm.columnValue(path.get(0)));
+				return Operand.ofDynamic(rm.value(path.get(0)).orElse(null));
 			}
 
 			

@@ -28,11 +28,6 @@ public class AsyncRegistryImpl implements AsyncRegistry {
 		this.clientInterface = null;
 	}
 
-	public AsyncRegistryImpl() {
-		// TODO Auto-generated constructor stub
-	}
-
-
 	  private final void registerAsyncRunner(String id, ServerAsyncRunner sar) {
 	    asyncRunnerMap.put(id, sar);
 	  }

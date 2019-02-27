@@ -159,7 +159,6 @@ public class LegacyGrusConnection implements GrusConnection {
 
 	@Override
 	public void rollback(boolean b) {
-		// TODO Auto-generated method stub
 		
 	}
 

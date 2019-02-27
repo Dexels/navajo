@@ -27,9 +27,6 @@ public class CallCommand extends ConsoleCommand {
 
 	
 	
-	// TODO, rewrite to use NavajoContext?
-	
-	
 	@Descriptor(value = "Call a script without input. It will bypass auth.") 
 
 	public void call(CommandSession session, @Descriptor(value = "The script to call") String scr) {
@@ -47,7 +44,6 @@ public class CallCommand extends ConsoleCommand {
 
 	@Override
 	public String showUsage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

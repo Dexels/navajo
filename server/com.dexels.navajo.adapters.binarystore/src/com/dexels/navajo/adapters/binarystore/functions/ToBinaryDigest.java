@@ -6,10 +6,6 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ToBinaryDigest extends FunctionInterface {
 
-	public ToBinaryDigest() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		String parse = getStringOperand(0);

@@ -852,7 +852,6 @@ public class TestProperty {
 		assertEquals(illegalExpression, res);
 		// Can't really test, need an expression evaluator, which has a dep to
 		// Navajo
-		// TODO: Move test to navajo
 		// assertEquals(illegalExpression, p1.getTypedValue());
 
 	}

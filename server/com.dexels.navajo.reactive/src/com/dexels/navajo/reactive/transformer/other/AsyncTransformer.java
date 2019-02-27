@@ -23,12 +23,12 @@ public class AsyncTransformer implements ReactiveTransformer {
 	private final TransformerMetadata metadata;
 	private final ReactiveParameters parameters;
 //	private final TopicPublisher publisher;
-	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper;
+//	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper;
 	
 	public AsyncTransformer(AsyncTransformerFactory metadata, ReactiveParameters parameters,Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
 		this.metadata = metadata;
 		this.parameters = parameters;
-		this.joinermapper = joinermapper;
+//		this.joinermapper = joinermapper;
 	}
 
 	@Override

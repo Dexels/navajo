@@ -34,11 +34,11 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	private final static Logger logger = LoggerFactory
 			.getLogger(TestNavajoConfig.class);
 	
-	public TestNavajoConfig() throws Exception {
+	public TestNavajoConfig() {
 		this(null);
 	}
 	
-	public TestNavajoConfig(File configRoot) throws Exception {
+	public TestNavajoConfig(File configRoot) {
 		this.configRoot = configRoot;
 		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
 	}

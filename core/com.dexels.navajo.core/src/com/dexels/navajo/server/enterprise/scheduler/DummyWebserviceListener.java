@@ -1,6 +1,6 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
@@ -10,63 +10,52 @@ public class DummyWebserviceListener implements WebserviceListenerRegistryInterf
 
 	@Override
 	public boolean afterWebservice(String webservice, Access a) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Navajo beforeWebservice(String webservice, Access a) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Navajo beforeWebservice(String webservice, Access a,
-			HashSet<String> ignoreTaskList, boolean locally) {
-		// TODO Auto-generated method stub
+			Set<String> ignoreTaskList, boolean locally) {
 		return null;
 	}
 
 	@Override
 	public void removeTrigger(TriggerInterface afterWebserviceTrigger) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void registerTrigger(TriggerInterface afterWebserviceTrigger) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean afterWebservice(String webservice, Access a,
-			HashSet<String> ignoreTaskList, boolean locally) {
-		// TODO Auto-generated method stub
+			Set<String> ignoreTaskList, boolean locally) {
 		return false;
 	}
 
 	@Override
 	public boolean isActiveRegisteredWebservice(String string) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setWorkflowManager(WorkFlowManagerInterface wfmi) {
-		// TODO Auto-generated method stub
 		
 	}
 
     @Override
     public void addRegisteredWebservice(String wfName, String webservice) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void unregisterWebservicesFromWorkflow(String wfName) {
-        // TODO Auto-generated method stub
         
     }
 

@@ -3,13 +3,13 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.util.AuditLog;
+
+import navajocore.Version;
 
 public class TribeManagerFactory {
 

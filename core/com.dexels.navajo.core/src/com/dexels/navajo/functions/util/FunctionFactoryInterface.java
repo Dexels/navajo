@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions.util;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,13 +142,21 @@ public abstract class FunctionFactoryInterface implements Serializable {
 				// No adapter found, going older skool:
 				c = Class.forName(name, true, cl);
 			}
-			return c.newInstance();
+			return c.getDeclaredConstructor().newInstance();
 		} catch (InstantiationException e) {
 			logger.error("Caught exception. ",e);
 		} catch (IllegalAccessException e) {
 			logger.error("Caught exception. ",e);
 		} catch (ClassNotFoundException e) {
 			// old skool class fail, unreachable in injected OSGi mode
+			logger.error("Caught exception. ",e);
+		} catch (IllegalArgumentException e) {
+			logger.error("Caught exception. ",e);
+		} catch (InvocationTargetException e) {
+			logger.error("Caught exception. ",e);
+		} catch (NoSuchMethodException e) {
+			logger.error("Caught exception. ",e);
+		} catch (SecurityException e) {
 			logger.error("Caught exception. ",e);
 		}
 		return null;
@@ -209,7 +218,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 				return null;
 			}
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
-			FunctionInterface fi =myClass.newInstance();
+			FunctionInterface fi =myClass.getDeclaredConstructor(). newInstance();
 			fi.setDefinition(fd);
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
@@ -281,12 +290,20 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		try {
 //			logger.debug("Instantiating function: {}",fd.getObject());
 			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
-			return clz.newInstance();
+			return clz.getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e) {
 			logger.error("Caught exception. ",e);
 		} catch (InstantiationException e) {
 			logger.error("Caught exception. ",e);
 		} catch (IllegalAccessException e) {
+			logger.error("Caught exception. ",e);
+		} catch (IllegalArgumentException e) {
+			logger.error("Caught exception. ",e);
+		} catch (InvocationTargetException e) {
+			logger.error("Caught exception. ",e);
+		} catch (NoSuchMethodException e) {
+			logger.error("Caught exception. ",e);
+		} catch (SecurityException e) {
 			logger.error("Caught exception. ",e);
 		}
 		return null;

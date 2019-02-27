@@ -25,7 +25,6 @@ public class LoginCommand extends ConsoleCommand {
 
 	@Override
 	public String showUsage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

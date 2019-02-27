@@ -9,7 +9,6 @@ public class DummyRequestResponseQueue implements RequestResponseQueueInterface 
 
 	@Override
 	public void setQueueOnly(boolean b) {
-		// TODO Auto-generated method stub
 		
 	}
 

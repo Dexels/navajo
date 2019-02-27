@@ -198,7 +198,6 @@ public class BirtUtils {
 	}
 
 	/**
-	 * TODO: Support nested arrays
 	 * 
 	 * @param d
 	 * @param messageList

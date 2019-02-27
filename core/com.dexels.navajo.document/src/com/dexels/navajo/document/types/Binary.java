@@ -356,7 +356,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public Binary(byte[] data) {
 
     	this();
-    	// TODO: For sandbox, set inMemory directly to data
         if (data != null) {
             OutputStream fos =null;
             try {

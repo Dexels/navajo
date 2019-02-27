@@ -156,13 +156,11 @@ public final class SaxHandler implements DocHandler {
 	 * @param h parameter callback 
 	 */
     private final void parseAgent(Hashtable<String,String> h) {
-        // TODO Auto-generated method stub
         
     }
 
 
     private final void parseRequired(Hashtable<String,String> h) {
-        // TODO Auto-generated method stub
         currentMethod.addRequired(h.get("name"));
     }
 
@@ -199,12 +197,10 @@ public final class SaxHandler implements DocHandler {
 	 * @param h parameter callback 
 	 */
     private final void parseMethods(Hashtable<String,String> h) {
-        // TODO Auto-generated method stub
         
     }
 
     private final void parseOperations(Hashtable<String,String> h) {
-        // TODO Auto-generated method stub
         
     }
 
@@ -212,7 +208,6 @@ public final class SaxHandler implements DocHandler {
 	 * @param h parameter callback 
 	 */
     private final void parseCallback(Hashtable<String,String> h) {
-        // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }       
@@ -254,8 +249,6 @@ public final class SaxHandler implements DocHandler {
     
     
     private final void parseHeader(Hashtable<String,String> h) {
-        // TODO: Should use the navajo factory for these functions
-//                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
         currentHeader = bhi;
         for (Iterator<Entry<String,String>> iter = h.entrySet().iterator(); iter.hasNext();) {
@@ -265,7 +258,6 @@ public final class SaxHandler implements DocHandler {
 			bhi.setHeaderAttribute(element, value);
         }
         currentDocument.addHeader(bhi);
-        // TODO Auto-generated method stub
         
     }
 
@@ -496,7 +488,6 @@ public final class SaxHandler implements DocHandler {
         if (currentMessage==null) {
             return;
         }
-        // TODO: Shouldn't this be getArrayParentMessage?
         Message parentMessage = currentMessage.getParentMessage();
         if (parentMessage==null) {
             return;

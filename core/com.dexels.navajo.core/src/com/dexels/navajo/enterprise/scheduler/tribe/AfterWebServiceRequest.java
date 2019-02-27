@@ -1,6 +1,6 @@
 package com.dexels.navajo.enterprise.scheduler.tribe;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
@@ -15,9 +15,9 @@ public class AfterWebServiceRequest extends Request {
 
 	private String webservice;
 	private Access myAccess;
-	private HashSet<String> ignoreTaskIds;
+	private Set<String> ignoreTaskIds;
 	
-	public AfterWebServiceRequest(String service, Access a, HashSet<String> ignoreList) {
+	public AfterWebServiceRequest(String service, Access a, Set<String> ignoreList) {
 		this.webservice = service;
 		this.myAccess = a;
 		this.ignoreTaskIds = ignoreList;
@@ -36,7 +36,7 @@ public class AfterWebServiceRequest extends Request {
 		return myAccess;
 	}
 
-	public HashSet<String> getIgnoreTaskIds() {
+	public Set<String> getIgnoreTaskIds() {
 		return ignoreTaskIds;
 	}
 }

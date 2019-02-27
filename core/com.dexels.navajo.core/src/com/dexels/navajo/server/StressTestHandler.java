@@ -24,8 +24,6 @@ public class StressTestHandler  extends ServiceHandler {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         
         return NavajoFactory.getInstance().createNavajo();

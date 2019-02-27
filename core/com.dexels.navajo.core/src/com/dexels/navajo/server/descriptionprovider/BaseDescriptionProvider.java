@@ -100,7 +100,6 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 
 	@Override
 	public void updatePropertyDescription(PropertyDescription pd, String rpcUser) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -111,11 +110,6 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 		
 	}
 
-
-//	public void updatePropertyDescription(int id, String description) {
-//		
-//	}
-
 	@Override
 	public void kill() {
 	}
@@ -124,7 +118,6 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
-
 
 	@Override
 	public void store() throws MappableException, UserException {

@@ -164,7 +164,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
 		// TODO ignoreProxyListeners is actually not used. Is that correct?
-		//logger.info("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);

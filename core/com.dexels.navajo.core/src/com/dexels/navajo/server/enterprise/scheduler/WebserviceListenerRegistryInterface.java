@@ -1,6 +1,6 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
@@ -11,12 +11,12 @@ public interface WebserviceListenerRegistryInterface {
 	public boolean afterWebservice(String webservice, Access a);
 	public Navajo beforeWebservice(String webservice, Access a);
 	public Navajo beforeWebservice(String webservice, Access a,
-			HashSet<String> ignoreTaskList, boolean locally);
+			Set<String> ignoreTaskList, boolean locally);
 
 	public void removeTrigger(TriggerInterface afterWebserviceTrigger);
 	public void registerTrigger(TriggerInterface afterWebserviceTrigger);
 	public boolean afterWebservice(String webservice, Access a,
-			HashSet<String> ignoreTaskList, boolean locally);
+			Set<String> ignoreTaskList, boolean locally);
 	public boolean isActiveRegisteredWebservice(String string);
 	public void setWorkflowManager(WorkFlowManagerInterface wfmi);
 	

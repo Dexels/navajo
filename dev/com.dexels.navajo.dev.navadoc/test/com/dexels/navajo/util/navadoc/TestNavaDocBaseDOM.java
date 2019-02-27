@@ -166,7 +166,7 @@ public class TestNavaDocBaseDOM
     this.assertTrue(s + ".html reasonably correct", d.similar());
   }
 
-  // todo: factor this into some kind of generic text fixture super class
+  // factor this into some kind of generic text fixture super class
   private File capture(NavaDocBaseDOM dom) {
     NavaDocOutputter o = new NavaDocOutputter(dom, this.targetPath);
 

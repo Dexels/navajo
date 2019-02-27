@@ -194,13 +194,11 @@ public class TestDispatcher implements DispatcherInterface {
 	@Override
 	public Navajo handle(Navajo inMessage, String instance, boolean skipAuth)
 			throws FatalException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public void generateServerReadyEvent() {
-		// TODO Auto-generated method stub
 		
 	}
 

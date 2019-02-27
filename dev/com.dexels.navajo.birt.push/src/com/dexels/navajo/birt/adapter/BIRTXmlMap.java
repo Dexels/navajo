@@ -188,9 +188,6 @@ public class BIRTXmlMap implements Mappable {
 	}
 
 	private Binary processReport(File fixedFile, Navajo n) throws MalformedURLException, IOException {
-		// todo: 
-		// check reportName
-
 		Property outputFormatProperty = n.getProperty("/__ReportDefinition/OutputFormat");
 		if(outputFormatProperty!=null) {
 			outputFormat = outputFormatProperty.getValue();
@@ -219,14 +216,6 @@ public class BIRTXmlMap implements Mappable {
 		return result;
 	}
 
-	// public void finalize() {
-	// if (myEngine != null) {
-	// myEngine.shutdown();
-	// myEngine.destroy();
-	// myEngine = null;
-	// }
-	// }
-
 	/**
 	 * A Mappable class is executed by the Navajo Mapping Environment.
 	 * 
@@ -240,7 +229,6 @@ public class BIRTXmlMap implements Mappable {
 	 *            NavajoConfig
 	 * @throws MappableException
 	 * @throws UserException
-	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
 	 */
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -304,22 +292,12 @@ public class BIRTXmlMap implements Mappable {
 
 	}
 
-	/**
-	 * store
-	 * 
-	 * @throws MappableException
-	 * @throws UserException
-	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
-	 */
+
 	@Override
 	public void store() throws MappableException, UserException {
 	}
 
-	/**
-	 * kill
-	 * 
-	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
-	 */
+
 	@Override
 	public void kill() {
 	}

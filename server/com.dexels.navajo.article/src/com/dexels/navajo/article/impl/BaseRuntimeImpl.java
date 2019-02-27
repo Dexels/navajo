@@ -234,7 +234,6 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 					elements.add(node);
 				}
 			}
-			// TODO bit shaky now
 			if(elements.size()==0) {
 				writeNode(rootNode);
 			} else if(elements.size()==1 ) {

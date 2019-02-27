@@ -114,9 +114,6 @@ public class BaseMethodImpl extends BaseNode implements Method {
         BaseRequiredImpl bri = new BaseRequiredImpl();
         bri.setMessage(message.getFullMessageName());
         myRequiredMessages.add(bri);
-        /**
-         * @todo Implement this com.dexels.navajo.document.Method abstract method
-         */
     }
 
     /**

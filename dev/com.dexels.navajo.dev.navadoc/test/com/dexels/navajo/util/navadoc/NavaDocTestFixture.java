@@ -79,7 +79,7 @@ public class NavaDocTestFixture extends java.lang.Object {
     }
 
     // check if we want to save control documents
-    // @todo: the fixture will be responsible for setting up
+    // the fixture will be responsible for setting up
     // and tearing down all temporary test documents
     String save = System.getProperty( "saveResults" );
 

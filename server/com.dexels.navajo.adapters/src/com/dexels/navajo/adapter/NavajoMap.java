@@ -1856,7 +1856,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     @Override
     public void setScheduledAt(long currentTimeMillis) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1870,12 +1869,10 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     @Override
     public String getUrl() {
         return "TEMPORARY VERSION!!!";
-        // return this.access.getRequestUrl();
     }
 
     @Override
     public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1925,7 +1922,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     @Override
     public String getNavajoInstance() {
-        // TODO Auto-generated method stub
         return null;
     }
 

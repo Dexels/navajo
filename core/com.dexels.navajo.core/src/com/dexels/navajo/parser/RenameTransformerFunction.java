@@ -1,6 +1,7 @@
 package com.dexels.navajo.parser;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
@@ -19,9 +20,13 @@ public class RenameTransformerFunction implements TransformerFunction {
 		String to = (String) parameters.get(1).value;
 
 		return in->{
-			Object oldValue = in.columnValue(fromKey);
-			String oldType = in.columnType(fromKey);
-			return in.without(fromKey ).with(to,oldValue, oldType);
+			Optional<Object> oldValue = in.value(fromKey);
+			if(oldValue.isPresent()) {
+				String oldType = in.columnType(fromKey);
+				return in.without(fromKey ).with(to,oldValue.get(), oldType);
+			} else {
+				return in;
+			}
 		};
 	}
 

@@ -39,7 +39,6 @@ class ASTReactiveScriptNode extends SimpleNode {
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
-	// TODO support headers;
 	List<ReactivePipeNode> pipes = new ArrayList<>();
 	int start = hasHeader ? headers : 0;
 	

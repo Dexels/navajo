@@ -29,7 +29,6 @@ public class TestResourceManager implements ResourceManager {
 
 	@Override
 	public void setHealth(String resourceId, int h) {
-		// TODO Auto-generated method stub
 
 	}
 

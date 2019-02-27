@@ -2955,6 +2955,7 @@ public class XMLElement implements java.io.Serializable {
 	        return al.get(0);
 	    }
 
+	  
 		public void addTagKeyValue(String key, String value) {
 			XMLElement keyValue = getElementByTagName(key);
 			if(keyValue!=null) {
@@ -3006,6 +3007,9 @@ public class XMLElement implements java.io.Serializable {
 			}
 			return al;
 		}
+		
+		
+		
 		public XMLElement getChildByTagName(String tag) {
 			for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
 				XMLElement element = iter.next();

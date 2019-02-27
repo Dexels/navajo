@@ -67,19 +67,16 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 
 	@Override
 	public void setUsername(String username) {
-		// TODO Auto-generated method stub
 		
 	}
 
     @Override
     public void setAccess(Access a) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public Access getAccess() {
-        // TODO Auto-generated method stub
         return null;
     }
 

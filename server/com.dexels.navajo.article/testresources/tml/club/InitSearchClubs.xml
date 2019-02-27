@@ -22,12 +22,9 @@
       <property direction="out" name="NavajoUser" value="ROOT" length="50" type="string"/>
       <property direction="out" name="NavajoMethod" value="club/ProcessSearchClubs" length="50" type="string"/>
       <property direction="out" name="MassMailingLogin" value="fransw/tripod" length="10" type="string"/>
-      <property direction="out" name="BrokerInFolder" value="/home/sportlink/knvb/brokerIn/exceptions" length="10" type="string"/>
-      <property direction="out" name="BrokerCertificate" value="/home/sportlink/knvb/brokerCertificates/cert-prod.crt" length="10" type="string"/>
       <property direction="out" name="RequiredClubVersion" value="5.0" length="10" type="string"/>
       <property direction="out" name="DefaultUnionMemberRole" value="UNIONMEMBER" length="10" type="string"/>
       <property direction="out" name="CrystalBasePath" value="/home/crystal/bobje/tomcat/webapps/ROOT/reports/" length="10" type="string"/>
-      <property direction="out" name="BrokerPrivatekey" value="/home/sportlink/knvb/brokerCertificates/key-prod.pkcs8" length="10" type="string"/>
       <property direction="out" name="SmartStreamIncomingDir" value="." length="10" type="string"/>
       <property direction="out" name="VLAApplicationMode" value="ASP" length="10" type="string"/>
       <property direction="out" name="BrokerURL" value="http://80.79.42.72/" length="10" type="string"/>
@@ -42,7 +39,6 @@
       <property direction="out" name="IdentifierPattern" value="[A-Z]{4}[0-9]{2}[A-Z0-9]{1}" length="10" type="string"/>
       <property direction="out" name="ApplicationInstance" value="KNVB" length="10" type="string"/>
       <property direction="out" name="DefaultOfficialEndTime" value="23:00" length="10" type="string"/>
-      <property direction="out" name="SSLHome" value="/home/sportlink/ssl/" length="10" type="string"/>
       <property direction="out" name="CrystalServer" value="penelope1:6400" length="10" type="string"/>
       <property direction="out" name="EnsduOutgoingDir" value="." length="10" type="string"/>
       <property direction="out" name="KNVBNLFtpHost" value="import.knvb.nl" length="10" type="string"/>

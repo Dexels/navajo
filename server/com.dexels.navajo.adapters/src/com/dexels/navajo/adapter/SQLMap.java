@@ -1319,7 +1319,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				throw new UserException(-1,
 						"Could not create connection to datasource " + this.datasource + ", using username " + this.username);
 			} else {
-			    // TODO: Fix this in OSGi
 			    logger.trace("Database Metadata not yet implemented in OSGi");
 			    return null;
 			}

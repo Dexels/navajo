@@ -13,9 +13,7 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 /**
  * Wraps a Navajo object in a nice rug for cross Tribal transportation purposes
- * 
- * @TODO: Register DefaultNavajoWrap object with Garbage Collector to remove
- *        'old' objects.
+
  * 
  * @author arjenschoneveld
  * 

@@ -93,7 +93,6 @@ public final class AuditLog implements Mappable {
 	}
 	
 
-	// TODO Ignoring subsystem now, fix?
 	private static final void logToSlf(String message, Throwable exception, Level l) {
 		Logger instanceLog = LoggerFactory.getLogger("NavajoLog");
 		if(Level.INFO.equals(l)) {
@@ -113,9 +112,6 @@ public final class AuditLog implements Mappable {
 
 	public final static void log(String message, final Throwable exception, Level level) {
 		logToSlf(message,exception,  level);
-//		logger.log(level, instanceName + ":" + subsystem + message);
-		// TODO post exceptions as events too?
-//		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, level));
 	}
 	
 	

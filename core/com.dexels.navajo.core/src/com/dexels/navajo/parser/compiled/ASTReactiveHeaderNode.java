@@ -17,7 +17,6 @@ class ASTReactiveHeaderNode extends SimpleNode {
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
-	// TODO Auto-generated method stub
 	return null;
 }
 

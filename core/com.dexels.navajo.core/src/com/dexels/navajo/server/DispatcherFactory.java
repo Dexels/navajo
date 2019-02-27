@@ -19,17 +19,13 @@ import com.dexels.navajo.server.jmx.JMXHelper;
 
 public class DispatcherFactory {
 
-	private static volatile DispatcherInterface instance;
+	private static DispatcherInterface instance;
 	private static Object semaphore = new Object();
 	private static ScriptEngineManager scriptEngineFactory = null;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(DispatcherFactory.class);
 	
-	public DispatcherFactory() {	
-	}
-
-
   
 	public DispatcherFactory(DispatcherInterface injectedDispatcher) {	
 		instance = injectedDispatcher;
@@ -38,7 +34,7 @@ public class DispatcherFactory {
 	public static DispatcherInterface getInstance() {
 		return instance;
 	}
-	public synchronized static void setInstance(DispatcherInterface dispatcher) {
+	public static synchronized  void setInstance(DispatcherInterface dispatcher) {
 		instance = dispatcher;
 	}
 	

@@ -21,19 +21,16 @@ public class NavajoSendEventAdapter implements Mappable {
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 	}
 
 	public void setPropertyName(String propertyName) {

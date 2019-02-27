@@ -169,7 +169,7 @@ public final class Utils extends Exception {
 	 */
 	public final static Object subtract(Object a, Object b) throws TMLExpressionException {
 		if ((a instanceof Integer) && (b instanceof Integer))
-			return new Integer(((Integer) a).intValue() - ((Integer) b).intValue());
+			return Integer.valueOf(((Integer) a).intValue() - ((Integer) b).intValue());
 		else if ((a instanceof String) || (b instanceof String)) {
 			throw new TMLExpressionException("Subtraction not defined for Strings");
 		} else if (a instanceof Double && b instanceof Integer)
@@ -208,7 +208,7 @@ public final class Utils extends Exception {
 			cb.setTime((Date) b);
 			cb.add(Calendar.MILLISECOND, cb.get(Calendar.DST_OFFSET));
 
-			return new Integer((int) ((ca.getTimeInMillis() - cb.getTimeInMillis()) / (double) MILLIS_IN_DAY));
+			return Integer.valueOf((int) ((ca.getTimeInMillis() - cb.getTimeInMillis()) / (double) MILLIS_IN_DAY));
 		}
 
 		if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
@@ -259,7 +259,7 @@ public final class Utils extends Exception {
 		else if (b == null)
 			return a;
 		else if ((a instanceof Integer) && (b instanceof Integer))
-			return new Integer(((Integer) a).intValue() + ((Integer) b).intValue());
+			return Integer.valueOf(((Integer) a).intValue() + ((Integer) b).intValue());
 		else if ((a instanceof String) || (b instanceof String)) {
 			String sA = Utils.getStringValue(a);
 			String sB = Utils.getStringValue(b);
@@ -321,7 +321,7 @@ public final class Utils extends Exception {
 		} else if ((a instanceof Boolean && b instanceof Boolean)) {
 			Boolean ba = (Boolean) a;
 			Boolean bb = (Boolean) b;
-			return new Integer((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
+			return Integer.valueOf((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
 		} else
 			throw new TMLExpressionException("Addition: Unknown type. "+" expression: "+expression);
 	}

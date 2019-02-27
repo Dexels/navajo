@@ -46,8 +46,9 @@ public class WorkerFactory {
 				
 				if ( instance == null ) {
 					try {
+						@SuppressWarnings("unchecked")
 						Class<? extends WorkerInterface> c = (Class<? extends WorkerInterface>) Class.forName("com.dexels.navajo.integrity.TribalWorker");
-						WorkerInterface dummy = c.newInstance();
+						WorkerInterface dummy = c.getDeclaredConstructor().newInstance();
 						Method m = c.getMethod("getInstance", (Class[])null);
 						instance = (WorkerInterface) m.invoke(dummy, (Object[])null);
 					} catch (Exception e) {

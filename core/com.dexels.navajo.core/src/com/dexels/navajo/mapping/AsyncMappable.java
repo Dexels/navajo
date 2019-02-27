@@ -70,7 +70,7 @@ import com.dexels.navajo.util.AuditLog;
  *   <object name="myObject" ref="3423432" interrupt="kill"/>
  * </callback
  *
- * TODO: FUTURE ENHANCEMENT (automatic client callback):
+ * FUTURE ENHANCEMENT (automatic client callback):
  * The client must run a Navajo server by itself in order to support client callback.
  *
  * <header>
@@ -396,7 +396,6 @@ protected void finalize() {
   }
 
   private final void log() {
-	  // TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
 	  if ( DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner() != null && !logged ) {
 		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
 		  if ( a != null ) {

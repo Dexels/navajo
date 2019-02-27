@@ -193,7 +193,7 @@ public class NQLContext implements NqlContextApi {
 	
 	private void writeBTML(OutputStream outputStream) throws IOException {
 		if(!(content instanceof Message)) {
-			throw new UnsupportedOperationException("Can not return entire Navajo message as BTML at this point. TODO: Add. Or use output.");
+			throw new UnsupportedOperationException("Can not return entire Navajo message as BTML at this point.");
 		}
 		Message m = (Message)content;
 		Writer w = new OutputStreamWriter(outputStream);
@@ -216,12 +216,6 @@ public class NQLContext implements NqlContextApi {
 		}
 		w.flush();
 	}
-	
-//	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
-//		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(resultMessage,"navajoDataSource");
-//		XMLDocumentUtils.write(laszlo,out,false);
-//	}
-
 
 	private void writeMessageLineCSV(Writer writer, Message e, String separator,String embed) throws IOException {
 		int index = 0;
@@ -262,7 +256,6 @@ public class NQLContext implements NqlContextApi {
 		}
 		Property p = current.getProperty(path);
 		if(p==null) {
-			// TODO append property if missing
 			return;
 		} 
 		p.setValue(value);

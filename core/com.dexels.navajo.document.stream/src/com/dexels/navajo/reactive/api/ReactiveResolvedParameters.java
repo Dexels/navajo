@@ -112,7 +112,6 @@ public class ReactiveResolvedParameters {
 	
 	// Guarantees it's there, will fail otherwise
 	public String paramString(String key) {
-		// TODO hard fail if null
 		Operand operand = resolvedNamed.get(key);
 		if(operand==null) {
 			logger.warn("Trouble retrieving key: {}, there is no such operand. Available: {}",key,resolvedNamed.keySet());

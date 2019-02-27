@@ -27,10 +27,11 @@ public class InputSource implements ReactiveSource {
 //		this.sourcePath = sourcePath;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
 		ReactiveResolvedParameters resolved = params.resolve(context, current, param, metadata);
-		Optional<String> path = resolved.optionalString("path");
+//		Optional<String>s path = resolved.optionalString("path");
 		return context.inputFlowable().orElse(Flowable.empty()); // .orElseGet(()->context.inputFlowable().orElse(context.getInput().toFlowable().flatMap(e->NavajoDomStreamer.feedFlowable(e))))
 //				.compose(StreamDocument.eventsToImmutable(path))
 //				.map(DataItem::of);

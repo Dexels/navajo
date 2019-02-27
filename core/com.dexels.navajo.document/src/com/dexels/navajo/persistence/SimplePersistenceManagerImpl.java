@@ -24,13 +24,10 @@ public class SimplePersistenceManagerImpl implements PersistenceManager {
 
 	@Override
 	public void clearCache() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public double getHitratio() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

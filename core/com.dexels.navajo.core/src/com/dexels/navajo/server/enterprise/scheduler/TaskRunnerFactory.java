@@ -43,15 +43,14 @@ public class TaskRunnerFactory {
 			return createTaskRunner();
 		}
 	}
+	@SuppressWarnings("unchecked")
 	private static TaskRunnerInterface createTaskRunner() {
 		if ( instance == null ) {
 			logger.warn("OSGi compatibility problem: This part will fail in OSGi.");
 			try {
 				Class<ClockInterface> c = (Class<ClockInterface>) Class.forName("com.dexels.navajo.scheduler.Clock");
-				ClockInterface dummy = c.newInstance();
+				ClockInterface dummy = c.getDeclaredConstructor().newInstance();
 				Method m = c.getMethod("getInstance",(Class[])null);
-				// TODO Shouldn't we geep a link to the clock object?
-//					ClockInterface myClock = (ClockInterface) 
 				m.invoke(dummy, (Object[])null);
 			} catch (Exception e) {
 
@@ -59,7 +58,7 @@ public class TaskRunnerFactory {
 			}	
 			try {
 				Class<TaskRunnerInterface> c = (Class<TaskRunnerInterface>) Class.forName("com.dexels.navajo.scheduler.TaskRunner");
-				TaskRunnerInterface dummy = c.newInstance();
+				TaskRunnerInterface dummy = c.getDeclaredConstructor().newInstance();
 				Method m = c.getMethod("getInstance",(Class[]) null);
 				instance = (TaskRunnerInterface) m.invoke(dummy, (Object[])null);
 			} catch (ClassNotFoundException e) {
@@ -72,7 +71,7 @@ public class TaskRunnerFactory {
 			}	
 			try {
 				Class<?> c = Class.forName("com.dexels.navajo.workflow.WorkFlowManager");
-				Object dummy = c.newInstance();
+				Object dummy = c.getDeclaredConstructor().newInstance();
 				Method m = c.getMethod("getInstance", (Class[])null);
 				m.invoke(dummy, (Object[])null);
 			} catch (ClassNotFoundException e) {
@@ -83,7 +82,7 @@ public class TaskRunnerFactory {
 			}	
 			try {
 				Class<GenericThread> c = (Class<GenericThread>) Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
-				Object dummy = c.newInstance();
+				Object dummy = c.getDeclaredConstructor().newInstance();
 				Method m = c.getMethod("getInstance", (Class[])null);
 				m.invoke(dummy, (Object[])null);
 			} catch (ClassNotFoundException e) {
@@ -98,10 +97,11 @@ public class TaskRunnerFactory {
 		return instance;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static final TaskInterface getTaskInstance() {
 		try {
-		Class c = Class.forName("com.dexels.navajo.scheduler.Task");
-		TaskInterface tif = (TaskInterface) c.newInstance();
+		Class<TaskInterface> c = (Class<TaskInterface>) Class.forName("com.dexels.navajo.scheduler.Task");
+		TaskInterface tif = (TaskInterface) c.getDeclaredConstructor().newInstance();
 		return tif;
 		} catch (Exception e) {
 			AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);

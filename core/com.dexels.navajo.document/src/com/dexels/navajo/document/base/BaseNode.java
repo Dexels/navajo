@@ -119,9 +119,6 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 			 Entry<String, String> e = iter.next();
 			 String element = e.getKey();
 			 String value = e.getValue();
-			 /*
-			  * TODO: stream!
-			  */
 			  if (value!=null) {
 				  // optimization: Only escape properties:
 				  String sss = element;
@@ -177,9 +174,6 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 				Entry<String, String> e = iter.next();
 				String element = e.getKey();
 				String value = e.getValue();
-				/*
-				 * TODO: stream!
-				 */
 				if (value != null) {
 					// optimization: Only escape properties:
 					String sss = element;

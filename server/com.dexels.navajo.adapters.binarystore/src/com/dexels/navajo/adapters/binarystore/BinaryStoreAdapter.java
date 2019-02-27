@@ -60,7 +60,6 @@ public class BinaryStoreAdapter implements Mappable {
 	
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 

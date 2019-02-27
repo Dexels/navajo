@@ -108,8 +108,6 @@ class FileComparator implements Comparator<File>{
  * It basically assumes some sort of OS-dependend network file system (e.g. NFS) for the "shared" part
  * of the SharedStoreInterface.
  * 
- * TODO: Create logging mechanism to log SharedFileStore errors/warnings.
- * 
  * @author arjen
  *
  */

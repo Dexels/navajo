@@ -12,19 +12,16 @@ public class CompiledTestScript4 extends CompiledScript {
 
 	@Override
 	public void execute(Access access) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void finalBlock(Access access) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setValidations() {
-		// TODO Auto-generated method stub
 
 	}
 

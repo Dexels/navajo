@@ -158,7 +158,6 @@ public class ArticleTmlRunnable implements TmlRunnable{
 
     @Override
     public void setCommitted(boolean b) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -170,7 +169,6 @@ public class ArticleTmlRunnable implements TmlRunnable{
 
     @Override
     public void endTransaction() throws IOException {
-        // TODO Auto-generated method stub
 
     }
 

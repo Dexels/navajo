@@ -13,9 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -30,7 +27,6 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 
 public final class Expression {
-    private final static Logger logger = LoggerFactory.getLogger(Expression.class);
 	public static String ACCESS = "ACCESS";
 
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();

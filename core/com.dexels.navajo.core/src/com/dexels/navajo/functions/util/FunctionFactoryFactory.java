@@ -61,7 +61,7 @@ public class FunctionFactoryFactory {
 			if ( func != null ) {
 				try {
 					Class<? extends FunctionFactoryInterface> c = (Class<? extends FunctionFactoryInterface>) Class.forName(func);
-					instance = c.newInstance();
+					instance = c.getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -84,7 +84,7 @@ public class FunctionFactoryFactory {
 	
 		FunctionInterface fi = fii.getInstance(cl, "SingleValueQuery");
 		fi.reset();
-		fi.insertIntegerOperand(new Integer(21210));
+		fi.insertIntegerOperand(Integer.valueOf(21210));
 		fi.insertStringOperand("SELECT * FROM AAP WHERE noot = ?");
 		fi.insertStringOperand("PIPO");
 		fi.evaluateWithTypeChecking();

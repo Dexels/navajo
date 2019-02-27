@@ -76,8 +76,6 @@ public class PropertyTypeChecker {
   }
 
 
-/** @todo For now, only implemented checking for integer properties. May need to refactor a bit
-   * to accommodate many propertytypes*/
   public String verify(Property p, String value) throws PropertyTypeException {
     if (p==null) {
      return value;

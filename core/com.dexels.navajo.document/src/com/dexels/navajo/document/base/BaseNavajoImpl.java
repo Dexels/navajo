@@ -84,12 +84,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     @Override
     public void removeHeader() {
         myHeader = null;
-        /** @todo Don't really know what I should do here */
     }
 
     public void setExpiration(int i) {
         expiration = i;
-        /** @todo Verify this */
     }
 
     @Override
@@ -271,7 +269,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
     @Override
     public boolean contains(String s) {
-        /** @todo Implement */
         throw new UnsupportedOperationException();
     }
 
@@ -365,7 +362,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     @Override
     public List<String> getRequiredMessages(String s) {
 
-        /** @todo Implement */
         throw new UnsupportedOperationException();
     }
 

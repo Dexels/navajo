@@ -1,8 +1,6 @@
 package com.dexels.navajo.proxy;
 
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
 import javax.servlet.ServletConfig;

@@ -47,7 +47,6 @@ public class NavaDocDifferenceListener implements DifferenceListener {
   @Override
 public void skippedComparison( Node parm1, Node parm2 ) {
 
-    /** @todo: Implement this org.custommonkey.xmlunit.DifferenceListener method*/
     throw new java.lang.UnsupportedOperationException( "Method skippedComparison() not yet implemented." );
   }
 
@@ -60,7 +59,6 @@ public void skippedComparison( Node parm1, Node parm2 ) {
 
 @Override
 public int differenceFound(Difference arg0) {
-	// TODO Auto-generated method stub
 	return 0;
 }
 

@@ -116,7 +116,7 @@ public class GenericHandler extends ServiceHandler {
     	NavajoClassSupplier loader = getScriptLoader(a.betaUser, className);
     	Class<?> cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
-    		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
+    		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.getDeclaredConstructor().newInstance();
     		if(cso instanceof GenericScriptEngine) {
     			GenericScriptEngine gse = (GenericScriptEngine)cso;
     			gse.setScriptFile(scriptFile);
@@ -139,7 +139,7 @@ public class GenericHandler extends ServiceHandler {
     		}
     		Class<?> cs = loader.getCompiledNavaScript(className);
         	if ( cs != null ) {
-        		cso = (CompiledScript) cs.newInstance();
+        		cso = (CompiledScript) cs.getDeclaredConstructor().newInstance();
         		cso.setClassLoader(loader);
         	}	
     	} catch (Exception e) {

@@ -22,13 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
-import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribalTopic;
 import com.dexels.navajo.server.enterprise.tribe.impl.SimpleTribeMember;
 
 public class DefaultTribeManager implements TribeManagerInterface {
 
-//	private NavajoConfigInterface navajoConfig;
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(DefaultTribeManager.class);
@@ -46,9 +44,6 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	}
 
 	public DefaultTribeManager() {
-//		if(!Version.osgiActive()) {
-//			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
-//		}
 	}
 	
 	public void activate(Map<String,Object> settings) {
@@ -168,13 +163,13 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	@Override
 	public void tribalAfterWebServiceRequest(
-			String service, Access a, HashSet<String> ignoreTaskIds) {
+			String service, Access a, Set<String> ignoreTaskIds) {
 		
 	}
 
 	@Override
 	public Navajo tribalBeforeWebServiceRequest(
-			String service, Access a, HashSet<String> ignoreList) {
+			String service, Access a, Set<String> ignoreList) {
 		return null;
 	}
 
@@ -255,7 +250,6 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	@Override
 	public List<TribalNumber> getDistributedCounters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

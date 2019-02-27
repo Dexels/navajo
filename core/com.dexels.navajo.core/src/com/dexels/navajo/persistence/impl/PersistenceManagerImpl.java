@@ -28,7 +28,6 @@ import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
@@ -328,6 +327,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public boolean isCached(String service, String serviceKeyValues) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		final SharedTribalMap<String, PersistentEntry> inMemoryCache2 = pm.inMemoryCache;

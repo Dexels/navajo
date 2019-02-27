@@ -10,7 +10,7 @@ package com.dexels.navajo.mapping.compiler;
  */
 
 /**
- * TODO IMPLEMENT SUPPORT FOR ARBITRARY JAVA BEANS (NEXT TO MAPPABLE AND ASYNCMAPPABLE OBJECTS.
+ * IMPLEMENT SUPPORT FOR ARBITRARY JAVA BEANS (NEXT TO MAPPABLE AND ASYNCMAPPABLE OBJECTS.
  *
  * SYMBOL TABLE BIJHOUDEN VAN ATTRIBUUT WAARDEN UIT MAPPABLE OBJECTEN, DAN DEZE SYMBOL TABLE MEEGEVEN AAN EXPRESSION.EVALUATE(),
  * ZODAT NIET VIA INTROSPECTIE DE ATTRIBUUT WAARDEN HOEVEN TE WORDEN BEPAALD
@@ -1938,7 +1938,6 @@ public class TslCompiler {
 				+ attribute.substring(1, attribute.length());
 
 		String methodName = null;
-		// TODO Strip methodName
 		if (totalMethodName.indexOf("/") != -1) {
 			methodName = totalMethodName.substring(
 					totalMethodName.lastIndexOf('/') + 1,
@@ -2095,7 +2094,7 @@ public class TslCompiler {
 							+ methodName + "(" + castedValue + ");\n");
 				} else {
 					// set attribute in excluded fields.
-					// TODO: USE INTROSPECTION METHOD TO CALL METHOD ON PROXIED
+					// USE INTROSPECTION METHOD TO CALL METHOD ON PROXIED
 					// DOMAIN OBJECT...
 					result.append(printIdent(ident + 2) + objectName
 							+ ".setDomainObjectAttribute(\"" + attribute
@@ -2907,7 +2906,6 @@ public class TslCompiler {
 		} else {
 			contextClass = null;
 		}
-		// TODO NOOT
 		return result.toString();
 	}
 
@@ -2918,7 +2916,7 @@ public class TslCompiler {
 	 * @param scriptPath
 	 * @param n
 	 * @param parent
-	 * @param deps TODO
+	 * @param deps
 	 * @throws Exception
 	 */
 	private final void includeNode(String scriptPath, Node n, Document parent,

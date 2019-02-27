@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
@@ -23,8 +20,6 @@ import com.dexels.navajo.reactive.api.TransformerMetadata;
 public class FlatMapTransformerFactory implements ReactiveTransformerFactory, TransformerMetadata {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(FlatMapTransformerFactory.class);
-
 	private ReactiveSource childSource = null;
 
 	public FlatMapTransformerFactory() {

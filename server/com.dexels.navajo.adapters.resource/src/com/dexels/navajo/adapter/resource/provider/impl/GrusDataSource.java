@@ -81,25 +81,21 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public void setAged() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean isAged() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setAgedForced() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		if(connection!=null) {
 			try {
 				connection.close();
@@ -127,13 +123,11 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public void autocommit(boolean b) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void rollback(boolean b) {
-		// TODO Auto-generated method stub
 		
 	}
 

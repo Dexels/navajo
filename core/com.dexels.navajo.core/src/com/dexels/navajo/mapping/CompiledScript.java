@@ -468,8 +468,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
                     access.setExitCode(Access.EXIT_EXCEPTION);
                     throw e;
                 } finally {
-                    // TODO Will fail epically with continuations. Just because
-                    // this thread will die doesn't mean this scirpt is done.
                     finalBlock(access);
                 }
             }

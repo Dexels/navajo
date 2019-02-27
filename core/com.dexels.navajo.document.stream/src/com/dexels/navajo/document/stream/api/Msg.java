@@ -127,7 +127,6 @@ public class Msg {
 				break;
 			}
 		}
-		// TODO
 		return ImmutableFactory.create(values, types);
 	}
 	
