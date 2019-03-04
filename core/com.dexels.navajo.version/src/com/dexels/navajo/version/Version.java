@@ -8,13 +8,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 public class Version extends AbstractVersion {
-	private MBeanServer mbeanServer = null;
 	private ServiceRegistration<MBeanServer> registration = null;
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		mbeanServer = ManagementFactory.getPlatformMBeanServer();
+		MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
 		String inject = System.getProperty("navajo.inject.mbeanserver");
 		if(inject!=null) {
 			registration = context.registerService(MBeanServer.class, mbeanServer,null);

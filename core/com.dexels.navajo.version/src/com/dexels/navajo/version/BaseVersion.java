@@ -34,13 +34,9 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BaseVersion {
 
-	public String RELEASEDATE;
-	
-	protected final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
+	protected static final Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
 
-	
-	// List of versions of included packages.
-	private ArrayList<AbstractVersion> includedPackages = new ArrayList<AbstractVersion>();
+	private ArrayList<AbstractVersion> includedPackages = new ArrayList<>();
 	
 	
 	public void addIncludes(String [] versionClasses) {
@@ -61,14 +57,10 @@ public abstract class BaseVersion {
 		
 		for (int i = 0; i < includedPackages.size(); i++) {
 			AbstractVersion v = includedPackages.get(i);
-//			System.err.print(this.getClass().getName() +
-//					": Checking if " + versionClass + " is already included...");
 			if (v.getClass().getName().equals(versionClass)) {
-				//logger.info("...yes it is!");
 				return true;
 			}
 		}
-		//logger.info("...no it isn't!");
 		return false;
 		
 	}
@@ -80,7 +72,6 @@ public abstract class BaseVersion {
 			AbstractVersion v =  c.getDeclaredConstructor().newInstance();
 			// Check if v is not already included in chain.
 			if (!checkInclude(versionClass)) {
-				//logger.info(this.getClass().getName() + ": Adding " + versionClass);
 				includedPackages.add(v);
 			}
 		} catch (Exception e) {
@@ -92,11 +83,9 @@ public abstract class BaseVersion {
 
 	
 	protected void buildIncludeTree(Set<AbstractVersion> t) {
-		//logger.info(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
 			AbstractVersion child = includedPackages.get(i);
 			if (!t.contains(child)) {
-				//logger.info("Adding " + child.getClass().getName());
 				t.add(child);
 			}
 		}
@@ -113,7 +102,7 @@ public abstract class BaseVersion {
 	 */
 	public AbstractVersion [] getIncludePackages() {
 		
-		Set<AbstractVersion> allDeps = new TreeSet<AbstractVersion>();
+		Set<AbstractVersion> allDeps = new TreeSet<>();
 		buildIncludeTree(allDeps);
 		AbstractVersion [] v = new AbstractVersion[allDeps.size()];
 		v = allDeps.toArray(v);

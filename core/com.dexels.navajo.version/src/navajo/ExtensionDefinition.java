@@ -14,10 +14,6 @@ public interface ExtensionDefinition extends Serializable {
 	 */
 	public String[] getIncludes();
 
-	
-//	public String[] getFunctionIncludes();
-
-	
 	/**
 	 * Returns the description of this extension
 	 * 
@@ -44,7 +40,6 @@ public interface ExtensionDefinition extends Serializable {
 	public List<String> getRequiredExtensions();
 	public String getConnectorId();
 	public String getProjectName();
-//	public String getDeploymentDescriptor();
 	public List<String> getDependingProjectUrls();
 	public ClassLoader getExtensionClassloader();
 	public void setExtensionClassloader(ClassLoader extClassloader);
