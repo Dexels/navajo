@@ -43,12 +43,12 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
     if (getOperands().size() != 2) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
-   Object o = getOperand(0);
-   Object subtypeObject = getOperand(1);
-   if(!(subtypeObject instanceof String)) {
-	      throw new TMLExpressionException(this, "Invalid function call");
-   }
-   String subType = (String)subtypeObject;
+   Object o = operand(0).value;
+//   Object subtypeObject = getOperand(1);
+//   if(!(subtypeObject instanceof String)) {
+//	      throw new TMLExpressionException(this, "Invalid function call");
+//   }
+   String subType = getStringOperand(1);
    if (o instanceof Property) {
 	   Property p = (Property)o;
 	   return p.getSubType(subType);

@@ -94,9 +94,9 @@ public String usage() {
                 double min = (value1 < value2) ? value1 : value2;
 
                 if (a instanceof Double || b instanceof Double)
-                    return new Double(min);
+                    return Double.valueOf(min);
                 else
-                    return new Integer((int) min);
+                    return Integer.valueOf((int) min);
                 
             }
         }
@@ -107,9 +107,9 @@ public String usage() {
         Object a = sdf.parse("2017-11-10");
 //        Object a = Math.PI;
         Object b = sdf.parse("2015-11-10");
-//        Object b = new Integer(3);
+//        Object b = Integer.valueOf(3);
         Object c = sdf.parse("2019-10-11");
-//        Object c = new Integer(5);
+//        Object c = Integer.valueOf(5);
         
         List<Object> l = new ArrayList<Object>();
         l.add(a);

@@ -2,15 +2,11 @@ package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ValidatePhoneNumber extends FunctionInterface {
     
-	private final static Logger logger = LoggerFactory.getLogger(ValidatePhoneNumber.class);
 	// Only exclude unwanted chars. The length is not a part of the check.
 	private static final Pattern phoneNumberPattern = Pattern.compile("^([0-9\\(\\)\\/\\+ \\-]*)$");
     
@@ -32,33 +28,12 @@ public class ValidatePhoneNumber extends FunctionInterface {
 
 	@Override
     public Object evaluate() throws TMLExpressionException {
-        Object o1 = this.getOperands().get(0);
-        
-        // No need to check if everything is missing
-        if (o1 == null || o1.equals("")) {
-            throw new TMLExpressionException("Phonenumber argument is missing or null ValidatePhoneNumber()");
-        }
-        
-		if (phoneNumberPattern.matcher((CharSequence) o1).matches()) {
+        String phoneNumberString = getStringOperand(0);
+		if (phoneNumberPattern.matcher(phoneNumberString).matches()) {
 			return true;
 		} else {
 			return false;
 		}
     }
 
-    public static void main(String [] args) {
-
-        ValidatePhoneNumber e1 = new ValidatePhoneNumber();
-        e1.reset();
-        e1.insertStringOperand("+31 (0)20 490 4977");
-        ValidatePhoneNumber e2 = new ValidatePhoneNumber();
-        e2.reset();
-        e2.insertStringOperand("020-4904977");
-        try {
-            System.out.println(e1.getOperand(0) + " - " + e1.evaluate());
-            System.out.println(e2.getOperand(0) + " - " + e2.evaluate());
-        } catch (TMLExpressionException ee) {
-        	logger.error("Error: ", ee);
-        }
-      }
 }

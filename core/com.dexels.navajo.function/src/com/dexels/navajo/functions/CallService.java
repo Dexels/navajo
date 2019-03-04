@@ -27,8 +27,8 @@ public class CallService extends FunctionInterface {
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Operand result = null;
-		String serviceName = null;
-		String expression = null;
+		String serviceName = getStringOperand(0);
+		String expression = getOperands().size()==1 ? null : getStringOperand(1);
 		
 		if ( getNavajo() == null ) {
 			throw new TMLExpressionException("No Navajo Request object available.");
@@ -36,16 +36,6 @@ public class CallService extends FunctionInterface {
 		if ( getOperands().size() > 2 ) {
 			throw new TMLExpressionException("Invalid number of parameters.");
 		}
-		if ( !(getOperand(0) instanceof String) ) {
-			throw new TMLExpressionException("Invalid service name defined.");
-		}
-		if ( !(getOperands().size() == 1 || getOperand(1) == null || getOperand(1) instanceof String) ) {
-			throw new TMLExpressionException("Invalid expression defined.");
-		}
-	
-		serviceName = (String) getOperand(0);
-		expression = getOperands().size() == 1 ? null : (String) getOperand(1);
-		
 		try {
 			
 			Navajo response = getNavajo().getNavajo(serviceName);

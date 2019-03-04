@@ -13,12 +13,12 @@ public final class ToDouble extends FunctionInterface {
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		Object o = this.getOperands().get(0);
         if (o==null) {
-          return new Double(0);
+          return Double.valueOf(0);
         }
         if(o instanceof Money) {
       	  return ((Money)o).doubleValue();
         }
-        return new Double(o+"");
+        return Double.valueOf(o+"");
     }
 
     @Override

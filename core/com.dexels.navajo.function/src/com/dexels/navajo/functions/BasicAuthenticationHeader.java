@@ -38,22 +38,13 @@ public class BasicAuthenticationHeader extends FunctionInterface {
 		 }
 		 
 		 
-		Object o1 = this.getOperand(0);
-		Object o2 = this.getOperand(1);
-		
-		if (!(o1 instanceof String) || !(o2 instanceof String)) {
-            throw new TMLExpressionException("BasicAuthenticationHeader(String, String) expected");
-		}
-		
-		String authString = (String) o1 + ":" + (String) o2;
+		String o1 = this.getStringOperand(0);
+		String o2 = this.getStringOperand(1);
+
+		String authString =  o1 + ":" + o2;
 		byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
 		return "Basic " + Base64.encode(bytes, 0, bytes.length, 0, "");
 
 	}
-	
-	public static void main(String [] args) throws Exception {
-			
-	}
-	
 
 }

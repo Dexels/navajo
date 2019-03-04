@@ -1,6 +1,9 @@
 package com.dexels.navajo.functions;
 
+import org.junit.Assert;
+
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.FunctionInterface;
 
@@ -39,7 +42,7 @@ public class CheckFloat extends FunctionInterface {
 	@Override
 	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
-		Object o = getOperand(0);
+		Object o = operand(0).value;
 
 		// If strict flag is set, properties can be passed as string values.
 		if (getOperands().size() > 1) {
@@ -75,33 +78,38 @@ public class CheckFloat extends FunctionInterface {
 		CheckFloat cf = new CheckFloat();
 
 		cf.reset();
-		cf.insertIntegerOperand(new Integer(1234));
+		cf.insertIntegerOperand(Integer.valueOf(1234));
 		Object result = cf.evaluate();
 		System.err.println("result = " + result);
-
+		Assert.assertTrue((boolean) result);
 		cf.reset();
-		cf.insertFloatOperand(new Double(5.67));
+		cf.insertFloatOperand(Double.valueOf(5.67));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
 
 		cf.reset();
-		cf.insertFloatOperand(new Double(+7.98E4));
+		cf.insertFloatOperand(Double.valueOf(+7.98E4));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
 
 		cf.reset();
-		cf.insertFloatOperand(new Double(-5.43E-2));
+		cf.insertFloatOperand(Double.valueOf(-5.43E-2));
 		result = cf.evaluate();
 		System.err.println("result = " + result);
+		Assert.assertTrue((boolean) result);
 
 		cf.reset();
 		cf.insertStringOperand("aap");
 		result = cf.evaluate();
 		System.err.println("result = " + result);
+		Assert.assertFalse((boolean) result);
 
 		cf.reset();
-		cf.insertOperand(null);
+		cf.insertOperand(Operand.NULL);
 		result = cf.evaluate();
 		System.err.println("result = " + result);
+		Assert.assertFalse((boolean) result);
 	}
 }

@@ -22,7 +22,7 @@ public class GetHeader extends FunctionInterface {
 
 		if ( inMessage != null ) {
 			Header h = inMessage.getHeader();
-			result = h.getHeaderAttribute((String) getOperand(0));
+			result = h.getHeaderAttribute(getStringOperand(0));
 		} else {
 			return "empty header";
 		}

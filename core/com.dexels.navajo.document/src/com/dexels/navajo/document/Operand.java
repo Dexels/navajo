@@ -149,7 +149,6 @@ public static Operand ofClockTime(ClockTime clockTime) {
 	return new Operand(clockTime,Property.CLOCKTIME_PROPERTY);
 }
 
-@Deprecated
 public static Operand ofMessage(Message message) {
 	return new Operand(message,"message");
 }

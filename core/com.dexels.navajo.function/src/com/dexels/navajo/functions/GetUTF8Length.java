@@ -30,10 +30,10 @@ public final class GetUTF8Length extends FunctionInterface {
     @Override
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
     	if(this.getOperands().size()==0) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}
     	if(this.getOperands().size()==1 && this.getOperands().get(0)==null) {
-    		return new Integer(0);
+    		return Integer.valueOf(0);
     	}    	
     	if(this.getOperands().size() > 1) {
             throw new TMLExpressionException("Only a single argument supported for GetUTF8Length() function.");
@@ -54,7 +54,7 @@ public final class GetUTF8Length extends FunctionInterface {
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Error: ", e);
 		}
-	    return new Integer(0);
+	    return Integer.valueOf(0);
     }
 
     @Override

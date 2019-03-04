@@ -126,7 +126,7 @@ public final class IntegerPropertyField extends PropertyField implements
 			if (initProperty != null) {
 				if (longMode) {
 					initProperty
-							.setAnyValue(new Long(Long.parseLong(getText())));
+							.setAnyValue(Long.valueOf(Long.parseLong(getText())));
 					initProperty.setType(Property.LONG_PROPERTY);
 				} else {
 					initProperty.setAnyValue(new Integer(Integer

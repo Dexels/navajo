@@ -36,7 +36,7 @@ public final class GetUrlSize extends GetUrlBase {
 			throw new TMLExpressionException("GetUrlSize: bad url: "+a);
 		}
 
-		return new Integer(getUrlLength(u));
+		return Integer.valueOf(getUrlLength(u));
 	}
 
 

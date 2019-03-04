@@ -50,7 +50,7 @@ public String usage() {
     // Tests.
    ToMoney tm = new ToMoney();
     tm.reset();
-    tm.insertFloatOperand(new Double(1024.4990));
+    tm.insertFloatOperand(Double.valueOf(1024.4990));
     System.out.println("result = " + ((Money) tm.evaluate()).formattedString());
 
     // Using expressions.

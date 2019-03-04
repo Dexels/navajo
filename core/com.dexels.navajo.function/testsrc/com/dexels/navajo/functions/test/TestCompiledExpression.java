@@ -7,8 +7,6 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
@@ -30,9 +28,6 @@ public class TestCompiledExpression {
 	private Navajo input;
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(TestCompiledExpression.class);
-
-
 
 	@Before
 	public void setup() {
@@ -100,8 +95,9 @@ public class TestCompiledExpression {
 		List<String> problems = new ArrayList<>();
 		ContextExpression o = ExpressionCache.getInstance().parse(problems,"ToUpper(ToLower('Bob'))",name->FunctionClassification.DEFAULT);
 		long now = System.currentTimeMillis();
-		for (int i = 0; i < 100000000; i++) {
-			String tr = (String) o.apply().value;
+		for (int i = 0; i < 100000; i++) {
+			o.apply();
+//			.value;
 //			System.err.println("tr:" +tr);
 		}
 		System.err.println("Now: "+(System.currentTimeMillis()-now));

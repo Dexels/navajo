@@ -112,7 +112,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
               sum += ( (Integer) o).doubleValue();
             }
             else if (o instanceof Double) {
-//              if (!((Double)o).equals(new Double(Double.NaN))) {
+//              if (!((Double)o).equals(Double.valueOf(Double.NaN))) {
               sumType = "float";
               sum += ( (Double) o).doubleValue();
 //              }
@@ -124,13 +124,13 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 //              }
             }
             else if (o instanceof Money) {
-//              if (!new Double(((Money)o).doubleValue()).equals(new Double(Float.NaN))) {
+//              if (!Double.valueOf(((Money)o).doubleValue()).equals(Double.valueOf(Float.NaN))) {
               sumType = "money";
               sum += ( (Money) o).doubleValue();
 //              }
             }
             else if (o instanceof Percentage) {
-//              if (!new Double(((Money)o).doubleValue()).equals(new Double(Float.NaN))) {
+//              if (!Double.valueOf(((Money)o).doubleValue()).equals(Double.valueOf(Float.NaN))) {
               sumType = "percentage";
               sum += ( (Percentage) o).doubleValue();
 //              }
@@ -147,7 +147,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
         }
       }
       if (sumType.equals("int")) {
-        return new Integer( (int) sum);
+        return Integer.valueOf( (int) sum);
       }
       else if (sumType.equals("money")) {
         return new Money(sum);
@@ -157,7 +157,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
         return new Percentage(sum);
       }
       else {
-        return new Double(sum);
+        return Double.valueOf(sum);
       }
     }
     catch (NavajoException ne) {

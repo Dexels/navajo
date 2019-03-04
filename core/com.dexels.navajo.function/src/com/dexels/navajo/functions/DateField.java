@@ -32,15 +32,15 @@ public final class DateField extends FunctionInterface {
         //System.out.println("WEEK  = " + cal.get(Calendar.WEEK_OF_YEAR));
 
         if (field.equals("WEEK"))
-            return new Integer(cal.get(Calendar.WEEK_OF_YEAR));
+            return Integer.valueOf(cal.get(Calendar.WEEK_OF_YEAR));
         else if (field.equals("YEAR"))
-            return new Integer(cal.get(Calendar.YEAR));
+            return Integer.valueOf(cal.get(Calendar.YEAR));
         else if (field.equals("MONTH"))
-            return new Integer(cal.get(Calendar.MONTH));
+            return Integer.valueOf(cal.get(Calendar.MONTH));
         else if (field.equals("DAY"))
-            return new Integer(cal.get(Calendar.DAY_OF_MONTH));
+            return Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH));
         else
-            return new Integer(-1);
+            return Integer.valueOf(-1);
     }
 
     @Override

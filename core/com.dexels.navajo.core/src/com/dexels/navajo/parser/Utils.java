@@ -173,11 +173,11 @@ public final class Utils extends Exception {
 		else if ((a instanceof String) || (b instanceof String)) {
 			throw new TMLExpressionException("Subtraction not defined for Strings");
 		} else if (a instanceof Double && b instanceof Integer)
-			return new Double(((Double) a).doubleValue() - ((Integer) b).intValue());
+			return Double.valueOf(((Double) a).doubleValue() - ((Integer) b).intValue());
 		else if (a instanceof Integer && b instanceof Double)
-			return new Double(((Integer) a).intValue() - ((Double) b).doubleValue());
+			return Double.valueOf(((Integer) a).intValue() - ((Double) b).doubleValue());
 		else if (a instanceof Double && b instanceof Double)
-			return new Double(((Double) a).doubleValue() - ((Double) b).doubleValue());
+			return Double.valueOf(((Double) a).doubleValue() - ((Double) b).doubleValue());
 		else if ((a instanceof Money || b instanceof Money)) {
 			if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
@@ -266,11 +266,11 @@ public final class Utils extends Exception {
 
 			return sA + sB;
 		} else if (a instanceof Double && b instanceof Integer)
-			return new Double(((Double) a).doubleValue() + ((Integer) b).intValue());
+			return Double.valueOf(((Double) a).doubleValue() + ((Integer) b).intValue());
 		else if (a instanceof Integer && b instanceof Double)
-			return new Double(((Integer) a).intValue() + ((Double) b).doubleValue());
+			return Double.valueOf(((Integer) a).intValue() + ((Double) b).doubleValue());
 		else if (a instanceof Double && b instanceof Double)
-			return new Double(((Double) a).doubleValue() + ((Double) b).doubleValue());
+			return Double.valueOf(((Double) a).doubleValue() + ((Double) b).doubleValue());
 		else if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
 			DatePattern dp1 = null;
 			DatePattern dp2 = null;

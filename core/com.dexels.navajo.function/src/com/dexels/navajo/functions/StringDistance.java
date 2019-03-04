@@ -61,7 +61,7 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
       }
     }
 
-    return new Integer(d[c1.length - 1][c2.length - 1]);
+    return Integer.valueOf(d[c1.length - 1][c2.length - 1]);
 
   }
 }

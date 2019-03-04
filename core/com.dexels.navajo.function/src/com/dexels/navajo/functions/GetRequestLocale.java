@@ -18,7 +18,7 @@ public class GetRequestLocale  extends FunctionInterface {
            return loc;
        }
        if ((getOperands().size() > 0)) {
-           return getOperand(0).toString();
+           return getStringOperand(0);
        }
       
        return DEFAULT_LOCALE;

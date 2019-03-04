@@ -37,17 +37,17 @@ public class Abs extends FunctionInterface {
 	 */
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
+		Object o = operand(0).value;
 		if (o == null) {
 			return null;
 		}
 		
 		if (o instanceof Float) {
-			return new Float(Math.abs(((Float) o).floatValue()));
+			return Float.valueOf(Math.abs(((Float) o).floatValue()));
 		} else if (o instanceof Double) {
-			return new Double(Math.abs(((Double) o).doubleValue()));
+			return Double.valueOf(Math.abs(((Double) o).doubleValue()));
 		} else if (o instanceof Integer) {
-			return new Integer(Math.abs(((Integer) o).intValue()));
+			return Integer.valueOf(Math.abs(((Integer) o).intValue()));
 		} else {
 			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
 		}

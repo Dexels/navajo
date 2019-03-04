@@ -1,9 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.parser.Expression;
 
 
 /**
@@ -35,7 +33,7 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 
-    String input = (String) getOperand(0);
+    String input = getStringOperand(0);
     StringBuffer expression = new StringBuffer(input.length());
 
     boolean startExpression = false;
@@ -70,18 +68,4 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 public String usage() {
     return "CreateExpression(String)";
   }
-
-  public static void main(String [] args) throws Exception {
-    String expression = "Hallo \n Hoe is het nou?";
-    CreateExpression ce = new CreateExpression();
-    ce.reset();
-    ce.insertStringOperand(expression);
-    String result = (String) ce.evaluate();
-    System.err.println("result:");
-    System.err.println(result);
-    Operand o = Expression.evaluate(result, null);
-    System.err.println("Evaluated to: ");
-    System.err.println(o.value);
-  }
-
 }

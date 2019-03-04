@@ -43,11 +43,7 @@ public class GetPropertyDirection extends GetPropertyAttribute {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		Object o = getOperand(0);
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "String argument expected");
-		}
-		String propertyName = (String) o;
+		String propertyName = getStringOperand(0);
 
 		return getAttribute(propertyName, "direction");
 	}

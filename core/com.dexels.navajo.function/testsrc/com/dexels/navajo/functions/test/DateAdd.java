@@ -49,14 +49,14 @@ public class DateAdd  {
 		
 		Date d = new java.util.Date();
 		da.insertDateOperand(d);
-		da.insertIntegerOperand(new Integer(1));
+		da.insertIntegerOperand(Integer.valueOf(1));
 		da.insertStringOperand("WEEK");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
 		da.insertDateOperand((java.util.Date)o);
-		da.insertIntegerOperand(new Integer(-1));
+		da.insertIntegerOperand(Integer.valueOf(-1));
 		da.insertStringOperand("WEEK");
 		Object o2 = da.evaluate();
 		
@@ -64,7 +64,7 @@ public class DateAdd  {
 		
 		da.reset();
 		da.insertDateOperand((java.util.Date)o2);
-		da.insertIntegerOperand(new Integer(7));
+		da.insertIntegerOperand(Integer.valueOf(7));
 		da.insertStringOperand("DAY");
 		Object o3 = da.evaluate();
 		
@@ -77,14 +77,14 @@ public class DateAdd  {
 		
 		Date d = new java.util.Date();
 		da.insertDateOperand(d);
-		da.insertIntegerOperand(new Integer(100));
+		da.insertIntegerOperand(Integer.valueOf(100));
 		da.insertStringOperand("MONTH");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
 		da.insertDateOperand((java.util.Date)o);
-		da.insertIntegerOperand(new Integer(-100));
+		da.insertIntegerOperand(Integer.valueOf(-100));
 		da.insertStringOperand("MONTH");
 		Object o2 = da.evaluate();
 		
@@ -97,14 +97,14 @@ public class DateAdd  {
 		
 		Date d = new java.util.Date();
 		da.insertDateOperand(d);
-		da.insertIntegerOperand(new Integer(100));
+		da.insertIntegerOperand(Integer.valueOf(100));
 		da.insertStringOperand("DAY");
 		Object o = da.evaluate();
 		assertEquals(o.getClass(), java.util.Date.class);
 		
 		da.reset();
 		da.insertDateOperand((java.util.Date)o);
-		da.insertIntegerOperand(new Integer(-100));
+		da.insertIntegerOperand(Integer.valueOf(-100));
 		da.insertStringOperand("DAY");
 		Object o2 = da.evaluate();
 		

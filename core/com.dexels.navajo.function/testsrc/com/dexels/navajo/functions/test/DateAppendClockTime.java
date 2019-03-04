@@ -51,7 +51,7 @@ public class DateAppendClockTime {
 		da.reset();
 		System.out.println(da.evaluate());
 
-		Object o = da.evaluate();
+		da.evaluate();
 	}
 
 	@Test(expected = com.dexels.navajo.expression.api.TMLExpressionException.class)
@@ -68,7 +68,7 @@ public class DateAppendClockTime {
 		da.insertStringOperand("11:28");
 		System.out.println(da.evaluate());
 
-		Object o = da.evaluate();
+		da.evaluate();
 	}
 
 }

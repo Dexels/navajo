@@ -34,6 +34,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
+@Deprecated
 public class Base64Encode extends FunctionInterface {
 
 	
@@ -61,7 +62,7 @@ public class Base64Encode extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
+		Object o = operand(0).value;
 		String data = null;
 		if ( o instanceof Binary ) {
 			Binary b = (Binary) o;

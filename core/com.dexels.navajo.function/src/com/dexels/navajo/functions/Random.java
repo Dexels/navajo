@@ -26,7 +26,7 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
     if (result < 0)
       result *= -1;
     int i = (int) (result/1000.0);
-    return new Integer(i);
+    return Integer.valueOf(i);
   }
   @Override
 public String usage() {

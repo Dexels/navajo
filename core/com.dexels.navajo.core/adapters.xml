@@ -143,7 +143,6 @@
             <value name="name" required="true" direction="in"/>
             <value name="query" required="false" direction="in"/>
             <value name="description" required="false" direction="in"/>
-            <value name="orderByDescription"  required="false" direction="in"/>
             <value name="direction" required="true" direction="in"/>
             <value name="emptyOption" required="false" direction="in"/>
             <value name="selectedValue" required="false" direction="in"/>

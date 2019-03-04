@@ -25,7 +25,7 @@ public class MD5Sum extends FunctionInterface {
 	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 		String output = "unknown";
 		if (getOperand(0) == null) {
-			return new Integer(0);
+			return Integer.valueOf(0);
 		}
 		if ( getOperand(0) instanceof Binary ) {
 			Binary binaryFile = (Binary) getOperand(0);	
@@ -65,6 +65,7 @@ public class MD5Sum extends FunctionInterface {
 		return "Get the MD5Sum of supplied Binary object.";
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void main(String args[]) throws Exception {
 
 		String b = "Kroket";

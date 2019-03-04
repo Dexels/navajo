@@ -239,7 +239,7 @@ public abstract class ScriptCompiler {
     private String generateDs(String packagePath, String script, List<Dependency> dependencies, Set<String> dependentResources)
             throws IOException {
         String fullName;
-        String compiledDate = "" + new Long(new Date().getTime());
+        String compiledDate = "" + Long.valueOf(new Date().getTime());
         if (packagePath.equals("")) {
             fullName = script;
         } else {

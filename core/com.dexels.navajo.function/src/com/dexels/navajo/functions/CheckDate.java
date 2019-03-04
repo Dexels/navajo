@@ -52,13 +52,13 @@ public final class CheckDate extends FunctionInterface {
 
 	@Override
     public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
-        Object o = this.getOperand(0);
+        Object o = this.operand(0).value;
         
         if (o instanceof java.util.Date) {
             // Year can't be greater than 9999 by default
             boolean limitYear = true;
             if (this.getOperands().size() > 1) {
-                limitYear = (Boolean) this.getOperand(1);
+                limitYear = getBooleanOperand(1);
             }
             
             if (limitYear) {

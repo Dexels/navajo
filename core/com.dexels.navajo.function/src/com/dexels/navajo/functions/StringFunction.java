@@ -107,9 +107,9 @@ public final class StringFunction extends FunctionInterface {
 		// String aap = "Voetbal";
 		// f.insertOperand("substring");
 		// f.insertOperand(aap);
-		// f.insertOperand(new Integer(0));
-		// f.insertOperand(new Integer(2));
-		// //f.insertOperand(new Integer(4));
+		// f.insertOperand(Integer.valueOf(0));
+		// f.insertOperand(Integer.valueOf(2));
+		// //f.insertOperand(Integer.valueOf(4));
 		//
 		// Object o = f.evaluate();
 		// System.out.println("o = " + o + ", type = " +
@@ -129,8 +129,8 @@ public final class StringFunction extends FunctionInterface {
 		// f.reset();
 		// f.insertOperand("substring");
 		// f.insertOperand(noot);
-		// f.insertOperand(new Integer(0));
-		// f.insertOperand(new Integer(7));
+		// f.insertOperand(Integer.valueOf(0));
+		// f.insertOperand(Integer.valueOf(7));
 		// o = f.evaluate();
 		// System.out.println("o = " + o + ", type = " +
 		// o.getClass().getName());

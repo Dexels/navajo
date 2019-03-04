@@ -57,7 +57,7 @@ public class GetSelectedValues extends FunctionInterface {
 			throw new TMLExpressionException(this,
 					"Invalid function call, need one or two parameters");
 		}
-		Object o = getOperand(0);
+		Object o = operand(0).value;
 		if (o == null) {
 			throw new TMLExpressionException(this,
 					"Invalid function call in GetSelectedValues: Parameter null");
@@ -65,7 +65,7 @@ public class GetSelectedValues extends FunctionInterface {
 
 		boolean outputAsStringList = false;
 		if (getOperands().size() > 1) {
-			outputAsStringList = (Boolean)getOperand(1);
+			outputAsStringList = getBooleanOperand(1);
 		}
 
 		List<Object> values = new ArrayList<Object>();

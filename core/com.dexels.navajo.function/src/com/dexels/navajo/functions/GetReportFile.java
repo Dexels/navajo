@@ -35,7 +35,7 @@ public String remarks() {
   @Override
 public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
 	 String script = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-    String reportName = (String) getOperand(0);
+    String reportName = getStringOperand(0);
 	 java.io.File scriptDir = new java.io.File(script); 
 	 java.io.File report = new java.io.File(scriptDir, reportName+".rptdesign");
     try {

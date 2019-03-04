@@ -38,22 +38,14 @@ public final class CapString extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		Object op = getOperand(0);
-		Object size = getOperand(1);
-		if (!(op instanceof String)) {
-			throw new TMLExpressionException(this, "String argument expected");
-		}
-		if (!(size instanceof Integer)) {
-			throw new TMLExpressionException(this, "Integer argument expected");
-		}
+		String s = getStringOperand(0);
+		Integer size = getIntegerOperand(1);
 
-		if (op == null || ((String)op).length() == 0) {
+		if (s == null || s.length() == 0) {
 			return "";
 		} else {
-			String s = (String) op;
-			int l = (Integer)size;
-			if (s.length() > l) {
-				return s.substring(0, l);
+			if (s.length() > size) {
+				return s.substring(0, size);
 			} else {
 				return s;
 			}
@@ -69,14 +61,5 @@ public final class CapString extends FunctionInterface {
 	@Override
 	public String remarks() {
 		return "CapString a string";
-	}
-
-	public static void main(String[] args) throws TMLExpressionException {
-		CapString t = new CapString();
-		t.reset();
-		t.insertStringOperand("012345678901234567890");
-		t.insertIntegerOperand(6);
-		String res = (String) t.evaluate();
-		System.err.println(">" + res + "<");
 	}
 }

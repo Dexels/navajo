@@ -61,16 +61,7 @@ public class Base64ImageStringToBinary extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
-		String data = null;
-		if ( o instanceof String ) {
-			data = (String) o;
-		} else {
-			throw new TMLExpressionException("Can not Base64ImageStringToBinary null data");
-		}
-//		sun.misc.Base64ImageStringToBinaryr enc = new sun.misc.Base64ImageStringToBinaryr();	
-//		String encoded = enc.encode(data.getBytes());
-//		
+		String data = getStringOperand(0);
 		Binary b;
 		try {
 			String partSeparator = ",";

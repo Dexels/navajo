@@ -47,18 +47,18 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
                                        "Wrong number of arguments: " +
                                        getOperands().size());
     }
-    if (! (getOperand(0)instanceof String && getOperand(1)instanceof String)) {
+    if (! (operand(0).value instanceof String && operand(1).value instanceof String)) {
       throw new TMLExpressionException(this,
                                        "Wrong argument types: " +
-                                       getOperand(0).getClass() + " and " +
-                                       getOperand(1).getClass());
+                                       operand(0).value.getClass() + " and " +
+                                       operand(1).value.getClass());
     }
-    String messageName = (String) getOperand(0);
-    String propertyName = (String) getOperand(1);
+    String messageName = getStringOperand(0);
+    String propertyName = getStringOperand(1);
 
     String filter = null;
     if (getOperands().size() > 2) {
-      filter = (String) getOperand(2);
+      filter = getStringOperand(2);
     }
     Message parent = getCurrentMessage();
     Navajo doc = getNavajo();
