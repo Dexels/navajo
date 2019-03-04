@@ -723,6 +723,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		if (input.getMessage(Message.MSG_TOKEN_BLOCK) != null) {
             request.addMessage(input.getMessage(Message.MSG_TOKEN_BLOCK).copy(request));
         }
+		if (input.getMessage(Message.MSG_ENTITY_BLOCK) != null) {
+            request.addMessage(input.getMessage(Message.MSG_ENTITY_BLOCK).copy(request));
+        }
 		if (getop.getExtraMessage() != null) {
 			request.addMessage(getop.getExtraMessage().copy(request));
 		}
