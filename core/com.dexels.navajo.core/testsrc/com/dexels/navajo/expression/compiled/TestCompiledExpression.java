@@ -113,7 +113,7 @@ public class TestCompiledExpression {
         Assert.assertFalse(ss.isLiteral());
 	}
 
-	@Test
+	@Test @Ignore
 	public void testParseTmlConditionalComplex() throws ParseException, TMLExpressionException {
 		String expression = "{request@.:!?[/NewMemberFunction/FromUnion]} AND {response@.:!?[/ExistingClubFunction/PersonId]}";
 		StringReader sr = new StringReader(expression);
