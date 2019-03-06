@@ -23,7 +23,7 @@ import com.dexels.navajo.document.types.ClockTime;
 
 public class NavajoLaszloConverter {
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoLaszloConverter.class);
 	
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {

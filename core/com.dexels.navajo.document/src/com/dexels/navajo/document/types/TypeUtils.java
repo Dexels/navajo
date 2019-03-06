@@ -29,7 +29,6 @@ public class TypeUtils {
             return Property.BOOLEAN_PROPERTY;
         else if (o.getClass().getName().startsWith("[Ljava.util.Vector"))
             return Property.POINTS_PROPERTY;
-        // Added by arjen 19/2/2004.
         else if (o instanceof Money)
             return Property.MONEY_PROPERTY;
         else if (o instanceof Percentage)
@@ -55,9 +54,6 @@ public class TypeUtils {
             return "property";
         } else
             return "unknown";
-
-        // throw new TMLExpressionException("Could not determine NavajoType for Java
-        // type: " + o.getClass().getName());
     }
 
 }

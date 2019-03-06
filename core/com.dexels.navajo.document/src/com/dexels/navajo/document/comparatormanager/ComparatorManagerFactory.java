@@ -5,6 +5,9 @@ public class ComparatorManagerFactory {
 
 	private static ComparatorManager instance;
 
+	private ComparatorManagerFactory() {
+		// no instance
+	}
 	public static synchronized ComparatorManager getInstance() {
 		return instance;
 	}

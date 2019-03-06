@@ -37,7 +37,7 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 		}
 		if (fileExtensions == null)
 		{
-			fileExtensions = new ArrayList<String>();
+			fileExtensions = new ArrayList<>();
 		}
 		fileExtensions.add(ext);
 	}
@@ -76,7 +76,7 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 		}
 		if (mimeTypes == null)
 		{
-			mimeTypes = new ArrayList<String> ();
+			mimeTypes = new ArrayList<> ();
 		}
 		mimeTypes.add(mimeType);
 	}
@@ -288,7 +288,7 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(80);
+		StringBuilder sb = new StringBuilder(80);
 		sb.append(getGroup());
 		sb.append(';');
 		sb.append(getShortName());

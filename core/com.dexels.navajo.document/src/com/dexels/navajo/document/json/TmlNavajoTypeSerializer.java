@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public class TmlNavajoTypeSerializer extends StdSerializer<NavajoType> {
-    private final static Logger logger = LoggerFactory.getLogger(TmlNavajoTypeSerializer.class);
+    private static final Logger logger = LoggerFactory.getLogger(TmlNavajoTypeSerializer.class);
 
     private static final long serialVersionUID = 6193576754986884043L;
 

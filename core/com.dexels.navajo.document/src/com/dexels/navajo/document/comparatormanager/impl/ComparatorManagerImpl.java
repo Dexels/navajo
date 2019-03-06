@@ -14,9 +14,9 @@ import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
 
 public class ComparatorManagerImpl implements ComparatorManager {
 
-	private final Map<String,ComparatorFactory> factories = new HashMap<String, ComparatorFactory>();
+	private final Map<String,ComparatorFactory> factories = new HashMap<>();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ComparatorManagerImpl.class);
 	
 	public void activate() {

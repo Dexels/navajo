@@ -56,7 +56,7 @@ public class TestBinary {
 	private Binary binary5;
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestBinary.class);
 	
 	@Before

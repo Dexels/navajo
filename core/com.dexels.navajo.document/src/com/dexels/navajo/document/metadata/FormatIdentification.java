@@ -2,13 +2,14 @@ package com.dexels.navajo.document.metadata;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -37,13 +38,12 @@ public class FormatIdentification implements Serializable
 {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(FormatIdentification.class);
+	private static final Logger logger = LoggerFactory.getLogger(FormatIdentification.class);
 	private static final long serialVersionUID = 7824735272127450235L;
 	private static List<FormatDescription> descriptions;
-	private static int minBufferSize;
-	private final static String ZIP_EXCEL_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	private final static String ZIP_WORD_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	private final static String ZIP_POWERPOINT_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+	private static final String ZIP_EXCEL_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	private static final String ZIP_WORD_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+	private static final String ZIP_POWERPOINT_CONTENTTYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 	
 
 	static
@@ -77,7 +77,12 @@ public class FormatIdentification implements Serializable
 				// When it concerns a ZIP archive, it might be some kinda office type doc
 				// So check some stuff before returning ZIP as the answer
 				if (desc.getLongName().equalsIgnoreCase("PKWare Zip (ZIP)")) {
-					FormatDescription newDesc = identifyZipByContent(data, file);
+					FormatDescription newDesc = null;
+					try {
+						newDesc = identifyZipByContent(data, file);
+					} catch (IOException e) {
+						logger.error("identification of file failed: "+file, e);
+					}
 					if (newDesc != null) {
 						return newDesc;
 					} else {
@@ -136,49 +141,33 @@ public class FormatIdentification implements Serializable
 		return identify(data, file);
 	}
 	
-	private static File createTempFile(byte[] data) {
+	private static File createTempFile(byte[] data) throws IOException {
 		// Create a tmp file for the method to use.
-		// Location is the java.io.tmp
-		File file = null;
-		FileOutputStream fos = null;
-		try {
-			UUID uuid = UUID.randomUUID();
-            String fileName = uuid.toString();						
-			file = File.createTempFile(fileName, ".zip");
-			fos = new FileOutputStream(file);
+		UUID uuid = UUID.randomUUID();
+        String fileName = uuid.toString();
+		File file = File.createTempFile(fileName, ".zip");
+		
+		try(OutputStream fos = new FileOutputStream(file);) {
 			fos.write(data);
 			fos.flush();
-		} catch (FileNotFoundException e) {
-			logger.error("Error: ", e);
-			return file;
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-			return file;
-		} finally {
-		    if (fos != null) {
-		        try {
-		            fos.close();
-		        
-		        } catch (Exception e) {}
-		    }
 		}
 		return file;
 	}
 	
-	private static FormatDescription identifyZipByContent (byte[] data, File file) {
+	private static FormatDescription identifyZipByContent (byte[] data, File file) throws IOException {
 		FormatDescription newDesc = null;
 		InputStream input = null;
 		BufferedReader br = null;
 	    ZipInputStream zipInput = null;
-	    ZipFile zipFile = null;
 	    boolean deleteFile = false;
 
-		try {
-			if (file == null) {
-				file = createTempFile(data);
-				deleteFile = true;
-			}
-		    zipFile = new ZipFile(file);
+		if (file == null) {
+			file = createTempFile(data);
+			deleteFile = true;
+		}
+
+		try(ZipFile zipFile = new ZipFile(file)) {
+		    
 		    final Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
             // Create label for breaking
@@ -188,9 +177,8 @@ public class FormatIdentification implements Serializable
 		        if (!zipEntry.isDirectory()) {
 		            final String fileName = zipEntry.getName();
 		            if (fileName.endsWith(".xml")) {
-		                //zipInput = new ZipInputStream(new FileInputStream(fileName));
 		                input = zipFile.getInputStream(zipEntry);
-		                br = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		                br = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		                
 		                String line;
 		                while((line = br.readLine()) != null) {
@@ -239,11 +227,10 @@ public class FormatIdentification implements Serializable
 				if (input != null) {
 					input.close();
 				}
-				if (zipFile != null) {
-				    zipFile.close();
-				}
 				if (deleteFile) {
-					file.delete();
+					if(file!=null) {
+						file.delete();
+					}
 				}
 			} catch (IOException e) {
 				logger.error("Error: ", e);
@@ -255,15 +242,11 @@ public class FormatIdentification implements Serializable
 
 	private static void init()
 	{
-		descriptions = new ArrayList<FormatDescription>();
-		minBufferSize = 1;
-		try
+		descriptions = new ArrayList<>();
+		int minBufferSize = 1;
+		try(InputStream input =  FormatIdentification.class.getResource("formats.txt").openStream())
 		{
-			InputStream input =  FormatIdentification.class.getResource("formats.txt").openStream();
-			if (input == null) {
-				return;
-			}
-			FormatDescriptionReader in = new FormatDescriptionReader(new InputStreamReader(input,"UTF-8"));
+			FormatDescriptionReader in = new FormatDescriptionReader(new InputStreamReader(input,StandardCharsets.UTF_8));
 			FormatDescription desc;
 			while ((desc = in.read()) != null)
 			{
@@ -275,26 +258,10 @@ public class FormatIdentification implements Serializable
 				}
 				descriptions.add(desc);
 			}
-			input.close();
 		}
 		catch (Exception e)
 		{
 			logger.error("Error: ", e);
 		}
-	}
-
-	
-	public static void main(String[] args) {
-		FormatIdentification.init();
-		FormatDescription sd = FormatIdentification.identify(new File("C:/Users/Erik/Desktop/Workbook1.xls"));
-		logger.info("Result: "+sd);
-		sd = FormatIdentification.identify(new File("C:/Users/Erik/Desktop/bestellijst_aarse.doc"));
-		logger.info("Result: "+sd);
-		sd = FormatIdentification.identify(new File("C:/Users/Erik/Desktop/20130425_uitgevoerde tests KNKV.xlsx"));
-		logger.info("Result: "+sd);
-		sd = FormatIdentification.identify(new File("C:/Users/Erik/Desktop/OOWriterTest.odt"));
-		logger.info("Result: "+sd);
-		sd = FormatIdentification.identify(new File("C:/Users/Erik/Desktop/OOCalcTest.ods"));
-		logger.info("Result: "+sd);
 	}
 }

@@ -15,12 +15,15 @@ import org.slf4j.LoggerFactory;
 
 public class PersistenceManagerFactory {
 
-	static volatile PersistenceManager instance;
-	final static Object object = new Object();
+	static PersistenceManager instance;
+	static final Object object = new Object();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(PersistenceManagerFactory.class);
 	
+	private PersistenceManagerFactory() {
+		// no instance
+	}
 	public static void clearInstance() {
 		instance = null;
 	}

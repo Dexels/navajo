@@ -15,7 +15,7 @@ public class Base64DecodingFinishedException extends IOException {
 
 	private static final long serialVersionUID = -2693614501104506907L;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(Base64DecodingFinishedException.class);
 	
 	public Base64DecodingFinishedException(char[] data, int offset, int len) {

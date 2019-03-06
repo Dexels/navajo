@@ -19,7 +19,7 @@ import com.dexels.navajo.document.Navajo;
 public class BaseObjectImpl extends BaseNode {
 
 	private static final long serialVersionUID = -1937743662725211261L;
-	private final Map<String,String> myAttributes = new HashMap<String,String>();
+	private final Map<String,String> myAttributes = new HashMap<>();
   
   public BaseObjectImpl(Navajo n) {
     super(n);
@@ -46,8 +46,8 @@ public class BaseObjectImpl extends BaseNode {
     public void setRef(String ref) {
         myAttributes.put("ref", ref);
     }
-    public void setPercReady(double perc_ready) {
-        myAttributes.put("perc_ready", ""+perc_ready);
+    public void setPercReady(double percReady) {
+        myAttributes.put("perc_ready", ""+percReady);
     }
     public void setFinished(boolean b) {
         myAttributes.put("finished", (b ? "true" : "false"));

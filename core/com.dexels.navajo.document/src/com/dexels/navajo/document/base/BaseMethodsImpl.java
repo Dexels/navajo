@@ -20,7 +20,7 @@ import com.dexels.navajo.document.Navajo;
 public class BaseMethodsImpl extends BaseNode {
 
 	private static final long serialVersionUID = 9105044646681827267L;
-	private final List<BaseNode> myMethods = new ArrayList<BaseNode>();
+	private final List<BaseNode> myMethods = new ArrayList<>();
   public BaseMethodsImpl(Navajo n) {
     super(n);
   }

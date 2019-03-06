@@ -17,7 +17,7 @@ import com.dexels.navajo.document.PropertyTypeException;
 
 public class TypeCheckMoney extends TypeChecker {
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TypeCheckMoney.class);
 	
   public TypeCheckMoney() {

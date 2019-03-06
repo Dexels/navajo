@@ -10,7 +10,7 @@ public class Coordinate extends NavajoType implements Serializable {
      * 
      */
     private static final long serialVersionUID = 3899354902954075174L;
-    public final static String VERSION = "$Id$";
+    public static final String VERSION = "$Id$";
 
     private Double latitude = null;
     private Double longitude = null;

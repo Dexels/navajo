@@ -5,6 +5,10 @@ import com.dexels.navajo.document.metadata.GenericBinaryOpener;
 public class BinaryOpenerFactory {
 	
 	private static BinaryOpener instance;
+	
+	private BinaryOpenerFactory() { // no instance 
+	}
+
 	public static BinaryOpener getInstance()
 	{
 		if (instance == null)

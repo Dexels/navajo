@@ -13,7 +13,7 @@ import com.dexels.navajo.document.types.Binary;
 public class NavajoDocumentTestFicture  {
 
   public Navajo testDoc;
-  private final static Logger logger = LoggerFactory.getLogger(NavajoDocumentTestFicture.class);
+  private static final Logger logger = LoggerFactory.getLogger(NavajoDocumentTestFicture.class);
   public NavajoDocumentTestFicture() {
   }
 

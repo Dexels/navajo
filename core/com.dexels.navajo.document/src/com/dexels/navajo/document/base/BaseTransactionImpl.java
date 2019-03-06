@@ -7,11 +7,6 @@ import com.dexels.navajo.document.Navajo;
 
 public class BaseTransactionImpl extends BaseNode {
 	private static final long serialVersionUID = -6325965122672286543L;
-//  private ArrayList myRequiredMessages = new ArrayList();
-//  private String myName = "";
-//  private Message myParent = null;
-//  private String myDescription = null;
-//  private String myServer;
 private String rpc_name;
 private String rpc_usr;
 private String rpc_pwd;
@@ -26,7 +21,7 @@ protected String myRequestId;
  
   @Override
 public Map<String,String> getAttributes() {
-      Map<String,String> m = new HashMap<String,String>();
+      Map<String,String> m = new HashMap<>();
       if (rpc_name!=null) {
           m.put("rpc_name", rpc_name);
       }

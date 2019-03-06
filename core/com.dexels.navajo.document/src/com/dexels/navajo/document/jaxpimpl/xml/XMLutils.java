@@ -14,28 +14,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 
 public class XMLutils {
 
-    public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
-	private final static Logger logger = LoggerFactory
-			.getLogger(XMLutils.class);
+	private XMLutils() {
+		// no instances
+	}
+	
+    public static final String XML_ESCAPE_DELIMITERS = "&'<>\"";
     public static String getElementValue(Node node) {
     	
 	return node.getNodeValue();
     }
 
-    public static Navajo createNavajoInstance(String filename) throws NavajoException, FileNotFoundException {
+    public static Navajo createNavajoInstance(String filename) throws FileNotFoundException {
 
 
           Document d = null;
@@ -73,7 +72,7 @@ public class XMLutils {
    
     
     	String nodeName = node.getNodeName();
-    	nodeName = nodeName.substring( (nodeName.indexOf(":") != -1 ? nodeName.indexOf(":") + 1: 0) );
+    	nodeName = nodeName.substring( (nodeName.indexOf(':') != -1 ? nodeName.indexOf(':') + 1: 0) );
     	
        if (nodeName.equals(name)) {
             return node;
@@ -106,8 +105,8 @@ public class XMLutils {
     public static Node findNode(Node node, String name)
     {
        String nodeName  = node.getNodeName();
-       nodeName = nodeName.substring( (nodeName.indexOf(":") != -1 ? nodeName.indexOf(":") + 1 : 0) );
-       name = name.substring( (name.indexOf(":") != -1 ? name.indexOf(":") + 1 : 0) );
+       nodeName = nodeName.substring( (nodeName.indexOf(':') != -1 ? nodeName.indexOf(':') + 1 : 0) );
+       name = name.substring( (name.indexOf(':') != -1 ? name.indexOf(':') + 1 : 0) );
        if (nodeName.equals(name)) {
             return node;
         }
@@ -129,11 +128,11 @@ public class XMLutils {
 				    String value)     {
 
     	  String nodeName  = node.getNodeName();
-          nodeName = nodeName.substring( (nodeName.indexOf(":") != -1 ? nodeName.indexOf(":") + 1 : 0) );
+          nodeName = nodeName.substring( (nodeName.indexOf(':') != -1 ? nodeName.indexOf(':') + 1 : 0) );
 	if (nodeName.equals(name)) {
 	    Element e = (Element) node;
 	    if (e.getAttribute(attribute) != null && e.getAttribute(attribute).equals(value))
-		return node;
+	    	return node;
 	}
 	if (node.hasChildNodes()) {
 	    NodeList list = node.getChildNodes();
@@ -175,7 +174,7 @@ public class XMLutils {
         }
 
         StringTokenizer tokenizer = new StringTokenizer(s, XML_ESCAPE_DELIMITERS, true);
-        StringBuffer    result    = new StringBuffer();
+        StringBuilder    result    = new StringBuilder();
 
         while (tokenizer.hasMoreElements()) {
             String substring = tokenizer.nextToken();
@@ -186,10 +185,6 @@ public class XMLutils {
                 case '&' :
                     result.append("&amp;");
                     break;
-
-                //case '\'' :
-                //    result.append("&apos;");
-                //    break;
 
                 case ';' :
                     result.append("\\;");
@@ -206,10 +201,6 @@ public class XMLutils {
                 case '\"' :
                     result.append("&quot;");
                     break;
-
-//                case '\n' :
-//                    result.append("\\n");
-//                    break;
 
                 default :
                     result.append(substring);
@@ -319,11 +310,5 @@ public class XMLutils {
         result += s.substring(offset, s.length());    // characters after last newline
 
         return result;
-    }
-    
-    public static void main(String [] args) throws Exception {
-    	Document d = XMLDocumentUtils.createDocument(new FileInputStream("/home/arjen/soap.xml"), true);
-    	Node h = XMLutils.findNode(d, "Header");
-    	logger.info("header = " + h);
     }
 }

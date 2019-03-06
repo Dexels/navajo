@@ -24,7 +24,7 @@ public final class PropertyFilter {
     private Property myValue;
     private String myOperator;
 
-    private final static Logger logger = LoggerFactory.getLogger(PropertyFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyFilter.class);
 
     public PropertyFilter(String propName, Property value, String operator) {
         myPropertyName = propName;
@@ -32,13 +32,13 @@ public final class PropertyFilter {
         myOperator = operator;
     }
 
-    public PropertyFilter(String propName, String value, String type, String operator) throws NavajoException {
+    public PropertyFilter(String propName, String value, String type, String operator) {
         myPropertyName = propName;
         myValue = NavajoFactory.getInstance().createProperty(null, "unknown", type, value, 0, "", Property.DIR_IN);
         myOperator = operator;
     }
 
-    public final boolean compliesWith(Message m) throws NavajoException {
+    public final boolean compliesWith(Message m) {
 
         if ("*".equals(myPropertyName)) {
             List<Property> props = m.getAllProperties();
@@ -54,7 +54,7 @@ public final class PropertyFilter {
         }
     }
 
-    private boolean checkProperty(Property p) throws NavajoException {
+    private boolean checkProperty(Property p) {
         if (p == null) {
             logger.info("Property can not be found");
             return true;

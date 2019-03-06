@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Stack;
 
 import org.slf4j.Logger;
@@ -16,39 +20,56 @@ import org.slf4j.LoggerFactory;
  */
 public class QDParser {
     
+	private QDParser() {
+		// -no instances
+	}
     public static final int PUSHBACK_SIZE = 2000;
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(QDParser.class);
 	
-    private static int popMode(Stack<Integer> st) {
-        if (!st.empty())
+    private static int popMode(Deque<Integer> st) {
+        if (!st.isEmpty())
             return st.pop().intValue();
         else
             return PRE;
     }
 
-    private final static int TEXT = 1, ENTITY = 2, OPEN_TAG = 3, CLOSE_TAG = 4, START_TAG = 5, ATTRIBUTE_LVALUE = 6, ATTRIBUTE_EQUAL = 9,
-            ATTRIBUTE_RVALUE = 10, QUOTE = 7, IN_TAG = 8, SINGLE_TAG = 12, COMMENT = 13, DONE = 11, DOCTYPE = 14, PRE = 15, CDATA = 16;
+    private static final int TEXT = 1;
+    private static final int ENTITY = 2;
+    private static final int OPEN_TAG = 3;
+    private static final int CLOSE_TAG = 4;
+    private static final int START_TAG = 5;
+    private static final int ATTRIBUTE_LVALUE = 6;
+    private static final int ATTRIBUTE_EQUAL = 9;
+    private static final int ATTRIBUTE_RVALUE = 10;
+    private static final int QUOTE = 7;
+    private static final int IN_TAG = 8;
+    private static final int SINGLE_TAG = 12;
+    private static final int COMMENT = 13;
+    private static final int DONE = 11; 
+    private static final int DOCTYPE = 14;
+    private static final int PRE = 15;
+    private static final int CDATA = 16;
 
     public static void parse(DocHandler doc, Reader re) throws Exception {
         PushbackReader r = new PushbackReader(new BufferedReader(re), PUSHBACK_SIZE);
-        StringBuffer attributeBuffer = new StringBuffer(50);
-        //Stack st = new Stack();
+        StringBuilder attributeBuffer = new StringBuilder(50);
         int depth = 0;
         int mode = PRE;
         int c = 0;
         int quotec = '"';
         depth = 0;
-        StringBuffer sb = new StringBuffer();
-        StringBuffer etag = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
+        StringBuilder etag = new StringBuilder();
         String tagName = null;
         String lvalue = null;
         String rvalue = null;
-        Hashtable<String,String> attrs = null;
-        Stack<Integer> st = new Stack<Integer>();
+        Map<String,String> attrs = null;
+        Deque<Integer> st = new LinkedList<>();
         doc.startDocument();
-        int line = 1, col = 0;
+        int line = 1;
+        int col = 0;
         boolean eol = false;
         while ((c = r.read()) != -1) {
 
@@ -80,10 +101,6 @@ public class QDParser {
                 if (c == '<') {
                     st.push(Integer.valueOf(mode));
                     mode = START_TAG;
-                    // if (sb.length() > 0) {
-                    // doc.text(sb.toString());
-                    // sb.setLength(0);
-                    // }
                 } else if (c == '&') {
                     st.push(Integer.valueOf(mode));
                     mode = ENTITY;
@@ -110,7 +127,6 @@ public class QDParser {
                 if (c == '>' && sb.toString().endsWith("]]")) {
                     sb.setLength(sb.length() - 2);
                     logger.info("Warning: ignoring cdata!");
-                    // doc.text(sb.toString());
                     sb.setLength(0);
                     mode = popMode(st);
                 } else
@@ -128,8 +144,6 @@ public class QDParser {
                 // We are outside the root tag element
             } else if (mode == PRE) {
                 if (c == '<') {
-                    // mode = TEXT;
-                    // st.push(new Integer(mode));
                     mode = START_TAG;
                 }
 
@@ -156,7 +170,7 @@ public class QDParser {
                     st.push(Integer.valueOf(mode));
                     mode = OPEN_TAG;
                     tagName = null;
-                    attrs = new Hashtable<String,String>();
+                    attrs = new HashMap<>();
                     sb.append((char) c);
                 }
 
@@ -177,8 +191,6 @@ public class QDParser {
                     else if (cent.equals("apos"))
                         sb.append('\'');
                     // Could parse hex entities if we wanted to
-                    // else if(cent.startsWith("#x"))
-                    // sb.append((char)Integer.parseInt(cent.substring(2),16));
                     else if (cent.length() > 0 && cent.charAt(0) == '#')
                         sb.append((char) Integer.parseInt(cent.substring(1)));
                     // Insert custom entity definitions here
@@ -204,7 +216,7 @@ public class QDParser {
                     return;
                 }
                 sb.setLength(0);
-                attrs = new Hashtable<String,String>();
+                attrs = new Hashtable<>();
                 tagName = null;
                 mode = popMode(st);
 
@@ -219,7 +231,7 @@ public class QDParser {
                     depth++;
                     doc.startElement(tagName, attrs);
                     tagName = null;
-                    attrs = new Hashtable<String,String>();
+                    attrs = new HashMap<>();
                     mode = popMode(st);
                     skipWhitespace(r);
                     char ccc = nextChar(r);
@@ -227,7 +239,6 @@ public class QDParser {
                         doc.text(r);
                         r.read();
                         popMode(st);
-                        // / mode = CLOSE_TAG;
                     }
                 } else if (c == '/') {
                     mode = SINGLE_TAG;
@@ -261,10 +272,6 @@ public class QDParser {
                     mode = IN_TAG;
                     // See section the XML spec, section 3.3.3
                     // on normalization processing.
-
-                    // HMMMMMMMMM DOES THIS BREAK BASE64?
-                    // } else if (" \r\n\u0009".indexOf(c) >= 0) {
-                    // sb.append(' ');
                 } else if (c == '&') {
                     st.push(Integer.valueOf(mode));
                     mode = ENTITY;
@@ -286,7 +293,6 @@ public class QDParser {
                     }
                     mode = IN_TAG;
 
-                    // mode = QUOTE;
                 } else if (!Character.isWhitespace((char) c)) {
                     exc("Error in attribute processing", line, col);
                 }
@@ -317,16 +323,11 @@ public class QDParser {
                     doc.startElement(tagName, attrs);
                     depth++;
                     tagName = null;
-                    attrs = new Hashtable<String,String>();
+                    attrs = new HashMap<>();
                     skipWhitespace(r);
-//                    logger.info("Char: " + (char) nextChar(r));
                     if (nextChar(r) != '<') {
                         doc.text(r);
-//                        r.unread('<');
                     } 
-                    // char cc = (char)r.read();
-                    // /Lookahead(r);
-                    // mode = TEXT;
 
                 } else if (c == '/') {
                     mode = SINGLE_TAG;
@@ -341,58 +342,6 @@ public class QDParser {
         else
             exc("missing end tag", line, col);
     }
-
-//    private static String displayMode(int mode) {
-//        switch (mode) {
-//        case 1:
-//            return "TEXT";
-//        case 2:
-//            return "ENTITY";
-//        case 3:
-//            return "OPEN_TAG";
-//        case 4:
-//            return "CLOSE_TAG";
-//        case 5:
-//            return "START_TAG";
-//        case 6:
-//            return "ATTRIBUTE_LVALUE";
-//        case 7:
-//            return "QUOTE";
-//        case 8:
-//            return "IN_TAG";
-//        case 9:
-//            return "ATTRIBUTE_EQUAL";
-//        case 10:
-//            return "ATTRIBUTE_RVALUE";
-//        case 11:
-//            return "DONE";
-//        case 12:
-//            return "SINGLE_TAG";
-//        case 13:
-//            return "COMMENT";
-//        case 14:
-//            return "DOCTYPE";
-//        case 15:
-//            return "PRE";
-//        case 16:
-//            return "CDATA";
-//
-//        default:
-//            break;
-//        }
-//        return null;
-//    }
-//
-//    private static void showLookahead(PushbackReader r) throws IOException {
-//        char[] c = new char[10];
-//        r.read(c);
-//        System.err.print("LOOKAHEAD: >");
-//        for (int i = 0; i < c.length; i++) {
-//            System.err.print(c[i]);
-//        }
-//        logger.info("<\n");
-//        r.unread(c);
-//    }
 
     private static char nextChar(PushbackReader r) throws IOException {
         int c = r.read();

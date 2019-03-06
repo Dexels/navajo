@@ -59,26 +59,23 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     protected String myErrorDescription;
     private List<PropertyChangeListener> myPropertyDataListeners;
     private final NavajoFactory myFactory;
-    private HashMap<String, Navajo> navajoMap = new HashMap<String, Navajo>();
+    private HashMap<String, Navajo> navajoMap = new HashMap<>();
 
-    private final static Logger logger = LoggerFactory.getLogger(BaseNavajoImpl.class);
+    private static final String IMPLEMENTATIONNAME = "SAXP";
+    private static final Logger logger = LoggerFactory.getLogger(BaseNavajoImpl.class);
 
     public BaseNavajoImpl(NavajoFactory nf) {
         myFactory = nf;
         rootMessage = (BaseMessageImpl) nf.createMessage(this, "");
-        // new BaseMessageImpl(this);
     }
 
     public String getImplementationName() {
-        return "SAXP";
+        return IMPLEMENTATIONNAME;
     }
 
     @Override
     public void addHeader(Header h) {
-        // if (myHeader == null) {
         myHeader = (BaseHeaderImpl) h;
-        // }
-        // myHeader.merge((BaseHeaderImpl)h);
     }
 
     @Override
@@ -94,7 +91,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     public Navajo copy() {
         Navajo ni = NavajoFactory.getInstance().createNavajo();
         BaseNavajoImpl n = (BaseNavajoImpl) ni;
-        // n.setRootMessage(cop getRootMessage().copy(n));
         List<Message> al = getAllMessages();
         for (int i = 0; i < al.size(); i++) {
             Message m = al.get(i);
@@ -128,17 +124,13 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
         return rootMessage.getMessage(name);
     }
 
-    // public Message getMessage(String name, int index) {
-    // return rootMessage.getMessage(name,index);
-    // }
-
     @Override
     public Message getRootMessage() {
         return rootMessage;
     }
 
     @Override
-    public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
+    public void addMap(com.dexels.navajo.document.MapTag map) {
         throw new java.lang.UnsupportedOperationException("Method addMap() not yet implemented.");
     }
 
@@ -147,7 +139,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
         if (m == null) {
             throw new NullPointerException("Can not add null message to Navajo object");
         }
-        // logger.info("ADDING MESSAGE");
         rootMessage.addMessage(m);
         return m;
     }
@@ -168,11 +159,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public List<Message> getMessages(String regexp) throws NavajoException {
+    public List<Message> getMessages(String regexp) {
         if (regexp.startsWith(MESSAGE_SEPARATOR)) {
             return rootMessage.getMessages(regexp.substring(1));
         }
-        // logger.info("Getmessages, in Navajo. looking for messagE: "+regexp);
         return rootMessage.getMessages(regexp);
     }
 
@@ -191,6 +181,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     /** @deprecated. This is SO JAXP */
+    @Deprecated
     @Override
     public void importMessage(Message m) {
         BaseMessageImpl mi = (BaseMessageImpl) m;
@@ -263,8 +254,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
     @Override
     public Message copyMessage(Message m, Navajo n) {
-        BaseMessageImpl mc = (BaseMessageImpl) (((BaseMessageImpl) m).copy(n));
-        return mc;
+    	return (((BaseMessageImpl) m).copy(n));
     }
 
     @Override
@@ -273,7 +263,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public Selection getSelection(String property) throws NavajoException {
+    public Selection getSelection(String property) {
         Selection sel = null;
         Property prop = null;
         StringTokenizer tok = new StringTokenizer(property, Navajo.MESSAGE_SEPARATOR);
@@ -321,8 +311,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public List<Property> getProperties(String s) throws NavajoException {
-        List<Property> props = new ArrayList<Property>();
+    public List<Property> getProperties(String s) {
+        List<Property> props = new ArrayList<>();
         Property prop = null;
         List<Message> messages = null;
         String property = null;
@@ -396,12 +386,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
             List<Message> otherMsgs = other.getAllMessages();
             List<Message> myMsgs = this.getAllMessages();
 
-            // logger.info("-----------------");
-            // this.write(System.err);
-            // logger.info("-----------------");
-            // o.write(System.err);
-            // logger.info("-----------------");
-
             if (otherMsgs.size() != myMsgs.size()) {
                 return false;
             }
@@ -428,7 +412,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public synchronized List<Property> refreshExpression() throws NavajoException {
+    public synchronized List<Property> refreshExpression() {
         try {
 
             Map<Property, List<Property>> depSet = NavajoFactory.getInstance().getExpressionEvaluator()
@@ -442,15 +426,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
     }
 
-    // /**
-    // * @deprecated
-    // */
-    // @Deprecated
-    // public void read(java.io.InputStream stream) throws NavajoException {
-    // InputStreamReader isr = new InputStreamReader(stream);
-    // read(isr);
-    // }
-
     public Object getRef() {
         throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
     }
@@ -461,7 +436,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void writeMessage(String name, String filename) throws NavajoException {
+    public void writeMessage(String name, String filename) {
         throw new UnsupportedOperationException("Oh please. writeMessage is SO five years ago");
     }
 
@@ -497,7 +472,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
      */
     @Override
     @Deprecated
-    public void appendDocBuffer(Object d) throws NavajoException {
+    public void appendDocBuffer(Object d) {
         Navajo n = (Navajo) d;
         List<Message> msgs = n.getAllMessages();
         for (int i = 0; i < msgs.size(); i++) {
@@ -507,19 +482,19 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void write(Writer writer, boolean condense, String method) throws NavajoException {
+    public void write(Writer writer, boolean condense, String method) {
         write(writer);
     }
 
     @Override
-    public void write(OutputStream stream, boolean condense, String method) throws NavajoException {
+    public void write(OutputStream stream, boolean condense, String method) {
         super.write(stream);
     }
 
   
     @Override
     public Map<String, String> getAttributes() {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         m.put("documentImplementation", getImplementationName());
         return m;
     }
@@ -545,15 +520,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
     @Override
     public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
-        // logger.info("Navajo changed. ");
         if (myPropertyDataListeners != null) {
             for (int i = 0; i < myPropertyDataListeners.size(); i++) {
                 PropertyChangeListener c = myPropertyDataListeners.get(i);
                 c.propertyChange(new PropertyChangeEvent(p, "value", oldValue, newValue));
-
-                // logger.info("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue
-                // + " - " + newValue);
-                // Thread.dumpStack();
             }
         }
     }
@@ -561,7 +531,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     @Override
     public void addPropertyChangeListener(PropertyChangeListener p) {
         if (myPropertyDataListeners == null) {
-            myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
+            myPropertyDataListeners = new ArrayList<>();
         }
         myPropertyDataListeners.add(p);
     }
@@ -580,7 +550,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void writeJSON(Writer w) throws NavajoException {
+    public void writeJSON(Writer w) {
         try {
             this.printElementJSON(w, false);
         } catch (Exception e) {
@@ -589,7 +559,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void writeJSONTypeless(Writer w) throws NavajoException {
+    public void writeJSONTypeless(Writer w) {
         try {
             this.printElementJSONTypeless(w);
         } catch (Exception e) {
@@ -615,12 +585,12 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public Navajo merge(Navajo with) throws NavajoException {
+    public Navajo merge(Navajo with) {
         return merge(with, false);
     }
 
     @Override
-    public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoException {
+    public Navajo merge(Navajo with, boolean preferThisNavajo) {
 
         // Find duplicate messages.
         List<Message> superMessages = this.getAllMessages();
@@ -659,7 +629,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public Navajo mask(Navajo with, String method) throws NavajoException {
+    public Navajo mask(Navajo with, String method) {
         // Find duplicate messages.
         List<Message> superMessages = this.getAllMessages();
         List<Message> subMessages = with.getAllMessages();
@@ -727,7 +697,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void addOperation(Operation o) throws NavajoException {
+    public void addOperation(Operation o) {
         myOperations.addOperation(o);
     }
 

@@ -21,7 +21,7 @@ import com.dexels.navajo.document.Operation;
 public class BaseOperationsImpl extends BaseNode {
 
 	private static final long serialVersionUID = 9105044646681827267L;
-	private final List<BaseNode> myOperations = new ArrayList<BaseNode>();
+	private final List<BaseNode> myOperations = new ArrayList<>();
   public BaseOperationsImpl(Navajo n) {
     super(n);
   }
@@ -61,7 +61,7 @@ public class BaseOperationsImpl extends BaseNode {
       }
 
     public List<Operation> getAllOperations() {
-    	List<Operation> al = new ArrayList<Operation>();
+    	List<Operation> al = new ArrayList<>();
         for (int i = 0; i < myOperations.size(); i++) {
         	Operation m = (Operation) myOperations.get(i);
             al.add(m);

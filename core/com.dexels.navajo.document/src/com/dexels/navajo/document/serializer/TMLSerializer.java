@@ -2,6 +2,7 @@ package com.dexels.navajo.document.serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -31,7 +32,7 @@ public class TMLSerializer  {
 	private static final byte LONG_STRING_PROPERTY_CODE = 10;
 	private static final byte MESSAGE_CLOSE_CODE = 99;
 
-	final protected static char[] hexArray = { '0', '1', '2', '3', '4', '5',
+	protected static final char[] hexArray = { '0', '1', '2', '3', '4', '5',
 		'6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	/**
@@ -54,8 +55,8 @@ public class TMLSerializer  {
 	 * 
 	 * 1[len]Visitor4[len]RFID[len]aap6[len]FestivalTokens[len]3099
 	 */
-	private volatile Navajo myNavajo;
-	private volatile String webservice;
+	private Navajo myNavajo;
+	private String webservice;
 	
 	int arrayEltIndex = 0;
 
@@ -92,7 +93,7 @@ public class TMLSerializer  {
 		return bb.array();
 	}
 	
-	private final short bytesToShort(InputStream is) throws Exception {
+	private final short bytesToShort(InputStream is) throws IOException {
 		byte [] r = new byte[2];
 		is.read(r, 0, 2);
 		ByteBuffer bb = ByteBuffer.wrap(r);
@@ -106,14 +107,14 @@ public class TMLSerializer  {
 		return bb.array();
 	}
 	
-	private final int bytesToInt(InputStream is) throws Exception {
+	private final int bytesToInt(InputStream is) throws IOException {
 		byte [] r = new byte[4];
 		is.read(r, 0, 4);
 		ByteBuffer bb = ByteBuffer.wrap(r);
 		return bb.getInt();
 	}
 	
-	private final void serializeProperty(Property p, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
+	private final void serializeProperty(Property p, byte type, boolean hidePropertyName, OutputStream os) throws IOException {
 		
 		boolean isPartOfArrayElt = ( type == ARRAY_MESSAGE_ELT_CODE && hidePropertyName );
 		int lengthOfPropertyValue = 0;
@@ -161,7 +162,7 @@ public class TMLSerializer  {
 
 	}
 	
-	private final void serializeMessage(Message m, byte type, boolean hidePropertyName, OutputStream os) throws Exception {
+	private final void serializeMessage(Message m, byte type, boolean hidePropertyName, OutputStream os) throws IOException {
 		os.write(serializeMessageTag(m.getName(), type));
 		for ( Property p : m.getAllProperties() ) {
 			serializeProperty(p, type, hidePropertyName, os);
@@ -202,7 +203,7 @@ public class TMLSerializer  {
 		return baos.toByteArray();
 	}
 
-	private final Property parseProperty(String type, boolean partOfArrayElement, int propertyIndex, int arrayEltIndex, InputStream is, boolean longLength) throws Exception {
+	private final Property parseProperty(String type, boolean partOfArrayElement, int propertyIndex, int arrayEltIndex, InputStream is, boolean longLength) throws IOException {
 
 		String name = propertyIndex + "";
 		byte [] array = null;
@@ -221,14 +222,13 @@ public class TMLSerializer  {
 			return p;
 		} else {
 			String value = new String(array);
-			Property p = NavajoFactory.getInstance().createProperty(myNavajo, name,type, value, 0, "", "");
-			return p;
+			return NavajoFactory.getInstance().createProperty(myNavajo, name,type, value, 0, "", "");
 		}
 	}
 
 	private final void fixPropertyNames(Message am) {
 		// fix array elements.
-		List<Property> definition = new ArrayList<Property>();
+		List<Property> definition = new ArrayList<>();
 		int index = 0;
 		for ( Message sub : am.getElements() ) {
 			if ( index == 0 ) {
@@ -244,7 +244,7 @@ public class TMLSerializer  {
 		}
 	}
 	
-	private final Message parseMessage(InputStream is, Message parent, String msgType) throws Exception {
+	private final Message parseMessage(InputStream is, Message parent, String msgType) throws IOException {
 		String name = "-";
 		if ( !msgType.equals(Message.MSG_TYPE_ARRAY_ELEMENT)) { // array message elements do not have a message name.
 			byte [] array = new byte[bytesToShort(is)];
@@ -302,7 +302,7 @@ public class TMLSerializer  {
 		return m;
 	}
 
-	public final void constructFromBytes(InputStream is, int length) throws Exception {
+	public final void constructFromBytes(InputStream is, int length) throws IOException {
 		byte [] wsLengthArray = new byte[2];
 		is.read(wsLengthArray, 0, 2);
 		ByteBuffer bb = ByteBuffer.wrap(wsLengthArray);
@@ -320,7 +320,7 @@ public class TMLSerializer  {
 		}
 	}
 	
-	public final void constructFromBytes(byte[] b) throws Exception {
+	public final void constructFromBytes(byte[] b) throws IOException {
 		// Strip off first byte, it contains the type. Remainder is compressed.
 		byte [] result = new byte[b.length -1];
 		System.arraycopy(b, 1, result, 0, result.length);
@@ -343,12 +343,6 @@ public class TMLSerializer  {
 	}
 
 	public static void main(String [] args) throws Exception {
-
-		
-//		Binary b = new Binary(new File("/Users/arjenschoneveld/module_sum3.jpg"));
-		
-		//System.err.println("Binary: " + b.getData().length);
-		
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		
 		
@@ -358,9 +352,6 @@ public class TMLSerializer  {
 		m.addProperty(p1);
 		Property p2 = NavajoFactory.getInstance().createProperty(n, "FestivalTokens", Property.INTEGER_PROPERTY, "78", 0, "", "");
 		m.addProperty(p2);
-//		Property p6 = NavajoFactory.getInstance().createProperty(n, "Picture", Property.BINARY_PROPERTY, null, 0, "", "");
-//		p6.setAnyValue(b);
-//		m.addProperty(p6);
 		Property p7 = NavajoFactory.getInstance().createProperty(n, "StartDate", Property.DATE_PROPERTY, null, 0, "", "");
 		p7.setAnyValue(new java.util.Date());
 		m.addProperty(p7);
@@ -392,9 +383,6 @@ public class TMLSerializer  {
 				m4.addProperty(p41);
 			}
 		}
-
-		
-		//n.write(System.err);
 		
 		TMLSerializer pl1 = new TMLSerializer(n, "everywear/entity/visitor/ProcessQueryVisitor");
 		byte [] data = pl1.getBytes();

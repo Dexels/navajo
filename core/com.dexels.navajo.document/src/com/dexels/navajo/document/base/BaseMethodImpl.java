@@ -80,7 +80,6 @@ public class BaseMethodImpl extends BaseNode implements Method {
     public final Method copy(Navajo n) {
 
         BaseMethodImpl m = (BaseMethodImpl) NavajoFactory.getInstance().createMethod(n, getName(), getServer());
-        // ArrayList<BaseRequiredImpl> al = new ArrayList<BaseRequiredImpl>();
         for (String d : getRequiredMessages()) {
             m.addRequired(d);
         }
@@ -130,7 +129,7 @@ public class BaseMethodImpl extends BaseNode implements Method {
             if (req.getFilter() != null && !req.getFilter().equals("") && req.getMessage().equals(message.getName())) {
                 ExpressionEvaluator expr = NavajoFactory.getInstance().getExpressionEvaluator();
                 try {
-                    Operand o = expr.evaluate(req.getFilter(), getRootDoc(), null, message, null,null);
+                    Operand o = expr.evaluate(req.getFilter(), getRootDoc(), null, message, null, null);
                     if (o.value instanceof Boolean) {
                         return ((Boolean) o.value).booleanValue();
                     }

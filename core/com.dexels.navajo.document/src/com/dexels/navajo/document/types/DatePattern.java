@@ -43,7 +43,7 @@ public final class DatePattern {
 		this.isOffset = prev.isOffset;
 	}
 
-	public final static DatePattern parseDatePattern(Date datum) {
+	public static final DatePattern parseDatePattern(Date datum) {
 
 		// System.out.println("in parseDatePattern(Date)");
 		Calendar cal = Calendar.getInstance();
@@ -63,7 +63,7 @@ public final class DatePattern {
 		return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, false);
 	}
 
-	public final static DatePattern parseDatePattern(String value) throws NumberFormatException {
+	public static final DatePattern parseDatePattern(String value) throws NumberFormatException {
 
 		// System.out.println("in parseDatePattern(String): " + value);
 		StringTokenizer dString = new StringTokenizer(value, "#");

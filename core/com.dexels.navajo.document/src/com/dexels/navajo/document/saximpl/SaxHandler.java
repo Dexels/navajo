@@ -11,9 +11,11 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,12 +44,12 @@ import com.dexels.navajo.document.types.Binary;
 public final class SaxHandler implements DocHandler {
 
     private Navajo currentDocument=null;
-    private final Stack<Message> messageStack = new Stack<Message>();
+    private final Deque<Message> messageStack = new LinkedList<Message>();
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
     private Method currentMethod = null;
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SaxHandler.class);
     public void reset() {
         currentDocument = null;
@@ -58,7 +60,7 @@ public final class SaxHandler implements DocHandler {
 
       
     @Override
-	public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
+	public final void startElement(String tag, Map<String,String> h) throws Exception {
 //        logger.info("starting element: "+tag+" attrs: "+h);
 //        currentTag = tag;
         
@@ -145,27 +147,23 @@ public final class SaxHandler implements DocHandler {
             return;
         }        
         
-        //logger.info("Unknown tag: "+tag+" attrs: "+h);
-                 
-//        throw new IllegalArgumentException("Unknown tag: "+tag+" attrs: "+h);
-        
     }
     
     
     /**
 	 * @param h parameter callback 
 	 */
-    private final void parseAgent(Hashtable<String,String> h) {
+    private final void parseAgent(Map<String,String> h) {
         
     }
 
 
-    private final void parseRequired(Hashtable<String,String> h) {
+    private final void parseRequired(Map<String,String> h) {
         currentMethod.addRequired(h.get("name"));
     }
 
 
-    private final void parseObject(Hashtable<String,String> h) {
+    private final void parseObject(Map<String,String> h) {
     	
     	if ( h.get("ref") == null || (h.get("ref")).equals("") ) {
     		return;
@@ -196,24 +194,24 @@ public final class SaxHandler implements DocHandler {
     /**
 	 * @param h parameter callback 
 	 */
-    private final void parseMethods(Hashtable<String,String> h) {
+    private final void parseMethods(Map<String,String> h) {
         
     }
 
-    private final void parseOperations(Hashtable<String,String> h) {
+    private final void parseOperations(Map<String,String> h) {
         
     }
 
     /**
 	 * @param h parameter callback 
 	 */
-    private final void parseCallback(Hashtable<String,String> h) {
+    private final void parseCallback(Map<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }       
     }
 
-    private final void parseTransaction(Hashtable<String,String> h) {
+    private final void parseTransaction(Map<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }
@@ -230,7 +228,7 @@ public final class SaxHandler implements DocHandler {
 
 
 
-    private final void parsePiggyback(Hashtable<String,String> h) {
+    private final void parsePiggyback(Map<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Piggyback tag outside header tag.");
         }
@@ -248,7 +246,7 @@ public final class SaxHandler implements DocHandler {
     }
     
     
-    private final void parseHeader(Hashtable<String,String> h) {
+    private final void parseHeader(Map<String,String> h) {
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
         currentHeader = bhi;
         for (Iterator<Entry<String,String>> iter = h.entrySet().iterator(); iter.hasNext();) {
@@ -261,13 +259,13 @@ public final class SaxHandler implements DocHandler {
         
     }
 
-    private final void parseMethod(Hashtable<String,String> h) throws NavajoException {
+    private final void parseMethod(Map<String,String> h) throws NavajoException {
         String name = h.get("name");
         currentMethod = NavajoFactory.getInstance().createMethod(currentDocument, name, null);
         currentDocument.addMethod(currentMethod);
     }
 
-    private final void parseSelection(Hashtable<String,String> h) throws NavajoException {
+    private final void parseSelection(Map<String,String> h) throws NavajoException {
     	String name = h.get("name");
     	String value = h.get("value");
     	int selected = Integer.parseInt(h.get("selected"));
@@ -296,7 +294,7 @@ public final class SaxHandler implements DocHandler {
     	
     }
 
-    private final void parseProperty(Hashtable<String,String> h) throws NavajoException {
+    private final void parseProperty(Map<String,String> h) throws NavajoException {
 //        logger.info("NAME: "+(String)h.get("name"));
         String sLength = null;
         String myName = h.get(Property.PROPERTY_NAME);
@@ -343,16 +341,13 @@ public final class SaxHandler implements DocHandler {
           	throw NavajoFactory.getInstance().createNavajoException("Can not parse property without being inside a message, probably an input error");
         }
           Message current = messageStack.peek();
-//          logger.info("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);
 
 
           BaseMessageImpl arrayParent = (BaseMessageImpl) current.getArrayParentMessage();
-          //logger.info("current = " + current.getName() + ", type = " + current.getType());
           if ( arrayParent != null && arrayParent.isArrayMessage() ) {
 
             definitionProperty = arrayParent.getPropertyDefinition(myName);
-            //logger.info("definitionProperty = " + definitionProperty + ", for name: " + myName);
             
             
             if (definitionProperty != null) {
@@ -383,10 +378,6 @@ public final class SaxHandler implements DocHandler {
                 	currentProperty.setSubType(definitionProperty.getSubType() + "," + subType);
                 }
               }
-
-//              if (myValue == null || "".equals(myValue)) {
-//                myValue = definitionProperty.getValue();
-//              }
             }
           }
 
@@ -416,7 +407,6 @@ public final class SaxHandler implements DocHandler {
         		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
         		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);
         		  currentProperty.addSelection(s2);
-        		  //logger.info("ADDING SELECTION: " + s2);
         	  }
           }
               currentProperty.setType(type);
@@ -429,13 +419,12 @@ public final class SaxHandler implements DocHandler {
               currentProperty.setReference(reference);
               currentProperty.setBind(bind);
               currentProperty.setMethod(method);
-//              createProperty(currentDocument,myName,cardinality,description,direction);
 
 
       }
     
 
-    private final void parseMessage(Hashtable<String,String> h) throws NavajoException {
+    private final void parseMessage(Map<String,String> h) throws NavajoException {
         String name = h.get("name");
         String type = h.get("type");
         String orderby = h.get("orderby");
@@ -466,7 +455,6 @@ public final class SaxHandler implements DocHandler {
         	m.setSubType(subtype);
         }
         if (messageStack.isEmpty()) {
-//            logger.info("Adding to root!");
             currentDocument.addMessage(m);
         } else {
         	// Don't add definition messages.
@@ -575,7 +563,7 @@ public final class SaxHandler implements DocHandler {
 
 
     @Override
-	public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName,StringBuffer attributeBuffer) throws IOException {
+	public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName,StringBuilder attributeBuffer) throws IOException {
         int c = 0;
         attributeBuffer.delete(0, attributeBuffer.length());
         while ((c = r.read()) != -1) {

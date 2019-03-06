@@ -19,7 +19,7 @@ import com.dexels.navajo.document.Navajo;
 public class BaseCallbackImpl extends BaseNode {
 
 	private static final long serialVersionUID = 8739370944781100854L;
-private final List<BaseNode> myObjects = new ArrayList<BaseNode>();
+private final List<BaseNode> myObjects = new ArrayList<>();
    
   public BaseCallbackImpl(Navajo n) {
     super(n);
@@ -59,7 +59,7 @@ private final List<BaseNode> myObjects = new ArrayList<BaseNode>();
     }
     
     public String getSignature() {
-    	StringBuffer sb = new StringBuffer();
+    	StringBuilder sb = new StringBuilder();
     	for (int i = 0; i < myObjects.size(); i++ ) {
     		BaseObjectImpl obj = (BaseObjectImpl) myObjects.get(i);
     		sb.append(obj.getName() +"-"+obj.getRef());

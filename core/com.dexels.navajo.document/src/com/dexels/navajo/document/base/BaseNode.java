@@ -34,8 +34,7 @@ public abstract class BaseNode implements java.io.Serializable{
 
 protected Navajo myDocRoot;
   
-  public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
-  //public final static String XML_ESCAPE_DELIMITERS = "";
+  public static final String XML_ESCAPE_DELIMITERS = "&'<>\"";
 
   public abstract Map<String,String> getAttributes();
   public abstract List<? extends BaseNode> getChildren();
@@ -88,12 +87,6 @@ public void printBody(final Writer sw, int indent) throws IOException {
 	 if (hasChildren && hasText) {
 		 throw new IllegalStateException("Can not have both children AND text");
 	 }
-//	 if (!hasChildren && !hasText) {
-//		 writeElement( sw, "/>\n");
-//		 return;
-//	 }
-//	 writeElement( sw, ">\n");
-//	 // list should not be null, but to appease the warnings
 	 if(list!=null) {
 		 for (int i = 0; i < list.size(); i++) {
 			 BaseNode child = list.get(i);
@@ -124,20 +117,19 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 				  String sss = element;
 				  if (getTagName().equals("property")) {
 					  if (element.equals("value")) {
-						  sss = XMLEscape(value);
+						  sss = xmlEscape(value);
 					  }
 				  }
 				  if (getTagName().equals("option")) {
-					  sss = XMLEscape(value);
+					  sss = xmlEscape(value);
 				  }
 
-				  sss = XMLEscape(value);
+				  sss = xmlEscape(value);
 				  writeElement( sw," ");
 				  writeElement( sw, element);
 				  writeElement( sw, "=\"");
 				  writeElement( sw, sss);
 				  writeElement( sw, "\"");
-//				  logger.info("||"+value+"||");
 			  }
 		 }
 	 }
@@ -154,8 +146,6 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 	 writeElement( sw, ">\n");
 	return true;
 }
- 
- // {tml : {documentImplementation :  SAXP, methods : {}}
  
  public final void printElementJSON(final Writer sw, boolean arrayElement) throws IOException {
 		String tagName = getTagName();
@@ -179,13 +169,13 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 					String sss = element;
 					if (getTagName().equals("property")) {
 						if (element.equals("value")) {
-							sss = XMLEscape(value);
+							sss = xmlEscape(value);
 						}
 					}
 					if (getTagName().equals("option")) {
-						sss = XMLEscape(value);
+						sss = xmlEscape(value);
 					}
-					sss = XMLEscape(value);
+					sss = xmlEscape(value);
 					writeElement(sw, " ");
 					writeElement(sw, "\"" + element + "\"");
 					writeElement(sw, " : ");
@@ -193,7 +183,6 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 					if (iter.hasNext()) {
 						writeElement(sw, ", ");
 					}
-					// logger.info("||"+value+"||");
 				}
 			}
 		}
@@ -305,7 +294,7 @@ public void writeText(Writer w) throws IOException  {
    * Replace all occurrences of the characters &, ', ", < and > by the escaped
    * characters &amp;, &quot;, &apos;, &lt; and &gt;
    */
-  private static final String XMLEscape(String s) {
+  private static final String xmlEscape(String s) {
     
     boolean contains = false;
     for ( int i = 0; i < XML_ESCAPE_DELIMITERS.length(); i++ ) {
@@ -323,7 +312,7 @@ public void writeText(Writer w) throws IOException  {
       }
 
       StringTokenizer tokenizer = new StringTokenizer(s, XML_ESCAPE_DELIMITERS, true);
-      StringBuffer    result    = new StringBuffer();
+      StringBuilder result    = new StringBuilder();
 
       while (tokenizer.hasMoreElements()) {
           String substring = tokenizer.nextToken();
@@ -334,10 +323,6 @@ public void writeText(Writer w) throws IOException  {
               case '&' :
                   result.append("&amp;");
                   break;
-
-              //case '\'' :
-              //    result.append("&apos;");
-              //    break;
 
               case ';' :
                   result.append("\\;");
@@ -354,10 +339,6 @@ public void writeText(Writer w) throws IOException  {
               case '\"' :
                   result.append("&quot;");
                   break;
-
-//              case '\n' :
-//                  result.append("\\n");
-//                  break;
 
               default :
                   result.append(substring);

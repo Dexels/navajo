@@ -26,7 +26,7 @@ import com.dexels.navajo.document.Selection;
 public class BaseSelectionImpl extends BaseNode implements Selection{
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(BaseSelectionImpl.class);
 	private static final long serialVersionUID = 1548716501966033367L;
 protected String name ="";
@@ -74,7 +74,6 @@ public final void setSelected( boolean selected ) {
 
   @Override
 public final String toString() {
-    //logger.info("toString(): " + getName().trim());
     if (getName() != null)
       return getName().trim();
     else
@@ -117,7 +116,6 @@ public final String toString() {
     	if (superEquals != newEquals)
     	{
 	        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
-	        logger.info("SKYLLA: Suggested equals function for BaseSelectionImpl returns " + newEquals + ", super.equals returns " + superEquals + ". We are: " + this + ", comparing Object: " + o + " having value : " + oValue + ", with our value " + this.getValue());
     	}
         return superEquals;
 
@@ -128,12 +126,6 @@ public final String toString() {
     {
     	return o instanceof Selection ? this.compareTo((Selection) o ) == 0 : false;
     }
-    /* Suggested implementation for hashCode, to go along with the equals code above
-    @Override
-    public final int hashCode() {
-    	return getValue() == null ? -1 : getValue().hashCode();
-    }
-*/
 
   
   @Override
@@ -156,7 +148,7 @@ public final int compareTo(Selection o) {
   }
 @Override
 public Map<String,String> getAttributes() {
-    Map<String,String> m = new HashMap<String,String>();
+    Map<String,String> m = new HashMap<>();
     m.put("name", name);
     m.put("value", value);
     m.put("selected", isSelected?"1":"0");

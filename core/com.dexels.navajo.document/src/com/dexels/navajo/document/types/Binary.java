@@ -79,15 +79,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     private byte[] inMemory = null;
     
-    public final static String MSEXCEL = "application/msexcel";
+    public static final String MSEXCEL = "application/msexcel";
 
-    public final static String MSWORD = "application/msword";
+    public static final String MSWORD = "application/msword";
 
-    public final static String PDF = "application/pdf";
+    public static final String PDF = "application/pdf";
 
-    public final static String GIF = "image/gif";
+    public static final String GIF = "image/gif";
 
-    public final static String TEXT = "plain/text";
+    public static final String TEXT = "plain/text";
 
     private FormatDescription currentFormatDescription;
 
@@ -97,7 +97,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
 	private final URL lazyURL;
     
-    private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
+    private static final HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
     
     private Map<String,List<String>> urlMetaData = null;
 

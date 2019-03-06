@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class RequestHeader {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(RequestHeader.class);
     public static final String HTTP_AUTH_TYPE = "auth-type";
     public static final String HTTP_CHAR_ENCODING = "char-encoding";

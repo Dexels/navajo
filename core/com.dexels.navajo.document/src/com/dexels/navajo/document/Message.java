@@ -187,6 +187,7 @@ public interface Message
   * @deprecated
   * @param condition
   */
+  @Deprecated
   public void setCondition(String condition);
 
   /**
@@ -338,7 +339,7 @@ public interface Message
   /**
    * Adds a message to an array message at a specific location in the array
    */
-  public void addMessage(Message m, int index) throws NavajoException;
+  public void addMessage(Message m, int index);
 
   /**
    * Remove a property from a message. If a null value is given as input do nothing.
@@ -363,7 +364,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList with Message objects that match the given regular expression
    */
-  public List<Message> getMessages(String regularExpression) throws NavajoException;
+  public List<Message> getMessages(String regularExpression);
 
   /**
    * Get an array element message with a given index.
@@ -439,14 +440,14 @@ public interface Message
    *
    * @param writer
    */
-  public void write(java.io.Writer writer) throws NavajoException;
+  public void write(java.io.Writer writer);
 
   /**
    * Serialize a message as a string to a particular output stream.
    *
    * @param stream
    */
-  public void write(java.io.OutputStream stream) throws NavajoException;
+  public void write(java.io.OutputStream stream);
 
   public void writeJSON(Writer writer) throws IOException;
   
@@ -489,7 +490,7 @@ public interface Message
    *
    * @return
    */
-  public Message copy() throws NavajoException;
+  public Message copy();
 
   /**
    * Compare the content of a message with another Message o.
@@ -512,7 +513,7 @@ public interface Message
    * refreshes recursively all the properties in this message.
    * i.e.: Recalculates all expression-type properties
    */
-  public void refreshExpression() throws NavajoException, ExpressionChangedException;
+  public void refreshExpression() throws ExpressionChangedException;
 
   /**
    * Not in use
@@ -553,24 +554,11 @@ public interface Message
    * @param applySubType apply the subtype constraints (for instance nullable=true)
    */
   public void merge(Message incoming, boolean preferThis, boolean applySubType);
-  
-  /**
-   * Add empty message at index
-   * @return Inserted message
-   */
-  //public Message addMessage(int index);
-
-  /**
-   * Add empty message at the end
-   * @return Appended message
-   */
-  // public Message addMessage();
 
   /**
    * Get the definition message. Definition messages are used in array messages to define the arraymessages' properties for each 'column'
    * @return Message definition
    */
-
   public Message getDefinitionMessage();
   
   public void setDefinitionMessage(Message m);

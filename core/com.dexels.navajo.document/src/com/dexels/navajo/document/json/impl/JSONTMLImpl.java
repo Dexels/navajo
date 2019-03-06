@@ -42,7 +42,7 @@ public class JSONTMLImpl implements JSONTML {
 	private boolean typeIsValue = false;
 	private Navajo entityTemplate = null;
 
-	private final static String TOP_LEVEL_MSG = "__TOP__";
+	private static final String TOP_LEVEL_MSG = "__TOP__";
 
 	public JSONTMLImpl() {
 		jsonFactory =  new JsonFactory();
@@ -66,8 +66,7 @@ public class JSONTMLImpl implements JSONTML {
 	public Navajo parse(InputStream is) throws Exception {
 		try {
 			JsonParser jp = jsonFactory.createParser(is);
-			Navajo n = parse(jp);
-			return n;
+			return parse(jp);
 		} catch (Exception e) {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage(), e);
 		} 
@@ -86,8 +85,7 @@ public class JSONTMLImpl implements JSONTML {
 	public Navajo parse(Reader r) throws Exception {
 		try {
 			JsonParser jp = jsonFactory.createParser(r);
-			Navajo n = parse(jp);
-			return n;
+			return parse(jp);
 		} catch (Exception e) {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
 		} 
@@ -210,7 +208,7 @@ public class JSONTMLImpl implements JSONTML {
 		}
 		
 
-		List<Message> messages = new ArrayList<Message>();
+		List<Message> messages = new ArrayList<>();
 		if (m.isArrayMessage()) {
 			if (typeIsValue) {
 				// Print definition message
@@ -330,7 +328,7 @@ public class JSONTMLImpl implements JSONTML {
             String subpath = st.nextToken();
             if (subpath.contains("@")) {
                 // Strip the @ part
-                subpath = subpath.substring(0, subpath.indexOf("@"));
+                subpath = subpath.substring(0, subpath.indexOf('@'));
                 next = next.getMessage(subpath).getDefinitionMessage();
             } else {
                 next = next.getMessage(subpath);

@@ -61,8 +61,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private String myMethod = "";
 
-    // private String myCondition = "";
-
     private int myIndex = -1;
 
     protected TreeMap<String, Property> propertyMap = null;
@@ -90,15 +88,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     // private List myDefinitionList = null;
     // private Map myDefinitionMap = null;
 
-    private final static Logger logger = LoggerFactory.getLogger(BaseMessageImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseMessageImpl.class);
 
     protected BaseMessageImpl definitionMessage = null;
 
-	private String subType;
+    private String subType;
 
-	private Map<String, String> subtypeMap;
+    private Map<String, String> subtypeMap;
 
-	
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -200,7 +197,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return myScope;
     }
 
-    public final void clearAllSelections() throws NavajoException {
+    public final void clearAllSelections()  {
         if (propertyList != null) {
 
             for (int i = 0; i < propertyList.size(); i++) {
@@ -225,7 +222,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (m == null) {
             return null;
         }
-        
+
         if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
             return addMessage(m, false);
         } else {
@@ -271,10 +268,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     @Override
     public final Message addMessage(Message m, boolean overwrite) {
         if (messageList == null) {
-            messageList = new ArrayList<Message>();
+            messageList = new ArrayList<>();
         }
         if (messageMap == null) {
-            messageMap = new TreeMap<String, Message>();
+            messageMap = new TreeMap<>();
         }
 
         m.setParent(this);
@@ -313,16 +310,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final void addMessage(Message m, int index) throws NavajoException {
+    public final void addMessage(Message m, int index)  {
         if (messageList == null) {
-            messageList = new ArrayList<Message>();
+            messageList = new ArrayList<>();
         }
         if (messageMap == null) {
-            messageMap = new TreeMap<String, Message>();
+            messageMap = new TreeMap<>();
         }
 
         if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
-            throw new NavajoExceptionImpl("Can not add to with index to messages, if it is not an array message. Is that clear?");
+            throw new NavajoExceptionImpl(
+                    "Can not add to with index to messages, if it is not an array message. Is that clear?");
         }
 
         messageList.add(index, m);
@@ -334,9 +332,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     @Override
     public ArrayList<Message> getAllMessages() {
         if (messageList == null) {
-            return new ArrayList<Message>();
+            return new ArrayList<>();
         }
-        return new ArrayList<Message>(messageList);
+        return new ArrayList<>(messageList);
     }
 
     @Override
@@ -353,10 +351,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             throw new NullPointerException("Message: can not add null property");
         }
         if (propertyMap == null) {
-            propertyMap = new TreeMap<String, Property>();
+            propertyMap = new TreeMap<>();
         }
         if (propertyList == null) {
-            propertyList = new ArrayList<Property>();
+            propertyList = new ArrayList<>();
         }
 
         BasePropertyImpl p = (BasePropertyImpl) q;
@@ -429,17 +427,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     @Override
     public final ArrayList<Property> getAllProperties() {
         if (propertyList == null) {
-            propertyList = new ArrayList<Property>();
+            propertyList = new ArrayList<>();
         }
-        return new ArrayList<Property>(propertyList);
+        return new ArrayList<>(propertyList);
     }
 
-  
     @Override
-    public final List<Property> getProperties(String regularExpression) throws NavajoException {
+    public final List<Property> getProperties(String regularExpression)  {
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
-            regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
+            regularExpression = regularExpression
+                    .substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
             return getParentMessage().getProperties(regularExpression);
         } else if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We
             // have
@@ -449,7 +447,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             Navajo d = getRootDoc();
             return d.getProperties(regularExpression.substring(1));
         } else {
-            ArrayList<Property> props = new ArrayList<Property>();
+            ArrayList<Property> props = new ArrayList<>();
             List<Message> messages = null;
             String property = null;
             Message message = null;
@@ -471,7 +469,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             if (!messageList.equals("")) {
                 messages = this.getMessages(messageList);
             } else {
-                messages = new ArrayList<Message>();
+                messages = new ArrayList<>();
                 messages.add(this);
             }
 
@@ -495,7 +493,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public void refreshExpression() throws NavajoException, ExpressionChangedException {
+    public void refreshExpression() throws ExpressionChangedException {
 
         if (messageList != null) {
             for (int i = 0; i < messageList.size(); i++) {
@@ -574,21 +572,20 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return messageMap.get(name);
     }
 
-
     /**
-     * Return all messages that match a given regular expression. Regular
-     * expression may include sub-messages and even absolute message references
-     * starting at the root level.
+     * Return all messages that match a given regular expression. Regular expression
+     * may include sub-messages and even absolute message references starting at the
+     * root level.
      */
     @Override
-    public List<Message> getMessages(String regularExpression) throws NavajoException {
+    public List<Message> getMessages(String regularExpression)  {
 
-        // ArrayList messages = new ArrayList();
         List<Message> sub = null;
         List<Message> sub2 = null;
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
-            regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
+            regularExpression = regularExpression
+                    .substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
             return getParentMessage().getMessages(regularExpression);
         } else if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We
             // have an absolute offset
@@ -618,7 +615,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return sub;
         } else {
 
-            ArrayList<Message> result = new ArrayList<Message>();
+            ArrayList<Message> result = new ArrayList<>();
             try {
                 String index = null;
 
@@ -634,7 +631,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                         BaseMessageImpl m = (BaseMessageImpl) messageList.get(i);
                         String name = m.getName();
                         String type = m.getType();
-						if (type.equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
+                        if (type.equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
                             // message is array type add all children.
                             if (index == null) {
                                 if (m.messageList != null) {
@@ -747,8 +744,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     /**
-     * Add a collection of properties to a message. Properties that already
-     * exist are overwritten.
+     * Add a collection of properties to a message. Properties that already exist
+     * are overwritten.
      * 
      * @param m
      * @param properties
@@ -761,8 +758,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     /**
-     * Merges messsage with another message. Properties and submessages are
-     * merged. Properties of other message have precedence.
+     * Merges messsage with another message. Properties and submessages are merged.
+     * Properties of other message have precedence.
      * 
      * @param origMsg
      * @param mergeThisMsg
@@ -852,7 +849,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Message copy() throws NavajoException {
+    public final Message copy()  {
         Navajo empty = NavajoFactory.getInstance().createNavajo();
         Message result = copy(empty);
         empty.addMessage(result);
@@ -903,11 +900,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return cp;
     }
 
-//    private Map<String,String> getSubTypesMap() {
-//		return this.subtypeMap;
-//	}
-
-	public final void prune() {
+    public final void prune() {
 
         if (messageList != null) {
             for (int i = 0; i < messageList.size(); i++) {
@@ -941,7 +934,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final String toString() {
-        // return super.toString();
         if (myStringMap != null) {
             return myStringMap.getMessageLabel(this);
         }
@@ -1024,15 +1016,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 }
             }
             return pp;
-            // return getProperty(path);
         } else {
             String msgname = path.substring(0, slash);
             String propname = path.substring(slash, path.length());
             BaseMessageImpl ms = (BaseMessageImpl) getMessage(msgname);
             if (ms != null) {
                 return ms.getPropertyByPath(propname);
-            } else {
-                // Thread.dumpStack();
             }
             return null;
         }
@@ -1174,7 +1163,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return b;
     }
 
-
     @Override
     public final boolean isEqual(Message o) {
         return isEqual(o, "");
@@ -1188,7 +1176,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
         // Check sub message structure.
         List<Message> allOther = other.messageList;
-        // ArrayList allMe = messag;
         if (allOther != null && messageList == null) {
             return false;
         }
@@ -1264,7 +1251,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final Map<String, String> getAttributes() {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         m.put("name", myName);
         if (!"".equals(orderBy)) {
             m.put("orderby", orderBy);
@@ -1291,15 +1278,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (myScope != null && !myScope.equals("")) {
             m.put(Message.MSG_SCOPE, myScope);
         }
-		if (subType != null && !subType.equals("") ) {
-			m.put(MSG_SUBTYPE, subType);
-		}
+        if (subType != null && !subType.equals("")) {
+            m.put(MSG_SUBTYPE, subType);
+        }
         return m;
     }
 
     @Override
     public final List<BaseNode> getChildren() {
-        ArrayList<BaseNode> al = new ArrayList<BaseNode>();
+        ArrayList<BaseNode> al = new ArrayList<>();
         if (propertyList == null) {
 
         } else {
@@ -1328,8 +1315,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     /**
-     * @param newName
-     *            the name of the new message
+     * @param newName the name of the new message
      */
     public Object clone(String newName) {
         throw new UnsupportedOperationException("Can not clone properties (yet)");
@@ -1357,7 +1343,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                         // Parse the orderby attribute
                         // Put them in a set
                         StringTokenizer tok = new StringTokenizer(order, ",");
-                        List<String> orderValues = new LinkedList<String>();
+                        List<String> orderValues = new LinkedList<>();
                         while (tok.hasMoreTokens()) {
                             String token = tok.nextToken();
                             orderValues.add(token.trim());
@@ -1372,10 +1358,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                             String oV = it.next();
                             // If DESC we flip the direction
                             int desc = -1;
-                            if (oV.indexOf(" ") > 0) {
-                                String sort = oV.substring(oV.indexOf(" ") + 1);
-                                oV = oV.substring(0, oV.indexOf(" "));
-                                if ("DESC".equals(sort.toUpperCase())) {
+                            if (oV.indexOf(' ') > 0) {
+                                String sort = oV.substring(oV.indexOf(' ') + 1);
+                                oV = oV.substring(0, oV.indexOf(' '));
+                                if ("DESC".equalsIgnoreCase(sort)) {
                                     desc = 1;
                                 }
                             }
@@ -1387,15 +1373,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                                 String compareFunction = oV.substring(0, oV.indexOf("("));
                                 Comparator c = null;
                                 try {
-                                    // Class<? extends Comparator> compareClass
-                                    // = null;
-                                    // logger.info("Instantiating function " +
-                                    // compareFunction);
-	                            		final ComparatorManager instance = ComparatorManagerFactory.getInstance();
-	                            		c = instance.getComparator(compareFunction);
-
-//                                    ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
-//                                    c = ee.getComparator(compareFunction);
+                                    final ComparatorManager instance = ComparatorManagerFactory.getInstance();
+                                    c = instance.getComparator(compareFunction);
                                     if (c == null) {
                                         logger.error("Comparator not found: {}. Not sorting.", compareFunction);
                                         compare = 0;
@@ -1403,24 +1382,21 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                                         compare = c.compare(this, m);
                                     }
                                 } catch (Exception e) {
-                                    logger.error("Error on compare message using {}", compareFunction,  e);
+                                    logger.error("Error on compare message using {}", compareFunction, e);
                                     compare = 0;
                                 }
 
                             } else {
                                 // Now we assume oV is an existing property in both messages
-
-                                // logger.info("Getting property compare: '" + oV + "',  descending? " + desc );
                                 Property myOvProp = getProperty(oV);
                                 if (myOvProp == null) {
-                                    logger.info("WARNING: error while sorting message. Could not sort property named: " + oV);
+                                    logger.info("WARNING: error while sorting message. Could not sort property named: "
+                                            + oV);
                                     return 0;
                                 }
                                 Property compOvProp = m.getProperty(oV);
                                 compare = desc * compOvProp.compareTo(myOvProp);
                             }
-
-                            // logger.info("Compared value: " + compare);
                         }
                         return compare;
                     }
@@ -1429,11 +1405,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
         return 0;
     }
-    
 
     @Override
     public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
-        // logger.info("Message changed: "+getName()+" index: "+getIndex());
         if (getArrayParentMessage() != null) {
             getArrayParentMessage().firePropertyDataChanged(p, oldValue, newValue);
         } else {
@@ -1464,29 +1438,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         myPropertyDataListeners.remove(p);
     }
 
-    /**
-     * Methods below are needed for TreeNode interface. Should be refactored in
-     * the future, but there is a dependency in JTreeTable (NavajoSwingClient).
-     */
 
-    public final Enumeration<Object> children() {
-        Vector<Object> v = new Vector<Object>(getAllProperties());
-        if (messageList != null) {
-            v.addAll(messageList);
-        }
-        return v.elements();
-    }
-
-    public final boolean isLeaf() {
-        if (messageList == null) {
-            return true;
-        }
-        return messageList.size() == 0;
-    }
-
-    public final boolean getAllowsChildren() {
-        return true;
-    }
 
     @Override
     public void write(Writer w) {
@@ -1609,46 +1561,46 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     @Override
     public Map<String, Property> getProperties() {
         if (propertyMap == null) {
-            return new HashMap<String, Property>();
+            return new HashMap<>();
         } else {
-            return new HashMap<String, Property>(propertyMap);
+            return new HashMap<>(propertyMap);
         }
     }
 
     @Override
     public Map<String, Message> getMessages() {
         if (messageMap == null) {
-            return new HashMap<String, Message>();
+            return new HashMap<>();
         } else {
-            return new HashMap<String, Message>(messageMap);
+            return new HashMap<>(messageMap);
         }
     }
 
     @Override
     public List<Message> getElements() {
         if (messageList == null) {
-            return new ArrayList<Message>();
+            return new ArrayList<>();
         } else {
-            return new ArrayList<Message>(messageList);
+            return new ArrayList<>(messageList);
         }
     }
-    
+
     @Override
     public List<Message> getSortedElements() {
         if (messageList == null) {
-            return new ArrayList<Message>();
+            return new ArrayList<>();
         } else {
-        	ArrayList<Message> result = new ArrayList<Message>(messageList);
-        	if (!"".equals(orderBy)) {
+            ArrayList<Message> result = new ArrayList<>(messageList);
+            if (!"".equals(orderBy)) {
                 Collections.sort(result);
             }
             return result;
         }
     }
-    
+
     @Override
     public void merge(Message incoming, boolean preferThis) {
-    	merge(incoming, preferThis, true);
+        merge(incoming, preferThis, true);
     }
 
     @Override
@@ -1669,24 +1621,22 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
         // Check if message with incoming name exists.
         if (!getName().equals(incoming.getName())) {
-            // addMessage(incoming, true);
-            // return;
             incoming.setName(getName());
         }
 
         List<Property> properties = incoming.getAllProperties();
         for (int i = 0; i < properties.size(); i++) {
             Property p = (Property) properties.get(i).clone();
-            Property o_p = null;
+            Property otherProperty = null;
             if (preferThis) {
-                o_p = getProperty(p.getName());
+                otherProperty = getProperty(p.getName());
             }
-            if (!preferThis || o_p == null) {
+            if (!preferThis || otherProperty == null) {
                 addProperty(p);
             }
             // If we don't have a method set, use the incoming method
-            if (o_p != null && o_p.getMethod().equals("")) {
-                o_p.setMethod(p.getMethod());
+            if (otherProperty != null && otherProperty.getMethod().equals("")) {
+                otherProperty.setMethod(p.getMethod());
             }
 
         }
@@ -1695,23 +1645,25 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             String newMsgName = subMessages.get(i).getName();
             Message existing = this.getMessage(newMsgName);
             if (existing == null) {
-            	// if we dont have this message ourselves and incoming message has it marked as nullable, then we should NOT add it (because we explicitly allow the message to not exist)
-            	String nullableString = subMessages.get(i).getSubType("nullable");
-    			boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString); 
-    			if (nullable && applySubType) {
-    				continue;
-    			}
+                // if we dont have this message ourselves and incoming message has it marked as
+                // nullable, then we should NOT add it (because we explicitly allow the message
+                // to not exist)
+                String nullableString = subMessages.get(i).getSubType("nullable");
+                boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString);
+                if (nullable && applySubType) {
+                    continue;
+                }
                 try {
                     Message newMsg = subMessages.get(i).copy();
-                    Message o_m = null;
+                    Message otherMessage = null;
                     if (preferThis) {
-                        o_m = getMessage(newMsg.getName());
+                        otherMessage = getMessage(newMsg.getName());
                     }
-                    if (!preferThis || o_m == null) {
+                    if (!preferThis || otherMessage == null) {
                         this.addMessage(newMsg);
                     }
-                    if (o_m != null && o_m.getMethod().equals("")) {
-                        o_m.setMethod(newMsg.getMethod());
+                    if (otherMessage != null && otherMessage.getMethod().equals("")) {
+                        otherMessage.setMethod(newMsg.getMethod());
                     }
 
                 } catch (NavajoException e) {
@@ -1747,7 +1699,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             } else {
                 this.getRootDoc().removeMessage(this);
             }
-            
+
             return;
         }
         // Mask all properties.
@@ -1756,83 +1708,84 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         while (allProperties.hasNext()) {
             Property p = allProperties.next();
             Property m_p = mask.getProperty(p.getName());
-            
-            // If we didn't find a mask property but we are an array element, check for definition message
+
+            // If we didn't find a mask property but we are an array element, check for
+            // definition message
             if (m_p == null && this.getIndex() > -1) {
                 m_p = ((BaseMessageImpl) mask).getPropertyDefinition(p.getName());
             }
-            
+
             if (m_p == null) {
                 removeProperty(p);
                 continue;
             }
-            
+
             p.setSubType(m_p.getSubType());
             p.setDirection(m_p.getDirection());
-            
+
             // A method that is null or "" is considered to always match
-            boolean matchMethod =  m_p.getMethod() == null || m_p.getMethod().equals("")
-                    || p.getMethod().equals("") || p.getMethod().equals(method);
+            boolean matchMethod = m_p.getMethod() == null || m_p.getMethod().equals("") || p.getMethod().equals("")
+                    || p.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeProperty(p);
-            } else if (!p.getType().equals(m_p.getType()) && !m_p.getType().equals(Property.SELECTION_PROPERTY)) { 
+            } else if (!p.getType().equals(m_p.getType()) && !m_p.getType().equals(Property.SELECTION_PROPERTY)) {
                 if (p.getValue() != null) {
-                    logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(), m_p.getType());
+                    logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(),
+                            m_p.getType());
                 }
                 p.setType(m_p.getType());
             }
         }
 
-        // If we are an array message, mask all submessages with definition message in mask
+        // If we are an array message, mask all submessages with definition message in
+        // mask
         if (isArrayMessage() && mask.isArrayMessage()) {
             for (Message child : getElements()) {
                 child.maskMessage(mask, method);
             }
             return;
-        } 
+        }
 
         // Mask all messages.
         Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
         while (allMessages.hasNext()) {
 
             Message m = allMessages.next();
-            Message mask_message = mask.getMessage(m.getName());
-            if (mask_message == null && this.getIndex() > -1) {
-                mask_message = mask.getDefinitionMessage().getMessage(m.getName());
+            Message maskMessage = mask.getMessage(m.getName());
+            if (maskMessage == null && this.getIndex() > -1) {
+                maskMessage = mask.getDefinitionMessage().getMessage(m.getName());
             }
-                
-            
-            if (mask_message == null ) {
+
+            if (maskMessage == null) {
                 removeMessage(m);
                 continue;
             }
-            
-            boolean matchMethod = m.getMethod().equals("") || method.equals("") || mask_message.getMethod().equals("") || m.getMethod().equals(method);
+
+            boolean matchMethod = m.getMethod().equals("") || method.equals("") || maskMessage.getMethod().equals("")
+                    || m.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeMessage(m);
                 continue;
             }
-            
-
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
-                Message definitionMessage = mask_message.getDefinitionMessage();
+                Message definitionMessage = maskMessage.getDefinitionMessage();
                 if (definitionMessage == null) {
                     logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
-                    
+
                 } else {
 
                     for (int i = 0; i < m.getElements().size(); i++) {
-                            m.getElements().get(i).maskMessage(mask_message, method);
+                        m.getElements().get(i).maskMessage(maskMessage, method);
                     }
                     // also mask the definition message
-                    definitionMessage.maskMessage(mask_message, method);
+                    definitionMessage.maskMessage(maskMessage, method);
                 }
             } else {
-                m.maskMessage(mask_message, method);
+                m.maskMessage(maskMessage, method);
             }
 
         }
@@ -1848,7 +1801,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     public void writeSimpleJSON(Writer writer) throws IOException {
         writer.write("{");
         printElementJSONTypeless(writer);
-        // writer.write("}");
     }
 
     @Override
@@ -1863,10 +1815,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         printElementJSONTypeless(name, writer, properties);
     }
 
-    
     // copied from original MergeUtils, can use a rewrite
     @Override
-    public void writeAsCSV(Writer writer, String delimiter) throws IOException { 
+    public void writeAsCSV(Writer writer, String delimiter) throws IOException {
         if (getType().equals(Message.MSG_TYPE_ARRAY)) {
             if (getArraySize() > 0) {
                 String header = "";
@@ -1949,7 +1900,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public Map<String, Object> getValueMap() {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         for (Map.Entry<String, Property> e : propertyMap.entrySet()) {
             Object o = e.getValue().getTypedValue();
             if (o != null) {
@@ -1959,53 +1910,53 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         return Collections.unmodifiableMap(result);
     }
 
-	@Override
-	public void printElement(final Writer sw, int indent) throws IOException {
+    @Override
+    public void printElement(final Writer sw, int indent) throws IOException {
 
-		// Do not serialized message that have mode="ignore" or messages that
-		// start with "__" (reserved for internal messages)
-		if (Message.MSG_MODE_IGNORE.equals(getMode())) {
-			return;
-		}
-		super.printElement(sw, indent);
-	}
+        // Do not serialized message that have mode="ignore" or messages that
+        // start with "__" (reserved for internal messages)
+        if (Message.MSG_MODE_IGNORE.equals(getMode())) {
+            return;
+        }
+        super.printElement(sw, indent);
+    }
 
-	@Override
-	public void setValue(String propertyName, Object value) {
-		Property p = getProperty(propertyName);
-		if(p==null) {
-			p = NavajoFactory.getInstance().createProperty(getRootDoc(), propertyName, Property.STRING_PROPERTY, "", 0, "", Property.DIR_OUT);
-			addProperty(p);;
-		}
-		p.setAnyValue(value);
-	}
-	
-	public String getSubType() {
-		return subType;
-	}
-	
-	@Override
-	public final String getSubType(String key) {
-		if (subtypeMap != null) {
-			return subtypeMap.get(key);
-		}
-		return null;
+    @Override
+    public void setValue(String propertyName, Object value) {
+        Property p = getProperty(propertyName);
+        if (p == null) {
+            p = NavajoFactory.getInstance().createProperty(getRootDoc(), propertyName, Property.STRING_PROPERTY, "", 0,
+                    "", Property.DIR_OUT);
+            addProperty(p);
+        }
+        p.setAnyValue(value);
+    }
 
-	}
-	
-	@Override
-	public final Map<String,String> getSubTypes() {
-		if(subtypeMap==null) {
-			return  new HashMap<String, String>();
-		}
-		return new HashMap<String, String>(subtypeMap);
-	}	
+    public String getSubType() {
+        return subType;
+    }
 
-	
-	@Override
-	public void setSubType(String subType) {
-		this.subType = subType;
-		subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
-	}
-	
+    @Override
+    public final String getSubType(String key) {
+        if (subtypeMap != null) {
+            return subtypeMap.get(key);
+        }
+        return null;
+
+    }
+
+    @Override
+    public final Map<String, String> getSubTypes() {
+        if (subtypeMap == null) {
+            return new HashMap<>();
+        }
+        return new HashMap<>(subtypeMap);
+    }
+
+    @Override
+    public void setSubType(String subType) {
+        this.subType = subType;
+        subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
+    }
+
 }

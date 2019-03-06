@@ -115,7 +115,7 @@ import org.slf4j.LoggerFactory;
 public class XMLElement implements java.io.Serializable {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(XMLElement.class);
 	/**
 	 * Serialization serial version ID.

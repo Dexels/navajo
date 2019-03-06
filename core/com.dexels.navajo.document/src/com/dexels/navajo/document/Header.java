@@ -204,7 +204,7 @@ public interface Header extends java.io.Serializable {
 	
 	public void setSchedule(String s);
 
-	public void write(OutputStream err) throws NavajoException;
+	public void write(OutputStream err);
 
 	public Header copy(Navajo n);
 

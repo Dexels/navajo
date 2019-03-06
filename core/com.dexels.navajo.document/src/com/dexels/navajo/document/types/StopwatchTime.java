@@ -23,7 +23,7 @@ public final class StopwatchTime
 
 	private static final long serialVersionUID = -6257975668104174868L;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(StopwatchTime.class);
 	long myMillis = 0;
 

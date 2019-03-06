@@ -40,7 +40,7 @@ public class XMLDocumentUtils {
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(XMLDocumentUtils.class);
     private static synchronized void createDocumentBuilderFactory() {
 
@@ -48,7 +48,6 @@ public class XMLDocumentUtils {
             try {
                 builderFactory = DocumentBuilderFactory.newInstance();
             } catch (Exception e) {
-                // builderFactory = DocumentBuilderFactory.newInstance();
             	logger.error("Trouble initializing documentbuilder factory: ",e);
             }
         }
@@ -57,12 +56,10 @@ public class XMLDocumentUtils {
     /**
      * transforms an XML-file and XSL-file into a String
      */
-    public static synchronized String transform(Document xmlIn, File xslFile)throws TransformerConfigurationException,
-            TransformerException, com.dexels.navajo.document.NavajoException {
+    public static synchronized String transform(Document xmlIn, File xslFile)throws TransformerException {
         createDocumentBuilderFactory();
         if (transformerFactory == null) {
             try {
-                //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
                  transformerFactory = TransformerFactory.newInstance();
             } catch (java.lang.NoClassDefFoundError e) {
                 logger.warn("Could not find XSLT factory, using system default");
@@ -92,10 +89,8 @@ public class XMLDocumentUtils {
      * sets 'encoding' to DEFAULT (= 'UTF-16')
      * in case of no DTD-checking dtdPublicId and dtdSystemId may be declared as 'null'
      */
-    public static void toXML(Document document, String dtdPublicId, String dtdSystemId, StreamResult result)
-            throws com.dexels.navajo.document.NavajoException {
+    public static void toXML(Document document, String dtdPublicId, String dtdSystemId, StreamResult result) {
         toXML(document, dtdPublicId, dtdSystemId, DEFAULT_ENCODING, result);
-        return;
     }
 
     /**
@@ -103,10 +98,7 @@ public class XMLDocumentUtils {
      * encoding can be set;
      * output method = 'xml' (indented)
      */
-    public static synchronized void toXML(Node document, String dtdPublicId, String dtdSystemId, String encoding,
-                              StreamResult result)
-            throws com.dexels.navajo.document.NavajoException {
-
+    public static synchronized void toXML(Node document, String dtdPublicId, String dtdSystemId, String encoding, StreamResult result) {
         createDocumentBuilderFactory();
         if (transformerFactory == null) {
             try {
@@ -132,10 +124,8 @@ public class XMLDocumentUtils {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(document), result);
         } catch (Exception exception) {
-        	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         }
-        return;
     }
 
     /**
@@ -147,9 +137,7 @@ public class XMLDocumentUtils {
 
         try {
             javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            Document document = builder.newDocument();
-
-            return document;
+            return builder.newDocument();
         } catch (Exception exception) {
         	logger.error("Error: ", exception);
             return null;
@@ -159,11 +147,10 @@ public class XMLDocumentUtils {
     /**
      * an XML-file is read into a Document
      */
-    public static Document createDocument(String source) throws com.dexels.navajo.document.NavajoException {
+    public static Document createDocument(String source) {
         try {
             return createDocument(new FileInputStream(new File(source)), false);
         } catch (FileNotFoundException fnfex) {
-        	logger.error("Error: ", fnfex);
             throw NavajoFactory.getInstance().createNavajoException(fnfex.getMessage());
         }
     }
@@ -172,7 +159,7 @@ public class XMLDocumentUtils {
      * XML-information is read via an inputstream into a Document (DTD validation can be set)
      * @param validation use validation? Actually unused variable
      */
-    public static Document createDocument(InputStream source, boolean validation) throws com.dexels.navajo.document.NavajoException {
+    public static Document createDocument(InputStream source, boolean validation) {
 
         createDocumentBuilderFactory();
 
@@ -182,7 +169,6 @@ public class XMLDocumentUtils {
             document.normalize();
             return document;
         } catch (Exception exception) {
-        	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         } finally {
             // ALWAYS CLOSE STREAM!!
@@ -205,12 +191,10 @@ public class XMLDocumentUtils {
             return publicId != null && publicId.equals(dtdPublicId);
         }
         return true; // Workaround until DTDs are published
-        // return false;
     }
 
-    private final static void writeElement( Writer sw, String value ) throws IOException {
+    private static final void writeElement( Writer sw, String value ) throws IOException {
     	sw.write(value);
-    	//System.err.print(value);
     }
 
     private static void printElement(Node n, Writer sw) throws IOException {
@@ -220,7 +204,6 @@ public class XMLDocumentUtils {
  
         if (n instanceof Element) {
          
-            //StringBuffer result = new StringBuffer();
             String tagName = n.getNodeName();
 
             writeElement( sw, "<" + tagName);
@@ -265,8 +248,6 @@ public class XMLDocumentUtils {
             	Comment c = (Comment)n;
                 sw.write("<!--"+c.getData()+"-->");
             }
-            
-            return;
         }
     }
 
@@ -311,12 +292,5 @@ public class XMLDocumentUtils {
 			logger.error("Error: ", e);
 		}
         return sw.toString();
-    }
-
-    public static void main(String args[]) throws Exception {
-        //Document d = createDocument("/home/arjen/projecten/Navajo/soap/tml.xml");
-        //Document d = createDocument("/home/arjen/projecten/Navajo/soap/soap.xml");
-//        String out = transform(d,
-//            new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
     }
 }

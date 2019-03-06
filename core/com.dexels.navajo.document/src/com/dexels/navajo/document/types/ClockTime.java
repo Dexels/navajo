@@ -28,9 +28,9 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 * 
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
-    private final static Logger logger = LoggerFactory.getLogger(ClockTime.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClockTime.class);
 
-	public final static String VERSION = "$Id$";
+	public static final String VERSION = "$Id$";
 
 	//Set the fixed year constants.
 	public static final int FIXED_YEAR = 1971;
@@ -41,14 +41,14 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 
 	private boolean shortFormat = false;
     
-	private final static ThreadLocal<DateFormat> dfMedium = new ThreadLocal<DateFormat>() {
+	private static final ThreadLocal<DateFormat> dfMedium = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue()
 		{
 			return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
 		}
 	}; 
-	private final static ThreadLocal<DateFormat> dfShort = new ThreadLocal<DateFormat>() {
+	private static final ThreadLocal<DateFormat> dfShort = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue()
 		{

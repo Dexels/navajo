@@ -41,7 +41,7 @@ import com.dexels.navajo.document.types.StopwatchTime;
 
 public class TestProperty {
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestProperty.class);
 	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
 	private Navajo testDoc;

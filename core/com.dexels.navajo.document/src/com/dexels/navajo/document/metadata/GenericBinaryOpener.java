@@ -19,7 +19,7 @@ import com.dexels.navajo.document.types.Binary;
 
 public class GenericBinaryOpener implements BinaryOpener {
 
-    private final static Logger logger = LoggerFactory.getLogger(GenericBinaryOpener.class);
+    private static final Logger logger = LoggerFactory.getLogger(GenericBinaryOpener.class);
     // private static final String UNIX_PATH = "netscape";
     // private static final String UNIX_FLAG = "-remote openURL";
 

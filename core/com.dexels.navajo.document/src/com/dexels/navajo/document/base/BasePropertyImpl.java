@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,49 +85,34 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected Date myDate;
 	
 	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
-	private final static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT1);
-            sdf.setLenient(false);
-            return sdf;
-        }
-	}; 
-	private final static ThreadLocal<SimpleDateFormat> dateFormat4 = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT4);
-            sdf.setLenient(false);
-            return sdf;
-        }
-	}; 
-	private final static ThreadLocal<SimpleDateFormat> dateFormat2 = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT2);
-            sdf.setLenient(false);
-            return sdf;
-        }
-	}; 
-	private final static ThreadLocal<SimpleDateFormat> dateFormat3 = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
+	private static final ThreadLocal<SimpleDateFormat> dateFormat1 = ThreadLocal.withInitial(()->{
+        SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT1);
+        sdf.setLenient(false);
+        return sdf;
+	});
+	
+	private static final ThreadLocal<SimpleDateFormat> dateFormat4 = ThreadLocal.withInitial(()->{
+        SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT4);
+        sdf.setLenient(false);
+        return sdf;
+	});
+	private static final ThreadLocal<SimpleDateFormat> dateFormat2 = ThreadLocal.withInitial(()->{
+        SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT2);
+        sdf.setLenient(false);
+        return sdf;
+	});
+	private static final ThreadLocal<SimpleDateFormat> dateFormat3 = ThreadLocal.withInitial(()->{
             SimpleDateFormat sdf = new SimpleDateFormat(Property.DATE_FORMAT3);
             sdf.setLenient(false);
             return sdf;
-        }
-	}; 
-	private final static ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
+    });
+	private static final ThreadLocal<SimpleDateFormat> timestampFormat = ThreadLocal.withInitial(()->{
             SimpleDateFormat sdf = new SimpleDateFormat(Property.TIMESTAMP_FORMAT);
             sdf.setLenient(false);
             return sdf;
-        }
-   }; 
-	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+    });
 	
-	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
+	protected final transient ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
 		private static final long serialVersionUID = 2460743050491944290L;
 
 		@Override
@@ -140,7 +124,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return get(0).getValue();
 			}
 			int index = 0;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (Selection s  : this) {
 				sb.append(s.getValue());
 				if(index<size()-1) {
@@ -167,17 +151,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	protected Property definitionProperty = null;
 
-	// private String myMessageName = null;
 	private Message myParent = null;
-//	private Vector<String>[] myPoints = null;
-
 	protected boolean isListType = false;
 
-	private Object evaluatedValue = null;
+	private transient Object evaluatedValue = null;
 	private String evaluatedType = null;
-	private List<PropertyChangeListener> myPropertyDataListeners;
+	private transient List<PropertyChangeListener> myPropertyDataListeners;
 	protected String subType = null;
-	private Object tipiProperty = null;
+	private transient Object tipiProperty = null;
 	   
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
@@ -198,9 +179,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		isListType = false;
 		myName = name;
 		myValue = value;
-		// if (type==null || "".equals(type)) {
-		// type = STRING_PROPERTY;
-		// }
 		this.type = type;
 
 		this.length = i;
@@ -217,7 +195,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		super(n);
 		isListType = true;
 		myName = name;
-		// myValue = "list";
 		this.cardinality = cardinality;
 		this.description = desc;
 		this.direction = direction;
@@ -254,9 +231,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public void addSubType(String extra) {
 		StringTokenizer st = new StringTokenizer(extra, "=");
-		String key = st.nextToken();
+		String keySub = st.nextToken();
 		String value = st.nextToken();
-		addSubType(key, value);
+		addSubType(keySub, value);
 	}
 
 	@Override
@@ -379,7 +356,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	private final void clearValue(Boolean internal) {
-		//setValue((String) null);
 		Object o  = getTypedValue();
 		tipiProperty = null;
 		// Similar to setAnyValue, only here the type will be determined based on the current type,
@@ -397,7 +373,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	@Override
 	public final void setAnyValue(Object o, Boolean internal) {
-//		myBinary = null;
 		if(myBinary!=null) {
 			if(o instanceof Binary) {
 				// piggy backing on a similar implementation that just inverts the meaning
@@ -535,7 +510,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	public final Object getEvaluatedValue()  {
-		// logger.info("Evaluating property: "+getValue());
 		Operand o;
 		// No evaluator present.
 		if (NavajoFactory.getInstance().getExpressionEvaluator() == null) {
@@ -551,7 +525,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					evaluatedType = o.type;
 					return o.value;
 				} catch (Throwable e) {
-					logger.info("Exception while evaluating property: " + getFullPropertyName() + " expression: " + getValue());
+					logger.info("Exception while evaluating property: {} expression: {}",getFullPropertyName(), getValue());
 					return null;
 				}
 
@@ -588,7 +562,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final String getEvaluatedType() throws NavajoException {
+	public final String getEvaluatedType() {
 		if (!EXPRESSION_PROPERTY.equals(getType())) {
 			return getType();
 		}
@@ -604,7 +578,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final void refreshExpression() throws NavajoException, ExpressionChangedException {
+	public final void refreshExpression() throws ExpressionChangedException {
 		if (getType().equals(Property.EXPRESSION_PROPERTY)) {
 			// also sets evaluatedType
 			Object oldEvaluatedValue = evaluatedValue;
@@ -612,7 +586,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			if (evaluatedValue instanceof ArrayList) {
 				updateExpressionSelections((ArrayList<Selection>) evaluatedValue);
 				firePropertyChanged("selection", "", " ");
-				write(System.err);
 			} else {
 				if (oldEvaluatedValue != null) {
 					if (!oldEvaluatedValue.equals(evaluatedValue)) {
@@ -632,7 +605,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 	}
 
-	private void updateExpressionSelections(List<Selection> list) throws NavajoException {
+	private void updateExpressionSelections(List<Selection> list) {
 		removeAllSelections();
 		for (int i = 0; i < list.size(); i++) {
 			Selection s = list.get(i);
@@ -650,11 +623,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public final Object getTypedValue() {
 
-		
-		// if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
-		// return null;
-		// }
-		// logger.info("MYVALUE: "+myValue);
 		if (getType().equals(Property.STRING_PROPERTY)) {
 			return getValue();
 		}
@@ -698,9 +666,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return new Money((Double) null, getSubType());
 			}
 			String val = getValue();
-//			logger.info("VALUEEEEEE: "+val);
-//			String val2 = val.replace(".", "");
-//			String val3 = val2.replace(',', '.');
 			
 			NumberFormat fn = NumberFormat.getNumberInstance(Locale.US);
 			
@@ -735,20 +700,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
             }
             // Try in order from most specific to least specific
             try {
-                Date d = timestampFormat.get().parse(getValue());
-                return d;
+            	return timestampFormat.get().parse(getValue());
             } catch (Exception ex) {
                 try {
-                    Date d = dateFormat4.get().parse(getValue());
-                    return d;
+                	return dateFormat4.get().parse(getValue());
                 } catch (Exception ex2) {
                     try {
-                        Date d = dateFormat1.get().parse(getValue());
-                        return d;
+                    	return dateFormat1.get().parse(getValue());
                     } catch (Exception ex3) {
                         try {
-                            Date d = dateFormat2.get().parse(getValue());
-                            return d;
+                        	return dateFormat2.get().parse(getValue());
                         } catch (Exception ex4) {
                             try {
                                 Long l = Long.parseLong(getValue());
@@ -756,7 +717,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
                                 d.setTime(l);
                                 return d;
                             } catch (Exception e5) {
-                                logger.info("Sorry I really can't parse that date: " + getValue());
+                                logger.info("Sorry I really can't parse that date: {}", getValue());
                                 return null;
                             }
                         }
@@ -769,10 +730,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return null;
 			}
 			try {
-				// Added a trim. Frank.
 				return Integer.valueOf(Integer.parseInt(getValue().trim()));
 			} catch (NumberFormatException ex3) {
-				logger.info("Numberformat exception...:"+getValue().trim());
+				logger.info("Numberformat exception...: {}",getValue().trim());
 				return null;
 			}
 		} else if (getType().equals(Property.LONG_PROPERTY)) {
@@ -792,15 +752,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			String v = getValue();
 			String w = v;
-			// Sometimes the numberformatting creates
-			if (v.indexOf(",") != -1) {
+			// Sometimes the number formatting creates
+			if (v.indexOf(',') != -1) {
 				w = v.replaceAll(",", "");
 			}
 			Double d;
 			try {
 				d = Double.valueOf(Double.parseDouble(w));
 			} catch (NumberFormatException ex) {
-				logger.info("Can not format double with: " + w);
+				logger.info("Can not format double with: {}", w);
 				return null;
 			}
 			return d;
@@ -811,8 +771,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				logger.error("Error: ", e);
 			}
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
-			List<Selection> all = getAllSelectedSelections();
-			return all;
+			return getAllSelectedSelections();
 		} else if (getType().equals(Property.TIPI_PROPERTY)) {
 		    return tipiProperty;
 		} else if (getType().equals(Property.LIST_PROPERTY) ) {
@@ -820,12 +779,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			    return tipiProperty;
 			}
 			try {
-			    if (myValue != null && myValue.indexOf('[') == 0) {
+			    if (myValue.indexOf('[') == 0) {
 	                // Parse back into a list
 	                String stripped = myValue.substring(1,  myValue.length() -1);
 	                tipiProperty = Arrays.asList(stripped.split(", "));
 	                return tipiProperty;
-	            } else if (myValue != null &&  myValue.length() > 0) {
+	            } else if (myValue.length() > 0) {
 	                logger.info("Failed to parse {} as a list!", myValue);
 	            }
 			} catch (Exception e ) {
@@ -844,23 +803,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 		return getValue();
 	}
-
-//	public final void clearValue() {
-//		myValue = null;
-//	}
-
-//	private final void copyResource(OutputStream out, InputStream in) throws IOException {
-//		BufferedInputStream bin = new BufferedInputStream(in);
-//		BufferedOutputStream bout = new BufferedOutputStream(out);
-//		byte[] buffer = new byte[1024];
-//		int read;
-//		while ((read = bin.read(buffer)) > -1) {
-//			bout.write(buffer, 0, read);
-//		}
-//		bin.close();
-//		bout.flush();
-//		bout.close();
-//	}
 
 	@Override
 	public final void setValue(Binary b) {
@@ -1249,7 +1191,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
             old = getTypedValue();
         }
 		if (BINARY_PROPERTY.equals(getType())) {
-			//logger.info("Warning: Very deprecated. use setValue(Binary) instead");
 			try {
 				if (value != null) {
 					myBinary = new Binary(new StringReader(value));
@@ -1299,15 +1240,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			if (oldValue == null && newValue == null) {
 				return;
 			}
-			if (oldValue != null) {
-				if (oldValue.equals(newValue)) {
-					return;
-				}
-			}
-			if (newValue != null) {
-				if (newValue.equals(oldValue)) {
-					return;
-				}
+			if (oldValue != null && oldValue.equals(newValue)) {
+				return;
 			}
 
 			if (hasPropertyDataListeners()) {
@@ -1357,16 +1291,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public final Map<String,String> getSubTypes() {
 		if(subtypeMap==null) {
-			return  new HashMap<String, String>();
+			return  new HashMap<>();
 		}
-		return new HashMap<String, String>(subtypeMap);
+		return new HashMap<>(subtypeMap);
 	}	
 
 	private String serializeSubtypes() {
 		if (subtypeMap == null) {
 			return null;
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (definitionProperty == null) {
 			for (Iterator<String> iter = subtypeMap.keySet().iterator(); iter.hasNext();) {
 				String item = iter.next();
@@ -1387,7 +1321,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					}
 				}
 			}
-			logger.info("Subtypes: " + sb.toString());
+			logger.info("Subtypes: {}", sb);
 			return sb.toString();
 		}
 
@@ -1401,11 +1335,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public final String setCheckedValue(String v) {
 
-		// if (EXPRESSION_PROPERTY.equals(getType())&&
-		// PROPERTY_DESCRIPTION.equals(getName())) {
-		// logger.info("SETTING VALUE: "+value);
-		// Thread.dumpStack();
-		// }
 		String value = null;
 		try {
 			value = PropertyTypeChecker.getInstance().verify(this, v);
@@ -1416,8 +1345,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (value != null) {
 			try {
 				if (getType().equals(SELECTION_PROPERTY)) {
-					// logger.info("Setting value of selection
-					// property");
 					setSelectedByValue(value);
 				} else {
 					myValue = value;
@@ -1451,8 +1378,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public final String getType() {
 		if (this.type == null || "".equals(this.type)) {
-			// logger.info("Warning: Property without type. Reverting
-			// to String type");
 			return STRING_PROPERTY;
 		} else {
 			return (this.type);
@@ -1488,29 +1413,19 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 	}
 
+	/**
+	 * TODO return immutable result?
+	 */
 	@Override
 	public final ArrayList<Selection> getAllSelections() {
-		if (selectionList == null) {
-			return new ArrayList<Selection>();
-		}
-		ArrayList<Selection> l = new ArrayList<Selection>(selectionList);
-		return l;
+		return new ArrayList<Selection>(selectionList);
 	}
 
 	@Override
 	public final void setSelected(Selection s) {
-		if (selectionList == null) {
-			logger.warn("setSelected(selection) got null input"); 
-			return;
-		}
 		List<Selection> old;
 			old = getAllSelectedSelections();
-		
-//		String oldSel = null;
-//		Selection old = getSelected();
-//		if (old != null) {
-//			oldSel = old.getValue();
-//		}
+
 
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
@@ -1522,14 +1437,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				}
 			}
 		}
-//		if(!old.equals(current))
 		
 		List<Selection> newValue = getAllSelectedSelections();
 
 		boolean isEqual = isEqual(old, newValue);
-//		logger.info("OLD: "+old);
-//		logger.info("NEW: "+newValue);
-//		logger.info("isEqual: "+isEqual);
 		if(!isEqual) { 
 			firePropertyChanged("selection", old,newValue);
 		}
@@ -1550,19 +1461,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 	public final void setAllSelected(boolean b) {
-		if (selectionList == null) {
-			return;
-		}
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
 			current.setSelected(b);
 		}
 	}
 
-	public final void setSelectedByValue(Object value) throws NavajoException {
-		if (selectionList == null) {
-			return;
-		}
+	public final void setSelectedByValue(Object value) {
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
 			if (current.getValue() == null) {
@@ -1573,9 +1478,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					clearSelections();
 				}
 				setSelected(current);
-				// ((BaseSelectionImpl) current).setSelected(true);
-			} else {
-				// current.setSelected(false);
 			}
 		}
 	}
@@ -1586,16 +1488,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public final void addSelection(Selection s) {
-//		if (selectionList == null) {
-//			selectionList = new ArrayList<BaseSelectionImpl>();
-//		}
-
 		int max = selectionList.size();
 		boolean selected = s.isSelected();
 		for (int i = 0; i < max; i++) {
 			Selection t = selectionList.get(i);
 			if (t.getName().equals(s.getName())) {
-				// logger.info("REMOVING SELECTION!");
 				selected = t.isSelected();
 				selectionList.remove(i);
 				max--;
@@ -1613,25 +1510,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public final void removeSelection(Selection s) {
-		if (selectionList == null) {
-			return;
-		}
 		selectionList.remove(s);
 	}
 
 	@Override
-	public final void removeAllSelections() throws NavajoException {
-		if (selectionList == null) {
-			return;
-		}
+	public final void removeAllSelections() {
 		selectionList.clear();
 	}
 
 	@Override
 	public final Selection getSelection(String name) {
-		if (selectionList == null) {
-			return NavajoFactory.getInstance().createDummySelection();
-		}
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
 			if (current.getName().equals(name)) {
@@ -1643,9 +1531,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public final Selection getSelectionByValue(String value) {
-		if (selectionList == null) {
-			return NavajoFactory.getInstance().createDummySelection();
-		}
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
 			if (current != null && current.getValue().equals(value)) {
@@ -1653,26 +1538,21 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 		}
 		return NavajoFactory.getInstance().createDummySelection();
-		// return null;
 	}
 
 	/**
 	 * I don't like this function, with its silly way of indicating null selections (== dummy selection)
 	 * @deprecated
 	 */
+	@Deprecated
 	@Override
 	public final Selection getSelected() {
-		if (selectionList == null) {
-			return NavajoFactory.getInstance().createDummySelection();
-		}
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
-			// logger.info("CHECKING:::: "+current);
 			if (current != null && current.isSelected()) {
 				return current;
 			}
 		}
-		// return null;
 		return NavajoFactory.getInstance().createDummySelection();
 	}
 
@@ -1762,14 +1642,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return super.hashCode();
 	}
 
-
-
-
-	// public int compare(Property p) {
-	// Comparable ob1 = (Comparable)getAlternativeTypedValue();
-	// Comparable ob2 = (Comparable)p.getAlternativeTypedValue();
-	// return ob1.compareTo(ob2);
-	// }
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final int compareTo(Property p) {
@@ -1796,8 +1668,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 
 			// Get first argument.
+			String selectionSubType = getSubType("name");
 			if (getType().equals(Property.SELECTION_PROPERTY)) {
-				if (getSubType("name") != null && getSubType("name").equals("integer")) {
+				if (selectionSubType != null && selectionSubType.equals("integer")) {
 					ob1 = Integer.valueOf(getSelected().getName());
 				} else {
 					ob1 = getSelected().getName();
@@ -1809,7 +1682,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			// Get second argument.
 			if (((BasePropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
 				BasePropertyImpl cp = (BasePropertyImpl) p;
-				if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
+				if (selectionSubType != null && cp.getSubType("name").equals("integer")) {
 					ob2 = Integer.valueOf(cp.getSelected().getName());
 				} else {
 					ob2 = ((BasePropertyImpl) p).getSelected().getName();
@@ -1835,8 +1708,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 
 			try {
-				int i = ob1.compareTo(ob2);
-				return i;
+				return ob1.compareTo(ob2);
 			} catch (Throwable t) {
 				return 0;
 			}
@@ -1849,7 +1721,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 
 	@Override
-	public void setSelected(String[] s) throws com.dexels.navajo.document.NavajoException {
+	public void setSelected(String[] s) {
 		if (!getType().equals(SELECTION_PROPERTY)) {
 			throw NavajoFactory.getInstance().createNavajoException("Setting selected of non-selection property!");
 		}
@@ -1863,24 +1735,19 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void addSelectionWithoutReplace(Selection s) throws com.dexels.navajo.document.NavajoException {
-//		if (selectionList == null) {
-//			selectionList = new ArrayList<BaseSelectionImpl>();
-//		}
-
+	public final void addSelectionWithoutReplace(Selection s) {
 		selectionList.add((BaseSelectionImpl)s);
 		((BaseSelectionImpl) s).setParent(this);
 	}
 
 	@Override
-	public final void setSelected(ArrayList<String> al) throws com.dexels.navajo.document.NavajoException {
-		List<Selection> old = new ArrayList<Selection>(getAllSelectedSelections());
+	public final void setSelected(ArrayList<String> al) {
+		List<Selection> old = new ArrayList<>(getAllSelectedSelections());
 		setAllSelected(false);
 		for (int i = 0; i < al.size(); i++) {
 			String s = al.get(i);
 			Selection sl = getSelectionByValue(s);
 			sl.setSelected(true);
-//			setSelected(sl.getValue());
 		}
 		firePropertyChanged("selection", old, getAllSelectedSelections());
 	}
@@ -1899,7 +1766,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					return get(0).getValue();
 				}
 				int index = 0;
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				for (Selection s  : this) {
 					sb.append(s.getValue());
 					if(index<size()-1) {
@@ -1923,7 +1790,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void setSelected(String value) throws com.dexels.navajo.document.NavajoException {
+	public final void setSelected(String value) {
 		if (!"+".equals(getCardinality())) {
 			ArrayList<Selection> al = getAllSelections();
 			for (int i = 0; i < al.size(); i++) {
@@ -1942,8 +1809,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void clearSelections() throws com.dexels.navajo.document.NavajoException {
-		List<Selection> old = new ArrayList<Selection>(getAllSelectedSelections());
+	public final void clearSelections() {
+		List<Selection> old = new ArrayList<>(getAllSelectedSelections());
 		ArrayList<Selection> al = getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
 			BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
@@ -1953,13 +1820,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final Selection existsSelection(String name) throws com.dexels.navajo.document.NavajoException {
+	public final Selection existsSelection(String name) {
 		return getSelection(name);
 	}
 
-	// public String getFullPropertyName() throws NavajoException {
-	// return getPath();
-	// }
 	@Override
 	public final boolean isDirIn() {
 		if (getDirection() == null) {
@@ -2055,25 +1919,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		else {
 
 			// If both values are null they're equal.
-			// if (p.getTypedValue() == null && this.getTypedValue() == null) {
-			// return true;
-			// }
 			if (p.getValue() == null && this.getValue() == null) {
 				return true;
 			}
 
 			// If only one of them is null they're not equal.
-			// if (p.getTypedValue() == null || this.getTypedValue() == null) {
-			// return false;
-			// }
 			if (p.getValue() == null || this.getValue() == null) {
 				return false;
 			}
 
 			// We are only equal if our values match exactly..
 
-			boolean result = p.getValue().equals(this.getValue());
-			return result;
+			return p.getValue().equals(this.getValue());
 		}
 
 	}
@@ -2085,7 +1942,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public Map<String,String> getAttributes() {
-		Map<String,String> m = new HashMap<String,String>();
+		Map<String,String> m = new HashMap<>();
 		
 		if ( myExtends != null ) {
 			m.put(Property.PROPERTY_EXTENDS, myExtends);
@@ -2122,9 +1979,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			if (length > 0) {
 				m.put(PROPERTY_LENGTH, "" + length);
-			} //else {
-//				m.put(PROPERTY_LENGTH, "");
-//			}
+			} 
 		}
 		if (myName != null) {
 			m.put(PROPERTY_NAME, myName);
@@ -2229,26 +2084,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener p) {
 		if (myPropertyDataListeners == null) {
-			myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
+			myPropertyDataListeners = new ArrayList<>();
 		}
 		if(myPropertyDataListeners.contains(p)) {
-			logger.info("IDENTICAL LISTENER!!!\n"+getFullPropertyName());
+			logger.info("IDENTICAL LISTENER {}",getFullPropertyName());
 			return;
 		}
 		myPropertyDataListeners.add(p);
-//		logger.info("Adding: "+p.getClass()+" to: "+getFullPropertyName());
-//		Thread.dumpStack();
 
 		if (myPropertyDataListeners.size() > 5) {
-			logger.trace("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
-			logger.trace(">>> "+myPropertyDataListeners);
+			logger.trace("Multiple property listeners detected {} path: {}",myPropertyDataListeners.size(),getFullPropertyName());
+			logger.trace(">>> {}",myPropertyDataListeners);
 		}
-		if (myPropertyDataListeners.size() > 5) {
-//			for (PropertyChangeListener xxp : myPropertyDataListeners) {
-//				logger.info("Listener: "+xxp);
-//			}
-		}
-
 	}
 
 	@Override
@@ -2259,30 +2106,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		myPropertyDataListeners.remove(p);
 	}
 
-	public static void main(String[] args) {
-
-		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
-
-		NavajoFactory nf = NavajoFactory.getInstance();
-		BaseNavajoImpl n = new BaseNavajoImpl(nf);
-		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
-		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
-		m.addProperty(p1);
-		p1.setType("string");
-		p1.setValue("CHGP12Y");
-
-		BaseNavajoImpl n2 = new BaseNavajoImpl(nf);
-		BaseMessageImpl m2 = new BaseMessageImpl(n2, "Aap");
-		BasePropertyImpl p2 = new BasePropertyImpl(n2, "Noot");
-		m2.addProperty(p2);
-		p2.setType("string");
-		p2.setValue("CHGP12Y");
-
-	}
-
 	@Override
-	public void setSelected(Selection s, boolean selected) throws NavajoException {
-		List<Selection> l = new ArrayList<Selection>( getAllSelectedSelections());
+	public void setSelected(Selection s, boolean selected) {
+		List<Selection> l = new ArrayList<>( getAllSelectedSelections());
 		for (Selection selection : getAllSelections()) {
 			if (selection.equals(s)) {
 				s.setSelected(selected);
@@ -2306,34 +2132,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				PropertyChangeListener c = myPropertyDataListeners.get(i);
 				
 				c.propertyChange(new PropertyChangeEvent(this, PROPERTY_VALUE, getTypedValue(), getTypedValue()));
-				// logger.info("Alpha: PROPERTY DATA CHANGE Fired: " +
-				// oldValue + " - " +
-				// newValue);
-				// Thread.dumpStack();
 			}
 		}
 	}
-	
-	/**
-	 * Methods below are needed for TreeNode interface. Should be refactored in the future, but there
-	 * is a dependency in JTreeTable (NavajoSwingClient).
-	 */
-	public int getChildCount() {
-		return 0;
-	}
-
-	public boolean getAllowsChildren() {
-		return false;
-	}
-
-	public boolean isLeaf() {
-		return true;
-	}
-
-	public Enumeration<?> children() {
-		return null;
-	}
-	
 	@Override
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
 		String value = getValue();

@@ -20,7 +20,7 @@ import com.dexels.navajo.document.PropertyTypeException;
 
 public class TypeCheckString extends TypeChecker {
   
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 		.getLogger(TypeCheckString.class);
   public TypeCheckString() {
   }
@@ -29,11 +29,8 @@ public String getType() {
     return Property.STRING_PROPERTY;
   }
 
-  /** @todo check number of invokations... Still seems to be called too often */
-
   @Override
-public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
-//    logger.info("Entering string checker: "+value);
+public String verify(Property p, String value) {
     if (value==null || "".equals(value)) {
       return value;
     }
@@ -41,11 +38,9 @@ public String verify(Property p, String value) throws com.dexels.navajo.document
     String regexp = p.getSubType("regexp");
     if (cap!=null) {
       if ("upper".equals(cap)) {
-//        logger.info("Upper: "+value.toUpperCase());
         return value.toUpperCase();
       }
       if ("lower".equals(cap)) {
-//        logger.info("Upper: "+value.toLowerCase());
         return value.toLowerCase();
       }
     }
@@ -67,7 +62,6 @@ public static void main(String[] args) {
     String message ="aaaaap";
     if (!Pattern.matches(regexp, value)) {
         logger.info("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
-//            throw new PropertyTypeException(p,message);
     } else {
         logger.info("Regexp matches!");
     }

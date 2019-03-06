@@ -64,7 +64,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	@Override
 	public Map<String, String> getAttributes() {
-		 Map<String,String> m = new HashMap<String,String>();
+		 Map<String,String> m = new HashMap<>();
 	      m.put("method", method);
 	      m.put("service", service);
 	      m.put("validationService", validationService);
@@ -77,7 +77,7 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 		if ( extraMessage == null ) {
 			return null;
 		}
-		List<BaseNode> children =  new ArrayList<BaseNode>();
+		List<BaseNode> children =  new ArrayList<>();
 		children.add((BaseMessageImpl )extraMessage);
 		return children;
 	}
@@ -99,9 +99,8 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 
 	@Override
 	public Operation copy(Navajo n) {
-		BaseOperationImpl m = (BaseOperationImpl) NavajoFactory.getInstance().createOperation(n,
+		return NavajoFactory.getInstance().createOperation(n,
 				getMethod(), getService(), getValidationService(), getEntityName(), getExtraMessage().copy());
-	    return m;
 	}
 
 	@Override

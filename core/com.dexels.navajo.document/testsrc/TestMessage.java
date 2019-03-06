@@ -28,7 +28,7 @@ public class TestMessage {
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
   private Navajo testDoc = null;
   
-  private final static Logger logger = LoggerFactory.getLogger(TestMessage.class);
+  private static final Logger logger = LoggerFactory.getLogger(TestMessage.class);
 
 
   @Before
