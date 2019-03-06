@@ -91,11 +91,11 @@ public class DiffMap implements Mappable {
 			}
 		}
 		for (Message element : currentMessage.getElements()) {
+			Message resultElement = element.copy(myAccess.getOutputDoc());
 			try {
-				getDiffForMatchingKeys(previousMessage, element);
+				getDiffForMatchingKeys(previousMessage, resultElement);
 			} catch (NoSuchElementException e) {
 				// insert
-				Message resultElement = element.copy(myAccess.getOutputDoc());
 				resultElement.addProperty(NavajoFactory.getInstance().createProperty(myAccess.getOutputDoc(), "Insert", Property.BOOLEAN_PROPERTY, String.valueOf(true), 0, null, Property.DIR_OUT));
 				result.addElement(resultElement);
 			}
