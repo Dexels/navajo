@@ -41,7 +41,7 @@ public class BasicClientTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Test
+	@Test(timeout=10000)
 	public void testSomething() throws Exception {
 //		System.err.println("=============================== TEST SETUP ============================================");
 //		myClient = NavajoClientFactory.getClient();
