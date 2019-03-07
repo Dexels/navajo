@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.node.POJONode;
 
 public class APIValue {
 	
-	private final static String TYPE_SELECTION = "selection";
-	private final static String TYPE_DATETIME = "datetime";
-	private final static String TYPE_INTEGER = "integer";
-	//private final static String TYPE_BOOLEAN = "boolean";
+	private static final String TYPE_SELECTION = "selection";
+	private static final String TYPE_DATETIME = "datetime";
+	private static final String TYPE_INTEGER = "integer";
+	//private static final String TYPE_BOOLEAN = "boolean";
 	
 	public static void setValueOnNodeForType(ObjectNode node, String id, String type, Property property, ArticleRuntime runtime) throws APIException {
 		if (property == null || property.getTypedValue() == null) {

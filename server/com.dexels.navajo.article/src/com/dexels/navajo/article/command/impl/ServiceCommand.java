@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class ServiceCommand implements ArticleCommand {
-    private final static Logger statLogger = LoggerFactory.getLogger("stats");
-    private final static Logger logger = LoggerFactory.getLogger(ServiceCommand.class);
+    private static final Logger statLogger = LoggerFactory.getLogger("stats");
+    private static final Logger logger = LoggerFactory.getLogger(ServiceCommand.class);
     
 	private String name;
     private DispatcherInterface dispatcher;

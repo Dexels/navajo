@@ -12,7 +12,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public class BasicAuthenticationMethod implements AuthenticationMethod {
-    private final static Logger logger = LoggerFactory.getLogger(BasicAuthenticationMethod.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicAuthenticationMethod.class);
     
     private Base64 base64;
     private AAAQuerier authenticator;

@@ -24,8 +24,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class ArticleBaseServlet extends HttpServlet  {
 	private static final String VALIDATION_DESCRIPTION_LANG = "nl";
-    private final static long serialVersionUID = -6895324256139435015L;
-	private final static Logger logger = LoggerFactory.getLogger(ArticleBaseServlet.class);
+    private static final long serialVersionUID = -6895324256139435015L;
+	private static final Logger logger = LoggerFactory.getLogger(ArticleBaseServlet.class);
 	private static ResourceBundleStore resourceBundle;
 	
 	private ArticleContext context;

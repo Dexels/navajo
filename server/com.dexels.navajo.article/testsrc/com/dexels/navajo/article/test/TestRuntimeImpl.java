@@ -18,7 +18,7 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 
 	private final StringWriter writer = new StringWriter();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestRuntimeImpl.class);
 	
 	public TestRuntimeImpl(String articleName, XMLElement article, String instance) {

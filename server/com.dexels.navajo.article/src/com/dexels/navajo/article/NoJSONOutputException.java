@@ -10,7 +10,7 @@ import java.io.InputStream;
 public class NoJSONOutputException extends Exception {
 
 	private static final long serialVersionUID = 476969437269688913L;
-	private final InputStream stream;
+	private final transient InputStream stream;
 	private final String mimeType;
 
 	public NoJSONOutputException(String mimetype, InputStream is) {

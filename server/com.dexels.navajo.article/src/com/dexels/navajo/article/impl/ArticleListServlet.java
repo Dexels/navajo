@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ArticleListServlet extends ArticleBaseServlet implements Servlet {
 	private static final long serialVersionUID = -6895324256139435015L;
 	
-	private static String ARGUMENT_ARTICLE = "article";
-	private static String ARGUMENT_EXTENDED = "extended";
+	private static final String ARGUMENT_ARTICLE = "article";
+	private static final String ARGUMENT_EXTENDED = "extended";
 
 	public ArticleListServlet() {
 

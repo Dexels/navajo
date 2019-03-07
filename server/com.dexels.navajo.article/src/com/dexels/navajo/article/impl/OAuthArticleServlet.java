@@ -27,7 +27,7 @@ import com.dexels.oauth.api.exception.TokenStoreException;
 public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
     private static final String ACCESS_PREFIX = "article/";
 
-    private final static Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
 
     private static final long serialVersionUID = 1199676363102046960L;
     private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";

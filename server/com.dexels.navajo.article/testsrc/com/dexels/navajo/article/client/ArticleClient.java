@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ArticleClient {
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ArticleClient.class);
 	private URL base;
 	private ObjectNode meta;

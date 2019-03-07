@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(BaseRuntimeImpl.class);
 
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();

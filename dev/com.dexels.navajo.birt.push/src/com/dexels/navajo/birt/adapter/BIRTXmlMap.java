@@ -1,14 +1,9 @@
 package com.dexels.navajo.birt.adapter;
 
-//import org.eclipse.birt.core.exception.BirtException;
-//import org.eclipse.birt.core.framework.Platform;
-//import org.eclipse.birt.report.engine.api.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,26 +23,21 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
-import com.dexels.navajo.script.api.Access;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.script.api.UserException;
+import com.dexels.navajo.server.DispatcherFactory;
 
 public class BIRTXmlMap implements Mappable {
 	private static final String DEFAULT_OUTPUT_FORMAT = "pdf";
-	private Map<String,Object> parameters = new HashMap<String,Object>();
+	private Map<String,Object> parameters = new HashMap<>();
 	private String reportDir = "reports/";
 	private String viewerReportDir = "reports/";
 	private String viewerUrl = "http://distel:8080/birt/run";
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(BIRTXmlMap.class);
-	// private String engineDir = "birt-engine/";
-
-//	private String directFile = null; // "c:/projects/sportlink-serv/navajo-tester/auxilary/reports/tempReport51567.rptdesign";
-	// private static final String CHART_HOME =
-	// "/home/orion/projects/NavajoBIRT/birt-runtime-2_1_2/ChartEngine";
 
 	public Binary report;
 	public Binary tableReport;
@@ -58,9 +48,7 @@ public class BIRTXmlMap implements Mappable {
 
 	private Navajo inNavajo;
 
-	// private IReportEngine myEngine = null;
-
-	public Binary getReport() throws NavajoException {
+	public Binary getReport() {
 
 		try {
 			return executeReport(reportName, inNavajo);
@@ -70,7 +58,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 	}
 
-	public Binary getTableReport() throws NavajoException {
+	public Binary getTableReport() {
 
 		try {
 			return executeReport(inNavajo);
@@ -93,16 +81,15 @@ public class BIRTXmlMap implements Mappable {
 
 	public void setParameterValue(Object o) {
 		if (parameters == null) {
-			parameters = new HashMap<String,Object>();
+			parameters = new HashMap<>();
 		}
 		parameters.put(parameterName, o);
 	}
-	private Binary executeReport( Navajo input) throws NavajoException, IOException {
+	private Binary executeReport( Navajo input) throws IOException {
 		int top = 15;
 		int right = 15;
 		int bottom = 15;
 		int left = 15;
-		boolean landscape = true;
 
 		BirtUtils b = new BirtUtils();
 		
@@ -115,7 +102,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		
 		if(margin!=null) {
-			logger.debug("Margin: "+margin);
+			logger.debug("Margin: {}", margin);
 			StringTokenizer st = new StringTokenizer(margin,",");
 			top = Integer.parseInt(st.nextToken());
 			right = Integer.parseInt(st.nextToken());
@@ -124,15 +111,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		
 		Property landscapeProperty  = inNavajo.getProperty("/__ReportDefinition/Orientation");
-		if(landscapeProperty!=null) {
-			String l = landscapeProperty.getValue();
-			if("landscape".equals(l)) {
-				landscape = true;
-			}
-			if("portrait".equals(l)) {
-				landscape = false;
-			}
-		}
+		boolean landscape = extractLandscape(landscapeProperty);
 		File templateDir = new File(getReportDir()+"template/");
 		if(!templateDir.exists()) {
 			templateDir.mkdirs();
@@ -142,13 +121,26 @@ public class BIRTXmlMap implements Mappable {
 		b.createTableReport(reportTemplateStream,rep,input,left,top,right,bottom, landscape);
 		return processReport(rep,input);
 	}
+
+	private boolean extractLandscape(Property landscapeProperty) {
+		if(landscapeProperty!=null) {
+			String l = landscapeProperty.getValue();
+			if("landscape".equals(l)) {
+				return true;
+			}
+			if("portrait".equals(l)) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+		return true;
+	}
 	
 	/*
 	 * For 'defined' reports, so the master page is left alone
 	 */
-	private Binary executeReport(String reportName,Navajo input) throws NavajoException,
-			IOException {
-		Binary result = new Binary();
+	private Binary executeReport(String reportName,Navajo input) throws IOException {
 		Binary reportDef = null;
 
 		Property outputFormatProperty = inNavajo.getProperty("/__ReportDefinition/OutputFormat");
@@ -169,13 +161,13 @@ public class BIRTXmlMap implements Mappable {
 		InputStream reportIs = null;
 		if(reportDef==null) {
 			File reportFile = new File(reportDir + reportName + ".rptdesign");
-			logger.debug("No definition defined. Using reportname: "+reportFile.getAbsolutePath());
+			logger.debug("No definition defined. Using reportname: {}", reportFile.getAbsolutePath());
 			if (!reportFile.exists()) {
 				throw NavajoFactory.getInstance().createNavajoException("Report: " + reportFile + " not found.");
 			}
 			reportIs = new FileInputStream(reportFile);
 		} else {
-			logger.debug("Using supplied definition. Size: "+reportDef.getLength());
+			logger.debug("Using supplied definition. Size: {}", reportDef.getLength());
 			reportIs = reportDef.getDataAsStream();		
 		}
 		
@@ -183,11 +175,10 @@ public class BIRTXmlMap implements Mappable {
 		reportIs.close();
 		
 		
-		result = processReport(fixedFile,inNavajo);
-		return result;
+		return processReport(fixedFile,inNavajo);
 	}
 
-	private Binary processReport(File fixedFile, Navajo n) throws MalformedURLException, IOException {
+	private Binary processReport(File fixedFile, Navajo n) throws IOException {
 		Property outputFormatProperty = n.getProperty("/__ReportDefinition/OutputFormat");
 		if(outputFormatProperty!=null) {
 			outputFormat = outputFormatProperty.getValue();
@@ -197,7 +188,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 	
 		Binary result;
-		StringBuffer urlBuffer = new StringBuffer();
+		StringBuilder urlBuffer = new StringBuilder();
 		urlBuffer.append(getViewerUrl());
 		urlBuffer.append("/run?__report=" + fixedFile.getName());
 
@@ -208,7 +199,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		urlBuffer.append("&__format=" + outputFormat);
 
-		logger.debug("Result = " + urlBuffer.toString());
+		logger.debug("Result = {}", urlBuffer);
 
 		URL u = new URL(urlBuffer.toString());
 		InputStream is = u.openStream();
@@ -300,10 +291,6 @@ public class BIRTXmlMap implements Mappable {
 
 	@Override
 	public void kill() {
-	}
-
-	public static void main(String args[]) {
-
 	}
 
 	public String getViewerUrl() {

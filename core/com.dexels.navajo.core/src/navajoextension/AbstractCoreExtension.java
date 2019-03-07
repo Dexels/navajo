@@ -18,8 +18,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVersion {
 	
-	private final Set<ServiceRegistration<?>> registrations = new HashSet<ServiceRegistration<?>>();
-//	private ServiceRegistration registration;
+	private final Set<ServiceRegistration<?>> registrations = new HashSet<>();
 
 	
 
@@ -36,13 +35,11 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 
 	private void deregisterAll() {
 		for (ServiceRegistration<?> sr : registrations) {
-//			final String property = (String) sr.getReference().getProperty("functionName");
-//			logger.info("Deregistering: "+property);
 			sr.unregister();
 		}
 	}
 	
-	private void registerAllFunctions(ExtensionDefinition extensionDef) throws TMLExpressionException {
+	private void registerAllFunctions(ExtensionDefinition extensionDef)  {
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 		fi.init();
 		fi.clearFunctionNames();
@@ -96,7 +93,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	@SuppressWarnings("unchecked")
 	private void registerFunction(BundleContext bundleContext,FunctionFactoryInterface fi,
 			String functionName, FunctionDefinition fd, ExtensionDefinition extensionDef) {
-		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		Dictionary<String, Object> props = new Hashtable<>();
 		if(functionName==null) {
 			logger.warn("Can not register function: No functionName supplied");
 			return;
@@ -118,12 +115,10 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		}
 
 		props.put("type", "function");
-//		logger.debug("registering function: {}",functionName);
 		Class<? extends FunctionInterface> clz;
 		ServiceRegistration<FunctionDefinition> registration;
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
-//			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
 			fd.setFunctionClass(clz);
 			if(bundleContext!=null) {
 				registration = bundleContext.registerService(

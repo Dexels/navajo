@@ -38,7 +38,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	private NavajoIOConfig config;
 	private TokenStore tokenStore;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
 
 	public void activate() {

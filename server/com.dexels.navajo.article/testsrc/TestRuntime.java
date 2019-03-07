@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class TestRuntime {
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestRuntime.class);
 	
 	TestContextImpl context = null;

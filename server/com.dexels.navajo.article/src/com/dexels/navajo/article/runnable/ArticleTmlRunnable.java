@@ -39,7 +39,7 @@ import com.dexels.oauth.api.Client;
 
 @Deprecated
 public class ArticleTmlRunnable implements TmlRunnable{
-    private final static Logger logger = LoggerFactory.getLogger(ArticleTmlRunnable.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArticleTmlRunnable.class);
 
     private final ArticleRuntime runtime;
     private final ArticleContext context;

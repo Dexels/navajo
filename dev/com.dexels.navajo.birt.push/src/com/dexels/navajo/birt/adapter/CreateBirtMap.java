@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -21,7 +20,6 @@ public class CreateBirtMap implements Mappable {
 	public void kill() {
 
 	}
-	//Property marginProperty = inNavajo.getProperty("/__ReportDefinition/Margin");
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -41,7 +39,7 @@ public class CreateBirtMap implements Mappable {
 		this.reportTemplate = reportTemplate;
 	}
 
-	public Binary getEmptyReport() throws IOException, NavajoException {
+	public Binary getEmptyReport() throws IOException {
 		BirtUtils b = new BirtUtils();
 		emptyReport = b.createEmptyReport(myNavajo, getReportTemplate());
 		return emptyReport;

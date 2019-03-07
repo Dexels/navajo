@@ -4,9 +4,9 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public interface AuthenticationMethod {
-    public final static String OAUTH_IDENTIFIER = "Bearer";
-    public final static String BASIC_IDENTIFIER = "Basic";
-    public final static String DEFAULT_IDENTIFIER = "default";
+    public static final String OAUTH_IDENTIFIER = "Bearer";
+    public static final String BASIC_IDENTIFIER = "Basic";
+    public static final String DEFAULT_IDENTIFIER = "default";
 
     public AuthenticationMethod getInstanceForRequest(String header);
 

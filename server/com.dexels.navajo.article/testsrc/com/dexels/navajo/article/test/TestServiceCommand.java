@@ -18,7 +18,7 @@ import com.dexels.navajo.document.NavajoFactory;
 public class TestServiceCommand extends ServiceCommand {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestServiceCommand.class);
 	
 	public TestServiceCommand() {

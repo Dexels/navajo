@@ -1051,7 +1051,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             return outMessage;
         } catch (UserException ue) {
             try {
-                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.t != null ? ue.t : ue));
+                outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1, (ue.getCause() != null ? ue.getCause() : ue));
                 myException = ue;
                 return outMessage;
             } catch (Exception ee) {
@@ -1063,7 +1063,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             logger.error("Error: ", se);
             myException = se;
             try {
-                outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.t != null ? se.t : se));
+                outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1, (se.getCause() != null ? se.getCause() : se));
                 return outMessage;
             } catch (Exception ee) {
                 logger.error("Error: ", ee);

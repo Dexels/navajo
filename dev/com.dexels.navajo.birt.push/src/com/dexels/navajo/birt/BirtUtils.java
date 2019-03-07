@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -30,13 +32,12 @@ public class BirtUtils {
 
 	// for XML tag id's. Start at 10
 	private int idCounter = 10;
-
 	
-	private final static Logger logger = LoggerFactory
+	private static final Random randomizer = new Random();
+	private static final Logger logger = LoggerFactory
 			.getLogger(BirtUtils.class);
 
-	public Binary createEmptyReport(Navajo n, Binary template) throws IOException,
-			NavajoException {
+	public Binary createEmptyReport(Navajo n, Binary template) throws IOException {
 		InputStream templateStream = null;
 		if(template==null) {
 			templateStream = getClass().getResourceAsStream("blank.rptdesign");
@@ -46,7 +47,7 @@ public class BirtUtils {
 		File reportFile = File.createTempFile("temp", ".rptdesign");
 		createEmptyReport(n,reportFile,templateStream);
 		Binary result = new Binary(reportFile,false);
-		reportFile.delete();
+		Files.delete(reportFile.toPath());
 		return result;
 	}
 	
@@ -62,10 +63,9 @@ public class BirtUtils {
 	 * @throws IOException
 	 * @throws NavajoException
 	 */
-	public void createEmptyReport(Navajo n, File reportFile, InputStream reportTemplateStream) throws IOException,
-			NavajoException {
+	public void createEmptyReport(Navajo n, File reportFile, InputStream reportTemplateStream) throws IOException {
 		File source = createDataSource(n);
-		logger.debug("Creating report: "+reportFile.getAbsolutePath());
+		logger.debug("Creating report: {}", reportFile.getAbsolutePath());
 		createReportFile(source, n, reportFile,"navajoDataSource",reportTemplateStream);
 	}
 
@@ -81,7 +81,7 @@ public class BirtUtils {
 	}
 
 	public void createEmptyReport(File tmlFile, File reportFolder, String reportName, File reportTemplateFile)
-			throws IOException, NavajoException {
+			throws IOException {
 		FileInputStream fis = new FileInputStream(tmlFile);
 		Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 		fis.close();
@@ -92,7 +92,7 @@ public class BirtUtils {
 		createReportFile(source, n, reportFile, "navajoDataSource", templatInput);
 	}
 
-	public File createFixedReportDefinition(InputStream rptdesign, File datasource, File tempReportDir) throws NavajoException, IOException {
+	public File createFixedReportDefinition(InputStream rptdesign, File datasource, File tempReportDir) throws IOException {
 		Document d = XMLDocumentUtils.createDocument(rptdesign, false);
 		Element ods = (Element) XMLutils.findNode(d, "oda-data-source");
 		Element cr = (Element) XMLutils.findNodeWithAttributeValue(d, "property", "name", "createdBy");
@@ -108,7 +108,6 @@ public class BirtUtils {
 			e.setTextContent(datasource.getAbsolutePath());
 		}
 
-		// File f = File.createTempFile("fixedReport", ".rptdesign");
 		File f = createTempReport(tempReportDir);
 		FileWriter fw = new FileWriter(f);
 		XMLDocumentUtils.write(d, fw, false);
@@ -119,7 +118,7 @@ public class BirtUtils {
 	}
 
 	public File createTempReport(File parentDir) {
-		String random = "report" + ((int) (Math.random() * 10000)) + ".rptdesign";
+		String random = "report" + ((randomizer.nextInt() * 10000)) + ".rptdesign";
 		File ff = new File(parentDir, random);
 		if (ff.exists()) {
 			return createTempReport(parentDir);
@@ -149,7 +148,7 @@ public class BirtUtils {
 		}
 		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, false);
 		FileWriter fw = new FileWriter(sourceFile);
-		logger.debug("Data source created: " + sourceFile.getAbsolutePath());
+		logger.debug("Data source created: {}", sourceFile.getAbsolutePath());
 		XMLDocumentUtils.write(t, fw, false);
 		fw.flush();
 		fw.close();
@@ -157,15 +156,9 @@ public class BirtUtils {
 	}
 
 	private void createReportFile(File datasource, Navajo n, File reportFile, String dataSourceName, InputStream reportTemplateStream)
-			throws IOException, NavajoException {
-		// URL u =
-		// BirtUtils.class.getClassLoader().getResource("blank.rptdesign");
-		Document d = null;
-		try {
-			d = XMLDocumentUtils.createDocument(reportTemplateStream, false);
-		} catch (NavajoException e1) {
-			logger.error("Error: ", e1);
-		}
+			throws IOException {
+		 Document d = XMLDocumentUtils.createDocument(reportTemplateStream, false);
+
 		reportTemplateStream.close();
 
 		Element dsrc = (Element) XMLutils.findNode(d, "oda-data-source");
@@ -185,7 +178,6 @@ public class BirtUtils {
 
 		parseArrayMessages(d, n.getAllMessages(), datasource.getAbsolutePath(), dataSourceName);
 
-		// File reportFile = new File(reportFolder,reportName);
 		File parentFile = reportFile.getParentFile();
 		if (!parentFile.exists()) {
 			parentFile.mkdirs();
@@ -217,7 +209,7 @@ public class BirtUtils {
 			} else {
 				List<Message> aa = current.getAllMessages();
 				List<Property> pp = current.getAllProperties();
-				if (pp.size() > 0) {
+				if (!pp.isEmpty()) {
 					createDataSet(d, fullPath, datasourceName, current, absolutePath);
 				}
 				parseArrayMessages(d, aa, absolutePath, datasourceName);
@@ -277,7 +269,6 @@ public class BirtUtils {
 					n = addProperty(d, odaDataSetTag, "list-property", "computedColumns", null);
 				}
 				Element struc = addProperty(d, n, "structure", null, null);
-				// org.apache.commons.codec.binary.Base64.decodeBase64("aap".getBytes());
 
 				addProperty(d, struc, "property", "name", current.getName() + "_Data");
 				addProperty(d, struc, "expression", "expression", "importPackage(Packages.org.dexels.utils); Base64.decode(dataSetRow[\""
@@ -291,7 +282,7 @@ public class BirtUtils {
 	private String createArrayMessageQueryText(List<Property> props, String serviceName, Message arrayMessage) {
 		boolean isArray = arrayMessage.getType().equals(Message.MSG_TYPE_ARRAY);
 		String fixed = serviceName.replaceAll("/", "_");
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append("table0#-TNAME-#table0#");
 		sb.append(":");
@@ -328,11 +319,10 @@ public class BirtUtils {
 			return queryString ? "Double" : "float";
 		}
 		if (p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
-			return queryString ? "String" : "String";
+			return "String";
 		}
 		if (p.getType().equals(Property.DATE_PROPERTY)) {
-			return queryString ? "String" : "String";
-			// return queryString?"Date":"date-time";
+			return "String";
 		}
 		if (p.getType().equals(Property.MONEY_PROPERTY)) {
 			return queryString ? "Double" : "float";
@@ -341,10 +331,10 @@ public class BirtUtils {
 			return queryString ? "Double" : "float";
 		}
 		if (p.getType().equals(Property.PASSWORD_PROPERTY)) {
-			return queryString ? "String" : "String";
+			return "String";
 		}
 
-		return queryString ? "String" : "String";
+		return "String";
 
 	}
 
@@ -392,13 +382,10 @@ public class BirtUtils {
 
 
 	public void createTableReport(InputStream reportTemplateStream, File reportFile, Navajo n, int left, int top, int right, int bottom,
-			boolean landscape) throws IOException, NavajoException {
-		// public void setupMasterPage(Document d, int left, int top, int right,
-		// int bottom, boolean landscape) {
-//		String serviceName = n.getHeader().getHeaderAttribute("sourceScript");
-		List<String> pNames = new ArrayList<String>();
-		List<Integer> pSizes = new ArrayList<Integer>();
-		List<String> pTitles = new ArrayList<String>();
+			boolean landscape) throws IOException {
+		List<String> pNames = new ArrayList<>();
+		List<Integer> pSizes = new ArrayList<>();
+		List<String> pTitles = new ArrayList<>();
 		Property propNames = n.getProperty("__ReportDefinition/PropertyNames");
 		Property propSizes = n.getProperty("__ReportDefinition/PropertySizes");
 		Property propTitles = n.getProperty("__ReportDefinition/PropertyTitles");
@@ -435,65 +422,57 @@ public class BirtUtils {
 
 	private void createTableReport(Navajo n, InputStream reportTemplateStream, File reportFile, String messagePath,
 			Object[] propertyNames, Object[] propertyWidths, Object[] propertyTitles, int left, int top, int right, int bottom,
-			boolean landscape) throws IOException, NavajoException {
+			boolean landscape) throws IOException {
 		createEmptyReport(n, reportFile, reportTemplateStream);
-		FileInputStream fis = new FileInputStream(reportFile);
+		try(FileInputStream fis = new FileInputStream(reportFile)) {
+			Document d = XMLDocumentUtils.createDocument(fis, false);
+
+			setupMasterPage(d, left, top, right, bottom, landscape);
+			Element report = (Element) XMLutils.findNode(d, "report");
+			Element body = d.createElement("body");
+			Element table = d.createElement("table");
+			report.appendChild(body);
+			body.appendChild(table);
+			addProperty(d, table, "property", "style", "MessageTable");
+			 //<property name="pageBreakInterval">99</property>
+			addProperty(d, table, "property", "pageBreakInterval", "0");
+	         
+			table.setAttribute("id", "" + idCounter++);
+			addProperty(d, table, "property", "width", "100%");
+			addProperty(d, table, "property", "dataSet", messagePath);
+
+			Element boundProps = d.createElement("list-property");
+			boundProps.setAttribute("name", "boundDataColumns");
+			table.appendChild(boundProps);
+			for (int i = 0; i < propertyNames.length; i++) {
+				Element struc = d.createElement("structure");
+				boundProps.appendChild(struc);
+				addProperty(d, struc, "property", "name", "" + propertyNames[i]);
+				addProperty(d, struc, "expression", "expression", "dataSetRow[\"" + propertyNames[i] + "\"]");
+				addProperty(d, struc, "property", "dataType", "string");
+			}
+			for (int i = 0; i < propertyWidths.length; i++) {
+				Element column = d.createElement("column");
+				column.setAttribute("id", "" + idCounter++);
+				table.appendChild(column);
+				addProperty(d, column, "property", "width", "" + propertyWidths[i] + "px");
+			}
+			createTablePart(propertyNames, propertyTitles, d, table, true);
+			createTablePart(propertyNames, propertyTitles, d, table, false);
+
+			FileWriter fw = new FileWriter(reportFile);
+
+			XMLDocumentUtils.write(d, fw, false);
+			fw.flush();
+			fw.close();			
+		}
 
 		if (messagePath == null) {
 			messagePath = locateArrayMessage(n);
 		}
-
-		Document d = null;
-		try {
-			d = XMLDocumentUtils.createDocument(fis, false);
-		} catch (NavajoException e1) {
-			logger.error("Error creating xml document? Fatal, can't continue. ", e1);
-			return;
-		}
-		fis.close();
-
-		setupMasterPage(d, left, top, right, bottom, landscape);
-		Element report = (Element) XMLutils.findNode(d, "report");
-		Element body = d.createElement("body");
-		Element table = d.createElement("table");
-		report.appendChild(body);
-		body.appendChild(table);
-		addProperty(d, table, "property", "style", "MessageTable");
-		 //<property name="pageBreakInterval">99</property>
-		addProperty(d, table, "property", "pageBreakInterval", "0");
-         
-		table.setAttribute("id", "" + idCounter++);
-		addProperty(d, table, "property", "width", "100%");
-		addProperty(d, table, "property", "dataSet", messagePath);
-
-		Element boundProps = d.createElement("list-property");
-		boundProps.setAttribute("name", "boundDataColumns");
-		table.appendChild(boundProps);
-		for (int i = 0; i < propertyNames.length; i++) {
-			Element struc = d.createElement("structure");
-			boundProps.appendChild(struc);
-			addProperty(d, struc, "property", "name", "" + propertyNames[i]);
-			addProperty(d, struc, "expression", "expression", "dataSetRow[\"" + propertyNames[i] + "\"]");
-			addProperty(d, struc, "property", "dataType", "string");
-		}
-		for (int i = 0; i < propertyWidths.length; i++) {
-			Element column = d.createElement("column");
-			column.setAttribute("id", "" + idCounter++);
-			table.appendChild(column);
-			addProperty(d, column, "property", "width", "" + propertyWidths[i] + "px");
-		}
-		createTablePart(propertyNames, propertyTitles, d, table, true);
-		createTablePart(propertyNames, propertyTitles, d, table, false);
-
-		FileWriter fw = new FileWriter(reportFile);
-
-		XMLDocumentUtils.write(d, fw, false);
-		fw.flush();
-		fw.close();
-
 	}
 
-	private String locateArrayMessage(Navajo n) throws NavajoException {
+	private String locateArrayMessage(Navajo n) {
 		List<Message> mm = n.getAllMessages();
 		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
 			Message m = iter.next();
