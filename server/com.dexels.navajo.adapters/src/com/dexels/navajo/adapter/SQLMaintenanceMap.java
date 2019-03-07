@@ -40,7 +40,7 @@ public class SQLMaintenanceMap implements Mappable {
   public SQLMapDatasourceMap [] deleteDatasources;
   public int transactionContextCount;
   
-private final static Logger logger = LoggerFactory
+private static final Logger logger = LoggerFactory
 		.getLogger(SQLMaintenanceMap.class);
 
 

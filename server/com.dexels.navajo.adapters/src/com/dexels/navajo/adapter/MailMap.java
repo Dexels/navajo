@@ -103,7 +103,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	private Navajo myNavajo;
 	private Access myAccess;
 	
-	private final static Logger logger = LoggerFactory.getLogger(MailMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(MailMap.class);
 	
 	private boolean useEncryption = false;
 

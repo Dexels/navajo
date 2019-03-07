@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 public class GrusManager implements Runnable {
 
-	private final static GrusManager instance; 
+	private static final GrusManager instance; 
 	private Thread myThread;
 	private final Set<LegacyDbConnectionBroker> registeredBrokers = Collections.synchronizedSet(new HashSet<LegacyDbConnectionBroker>());
 	private boolean shutdown = false;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GrusManager.class);
 	
 	static  {

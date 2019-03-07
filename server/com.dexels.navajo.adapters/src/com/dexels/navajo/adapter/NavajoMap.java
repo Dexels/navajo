@@ -187,7 +187,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     private List<String> deletedProperties = new ArrayList<>();
     private List<String> deletedMessages = new ArrayList<>();
-    private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(NavajoMap.class);
     private static final long MAX_WAITTIME = 600000; // 10 min
 
     public NavajoMap() {
@@ -923,7 +923,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 serviceCalled = true;
             } // Internal request.
             else {
-                try {
                     inDoc = null;
                     serviceFinished = false;
                     if (block) {
@@ -943,15 +942,9 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                             throw new SystemException(-1, "", getException());
                         }
                     }
-                } catch (IOException e) {
-                    throw new SystemException("Error submitting to remote server:", e);
-
-                }
             }
 
-        } catch (NavajoException e) {
-            throw new SystemException("Error connecting to remote server", e);
-        } catch (IOException e) {
+        } catch (NavajoException|IOException e) {
             throw new SystemException("Error connecting to remote server", e);
         }
 

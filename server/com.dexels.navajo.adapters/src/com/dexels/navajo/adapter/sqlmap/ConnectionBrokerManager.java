@@ -31,7 +31,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
     private static Object semaphore = new Object();
 
-    private final static Logger logger = LoggerFactory.getLogger(ConnectionBrokerManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionBrokerManager.class);
 
     public ConnectionBrokerManager() {
         super();

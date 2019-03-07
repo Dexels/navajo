@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class ByteArrayDataSource implements DataSource {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ByteArrayDataSource.class);
 	
     private byte[] m_data;

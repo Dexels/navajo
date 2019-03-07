@@ -42,7 +42,7 @@ import com.dexels.navajo.util.AuditLog;
 public class SPMap extends SQLMap {
 
 	
-  private final static Logger logger = LoggerFactory.getLogger(SPMap.class);
+  private static final Logger logger = LoggerFactory.getLogger(SPMap.class);
   public String outputParameter;
   public String outputParameterType;
 

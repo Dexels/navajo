@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.script.api.UserException;
 
 public class SequencedInsertMap extends SQLMap {
-    private final static Logger logger = LoggerFactory.getLogger(SequencedInsertMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(SequencedInsertMap.class);
 
     
   public final static String ORACLEPRODUCTNAME = "Oracle";

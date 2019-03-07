@@ -27,7 +27,7 @@ public class XMLStreamMap implements Mappable {
 	public Binary content = null;
 	private boolean newLineFlag = false;  // flag if we're on a new line
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(XMLStreamMap.class);
 	
 	// @Override

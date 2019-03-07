@@ -37,7 +37,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	private static final long serialVersionUID = 5625969473841204407L;
-	private final static Logger logger = LoggerFactory.getLogger(CommonsMailMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommonsMailMap.class);
 	@SuppressWarnings("unused")
 	private Navajo doc = null;
 	private Navajo myNavajo;

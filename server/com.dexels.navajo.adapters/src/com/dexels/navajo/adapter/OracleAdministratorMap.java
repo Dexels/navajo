@@ -27,7 +27,7 @@ public class OracleAdministratorMap extends SQLMap {
 
 	public static final String LISTDELIMITER = ":";
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(OracleAdministratorMap.class);
 	
 	protected static final String constraintSQL =

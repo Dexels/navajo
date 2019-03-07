@@ -75,7 +75,7 @@ public class AdminMap implements Mappable {
     // RequestRate windowSize
     public int requestRateWindowSize;
 
-    private final static Logger logger = LoggerFactory.getLogger(AdminMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdminMap.class);
 
     private Access myAccess = null;
 

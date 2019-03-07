@@ -26,7 +26,7 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 
 public class RESTAdapter extends NavajoMap {
-    private final static Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
     private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
     private static final int DEFAULT_READ_TIMEOUT = 60 * 1000; // 1 min
     

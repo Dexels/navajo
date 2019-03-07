@@ -16,7 +16,7 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 
 	private static final long serialVersionUID = 2697339185493595216L;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestQueuedAdapter.class);
 	
 	private Access myAccess;

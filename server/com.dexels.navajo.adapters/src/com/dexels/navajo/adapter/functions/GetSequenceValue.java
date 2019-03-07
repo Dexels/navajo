@@ -10,7 +10,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.script.api.UserException;
 
 public class GetSequenceValue extends FunctionInterface {
-    private final static Logger logger = LoggerFactory.getLogger(GetSequenceValue.class);
+    private static final Logger logger = LoggerFactory.getLogger(GetSequenceValue.class);
 
    
     public GetSequenceValue() {}

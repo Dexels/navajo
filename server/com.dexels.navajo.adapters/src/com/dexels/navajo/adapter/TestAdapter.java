@@ -23,7 +23,7 @@ public class TestAdapter implements Mappable {
     public TestAdapter [] testAdapters;
     public TestAdapter single;
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestAdapter.class);
 	
     public TestAdapter() {}

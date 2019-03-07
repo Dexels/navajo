@@ -50,7 +50,7 @@ public class XMLMap extends TagMap implements Mappable {
 	public String stringContent = null;
 	public boolean debug = false;
 	
-	private final static Logger logger = LoggerFactory.getLogger(XMLMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(XMLMap.class);
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {

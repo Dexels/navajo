@@ -39,7 +39,7 @@ public final class SessionIdentification {
   private static final String oracleSid = "SELECT sid, serial# FROM v$session WHERE client_info = ?";
   private static final String killOracleSession = "ALTER SYSTEM KILL SESSION '?, ?'";
   
-private final static Logger logger = LoggerFactory
+private static final Logger logger = LoggerFactory
 		.getLogger(SessionIdentification.class);
 
   public static final void killSession(String dbIdentifier, Connection con, Access access) {

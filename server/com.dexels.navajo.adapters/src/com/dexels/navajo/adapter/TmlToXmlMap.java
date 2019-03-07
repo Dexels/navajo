@@ -27,7 +27,7 @@ public class TmlToXmlMap implements Mappable {
 	public String attributeValue = "";
 	public boolean buildContent, dumpObject;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TmlToXmlMap.class);
 	
 	private boolean hasBeenBuild = false;

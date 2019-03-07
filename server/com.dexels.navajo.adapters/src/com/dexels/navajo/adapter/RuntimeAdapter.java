@@ -35,7 +35,7 @@ public class RuntimeAdapter implements Mappable {
   public String error = "";
   public String dir = "";
   
-  private final static Logger logger = LoggerFactory
+  private static final Logger logger = LoggerFactory
 		.getLogger(RuntimeAdapter.class);
 
   private String parameterList = null;

@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 public class LegacyGrusConnection implements GrusConnection {
 
-	private final static Logger logger = LoggerFactory.getLogger(LegacyDbConnectionBroker.class);
-	private final static int LOGIN_TIMEOUT = 10;
+	private static final Logger logger = LoggerFactory.getLogger(LegacyDbConnectionBroker.class);
+	private static final int LOGIN_TIMEOUT = 10;
 	
 	final Connection myConnection;
 	final LegacyDbConnectionBroker myBroker;

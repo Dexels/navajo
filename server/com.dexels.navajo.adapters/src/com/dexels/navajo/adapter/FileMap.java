@@ -43,7 +43,7 @@ public class FileMap implements Mappable {
 
 	public Binary content;
 	
-	private final static Logger logger = LoggerFactory.getLogger(FileMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileMap.class);
 	
 	private ArrayList<FileLineMap> lineArray = null;
 

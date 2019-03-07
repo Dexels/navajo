@@ -169,7 +169,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	private static boolean initialized = false;
   
 	
-	private final static Logger logger = LoggerFactory.getLogger(SQLMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(SQLMap.class);
 	
 	public SQLMap() {
 		this.isLegacyMode = SQLMapConstants.isLegacyMode();

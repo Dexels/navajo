@@ -20,7 +20,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	public DummyAttachmentMap [] multipleAttachments;
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(DummyMailMap.class);
 	
 	public String sender;

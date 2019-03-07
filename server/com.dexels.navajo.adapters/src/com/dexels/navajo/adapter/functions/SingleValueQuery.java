@@ -22,7 +22,7 @@ import com.dexels.navajo.jdbc.JDBCMappable;
  */
 
 public class SingleValueQuery extends FunctionInterface {
-    private final static Logger logger = LoggerFactory.getLogger(SingleValueQuery.class);
+    private static final Logger logger = LoggerFactory.getLogger(SingleValueQuery.class);
 
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";

@@ -52,7 +52,7 @@ import com.dexels.navajo.script.api.UserException;
 public class TagMap implements Mappable {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(TagMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(TagMap.class);
 	
 	public final String PREFIX_PATTERN   = "^[0-9]+";
 	public final String PREFIX_SEPARATOR = "@";

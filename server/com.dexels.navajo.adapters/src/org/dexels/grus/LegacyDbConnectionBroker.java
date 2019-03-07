@@ -18,7 +18,7 @@ public final class LegacyDbConnectionBroker implements DbConnectionBroker
 {
 	protected String location, username, password;
 	
-	private final static Logger logger = LoggerFactory.getLogger(LegacyDbConnectionBroker.class);
+	private static final Logger logger = LoggerFactory.getLogger(LegacyDbConnectionBroker.class);
 	
 	protected String dbIdentifier;
 	

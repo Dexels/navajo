@@ -63,7 +63,7 @@ public class SelectionMap implements Mappable {
     public String option;
     public OptionMap[]  options;
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SelectionMap.class);
 	
     public SelectionMap() {}

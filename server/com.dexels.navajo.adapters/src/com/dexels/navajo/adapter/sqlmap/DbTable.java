@@ -50,7 +50,7 @@ public class DbTable implements Mappable {
 
   public DbColumn[] columns;
   
-private final static Logger logger = LoggerFactory.getLogger(DbTable.class);
+private static final Logger logger = LoggerFactory.getLogger(DbTable.class);
 
   @Override
 public void load(Access access) throws MappableException, UserException {

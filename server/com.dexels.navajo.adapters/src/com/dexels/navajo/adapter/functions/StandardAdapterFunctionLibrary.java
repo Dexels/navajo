@@ -20,7 +20,7 @@ public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	private static final long serialVersionUID = -2167328743333229662L;
 	private transient ClassLoader extensionClassLoader = null;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(StandardAdapterFunctionLibrary.class);
 	
 	@Override

@@ -31,7 +31,7 @@ public class AsyncProxyMap extends AsyncMappable {
   private Navajo inDoc;
   private Access access;
 
-  private final static Logger logger = LoggerFactory
+  private static final Logger logger = LoggerFactory
 		.getLogger(AsyncProxyMap.class);
 
 

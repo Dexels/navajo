@@ -47,7 +47,7 @@ public class ZipMap implements Mappable {
 	public Binary content;
 	public Binary zipped;
 	
-	private final static Logger logger = LoggerFactory.getLogger(ZipMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(ZipMap.class);
 	
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;

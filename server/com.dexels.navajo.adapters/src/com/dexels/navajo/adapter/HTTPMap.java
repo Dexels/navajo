@@ -84,7 +84,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 
 	public static int maxRunningInstances = -1;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(HTTPMap.class);
 	
 	private HashMap<String, String> headers = new HashMap<String, String>();

@@ -30,7 +30,7 @@ public class NavajoSaveAdapter
 
   private Navajo inMessage = null;
   
-private final static Logger logger = LoggerFactory
+private static final Logger logger = LoggerFactory
 		.getLogger(NavajoSaveAdapter.class);
 
 

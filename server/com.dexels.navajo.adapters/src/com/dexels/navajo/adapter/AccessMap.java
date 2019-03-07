@@ -39,7 +39,7 @@ public final class AccessMap implements Mappable {
   public String waitingFor = null;
   public CompiledScriptInterface myScript = null;
   
-private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
+private static final Logger logger = LoggerFactory.getLogger(AccessMap.class);
 
   /* Private vars */
   private boolean showDetails = false;

@@ -41,9 +41,9 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 	public String messagePointer;
 	public com.dexels.navajo.adapter.navajomap.MessageMap [] messages;
 	
-	private final static Logger logger = LoggerFactory.getLogger(NavajoMapGroupAdapter.class);
+	private static final Logger logger = LoggerFactory.getLogger(NavajoMapGroupAdapter.class);
 
-	private final static String FIRST_RESULT = "_ANY_";
+	private static final String FIRST_RESULT = "_ANY_";
 	private int sequence = 0;
 	
 	@Override

@@ -40,7 +40,7 @@ public class QuestionMergeMap
   public boolean overwrite = false;
   public boolean backup = false;
   
-private final static Logger logger = LoggerFactory
+private static final Logger logger = LoggerFactory
 		.getLogger(QuestionMergeMap.class);
 
   private Navajo inNavajo = null;

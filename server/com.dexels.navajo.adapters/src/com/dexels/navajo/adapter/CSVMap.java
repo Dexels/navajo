@@ -59,7 +59,7 @@ public class CSVMap implements Mappable {
 
     private List<CSVEntryMap> draftEntries = null;
 
-    private final static Logger logger = LoggerFactory.getLogger(CSVMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(CSVMap.class);
 
     @Override
     public void load(Access access) throws MappableException, UserException {

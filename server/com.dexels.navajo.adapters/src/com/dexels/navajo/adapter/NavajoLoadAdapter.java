@@ -27,7 +27,7 @@ public class NavajoLoadAdapter
     implements Mappable {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoLoadAdapter.class);
   public String pathPrefix;
 

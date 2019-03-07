@@ -29,7 +29,7 @@ public class DirMap implements Mappable {
 	public String extension;
 	private File currentPath = null;
 	
-	private final static Logger logger = LoggerFactory.getLogger(DirMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(DirMap.class);
 	
 	public synchronized String getPath() {
 		return path;

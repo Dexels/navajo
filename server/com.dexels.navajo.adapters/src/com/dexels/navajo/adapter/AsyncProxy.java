@@ -49,7 +49,7 @@ public class AsyncProxy implements Mappable {
   public String lockClass;
   
   
-  private final static Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
+  private static final Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
 
   @Override
 public void load(Access access) throws MappableException, UserException {

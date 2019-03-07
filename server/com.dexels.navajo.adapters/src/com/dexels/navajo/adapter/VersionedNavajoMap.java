@@ -32,7 +32,7 @@ import com.dexels.navajo.server.ConditionErrorException;
 public class VersionedNavajoMap extends NavajoMap {
 
 		
-		private final static Logger logger = LoggerFactory
+		private static final Logger logger = LoggerFactory
 				.getLogger(VersionedNavajoMap.class);
 		
  @Override

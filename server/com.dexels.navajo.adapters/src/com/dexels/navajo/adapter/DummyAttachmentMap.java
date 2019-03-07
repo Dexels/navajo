@@ -13,7 +13,7 @@ public class DummyAttachmentMap extends AttachementMap implements AttachmentMapI
 
 	private String attachFile;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(DummyAttachmentMap.class);
 	
 	@Override

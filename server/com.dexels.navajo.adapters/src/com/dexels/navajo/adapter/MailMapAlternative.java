@@ -58,7 +58,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 	private static final long serialVersionUID = -6829674936474299750L;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(MailMapAlternative.class);
 	
 	public String recipients = "";
