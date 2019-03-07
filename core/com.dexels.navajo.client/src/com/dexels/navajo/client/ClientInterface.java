@@ -18,10 +18,10 @@ import com.dexels.navajo.document.Navajo;
  * See NavajoClient for an explanation of all methods
  */
 public interface ClientInterface {
-	public final static String LOCALE_HEADER_KEY = "locale";
-	public final static String SUBLOCALE_HEADER_KEY = "sublocale";
-	public final static String ORG_HEADER_KEY = "organization";
-	public final static String APP_HEADER_KEY = "application";
+	public static final String LOCALE_HEADER_KEY = "locale";
+	public static final String SUBLOCALE_HEADER_KEY = "sublocale";
+	public static final String ORG_HEADER_KEY = "organization";
+	public static final String APP_HEADER_KEY = "application";
 
     public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
 

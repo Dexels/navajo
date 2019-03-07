@@ -9,11 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.Base64;
+import java.util.Map.Entry;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -33,7 +34,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	private static final long serialVersionUID = 4279069306367565223L;
 
-	private final static Logger logger = LoggerFactory.getLogger(JavaNetNavajoClientImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(JavaNetNavajoClientImpl.class);
 
 	public static final int CONNECT_TIMEOUT = 10000;
 
@@ -121,45 +122,38 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 
 	private Navajo readResponse(boolean useCompression, HttpURLConnection con) throws IOException {
 		// Check for errors.
-		InputStream in = null;
 		Navajo res = null;
-		try {
-			InputStream inr = con.getInputStream();
-			InputStream inraw = null;
-			if (con.getResponseCode() >= 400) {
-				throw new IOException(readErrorStream(con));
-			} else {
-				if (useCompression) {
-					if (forceGzip) {
-						inraw = new GZIPInputStream(inr);
-					} else {
-						String responseEncoding = con.getHeaderField("Content-Encoding");
-						if (useCompression && ("jzlib".equals(responseEncoding) || "deflate".equals(responseEncoding))) {
-							
-							inraw = new InflaterInputStream(inr);
-						} else {
-							inraw = inr;
-						}
-					}
-
+		InputStream inr = con.getInputStream();
+		InputStream inraw = null;
+		if (con.getResponseCode() >= 400) {
+			throw new IOException(readErrorStream(con));
+		} else {
+			if (useCompression) {
+				if (forceGzip) {
+					inraw = new GZIPInputStream(inr);
 				} else {
-					inraw = inr;
+					String responseEncoding = con.getHeaderField("Content-Encoding");
+					if (("jzlib".equals(responseEncoding) || "deflate".equals(responseEncoding))) {
+						
+						inraw = new InflaterInputStream(inr);
+					} else {
+						inraw = inr;
+					}
 				}
-			}
-			if (inraw != null) {
-				res = NavajoFactory.getInstance().createNavajo(inraw);
-			}
-		} finally {
-			if (in != null) {
-				in.close();
-				in = null;
+
+			} else {
+				inraw = inr;
 			}
 		}
+		if (inraw != null) {
+			res = NavajoFactory.getInstance().createNavajo(inraw);
+		}
+
 		return res;
 	}
 
 	private void postNavajo(Navajo inputNavajo, boolean useCompression, HttpURLConnection con)
-			throws UnsupportedEncodingException, IOException {
+			throws IOException {
         if (useCompression) {
             if (forceGzip) {
                 con.setRequestProperty("Content-Encoding", "gzip");
@@ -174,9 +168,9 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 			BufferedWriter out = null;
 			try {
 				if (forceGzip) {
-					out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
+					out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), StandardCharsets.UTF_8));
 				} else {
-					out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(con.getOutputStream()), "UTF-8"));
+					out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(con.getOutputStream()), StandardCharsets.UTF_8));
 				}
 				inputNavajo.write(out);
 			} finally {
@@ -190,30 +184,17 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 				}
 			}
 		} else {
-			// con.connect();
 			con.setRequestProperty("noCompression", "true");
-			BufferedWriter os = null;
-			try {
-				os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+			try(BufferedWriter os =  new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8))) {
 				inputNavajo.write(os);
-			} finally {
-				if (os != null) {
-					try {
-						os.flush();
-						os.close();
-					} catch (IOException e) {
-						logger.error("Error: ", e);
-					}
-				}
 			}
 		}
 	}
 
 	private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 		con.setRequestProperty("X-Navajo-Service", header.getRPCName());
-//		con.setRequestProperty("X-Navajo-Debug", "true");
-		for (String key : httpHeaders.keySet()) {
-			con.setRequestProperty(key, httpHeaders.get(key));
+		for (Entry<String,String> entry : httpHeaders.entrySet()) {
+			con.setRequestProperty(entry.getKey(), entry.getValue());
 		}
 
 	}
@@ -226,24 +207,18 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				copyResource(bos, es);
 				bos.close();
-				// String error = new String(bos.toByteArray());
-				logger.info("Responsecode: " + respCode);
+				logger.info("Responsecode: {}", respCode);
 				es.close();
 				return "HTTP Status error " + respCode;
 			}
 		} catch (IOException ioe) {
-			logger.error("Error: " + ioe);
+			logger.error("Error: ", ioe);
 		}
 		return null;
 	}
 
 	private final void copyResource(OutputStream out, InputStream in) throws IOException {
-
-		BufferedInputStream bin = null;
-		BufferedOutputStream bout = null;
-		try {
-			bin = new BufferedInputStream(in);
-			bout = new BufferedOutputStream(out);
+		try(BufferedInputStream bin = new BufferedInputStream(in); BufferedOutputStream bout = new BufferedOutputStream(out);) {
 			byte[] buffer = new byte[1024];
 			int read = -1;
 			boolean ready = false;
@@ -258,21 +233,7 @@ public class JavaNetNavajoClientImpl extends NavajoClient implements ClientInter
 					ready = true;
 				}
 			}
-		} finally {
-			try {
-				if (bin != null) {
-					bin.close();
-				}
-				if (bout != null) {
-					bout.flush();
-					bout.close();
-				}
-
-			} catch (IOException e) {
-
-			}
 		}
-
 	}
 
 	@Override

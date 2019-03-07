@@ -25,12 +25,11 @@ public class AutoCompiler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AutoCompiler.class);
 	
-	private final int DEFAULT_WARMUP_WAIT = 20000;
+	private static final int DEFAULT_WARMUP_WAIT = 20000;
 	// default to 15m
-	private final int DEFAULT_SCHEDULE_WAIT = 900000;
-	private final boolean DEFAULT_ENABLED = false;
+	private static final int DEFAULT_SCHEDULE_WAIT = 900000;
+	private static final boolean DEFAULT_ENABLED = false;
 
-	private long warmupWait = DEFAULT_WARMUP_WAIT;
 	private long scheduleWait = DEFAULT_SCHEDULE_WAIT;
 
 	
@@ -46,19 +45,17 @@ public class AutoCompiler {
 		if (settings.containsKey("enabled")) {
 			enabled =  Boolean.valueOf((String) settings.get("enabled"));
 		}
-		this.warmupWait = parseValue(settings,"warmupWait",DEFAULT_WARMUP_WAIT);
+		long warmupWait = parseValue(settings,"warmupWait",DEFAULT_WARMUP_WAIT);
 		this.scheduleWait = parseValue(settings,"scheduleWait",DEFAULT_SCHEDULE_WAIT);
 		logger.info("Scanning auto");
 		this.executor = Executors.newFixedThreadPool(1);
-		this.executor.execute(new Runnable(){
-
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(warmupWait);
-				} catch (InterruptedException e) {
-				}
-			}});
+		this.executor.execute(() -> {
+			try {
+				Thread.sleep(warmupWait);
+			} catch (InterruptedException e) {
+				logger.error("Error: ", e);
+			}
+		});
 		active.set(enabled);
 		scanFiles();
 	}
@@ -75,24 +72,23 @@ public class AutoCompiler {
 			if(value instanceof Integer) {
 				return (Integer)value;
 			}
-			logger.warn("Weird settings type for key: "+key+" in autocompiler component. Returning default: "+defaultValue);
+			logger.warn("Weird settings type for key: {} in autocompiler component. Returning default: {}", key, defaultValue);
 		}
 		return defaultValue;
 	}
 
 	public void scanFiles() {
 		if(executor!=null) {
-			executor.execute(new Runnable(){
-				@Override
-				public void run() {
-					while(active.get()) {
-						scan();
-						try {
-							Thread.sleep(scheduleWait);
-						} catch (InterruptedException e) {
-						}
+			executor.execute(() -> {
+				while(active.get()) {
+					scan();
+					try {
+						Thread.sleep(scheduleWait);
+					} catch (InterruptedException e) {
+						logger.error("Error: ", e);
 					}
-				}});
+				}
+			});
 		}
 	}
 	public void deactivate() {
@@ -106,8 +102,8 @@ public class AutoCompiler {
 	private void scan() {
 		try {
 			scan(Paths.get(navajoIOConfig.getScriptPath()),Paths.get(navajoIOConfig.getCompiledScriptPath()));
-		} catch (Throwable e) {
-			logger.error("Error performing auto compile scan: "+e);
+		} catch (Exception e) {
+			logger.error("Error performing auto compile scan: ",e);
 		}
 	}
 	private void scan(final Path scriptPath,final Path compiledPath) {
@@ -149,12 +145,12 @@ public class AutoCompiler {
 			 }
 			 if(needRecompile) {
 				 cleanPath = cleanPath.replace('\\', '/');
-				 logger.debug("Need to recompile : "+cleanPath);
-				 List<String> success = new ArrayList<String>();
+				 logger.debug("Need to recompile : {}",cleanPath);
+				 List<String> success = new ArrayList<>();
 				 try {
 					bundleCreator.createBundle(cleanPath, new ArrayList<String>(), success, new ArrayList<String>(), false, false);
 					Thread.yield();
-				 } catch (Throwable e) {
+				 } catch (Exception e) {
 					logger.warn("Bundle creation problem for bundle: "+cleanPath,e);
 				}
 			 }

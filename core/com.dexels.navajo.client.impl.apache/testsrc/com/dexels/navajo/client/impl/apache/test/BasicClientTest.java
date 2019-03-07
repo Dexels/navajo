@@ -4,6 +4,7 @@ package com.dexels.navajo.client.impl.apache.test;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.config.runtime.TestConfig;
@@ -42,7 +43,7 @@ public class BasicClientTest {
 	 * @throws ClientException 
 	 * @throws java.lang.Exception
 	 */
-	@Test
+	@Test(timeout=10000) @Ignore
 	public void testSomething() throws ClientException  {
 		long total = 0;
 		long start = System.currentTimeMillis();

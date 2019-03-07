@@ -2,20 +2,20 @@ package com.dexels.navajo.adapters.binarystore.functions;
 
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.expression.api.FunctionInterface;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class ToBinaryDigest extends FunctionInterface {
 
 	@Override
-	public Object evaluate() throws TMLExpressionException {
+	public Object evaluate() {
 		String parse = getStringOperand(0);
 		return new BinaryDigest(parse);
 	}
 
+	@Override
 	public String usage() {
 	    return "ToBinaryDigest(digestString)";
 	  }
-	  @Override
+	@Override
 	public String remarks() {
 	    return "A convertor to parse binary digests to a binary_digest object";
 	  }

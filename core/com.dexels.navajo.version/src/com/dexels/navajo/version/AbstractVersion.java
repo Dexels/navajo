@@ -22,6 +22,7 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 	}
 
 	
+	
 	public static boolean osgiActive() {
 		try {
 			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(AbstractVersion.class);

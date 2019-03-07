@@ -2,16 +2,16 @@ package com.dexels.navajo.adapters.binarystore.functions;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class BinaryDigest extends FunctionInterface {
 
 	@Override
-	public Object evaluate() throws TMLExpressionException {
+	public Object evaluate() {
 		Binary b = getBinaryOperand(0);
 		return b.getDigest().toString();
 	}
 
+	@Override
 	public String usage() {
 	    return "BinaryDigest(binary)";
 	  }

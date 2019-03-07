@@ -113,8 +113,7 @@ public class DefaultSystemInfo implements SystemInfoProvider {
 	}
 	
 	public SystemInfoProvider parseSystemInfoString(String s) {
-		SystemInfoProvider info = new DefaultSystemInfo(s);
-		return info;
+		return new DefaultSystemInfo(s);
 	}
 
 }

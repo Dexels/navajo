@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -26,7 +27,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 public abstract class NavajoClient implements ClientInterface{
-    private final static Logger logger = LoggerFactory.getLogger(NavajoClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(NavajoClient.class);
 
     protected String username = null;
     protected String password = null;
@@ -34,7 +35,7 @@ public abstract class NavajoClient implements ClientInterface{
     protected int currentServerIndex;
 
     // Warning: Not thread safe!
-    protected final Set<Map<String, String>> piggyBackData = new HashSet<Map<String, String>>();
+    protected final Set<Map<String, String>> piggyBackData = new HashSet<>();
     protected Map<String, String> httpHeaders = new HashMap<>();
     protected Map<String, String> navajoHeaders = new HashMap<>();
 
@@ -124,7 +125,7 @@ public abstract class NavajoClient implements ClientInterface{
         /**
          * Make sure that same Navajo is not used simultaneously.
          */
-        synchronized (out) {
+        synchronized (this) {
             // ====================================================
 
             Header header = out.getHeader();
@@ -140,6 +141,7 @@ public abstract class NavajoClient implements ClientInterface{
             }
             // ALWAY SET REQUEST ID AT THIS POINT.
             if (header.getRequestId() != null && header.getRequestId().equals("42")) {
+            	//
             } else {
                 header.setRequestId(Guid.create());
             }
@@ -147,10 +149,9 @@ public abstract class NavajoClient implements ClientInterface{
             header.setHeaderAttribute("clientToken", sessionToken);
             header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
             
-            for (String key : navajoHeaders.keySet()) {
-            	header.setHeaderAttribute(key, navajoHeaders.get(key));
+            for (Entry<String,String> entry : navajoHeaders.entrySet()) {
+            	header.setHeaderAttribute(entry.getKey(), entry.getValue());
             }
-            // ========= Adding globalMessages
 
             long clientTime = 0;
             try {
@@ -177,7 +178,7 @@ public abstract class NavajoClient implements ClientInterface{
                         n.getHeader().setHeaderAttribute("transferTime", "" + (clientTime - totalTime));
                     }
                     Map<String, String> headerAttributes = n.getHeader().getHeaderAttributes();
-                    Map<String, String> pbd = new HashMap<String, String>(headerAttributes);
+                    Map<String, String> pbd = new HashMap<>(headerAttributes);
                     pbd.put("type", "performanceStats");
                     pbd.put("service", method);
                     synchronized (piggyBackData) {
@@ -191,7 +192,6 @@ public abstract class NavajoClient implements ClientInterface{
             } catch (ClientException e) {
                 throw e;
             } catch (Exception e) {
-                logger.error("Error: ", e);
                 throw new ClientException(-1, -1, e.getMessage(), e);
             }
         }
@@ -299,7 +299,7 @@ public abstract class NavajoClient implements ClientInterface{
         for (int i = 0; i < serverUrls.length; i++) {
             if (serverUrls[i].equals(host)) {
                 currentServerIndex = i;
-                logger.info("SET CURRENT SERVER TO: " + host + "(" + currentServerIndex + ")");
+                logger.info("SET CURRENT SERVER TO: {}({})",host,currentServerIndex);
                 break;
             }
         }

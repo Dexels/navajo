@@ -32,7 +32,7 @@ public class GrusProviderImpl implements GrusProvider {
 	private final AtomicInteger connectionCounter = new AtomicInteger();
 	private final Map<Long, GrusConnection> grusIds = new HashMap<Long, GrusConnection>();
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GrusProviderImpl.class);
 
 	@SuppressWarnings("unchecked")

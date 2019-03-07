@@ -37,15 +37,13 @@ public class CustomClassloaderJavaFileManager extends
 		ForwardingJavaFileManager<JavaFileManager> implements JavaFileManager,
 		BundleListener {
 	private final ClassLoader classLoader;
-//	private final JavaFileManager standardFileManager;
 
-	private final Map<String, CustomJavaFileFolder> folderMap = new HashMap<String, CustomJavaFileFolder>();
-	private final Map<String, CustomJavaFileObject> fileMap = new HashMap<String, CustomJavaFileObject>();
-//	private final Map<CustomJavaFileFolder, Bundle> bundleMap = new HashMap<CustomJavaFileFolder, Bundle>();
-	private final Set<Bundle> loadedBundles = new HashSet<Bundle>();
+	private final Map<String, CustomJavaFileFolder> folderMap = new HashMap<>();
+	private final Map<String, CustomJavaFileObject> fileMap = new HashMap<>();
+	private final Set<Bundle> loadedBundles = new HashSet<>();
 	private Optional<BundleContext> bundleContext;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CustomClassloaderJavaFileManager.class);
 	
 
@@ -53,7 +51,6 @@ public class CustomClassloaderJavaFileManager extends
 			ClassLoader classLoader, JavaFileManager standardFileManager) {
 		super(standardFileManager);
 		this.classLoader = classLoader;
-//		this.standardFileManager = standardFileManager;
 		this.bundleContext = context;
 		this.bundleContext.ifPresent(ctx->{
 			ctx.addBundleListener(this);
@@ -72,7 +69,7 @@ public class CustomClassloaderJavaFileManager extends
 			String binaryName = ((CustomJavaFileObject) file).binaryName();
 			if (binaryName.indexOf('/') >= 0) {
 				binaryName = binaryName
-						.substring(binaryName.lastIndexOf("/") + 1);
+						.substring(binaryName.lastIndexOf('/') + 1);
 			}
 			if (binaryName.indexOf('.') >= 0) {
 				binaryName = binaryName.substring(0, binaryName.indexOf('.'));
@@ -85,21 +82,7 @@ public class CustomClassloaderJavaFileManager extends
 
 	@Override
 	public boolean hasLocation(Location location) {
-		if(location.equals(StandardLocation.SOURCE_PATH)) {
-			return true;
-		}
-		return false;
-//		if (location.equals( StandardLocation.CLASS_OUTPUT) 
-//				|| location.equals(StandardLocation.UPGRADE_MODULE_PATH)
-//				|| location.equals(StandardLocation.SYSTEM_MODULES)
-//				|| location.equals(StandardLocation.PATCH_MODULE_PATH)
-//				|| location.equals(StandardLocation.MODULE_SOURCE_PATH)
-//				|| location.equals(StandardLocation.MODULE_PATH)
-//				
-//				) {
-//			return false;
-//		}
-//		return true;
+		return location.equals(StandardLocation.SOURCE_PATH);
 	}
 
 	@Override
@@ -122,15 +105,14 @@ public class CustomClassloaderJavaFileManager extends
 			return cjfo;
 		}
 		String packageName = null;
-		if (className.indexOf("/") > 0) {
-			packageName = className.substring(0, className.lastIndexOf("/"));
+		if (className.indexOf('/') >= 0) {
+			packageName = className.substring(0, className.lastIndexOf('/'));
 		} else {
 			packageName = "";
 		}
 		CustomJavaFileFolder cjf = getNode(packageName);
 
-		JavaFileObject jfo = cjf.getFile(binaryName);
-		return jfo;
+		return cjf.getFile(binaryName);
 	}
 
 
@@ -141,9 +123,7 @@ public class CustomClassloaderJavaFileManager extends
 			throws IOException {
 		String binaryName = className.replaceAll("\\.", "/") + kind.extension;
 		URI uri = URI.create("file:///" + binaryName);
-		CustomJavaFileObject cjfo = fileMap.get(binaryName); // new
-																// CustomJavaFileObject(binaryName,
-																// uri,fileMap.get(uri.toString()));
+		CustomJavaFileObject cjfo = fileMap.get(binaryName); 
 		if (cjfo == null) {
 			cjfo = new CustomJavaFileObject(binaryName, uri,
 					(InputStream) null, kind);
@@ -169,9 +149,7 @@ public class CustomClassloaderJavaFileManager extends
 
 		if (location == StandardLocation.PLATFORM_CLASS_PATH) {
 			try {
-				Iterable<JavaFileObject> list = super.list(location, packageName, kinds,
-						recurse);
-				return list;
+				return super.list(location, packageName, kinds,recurse);
 			} catch (Throwable e) {
 				logger.error("Platform class loader failed while trying to load: "+packageName,e);
 			}
@@ -236,9 +214,7 @@ public class CustomClassloaderJavaFileManager extends
 		return findChild(child, paths, index+1);
 	}
 	private CustomJavaFileFolder createPackageNode(String packageName) {
-		CustomJavaFileFolder folder = new CustomJavaFileFolder(packageName);
-//		folderMap.put(packageName, folder);
-		return folder;
+		return new CustomJavaFileFolder(packageName);
 	}
 
 	@Override
@@ -250,18 +226,19 @@ public class CustomClassloaderJavaFileManager extends
 	public synchronized void bundleChanged(BundleEvent be) {
 		final Bundle bundle = be.getBundle();
 		switch (be.getType()) {
-		case BundleEvent.UNRESOLVED:
-		case BundleEvent.UNINSTALLED:
-		case BundleEvent.STOPPED:
-			unloadBundle(bundle);
-			break;
-		case BundleEvent.RESOLVED:
-		case BundleEvent.STARTING:
-		case BundleEvent.STARTED:
-			loadBundle(bundle);
-
-			break;
-
+			case BundleEvent.UNRESOLVED:
+			case BundleEvent.UNINSTALLED:
+			case BundleEvent.STOPPED:
+				unloadBundle(bundle);
+				break;
+			case BundleEvent.RESOLVED:
+			case BundleEvent.STARTING:
+			case BundleEvent.STARTED:
+				loadBundle(bundle);
+				break;
+			default:
+				break;
+	
 		}
 	}
 
@@ -304,7 +281,7 @@ public class CustomClassloaderJavaFileManager extends
 	}
 
 	private Iterable<String> getAffectedPackages(BundleWiring bw) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		if (bw == null) {
 			return result;
 		}

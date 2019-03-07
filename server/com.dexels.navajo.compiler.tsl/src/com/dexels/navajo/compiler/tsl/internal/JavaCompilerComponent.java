@@ -16,7 +16,7 @@ public class JavaCompilerComponent implements JavaCompiler {
 	private NavajoIOConfig navajoIOConfig = null;
 	private OSGiJavaCompiler javaCompiler = null;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(JavaCompilerComponent.class);
 	
 	public void setIOConfig(NavajoIOConfig config) {
@@ -60,7 +60,7 @@ public class JavaCompilerComponent implements JavaCompiler {
 		byte[] bb = javaCompiler.compile(script, fis);
 		fis.close();
 		if(bb==null) {
-			logger.warn("Java compilation failed for script: "+script);
+			logger.warn("Java compilation failed for script: {}", script);
 		} else {
 			navajoIOConfig.writeOutput(script, ".class", new ByteArrayInputStream(bb));			
 		}

@@ -14,23 +14,25 @@ public class Version extends AbstractCoreExtension {
 
 	private static BundleContext bundleContext;
 	
-	private final static Logger logger = LoggerFactory.getLogger(Version.class);
+	private static final Logger logger = LoggerFactory.getLogger(Version.class);
 
 	
 	public Version() {
 	}
 
-
+	private static void setContext(BundleContext bc) {
+		bundleContext = bc;
+	}
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		bundleContext = bc;
+		setContext(bc);
 		try {
 			BinaryStoreAdapterLibrary library = new BinaryStoreAdapterLibrary();
 			BinaryStoreFunctionLibrary funcLib = new BinaryStoreFunctionLibrary();
 			registerAll(library);
 			registerAll(funcLib);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Trouble starting Binary Store bundle",e);
 		}
 	}

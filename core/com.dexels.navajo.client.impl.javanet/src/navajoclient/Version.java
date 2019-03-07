@@ -25,33 +25,16 @@
 package navajoclient;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.javanet.JavaNetNavajoClientImpl;
 
-/**
- * VERSION HISTORY
- * 
- * 3.0.0  -Added support for Flexible Load Balancing.
- *        - Async Runner is server agnostic. It does not need to send the request
- *        - to the server that actually runs the async thread. This is handled by
- *        - the Dispatcher (TAG: NavajoRelease6_5_5)
- * 2.0.3. -Added more verbose timing information
- * 2.1.0. Added support for setting unique request id.
- * 2.2.0. -Support for text nodes within binary properties
- *        -Support for f#%ckin huge binaries on java 1.5
- *        -HTML client now works with any document version
- *        -HTML client does not waste as much memory as it used to
- *        -The streaming binaries only work well on 1.5, under 1.4
- *         the HTTP implentation will store all data in memory before
- *         sending.
- * 2.2.1. Added debug data.
- * 2.2.2. Closing input stream when creatin Navajo (for SAXP).
- * 2.2.3. Added support for piggybacking of data.
- * 2.2.4. Removed evil keep-alive
- */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(Version.class);
 
 	@Override
 	public void shutdown() {
@@ -64,8 +47,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		try {
 			super.start(bc);
 			NavajoClientFactory.setDefaultClient(new JavaNetNavajoClientImpl());
-		} catch (Throwable t) {
-			t.printStackTrace();
+		} catch (Exception t) {
+			logger.error("Error: ", t);
 		}
 	}
 //	

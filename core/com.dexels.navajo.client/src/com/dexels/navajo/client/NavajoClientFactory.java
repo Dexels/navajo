@@ -15,8 +15,11 @@ public class NavajoClientFactory {
 	private static ClientInterface myClient = null;
 	private static ClientInterface defaultClient;
 
-	private final static Logger logger = LoggerFactory.getLogger(NavajoClientFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(NavajoClientFactory.class);
 
+	private NavajoClientFactory() {
+		// no instance
+	}
 
 	/**
 	 * Clear current client
@@ -34,7 +37,7 @@ public class NavajoClientFactory {
 	 * 
 	 * @return ClientInterface
 	 */
-	public synchronized static ClientInterface getClient() {
+	public static synchronized ClientInterface getClient() {
 		if (myClient == null) {
 			if (defaultClient == null) {
 				logger.warn("No default client set. Missing impl? Cannot create client!", new Exception());
@@ -42,7 +45,7 @@ public class NavajoClientFactory {
 			}
 			ClientInterface client = null;
 			try {
-				client = (ClientInterface) defaultClient.getClass().getDeclaredConstructor().newInstance();
+				client = defaultClient.getClass().getDeclaredConstructor().newInstance();
 			
 			} catch (InstantiationException |IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
 				logger.error("Error: ", ex);
@@ -51,9 +54,7 @@ public class NavajoClientFactory {
 			if (client == null) {
 				return null;
 			}
-			if (myClient == null) {
-				myClient = client;
-			}
+			myClient = client;
 			client.setUsername("");
 			client.setPassword("");
 			client.setServerUrl("");

@@ -16,7 +16,7 @@ import com.dexels.navajo.script.api.UserException;
 
 public class NavajoSendEventAdapter implements Mappable {
 
-	private final Map<String,Object> parameters = new HashMap<String,Object>();
+	private final Map<String,Object> parameters = new HashMap<>();
 	private String propertyName = null;
 	
 	@Override

@@ -31,7 +31,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     
     private boolean keepIntermediateFiles = true;
 
-    private final static Logger logger = LoggerFactory.getLogger(BundleQueueComponent.class);
+    private static final Logger logger = LoggerFactory.getLogger(BundleQueueComponent.class);
 
     public void setBundleCreator(BundleCreator bundleCreator) {
         this.bundleCreator = bundleCreator;
@@ -58,45 +58,37 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
      * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java .lang.String) */
     @Override
     public void enqueueScript(final String script, final String path) {
-        executor.execute(new Runnable() {
+        executor.execute(() -> {
+		    List<String> failures = new ArrayList<>();
+		    List<String> success = new ArrayList<>();
+		    List<String> skipped = new ArrayList<>();
+		    logger.info("Eagerly compiling: {}", script);
+		    try {
+		        bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles);
+		        bundleCreator.installBundle(script, failures, success, skipped, true);
+		        if (!skipped.isEmpty()) {
+		            logger.info("Script compilation skipped: {}", script);
+		        }
+		        if (!failures.isEmpty()) {
+		            logger.info("Script compilation failed: {}", script);
+		        }
 
-            @Override
-            public void run() {
-                List<String> failures = new ArrayList<String>();
-                List<String> success = new ArrayList<String>();
-                List<String> skipped = new ArrayList<String>();
-                logger.info("Eagerly compiling: " + script);
-                try {
-                    bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles);
-                    bundleCreator.installBundle(script, failures, success, skipped, true);
-                    if (!skipped.isEmpty()) {
-                        logger.info("Script compilation skipped: " + script);
-                    }
-                    if (!failures.isEmpty()) {
-                        logger.info("Script compilation failed: " + script);
-                    }
-
-                } catch (Throwable e) {
-                    logger.error("Error: ", e);
-                }
-            }
-        });
+		    } catch (Throwable e) {
+		        logger.error("Error: ", e);
+		    }
+		});
     }
 
     public void enqueueDeleteScript(final String script) {
-        executor.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                // String tenant = script.
-                logger.info("Uninstalling: " + script);
-                try {
-                    bundleCreator.uninstallBundle(script);
-                } catch (Throwable e) {
-                    logger.error("Error: ", e);
-                }
-            }
-        });
+        executor.execute(() -> {
+		    // String tenant = script.
+		    logger.info("Uninstalling: {}", script);
+		    try {
+		        bundleCreator.uninstallBundle(script);
+		    } catch (Throwable e) {
+		        logger.error("Error: ", e);
+		    }
+		});
     }
 
     /**
@@ -131,7 +123,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
             String stripped = deletedScript.substring(folder.length());
             int dotIndex = stripped.lastIndexOf(".");
             if (dotIndex < 0) {
-                logger.info("Scripts need an extension, and {} has none. Ignoring.");
+                logger.info("Scripts need an extension, and {} has none. Ignoring.",stripped);
                 continue;
             }
 
@@ -150,7 +142,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
     private void checkForChangedScripts(Event e, String folder) {
         RepositoryInstance ri = (RepositoryInstance) e.getProperty("repository");
-        Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, folder));
+        Set<String> changedScripts = new HashSet<>(RepositoryEventParser.filterChanged(e, folder));
         for (String changedScript : changedScripts) {
             // Replace windows backslashes with normal ones
             changedScript = changedScript.replace("\\", "/");
@@ -158,7 +150,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 File location = new File(ri.getRepositoryFolder(), changedScript);
                 if (location.isFile()) {
                     String stripped = changedScript.substring(folder.length());
-                    int dotIndex = stripped.lastIndexOf(".");
+                    int dotIndex = stripped.lastIndexOf('.');
                     if (dotIndex < 0) {
                         logger.info("Scripts need an extension, and {} has none. Ignoring update.", stripped);
                         continue;
@@ -186,9 +178,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         history.add(script);
         
         String rpcName = script;
-        String bareScript = script.substring(script.lastIndexOf("/") + 1);
-        if (bareScript.indexOf("_") > 0) {
-            rpcName = script.substring(0, script.lastIndexOf("_"));
+        String bareScript = script.substring(script.lastIndexOf('/') + 1);
+        if (bareScript.indexOf('_') >= 0) {
+            rpcName = script.substring(0, script.lastIndexOf('_'));
         }
         List<Dependency> dependencies = depanalyzer.getReverseDependencies(rpcName);
         
@@ -197,7 +189,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         // handling includes within includes within includes etc. Use a History set to prevent
         // a loop somewhere.
         // Use a set to prevent duplicates due to tenent-specific dependencies
-        Set<String> dependentScripts = new HashSet<String>();
+        Set<String> dependentScripts = new HashSet<>();
         for (Dependency dep : dependencies) {
             if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
                 dependentScripts.add(dep.getScript());

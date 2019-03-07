@@ -21,7 +21,7 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 
 	private static final long serialVersionUID = 5960405491845545518L;
 	
-	private final static Logger logger = LoggerFactory.getLogger(URLMap.class);
+	private static final Logger logger = LoggerFactory.getLogger(URLMap.class);
 	private ServiceReference<?> httpResourceReference = null;
 	private HttpResource httpResource;
 

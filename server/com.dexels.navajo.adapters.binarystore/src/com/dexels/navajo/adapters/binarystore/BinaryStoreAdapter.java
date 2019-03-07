@@ -19,7 +19,7 @@ public class BinaryStoreAdapter implements Mappable {
 	private Binary value = null;
 	private String resource = null;
 	
-	private final static Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
+	private static final Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
 
 	
 	@Override

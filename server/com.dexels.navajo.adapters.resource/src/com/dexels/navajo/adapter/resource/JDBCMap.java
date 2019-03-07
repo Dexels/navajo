@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -47,7 +48,7 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBCMappable,StreamClosable {
 	private static final Logger logger = LoggerFactory.getLogger(JDBCMap.class);
-	protected final String DEFAULTSRCNAME = "default";
+	protected static final String DEFAULTSRCNAME = "default";
 	private String dbIdentifier = null;
 	private boolean debug = false;
 	private boolean updateOnly;
@@ -160,27 +161,17 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 	public void kill() {
 
 		try {
-			// if (autoCommitMap.get(this.datasource) == null) {
-			// return;
-			// }
-			// boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean)
-			// autoCommitMap.get(datasource)).booleanValue();
-			// if (!ac) {
-			if (con != null) {
-				// kill = true;
-				if(!autoCommit) {
-					con.rollback();
-				}
+			if (con != null && !autoCommit) {
+				con.rollback();
 			}
-			// }
 		} catch (SQLException sqle) {
 			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
 		} finally {
 			try {
 				store();
-			} catch (MappableException e) {
-			} catch (UserException e) {
+			} catch (MappableException|UserException e) {
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -194,7 +185,7 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 		cleanupBinaryStreams();
 
 		if (transactionContext != -1 && ownContext) {
-			logger.info(":::Creating transactioncontext: " + transactionContext);
+			logger.info(":::Creating transactioncontext: {}", transactionContext);
 			JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
 			if (con != null) {
 				if(autoCommit==false) {
@@ -368,7 +359,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 	 */
 	@Override
 	public void setQuery(final String newQuery) throws UserException {
-		if (newQuery.indexOf(";") != -1) {
+		if (newQuery.indexOf(';') != -1) {
 			throw new UserException(-1, "Use of semicolon in query fields is not allowed, maybe you meant to use an update field?");
 		}
 
@@ -397,7 +388,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 		if (parameters == null) {
 			parameters = new ArrayList();
 		}
-		if ((param != null) && (param instanceof String) && (((String) param).indexOf(";") != -1)) {
+		if ((param instanceof String) && (((String) param).indexOf(';') != -1)) {
 			java.util.StringTokenizer tokens = new java.util.StringTokenizer((String) param, ";");
 
 			while (tokens.hasMoreTokens()) {
@@ -438,7 +429,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 				// ?
 				con.close();
 			} catch (Throwable ex) {
-				// ex.printStackTrace(Access.getConsoleWriter(myAccess));
 				logger.error("Error killing connection", ex);
 			}
 		}
@@ -468,14 +458,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 
 			DataSource jdbc = JdbcResourceComponent.getJdbc(datasource);
 
-			// if(jdbc instanceof ConnectionPoolDataSource) {
-			// logger.info("USING POOL");
-			// ConnectionPoolDataSource cpds = (ConnectionPoolDataSource)jdbc;
-			// this.currentPooledConnection = cpds.getPooledConnection();
-			// con = currentPooledConnection.getConnection();
-			// } else {
 			con = jdbc.getConnection();
-			// }
 
 			setDbIdentifier(con);
 
@@ -487,7 +470,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 				PreparedStatement ps = con.prepareStatement(query);
 				ps.executeUpdate();
 				ps.close();
-				logger.info("Username set to: " + this.username);
+				logger.info("Username set to: {}", this.username);
 			}
 
 			if (con == null) {
@@ -500,9 +483,8 @@ public final Object getColumnName(final Integer index) throws UserException {
 			}
 
 			this.transactionContext = con.hashCode();
-			logger.info(":::Creating transactioncontext: " + transactionContext);
+			logger.info(":::Creating transactioncontext: {}", transactionContext);
 			this.ownContext = true;
-			// con = pooledConnection.getConnection();
 			JdbcResourceComponent.getInstance().registerTransaction(con.hashCode(), con);
 
 
@@ -641,8 +623,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 		}
 
 		// Set row to startIndex value.
-		// rs.setFetchDirection(ResultSet.TYPE_SCROLL_INSENSITIVE);
-		// rs.absolute(startIndex);
 
 		return rs;
 	}
@@ -713,7 +693,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 
 							Object value = null;
 							final Object strVal = rs.getObject(i);
-							// final String strVal = rs.getString(i);
 
 							if ((strVal != null && !rs.wasNull()) || type == Types.BLOB) {
 								value = SQLMapHelper.getColumnValue(rs, type, i);
@@ -722,9 +701,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 						}
 						dummy.add(rm);
 					}
-					// else if (index >= startIndex) {
-					// remainCount++;
-					// }
 					rowCount++;
 					index++;
 
@@ -809,7 +785,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 		// replace parameters.
 		String dbQuery = savedQuery;
 		if (this.parameters != null) {
-			StringBuffer queryWithParameters = new StringBuffer(dbQuery.length());
+			StringBuilder queryWithParameters = new StringBuilder(dbQuery.length());
 			int index = 0;
 			for (int i = 0; i < dbQuery.length(); i++) {
 				if (dbQuery.charAt(i) != '?') {
@@ -881,7 +857,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 
 			tempFile = File.createTempFile("sqlmap_records", "navajo");
 			FileOutputStream fos = new FileOutputStream(tempFile);
-			OutputStreamWriter fw = new OutputStreamWriter(fos, "UTF-8");
+			OutputStreamWriter fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
 
 			int columns = 0;
 			ResultSetMetaData meta = null;
@@ -1007,9 +983,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 		if (con == null) {
 			try {
 				createConnection();
-			} catch (SQLException e) {
-				logger.error("Error: ", e);
-			} catch (UserException e) {
+			} catch (SQLException|UserException e) {
 				logger.error("Error: ", e);
 			}
 		}
@@ -1029,9 +1003,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 	@Override
 	public void addToBinaryStreamList(InputStream binaryStream) {
 		binaryStreamList.add(binaryStream);
-	}
-	public ArrayList getBinaryStreamList() {
-		return binaryStreamList;
 	}
 
 

@@ -36,19 +36,18 @@ public class Version extends AbstractCoreExtension {
 
 
 	private static BundleContext bundleContext;
-	
-	public Version() {
+
+	private static void setContext(BundleContext bc) {
+		bundleContext = bc;
 	}
-
-
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		bundleContext = bc;
+		setContext(bc);
 		try {
 			ResourceAdapterLibrary library = new ResourceAdapterLibrary();
 			registerAll(library);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Trouble starting NavajoAdapters bundle",e);
 		}
 	}

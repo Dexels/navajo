@@ -49,7 +49,7 @@ public class TestClient {
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
-	@Test 
+	@Test (timeout=5000)
 	public void testClientBig() throws ClientException {
 		NavajoClient cl = new ApacheNavajoClientImpl();
 		cl.setAllowCompression(true);
@@ -64,7 +64,7 @@ public class TestClient {
 		result2.write(System.err);
 	}
 	
-	@Test 
+	@Test (timeout=5000)
 	public void testDirect() throws IOException {
 		Map<String,String> headers = new HashMap<>();
 		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());

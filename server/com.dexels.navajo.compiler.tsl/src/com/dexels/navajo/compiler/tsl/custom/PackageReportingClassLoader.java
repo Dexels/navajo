@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PackageReportingClassLoader extends ClassLoader {
-	private Set<PackageListener> packageListeners = new HashSet<PackageListener>();
+	private Set<PackageListener> packageListeners = new HashSet<>();
 
 	public PackageReportingClassLoader(ClassLoader parent) {
 		super(parent);
@@ -25,8 +25,8 @@ public class PackageReportingClassLoader extends ClassLoader {
 
 	private String getPackageName(String name) {
 		String packageName = null;
-		if (name.indexOf(".") > 0) {
-			packageName = name.substring(0, name.lastIndexOf("."));
+		if (name.indexOf('.') >= 0) {
+			packageName = name.substring(0, name.lastIndexOf('.'));
 		} else {
 			packageName = "";
 		}

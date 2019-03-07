@@ -14,7 +14,7 @@ public class RepoChangeListener implements EventHandler {
 	@SuppressWarnings("unused")
 	private BundleCreator bundleCreator = null;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(RepoChangeListener.class);
 
 	public void setBundleCreator(BundleCreator bundleCreator) {
@@ -32,7 +32,7 @@ public class RepoChangeListener implements EventHandler {
 
 	@Override
 	public void handleEvent(Event e) {
-		logger.debug("EVENT FOUND! " + e);
+		logger.debug("EVENT FOUND {}", e);
 		for (String p : e.getPropertyNames()) {
 			final Object value = e.getProperty(p);
 			if (value == null) {
@@ -43,7 +43,7 @@ public class RepoChangeListener implements EventHandler {
 					continue;
 				}
 			}
-			logger.debug("Name: " + p + " value: " + value);
+			logger.debug("Name: {} value: {}", p, value);
 
 		}
 	}

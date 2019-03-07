@@ -24,7 +24,7 @@ public class GrusDataSource implements GrusConnection {
 //	private final GrusProvider grusProvider;
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
+	private static final Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
 	
 	
 	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) throws Exception {

@@ -33,7 +33,7 @@ import oracle.jdbc.pool.OracleDataSource;
 public class SQL {
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(SQL.class);
+	private static final Logger logger = LoggerFactory.getLogger(SQL.class);
 
 	private static DataSource testDataSource = null;
 

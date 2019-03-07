@@ -42,14 +42,18 @@ public class Version extends AbstractCoreExtension {
 	}
 
 
+	private static void setContext(BundleContext bc) {
+		bundleContext = bc;
+	}
+	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		bundleContext = bc;
+		setContext(bc);
 		try {
 			EventAdapterLibrary library = new EventAdapterLibrary();
 			registerAll(library);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Trouble starting NavajoEventEmitters bundle",e);
 		}
 	}

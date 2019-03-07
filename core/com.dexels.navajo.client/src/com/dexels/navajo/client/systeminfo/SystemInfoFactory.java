@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 public class SystemInfoFactory  {
 
-	private volatile static SystemInfoProvider instance = null;
+	private static SystemInfoProvider instance = null;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SystemInfoFactory.class);
 	
 	private SystemInfoFactory() {
@@ -15,7 +15,7 @@ public class SystemInfoFactory  {
 	}
 	
 	
-	public synchronized static SystemInfoProvider getSystemInfo() {
+	public static synchronized SystemInfoProvider getSystemInfo() {
 
 		if ( instance == null ) {
 			try {
@@ -29,13 +29,13 @@ public class SystemInfoFactory  {
 		return instance;
 	}
 
-	public synchronized static void setSystemInfoProvider(SystemInfoProvider provider) {
+	public static synchronized void setSystemInfoProvider(SystemInfoProvider provider) {
 		instance = provider;
 	}
 	
 	public static void main(String [] args) {
 		SystemInfoProvider info = SystemInfoFactory.getSystemInfo();
-		logger.info(""+info);
+		logger.info("{}",info);
 	}
 	
 	public static void clearInstance() {

@@ -14,8 +14,8 @@ import java.io.IOException;
 public class ClientException extends IOException {
 
     private static final long serialVersionUID = 75302782005830988L;
-    private int code;
-    private int level;
+    private final int code;
+    private final int level;
 
     public ClientException(int level, int code, String message) {
         super(message);

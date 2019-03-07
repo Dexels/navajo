@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -39,18 +39,15 @@ import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(OSGiJavaCompilerImplementation.class);
 	private BundleContext context;
 	private StandardJavaFileManager fileManager;
 	private JavaFileManager customJavaFileManager;
 	private JavaCompiler compiler;
-	// private DiagnosticListener<JavaFileObject> compilerOutputListener;
 	private ServiceRegistration<JavaFileManager> fileManagerRegistration;
 	private CustomClassLoader customClassLoader;
 	private ServiceRegistration<ClassLoader> customClassLoaderRegistration;
-
-	// DiagnosticListener<JavaFileObject> compilerOutputListener;
 
 	public OSGiJavaCompilerImplementation() {
 
@@ -80,14 +77,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 				logger.error("Error: ", e);
 			}
 		}
-		compiler = getEclipseCompiler(); // ToolProvider.getSystemJavaCompiler();
-		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
-
-			@Override
-			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-//				logger.info("Problem in filemanager: "
-//						+ diagnostic.getMessage(Locale.ENGLISH));
-			}
+		compiler = getEclipseCompiler();
+		DiagnosticListener<JavaFileObject> compilerOutputListener = diagnostic -> {
+			//
 		};
 		fileManager = compiler.getStandardFileManager(compilerOutputListener,
 				null, null);
@@ -101,7 +93,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 					JavaFileManager.class, customJavaFileManager, null);
 
 			// (type=navajoScriptClassLoader)
-			Dictionary<String, String> nsc = new Hashtable<String, String>();
+			Dictionary<String, String> nsc = new Hashtable<>();
 			nsc.put("type", "navajoScriptClassLoader");
 				this.customClassLoaderRegistration = this.context.registerService(
 						ClassLoader.class, customClassLoader, nsc);
@@ -111,10 +103,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 	protected JavaCompiler getEclipseCompiler() {
 		try {
-//			Class<? extends JavaCompiler> jc = (Class<? extends JavaCompiler>) Class
-//					.forName("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler");
-//			JavaCompiler jj = jc.newInstance();
-//			return jj;
 			return new EclipseCompiler();
 		} catch (Exception e) {
 			logger.warn("Error retrieving Eclipse compiler", e);
@@ -148,49 +136,20 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		Iterable<? extends JavaFileObject> fileObjects = Arrays
 				.asList(javaSource);
 		final Writer sw = new StringWriter();
-		DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
-
-			@Override
-			public void report(Diagnostic<? extends JavaFileObject> jfo) {
-				try {
-					sw.write("Compilation problem. Line in .java file: " + jfo.getLineNumber() + ", error: " 
-							+ jfo.getMessage(Locale.ENGLISH) + "\n");
-				} catch (IOException e) {
-					logger.error("Compilation problem: ", e);
-				}
+		DiagnosticListener<JavaFileObject> compilerOutputListener = jfo -> {
+			try {
+				sw.write("Compilation problem. Line in .java file: " + jfo.getLineNumber() + ", error: " 
+						+ jfo.getMessage(Locale.ENGLISH) + "\n");
+			} catch (IOException e) {
+				logger.error("Compilation problem: ", e);
 			}
 		};
 		StringWriter swe = new StringWriter();
-		ArrayList<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		options.add("-nowarn");
 		options.add("-target");
 		options.add("1.8");
 		 
-//		options.add(CompilerOptions.OPTION_Compliance);
-//		options.add(CompilerOptions.VERSION_1_8);
-//		options.add(CompilerOptions.OPTION_Source);
-//		options.add(CompilerOptions.VERSION_1_8);
-//		options.add(CompilerOptions.OPTION_TargetPlatform);
-//		options.add(CompilerOptions.VERSION_1_8);
-//		int sup = compiler.isSupportedOption(CompilerOptions.OPTION_TargetPlatform);
-//		options.add(CompilerOptions.OPTION_Process_Annotations);
-//		Writer outdump = new Writer() {
-//
-//			@Override
-//			public void write(char[] cbuf, int off, int len) throws IOException {
-//			}
-//
-//			@Override
-//			public void flush() throws IOException {
-//				
-//			}
-//
-//			@Override
-//			public void close() throws IOException {
-//				
-//			}
-//			
-//		};
 		CompilationTask task = compiler.getTask(swe, customJavaFileManager,
 				compilerOutputListener, options, null,
 				fileObjects);
@@ -203,7 +162,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 				.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className,
 						Kind.CLASS);
 		if (jfo == null) {
-			logger.error("Compilation failed: \n" + sw.toString() + "\n" + swe.toString());
+			logger.error("Compilation failed: {} \n {}", sw, swe);
 			return null;
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

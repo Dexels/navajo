@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 		if (stripName.endsWith("/")) {
 			stripName = stripName.substring(0, stripName.length() - 1);
 		}
-		name = uri.toString(); // javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
+		name = uri.toString();
 	}
 
 	private void setContents(byte[] byteArray) {
@@ -113,7 +114,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	@Override
 	public OutputStream openOutputStream() throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
+		return new ByteArrayOutputStream() {
 
 			@Override
 			public void close() throws IOException {
@@ -121,7 +122,6 @@ public class CustomJavaFileObject implements JavaFileObject {
 				super.close();
 			}
 		};
-		return baos;
 	}
 
 	@Override
@@ -131,13 +131,13 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 	@Override
 	public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
-		return new InputStreamReader(openInputStream(), "UTF-8");
+		return new InputStreamReader(openInputStream(), StandardCharsets.UTF_8);
 	}
 
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)
 			throws IOException {
-		final Reader lc = new InputStreamReader(getContents(), "UTF-8");
+		final Reader lc = new InputStreamReader(getContents(), StandardCharsets.UTF_8);
 		StringWriter sw = new StringWriter();
 		IOUtils.copy(lc, sw);
 		return sw.toString();

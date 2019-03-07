@@ -19,12 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CustomJavaFileFolder {
-	private final Map<Bundle,List<JavaFileObject>> elements = new HashMap<Bundle,List<JavaFileObject>>();
+	private final Map<Bundle,List<JavaFileObject>> elements = new HashMap<>();
 	private String packageName;
-	private final Map<String, JavaFileObject> contentMap = new HashMap<String, JavaFileObject>();
-	private final Map<String, CustomJavaFileFolder> subFolders = new HashMap<String, CustomJavaFileFolder>();
+	private final Map<String, JavaFileObject> contentMap = new HashMap<>();
+	private final Map<String, CustomJavaFileFolder> subFolders = new HashMap<>();
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CustomJavaFileFolder.class);
 
 	public CustomJavaFileFolder(String packageName) {
@@ -32,7 +32,7 @@ public class CustomJavaFileFolder {
 	}
 
 	public Collection<JavaFileObject> getEntries() {
-		List<JavaFileObject> result = new ArrayList<JavaFileObject>();
+		List<JavaFileObject> result = new ArrayList<>();
 		for (List<JavaFileObject> e  : elements.values()) {
 			result.addAll(e);
 		}
@@ -45,7 +45,7 @@ public class CustomJavaFileFolder {
 
 	private List<JavaFileObject> findAll(Bundle bundle) {
 
-		List<JavaFileObject> result  = new ArrayList<JavaFileObject>();
+		List<JavaFileObject> result  = new ArrayList<>();
 		packageName = packageName.replaceAll("\\.", "/");
 
 		enumerateWiring(packageName, result, bundle);
@@ -85,22 +85,19 @@ public class CustomJavaFileFolder {
 		for (String resource : cc) {
 			URL u = b.getResource(resource);
 			if (u != null) {
-				// InputStream openStream = null;
 				URI uri = null;
 				try {
 					uri = u.toURI();
-					// try {
 					final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(
 							resource, uri, u.toURI(), Kind.CLASS);
 					result.add(customJavaFileObject);
 					contentMap.put(resource, customJavaFileObject);
 
 				} catch (Exception e1) {
-					logger.warn("URI failed for URL: " + u + " ignoring.");
+					logger.warn("URI failed for URL: {} ignoring.",u);
 				}
 			}
 		}
-		return;
 	}
 
 	public void addSubFolder(String name, CustomJavaFileFolder cjf) {
@@ -108,7 +105,7 @@ public class CustomJavaFileFolder {
 	}
 
 	public Iterable<JavaFileObject> getRecursiveEntries() {
-		Collection<JavaFileObject> files = new ArrayList<JavaFileObject>();
+		Collection<JavaFileObject> files = new ArrayList<>();
 		appendFiles(files);
 		return files;
 	}

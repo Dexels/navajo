@@ -16,7 +16,7 @@ public class DbConnectionBrokerWrapper implements DbConnectionBroker {
 	private boolean supportsAutoCommit = true;
 	private String dbIdentifier = "";
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(DbConnectionBrokerWrapper.class);
 	
 	public DbConnectionBrokerWrapper(GrusDataSource gds, String username, int maxConnections) {

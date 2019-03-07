@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
@@ -18,10 +17,9 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslScriptCompiler extends ScriptCompiler {
-    private final static Logger logger = LoggerFactory.getLogger(TslScriptCompiler.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(TslScriptCompiler.class);
 	private static final String SCRIPT_PATH = "scripts";
-    private static String SCRIPT_EXTENSION = ".xml";
+    private static final String SCRIPT_EXTENSION = ".xml";
 
     private ClassLoader classLoader = null;
     private TslCompiler compiler;
@@ -47,18 +45,12 @@ public class TslScriptCompiler extends ScriptCompiler {
     public Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
             String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
 
-        final Set<String> packages = new HashSet<String>();
+        final Set<String> packages = new HashSet<>();
         for (String pkg : standardPackages) {
             packages.add(pkg);
         }
         PackageReportingClassLoader prc = new PackageReportingClassLoader(classLoader);
-        prc.addPackageListener(new PackageListener() {
-
-            @Override
-            public void packageFound(String name) {
-                packages.add(name);
-            }
-        });
+        prc.addPackageListener(name -> packages.add(name));
 
         compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(),
                 packagePath, packagePath, prc, navajoIOConfig, dependencies, tenant, hasTenantSpecificFile,

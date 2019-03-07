@@ -3,7 +3,7 @@ package com.dexels.navajo.client.stream.jetty;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.Request;
@@ -28,31 +28,31 @@ public class JettyClient {
 	private AtomicLong received = new AtomicLong();
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(JettyClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(JettyClient.class);
 
 	public JettyClient() throws Exception {
 		httpClient.start();
 	}
 
-	public Single<ReactiveReply> callWithoutBody(String uri, Function<Request,Request> buildRequest) {
+	public Single<ReactiveReply> callWithoutBody(String uri, UnaryOperator<Request> buildRequest) {
 		return call(uri,buildRequest, Optional.empty(), Optional.empty()).firstOrError();
 	}
 
-	public Flowable<byte[]> callWithoutBodyToStream(String uri, Function<Request,Request> buildRequest) {
+	public Flowable<byte[]> callWithoutBodyToStream(String uri, UnaryOperator<Request> buildRequest) {
 		return call(uri,buildRequest, Optional.empty(), Optional.empty())
 				.compose(this.responseStream());
 	}
 	
-	public Flowable<ReactiveReply> callWithBody(String uri, Function<Request,Request> buildRequest,Flowable<byte[]> requestBody,String requestContentType) {
+	public Flowable<ReactiveReply> callWithBody(String uri, UnaryOperator<Request> buildRequest,Flowable<byte[]> requestBody,String requestContentType) {
 		return call(uri,buildRequest,Optional.of(requestBody),Optional.of(requestContentType));
 	}
-	public Flowable<byte[]> callWithBodyToStream(String uri, Function<Request,Request> buildRequest,Flowable<byte[]> requestBody,String requestContentType) {
+	public Flowable<byte[]> callWithBodyToStream(String uri, UnaryOperator<Request> buildRequest,Flowable<byte[]> requestBody,String requestContentType) {
 		return call(uri,buildRequest,Optional.of(requestBody),Optional.of(requestContentType))
 				.compose(this.responseStream())
 				
 				;
 	}
-	public  Flowable<ReactiveReply> call(String uri,Function<Request,Request> buildRequest,Optional<Flowable<byte[]>> requestBody,Optional<String> requestContentType) {
+	public  Flowable<ReactiveReply> call(String uri,UnaryOperator<Request> buildRequest,Optional<Flowable<byte[]>> requestBody,Optional<String> requestContentType) {
 //		Reque
 		Request req = httpClient.newRequest(uri);
 		Request reqProcessed = buildRequest.apply(req);

@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class WrappedClassLoader extends ClassLoader {
 
-	private volatile ClassLoader parent;
+	private ClassLoader parent;
 	
 	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -32,7 +32,6 @@ public class WrappedClassLoader extends ClassLoader {
 	       }
 	       return getClassLoaderParent().loadClass(name);
 	       
-//	       return super.findClass(name);
 	}
 
 	public void setClassLoader(ClassLoader parent) {

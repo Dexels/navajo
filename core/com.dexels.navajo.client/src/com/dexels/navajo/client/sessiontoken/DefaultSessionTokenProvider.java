@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultSessionTokenProvider implements SessionTokenProvider {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(DefaultSessionTokenProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultSessionTokenProvider.class);
 	private String token  = null;
 	
 	DefaultSessionTokenProvider() {

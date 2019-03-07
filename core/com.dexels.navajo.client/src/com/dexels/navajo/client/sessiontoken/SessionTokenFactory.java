@@ -5,23 +5,23 @@ import org.slf4j.LoggerFactory;
 
 public class SessionTokenFactory {
 
-    private volatile static SessionTokenProvider instance = null;
+    private static SessionTokenProvider instance = null;
 
     @SuppressWarnings("unused")
-    private final static Logger logger = LoggerFactory.getLogger(SessionTokenFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionTokenFactory.class);
 
     private SessionTokenFactory() {
 
     }
 
-    public synchronized static SessionTokenProvider getSessionTokenProvider() {
+    public static synchronized SessionTokenProvider getSessionTokenProvider() {
         if (instance == null) {
             instance = new DefaultSessionTokenProvider();
         }
         return instance;
     }
 
-    public synchronized static void setSessionTokenProvider(SessionTokenProvider provider) {
+    public static synchronized void setSessionTokenProvider(SessionTokenProvider provider) {
         instance = provider;
     }
 

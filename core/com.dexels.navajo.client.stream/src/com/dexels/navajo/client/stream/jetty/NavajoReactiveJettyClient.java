@@ -31,8 +31,7 @@ public class NavajoReactiveJettyClient {
 		Flowable<byte[]> inStream = in
 				.compose(StreamDocument.inNavajo(service, Optional.of(username), Optional.of(password)))
 				.lift(StreamDocument.serialize())
-				.compose(StreamCompress.compress(Optional.of("deflate")))
-				.doOnNext(e->System.err.println("Sending: "+new String(e)));
+				.compose(StreamCompress.compress(Optional.of("deflate")));
 		return this.client.callWithBodyToStream(uri, req->req
 				.header("X-Navajo-Reactive", useReactive?"true":"false")
 				.header("X-Navajo-Service", service)

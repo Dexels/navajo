@@ -15,7 +15,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.StreamDocument;
 
 public class TestStreamingInput  {
-	private final static Logger logger = LoggerFactory.getLogger(TestStreamingInput.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestStreamingInput.class);
 
 	@Test @Ignore
 	public void simpleTest() throws IOException {
