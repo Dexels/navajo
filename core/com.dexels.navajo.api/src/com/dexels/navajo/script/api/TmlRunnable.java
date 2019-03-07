@@ -1,12 +1,9 @@
 package com.dexels.navajo.script.api;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 public interface TmlRunnable extends Runnable {
 
@@ -30,13 +27,11 @@ public interface TmlRunnable extends Runnable {
 	public String getUrl();
 	public String getNavajoInstance();
 
-//	public Access getAccess();
-//	public void setAccess(Access access);
 	public Object getAttribute(String name);
 
 	public void setAttribute(String name, Object value) ;
 	public Set<String> getAttributeNames();
 	
-	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException;
+	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException;
 
 }

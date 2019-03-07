@@ -15,7 +15,7 @@ public class NavajoRemoteContext extends NavajoContext {
 	private ClientInterface myClient;
 	private boolean debugAll;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoRemoteContext.class);
 	
 	public void useCompression(boolean b) {
@@ -43,7 +43,6 @@ public class NavajoRemoteContext extends NavajoContext {
 		if(myClient==null) {
 			throw new ClientException(1,-1,"No client has been set up!");
 		}
-//		logger.info("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
@@ -68,7 +67,7 @@ public class NavajoRemoteContext extends NavajoContext {
 
 
 	public String getDefaultPostman(String serverName, int serverPort,String contextPath,String postmanPath) {
-		StringBuffer requestBuffer = new StringBuffer();
+		StringBuilder requestBuffer = new StringBuilder();
 		requestBuffer.append(serverName);
 		if (serverPort > 0) {
 			requestBuffer.append(":");
@@ -110,7 +109,7 @@ public class NavajoRemoteContext extends NavajoContext {
 		myClient.setPassword(password);
 		if (server == null) {
 			server = getDefaultPostman(requestServerName,requestServerPort,requestContextPath,postmanPath);
-			logger.info("No server supplied. Creating default server url: "+server);
+			logger.info("No server supplied. Creating default server url: {}",server);
 		}
 		myClient.setServerUrl(server);		
 		this.debugAll = debugAll;

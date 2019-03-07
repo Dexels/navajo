@@ -1,19 +1,19 @@
 package com.dexels.navajo.client.async.legacy;
 
+import java.io.StringWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.async.legacy.AsyncRegistryImpl;
-import com.dexels.navajo.client.async.legacy.ServerAsyncListener;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
 public class TestAsyncService {
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestAsyncService.class);
 
 	private AsyncRegistryImpl registry;
@@ -38,26 +38,23 @@ public class TestAsyncService {
 				
 				@Override
 				public void setProgress(String id, int d) {
-					logger.info("Progress on id: "+id+" : "+d);
+					logger.info("Progress on id: {} d: {}",id,d);
 				}
 				
 				@Override
 				public void serviceStarted(String id) {
-					logger.info("Service: "+id);
+					logger.info("Service: {}", id);
 				}
 				
 				@Override
 				public void receiveServerAsync(Navajo n, String method, String serverId,
 						String clientId) {
 					try {
-						n.write(System.err);
+						StringWriter sw = new StringWriter();
+						n.write(sw);
+						logger.info("Result: {}",sw);
 					} catch (NavajoException e) {
 						logger.error("Error: ", e);
-					}
-//					received = n;
-					synchronized (NavajoClientFactory.getClient()) {
-//						finished = true;
-//						myClient.notifyAll();
 					}
 			}
 				
@@ -67,7 +64,7 @@ public class TestAsyncService {
 				}
 			}, "aap", 5000);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

@@ -5,10 +5,9 @@ import java.io.InputStream;
 
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.script.api.Access;
 
 public interface ManualAsyncClient extends AsyncClient {
 
@@ -18,8 +17,7 @@ public interface ManualAsyncClient extends AsyncClient {
 
 	public void callService(Access inputAccess, Navajo input,
 			String service, TmlRunnable onSuccess, TmlRunnable onFail,
-			NavajoResponseCallback navajoResponseCallback) throws IOException,
-			NavajoException;
+			NavajoResponseCallback navajoResponseCallback) throws IOException;
 
 	public String getServer();
 

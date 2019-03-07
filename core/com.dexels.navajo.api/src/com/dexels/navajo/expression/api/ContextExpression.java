@@ -12,14 +12,14 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 public interface ContextExpression {
 
-	default public Operand apply() throws TMLExpressionException {
+	public default Operand apply() {
 		return apply(null,Optional.empty(),Optional.empty());
 	}
-	default public Operand apply(Navajo doc, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+	public default Operand apply(Navajo doc, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		return apply(doc,null,null,null,null,null,null,immutableMessage,paramMessage);
 	}
 
-	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException;
+	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel, MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage);
 	public boolean isLiteral();
 	public Optional<String> returnType();
 	public String expression();

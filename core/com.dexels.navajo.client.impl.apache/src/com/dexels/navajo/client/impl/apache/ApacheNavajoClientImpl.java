@@ -1,5 +1,5 @@
 /**
- * Title:        Navajo<p>
+  * Title:        Navajo<p>
  * Description:  <p>
  * Copyright:    Copyright (c) Arjen Schoneveld<p>
  * Company:      Dexels<p>
@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -51,13 +52,13 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterface, Serializable {
 
-    private final static Logger logger = LoggerFactory.getLogger(ApacheNavajoClientImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApacheNavajoClientImpl.class);
 
     private static final long serialVersionUID = -7848349362973607161L;
     public static final int CONNECT_TIMEOUT = 10000;
     private static final int SLEEPTIME_PER_EXCEPTION = 1500;
 
-    private CloseableHttpClient httpclient;
+    private transient CloseableHttpClient httpclient;
 
     public ApacheNavajoClientImpl() {
         RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(0).build();
@@ -108,8 +109,9 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
         		logger.error("Problem: ",t);
             if (retryRequest(t, retries)) {
                 try {
-                    Thread.sleep((exceptionCount+1) * SLEEPTIME_PER_EXCEPTION);
+                    Thread.sleep((long)((exceptionCount+1) * SLEEPTIME_PER_EXCEPTION));
                 } catch (InterruptedException e) {
+                	logger.error("Error: ", e);
                 }
                 n = doTransaction(d, useCompression, --retries, ++exceptionCount);
             } else {
@@ -117,7 +119,6 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
             }
         } finally {
             // Don't close to allow connection reuse
-            // httpclient.close();
         }
         if (n == null) {
             throw new ClientException(-1, -1, "Empty Navajo received");
@@ -195,10 +196,10 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
             logger.error("Error: ", exception);
              throw new ClientException(-1, -1, exception.getMessage(), exception);
         }
-        exception.printStackTrace();
+        logger.error("Error: ", exception);
         
         Navajo n = null;
-        if (exception instanceof java.net.UnknownHostException | exception instanceof org.apache.http.conn.HttpHostConnectException) {
+        if (exception instanceof java.net.UnknownHostException || exception instanceof org.apache.http.conn.HttpHostConnectException) {
             logger.warn("Connection problem: UnknownHostException exception to {}!", host, exception);
             n = NavajoFactory.getInstance().createNavajo();
             generateConnectionError(n, 7777777, "Unknown host: " + exception.getMessage());
@@ -238,8 +239,8 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
     private void appendHeaderToHttp(HttpPost httppost, Header header) {
         httppost.setHeader("X-Navajo-Service", header.getRPCName());
         
-        for (String key : httpHeaders.keySet()) {
-        	httppost.setHeader(key, httpHeaders.get(key));
+        for (Entry<String,String> entry : httpHeaders.entrySet()) {
+        	httppost.setHeader(entry.getKey(), entry.getValue());
         }
 
     }
@@ -274,10 +275,10 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
                 source.close();
             }
             keyManagerFactory.init(keyStore, password);
+            // TODO
             context = SSLContext.getInstance("TLS");
             context.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
             this.socketFactory = context.getSocketFactory();
-            return;
 		} catch (UnrecoverableKeyException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException
 				| CertificateException e) {
 			throw new IOException("Error loading certificate: ", e);

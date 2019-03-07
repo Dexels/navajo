@@ -1,15 +1,15 @@
 package com.dexels.navajo.script.api;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 public class RunnableTools {
 
+	private RunnableTools() {
+		// no instances
+	}
 	public static TmlRunnable prependRunnable(final TmlRunnable target, final Runnable runn) {
 		return mergeRunnable(target, runn, true);
 	}
@@ -19,7 +19,7 @@ public class RunnableTools {
 	}
 	
 	public static TmlRunnable mergeRunnable(final TmlRunnable target, final Runnable runn, final boolean before) {
-		TmlRunnable t = new TmlRunnable() {
+		return new TmlRunnable() {
 
 			@Override
 			public void run() {
@@ -84,8 +84,7 @@ public class RunnableTools {
 			}
 
 			@Override
-			public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException,
-					UnsupportedEncodingException, NavajoException {
+			public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException {
 				throw new UnsupportedOperationException();
 			}
 
@@ -126,6 +125,5 @@ public class RunnableTools {
 
 			
 		};
-		return t;
 	}
 }

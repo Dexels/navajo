@@ -33,43 +33,29 @@ public class UserException extends Exception {
     public static final int INVALID_ACCOUNT_NR = 0xF0;
     public static final int BREAK_EXCEPTION = 0x14;
     
-    public int code;
-    public String message = "";
-    public Throwable t = null;
+    public final int code;
 
     public UserException() {
         super();
+        code = -1;
     }
 
     public UserException(int code, String message, Throwable t) {
-    	super(t);
+    	super(message,t);
         this.code = code;
-        this.message = message;
-        this.t = t;
-
     }
 
     public UserException(String message, Throwable t) {
-    	super(t);
+    	super(message,t);
         this.code = -1;
-        this.message = message;
-        this.t = t;
-
     }
 
     public UserException(int code, String message) {
-
+    	super(message);
         this.code = code;
-        this.message = message;
-
     }
 
-    @Override
-	public String getMessage() {
-        return message;
-    }
-
-public int getCode() {
+    public int getCode() {
        return code;
      }
 }

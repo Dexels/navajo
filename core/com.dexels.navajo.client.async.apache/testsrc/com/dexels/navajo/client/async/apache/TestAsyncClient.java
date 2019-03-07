@@ -1,4 +1,6 @@
+package com.dexels.navajo.client.async.apache;
 import java.io.IOException;
+import java.io.StringWriter;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +16,7 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public class TestAsyncClient {
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestAsyncClient.class);
 
 	@Test @Ignore
@@ -22,15 +24,15 @@ public class TestAsyncClient {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
 
-//		myClient.setClientCertificate("SunX509","JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
 				logger.debug("Navajo finished!");
 				try {
-					logger.debug("Response2 ..");
-					n.write(System.err);
+					StringWriter sw = new StringWriter();
+					n.write(sw);
+					logger.debug("Response2 : {}",sw);
 				} catch (NavajoException e) {
 					logger.error("Error: ", e);
 				}
@@ -52,7 +54,7 @@ public class TestAsyncClient {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		for (int i = 0; i < 10; i++) {
 			ac.callService(input, service, showOutput);
-			System.out.println("Exchange sent");
+			logger.info("Exchange sent");
 		}
 		Thread.sleep(10000);
 	}

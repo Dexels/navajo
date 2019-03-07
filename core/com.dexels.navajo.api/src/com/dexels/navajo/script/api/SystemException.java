@@ -33,35 +33,26 @@ public class SystemException extends Exception {
 	public static final int LOCKS_EXCEEDED = 0xFF;
     
 
-    public int code;
-    public String message = "";
-    public Throwable t;
+    public final int code;
+
 
     public SystemException() {
       super();
+      code = -1;
     }
 
     public SystemException(int code, String message) {
-      this.code = code;
-      this.message = message;
+    	super(message);
+    	this.code = code;
     }
     public SystemException(String message, Throwable t) {
-        super(t);
+      super(message,t);
       this.code = -1;
-      this.message = message;
-      this.t = t;
     }
 
     
-    public SystemException(int code, String message, Throwable t) {
-        super(t);
-      this.code = code;
-      this.message = message;
-      this.t = t;
-    }
-
-    @Override
-	public String getMessage() {
-      return message;
-    }
+	public SystemException(int code, String message, Throwable t) {
+		super(message,t);
+		this.code = code;
+	}
 }

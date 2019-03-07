@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class ThreadPoolRequestQueue extends RequestQueue {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(ThreadPoolRequestQueue.class);
+	private static final Logger logger = LoggerFactory.getLogger(ThreadPoolRequestQueue.class);
 
 	private final ThreadPoolExecutor tpe;
 	
@@ -97,17 +97,16 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 
 	@Override
 	public int flushQueue() {
-		List<Runnable> list = new ArrayList<Runnable>();
+		List<Runnable> list = new ArrayList<>();
 		int size = tpe.getQueue().drainTo(list);
-		logger.info("Drained " + size + " items. List size: " + list.size());
+		logger.info("Drained {} items. List size: {}",size, list.size());
 		return size;
 	}
 
 	// Should make a conversion or something?
 	@Override
 	public List<TmlRunnable> getQueuedRequests() {
-		List<TmlRunnable> runnable = new ArrayList<TmlRunnable>();
-		return runnable;
+		return new ArrayList<>();
 	}
 
 }

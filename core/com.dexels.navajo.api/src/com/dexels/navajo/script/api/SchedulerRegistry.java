@@ -1,7 +1,5 @@
 package com.dexels.navajo.script.api;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +10,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SchedulerRegistry {
-    private final static Logger logger = LoggerFactory.getLogger(SchedulerRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchedulerRegistry.class);
 
-    private volatile Scheduler tmlScheduler;
+    private Scheduler tmlScheduler;
     private static SchedulerRegistry instance;
     
     public void activate() {
@@ -23,12 +21,15 @@ public class SchedulerRegistry {
            instance.tmlScheduler.shutdownScheduler();
            instance.tmlScheduler = null;
         }
-        instance = this;
+        setInstance(this);
     }
     
+    private static void setInstance(SchedulerRegistry sched) {
+    	instance = sched;
+    }
     public void deactivate() {
         logger.info("Deactivating SchedulerRegistry" );
-        instance = null;
+        setInstance(null);
     }
 
     public void setTmlScheduler(TmlScheduler scheduler) {
@@ -40,7 +41,7 @@ public class SchedulerRegistry {
     }
 
   
-    public static void submit(TmlRunnable myRunner, boolean lowPrio) throws IOException {
+    public static void submit(TmlRunnable myRunner, boolean lowPrio) {
         String queueid = Scheduler.NAVAJOMAP_LOWPRIO_POOL;
         if (!lowPrio) {
             queueid = Scheduler.NAVAJOMAP_PRIORITY_POOL;

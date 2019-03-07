@@ -21,9 +21,7 @@ public interface AsyncRequest {
 	public Object getCert();
 	
 	public void writeOutput(Navajo inDoc, Navajo outDoc, long scheduledAt,
-			long startedAt, String threadStatus) throws IOException,
-			FileNotFoundException, UnsupportedEncodingException,
-			NavajoException;
+			long startedAt, String threadStatus) throws IOException;
 
 	public void fail(Exception e);
 

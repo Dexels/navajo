@@ -24,7 +24,6 @@ import com.dexels.navajo.client.nql.internal.command.ServiceCommand;
 import com.dexels.navajo.client.nql.internal.command.SetValueCommand;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Property;
@@ -34,14 +33,13 @@ public class NQLContext implements NqlContextApi {
 	private ClientContext context;
 	private Navajo current = null;
 	private Object content = null;
-//	private Writer outputWriter = null;
 	private String mimeType = null;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NQLContext.class);
 	
 	public String getMimeType() {
-		if(content!=null && (content instanceof Property)) {
+		if(content instanceof Property) {
 			Property p = (Property)content;
 			if(Property.BINARY_PROPERTY.equals(p.getType())) {
 				Binary b = (Binary) p.getTypedValue();
@@ -96,14 +94,14 @@ public class NQLContext implements NqlContextApi {
 	// tml, btml, csv, tsv, json
 	
 	@Override
-	public void format(String type, OutputCallback callback) throws IOException, NavajoException {
+	public void format(String type, OutputCallback callback) throws IOException {
 		if(callback==null) {
 			throw new UnsupportedOperationException("No outputWriter set.");
 		}
 		if(content==null) {
 			content = current;
 		}
-		logger.info("Type: "+type);
+		logger.info("Type: {}", type);
 		if(type==null) {
 			type="tml";
 		}
@@ -137,7 +135,6 @@ public class NQLContext implements NqlContextApi {
 		}
 		if("binary".equals(type)) {
 			writeBinary(callback);
-			return;
 		}
 	}
 
@@ -178,7 +175,7 @@ public class NQLContext implements NqlContextApi {
 		b.write(callback.getOutputStream());
 	}
 
-	private void writeTML(OutputStream outputStream) throws NavajoException, IOException {
+	private void writeTML(OutputStream outputStream) throws IOException {
 		if(content instanceof Navajo) {
 			Navajo m = (Navajo)content;
 			m.write(outputStream);
@@ -266,7 +263,7 @@ public class NQLContext implements NqlContextApi {
 	 */
 	@Override
 	public List<NQLCommand> parseCommand(String nql) {
-		List<NQLCommand> cmds = new ArrayList<NQLCommand>();
+		List<NQLCommand> cmds = new ArrayList<>();
 		String[] elt = nql.split("\\|");
 		for (String command : elt) {
 			String[] parts = command.split(":");
@@ -291,10 +288,9 @@ public class NQLContext implements NqlContextApi {
 	
 	
 
-	public static void main(String[] args) throws NavajoException, ClientException, IOException {
+	public static void main(String[] args) throws IOException {
 		NQLContext nq = new NQLContext();
 		NavajoRemoteContext nc = new NavajoRemoteContext();
-//		StringWriter sw = new StringWriter();
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final OutputCallback outputCallback = new OutputCallback(){
 
@@ -305,12 +301,12 @@ public class NQLContext implements NqlContextApi {
 
 			@Override
 			public void setOutputType(String mime) {
-				logger.info("Output detected: "+mime);
+				logger.info("Output detected: {}",mime);
 			}
 			
 			@Override
 			public void setContentLength(long l) {
-				logger.info("Content length detected: "+l);
+				logger.info("Content length detected: {}",l);
 			}
 		};
 		
@@ -323,17 +319,15 @@ public class NQLContext implements NqlContextApi {
 		
 		String nql2 = "service:club/InitUpdateClub|Club/ClubIdentifier:BBFW63X|call:club/ProcessQueryClub|output:ClubData/Logo|format:binary";
 		nq.executeCommand(nql2,"sometenant","xyz","uvw",outputCallback);
-		logger.info("TYPE: "+nq.mimeType);
-		logger.info("Bytes written: "+baos.size());
-//		logger.info(sw.toString());
-		//	nq.getNavajo().write(System.err);
+		logger.info("TYPE: {}", nq.mimeType);
+		logger.info("Bytes written: {}",baos.size());
 	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.nql.NqlContextApi#executeCommand(java.lang.String)
 	 */
 	@Override
-	public void executeCommand(String nql, String tenant, String username, String password, OutputCallback ob) throws ClientException, NavajoException, IOException {
+	public void executeCommand(String nql, String tenant, String username, String password, OutputCallback ob) throws IOException {
 		List<NQLCommand>aa =  parseCommand(nql);
 		for (NQLCommand nqlCommand : aa) {
 			nqlCommand.execute(this,tenant,username,password, ob);

@@ -7,7 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -17,21 +20,21 @@ import com.dexels.navajo.document.Property;
 public class NavajoScriptingTests extends BasicClientTest {
 
 	Navajo input = null;
+	
+	private static final Logger logger = LoggerFactory.getLogger(NavajoScriptingTests.class);
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws ClientException {
 		input = myClient.doSimpleSend(null, "tests/InitProperties");
 	}
 
 	@Test @Ignore
-	public void testBasic() throws Exception {
-
+	public void testBasic() {
 		Assert.assertNotNull(input.getMessage("TestProperties"));
-
 	}
 
 	@Test @Ignore
-	public void testDateProperty() throws Exception {
+	public void testDateProperty() {
 
 		// Date
 		Message date = input.getMessage("TestProperties/Date");
@@ -59,7 +62,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testIntegerProperty() throws Exception {
+	public void testIntegerProperty() {
 
 		// Integer
 		Message integer = input.getMessage("TestProperties/Integer");
@@ -82,7 +85,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testBooleanProperty() throws Exception {
+	public void testBooleanProperty() {
 
 		// Boolean
 		Message bool = input.getMessage("TestProperties/Boolean");
@@ -105,7 +108,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testFloatProperty() throws Exception {
+	public void testFloatProperty() {
 
 		// Float
 		Message fl = input.getMessage("TestProperties/Float");
@@ -128,7 +131,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testMoneyProperty() throws Exception {
+	public void testMoneyProperty() {
 
 		// Money
 		Message fl = input.getMessage("TestProperties/Money");
@@ -150,7 +153,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testStringProperty() throws Exception {
+	public void testStringProperty() {
 
 		// String
 		Message fl = input.getMessage("TestProperties/String");
@@ -159,17 +162,17 @@ public class NavajoScriptingTests extends BasicClientTest {
 		Assert.assertEquals(fl.getProperty("EmptyTestStringProperty")
 				.getValue(), "");
 		Assert.assertEquals(fl.getProperty("EmptyTestStringProperty")
-				.getTypedValue(), new String(""));
+				.getTypedValue(), "");
 
 		Assert.assertEquals(
 				fl.getProperty("FullTestStringProperty").getValue(), "noot");
 		Assert.assertEquals(fl.getProperty("FullTestStringProperty")
-				.getTypedValue(), new String("noot"));
+				.getTypedValue(), "noot");
 
 	}
 
 	@Test @Ignore
-	public void testClocktimeProperty() throws Exception {
+	public void testClocktimeProperty() {
 
 		// Clocktime
 		Message fl = input.getMessage("TestProperties/Clocktime");
@@ -192,7 +195,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testBinaryProperty() throws Exception {
+	public void testBinaryProperty() {
 
 		// Binary
 		Message fl = input.getMessage("TestProperties/Binary");
@@ -210,7 +213,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testSelectionProperty() throws Exception {
+	public void testSelectionProperty() {
 
 		// Selections
 		Message fl = input.getMessage("TestProperties/Selections");
@@ -249,7 +252,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	}
 
 	@Test @Ignore
-	public void testArrayMessage() throws Exception {
+	public void testArrayMessage() {
 
 		Message fl = input.getMessage("TestProperties/Array");
 		Assert.assertEquals(fl.getType(), Message.MSG_TYPE_ARRAY);
@@ -275,7 +278,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 					&& !((Boolean) p.getTypedValue()).booleanValue()) {
 				Assert.fail("Something wrong with: " + p.getFullPropertyName());
 			} else {
-				System.err.println("ok: " + p.getFullPropertyName());
+				logger.info("ok: {}", p.getFullPropertyName());
 			}
 		}
 		List<Message> children = m.getAllMessages();

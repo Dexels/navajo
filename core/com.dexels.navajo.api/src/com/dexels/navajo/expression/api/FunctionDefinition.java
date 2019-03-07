@@ -12,7 +12,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public final class FunctionDefinition implements Serializable {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(FunctionDefinition.class);
 	private static final long serialVersionUID = 8105107847721249814L;
 	// = fully qualified class name, actually
@@ -88,7 +88,7 @@ public final class FunctionDefinition implements Serializable {
 		try {
 			final Class<? extends FunctionInterface> fc = getFunctionClass();
 			if(fc==null) {
-				logger.debug("No function class found for function with name: "+getDescription());
+				logger.warn("No function class found for function with name: {}", getDescription());
 				return null;
 			}
 			FunctionInterface osgiResolution = fc.getDeclaredConstructor().newInstance();
@@ -96,20 +96,9 @@ public final class FunctionDefinition implements Serializable {
 				osgiResolution.setTypes(getInputParams(), getResultParam());
 			}
 			return osgiResolution;
-		} catch (InstantiationException e) {
-			logger.debug("OSGi failed (InstantiationException). Going old skool",e);
-		} catch (IllegalAccessException e) {
-			logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
-		} catch (IllegalArgumentException e) {
+		} catch (InstantiationException|IllegalAccessException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException e) {
 			logger.warn("Function instantiation issue.",e);
-		} catch (InvocationTargetException e) {
-			logger.warn("Function instantiation issue.",e);
-		} catch (NoSuchMethodException e) {
-			logger.warn("Function instantiation issue.",e);
-		} catch (SecurityException e) {
-			logger.warn("Function instantiation issue.",e);
-		}
 		return null;
-
+		}
 	}
 }

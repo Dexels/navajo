@@ -46,7 +46,7 @@ public abstract class FunctionInterface {
 	protected FunctionDefinition myFunctionDefinition = null;
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(FunctionInterface.class);
+	private static final Logger logger = LoggerFactory.getLogger(FunctionInterface.class);
 
 	
 	public void setCurrentMessage(Message currentMessage) {
@@ -55,18 +55,16 @@ public abstract class FunctionInterface {
 
 	// Act as if these attributes are final, they can only be set once.
 	private static Object semahore = new Object();
-	private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<>();
+	private static final HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<>();
 
-	private final static Map<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<>();
-	private final static Map<Class<? extends FunctionInterface>, String> returnType = new HashMap<>();
+	private static final Map<Class<? extends FunctionInterface>, Class[][]> types = new HashMap<>();
+	private static final Map<Class<? extends FunctionInterface>, String> returnType = new HashMap<>();
 	private Class[][] myinputtypes;
-//	private Optional<String> myreturntypes;
 
 	public abstract String remarks();
 
 	private Access access;
 	private Map<String, Operand> namedParameters;
-//	private Map<String, Object> params;
 
 	private final Optional<String> getMyReturnType() {
 		return Optional.ofNullable(returnType.get(this.getClass()));
@@ -83,7 +81,7 @@ public abstract class FunctionInterface {
 		}
 		NavajoFactory nf = NavajoFactory.getInstance();
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < c.length; i++) {
 			if (c[i] != null) {
 				sb.append(nf.getNavajoType(c[i]));
@@ -98,7 +96,7 @@ public abstract class FunctionInterface {
 	}
 
 	public String usage() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append(getMyReturnType());
 		sb.append(" " + this.getClass().getSimpleName() + "( ");
@@ -125,12 +123,6 @@ public abstract class FunctionInterface {
 	
 	public void setDefinition(FunctionDefinition fd) {
 		myFunctionDefinition = fd;
-//		if (fd.getInputParams() != null) {
-//			myinputtypes = loadInputTypes(fd.getInputParams());
-//		}
-//		if (fd.getResultParam() != null) {
-//			myreturntypes = loadReturnType(fd.getResultParam());
-//		}
 	}
 
 	// Legacy
@@ -214,7 +206,7 @@ public abstract class FunctionInterface {
 	}
 
 	@SuppressWarnings({ "unchecked", "unused" })
-	private final void checkTypes() throws TMLExpressionException {
+	private final void checkTypes() {
 
 		Class[][] mytypes = null;
 		if (myinputtypes != null) {
@@ -224,7 +216,7 @@ public abstract class FunctionInterface {
 		}
 
 		if (mytypes != null) {
-			StringBuffer msg = new StringBuffer();
+			StringBuilder msg = new StringBuilder();
 
 			for (int paramIndex = 0; paramIndex < mytypes.length; paramIndex++) {
 
@@ -238,7 +230,7 @@ public abstract class FunctionInterface {
 					boolean notpresent = false;
 
 					try {
-						Object o = getOperand(paramIndex);
+						Object o = operand(paramIndex).value;
 						passedParam = (o != null ? o.getClass() : null);
 					} catch (Exception e) {
 						passedParam = null;
@@ -275,7 +267,7 @@ public abstract class FunctionInterface {
 	}
 
 	public final void reset() {
-		operandList = new ArrayList<Operand>();
+		operandList = new ArrayList<>();
 	}
 
 	public final void insertOperand(Operand o) {
@@ -300,25 +292,20 @@ public abstract class FunctionInterface {
 	public final void insertFloatOperand(Double o) {
 		operandList.add(Operand.ofFloat(o));
 	}
-//	public final void insertIntegerOperand(Integer o) {
-//		operandList.add(Operand.ofInteger(o));
-//	}
 
-	public Object evaluateWithTypeChecking() throws TMLExpressionException {
+	public Object evaluateWithTypeChecking() {
 		return evaluate();
 	}
 	
-	public Operand evaluateWithTypeCheckingOperand() throws TMLExpressionException {
-		// Check types.
-		// checkTypes();
+	public Operand evaluateWithTypeCheckingOperand() {
 		Object o = evaluate();
 		String type = TypeUtils.determineNavajoType(o);
 		return new Operand(o,type);
 	}
 
-	public abstract Object evaluate() throws TMLExpressionException;
+	public abstract Object evaluate();
 
-	protected final List<?> getOperands() {
+	protected final List<Object> getOperands() {
 		return operandList.stream().map(e->e.value).collect(Collectors.toList());
 	}
 
@@ -330,8 +317,13 @@ public abstract class FunctionInterface {
 		return this.currentMessage;
 	}
 
+	/**
+	 * @deprecated
+	 * @param index
+	 * @return
+	 */
 	@Deprecated
-	protected final Object getOperand(int index) throws TMLExpressionException {
+	protected final Object getOperand(int index) {
 		return operand(index).value;
 	}
 
@@ -374,10 +366,6 @@ public abstract class FunctionInterface {
 	public void setAccess(Access access) {
 		this.access = access;
 	}
-//
-//	public void setParams(Map<String, Object> params) {
-//		this.params = params;
-//	}
 
 	public Access getAccess() {
 		return this.access;
@@ -398,13 +386,12 @@ public abstract class FunctionInterface {
 		if(true) {
 			return Collections.emptyList();
 		}
-		//		Class[][] types = getTypes();
-		String[][] types = myFunctionDefinition.getInputParams();
-		if(types==null) {
+		String[][] inputTypes = myFunctionDefinition.getInputParams();
+		if(inputTypes==null) {
 			logger.warn("Can't type check function {} as it does not have defined input types. Expression: {}",myFunctionDefinition.getFunctionClass(),expression);
 		} else {
 			int i = 0;
-			for (String[] classes : types) {
+			for (String[] classes : inputTypes) {
 				int j = 0;
 				for (String c : classes) {
 					logger.info("class: {} type: {} -> {}",i,j,c);
@@ -413,32 +400,29 @@ public abstract class FunctionInterface {
 				i++;
 			}
 			int index = 0;
-			for (String[] alternatives : types) {
+			for (String[] alternatives : inputTypes) {
 				logger.info("Number of alternatives for arg # {} is :{}",index,alternatives.length);
 				List<String> typeCheckProblems = typeCheckOption(alternatives,l,index,expression);
 				if(typeCheckProblems.isEmpty()) {
-					System.err.println("Found typechecked option!");
+					logger.info("Found typechecked option!");
 					return typeCheckProblems;
 				}
 				index++;
 			}
 		}
-		return Arrays.asList(new String[] {"Could not find a suitable type solution to this function: "+getClass().getName()+" in expression: "+expression});
+		return Arrays.asList("Could not find a suitable type solution to this function: "+getClass().getName()+" in expression: "+expression);
 	}
 
 	private List<String> typeCheckOption(String[] alternatives, List<ContextExpression> l, int argumentIndex, String expression) {
 		int argumentNumber = 0;
 		List<String> problems = new ArrayList<>();
 		for (ContextExpression contextExpression : l) {
-			Optional<String> returnType = contextExpression.returnType();
-			if(!returnType.isPresent()) {
+			Optional<String> foundReturnType = contextExpression.returnType();
+			if(!foundReturnType.isPresent()) {
 				continue;
 			}
-//			if(argumentNumber > alternatives.length) {
-//				return Arrays.asList(new String[] {"Argument number mismatch"});
-//			}
 			// TODO fix alternatives 
-			String rt = returnType.get();
+			String rt = foundReturnType.get();
 			boolean isCompatible = isCompatible(rt,alternatives[argumentNumber]);
 			if(!isCompatible) {
 				problems.add("Argument # "+argumentNumber+" of type: "+alternatives[argumentNumber]+" is incompatible with: "+rt);

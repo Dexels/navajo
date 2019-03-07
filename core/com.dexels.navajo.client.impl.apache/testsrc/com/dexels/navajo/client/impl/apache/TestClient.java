@@ -1,4 +1,4 @@
-
+package com.dexels.navajo.client.impl.apache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,6 +17,9 @@ import java.util.zip.InflaterInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClient;
@@ -26,6 +29,9 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public class TestClient {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestClient.class);
+	
 	public TestClient() {
 	}
 
@@ -39,7 +45,7 @@ public class TestClient {
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "single");
-		result.write(System.err);;
+		result.write(System.err);
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
@@ -55,12 +61,12 @@ public class TestClient {
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
 		Navajo result2 = cl.doSimpleSend(result, "club/ProcessQueryClub");
-		result2.write(System.err);;
+		result2.write(System.err);
 	}
 	
 	@Test 
 	public void testDirect() throws IOException {
-		Map<String,String> headers = new HashMap<String, String>();
+		Map<String,String> headers = new HashMap<>();
 		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
 		headers.put("X-Navajo-Password", TestConfig.NAVAJO_TEST_PASS.getValue());
 		headers.put("X-Navajo-Service", "single");
@@ -77,7 +83,6 @@ public class TestClient {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
-//		con.setRequestProperty("User-Agent", USER_AGENT);
 
 		for (Entry<String, String> e : headers.entrySet()) {
 			con.setRequestProperty(e.getKey(), e.getValue());
@@ -91,29 +96,28 @@ public class TestClient {
 		// For POST only - END
 
 		int responseCode = con.getResponseCode();
-		System.out.println("POST Response Code :: " + responseCode);
-		con.getHeaderFields().forEach((k,v)->System.err.println("Key: "+k+" value(s): "+v));
+		logger.info("POST Response Code :: {}", responseCode);
 		String encoding = con.getHeaderField("Content-Encoding");
 		if(encoding==null) {
 			encoding = "";
 		}
 		if (responseCode == HttpURLConnection.HTTP_OK) { //success
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//			copyResource(baos,con.getInputStream());
 			switch(encoding) {
 			case "deflate":
 			case "jzlib":
 				copyResource(baos,new InflaterInputStream(con.getInputStream()));
+				break;
 			case "gzip":
 				copyResource(baos,new GZIPInputStream(con.getInputStream()));
+				break;
 			default:
 				copyResource(baos,con.getInputStream());
+				break;
 			}
-			
 			return baos.toByteArray();
-//			return con.getInputStream();
 		} else {
-			System.out.println("POST request not worked");
+			logger.info("POST request not worked");
 			return null;
 		} 
 	}
@@ -144,7 +148,7 @@ public class TestClient {
 	
 	@Test
 	public void testEnv() {
-		System.err.println("Environments: "+System.getenv());
+		logger.info("Environments: {}",System.getenv());
 	}
 
 }

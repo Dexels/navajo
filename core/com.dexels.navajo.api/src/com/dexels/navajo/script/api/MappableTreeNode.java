@@ -36,7 +36,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
 
     public MappableTreeNode parent = null;
     public Mappable myMap = null;
-    public Object myObject = null;
+    public transient Object myObject = null;
     public String name = "";
     public String ref = "";
     public String currentMethod = "";
@@ -48,7 +48,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
     // HashMap to cache method references.
     private transient Map<String, Method> methods;
     private int id = 0;
-    private Map<String, ArrayChildStatistics> elementCount = null;
+    private transient Map<String, ArrayChildStatistics> elementCount = null;
     private Access myAccess = null;
     private boolean arrayElement = false;
 
@@ -61,7 +61,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
     public MappableTreeNode(Access a, MappableTreeNode parent, Object o, boolean isArrayElement) {
         this.parent = parent;
         this.myObject = o;
-        methods = new HashMap<String, Method>();
+        methods = new HashMap<>();
         starttime = System.currentTimeMillis();
         myAccess = a;
         arrayElement = isArrayElement;
@@ -84,11 +84,6 @@ public final class MappableTreeNode implements Mappable, Serializable {
     }
 
     public Object getMyMap() {
-        // if (myObject != null && myObject instanceof Mappable) {
-        // return (Mappable) myObject;
-        // } else {
-        // return null;
-        // }
         return myObject;
     }
 
@@ -115,7 +110,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
 
     private final void incrementElementCount(String mapName) {
         if (elementCount == null) {
-            elementCount = new HashMap<String, ArrayChildStatistics>();
+            elementCount = new HashMap<>();
         }
         ArrayChildStatistics c = elementCount.get(mapName);
         if (c == null) {
@@ -186,7 +181,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
     @SuppressWarnings("rawtypes")
     public final Method getMethodReference(String name, Object[] arguments) throws MappingException {
 
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         key.append(name);
 
         // Determine method unique method key:a
@@ -213,7 +208,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
 
         if (m == null) {
 
-            StringBuffer methodNameBuffer = new StringBuffer();
+        	StringBuilder methodNameBuffer = new StringBuilder();
             methodNameBuffer.append("get").append((name.charAt(0) + "").toUpperCase())
                     .append(name.substring(1, name.length()));
 

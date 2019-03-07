@@ -25,6 +25,7 @@
 
 package com.dexels.navajo.script.api;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -83,8 +84,6 @@ public final class Access implements java.io.Serializable, Mappable {
     private static final String VERSION = "$Id$";
 
     public java.util.Date created = new java.util.Date();
-    private static int AccessCount = 0;
-    
     public int threadCount = 0;
     public double cpuload = -1.0;
     public String accessID = "";
@@ -141,7 +140,7 @@ public final class Access implements java.io.Serializable, Mappable {
     private transient Navajo mergedDoc;
     private transient Message currentOutMessage;
     private transient Object userCertificate;
-    private transient Set<Map<?, ?>> piggyBackData = null;
+    private transient Set<Map<String,String>> piggyBackData = null;
     private String clientToken = null;
     private String clientInfo = null;
     private String tenant;
@@ -171,10 +170,11 @@ public final class Access implements java.io.Serializable, Mappable {
         this();
 
         this.accessID = accessID;
+        int accessCount = 0;
         if (accessID == null) {
             synchronized (Access.class) {
-                AccessCount++;
-                this.accessID = created.getTime() + "-" + AccessCount;
+            	accessCount++;
+                this.accessID = created.getTime() + "-" + accessCount;
             }
         }
         this.userID = userID;
@@ -193,7 +193,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public MapStatistics createStatistics() {
         MapStatistics ms = new MapStatistics();
         if (mapStatistics == null) { // First map.
-            mapStatistics = new HashMap<Integer, MapStatistics>();
+            mapStatistics = new HashMap<>();
         }
         Integer count = Integer.valueOf(mapStatistics.size());
         mapStatistics.put(count, ms);
@@ -547,6 +547,7 @@ public final class Access implements java.io.Serializable, Mappable {
             try {
                 inDoc.addMessage(msg);
             } catch (NavajoException e) {
+            	logger.error("Error: ", e);
             }
         }
     }
@@ -576,27 +577,23 @@ public final class Access implements java.io.Serializable, Mappable {
         }
     }
 
-    public HashMap<Integer, MapStatistics> getMapStatistics() {
+    public Map<Integer, MapStatistics> getMapStatistics() {
         return mapStatistics;
     }
 
-    public void addPiggybackData(Map<?, ?> element) {
+    public void addPiggybackData(Map<String, String> element) {
         if (piggyBackData == null) {
-            piggyBackData = new HashSet<Map<?, ?>>();
+            piggyBackData = new HashSet<>();
         }
         piggyBackData.add(element);
     }
 
-    public Set<?> getPiggybackData() {
+    public Set<Map<String,String>> getPiggybackData() {
         return piggyBackData;
     }
 
     public String getClientInfo() {
         return this.clientInfo;
-    }
-
-    public String getAgentId() {
-        return "[deprecated]";
     }
 
     public String getClientToken() {
@@ -713,7 +710,7 @@ public final class Access implements java.io.Serializable, Mappable {
                 OutputStream os = b.getOutputStream();
                 inDoc.write(os);
                 os.close();
-            } catch (Throwable t) {
+            } catch (IOException t) {
                 throw new UserException(-1, t.getMessage(), t);
             }
         }
@@ -727,7 +724,7 @@ public final class Access implements java.io.Serializable, Mappable {
                 OutputStream os = b.getOutputStream();
                 outputDoc.write(os);
                 os.close();
-            } catch (Throwable t) {
+            } catch (IOException t) {
                 throw new UserException(-1, t.getMessage(), t);
             }
         }
@@ -757,7 +754,7 @@ public final class Access implements java.io.Serializable, Mappable {
      * Static method that does not check for existence of Access object.
      * 
      */
-    public final static void writeToConsole(final Access a, final String s) {
+    public static final void writeToConsole(final Access a, final String s) {
         if (a != null) {
             a.writeToConsole(s);
         }
@@ -766,7 +763,7 @@ public final class Access implements java.io.Serializable, Mappable {
         }
     }
 
-    public final static PrintWriter getConsoleWriter(final Access a) {
+    public static final PrintWriter getConsoleWriter(final Access a) {
         if (a != null) {
             return a.consoleOutput;
         }

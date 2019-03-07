@@ -12,9 +12,6 @@ package com.dexels.navajo.script.api;
 
 public class FatalException extends Exception {
 	
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -6962064660769014280L;
 
 	public FatalException(String s) {

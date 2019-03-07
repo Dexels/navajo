@@ -16,7 +16,7 @@ public class TMLExpressionException extends RuntimeException {
 	 * 
 	 */
 	private static final long serialVersionUID = 447452587961773391L;
-	private String message = "";
+	private final String message;
 
 	public TMLExpressionException(String s) {
 		this.message = "Invalid expression. " + s;

@@ -23,7 +23,6 @@ import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
@@ -41,13 +40,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	
 	private boolean closeAfterUse = false;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(AsyncClientImpl.class);
 
 	private int actualCalls = 0;
-
-//	private final static int CONNECT_TIMEOUT = 2000;
-//	private final static int MAX_CONNECTIONS_PER_ADDRESS = 200;
 
 	private boolean useHttps = false;
 
@@ -67,7 +63,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	 */
 	private synchronized void setActualCalls(int actualCalls) {
 		this.actualCalls = actualCalls;
-		logger.debug("Calls now: " + this.actualCalls);
+		logger.debug("Calls now: {}", this.actualCalls);
 	}
 	
 	static {
@@ -75,18 +71,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
     }
 
 	public AsyncClientImpl() {
-		// myThreadPool = new NavajoThreadPool();
-		// client.setThreadPool(myThreadPool);
-		// client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
-//		final SslContextFactory factory = new SslContextFactory();
-//		client = new HttpClient();
-//		client = HttpAsyncClients.createSystem();
 		client = HttpAsyncClients.createDefault();
-		 // max 200 concurrent connections to every address
-//		client.setMaxConnectionsPerDestination(MAX_CONNECTIONS_PER_ADDRESS);
-
-//		client.setConnectTimeout(CONNECT_TIMEOUT);
-		// client.setThreadPool(executor);
 		try {
 			client.start();
 		} catch (Exception e) {
@@ -139,7 +124,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			throws IOException {
 
 		final Object semaphore = new Object();
-		final Set<Navajo> result = new HashSet<Navajo>();
+		final Set<Navajo> result = new HashSet<>();
 
 		NavajoResponseHandler nrh = new NavajoResponseHandler() {
 			Throwable caughtException = null;
@@ -197,8 +182,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	@Override
 	public void callService(String url, String username, String password,
 			Navajo input, String service,
-			final NavajoResponseHandler continuation, Integer timeout) throws IOException,
-			NavajoException {
+			final NavajoResponseHandler continuation, Integer timeout) throws IOException {
 		logger.info("Calling remote navajo async for url: {} ",url);
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
@@ -226,7 +210,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			final String service, final TmlRunnable onSuccess,
 			final TmlRunnable onFail,
 			final NavajoResponseCallback navajoResponseCallback)
-			throws IOException, NavajoException {
+			throws IOException {
 		final Access currentAccess = inputAccess.cloneWithoutNavajos();
 
 		if (input == null) {
@@ -249,17 +233,13 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			public void onResponse(Navajo n) {
 				setActualCalls(getActualCalls() - 1);
 				currentAccess.setOutputDoc(n);
-				try {
-					if (onSuccess != null) {
-						onSuccess.setResponseNavajo(n);
-						if (navajoResponseCallback != null) {
-							navajoResponseCallback.responseReceived(n);
-						}
-						setActualCalls(getActualCalls() - 1);
-						SchedulerRegistry.submit(onSuccess, false);
+				if (onSuccess != null) {
+					onSuccess.setResponseNavajo(n);
+					if (navajoResponseCallback != null) {
+						navajoResponseCallback.responseReceived(n);
 					}
-				} catch (IOException e) {
-					logger.error("Error: ", e);
+					setActualCalls(getActualCalls() - 1);
+					SchedulerRegistry.submit(onSuccess, false);
 				}
 			}
 
@@ -272,8 +252,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 					if (onFail != null) {
 						SchedulerRegistry.submit(onFail, false);
 					}
-				} catch (IOException e) {
-					logger.error("Error: ", e);
 				} finally {
 					setActualCalls(getActualCalls() - 1);
 				}
@@ -290,7 +268,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		callService(currentAccess.getRequestUrl(), input, nrh, null);
 	}
 
-	private void callService(final String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) throws IOException, NavajoException {
+	private void callService(final String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) {
 
 		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -322,8 +300,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
 					if(continuation!=null) {
 						continuation.onResponse(response);
 					}
-				} catch (Throwable e) {
-					logger.info("Illegal TML detected.",e);
+				} catch (UnsupportedOperationException|IOException e) {
+					logger.error("Error: ", e);
 				} finally {
 				    if (closeAfterUse) {
 	                    close();
@@ -362,51 +340,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
                 .setProxy(proxy)
                 .build();		
         request.setConfig(config);
-	}
-
-	public static void main(String[] args) throws Exception {
-
-		final ManualAsyncClient ac = new AsyncClientImpl();
-		
-		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
-			@Override
-			public void onResponse(Navajo n) {
-				logger.debug("Navajo finished!");
-				try {
-					logger.debug("Response2 ..");
-					n.write(System.err);
-				} catch (NavajoException e) {
-					logger.error("Error: ", e);
-				}
-			}
-
-			@Override
-			public void onFail(Throwable t) {
-				logger.error("whoops: ", t);
-			}
-
-			@Override
-			public Throwable getCaughtException() {
-				return null;
-			}
-		};
-
-		// NavajoResponseHandler testFields =
-
-		String service = "club/InitUpdateClub";
-
-		Navajo input = NavajoFactory.getInstance().createNavajo();
-		for (int i = 0; i < 10; i++) {
-			// String service = "tests/InitNavajoMapTest3";
-			ac.callService(input, service, showOutput);
-			System.out.println("Exchange sent");
-		}
-		// Optionally set the HTTP method
-
-		// I suspect the http thread pool has daemon threads, so the vm will
-		// shut
-		// down if there are no 'real' threads.
-		Thread.sleep(10000);
 	}
 
 	/*
@@ -517,37 +450,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	@Override
 	public void setClientCertificate(String algorithm, String keyStoreType,
 			InputStream source, char[] password) throws IOException {
-//		SslContextFactory socketFactory = new SslContextFactory(true);
-//		try {
-//
-//			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-//			try {
-//				keyStore.load(source, password);
-//			} finally {
-//				source.close();
-//			}
-//			logger.info("Key loaded successfully");
-//			KeyManagerFactory keyManagerFactory = KeyManagerFactory
-//					.getInstance(algorithm);
-//			keyManagerFactory.init(keyStore, password);
-//			final KeyManager keyManager = keyManagerFactory.getKeyManagers()[0];
-//			//
-//			client = new HttpClient(socketFactory);
-//			client.start();
-//			return;
-//		} catch (UnrecoverableKeyException e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		} catch (KeyManagementException e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		} catch (NoSuchAlgorithmException e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		} catch (KeyStoreException e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		} catch (CertificateException e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		} catch (Exception e) {
-//			throw new IOException("Error loading certificate: ", e);
-//		}
+
 	}
 
     @Override

@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 
 public abstract class CompiledScriptFactory {
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CompiledScriptFactory.class);
 	
 	private String serviceName;
 	private String debug;
-	private final Map<String,Object> resources = new HashMap<String, Object>();
+	private final Map<String,Object> resources = new HashMap<>();
 	
 	public abstract CompiledScriptInterface getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 	
@@ -50,7 +50,7 @@ public abstract class CompiledScriptFactory {
 	}
 
 	public void deactivate() {
-		logger.info("Deactivating script: "+serviceName);
+		logger.info("Deactivating script: {}", serviceName);
 	}
 	
 

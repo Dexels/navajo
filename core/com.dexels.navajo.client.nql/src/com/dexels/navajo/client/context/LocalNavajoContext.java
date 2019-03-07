@@ -14,12 +14,11 @@ import com.dexels.navajo.script.api.LocalClient;
 
 public class LocalNavajoContext extends NavajoContext implements ClientContext {
 
-//	private LocalClient localClient;
 	
-	private final static Logger logger = LoggerFactory.getLogger(LocalNavajoContext.class);
+	private static final Logger logger = LoggerFactory.getLogger(LocalNavajoContext.class);
 	
-	private final String DEFAULT_TENANT = "DEFAULT_TENANT";
-	private final Map<String,LocalClient> localClients = new HashMap<String,LocalClient>();
+	private static final String DEFAULT_TENANT = "DEFAULT_TENANT";
+	private final Map<String,LocalClient> localClients = new HashMap<>();
 	
 	public void addLocalClient(LocalClient c, Map<String,Object> settings) {
 		if(settings==null) {

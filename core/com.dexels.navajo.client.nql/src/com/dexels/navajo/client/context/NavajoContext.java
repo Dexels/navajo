@@ -1,13 +1,12 @@
 package com.dexels.navajo.client.context;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.client.context.internal.MessageAccessMap;
 import com.dexels.navajo.client.context.internal.PropertyAccessMap;
 import com.dexels.navajo.document.Message;
@@ -18,9 +17,9 @@ import com.dexels.navajo.document.Property;
 
 public abstract class NavajoContext implements ClientContext {
 
-	private final Map<String, Navajo> myNavajoMap = new HashMap<String, Navajo>();
-	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
-	private final Stack<Object> myElementStack = new Stack<Object>();
+	private final Map<String, Navajo> myNavajoMap = new HashMap<>();
+	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<>();
+	private final LinkedList<Object> myElementStack = new LinkedList<>();
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
 	private String username = null;
 	private String password = null;
@@ -58,9 +57,7 @@ public abstract class NavajoContext implements ClientContext {
 	
 	// used by the JSP Tester
 	public String getEngineInstance() {
-		String instanceName = System.getProperty("com.dexels.navajo.server.EngineInstance");
-		
-		return instanceName;
+		return System.getProperty("com.dexels.navajo.server.EngineInstance");
 	}
 	
 
@@ -117,18 +114,18 @@ public abstract class NavajoContext implements ClientContext {
 			}
 		} else
 		if(o instanceof Message) {
-			logger.info("Message on top: "+((Message)o).getFullMessageName());
+			logger.info("Message on top: {}",((Message)o).getFullMessageName());
 		} else
 		if(o instanceof Property) {
 			try {
-				logger.info("Property on top: "+((Property)o).getFullPropertyName());
+				logger.info("Property on top: {}", ((Property)o).getFullPropertyName());
 			} catch (NavajoException e) {
 				logger.error("Error: ", e);
 			}
 			
 		} else {
 			if(o!=null) {
-				logger.info("Other object:" + o.getClass());
+				logger.info("Other object: {}", o.getClass());
 			} else {
 				logger.info("Null object on stack!");
 			}
@@ -141,9 +138,7 @@ public abstract class NavajoContext implements ClientContext {
 	 */
 	@Override
 	public Navajo getNavajo(String name) {
-
-		Navajo navajo = myNavajoMap.get(name);
-		return navajo;
+		return myNavajoMap.get(name);
 	}
 
 	public Property getProperty(String service, String path)
@@ -292,7 +287,7 @@ public abstract class NavajoContext implements ClientContext {
 
 	@Override
 	public Property parsePropertyPath(String path) {
-		if(path.indexOf(":")==-1) {
+		if(path.indexOf(':')==-1) {
 			Navajo n = getNavajo();
 			if(n!=null) {
 				return n.getProperty(path);
@@ -307,7 +302,7 @@ public abstract class NavajoContext implements ClientContext {
 	}
 	
 	public Message parseMessagePath(String path) {
-		if(path.indexOf(":")==-1) {
+		if(path.indexOf(':')==-1) {
 			Navajo n = getNavajo();
 			if(n!=null) {
 				return n.getMessage(path);
@@ -330,7 +325,7 @@ public abstract class NavajoContext implements ClientContext {
 	}
 
 	public void resolvePost(String name, String value) {
-		if(name.indexOf(":")==-1) {
+		if(name.indexOf(':')==-1) {
 			return;
 		}
 		String[] keyVal = name.split(":");
@@ -342,11 +337,7 @@ public abstract class NavajoContext implements ClientContext {
 		}
 		Property p = n.getProperty(path);
 		if(Property.BOOLEAN_PROPERTY.equals(p.getType()) ) {
-			if ("on".equals(value)) {
-				p.setAnyValue(true);
-			} else {
-				p.setAnyValue(false);
-			}
+			p.setAnyValue("on".equals(value));
 		} else {
 			p.setValue(value);
 		}
@@ -354,7 +345,7 @@ public abstract class NavajoContext implements ClientContext {
 
 
 	public String dumpStack() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for ( Object a : myElementStack) {
 			sb.append("Current object: "+a.getClass()+"\n");
 		}

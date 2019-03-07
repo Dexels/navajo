@@ -25,17 +25,15 @@ public class ServerAsyncRunner
   private ServerAsyncListener myListener = null;
   private String myClientId = null;
   private int myPollingInterval = -1;
-  //private int maxIter = 2;
   private boolean iterate = true;
   private volatile boolean kill = false;
-  int prev_progress = 0;
-  long prev_time = 0;
+  private int prevProgress = 0;
+  private long prevTime = 0;
   private final AsyncRegistry registry;
-//  private int serverIndex = 0;
-  private final static int MAX_POLLING_INTERVAL = 30000;
+  private static final int MAX_POLLING_INTERVAL = 30000;
 
   
-private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.class);
+private static final Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.class);
 
 
   /**
@@ -55,24 +53,23 @@ private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.c
     myListener = listener;
     myClientId = clientId;
     myPollingInterval = pollingInterval;
-//    serverIndex = client.getAsyncServerIndex();
     if (in.getHeader() != null) {
       in.getHeader().removeCallBackPointers();
     }
   }
 
   private Navajo doSimpleSend(Navajo n, String method) throws ClientException {
-    //return myClientInterface.doSpecificSend(n, method,serverIndex);
 	 return myClientInterface.doSimpleSend(n, method);
   }
 
   /**
    * Main thread
    */
+  @Override
   public void run() {
 
     try {
-      prev_time = System.currentTimeMillis();
+      prevTime = System.currentTimeMillis();
       while (isIterating()) {
         if (kill) {
           logger.warn("Kill called in ServerAsyncRunner...");
@@ -87,41 +84,9 @@ private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.c
           if (temp.getMessage("ConditionErrors") != null) {
         	  	logger.warn("Had ConditionErrors in Asyncsend.. ");
             killServerAsyncSend();
-            continue;
+          } else {
+              poll(temp);
           }
-
-          Header head = temp.getHeader();
-          if (head == null) {
-        	  	logger.warn("Received no header. returning and killing thread");
-            throw new ClientException( -1, -1, "No async header!");
-          }
-          if (isFinished(temp)) {
-            // Really dont know what I should pass to getCallBackPointer
-            if (myListener != null) {
-              myListener.setProgress(head.getCallBackPointer(null), 100);
-              myListener.receiveServerAsync(temp, myMethod, head.getCallBackPointer(null), myClientId);
-            }
-            registry.deRegisterAsyncRunner(myClientId);
-            myNavajo.removeHeader();
-            return;
-          }
-          else {
-            if (myListener != null) {
-              myListener.setProgress(head.getCallBackPointer(null), head.getCallBackProgress());
-            }
-          }
-          checkPollingInterval(head.getCallBackProgress());
-          logger.debug("Start sleep");
-          try {
-            if (myPollingInterval > MAX_POLLING_INTERVAL) {
-              myPollingInterval = MAX_POLLING_INTERVAL;
-            }
-            sleep(myPollingInterval);
-          }
-          catch (InterruptedException ex1) {
-        	  	logger.debug("Interrupted. Continuing with next iteration.");
-          }
-          logger.debug("End sleep");
         }
       }
     }
@@ -135,35 +100,72 @@ private final static Logger logger = LoggerFactory.getLogger(ServerAsyncRunner.c
     }
   }
 
-  private void checkPollingInterval(int current_progress) {
+private void poll(Navajo temp) throws ClientException {
+	Header head = temp.getHeader();
+	  if (head == null) {
+		  	logger.warn("Received no header. returning and killing thread");
+	    throw new ClientException( -1, -1, "No async header!");
+	  }
+	  if (isFinished(temp)) {
+	    // Really dont know what I should pass to getCallBackPointer
+	    if (myListener != null) {
+	      myListener.setProgress(head.getCallBackPointer(null), 100);
+	      myListener.receiveServerAsync(temp, myMethod, head.getCallBackPointer(null), myClientId);
+	    }
+	    registry.deRegisterAsyncRunner(myClientId);
+	    myNavajo.removeHeader();
+	    this.iterate = false;
+	  }
+	  else {
+	    if (myListener != null) {
+	      myListener.setProgress(head.getCallBackPointer(null), head.getCallBackProgress());
+	    }
+	  }
+	  checkPollingInterval(head.getCallBackProgress());
+	  sleep();
+}
 
-    int dif = current_progress - prev_progress;
+private void sleep() {
+	logger.debug("Start sleep");
+	  try {
+	    if (myPollingInterval > MAX_POLLING_INTERVAL) {
+	      myPollingInterval = MAX_POLLING_INTERVAL;
+	    }
+	    sleep(myPollingInterval);
+	  }
+	  catch (InterruptedException ex1) {
+		  	logger.debug("Interrupted. Continuing with next iteration.");
+	  }
+	  logger.debug("End sleep");
+}
+
+  private void checkPollingInterval(int currentProgress) {
+
+    int dif = currentProgress - prevProgress;
     long now = System.currentTimeMillis();
-    long time_dif = now - prev_time;
-    prev_time = now;
+    long timeDiff = now - prevTime;
+    prevTime = now;
     long eta = 0;
     if (dif > 0) {
-      eta = (100 - current_progress) * (time_dif / dif);
+      eta = (100 - currentProgress) * (timeDiff / dif);
     }
     if (dif < 1) {
       myPollingInterval = 2 * myPollingInterval;
-      prev_progress = current_progress;
+      prevProgress = currentProgress;
       return;
     }
     if (dif < 5) {
       myPollingInterval = (int) (1.5 * myPollingInterval);
-      prev_progress = current_progress;
+      prevProgress = currentProgress;
       return;
     }
-    if (dif > 20) {
-      if (myPollingInterval > 2500) {
+    if (dif > 20 && myPollingInterval > 2500) {
         myPollingInterval = (int) (myPollingInterval / 1.5);
-      }
     }
     if (eta < myPollingInterval) {
       myPollingInterval = (int) (eta / 2.0);
     }
-    prev_progress = current_progress;
+    prevProgress = currentProgress;
   }
 
   private boolean isIterating() {

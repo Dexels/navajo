@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.entity.AbstractHttpEntity;
@@ -34,7 +35,7 @@ public class NavajoRequestEntity extends AbstractHttpEntity {
     }
 
     @Override
-    public InputStream getContent() throws IOException, UnsupportedOperationException {
+    public InputStream getContent() throws IOException {
         StringWriter sw = new StringWriter();
         this.n.write(sw);
         return new ByteArrayInputStream(sw.toString().getBytes());
@@ -61,11 +62,11 @@ public class NavajoRequestEntity extends AbstractHttpEntity {
 
         try {
             if (!useCompression) {
-                out = new BufferedWriter(new OutputStreamWriter(os ,"UTF-8" ));
+                out = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             } else if (forceGzip) {
-                out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(os), "UTF-8"));
+                out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(os), StandardCharsets.UTF_8));
             } else {
-                out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(os), "UTF-8"));
+                out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(os), StandardCharsets.UTF_8));
             }
             n.write(out);
         } finally {

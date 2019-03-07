@@ -1,6 +1,6 @@
 package com.dexels.navajo.script.api;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import com.dexels.navajo.document.Message;
@@ -50,7 +50,7 @@ public interface CompiledScriptInterface {
 
 	public void setDependencies();
 
-	public ArrayList<Dependency> getDependentObjects();
+	public List<Dependency> getDependentObjects();
 
 	/**
 	 * Special 'getter' to be used from within scripts.
@@ -61,8 +61,7 @@ public interface CompiledScriptInterface {
 
 	public void run(Access access) throws Exception;
 
-	public void execute(Access access) throws Exception,
-			NavajoDoneException;
+	public void execute(Access access) throws Exception;
 
 	/**
 	 * Pool for use of Navajo functions.

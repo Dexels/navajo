@@ -44,7 +44,6 @@ public class ClientInfo {
 
     public int contentLength;
     public Date created;
-    // public int threadCount;
     private String authHeader;
 
     public ClientInfo(String ip, String host, String encoding, int parseTime, int queueTime, int queueSize, String queueId, boolean compressedrecv,
@@ -60,7 +59,6 @@ public class ClientInfo {
         this.created = created;
         this.queueId = queueId;
         this.queueSize = queueSize;
-        // this.threadCount = threadCount;
     }
 
     public ClientInfo(String ip, String host, String encoding, int parseTime, boolean compressedrecv, boolean compressedsend, int contentLength, Date created) {
@@ -72,7 +70,6 @@ public class ClientInfo {
         this.compressedSend = compressedsend;
         this.contentLength = contentLength;
         this.created = created;
-        // this.threadCount = threadCount;
     }
 
     public String getIP() {

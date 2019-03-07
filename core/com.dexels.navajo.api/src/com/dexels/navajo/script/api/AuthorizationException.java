@@ -19,10 +19,10 @@ public class AuthorizationException extends Exception {
 	public static final String AUTHORIZATION_ERROR_MESSAGE = "AuthorizationError";
 	public static final String AUTHENTICATION_ERROR_MESSAGE = "AuthenticationError";
 
-	private String message;
-	private String user;
-	private boolean authenticationError;
-	private boolean authorizationError;
+	private final String message;
+	private final String user;
+	private final boolean authenticationError;
+	private final boolean authorizationError;
 
 	public AuthorizationException(boolean authenticationError,boolean authorizationError, String user, String message, Throwable rootCause) {
 		super(rootCause);

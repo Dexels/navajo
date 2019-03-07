@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 
 public class SimpleScheduler implements Scheduler {
-    private final static Logger logger = LoggerFactory.getLogger(SimpleScheduler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleScheduler.class);
 
 	private final RequestQueue normalPool;
 	
@@ -16,10 +16,6 @@ public class SimpleScheduler implements Scheduler {
         normalPool = ThreadPoolRequestQueue.create(this, "async", Thread.NORM_PRIORITY, 50);
         
 	}
-
-	// public void cancel(TmlRunnable myRunner) {
-//  
-//}
 
     public boolean checkNavajo(Navajo input) {
 		return true;
@@ -39,10 +35,6 @@ public class SimpleScheduler implements Scheduler {
 	public void run(TmlRunnable myRunner) {
 		myRunner.run();
 	}
-
-
-//	public void runFinished(TmlRunnable tr) {
-//	}
 
 	@Override
 	public void shutdownScheduler() {

@@ -12,28 +12,27 @@ import java.util.concurrent.Future;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AsyncTest {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(AsyncTest.class);
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
-		String url = "https://something.sportlink.com/navajobirt/Postman";
-		CloseableHttpAsyncClient httpclient = HttpAsyncClients.createDefault();
-		long before = System.currentTimeMillis();
-		httpclient.start();
-		for (int i = 0; i < 500; i++) {
-			apacheclient(url,httpclient);
-		}
-		System.err.println("Time: "+ (System.currentTimeMillis()-before));
+	@Test
+	public void testAsync() {
+		// TODO
 	}
 
-	private static void apacheclient(String url, CloseableHttpAsyncClient httpclient) throws ClientProtocolException, IOException {
+	
+	@SuppressWarnings("unused")
+	private static void apacheclient(String url, CloseableHttpAsyncClient httpclient) throws IOException {
 		FileInputStream is = new FileInputStream("/Users/frank/tml.xml");
 
 		HttpPost httppost = new HttpPost(url);
@@ -54,7 +53,7 @@ public class AsyncTest {
 				    InputStream instream = entity.getContent();
 				    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				    copyResource(baos, instream);
-				    System.err.println("Result:\n"+new String(baos.toByteArray()));
+				    logger.info("Result: {}",new String(baos.toByteArray()));
 				    try {
 				        // do something useful
 				    } finally {
@@ -62,7 +61,7 @@ public class AsyncTest {
 				    }
 				}				
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 			
@@ -73,10 +72,8 @@ public class AsyncTest {
 		});
 		try {
 			response.get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
+		} catch (InterruptedException|ExecutionException e) {
+			logger.error("Error: ", e);
 		}
 
 	}
@@ -101,7 +98,7 @@ public class AsyncTest {
 			bout.flush();
 			bout.close();
 		} catch (IOException e) {
-
+			logger.error("Error: ", e);
 		}
 	}
 }

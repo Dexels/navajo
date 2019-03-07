@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class NavajoClientResourceManager {
 
-	private final Map<String,AsyncClient> clients = new HashMap<String,AsyncClient>();
+	private final Map<String,AsyncClient> clients = new HashMap<>();
 	private static NavajoClientResourceManager instance = null;
 	
 	public synchronized void activate() {
@@ -17,7 +17,7 @@ public class NavajoClientResourceManager {
 		instance = null;
 	}
 
-	public synchronized static NavajoClientResourceManager getInstance() {
+	public static synchronized NavajoClientResourceManager getInstance() {
 		return instance;
 	}
 	public void addAsyncClient(AsyncClient a) {

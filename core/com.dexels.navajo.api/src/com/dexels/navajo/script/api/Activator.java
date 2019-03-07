@@ -11,13 +11,16 @@ public class Activator implements BundleActivator {
 		return context;
 	}
 
+	private static void setContext(BundleContext ctx) {
+		context = ctx;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
+		setContext(bundleContext);
 	}
 
 	/*
@@ -26,7 +29,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-		Activator.context = null;
+		setContext(null);
 	}
 
 }
