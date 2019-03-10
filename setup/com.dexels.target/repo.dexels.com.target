@@ -146,7 +146,6 @@
 <plugin id="org.eclipse.equinox.app"/>
 <plugin id="org.eclipse.equinox.cm"/>
 <plugin id="org.eclipse.equinox.concurrent"/>
-<plugin id="org.eclipse.equinox.console"/>
 <plugin id="org.eclipse.equinox.console.ssh"/>
 <plugin id="org.eclipse.equinox.coordinator"/>
 <plugin id="org.eclipse.equinox.device"/>

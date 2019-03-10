@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -104,14 +105,14 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				}
 			}
 		}
-		addWatchedFolder(config, ".*\\.cfg", "config");
+		addWatchedFolder(config, Optional.of(".*\\.cfg"), "config");
 
 		File adapters = new File(rootPath, "adapters");
 
-		addWatchedFolder(adapters, "", "adapters");
+		addWatchedFolder(adapters, Optional.<String>empty(), "adapters");
 	}
 
-	private void addWatchedFolder(File folder, String fileFilter,
+	private void addWatchedFolder(File folder, Optional<String> fileFilter,
 			String configName) {
 		if (!folder.exists()) {
 			logger.debug("Not watching folder: " + folder.getAbsolutePath()
@@ -122,7 +123,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Configuration cc = getUniqueResourceConfig(folder.getAbsolutePath());
 			Dictionary<String, Object> d = new Hashtable<String, Object>();
 			d.put("felix.fileinstall.dir", folder.getAbsolutePath());
-			d.put("felix.fileinstall.filter", fileFilter);
+			if(fileFilter.isPresent()) {
+				d.put("felix.fileinstall.filter", fileFilter.get());
+			}
 			d.put("felix.fileinstall.enableConfigSave", "false");
 			d.put("configName", configName);
 			updateIfChanged(cc, d);
