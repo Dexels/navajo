@@ -12,7 +12,7 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoIOConfig {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoIOConfigComponent.class);
 	
 	

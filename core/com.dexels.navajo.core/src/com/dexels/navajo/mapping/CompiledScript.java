@@ -65,7 +65,7 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface {
-    private final static String UNSET_CONFIG_MODE = "unset";
+    private static final String UNSET_CONFIG_MODE = "unset";
     protected NavajoClassSupplier classLoader;
     private final HashMap functions = new HashMap();
     private String configDebugMode = UNSET_CONFIG_MODE;
@@ -116,7 +116,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     private HashSet<Lock> acquiredLocks = new HashSet<Lock>();
 
-    private final static Logger logger = LoggerFactory.getLogger(CompiledScript.class);
+    private static final Logger logger = LoggerFactory.getLogger(CompiledScript.class);
 
     /**
      * This HashMap is used for user defined expressions in <definitions>

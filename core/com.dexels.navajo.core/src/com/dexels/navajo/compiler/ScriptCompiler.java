@@ -34,7 +34,7 @@ import com.dexels.navajo.server.NavajoIOConfig;
  *
  */
 public abstract class ScriptCompiler {
-    private final static Logger logger = LoggerFactory.getLogger(ScriptCompiler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScriptCompiler.class);
     
     protected ExpressionEvaluator expressionEvaluator;
     protected NavajoIOConfig navajoIOConfig = null;
@@ -92,7 +92,7 @@ public abstract class ScriptCompiler {
     }
 
     private Set<String> processDependencies(List<Dependency> dependencies) {
-        Set<String> dependentResources = new HashSet<String>();
+        Set<String> dependentResources = new HashSet<>();
 
         for (Dependency d : dependencies) {
             if ("resource".equals(d.getType())) {
@@ -103,10 +103,10 @@ public abstract class ScriptCompiler {
                     
                     Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty(),Optional.empty());
                     if (op != null && op.value instanceof String) {
-                        logger.debug("Succeeded evaluation of id: " + ((String) op.value));
+                        logger.debug("Succeeded evaluation of id: {}", ((String) op.value));
                         dependentResources.add((String) op.value);
                     }
-                    logger.info("Resource dependency detected: {} type: {} dependency id: ", d.getClass().getName(),
+                    logger.info("Resource dependency detected: {} type: {} dependency id: {}", d.getClass().getName(),
                             d.getType(), d.getId());
 
                     Dependency[] subs = adapterFieldDep.getMultipleDependencies();
@@ -226,14 +226,11 @@ public abstract class ScriptCompiler {
     }
     
     private String getRelative(File base, File path) {
-        String relative = base.toURI().relativize(path.toURI()).getPath();
-        return relative;
+    	return base.toURI().relativize(path.toURI()).getPath();
     }
     
     private String formatCompilationDate() {
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String formatted = df.format(new Date());
-        return formatted;
+        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     }
 
     private String generateDs(String packagePath, String script, List<Dependency> dependencies, Set<String> dependentResources)

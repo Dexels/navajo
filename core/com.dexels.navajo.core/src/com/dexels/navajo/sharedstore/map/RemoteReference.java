@@ -33,7 +33,7 @@ public class RemoteReference implements Serializable {
 	
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(RemoteReference.class);
+	private static final Logger logger = LoggerFactory.getLogger(RemoteReference.class);
 
 	
 	private static final long serialVersionUID = -1993331465315897328L;

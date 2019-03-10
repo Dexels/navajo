@@ -6,6 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapters.stream.impl.CSVRowImpl;
 
 import io.reactivex.ObservableOperator;
@@ -14,7 +17,10 @@ import io.reactivex.disposables.Disposable;
 
 public class CSV {
 
-	
+	private CSV() {
+		// no instances
+	}
+	private static final Logger logger = LoggerFactory.getLogger(CSV.class);
 
     public static ObservableOperator<Row, String> rows(final String columnSeparator) {
 		return new ObservableOperator<Row, String>() {
@@ -33,7 +39,7 @@ public class CSV {
 
 					@Override
 					public void onError(Throwable e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 						child.onError(e);
 					}
 

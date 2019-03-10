@@ -114,7 +114,7 @@ class FileComparator implements Comparator<File>{
 public class SharedFileStore extends AbstractSharedStore implements SharedStoreInterface, HasMetrics {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SharedFileStore.class);
 	
 	/**
@@ -125,7 +125,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 
 	private NavajoConfigInterface navajoConfig;
 	private TribeManagerInterface tribeManagerInterface;
-	private final static Object lockSemaphore = new Object();
+	private static final Object lockSemaphore = new Object();
 	
 	/**
 	 * Metrics

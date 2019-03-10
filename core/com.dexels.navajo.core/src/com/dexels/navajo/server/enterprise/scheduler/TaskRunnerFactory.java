@@ -16,7 +16,7 @@ public class TaskRunnerFactory {
 	private static Object semaphore = new Object();
 	
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TaskRunnerFactory.class);
 	
 	public static void setInstance(TaskRunnerInterface instance) {

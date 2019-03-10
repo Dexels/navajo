@@ -24,7 +24,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class TslCompileException extends Exception {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TslCompileException.class);
 	
     /**

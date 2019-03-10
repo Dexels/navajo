@@ -12,7 +12,7 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 
 public class StressTestHandler  extends ServiceHandler {
-    private final static Logger logger = LoggerFactory.getLogger(StressTestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(StressTestHandler.class);
     @Override
     public Navajo doService()
             throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException {

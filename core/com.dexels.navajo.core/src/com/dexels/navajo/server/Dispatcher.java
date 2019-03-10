@@ -114,7 +114,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
 
-    private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     static {
         try {

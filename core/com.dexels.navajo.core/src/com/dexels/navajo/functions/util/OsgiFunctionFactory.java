@@ -20,7 +20,7 @@ import com.dexels.navajo.expression.api.FunctionInterface;
 public class OsgiFunctionFactory extends JarFunctionFactory {
 
 	private static final long serialVersionUID = 7044347052933946219L;
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
 	@Override

@@ -75,7 +75,7 @@ class Frequency implements Serializable {
 public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener, Mappable {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(PersistenceManagerImpl.class);
 	
 	/**

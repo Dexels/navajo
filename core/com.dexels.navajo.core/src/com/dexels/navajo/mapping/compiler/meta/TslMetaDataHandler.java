@@ -36,7 +36,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class TslMetaDataHandler implements MetaDataListener {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TslMetaDataHandler.class);
     private final Map<String,TreeSet<String>> callsScriptMap = new TreeMap<String,TreeSet<String>>();
     private final Map<String,TreeSet<String>> calledByScriptMap = new TreeMap<String,TreeSet<String>>();

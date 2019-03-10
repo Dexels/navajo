@@ -66,7 +66,8 @@ public class TslPreCompiler {
         	if (is != null) {
         		try {
 					is.close();
-				} catch (IOException e) {
+				} catch (IOException e) { 
+        			logger.error("Error: ", e);
 				}
         	}
         	
@@ -219,15 +220,15 @@ public class TslPreCompiler {
             String ext = extendsAttr.substring(9);
             // Entity versioning stuff
             String version = "0";
-            if (ext.indexOf(".") != -1) {
-                version = ext.substring(ext.indexOf(".") + 1, ext.indexOf("?") == -1 ? ext.length() : ext.indexOf("?"));
+            if (ext.indexOf('.') != -1) {
+                version = ext.substring(ext.indexOf('.') + 1, ext.indexOf('?') == -1 ? ext.length() : ext.indexOf('?'));
             }
             String rep = "." + version;
             ext = ext.replace(rep, "");
 
             String[] superEntities = ext.split(",");
             for (String superEntity : superEntities) {
-                if (superEntity.indexOf('?') > 0) {
+                if (superEntity.indexOf('?') > -1) {
                     superEntity = superEntity.split("\\?")[0];
                 }
 
@@ -362,9 +363,6 @@ public class TslPreCompiler {
 
         // Entity map
         xPath = XPathFactory.newInstance().newXPath();
-        // ((NodeList)
-        // xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression",
-        // tslDoc.getDocumentElement(), XPathConstants.NODESET)).getLength();
 
         nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);
 

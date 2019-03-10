@@ -44,7 +44,7 @@ public class MapMetaData {
 //	private String configPath = null;
 	
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(MapMetaData.class);
 	
 	private MapMetaData() {

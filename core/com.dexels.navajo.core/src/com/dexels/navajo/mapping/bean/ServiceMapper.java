@@ -29,7 +29,7 @@ public class ServiceMapper implements Mappable {
 	private List<Object> methodParameters = new ArrayList<Object>();
 	private Object result;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ServiceMapper.class);
 	
 //	private Access myAccess;

@@ -16,7 +16,7 @@ public class MethodDefinition {
 	private String name;
 	
 	private HashMap<String, ParameterDefinition> parameters = new HashMap<String, ParameterDefinition>();
-	private final static Random rand = new Random(System.currentTimeMillis());
+	private static final Random rand = new Random(System.currentTimeMillis());
 	
 	public MethodDefinition(String name, HashMap<String, ParameterDefinition> parameters) {
 		this.name = name;

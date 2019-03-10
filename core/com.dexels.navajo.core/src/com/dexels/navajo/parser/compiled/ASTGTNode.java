@@ -28,7 +28,7 @@ public final class ASTGTNode extends SimpleNode {
 		return lazyBiFunction(problems, expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    private final static Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
+    private static final Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
     	Object a = ao.value;
     	Object b = bo.value;
         if (a == null || b == null) {

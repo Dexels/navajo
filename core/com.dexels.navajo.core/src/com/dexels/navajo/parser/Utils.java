@@ -49,7 +49,7 @@ public final class Utils extends Exception {
 
 	public final static int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
-	private final static boolean compare(int a, int b, String c) {
+	private static final boolean compare(int a, int b, String c) {
 
 		if (c.equals(">"))
 			return (a > b);
@@ -67,7 +67,7 @@ public final class Utils extends Exception {
 			return false;
 	}
 
-	private final static boolean compare(Date a, Date b, String c) {
+	private static final boolean compare(Date a, Date b, String c) {
 		if (c.equals(">"))
 			return (a.after(b));
 		else if (c.equals("<"))
@@ -348,7 +348,7 @@ public final class Utils extends Exception {
 		return a;
 	}
 
-	private final static boolean isEqual(Object aval, Object bval) throws TMLExpressionException {
+	private static final boolean isEqual(Object aval, Object bval) throws TMLExpressionException {
 		Object a = getActualValue(aval);
 		Object b = getActualValue(bval);
 		if ((a == null) && (b == null))

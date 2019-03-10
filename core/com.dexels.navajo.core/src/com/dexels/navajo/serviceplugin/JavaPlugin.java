@@ -29,7 +29,7 @@ public abstract class JavaPlugin extends CompiledScript {
 	private Access myAccess;
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(JavaPlugin.class);
 	
 	

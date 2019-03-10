@@ -44,7 +44,7 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
-	private final static Logger logger = LoggerFactory.getLogger(DefaultExpressionEvaluator.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultExpressionEvaluator.class);
 
 	public DefaultExpressionEvaluator() {
 		logger.debug("Creating defaultExpressionEvaluator service");

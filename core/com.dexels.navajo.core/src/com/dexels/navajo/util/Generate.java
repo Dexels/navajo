@@ -36,7 +36,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 public class Generate {
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(Generate.class);
 
   public Navajo generateNavajoOutput(String file) throws Exception {

@@ -38,10 +38,10 @@ import com.dexels.navajo.version.AbstractVersion;
 public final class ASTFunctionNode extends SimpleNode {
 
 	
-	private final static Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");
+	private static final Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(ASTFunctionNode.class);
+	private static final Logger logger = LoggerFactory.getLogger(ASTFunctionNode.class);
 
 	String functionName;
 	int args = 0;

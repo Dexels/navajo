@@ -22,7 +22,7 @@ public
 class ASTReactivePipe extends SimpleNode {
 	
 	
-	private final static Logger logger = LoggerFactory.getLogger(ASTReactivePipe.class);
+	private static final Logger logger = LoggerFactory.getLogger(ASTReactivePipe.class);
 
 public int args = 0;
   public ASTReactivePipe(int id) {

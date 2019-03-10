@@ -22,7 +22,7 @@ public class TestBean implements Mappable {
 	public double dub;
 	public float flt;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestBean.class);
 	
 	

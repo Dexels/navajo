@@ -9,7 +9,7 @@ public class WrapCollectorFactory extends GenericThread {
 
     private static WrapCollector instance;
 
-    private final static Logger logger = LoggerFactory.getLogger(WrapCollectorFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(WrapCollectorFactory.class);
 
     public static void setInstance(WrapCollector wrapper) {
         logger.info("Got a WrapperCollector!");

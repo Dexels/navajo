@@ -52,7 +52,7 @@ class SerializableObject implements Serializable {
 public class SharedStoreInterfaceTest {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SharedStoreInterfaceTest.class);
 	private SharedStoreInterface si;
 	boolean locked = false;

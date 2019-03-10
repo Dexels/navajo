@@ -32,6 +32,9 @@ import oracle.jdbc.pool.OracleDataSource;
 
 public class SQL {
 	
+	private SQL() {
+		// no instances
+	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(SQL.class);
 
@@ -52,7 +55,7 @@ public class SQL {
 	        		testDataSource = ds;
 				return Optional.of(testDataSource);
 			} catch (SQLException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 		}
 		
@@ -64,16 +67,15 @@ public class SQL {
 	        props.put("url", "jdbc:mysql://localhost/competition");
 	        props.put("user", "username");
 	        props.put("password", "password");
-//	        dsc.activate(props);
 	        Properties p = new Properties();
 	        p.putAll(props);
 	        try {
 	        		testDataSource = dsc.createDataSource(p);
 				return Optional.of(testDataSource);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} 
-	        return null;
+	        return Optional.empty();
 		}
 		GrusProvider instance = GrusProviderFactory.getInstance();
 		DataSource source = instance.getInstanceDataSource(tenant, dataSourceName);
@@ -82,7 +84,6 @@ public class SQL {
 	
 	public static Flowable<ImmutableMessage> query(String datasource, String tenant, String query, Operand... params) {
 		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
-//		Pool<Connection> pool =  getPoolForDataSource(ds);
 		if(!ds.isPresent()) {
 			return Flowable.error(new NullPointerException("Datasource missing for datasource: "+datasource+" with tenant: "+tenant));
 		}
@@ -95,7 +96,6 @@ public class SQL {
 	
 	public static Flowable<ImmutableMessage> update(String datasource, String tenant, String query, Operand... params) {
 		Optional<DataSource> ds = resolveDataSource(datasource, tenant);
-//		Pool<Connection> pool =  getPoolForDataSource(ds);
 		if(!ds.isPresent()) {
 			return Flowable.error(new NullPointerException("Datasource missing for datasource: "+datasource+" with tenant: "+tenant));
 		}
@@ -105,8 +105,6 @@ public class SQL {
 			.parameters(valueList)
 			.counts()
 			.map(count->ImmutableFactory.empty().with("count", count, Property.INTEGER_PROPERTY));
-//			.complete().toFlowable();
-//			.get(SQL::resultSet);
 	}
 	
 	private static ImmutableMessage toLowerCaseKeys(ImmutableMessage m) {

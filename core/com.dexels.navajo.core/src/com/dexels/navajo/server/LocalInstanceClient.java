@@ -10,7 +10,7 @@ import com.dexels.navajo.script.api.FatalException;
 
 public class LocalInstanceClient extends LocalClientDispatcherWrapper {
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(LocalInstanceClient.class);
 	private String instance = null;
 	

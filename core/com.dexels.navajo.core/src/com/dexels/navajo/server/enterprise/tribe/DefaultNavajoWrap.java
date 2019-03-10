@@ -41,8 +41,8 @@ public class DefaultNavajoWrap implements NavajoRug {
 
     protected final String reference;
 
-    private final static Logger logger = LoggerFactory.getLogger(DefaultNavajoWrap.class);
-    private final static Random rand = new Random(System.currentTimeMillis());
+    private static final Logger logger = LoggerFactory.getLogger(DefaultNavajoWrap.class);
+    private static final Random rand = new Random(System.currentTimeMillis());
     
     /*
      * Return a unique id for this wrap. If TribalNumber are available use those, if not use random long.

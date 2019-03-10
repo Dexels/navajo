@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class EclipseCompiler implements JavaCompiler {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(EclipseCompiler.class);
     String encoding;
     String classpath; // ignored

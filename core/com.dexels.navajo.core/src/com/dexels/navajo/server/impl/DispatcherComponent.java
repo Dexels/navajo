@@ -19,7 +19,7 @@ public class DispatcherComponent extends Dispatcher implements
 	NavajoEventRegistry myRegistry = null;
 	TribeManagerInterface tribeManager = null;
 	
-	private final static Logger logger = LoggerFactory.getLogger(DispatcherComponent.class);
+	private static final Logger logger = LoggerFactory.getLogger(DispatcherComponent.class);
 //	private ServiceRegistration<AuditLog> auditLogSr;
 	
 	public void activate(BundleContext context) {

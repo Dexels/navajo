@@ -95,7 +95,7 @@ public class SunJavaCompiler implements JavaCompiler {
     private Class compilerClass;
 
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SunJavaCompiler.class);
     
 	@Override

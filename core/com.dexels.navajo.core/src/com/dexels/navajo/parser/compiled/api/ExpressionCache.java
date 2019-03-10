@@ -33,7 +33,7 @@ import com.google.common.cache.LoadingCache;
 
 
 public class ExpressionCache {
-	private final static Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExpressionCache.class);
     private static final String DEFAULT_CACHE_SPEC = "maximumSize=20000";
 
 	private static ExpressionCache instance;

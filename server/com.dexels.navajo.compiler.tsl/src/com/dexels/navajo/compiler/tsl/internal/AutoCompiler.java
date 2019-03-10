@@ -53,7 +53,7 @@ public class AutoCompiler {
 			try {
 				Thread.sleep(warmupWait);
 			} catch (InterruptedException e) {
-				logger.error("Error: ", e);
+				logger.trace("Error: ", e);
 			}
 		});
 		active.set(enabled);

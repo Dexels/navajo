@@ -59,7 +59,7 @@ public final class JMXHelper  {
 	private static HashSet<Monitor> monitors = new HashSet<Monitor>();
 	private static HashSet<ObjectName> mbeans = new HashSet<ObjectName>();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(JMXHelper.class);
 	
 	private static Map<Monitor,List<NotificationListener>> listenerMap = new HashMap<Monitor, List<NotificationListener>>();
@@ -179,7 +179,7 @@ public final class JMXHelper  {
 		return myThread;
 	}
 
-	private final static ObjectName getObjectName(String domain, String type) {
+	private static final ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
 			synchronized ( semaphore ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();

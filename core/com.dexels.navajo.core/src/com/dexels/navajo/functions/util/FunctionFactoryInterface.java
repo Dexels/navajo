@@ -23,16 +23,15 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	private static final long serialVersionUID = 6512562097288200226L;
 
-	private Map<String, FunctionDefinition> defaultConfig = null;
-//	protected final HashMap<String, String> defaultAdapterConfig = new HashMap<String, String>();
+	private transient Map<String, FunctionDefinition> defaultConfig = null;
 
-	protected final Map<ExtensionDefinition,Map<String, FunctionDefinition>> adapterConfig = new HashMap<ExtensionDefinition,Map<String, FunctionDefinition>>();
+	protected final transient Map<ExtensionDefinition,Map<String, FunctionDefinition>> adapterConfig = new HashMap<>();
 	
-	protected final Map<ExtensionDefinition,Map<String,FunctionDefinition>> functionConfig = new HashMap<ExtensionDefinition,Map<String,FunctionDefinition>>();
+	protected final transient Map<ExtensionDefinition,Map<String,FunctionDefinition>> functionConfig = new HashMap<>();
 
 	private static Object semaphore = new Object();
 	private boolean initializing = false;
-	private final List<FunctionResolver> functionResolvers = new LinkedList<FunctionResolver>();
+	private final transient List<FunctionResolver> functionResolvers = new LinkedList<>();
 	private static final Logger logger = LoggerFactory.getLogger(FunctionFactoryInterface.class);
 	public abstract void init();
 	
@@ -61,7 +60,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public final FunctionDefinition getDef(String name)  {
 		if(defaultConfig!=null) {
 			FunctionDefinition fd = defaultConfig.get(name);
-//			logger.info("Keys in defaultconfig: "+defaultConfig.keySet());
 			if(fd!=null) {
 				return fd;
 			}
@@ -77,7 +75,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		
 		for (Map<String, FunctionDefinition> elt : functionConfig.values()) {
 			FunctionDefinition fd = elt.get(name);
-//			logger.debug("Looking for function in fd: "+fd);
 			if(fd!=null) {
 				return fd;
 			}
@@ -92,7 +89,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	 * @throws UserException
 	 */
 	
-	public final FunctionDefinition getDef(ExtensionDefinition ed, String name) throws TMLExpressionException {
+	public final FunctionDefinition getDef(ExtensionDefinition ed, String name) {
 		
 		while ( initializing ) {
 			// Wait a bit.
@@ -107,7 +104,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		
 		Map<String, FunctionDefinition> map = functionConfig.get(ed);
 		if(map==null) {
-			logger.warn("Function definition not found: "+name+" for extensiondef: "+ed.getId()+" map: "+functionConfig);
+			logger.warn("Function definition not found: {} for extensiondef: {} map: {}",name,ed.getId(),functionConfig);
 			throw new TMLExpressionException("Could not find function definition: " + name);
 		} else {
 			FunctionDefinition fd = map.get(name);
@@ -143,20 +140,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 				c = Class.forName(name, true, cl);
 			}
 			return c.getDeclaredConstructor().newInstance();
-		} catch (InstantiationException e) {
-			logger.error("Caught exception. ",e);
-		} catch (IllegalAccessException e) {
-			logger.error("Caught exception. ",e);
-		} catch (ClassNotFoundException e) {
-			// old skool class fail, unreachable in injected OSGi mode
-			logger.error("Caught exception. ",e);
-		} catch (IllegalArgumentException e) {
-			logger.error("Caught exception. ",e);
-		} catch (InvocationTargetException e) {
-			logger.error("Caught exception. ",e);
-		} catch (NoSuchMethodException e) {
-			logger.error("Caught exception. ",e);
-		} catch (SecurityException e) {
+		} catch (InstantiationException|IllegalAccessException|ClassNotFoundException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException e) {
 			logger.error("Caught exception. ",e);
 		}
 		return null;
@@ -167,9 +151,9 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			String ss = getAdapterClass(name, elt);
 			if(ss!=null) {
 				try {
-					Class<?> c = Class.forName(getAdapterClass(name,elt),true,cl);
-					return c;
+					return Class.forName(getAdapterClass(name,elt),true,cl);
 				} catch (ClassNotFoundException e) {
+					logger.warn("Class definition {} found, but no actual class could be loaded: {}",name,ss,e);
 					// not found in this extensiondefinition.
 				}				
 			}
@@ -181,8 +165,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	public  Class<?> getAdapterClass(String name, ClassLoader cl, ExtensionDefinition ed) {
 		try {
-			Class<?> c = Class.forName(getAdapterClass(name,ed),true,cl);
-			return c;
+			return Class.forName(getAdapterClass(name,ed),true,cl);
 		} catch (ClassNotFoundException e) {
 			logger.error("Caught exception. ",e);
 		}
@@ -193,7 +176,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public Set<String> getFunctionNames(ExtensionDefinition ed) {
 		final Map<String, FunctionDefinition> functionsForExtension = functionConfig.get(ed);
 		if(functionsForExtension==null) {
-			logger.error("Error listing function names for definition: "+ed.getDescription()+" id: "+ed.getId());
+			logger.error("Error listing function names for definition: {} id: {}",ed.getDescription(),ed.getId());
 			return null;
 		}
 		return functionsForExtension.keySet();
@@ -230,15 +213,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		}
 	}
 
-//	public void load(FunctionDefinition fd) {
-//		myFunctionDefinition = fd;
-//		if (fd.getInputParams() != null) {
-//			myinputtypes = loadInputTypes(fd.getInputParams());
-//		}
-//		if (fd.getResultParam() != null) {
-//			myreturntypes = loadReturnType(fd.getResultParam());
-//		}
-//	}
 	
 	
 	public Map<String, FunctionDefinition> getConfig(ExtensionDefinition ed) {
@@ -246,7 +220,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		if(map!=null) {
 			return map;
 		}
-		map = new HashMap<String, FunctionDefinition>();
+		map = new HashMap<>();
 		functionConfig.put(ed,map);
 		return map;
 	}
@@ -256,7 +230,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		if(map!=null) {
 			return map;
 		}
-		map = new HashMap<String, FunctionDefinition>();
+		map = new HashMap<>();
 		adapterConfig.put(ed,map);
 		return map;
 	}
@@ -288,22 +262,9 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	@SuppressWarnings("unchecked")
 	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
 		try {
-//			logger.debug("Instantiating function: {}",fd.getObject());
 			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
 			return clz.getDeclaredConstructor().newInstance();
-		} catch (ClassNotFoundException e) {
-			logger.error("Caught exception. ",e);
-		} catch (InstantiationException e) {
-			logger.error("Caught exception. ",e);
-		} catch (IllegalAccessException e) {
-			logger.error("Caught exception. ",e);
-		} catch (IllegalArgumentException e) {
-			logger.error("Caught exception. ",e);
-		} catch (InvocationTargetException e) {
-			logger.error("Caught exception. ",e);
-		} catch (NoSuchMethodException e) {
-			logger.error("Caught exception. ",e);
-		} catch (SecurityException e) {
+		} catch (ClassNotFoundException|InstantiationException|IllegalAccessException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException e) {
 			logger.error("Caught exception. ",e);
 		}
 		return null;

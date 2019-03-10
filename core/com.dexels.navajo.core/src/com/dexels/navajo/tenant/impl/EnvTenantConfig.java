@@ -19,7 +19,7 @@ public class EnvTenantConfig implements TenantConfig {
 	
 	private boolean wildcard = false;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(EnvTenantConfig.class);
 	
 	@Override

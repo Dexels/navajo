@@ -18,7 +18,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 
 	private static final long serialVersionUID = -2957804056238962208L;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(AuditLogEvent.class);
 	
 	private static String instanceName = null;

@@ -49,7 +49,7 @@ import com.dexels.navajo.server.DispatcherInterface;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public final class MappingUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(MappingUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MappingUtils.class);
 
     public static final String getStrippedPropertyName(String name) {
         StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);

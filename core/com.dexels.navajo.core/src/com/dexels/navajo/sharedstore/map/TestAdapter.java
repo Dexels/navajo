@@ -24,7 +24,7 @@ public class TestAdapter implements Mappable {
 	
 	public static HashSet preventCollection = new HashSet();
 	
-	private final static Logger logger = LoggerFactory.getLogger(TestAdapter.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestAdapter.class);
 
 	@Override
 	public void kill() {

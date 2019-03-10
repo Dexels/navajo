@@ -21,7 +21,7 @@ public class SharedMemoryStore extends AbstractSharedStore implements SharedStor
 	SharedStoreEntryFactory ssf = null;
 	private Map<String,SharedStoreLock> mLocks = new ConcurrentHashMap<String,SharedStoreLock>();
 	
-	private final static Logger logger = LoggerFactory.getLogger(SharedMemoryStore.class);
+	private static final Logger logger = LoggerFactory.getLogger(SharedMemoryStore.class);
 	
 	private final String constructName(String parent, String name) {
 		return parent + "/" + name.replace('/', '_');

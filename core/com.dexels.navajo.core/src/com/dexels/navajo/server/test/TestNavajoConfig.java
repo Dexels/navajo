@@ -31,7 +31,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestNavajoConfig.class);
 	
 	public TestNavajoConfig() {

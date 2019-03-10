@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class DependencyAnalyzer {
-    private final static Logger logger = LoggerFactory.getLogger(DependencyAnalyzer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DependencyAnalyzer.class);
 
     protected TslPreCompiler precompiler;
     private NavajoIOConfig navajoIOConfig = null;
 
-    protected Map<String, List<Dependency>> dependencies;;
+    protected Map<String, List<Dependency>> dependencies;
     protected Map<String, List<Dependency>> reverseDependencies;
     protected String scriptFolder;
     private Object sync = new Object();
@@ -39,8 +39,8 @@ public class DependencyAnalyzer {
 
 
     protected void initialize() {
-        dependencies = new HashMap<String, List<Dependency>>();
-        reverseDependencies = new HashMap<String, List<Dependency>>();
+        dependencies = new HashMap<>();
+        reverseDependencies = new HashMap<>();
     }
 
     public void addDependencies(String script, File scriptFile) {
@@ -49,15 +49,12 @@ public class DependencyAnalyzer {
         ClassLoader cl = t.getContextClassLoader();
         t.setContextClassLoader(getClass().getClassLoader());
         try {
-            List<Dependency> myDependencies = new ArrayList<Dependency>();
+            List<Dependency> myDependencies = new ArrayList<>();
             String scriptTenant = tenantFromScriptPath(scriptFile.getAbsolutePath());
 
             synchronized (sync) {
                 try {
                     precompiler.getAllDependencies(scriptFile, scriptFolder, myDependencies, scriptTenant);
-                    // codeSearch.getAllWorkflowDependencies(scriptFile,
-                    // scriptPath,
-                    // scriptFolder, myDependencies);
                 } catch (Exception e) {
                     logger.error(" Exception on getting depencencies for: " + scriptFile.getAbsolutePath(), e);
                     return;
@@ -85,7 +82,7 @@ public class DependencyAnalyzer {
     
     public List<Dependency> getDependencies(String scriptPath, int dependencyType) {
         List<Dependency> allDeps = dependencies.get(scriptPath);
-        List<Dependency> result = new ArrayList<Dependency>();
+        List<Dependency> result = new ArrayList<>();
         
         if (allDeps == null) {
             return result;
@@ -102,8 +99,8 @@ public class DependencyAnalyzer {
     public List<Dependency> getReverseDependencies(String scriptPath) {
         String script = scriptPath;
 
-        if (scriptPath.indexOf('_') > 0) {
-            int slashIndex = scriptPath.lastIndexOf("/");
+        if (scriptPath.indexOf('_') >= 0) {
+            int slashIndex = scriptPath.lastIndexOf('/');
             
             if (slashIndex != -1) {
                 // Check if the last '_' is after the / part, since a _ might occur in a directory name
@@ -124,7 +121,7 @@ public class DependencyAnalyzer {
 
     private String tenantFromScriptPath(String scriptPath) {
         int scoreIndex = scriptPath.lastIndexOf('_');
-        int slashIndex = scriptPath.lastIndexOf("/");
+        int slashIndex = scriptPath.lastIndexOf('/');
         
         if (slashIndex != -1) {
             String bareScript = scriptPath.substring(slashIndex + 1);

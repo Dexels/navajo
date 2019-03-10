@@ -56,15 +56,15 @@ public class JettyClient {
 //		Reque
 		Request req = httpClient.newRequest(uri);
 		Request reqProcessed = buildRequest.apply(req);
-		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(reqProcessed);
 		if(requestContentType.isPresent()) {
 			reqProcessed = reqProcessed.header("Content-Type", requestContentType.get());
 		}
+		ReactiveRequest.Builder requestBuilder = ReactiveRequest.newBuilder(reqProcessed);
 		if(requestBody.isPresent()) {
 			Publisher<ContentChunk> bb = requestBody.get()
 					.doOnNext(b->this.sent.addAndGet(b.length))
 					.map(e->new ContentChunk(ByteBuffer.wrap(e)));
-			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.get()));
+			requestBuilder = requestBuilder.content(ReactiveRequest.Content.fromPublisher(bb, requestContentType.orElse("application/octet-stream")));
 		}
 		ReactiveRequest request = requestBuilder.build();
 		return Flowable.fromPublisher(request.response((response, content) -> Flowable.just(new ReactiveReply(response,content,b->this.sent.addAndGet(b.length)))))

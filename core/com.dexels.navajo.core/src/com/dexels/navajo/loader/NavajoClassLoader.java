@@ -77,7 +77,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     protected HashSet<JarResources> betaJarResources = null;
     
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoClassLoader.class);
 	
     private boolean noCaching = false;

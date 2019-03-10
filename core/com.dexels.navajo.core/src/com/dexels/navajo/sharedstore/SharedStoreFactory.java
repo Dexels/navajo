@@ -37,7 +37,7 @@ public class SharedStoreFactory {
 	private static volatile SharedStoreInterface instance = null;
 	private static Object semaphore = new Object();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SharedStoreFactory.class);
 	public final static void clear() {
 		instance = null;

@@ -52,10 +52,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<String,AsyncMappable>());
   public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<String,Access>());
   private float timeout = 3600000; 
-  private final static int threadWait = 2000;
-  private final static String id = "Navajo AsyncStore";
+  private static final int threadWait = 2000;
+  private static final String id = "Navajo AsyncStore";
   
-  private final static Logger logger = LoggerFactory.getLogger(AsyncStore.class);
+  private static final Logger logger = LoggerFactory.getLogger(AsyncStore.class);
 
   private static Object semaphore = new Object();
   

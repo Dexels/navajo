@@ -26,7 +26,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 	 * 
 	 */
 	private static final long serialVersionUID = -5200898919345188706L;
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(JarFunctionFactory.class);
 	
 	

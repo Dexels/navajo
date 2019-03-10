@@ -14,9 +14,9 @@ import com.dexels.navajo.server.resource.ServiceAvailability;
  */
 public class NavajoMapManager implements NavajoMapManagerMBean {
 
-	private HashMap<String, Integer> resourceHealthMap = new HashMap<String, Integer>();
+	private HashMap<String, Integer> resourceHealthMap = new HashMap<>();
 	
-	private static volatile NavajoMapManager instance = null;
+	private static NavajoMapManager instance = null;
 	
 	private NavajoMapManager() {
 		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "NavajoMapManager");
@@ -34,12 +34,12 @@ public class NavajoMapManager implements NavajoMapManagerMBean {
 		if ( rawId == null ) {
 			throw new RuntimeException("Illegal resource specified: " + rawId);
 		}
-		if ( rawId.indexOf(":") != -1 ) {
+		if ( rawId.indexOf(':') != -1 ) {
 			String hostId = rawId.split(":")[0];
 			String portId = rawId.split(":")[1];
 
 			return hostId + ":" + portId;
-		} else if ( rawId.indexOf("/") != -1 ){
+		} else if ( rawId.indexOf('/') != -1 ){
 			return rawId.split("/")[0];
 		} else {
 			return rawId;

@@ -35,7 +35,7 @@ public class NavajoConfigEmitter implements EventHandler {
 
 	private static final String CONFIG_SERVER_XML = "config/server.xml";
 	private static final int MAX_ACCESS_SET_SIZE = 50;
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoConfigEmitter.class);
 
 	private NavajoServerContext navajoContext;
@@ -365,7 +365,7 @@ public class NavajoConfigEmitter implements EventHandler {
 		}
 	}
 
-	private final static String properDir(String in) {
+	private static final String properDir(String in) {
 		String result = in + (in.endsWith("/") ? "" : "/");
 		return result;
 	}

@@ -30,11 +30,11 @@ import com.dexels.navajo.server.jmx.JMXHelper;
  *
  */
 public class NavajoEventRegistry extends NotificationBroadcasterSupport implements NavajoEventRegistryMXBean, NotificationListener {
-    private final static String id = "Navajo Event Registry";
-    private final static Logger logger = LoggerFactory.getLogger(NavajoEventRegistry.class);
-    private final static Object semaphore = new Object();
+    private static final String id = "Navajo Event Registry";
+    private static final Logger logger = LoggerFactory.getLogger(NavajoEventRegistry.class);
+    private static final Object semaphore = new Object();
     public static long notificationSequence = 0;
-	private volatile static NavajoEventRegistry instance = null;
+	private static NavajoEventRegistry instance = null;
 	
 	private final Map<Class<? extends NavajoEvent>, Set<NavajoListener>> registry = 
 															new ConcurrentHashMap<Class<? extends NavajoEvent>, Set<NavajoListener>>();
@@ -75,7 +75,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						instance = new NavajoEventRegistry();
 						try {
 							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-						} catch (Throwable t) {
+						} catch (Exception t) {
+							logger.error("Error: ", t);
 						} 
 					}
 				}
@@ -163,7 +164,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * 
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
-		// TODO ignoreProxyListeners is actually not used. Is that correct?
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -208,7 +208,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	        lock = new Object();
 	    }
         synchronized (lock) {
-            // logger.info("Synchronous Event Triggered: " + ne.getClass());
             publishMonitoredEvent(ne);
 
             Set<NavajoListener> copy = getInterestedParties(ne);
@@ -222,7 +221,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
                         } else {
                             nl.onNavajoEvent(ne);
                         }
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         logger.error("Error in onNavajoEvent {} to {}: {} ", ne, nl, t);
                     }
                 }
@@ -301,11 +300,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	@Override
 	public void handleNotification(Notification notification, Object handback) {
 
-		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
-		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
-		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
-		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
-		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: {}", notification.getType() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: {}", notification.getMessage() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: {}", notification.getSequenceNumber() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: {}", notification.getTimeStamp() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: {}", notification.getSource() );		
 
 	}
 
@@ -331,7 +330,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		instance = this;
 		try {
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Caught Error: ", e);
 		}
 	}

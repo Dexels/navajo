@@ -15,7 +15,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	private DispatcherInterface dispatcherInterface;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(LocalClientDispatcherWrapper.class);
 	protected String user;
 	protected String pass;

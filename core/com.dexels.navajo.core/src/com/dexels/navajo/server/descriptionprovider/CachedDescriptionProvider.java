@@ -18,7 +18,7 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 
 	protected final Map<String,String> cache = new HashMap<String,String>();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CachedDescriptionProvider.class);
 	
 	protected boolean debug = false;

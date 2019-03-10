@@ -13,7 +13,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 
 public class ASTPipeline extends SimpleNode {
 	
-	private final static Logger logger = LoggerFactory.getLogger(ASTPipeline.class);
+	private static final Logger logger = LoggerFactory.getLogger(ASTPipeline.class);
 
   public ASTPipeline(int id) {
     super(id);

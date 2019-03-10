@@ -1,3 +1,4 @@
+package com.dexels.navajo.adapters.stream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapters.stream.SQL;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.StreamDocument;
 
 public class TestStreamingInput  {
@@ -23,8 +22,8 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'", new Operand[]{})
-			.doOnNext(m->System.err.println("Message: "+m))
+		SQL.query("dummy","sometenant", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+			.doOnNext(m->logger.info("Message: {}",m))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
@@ -36,13 +35,13 @@ public class TestStreamingInput  {
 						out.flush();
 						out.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 
 				@Override
-				public void onError(Throwable arg0) {
-					logger.error("Error: ", out);
+				public void onError(Throwable e) {
+					logger.error("Error: ", e);
 				}
 
 				@Override
@@ -50,7 +49,7 @@ public class TestStreamingInput  {
 					try {
 						out.write(b);
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}				
 				}
 
@@ -69,9 +68,9 @@ public class TestStreamingInput  {
 		tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 
-		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'",new Operand[] {})
-			.doOnNext(m->System.err.println("Message: "+m))
-			.doOnComplete(()->System.err.println("Done!"))
+		SQL.query("dummy", "", "SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID = 'BBKV29N'")
+			.doOnNext(m->logger.info("Message: {}",m))
+			.doOnComplete(()->logger.info("Done!"))
 			.compose(StreamDocument.toMessageEvent("Organizations",true))
 			.compose(StreamDocument.inNavajo("dummy",  Optional.empty(),  Optional.empty()))
 			.lift(StreamDocument.serialize())
@@ -80,26 +79,26 @@ public class TestStreamingInput  {
 				@Override
 				public void onComplete() {
 					try {
-						System.err.println("Done");
+						logger.info("Done");
 						out.flush();
 						out.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 
 				@Override
-				public void onError(Throwable arg0) {
-					logger.error("Error: ", out);
+				public void onError(Throwable e) {
+					logger.error("Error: ", e);
 				}
 
 				@Override
 				public void onNext(byte[] b) {
 					try {
-						System.err.println("Item: "+new String(b));
+						logger.info("Item: {}", new String(b));
 						out.write(b);
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}				
 				}
 

@@ -16,7 +16,7 @@ public class SimpleSharedStore extends AbstractSharedStore implements SharedStor
 
 	File storeRoot;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SimpleSharedStore.class);
 	
 	public SimpleSharedStore(String name) {

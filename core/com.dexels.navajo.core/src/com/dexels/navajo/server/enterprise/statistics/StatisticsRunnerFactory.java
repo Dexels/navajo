@@ -19,7 +19,7 @@ public class StatisticsRunnerFactory {
 
     private static volatile StatisticsRunnerInterface instance = null;
     private static Object semaphore = new Object();
-    private final static Logger logger = LoggerFactory.getLogger(StatisticsRunnerFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(StatisticsRunnerFactory.class);
 
     public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
         if (instance != null) {

@@ -11,7 +11,7 @@ public class TestService {
 	DomainObjectMapper dom;
 	TestBean myBean;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TestService.class);
 	
 	public String getLastname(TestBean dom) throws Exception {

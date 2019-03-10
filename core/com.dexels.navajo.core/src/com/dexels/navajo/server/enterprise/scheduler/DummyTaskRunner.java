@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class DummyTaskRunner implements TaskRunnerInterface {
 
 		
-		private final static Logger logger = LoggerFactory
+		private static final Logger logger = LoggerFactory
 				.getLogger(DummyTaskRunner.class);
 		
 	

@@ -68,7 +68,7 @@ public class GenericHandler extends ServiceHandler {
     private static Object mutex2 = new Object();
    
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GenericHandler.class);
 //    public static String applicationGroup = "";
     
@@ -112,7 +112,7 @@ public class GenericHandler extends ServiceHandler {
        loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
     }
 
-    private final static CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
+    private static final CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
     	NavajoClassSupplier loader = getScriptLoader(a.betaUser, className);
     	Class<?> cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
@@ -272,7 +272,7 @@ public class GenericHandler extends ServiceHandler {
      * @param sourceFile
      * @return
      */
-    private final static boolean checkScriptRecompile(File scriptFile, File sourceFile) {
+    private static final boolean checkScriptRecompile(File scriptFile, File sourceFile) {
     	if ( scriptFile == null ) {
     		return false;
     	}
@@ -288,7 +288,7 @@ public class GenericHandler extends ServiceHandler {
      * @param targetFile
      * @return
      */
-    private final static boolean checkJavaRecompile(File sourceFile, File targetFile) {
+    private static final boolean checkJavaRecompile(File sourceFile, File targetFile) {
     	boolean b = !targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified());
     	return b;
     }

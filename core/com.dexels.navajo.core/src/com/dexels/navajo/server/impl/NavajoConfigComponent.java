@@ -49,7 +49,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private WorkerInterface integrityWorker;
 	private SharedStoreInterface sharedStore;
 	private TribeManagerInterface tribeManager;
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {

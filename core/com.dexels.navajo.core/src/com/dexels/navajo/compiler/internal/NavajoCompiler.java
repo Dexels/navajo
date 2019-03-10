@@ -40,22 +40,26 @@ import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 @Deprecated
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
 public class NavajoCompiler
 {
 		public static final String VERSION = "$Id$";
 		
-		private final static Logger logger = LoggerFactory
+		private static final Logger logger = LoggerFactory
 				.getLogger(NavajoCompiler.class);
 		public String errors;
 		
-        public void compile(NavajoConfigInterface config, String source) throws Throwable{
+        public void compile(NavajoConfigInterface config, String source) throws Exception {
 
         	try {
 				Class.forName("com.sun.tools.javac.Main");
 			} catch (ClassNotFoundException e) {
 				logger.info("No sun compiler.");
 				throw NavajoFactory.getInstance().createNavajoException("No java compiler found! Is tools.jar in your classpath? Are you using a full JDK?");
-//				return;
 			}
         	
             String classPath = null;
@@ -65,17 +69,13 @@ public class NavajoCompiler
             String adapterPath = config.getAdapterPath();
             String outputPath = config.getCompiledScriptPath();
             File jarFolder = config.getJarFolder();
-            StringBuffer mainCp = new StringBuffer();
+            StringBuilder mainCp = new StringBuilder();
             // Find all jar's in adapter path.
             if (jarFolder!=null && jarFolder.exists()) {
-				File[] jars = jarFolder.listFiles(new FilenameFilter(){
-					@Override
-					public boolean accept(File dir, String name) {
-						return name.endsWith(".jar");
-					}});
+				File[] jars = jarFolder.listFiles((FilenameFilter) (dir, name) -> name.endsWith(".jar"));
 				for (int i = 0; i < jars.length; i++) {
 					if (!jars[i].exists()) {
-						logger.info("JAR: "+jars[i]+" does not exist!");
+						logger.info("JAR: {} does not exist!",jars[i]);
 					
 					} else {
 						boolean valid = isValidZip(jars[i]);
@@ -107,7 +107,6 @@ public class NavajoCompiler
             
             classPath += additional.toString();
 
-            //logger.info("in NavajoCompiler(): new classPath = " + classPath);
             
             SunJavaCompiler compiler = new SunJavaCompiler();
 
@@ -123,22 +122,10 @@ public class NavajoCompiler
         }
         
         private boolean isValidZip(final File file) {
-      	    ZipFile zipfile = null;
-      	    try {
-      	        zipfile = new ZipFile(file);
+      	    try(ZipFile zipfile = new ZipFile(file)) {
       	        return true;
-      	    } catch (ZipException e) {
-      	        return false;
       	    } catch (IOException e) {
       	        return false;
-      	    } finally {
-      	        try {
-      	            if (zipfile != null) {
-      	                zipfile.close();
-      	                zipfile = null;
-      	            }
-      	        } catch (IOException e) {
-      	        }
       	    }
       	}
 

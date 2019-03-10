@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.server.GenericThread;
 
 public class NavajoMemoryMapCleaner extends GenericThread { 
-    private final static Logger logger = LoggerFactory.getLogger(NavajoMemoryMapCleaner.class);
+    private static final Logger logger = LoggerFactory.getLogger(NavajoMemoryMapCleaner.class);
 
-    private final static int WORKER_SLEEP =  60*60*1000; // run once an hour
+    private static final int WORKER_SLEEP =  60*60*1000; // run once an hour
 
     private TribeManagerInterface tribeManager;
     

@@ -8,7 +8,7 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class RemoteAsyncAnswer extends Answer {
 
-    private final static Logger logger = LoggerFactory.getLogger(RemoteAsyncAnswer.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteAsyncAnswer.class);
 
     private static final long serialVersionUID = 489178532753193613L;
 

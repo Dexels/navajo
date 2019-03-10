@@ -13,7 +13,7 @@ public class ReferenceCounter implements Runnable {
 	private final boolean increase;
 	private int count = -1;
 	
-	private final static Logger logger = LoggerFactory.getLogger(ReferenceCounter.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReferenceCounter.class);
 	
 	public ReferenceCounter(ConcurrentMap<String, Wrapper> referenceMap, DefaultNavajoWrap wrap, boolean increase) {
 		this.referenceCount = referenceMap;

@@ -41,7 +41,7 @@ class MySerializableObject implements Serializable {
 public class SharedMemoryStoreTest {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SharedMemoryStoreTest.class);
 	
 	private SharedStoreInterface si;

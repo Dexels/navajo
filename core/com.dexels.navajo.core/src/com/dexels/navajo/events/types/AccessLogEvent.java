@@ -21,7 +21,7 @@ public class AccessLogEvent implements NavajoEvent {
 
     private static final long serialVersionUID = 8600682387835507176L;
     
-    private final static Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(AccessLogEvent.class);
     private int accessLogCount;
     

@@ -23,7 +23,7 @@ public class DispatcherFactory {
 	private static Object semaphore = new Object();
 	private static ScriptEngineManager scriptEngineFactory = null;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(DispatcherFactory.class);
 	
   

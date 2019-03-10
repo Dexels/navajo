@@ -20,9 +20,9 @@ import com.dexels.navajo.server.global.GlobalManager;
 public class GlobalManagerImpl implements GlobalManager {
 
     private final Map<String, String> settings = new HashMap<String, String>();
-    private final static List<String> osgiSettings = Arrays.asList("component.id", "component.name", "service.factoryPid", "service.pid");
+    private static final List<String> osgiSettings = Arrays.asList("component.id", "component.name", "service.factoryPid", "service.pid");
 
-    private final static Logger logger = LoggerFactory.getLogger(GlobalManagerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalManagerImpl.class);
 
     public void activate(Map<String, Object> settings) {
         for (Entry<String, Object> e : settings.entrySet()) {

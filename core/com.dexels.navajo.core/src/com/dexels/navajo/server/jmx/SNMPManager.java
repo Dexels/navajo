@@ -25,7 +25,7 @@ public class SNMPManager implements CompositeData {
 	public static final String V1 = "V1";
 	public static final String V2 = "V2";
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(SNMPManager.class);
 	private Map<String,Object> items = new HashMap<String,Object>();
 	

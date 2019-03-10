@@ -15,7 +15,7 @@ public class CacheExpiryEvent implements NavajoEvent {
 	private String webservice;
 	private String key;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CacheExpiryEvent.class);
 	private static final long serialVersionUID = -7870880336884588772L;
 

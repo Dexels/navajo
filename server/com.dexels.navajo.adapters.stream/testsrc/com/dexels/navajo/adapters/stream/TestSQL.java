@@ -1,3 +1,4 @@
+package com.dexels.navajo.adapters.stream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,15 +13,15 @@ import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.adapters.stream.SQL;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.StreamDocument;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
 import com.dexels.navajo.script.api.SystemException;
@@ -31,12 +32,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TestSQL {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestSQL.class);
+
 	@Before
 	public void setup() {
 	}
 	@Test(timeout=15000) 
 	public void testSQL() {
-		Expression.compileExpressions = true;
 		AtomicInteger count = new AtomicInteger();
 		SQL.query("dummy", "tenant", "select * from ORGANIZATION WHERE ROWNUM <50")
 			.map(msg->msg.without(Arrays.asList("SHORTNAME,UPDATEBY,REMARKS".split(","))))
@@ -45,13 +48,11 @@ public class TestSQL {
 			.flatMap(msg->StreamDocument.replicationMessageToStreamEvents("Organization", msg, false))
 			.compose(StreamDocument.inArray("Organization"))
 			.lift(StreamDocument.serialize())
-			.blockingForEach(e->{
-				count.incrementAndGet();
-			});
-		System.err.println("Total: "+count.get());
+			.blockingForEach(e->count.incrementAndGet());
+		logger.info("Total: {}",count.get());
 	}
 
-	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) throws TMLExpressionException, SystemException {
+	public Single<ImmutableMessage> getOrganizationAttributes(ImmutableMessage msg) {
 		return SQL.query("dummy", "tenant", "select * from ORGANIZATIONATTRIBUTE WHERE ORGANIZATIONID = ?", Operand.ofString((String)msg.value("ORGANIZATIONID").orElse("")))
 			.observeOn(Schedulers.io())
 			.subscribeOn(Schedulers.io())
@@ -63,7 +64,7 @@ public class TestSQL {
 	}
 	
 	
-	public BiFunction<ImmutableMessage,ImmutableMessage,ImmutableMessage> set(String... params) throws TMLExpressionException, SystemException {
+	public BiFunction<ImmutableMessage,ImmutableMessage,ImmutableMessage> set(String... params) {
 		return (reduc,item)->{
 			String keyExpression = params[0];
 			String valueExpression = params[1];
@@ -85,7 +86,7 @@ public class TestSQL {
 		return core;
 	}
 
-	public Function<Message,Message> delete(String key) throws TMLExpressionException, SystemException {
+	public Function<Message,Message> delete(String key) {
 		return in->{
 			Property p = in.getProperty(key);
 			if(p!=null) {
@@ -95,7 +96,7 @@ public class TestSQL {
 		};
 	}
 
-	public Function<ImmutableMessage,ImmutableMessage> rename(String key, String to) throws TMLExpressionException, SystemException {
+	public Function<ImmutableMessage,ImmutableMessage> rename(String key, String to) {
 		return in->{
 			Optional<Object> value = in.value(key);
 			if(!value.isPresent()) {
@@ -120,7 +121,7 @@ public class TestSQL {
         try {
 			return dsc.createDataSource(p);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} 
 		return dsc;
 	}

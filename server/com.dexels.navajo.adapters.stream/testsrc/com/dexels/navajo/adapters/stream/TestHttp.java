@@ -1,7 +1,10 @@
+package com.dexels.navajo.adapters.stream;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.stream.xml.XML;
@@ -10,6 +13,9 @@ import com.dexels.navajo.document.stream.xml.XMLEvent.XmlEventTypes;
 import io.reactivex.Flowable;
 
 public class TestHttp {
+
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestHttp.class);
 
 	@Test 
 	public void testHttpGet() throws Exception {
@@ -24,24 +30,21 @@ public class TestHttp {
 		.firstElement()
 		.map(xml->xml.getAttributes().get("value")).blockingGet();
 	
-		System.err.println("Weather: "+weather);
+		logger.info("Weather: {}",weather);
 		// Not really a good unit test (... or is it?)
-//		Assert.assertEquals("few clouds", weather);
 	}
 
 
 	@Test
 	public void testBiggerDownload() throws Exception {
-//		String url = "https://repo.dexels.com/nexus/service/local/repositories/central/content/org/apache/tika/tika-bundle/1.6/tika-bundle-1.6.jar";
 		String url = "https://www.ad.nl/home/rss.xml";
-//		String url = "http://localhost:8080/clubs.xml";
 
 		JettyClient jc = new JettyClient();
 		long l = jc.callWithoutBodyToStream(url,e->e)
 			.lift(XML.parseFlowable(10))
 			.flatMap(x->x)
 			.count().blockingGet();
-		System.err.println("> "+l);
+		logger.info("> {}",l);
 		Assert.assertTrue(l>1000);
 	}
 	
@@ -51,13 +54,13 @@ public class TestHttp {
 		Flowable<Long> timer = Flowable.interval(100, TimeUnit.MILLISECONDS);
 		String[] xmls = new String[]{"<tag a=\"b\"><ble b=\"c\"> ","beeb</ble>","<blub/></tag>"};
 		Flowable.fromArray(xmls)
-				.doOnNext(i->System.err.println("Source emitting: "+i))
+				.doOnNext(i->logger.info("Source emitting: {}",i))
 				.map(i->i.getBytes())
 				.lift(XML.parseFlowable(10))
 				.flatMap(x->x)
 				.doOnError(t->t.printStackTrace())
 				.zipWith(timer, (a,b)->a)
-				.doOnComplete(()->System.err.println("done"))
-				.blockingForEach(e->System.err.println(e));
+				.doOnComplete(()->logger.info("done"))
+				.blockingForEach(e->logger.info(">> {}",e));
 	}
 }

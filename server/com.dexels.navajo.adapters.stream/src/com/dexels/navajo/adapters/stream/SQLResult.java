@@ -2,6 +2,7 @@ package com.dexels.navajo.adapters.stream;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
+import com.dexels.navajo.script.api.UserException;
 
 class SQLResult {
 	
@@ -18,7 +20,7 @@ class SQLResult {
 	private Map<String,String> types = new HashMap<>();
 	private List<String> order = new ArrayList<>();
 
-	public SQLResult(ResultSet rs) throws Exception {
+	public SQLResult(ResultSet rs) throws SQLException, UserException {
 		ResultSetMetaData meta = rs.getMetaData();
 		int columns = meta.getColumnCount();
 		

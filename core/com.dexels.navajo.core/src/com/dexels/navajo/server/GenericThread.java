@@ -66,7 +66,7 @@ public class GenericThread implements Runnable, Mappable {
 	public final static String NOTSTARTED = "Not running";
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GenericThread.class);
 	
 	private static Map<String,GenericThread> threadPool = Collections.synchronizedMap(new HashMap<String,GenericThread>());

@@ -139,7 +139,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		String bareScript = scriptName.substring(scriptName.lastIndexOf('/') + 1);
 		String rpcName = scriptName;
 
-		if (bareScript.indexOf("_") >= 0) {
+		if (bareScript.indexOf('_') >= 0) {
 			rpcName = scriptName.substring(0, rpcName.lastIndexOf('_'));
 		}
 
@@ -177,14 +177,13 @@ public class BundleCreatorComponent implements BundleCreator {
              if (dir.exists()) {
             	 files = FileUtils.listFiles(dir, fileFilter, null);
              }
-             Map<String, File> tenantSpecificFiles = new HashMap<String, File>();
-             Collection<String> tenantsToIgnore = new ArrayList<String>();
+             Map<String, File> tenantSpecificFiles = new HashMap<>();
+             Collection<String> tenantsToIgnore = new ArrayList<>();
              for (File ascript : files) {
             	 matchedScript = true;
                  String pathRelative = getRelative(scriptFolder, ascript );
                  String[] splitted =  pathRelative.split("\\.");
                  String tenantScriptName = splitted[0].replace('\\', '/');
-//                 String extension = "." + splitted[1];
                  tenantSpecificFiles.put(tenantScriptName, ascript);
                  // Get the tenant out of the name and put it in the tenantsToIgnore collection
                  tenantsToIgnore.add(tenantScriptName.split("_")[1]); 
@@ -214,7 +213,7 @@ public class BundleCreatorComponent implements BundleCreator {
         String scriptTenant = tenantFromScriptPath(script);
 
         if (!scriptFile.exists()) {
-            logger.error("Script or  folder not found: " + script + " full path: " + scriptFile.getAbsolutePath());
+            logger.error("Script or  folder not found: {} full path: {}",script, scriptFile.getAbsolutePath());
             return;
         }
 
@@ -692,7 +691,7 @@ public class BundleCreatorComponent implements BundleCreator {
         	     File f = new File(scriptFolder, tenantFilename);
         	     if (f.exists()) {
         	    	 return f;
-        	     } 
+        	     }
     		 }
     		
     	     String filename = rpcName +compiler.getScriptExtension();

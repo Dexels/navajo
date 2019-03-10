@@ -44,12 +44,12 @@ public final class AuditLog implements Mappable {
 	public final static String AUDIT_MESSAGE_AUTHORISATION = "Authorisation Repository";
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(AuditLog.class);
 	
 //	private volatile static String instanceName;
 	
-//	private final static Logger logger = LoggerFactory
+//	private static final Logger logger = LoggerFactory
 //			.getLogger(AuditLog.class);
 	
 	private String accessId;
@@ -75,7 +75,7 @@ public final class AuditLog implements Mappable {
 //	}
 //	
 	
-	private final static void logToSlf(String message, String subsystem, Level l) {
+	private static final void logToSlf(String message, String subsystem, Level l) {
 		Logger instanceLog = LoggerFactory.getLogger("NavajoLog");
 		if(Level.INFO.equals(l)) {
 			instanceLog.info(message, subsystem);

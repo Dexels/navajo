@@ -29,7 +29,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(DefaultTribeManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultTribeManager.class);
 
 	private Map<String,Lock> mLocks = new ConcurrentHashMap<String,Lock>();
 	private Map<String,TribalTopic> topics = new ConcurrentHashMap<String,TribalTopic>();

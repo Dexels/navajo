@@ -90,7 +90,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	
 	
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoConfig.class);
 
 

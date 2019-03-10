@@ -42,7 +42,7 @@ public class ResourceChecker {
 	private String webservice;
 	
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ResourceChecker.class);
 	
 	public ResourceChecker(CompiledScriptInterface s) {

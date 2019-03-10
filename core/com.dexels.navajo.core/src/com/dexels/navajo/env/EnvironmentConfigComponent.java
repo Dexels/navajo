@@ -13,10 +13,7 @@ public class EnvironmentConfigComponent {
 
 	private ConfigurationAdmin configAdmin;
 
-//	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
-//	private final Set<String> resourcePids = new HashSet<String>();
-
-	private final static Logger logger = LoggerFactory.getLogger(EnvironmentConfigComponent.class);
+	private static final Logger logger = LoggerFactory.getLogger(EnvironmentConfigComponent.class);
 	
 	public EnvironmentConfigComponent() {
 	}

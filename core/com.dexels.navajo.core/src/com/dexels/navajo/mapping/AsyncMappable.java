@@ -90,7 +90,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   private static final String VERSION = "$Id$";
 
   
-private final static Logger logger = LoggerFactory
+private static final Logger logger = LoggerFactory
 		.getLogger(AsyncMappable.class);
   
   public boolean isFinished = false;

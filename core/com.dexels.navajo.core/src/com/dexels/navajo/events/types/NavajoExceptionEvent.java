@@ -13,7 +13,7 @@ import com.dexels.navajo.events.NavajoEvent;
 public class NavajoExceptionEvent implements NavajoEvent {
 
 	private static final long serialVersionUID = 1224320416969244502L;
-	private final static Logger logger = LoggerFactory.getLogger(NavajoExceptionEvent.class);
+	private static final Logger logger = LoggerFactory.getLogger(NavajoExceptionEvent.class);
 	private String webservice;
 	private Throwable myException;
 	private String accessId;
@@ -49,18 +49,18 @@ public class NavajoExceptionEvent implements NavajoEvent {
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
 		try {
 			input.addMessage(event);
-			Property webservice = NavajoFactory.getInstance().createProperty(input, "Webservice", 
+			Property webserviceProperty = NavajoFactory.getInstance().createProperty(input, "Webservice", 
 					Property.STRING_PROPERTY, getWebservice(), 0, "", Property.DIR_OUT);
 			Property exception = NavajoFactory.getInstance().createProperty(input, "Exception", 
 					Property.STRING_PROPERTY, getException().getMessage(), 0, "", Property.DIR_OUT);
-			Property accessId = NavajoFactory.getInstance().createProperty(input, "AccessId", 
+			Property accessIdProperty = NavajoFactory.getInstance().createProperty(input, "AccessId", 
 					Property.STRING_PROPERTY, getAccessId(), 0, "", Property.DIR_OUT);
-			Property user = NavajoFactory.getInstance().createProperty(input, "User", 
+			Property userProperty = NavajoFactory.getInstance().createProperty(input, "User", 
 					Property.STRING_PROPERTY, getUser(), 0, "", Property.DIR_OUT);
-			event.addProperty(webservice);
+			event.addProperty(webserviceProperty);
 			event.addProperty(exception);
-			event.addProperty(accessId);
-			event.addProperty(user);
+			event.addProperty(accessIdProperty);
+			event.addProperty(userProperty);
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}

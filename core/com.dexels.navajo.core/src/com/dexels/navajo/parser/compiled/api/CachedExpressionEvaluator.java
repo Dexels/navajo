@@ -22,7 +22,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implements ExpressionEvaluator {
-    private final static Logger logger = LoggerFactory.getLogger(CachedExpressionEvaluator.class);
+    private static final Logger logger = LoggerFactory.getLogger(CachedExpressionEvaluator.class);
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)

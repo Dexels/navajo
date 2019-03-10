@@ -19,7 +19,7 @@ import com.dexels.navajo.script.api.UserException;
 public abstract class BaseDescriptionProvider implements DescriptionProviderInterface, Mappable {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(BaseDescriptionProvider.class);
 	private Message descriptionMessage = null;
 	public abstract void updateProperty(Navajo in, Property element, String locale, String tenant);

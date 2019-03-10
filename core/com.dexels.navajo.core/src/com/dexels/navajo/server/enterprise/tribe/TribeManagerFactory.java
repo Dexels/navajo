@@ -17,7 +17,7 @@ public class TribeManagerFactory {
 	private static Object semaphore = new Object();
 	private static boolean tribeManagerFound = false;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TribeManagerFactory.class);
 	
 	public static void useTestVersion() {

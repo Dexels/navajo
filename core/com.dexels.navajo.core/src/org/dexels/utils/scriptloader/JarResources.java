@@ -37,7 +37,7 @@ public final class JarResources {
     private File jarFile;
     
     
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(JarResources.class);
 	
 	

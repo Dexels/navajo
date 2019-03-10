@@ -124,7 +124,7 @@ public class TslCompiler {
 
 	private final NavajoIOConfig navajoIOConfig;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TslCompiler.class);
 
 	public TslCompiler(ClassLoader loader) {
@@ -446,11 +446,8 @@ public class TslCompiler {
 				&& (clause.indexOf("[") == -1) && (clause.indexOf("$") == -1)
 				&& (clause.indexOf("(") == -1) && (clause.indexOf("+") == -1)) {
 			try {
-				// //System.out.println("CLAUSE = " + clause);
 				Operand op = Expression.evaluate(clause, null);
-				// //System.out.println("op = " + op);
 				Object v = op.value;
-				// //System.out.println("op.value = " + v);
 				exact = true;
 				if (v instanceof String) {
 					call = replaceQuotesValue((String) v);
@@ -2977,7 +2974,7 @@ public class TslCompiler {
 		while (nextNode != null && !(nextNode instanceof Element)) {
 			nextNode = nextNode.getNextSibling();
 		}
-		if (nextNode == null | !(nextNode instanceof Element)) {
+		if (nextNode == null || !(nextNode instanceof Element)) {
 			nextNode = n;
 		}
 

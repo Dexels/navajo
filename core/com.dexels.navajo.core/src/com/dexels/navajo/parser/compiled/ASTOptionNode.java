@@ -25,7 +25,7 @@ public final class ASTOptionNode extends SimpleNode {
 
     String option = "";
     
-	private final static Logger logger = LoggerFactory.getLogger(ASTOptionNode.class);
+	private static final Logger logger = LoggerFactory.getLogger(ASTOptionNode.class);
 
 
     public ASTOptionNode(int id) {

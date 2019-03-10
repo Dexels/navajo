@@ -12,9 +12,9 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 public class WrapCollector extends GenericThread {
 
-    private final static int WORKER_SLEEP =  10000;
-    private final static int CHECK_AFTER_AGE = 10000;
-    private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too
+    private static final int WORKER_SLEEP =  10000;
+    private static final int CHECK_AFTER_AGE = 10000;
+    private static final int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too
                                                             // old, remove it.
 
     // Use Cluster wide Map to store reference count.
@@ -22,7 +22,7 @@ public class WrapCollector extends GenericThread {
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
     private TribeManagerInterface tribeManager;
 
-    private final static Logger logger = LoggerFactory.getLogger(WrapCollector.class);
+    private static final Logger logger = LoggerFactory.getLogger(WrapCollector.class);
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void activate() {

@@ -16,7 +16,7 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class MetricsManager implements Mappable {
 
-	private final static Map<String,HasMetrics> registeredModules = new HashMap<String,HasMetrics>();
+	private static final Map<String,HasMetrics> registeredModules = new HashMap<String,HasMetrics>();
 	
 	public static void addModule(String moduleName, HasMetrics hm) {
 		registeredModules.put(moduleName, hm);

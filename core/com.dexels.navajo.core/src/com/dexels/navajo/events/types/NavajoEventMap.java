@@ -1,6 +1,7 @@
 package com.dexels.navajo.events.types;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.dexels.navajo.events.NavajoEvent;
 
@@ -12,7 +13,7 @@ import com.dexels.navajo.events.NavajoEvent;
  */
 public class NavajoEventMap {
 
-	public final static HashMap<String,Class<? extends NavajoEvent>> navajoEvents;
+	static final Map<String,Class<? extends NavajoEvent>> navajoEvents;
 	
 	public static final String HEALTH_CHECK_EVENT = "healthcheck";
 	public static final String COMPILESCRIPT_EVENT = "compilescript";
@@ -31,7 +32,7 @@ public class NavajoEventMap {
 	
 	static {
 		
-		navajoEvents = new HashMap<String,Class<? extends NavajoEvent>>();
+		navajoEvents = new HashMap<>();
 		
 		navajoEvents.put(HEALTH_CHECK_EVENT, NavajoHealthCheckEvent.class);
 		navajoEvents.put(COMPILESCRIPT_EVENT, NavajoCompileScriptEvent.class);
@@ -43,10 +44,13 @@ public class NavajoEventMap {
 		navajoEvents.put(AUDITLOG_EVENT, AuditLogEvent.class);
 		navajoEvents.put(QUEUABLE_FINISHED_EVENT, QueuableFinishedEvent.class);
 		navajoEvents.put(QUEUABLE_FAILURE_EVENT, QueuableFailureEvent.class);
-//		navajoEvents.put(FULL_ACCESS_LOG_STATISTICS, AccessLogEvent.class);
 		navajoEvents.put(CACHEEXPIRY_EVENT, CacheExpiryEvent.class);
 		navajoEvents.put(SERVERREADY_EVENT, ServerReadyEvent.class);
 		
+	}
+	
+	private NavajoEventMap() {
+		// no instance
 	}
 	
 	public static Class<? extends NavajoEvent> getEventClass(String description) {

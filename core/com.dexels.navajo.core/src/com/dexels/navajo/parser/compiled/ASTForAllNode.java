@@ -31,7 +31,7 @@ public final class ASTForAllNode extends SimpleNode {
 //    MappableTreeNode mapObject;
     private Access access;
 
-    private final static Logger logger = LoggerFactory.getLogger(ASTForAllNode.class);
+    private static final Logger logger = LoggerFactory.getLogger(ASTForAllNode.class);
 
     public ASTForAllNode(int id) {
         super(id);

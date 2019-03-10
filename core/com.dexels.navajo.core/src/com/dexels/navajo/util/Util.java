@@ -22,7 +22,7 @@ public final class Util {
     @SuppressWarnings("unused")
 	private static ResourceBundle rb = null;
 
-    private final static Random random;
+    private static final Random random;
     private static String id;
     
     static {

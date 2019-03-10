@@ -24,7 +24,7 @@ public class NavajoEventRegistryTest {
 	static String message;
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoEventRegistryTest.class);
 	
 	@Before

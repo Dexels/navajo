@@ -16,7 +16,7 @@ import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class OSGiFunctionFactoryFactory  {
     private static Map<String, FunctionDefinition> cache = new HashMap<>();
-	private final static Logger logger = LoggerFactory.getLogger(OSGiFunctionFactoryFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(OSGiFunctionFactoryFactory.class);
 	
 	private OSGiFunctionFactoryFactory() {
 		// no instances

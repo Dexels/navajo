@@ -28,9 +28,7 @@ public class ReactiveReply {
 		Map<String,String> rest = new HashMap<>();
 		HttpFields headers = response.getHeaders();
 		
-		headers.getFieldNamesCollection().stream().forEach(ee->{
-			rest.put(ee, headers.get(ee) );
-		});
+		headers.getFieldNamesCollection().stream().forEach(ee->rest.put(ee, headers.get(ee) ));
 		return rest;
 	}
 	

@@ -23,7 +23,7 @@ public class UserDaemon extends GenericThread {
 	private static HashMap<String, UserDaemon> userServices = new HashMap<String, UserDaemon>();
 	// private int sleepTime;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(UserDaemon.class);
 
 	public static void startService(UserDaemon userService) {

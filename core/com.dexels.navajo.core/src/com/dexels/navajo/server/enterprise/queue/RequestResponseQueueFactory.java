@@ -14,7 +14,7 @@ public class RequestResponseQueueFactory {
 	private static volatile RequestResponseQueueInterface instance = null;
 	private static Object semaphore = new Object();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(RequestResponseQueueFactory.class);
 	
 	public static RequestResponseQueueInterface getInstance() {

@@ -25,7 +25,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     private final InputStreamReader inputStreamReader = new FileInputStreamReader();
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(FileNavajoConfig.class);
 	
 	

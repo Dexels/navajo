@@ -13,10 +13,10 @@ import com.dexels.navajo.expression.api.FunctionInterface;
 
 public class FunctionFactoryFactory {
 
-	private static volatile FunctionFactoryInterface instance = null;
+	private static  FunctionFactoryInterface instance = null;
 	private static Object semaphore = new Object();
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(FunctionFactoryFactory.class);
 	
 	private FunctionFactoryFactory() {	

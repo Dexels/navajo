@@ -12,8 +12,8 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public class SerializationUtil {
 
-	private final static Logger logger = LoggerFactory.getLogger(SerializationUtil.class);
-	private final static String SHAREDSTORE_PARENT = "clusternavajoobjects";
+	private static final Logger logger = LoggerFactory.getLogger(SerializationUtil.class);
+	private static final String SHAREDSTORE_PARENT = "clusternavajoobjects";
 	
 	public static boolean existsNavajo(String name) {
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();

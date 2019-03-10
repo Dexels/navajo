@@ -29,7 +29,7 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public final class ASTMappableNode extends SimpleNode {
 
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ASTMappableNode.class);
     String val = "";
 //    MappableTreeNode mapObject;

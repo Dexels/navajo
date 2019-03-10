@@ -43,7 +43,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 
 	private static String id = "Cache Controller";
 	public static final String VERSION = "$Id$";
-	private final static String CACHE_CONFIG = "cache.xml";
+	private static final String CACHE_CONFIG = "cache.xml";
 	
 	private volatile static CacheController instance = null;
 	private static Object semaphore = new Object();
@@ -52,7 +52,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	
 	private long configTimestamp = -1;
 	
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CacheController.class);
 	
 	public CacheController() {

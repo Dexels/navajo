@@ -22,7 +22,7 @@ public class AsyncTest extends AsyncMappable {
 	public double d = 1.0;
 	public int iter = 1000000;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(AsyncTest.class);
 
 	private float ready = (float) 0.0;
