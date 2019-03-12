@@ -119,10 +119,8 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	@Override
 	public void store() throws MappableException, UserException {
 		String mailStore = DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/log/dummymailmap.log";
-		try {
-			FileWriter fw = new FileWriter(mailStore, true);
+		try(FileWriter fw = new FileWriter(mailStore, true)) {
 			fw.write(this.sender + "," + this.recipients + "," + this.cc + "," + this.bcc + "," + this.subject + "," + this.text + "\n");
-			fw.close();
 		} catch (IOException e) {
 			throw new UserException(-1, "Error writing dummy data", e);
 		}

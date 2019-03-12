@@ -24,10 +24,9 @@ import com.dexels.navajo.script.api.UserException;
  */
 public class DirMap implements Mappable {
 
-	public final List<FileEntryMap> fileEntry = new ArrayList<FileEntryMap>();
+	public final List<FileEntryMap> fileEntry = new ArrayList<>();
 	public String path;
 	public String extension;
-	private File currentPath = null;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DirMap.class);
 	
@@ -48,7 +47,7 @@ public class DirMap implements Mappable {
 
 	public synchronized void setPath(String path) {
 		this.path = path;
-		currentPath = new File(path);
+		File currentPath = new File(path);
 		File[] aaa = currentPath.listFiles();
 		for (File file : aaa) {
 			if(file.isFile()) {
@@ -88,22 +87,5 @@ public class DirMap implements Mappable {
 	 */
 	@Override
 	public void kill() {
-	}
-
-
-	
-
-	public static void main(String[] args) throws Exception {
-		DirMap fm = new DirMap();
-		fm.setPath(".");
-		FileEntryMap[] m = fm.getFileEntries();
-		for (FileEntryMap f : m) {
-			logger.info("file name: "+f.getName()+" age: "+f.getMimeType()+" age: "+f.getFileAge()+" size: "+f.getSize());
-			if(f.getName().equals("aap.txt")) {
-				logger.info("Aap detected!");
-				f.setDelete(true);
-			}
-		}
-
 	}
 }

@@ -68,10 +68,6 @@ public void load(Access access) throws MappableException, UserException {
   @Override
 public void store() throws MappableException, UserException {
 
-//    if (copyMessageTo.equals(""))
-//      throw new UserException( -1, "copyMessageTo has to be specified");
-
-	
     Message from = null;
     if ( copyMessageFrom == null ) {
     	from = (useOutputDoc) ? myAccess.getCompiledScript().getCurrentOutMsg() : myAccess.getCompiledScript().getCurrentInMsg();

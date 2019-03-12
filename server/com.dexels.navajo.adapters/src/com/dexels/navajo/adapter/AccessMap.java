@@ -59,14 +59,14 @@ private static final Logger logger = LoggerFactory.getLogger(AccessMap.class);
   public void setKilled(boolean b) {
 	  if (myAccess.getCompiledScript().getCurrentMap() != null) {
 		  Mappable myMap = (Mappable) myAccess.getCompiledScript().getCurrentMap().myObject;
-		  if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
+		  if (myMap instanceof com.dexels.navajo.adapter.SQLMap) {
 			  ((SQLMap) myMap).setKillConnection();
 		  }
 	  }
 	  myAccess.getCompiledScript().setKill(b);
   }
 
-  private Message getMessage(Message parent, String name) throws NavajoException {
+  private Message getMessage(Message parent, String name) {
     Message m = null;
     m = NavajoFactory.getInstance().createMessage(callingAccess.getOutputDoc(), name);
     if (parent != null) {
@@ -77,12 +77,12 @@ private static final Logger logger = LoggerFactory.getLogger(AccessMap.class);
     return m;
   }
 
-  private void addProperty(Message m, String name, Object value, String type, int length) throws NavajoException, MappingException {
+  private void addProperty(Message m, String name, Object value, String type, int length) throws MappingException {
     MappingUtils.setProperty(false, m, name, value, type, null, Property.DIR_OUT, "", length,
     		callingAccess.getOutputDoc(), callingAccess.getCompiledScript().getInDoc(), false);
   }
 
-  private void showMapDetails(Message parent, MappableTreeNode m) throws NavajoException, MappingException, UserException {
+  private void showMapDetails(Message parent, MappableTreeNode m) throws MappingException, UserException {
 
     Mappable myMap = (Mappable) m.myObject;
 
@@ -93,6 +93,7 @@ private static final Logger logger = LoggerFactory.getLogger(AccessMap.class);
 	try {
 		ccc = Class.forName("com.dexels.navajo.adapter.SPMap");
 	} catch (ClassNotFoundException e) {
+		logger.debug("SPMap missing?",e);
 	}
     if (myMap instanceof com.dexels.navajo.adapter.SQLMap || (ccc!=null && (ccc.isInstance(myMap)))) {
       SQLMap mySQL = (SQLMap) myMap;
@@ -126,15 +127,15 @@ public void store() throws MappableException, UserException {
         addProperty(user, "Webservice", myAccess.rpcName, Property.STRING_PROPERTY, 50);
         addProperty(user, "AccessId", myAccess.accessID, Property.STRING_PROPERTY, 50);
         addProperty(user, "Stacktrace", myAccess.getCompiledScript().getStackTrace(), Property.MEMO_PROPERTY, 4096);
-        Message currentMap = getMessage(user, "CurrentMap");
+        Message currentMapMessage = getMessage(user, "CurrentMap");
         MappableTreeNode currentNode = getCurrentMap();
         if (currentNode != null) {
-          showMapDetails(currentMap, currentNode);
+          showMapDetails(currentMapMessage, currentNode);
         } 
-        Message requestNavajo = getMessage(user, "RequestNavajo");
-        addProperty(requestNavajo, "Document", getRequestNavajo(), Property.MEMO_PROPERTY, -1);
-        Message responseNavajo = getMessage(user, "ResponseNavajo");
-        addProperty(responseNavajo, "Document", getResponseNavajo(), Property.MEMO_PROPERTY, -1);
+        Message requestNavajoMessage = getMessage(user, "RequestNavajo");
+        addProperty(requestNavajoMessage, "Document", getRequestNavajo(), Property.MEMO_PROPERTY, -1);
+        Message responseNavajoMessage = getMessage(user, "ResponseNavajo");
+        addProperty(responseNavajoMessage, "Document", getResponseNavajo(), Property.MEMO_PROPERTY, -1);
         Message outMessagStack = getMessage(user, "OutMessageStack");
         addProperty(outMessagStack, "Stack", getOutMessageStack(), Property.STRING_PROPERTY, -1);
         Message mapStack = getMessage(user, "MapObjectStack");
@@ -228,8 +229,7 @@ public void kill() {
     return (int) ( System.currentTimeMillis() - myAccess.created.getTime() );
   }
   private MappableTreeNode getCurrentMap() {
-    MappableTreeNode current = myAccess.getCompiledScript().getCurrentMap();
-    return current;
+	return myAccess.getCompiledScript().getCurrentMap();
   }
 
   private String getResponseNavajo() {
@@ -276,7 +276,7 @@ private String getOutMessageStack() {
   }
 
 private String getMapStack() {
-   StringBuffer stackBuffer = new StringBuffer();
+   StringBuilder stackBuffer = new StringBuilder();
    Stack<MappableTreeNode> s = myAccess.getCompiledScript().getTreeNodeStack();
    Iterator<MappableTreeNode> iter = s.iterator();
    while (iter.hasNext()) {

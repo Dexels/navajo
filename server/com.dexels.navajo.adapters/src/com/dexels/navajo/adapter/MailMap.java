@@ -86,13 +86,12 @@ public class MailMap implements MailMapInterface, Mappable,
 	public boolean ignoreFailures = false;
 
 	public boolean relatedMultipart = false;
-	private List<AttachementMap> attachments = null;
+	private transient List<AttachementMap> attachments = null;
 	private String[] recipientArray = null;
 	private String[] ccArray = null;
 	private String[] bccArray = null;
 	private Navajo doc = null;
-	private String failure = "";
-	// private static Object semaphore = new Object();
+	private StringBuilder failureBuffer = new StringBuilder();
 
 	public int retries = 0;
 	public int maxRetries = 100;
@@ -168,9 +167,9 @@ public class MailMap implements MailMapInterface, Mappable,
      * 
      * If ignoreFailures is set, then no exceptions will be thrown
      */
-    private InternetAddress[] convertToInternetAddresses(String strAddreses[]) throws UserException {
+    private InternetAddress[] convertToInternetAddresses(String[] strAddreses) throws UserException {
 
-        ArrayList<InternetAddress> addresses = new ArrayList<InternetAddress>();
+        ArrayList<InternetAddress> addresses = new ArrayList<>();
 
         for (int i = 0; i < strAddreses.length; i++) {
             try {
@@ -180,7 +179,8 @@ public class MailMap implements MailMapInterface, Mappable,
                 if (ignoreFailures) {
                     AuditLog.log("MailMap", e.getMessage(), e, Level.WARNING, myAccess.accessID);
                     logger.warn("ingoreFailures flag is set. Ignoring the invalid e-mail address.");
-                    failure += e.getMessage() + ";";
+                    failureBuffer.append(e.getMessage());
+                    failureBuffer.append(";");
                 } else {
                     AuditLog.log("MailMap", e.getMessage(), e, Level.SEVERE, myAccess.accessID);
                     throw new UserException(-1, e.getMessage(), e);
@@ -242,14 +242,14 @@ public class MailMap implements MailMapInterface, Mappable,
 				bos.close();
 				ByteArrayInputStream bis = new ByteArrayInputStream(
 						bos.toByteArray());
-				Document doc = XMLDocumentUtils.createDocument(bis, false);
+				Document dc = XMLDocumentUtils.createDocument(bis, false);
 				bis.close();
-				result = XMLDocumentUtils.transform(doc, xsl);
+				result = XMLDocumentUtils.transform(dc, xsl);
 			}
 
 			if (attachments == null && contentType.equals("text/plain")) {
 				msg.setText(result);
-			} else if ( attachments == null || attachments.size() == 0 ) {
+			} else if ( attachments == null || attachments.isEmpty()) {
 				msg.setContent( result, contentType ); 
 			} else {
 				Multipart multipart = (relatedMultipart ? new MimeMultipart("related") : new MimeMultipart());
@@ -294,7 +294,6 @@ public class MailMap implements MailMapInterface, Mappable,
 						bp.getFileName();
 
 						// iPhone headers
-						//bp.setDisposition("attachment");
 						bp.setDisposition(am.getAttachContentDisposition());
 						
 						multipart.addBodyPart(bp);
@@ -311,7 +310,8 @@ public class MailMap implements MailMapInterface, Mappable,
 		    if (ignoreFailures) {
                 AuditLog.log("MailMap", e.getMessage(), e, Level.WARNING, myAccess.accessID);
                 logger.warn("ingoreFailures flag is set. Ignoring the invalid e-mail address.");
-                failure += e.getMessage() + ";";
+                failureBuffer.append(e.getMessage());
+                failureBuffer.append(";");
             } else {
                 AuditLog.log("MailMap", e.getMessage(), e, Level.SEVERE, myAccess.accessID);
                 throw new UserException(-1, e.getMessage(), e);
@@ -344,12 +344,10 @@ public class MailMap implements MailMapInterface, Mappable,
 				props.put("mail.smtp.socketFactory.fallback", "false");
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getInstance(props, auth);
-			return session;
+			return Session.getInstance(props, auth);
 		} else {
 			props.put("mail.smtp.port", actualport);
-			Session session = Session.getInstance(props);
-			return session;
+			return Session.getInstance(props);
 		}
 	}
 
@@ -366,7 +364,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public String getFailure() {
-		return failure;
+		return failureBuffer.toString();
 	}
 
 	@Override
@@ -496,7 +494,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	public void setMultipleAttachments(AttachementMap[] c) {
 
 		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
+			attachments = new ArrayList<>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
@@ -520,7 +518,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	@Override
 	public void setAttachment(AttachementMap m) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(m);
 	}
@@ -537,7 +535,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 	// for scala compatibility
 	public boolean getUseEncryption() {
-		return useEncryption;
+		return isUseEncryption();
 	}
 
 	

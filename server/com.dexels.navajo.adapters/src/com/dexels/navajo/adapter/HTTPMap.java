@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.security.cert.X509Certificate;
@@ -87,7 +88,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HTTPMap.class);
 	
-	private HashMap<String, String> headers = new HashMap<String, String>();
+	private HashMap<String, String> headers = new HashMap<>();
 
 	private int responseCode;
 	private String responseMessage;
@@ -191,6 +192,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		}
 	}
 	
+	// TODO improve security
 	public void trustAll()  {
 		TrustManager trm = new X509TrustManager() {
 			@Override
@@ -224,17 +226,22 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		if ( !isBelowInstanceThreshold()  ) {
 			logger.warn("WARNING: More than 100 waiting HTTP requests");
 		}
+		logger.info("About to send to: {}", url);
+		URL u = null;
 		try {
-			
-			logger.info("About to send to: " + url);
-			URL u = null;
 			if(!url.startsWith("http://") && (!url.startsWith("https://"))) {
 				logger.warn("No protocol. Always prepend protocol. Assuming http.");
 				u = new URL("http://" + url);
 			} else {
 				u = new URL(url);
 			}
+		} catch (MalformedURLException e1) {
+			throw new UserException("Malformed URL: "+url, e1);
+		}
+		
+		try {
 			
+
 			
 			HttpURLConnection con = createConnectionWithProxy(u);
 			con.setConnectTimeout(connectTimeOut);
@@ -306,14 +313,13 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		} catch (java.net.SocketTimeoutException sto) {
 			// 
 			if (!catchConnectionTimeOut) {
-				logger.error("Got connectiontimeout for " + url);
+				logger.error("Got connectiontimeout for url: {}", url);
 				throw new UserException(-1, sto.getMessage(), sto);
 			} else {	
-				logger.warn("Got connectiontimeout for " + url);
+				logger.warn("Got connectiontimeout for url: {}", url);
 				hasConnectionTimeOut = true;
 			}
 		} catch (Exception e) {
-			logger.error("Got other exception: " + e.getMessage() + " for url: " + url);
 			throw new UserException(-1, e.getMessage(), e);
 		} finally {
 			decreaseInstanceCount();
@@ -332,6 +338,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
     				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpProxyHost, Integer.parseInt(httpProxyPort)));
     				return (HttpURLConnection) u.openConnection(proxy);
     			}
+    			return (HttpURLConnection) u.openConnection();
     		case "https":
     			String httpsProxyHost = System.getenv("httpsProxyHost");
     			String httpsProxyPort =  System.getenv("httpsProxyPort");
@@ -339,8 +346,11 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
     				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpsProxyHost, Integer.parseInt(httpsProxyPort)));
     				return (HttpURLConnection) u.openConnection(proxy);
     			}
+    			return (HttpURLConnection) u.openConnection();
+    		default:
+    			logger.warn("Unknown protocol in HTTPMap: {} assuming http(?)",protocol);
+    			return (HttpURLConnection) u.openConnection();
     		} 
-		return (HttpURLConnection) u.openConnection();
 	}
 
 	protected void increaseInstanceCount() {
@@ -410,7 +420,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			if ( myAccess != null ) {
 				myAccess.setException(e);
 			}
-			logger.warn("Error performing HTTP: " + e.getMessage() + ", for access: " + (myAccess != null ? myAccess.accessID : "unknown" ));
+			logger.warn("Error performing HTTP: {}, for access: {}",e.getMessage(), (myAccess != null ? myAccess.accessID : "unknown" ));
 			return false;
 		}
 		return true;

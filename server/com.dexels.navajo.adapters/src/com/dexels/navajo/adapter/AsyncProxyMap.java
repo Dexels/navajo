@@ -45,7 +45,7 @@ public class AsyncProxyMap extends AsyncMappable {
   }
 
   public void setMethod(String name) {
-    logger.debug("AsyncProxyMap: in setMethod(), name = " + name);
+    logger.debug("AsyncProxyMap: in setMethod(), name = {}", name);
     this.method = name;
   }
 
@@ -69,7 +69,7 @@ public int getPercReady() {
 public void beforeResponse(Access access) {
     access.setOutputDoc(inDoc);
     logger.debug("AsyncProxyMap: in beforeResponse()");
-    logger.debug("INDOC = " + access.getOutputDoc());
+    logger.debug("INDOC = {}", access.getOutputDoc());
   }
 
   @Override

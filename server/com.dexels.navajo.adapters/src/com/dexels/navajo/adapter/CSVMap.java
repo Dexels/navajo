@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -68,7 +69,7 @@ public class CSVMap implements Mappable {
 
     // for scala compatibility
     public boolean getUpdate() {
-        return update;
+        return isUpdate();
     }
 
     public boolean isUpdate() {
@@ -81,7 +82,7 @@ public class CSVMap implements Mappable {
 
     public void setEntry(CSVEntryMap newEntry) {
         if (draftEntries == null)
-            draftEntries = new ArrayList<CSVEntryMap>();
+            draftEntries = new ArrayList<>();
         draftEntries.add(newEntry);
         update = true;
     }
@@ -110,7 +111,7 @@ public class CSVMap implements Mappable {
         try {
             Reader f = null;
             if (fileContent != null) {
-                f = new InputStreamReader(fileContent.getDataAsStream(), "UTF-8");
+                f = new InputStreamReader(fileContent.getDataAsStream(), StandardCharsets.UTF_8);
             } else {
                 f = new FileReader(fileName);
             }
@@ -119,7 +120,7 @@ public class CSVMap implements Mappable {
             String line = "";
             boolean firstLine = true;
             int importCount = 0;
-            List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
+            List<CSVEntryMap> entryList = new ArrayList<>();
 
             while ((line = buffer.readLine()) != null) {
                 if (maximumImportCount != 0 && (importCount >= maximumImportCount)) {
@@ -167,7 +168,7 @@ public class CSVMap implements Mappable {
         }
         char sepChar = sep.charAt(0);
         int startindex = 0;
-        List<String> currentLine = new ArrayList<String>();
+        List<String> currentLine = new ArrayList<>();
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
             if (c == sepChar) {
@@ -232,7 +233,6 @@ public class CSVMap implements Mappable {
             for (CSVEntryMap ce : draftEntries) {
                 entries[i++] = ce;
             }
-            // entries = (CSVEntryMap[]) draftEntries.toArray();
         }
         if (update) {
             try {

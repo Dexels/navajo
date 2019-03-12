@@ -11,8 +11,6 @@ import com.dexels.navajo.script.api.UserException;
 
 public class CreateMessage implements Mappable {
 
-	//public String name = "";
-	
 	private Access myAccess;
 	
 	@Override

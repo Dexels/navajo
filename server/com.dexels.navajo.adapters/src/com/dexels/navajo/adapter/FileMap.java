@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,13 +56,13 @@ public class FileMap implements Mappable {
 
 	}
 
-	private byte[] getBytes() throws Exception {
+	private byte[] getBytes() throws IOException  {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		for (int i = 0; i < lineArray.size(); i++) {
 			FileLineMap flm = lineArray.get(i);
 
-			if (flm != null && flm.getLine() != null) {
+			if (flm != null) {
 				String nextLine = handleLineEnds( flm.getLine() );
 
 				baos.write( ( charsetName == null ) ? nextLine.getBytes() : nextLine.getBytes( charsetName ) );
@@ -91,22 +92,16 @@ public class FileMap implements Mappable {
 			File f = new File(fileName);
 			if (f.exists()) {
 				logger.info("Deleting existing file");
-				f.delete();
-			}
-			BufferedOutputStream bos = null;
-			try {
-				bos = new BufferedOutputStream(new FileOutputStream(f));
-				bos.write(getBytes());
-			} catch (Exception e) {
-				throw new UserException(-1, e.getMessage());
-			} finally {
-				if (bos != null) {
-					try {
-						bos.close();
-					} catch (IOException e) {
-						logger.error("Error: ", e);
-					}
+				try {
+					Files.delete(f.toPath());
+				} catch (IOException e) {
+					throw new UserException(-1, "Error deleting existing file at path: "+f.getAbsolutePath(),e);
 				}
+			}
+			try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f))) {
+				bos.write(getBytes());
+			} catch (IOException e) {
+				throw new UserException(-1, e.getMessage(),e);
 			}
 		}
 	}
@@ -160,7 +155,7 @@ public class FileMap implements Mappable {
 
 	public void setLines(FileLineMap[] l) {
 		if (lineArray == null) {
-			lineArray = new ArrayList<FileLineMap>();
+			lineArray = new ArrayList<>();
 		}
 		for (int i = 0; i < l.length; i++) {
 			lineArray.add(l[i]);
@@ -169,7 +164,7 @@ public class FileMap implements Mappable {
 
 	public void setLine(FileLineMap l) {
 		if (lineArray == null) {
-			lineArray = new ArrayList<FileLineMap>();
+			lineArray = new ArrayList<>();
 		}
 		lineArray.add(l);
 	}
@@ -218,21 +213,9 @@ public class FileMap implements Mappable {
 	}
 
 	private String handleLineEnds( String input ) {
-		if ( ! this.dosMode || input == null || input.endsWith( "\r\n" ) || ! input.endsWith( "\n" ) )
+		if ( ! this.dosMode || input.endsWith( "\r\n" ) || ! input.endsWith( "\n" ) )
 			return input;
 
 		return input.substring( 0, input.length() - 1 ) + "\r\n";
-	}
-
-	public static void main(String[] args) throws Exception {
-		FileMap fm = new FileMap();
-		FileLineMap[] flm = new FileLineMap[2];
-		flm[0] = new FileLineMap();
-		flm[0].setLine("apenoot");
-		flm[1] = new FileLineMap();
-		flm[1].setLine("kibbeling");
-		fm.setLines(flm);
-		fm.setFileName("/home/arjen/aap.txt");
-		fm.store();
 	}
 }

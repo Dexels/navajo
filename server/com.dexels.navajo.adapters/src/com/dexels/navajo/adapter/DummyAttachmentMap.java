@@ -11,7 +11,6 @@ public class DummyAttachmentMap extends AttachementMap implements AttachmentMapI
 
 	private static final long serialVersionUID = 3502052945214585999L;
 
-	private String attachFile;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(DummyAttachmentMap.class);
@@ -38,28 +37,28 @@ public class DummyAttachmentMap extends AttachementMap implements AttachmentMapI
 
 	@Override
 	public void setAttachContentHeader(String s) {
-		logger.debug("in setAttachContentHeader(" + s + ")");
+		logger.debug("in setAttachContentHeader({})",s);
 	}
 
 	@Override
 	public void setAttachFile(String attachFile) {
-		logger.debug("in setAttachFile(" + attachFile + ")");
+		logger.debug("in setAttachFile({})",attachFile);
 		this.attachFile = attachFile;
 	}
 
 	@Override
 	public void setAttachFileContent(Binary attachFileContent) {
-		logger.debug("in setAttachFileContent(" + attachFileContent + ")");
+		logger.debug("in setAttachFileContent({})",attachFileContent);
 	}
 
 	@Override
 	public void setAttachFileName(String attachFileName) {
-		logger.debug("in setAttachFileName(" + attachFileName + ")");
+		logger.debug("in setAttachFileName({})",attachFileName);
 	}
 
 	@Override
 	public void setEncoding(String s) {
-		logger.debug("in setEncoding(" + s + ")");
+		logger.debug("in setEncoding({})",s);
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class DummyAttachmentMap extends AttachementMap implements AttachmentMapI
 
 	@Override
 	public void setAttachContentDisposition(String s) {
-		logger.debug("in setAttachContentDisposition(" + s + ")");
+		logger.debug("in setAttachContentDisposition({})",s);
 	}
 
 	@Override
@@ -79,6 +78,6 @@ public class DummyAttachmentMap extends AttachementMap implements AttachmentMapI
 
 	@Override
 	public void setAttachContentType(String s) {
-		logger.debug("in setAttachContentType(" + s + ")");
+		logger.debug("in setAttachContentType({})",s);
 	}
 }

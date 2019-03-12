@@ -60,10 +60,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	public String cc = null;
 	public String bcc = null;
 	String bodyText = "";
-	private String[] toArray = null;
-	private String[] ccArray = null;
-	private String[] bccArray = null;
-	private List<AttachementMap> attachments = null;
+	private transient List<AttachementMap> attachments = null;
 	public AttachementMap[] multipleAttachments = null;
 	public AttachementMap attachment = null;
 	private Integer port = null;
@@ -80,7 +77,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	 * @throws UserException
 	 * @throws EmailException
 	 */
-	private HtmlEmail getNewHtmlEmail() throws UserException, EmailException {
+	private HtmlEmail getNewHtmlEmail() throws UserException {
 		// Create the email message
 		Session session = createSession();
 		
@@ -140,14 +137,8 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	 */
 	public void sendMail() throws UserException {
 		final ClassLoader current = Thread.currentThread().getContextClassLoader();
-//		CommandMap.getDefaultCommandMap();
 		try {
-//			Thread.currentThread().setContextClassLoader( CommandMap.class.getClassLoader() );
-			 Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
-
-//			DataContentHandler dch=CommandMap.getDefaultCommandMap().createDataContentHandler("text/multipart");
-			
-//			logger.info("Sending mail to: "+to+" subject: "+subject+ " with handler: "+dch);
+			Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
 			// Create the email message and fill the basics
 			HtmlEmail email = getNewHtmlEmail();
 			if(debug) {
@@ -155,16 +146,15 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 			}
 			fillHtmlEmailBasics(email);
 		    // add attachments
-			List<String> inlineImages = new ArrayList<String>();
+			List<String> inlineImages = new ArrayList<>();
 			if (this.attachments != null) {
-                logger.debug("# of attachments found: "+attachments.size());
+                logger.debug("# of attachments found: {}",attachments.size());
 				for (int i = 0; i < this.attachments.size(); i++) {
 					AttachmentMapInterface am = this.attachments.get(i);
 					String file = am.getAttachFile();
 					String userFileName = am.getAttachFileName();
 					Binary content = am.getAttachFileContent();
 					String contentDisposition = am.getAttachContentDisposition();
-					//String encoding = am.getEncoding();
 
 					// Figure out how to get the path and then the url
 					String fileName = "";
@@ -175,7 +165,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 					}
 					File fl = new File(fileName);
 					URL url = fl.toURI().toURL();
-					logger.debug("Using url: "+url);
+					logger.debug("Using url: {}", url);
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
 					    inlineImages.add(email.embed(url, userFileName));
@@ -191,14 +181,13 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		  // Replace any inline image tags with the created ones
 		  bodyText = replaceInlineImageTags(bodyText, inlineImages);
 		  // Finally set the complete html
-		  logger.debug("Setting body: "+bodyText);
+		  logger.debug("Setting body: {}",bodyText);
 		  email.setHtmlMsg(bodyText);
 		  
 
 		  // set the alternative message
 		  email.setTextMsg(this.getNonHtmlText());
-		  logger.info("Sending mail to "+to+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
-
+		  logger.info("Sending mail to {} cc: {} bcc: {} with subject: {}",to,cc,bcc,subject);
 		  // send the email
 		  email.send();
     	} catch (Exception e) {
@@ -240,53 +229,52 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	 */
 	private EmailAttachment getEmailAttachment(String path, URL url, String disposition, String description, String name) {
 		  // Create the attachment
-		  EmailAttachment attachment = new EmailAttachment();
-		  attachment.setPath(path);
+		  EmailAttachment emailAttachment = new EmailAttachment();
+		  emailAttachment.setPath(path);
 		  if (disposition != null && disposition.equalsIgnoreCase("INLINE")) {
-			  attachment.setDisposition(EmailAttachment.INLINE);
+			  emailAttachment.setDisposition(EmailAttachment.INLINE);
 		  } else {
-			  attachment.setDisposition(EmailAttachment.ATTACHMENT);
+			  emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
 		  }
-		  attachment.setDescription(description);
-		  attachment.setName(name);
-		  attachment.setURL(url);
-		  return attachment;
+		  emailAttachment.setDescription(description);
+		  emailAttachment.setName(name);
+		  emailAttachment.setURL(url);
+		  return emailAttachment;
 	}
+	
+
 
 	public String[] getToArray(String s) {
-		this.toArray = null;
 		java.util.StringTokenizer tok = new StringTokenizer(s, ",");
-		this.toArray = new String[tok.countTokens()];
+		String[] toArray = new String[tok.countTokens()];
 		int index = 0;
 
 		while (tok.hasMoreTokens()) {
-			this.toArray[index++] = tok.nextToken();
+			toArray[index++] = tok.nextToken();
 		}
-		return this.toArray;
+		return toArray;
 	}
 
 	public String[] getBccArray(String bcc) {
-		this.bccArray = null;
 		java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
-		this.bccArray = new String[tok.countTokens()];
+		String[] bccArray = new String[tok.countTokens()];
 		int index = 0;
 
 		while (tok.hasMoreTokens()) {
-			this.bccArray[index++] = tok.nextToken();
+			bccArray[index++] = tok.nextToken();
 		}
-		return this.bccArray;
+		return bccArray;
 	}
 
 	public String[] getCcArray(String cc) {
-		this.ccArray = null;
 		java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
-		this.ccArray = new String[tok.countTokens()];
+		String[] ccArray = new String[tok.countTokens()];
 		int index = 0;
 
 		while (tok.hasMoreTokens()) {
-			this.ccArray[index++] = tok.nextToken();
+			ccArray[index++] = tok.nextToken();
 		}
-		return this.ccArray;
+		return ccArray;
 	}
 	public Integer getPort() {
 		return port;
@@ -309,7 +297,6 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 		if (getSmtpUser() != null && !"".equals(getSmtpUser())) {
 			// Use auth
 			props.put("mail.smtp.auth", "true");
-//			props.put("mail.debug", "true");
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
 
@@ -322,13 +309,11 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 				props.put("mail.smtp.port", actualport);
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getInstance(props, auth);
-			return session;
+			return Session.getInstance(props, auth);
 		} else {
 
 			props.put("mail.smtp.port", actualport);
-			Session session = Session.getInstance(props);
-			return session;
+			return Session.getInstance(props);
 		}
 	}
 
@@ -566,7 +551,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	
 	// for scala compatibility
 	public boolean getUseEncryption() {
-		return useEncryption;
+		return isUseEncryption();
 	}
 	public void setUseEncryption(boolean useEncryption) {
 		this.useEncryption = useEncryption;
@@ -588,7 +573,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 
 	public void setMultipleAttachments(AttachementMap[] c) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
+			attachments = new ArrayList<>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
@@ -610,7 +595,7 @@ public class CommonsMailMap implements Mappable, Queuable,Debugable {
 	
 	public void setAttachment(AttachementMap m) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachementMap>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(m);
 	}

@@ -78,14 +78,13 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	public boolean ignoreFailures = false;
 
 	public boolean relatedMultipart = false;
-	private List<AttachmentMapInterface> attachments = null;
-	private ArrayList<AttachmentMapInterface> bodyparts = null;
+	private transient List<AttachmentMapInterface> attachments = null;
+	private transient ArrayList<AttachmentMapInterface> bodyparts = null;
 	private String[] recipientArray = null;
 	private String[] ccArray = null;
 	private String[] bccArray = null;
 	private Navajo doc = null;
 	private String failure = "";
-	// private static Object semaphore = new Object();
 
 	public int retries = 0;
 	public int maxRetries = 100;
@@ -193,9 +192,9 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				bos.close();
 				ByteArrayInputStream bis = new ByteArrayInputStream(
 						bos.toByteArray());
-				Document doc = XMLDocumentUtils.createDocument(bis, false);
+				Document navajoDoc = XMLDocumentUtils.createDocument(bis, false);
 				bis.close();
-				result = XMLDocumentUtils.transform(doc, xsl);
+				result = XMLDocumentUtils.transform(navajoDoc, xsl);
 			}
 
 			if (attachments == null && contentType.equals("text/plain")) {

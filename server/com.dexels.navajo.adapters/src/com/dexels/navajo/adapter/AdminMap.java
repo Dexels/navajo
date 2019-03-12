@@ -23,11 +23,16 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfigInterface;
-
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
 @Deprecated
 public class AdminMap implements Mappable {
 
-    public int openConnections;
+    private static final String UNDEFINED = "Undefined, check OSGi";
+	public int openConnections;
     public int requestCount;
     public float requestRate;
     public Date startTime;
@@ -45,7 +50,6 @@ public class AdminMap implements Mappable {
     public String rootPath;
     public String webservice;
     public String documentClass;
-    // public WebserviceAccess webserviceAccess;
     public boolean supportsHotCompile;
     public boolean supportsAsync;
     public boolean supportsStore;
@@ -87,7 +91,6 @@ public class AdminMap implements Mappable {
         adapterPath = ensurePathEndsWithSeparator(nc.getAdapterPath());
         compiledScriptPath = ensurePathEndsWithSeparator(nc.getCompiledScriptPath());
         rootPath = ensurePathEndsWithSeparator(nc.getRootPath());
-        // supportsHotCompile = nc.isHotCompileEnabled();
         supportsAsync = nc.isAsyncEnabled();
         supportsStore = (nc.getAsyncStore() != null);
         supportsIntegrity = nc.isIntegrityWorkerEnabled();
@@ -125,7 +128,7 @@ public class AdminMap implements Mappable {
             sql.setDatasource(datasource);
 
             if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
-                logger.error("Could not create connection to datasource " + sql.datasource + ", using username " + sql.username);
+                logger.error("Could not create connection to datasource {}, using username {}",sql.datasource, sql.username);
                 return 0;
             }
             int c = SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
@@ -171,12 +174,12 @@ public class AdminMap implements Mappable {
      * @throws MappableException
      * @throws UserException
      */
-    public final int getMaxConnections(String datasource) throws UserException {
+    public final int getMaxConnections(String datasource) {
         SQLMap sql = new SQLMap();
         sql.setDatasource(datasource);
 
         if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
-            logger.error("Could not create connection to datasource " + sql.datasource + ", using username " + sql.username);
+            logger.error("Could not create connection to datasource {}, using username {}",sql.datasource, sql.username);
             return 0;
         }
         return SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getSize();
@@ -189,10 +192,9 @@ public class AdminMap implements Mappable {
     @SuppressWarnings("rawtypes")
     public AsyncProxy[] getAsyncThreads() {
 
-        // logger.info("IN GETASYNCTHREADS()......");
         Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
         Iterator iter = all.values().iterator();
-        List<AsyncProxy> l = new ArrayList<AsyncProxy>();
+        List<AsyncProxy> l = new ArrayList<>();
         while (iter.hasNext()) {
             AsyncMappable am = (AsyncMappable) iter.next();
             Access ac = com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(am.pointer);
@@ -227,9 +229,9 @@ public class AdminMap implements Mappable {
     }
 
     public AccessMap[] getUsers() {
-        Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
+        Set<Access> all = new HashSet<>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
         Iterator<Access> iter = all.iterator();
-        List<AccessMap> d = new ArrayList<AccessMap>();
+        List<AccessMap> d = new ArrayList<>();
         while (iter.hasNext()) {
             Access a = iter.next();
             d.add(new AccessMap(a));
@@ -258,22 +260,18 @@ public class AdminMap implements Mappable {
     public float getRequestRate() {
         return DispatcherFactory.getInstance().getRequestRate();
 
-        // float timespan = ( new java.util.Date().getTime() -
-        // com.dexels.navajo.server.DispatcherFactory.startTime.getTime() ) / (float)
-        // 1000.0;
-        // return ((float) getRequestCount() / timespan );
     }
 
     public String getProductName() {
-        return "Undefined, check OSGi";
+        return UNDEFINED;
     }
 
     public String getVendor() {
-        return "Undefined, check OSGi";
+        return UNDEFINED;
     }
 
     public String getVersion() {
-        return "Undefined, check OSGi";
+        return UNDEFINED;
     }
 
     public String getConfigPath() {
@@ -385,13 +383,6 @@ public class AdminMap implements Mappable {
         this.webservice = w;
     }
 
-    // public WebserviceAccess getWebserviceAccess() {
-    // if ( webservice == null ) {
-    // return null;
-    // }
-    // return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
-    // }
-
     public String getDocumentClass() {
         return NavajoFactory.getInstance().getClass().getName();
     }
@@ -414,7 +405,7 @@ public class AdminMap implements Mappable {
         NavajoFactory.resetImplementation();
         NavajoFactory.getInstance().setTempDir(DispatcherFactory.getInstance().getTempDir());
         NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
-        logger.debug("Document class is now: " + getDocumentClass());
+        logger.debug("Document class is now: {}", getDocumentClass());
     }
 
     @Deprecated
