@@ -16,7 +16,6 @@
 		<module>../../com.dexels.navajo.reactive</module>
 		<!--<module>../../com.dexels.navajo.proxy</module>-->
 		<module>../../com.dexels.navajo.queuemanager</module>
-		<module>../../com.dexels.navajo.rhino</module>
 		<module>../../com.dexels.navajo.adapters</module>
 		<module>../../com.dexels.navajo.adapters.resource</module>
 		<module>../../com.dexels.navajo.adapters.eventemitter</module>
@@ -34,7 +33,6 @@
 		<module>../../com.dexels.navajo.resource.test</module>
 		<module>../../com.dexels.navajo.server.logback</module>
 		<module>../../com.dexels.navajo.authentication.api</module>
-		<module>../../com.dexels.navajo.rhino.continuations</module>
 		<module>../../com.dexels.navajo.webconsole.branding</module>
 		<module>../../com.dexels.navajo.compiler.tsl</module>
 		<module>../../com.dexels.navajo.article</module>

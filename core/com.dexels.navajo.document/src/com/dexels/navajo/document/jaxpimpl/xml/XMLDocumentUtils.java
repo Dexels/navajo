@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -47,6 +48,9 @@ public class XMLDocumentUtils {
         if (builderFactory == null) {
             try {
                 builderFactory = DocumentBuilderFactory.newInstance();
+				builderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+				builderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
             } catch (Exception e) {
             	logger.error("Trouble initializing documentbuilder factory: ",e);
             }
@@ -61,6 +65,9 @@ public class XMLDocumentUtils {
         if (transformerFactory == null) {
             try {
                  transformerFactory = TransformerFactory.newInstance();
+ 				transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+ 				transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
             } catch (java.lang.NoClassDefFoundError e) {
                 logger.warn("Could not find XSLT factory, using system default");
 
@@ -103,7 +110,10 @@ public class XMLDocumentUtils {
         if (transformerFactory == null) {
             try {
                 transformerFactory = TransformerFactory.newInstance();
-            } catch (java.lang.NoClassDefFoundError e) {
+                transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+ 				transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            } catch (java.lang.NoClassDefFoundError | TransformerConfigurationException e) {
                 logger.warn("Could not find XSLT factory, using system default");
                 throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
             }
@@ -113,6 +123,7 @@ public class XMLDocumentUtils {
         try {
 
             Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             if (dtdSystemId != null) {
                 transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, dtdSystemId);

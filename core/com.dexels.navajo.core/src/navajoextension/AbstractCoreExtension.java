@@ -23,11 +23,6 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	
 
 	@Override
-	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
-	}
-
-	@Override
 	public void stop(BundleContext bc) throws Exception {
 		super.stop(bc);
 		deregisterAll();
