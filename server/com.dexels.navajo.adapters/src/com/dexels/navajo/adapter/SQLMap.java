@@ -74,7 +74,7 @@ import com.dexels.navajo.version.Version;
 @SuppressWarnings({"rawtypes", "unchecked", "unused", "deprecation"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
-	protected final static int INFINITE = 10000;
+	protected static final int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
 //	protected final String USERPWDDELIMITER = "/";
     protected final String DEFAULTSRCNAME = "default";
@@ -1127,7 +1127,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
-	public final static ResultSetMap getResultSetMap(ResultSetMetaData meta, int columns, ResultSet rs) throws Exception  {
+	public static final ResultSetMap getResultSetMap(ResultSetMetaData meta, int columns, ResultSet rs) throws Exception  {
 
 		ResultSetMap rm = new ResultSetMap();
 

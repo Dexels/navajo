@@ -8,10 +8,10 @@ import com.dexels.navajo.server.DispatcherFactory;
  * @author Erik Versteeg
  */
 public class SQLMapConstants {
-    public final static String ENTERPRISEDB = "enterprisedb";
-    public final static String ORACLEDB = "oracle";
-    public final static String POSTGRESDB = "postgresql";
-    public final static String MYSQLDB = "mysql";
+    public static final String ENTERPRISEDB = "enterprisedb";
+    public static final String ORACLEDB = "oracle";
+    public static final String POSTGRESDB = "postgresql";
+    public static final String MYSQLDB = "mysql";
 
     public static boolean isLegacyMode() {
         try {

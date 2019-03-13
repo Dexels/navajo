@@ -102,8 +102,8 @@ public void load(Access access) throws MappableException, UserException {
 
   @Override
 public void store() throws MappableException, UserException {
-    logger.debug("fileNamePropertyPath: "+fileNamePropertyPath);
-    logger.debug("Using prefix: "+pathPrefix);
+    logger.debug("fileNamePropertyPath: {}", fileNamePropertyPath);
+    logger.debug("Using prefix: {}", pathPrefix);
 
      String totalPath = null;
      if (fileName==null) {
@@ -111,10 +111,10 @@ public void store() throws MappableException, UserException {
        Property fileNameProp =  inMessage.getProperty(fileNamePropertyPath);
        totalPath = pathPrefix+fileNameProp.getValue();
      } else {
-       logger.debug("Explicit path found: "+fileName);
+       logger.debug("Explicit path found: {}", fileName);
        totalPath = pathPrefix+fileName;
      }
-     logger.debug("Resolved path to: "+totalPath);
+     logger.debug("Resolved path to: {}", totalPath);
      File path = new File(totalPath);
      if (path.exists() && !overwrite) {
        throw new UserException(-1, "File exists");
@@ -130,53 +130,20 @@ public void store() throws MappableException, UserException {
 
      if (data!=null) {
        logger.debug("Data found");
-       FileOutputStream fw = null;
-      try {
-        fw = new FileOutputStream(path);
+      try(FileOutputStream fw = new FileOutputStream(path)) {
         data.write(fw);
-//        fw.write(data.getData());
-        fw.flush();
-        fw.close();
       }
       catch (IOException ex1) {
     	  throw new UserException("Can not access file: "+fileName, ex1);
       }
-     finally {
-       if (fw!=null) {
-        try {
-          fw.close();
-        }
-        catch (IOException ex2) {
-        	logger.error("Error: ", ex2);
-        }
-       }
-     }
 
      } else {
        logger.debug("No data found.");
-       FileOutputStream fw = null;
-       try {
-         fw = new FileOutputStream(path);
+       try(FileOutputStream fw = new FileOutputStream(path)) {
          inMessage.write(fw);
-         fw.close();
-       }
-       catch (NavajoException ex) {
+       } catch (NavajoException|IOException ex) {
            logger.error("Error: ", ex);
          throw new UserException(-1,"Error writing Navajo!");
-       }
-       catch (IOException ex) {
-           logger.error("Error: ", ex);
-
-         throw new UserException(-1,"Error writing Navajo!");
-       } finally {
-         if (fw!=null) {
-          try {
-            fw.close();
-          }
-          catch (IOException ex3) {
-        	  logger.error("Error: ", ex3);
-          }
-         }
        }
      }
   }

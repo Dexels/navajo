@@ -98,9 +98,6 @@ public void load(Access access) throws MappableException, UserException {
     inNavajo = access.getInDoc();
   }
 
-  /** @todo Fridged it for a while need to test all this.
-   *  */
-
   @Override
 public void store() throws MappableException, UserException {
     Message listMessage = inNavajo.getMessage(formListPath);
@@ -141,15 +138,14 @@ public void store() throws MappableException, UserException {
     for (int i = 0; i < dataMessage.getArraySize(); i++) {
       Message m = dataMessage.getMessage(i);
       Property id = m.getProperty("Id");
-//      Property value = m.getProperty("Value");
-      logger.info("Looking for question: "+id.getValue());
+      logger.info("Looking for question: {}", id.getValue());
 
       StringTokenizer idTok = new StringTokenizer( (String) id.getTypedValue());
       Message question = getQuestionById(idTok, questionMessage);
       if (question==null) {
         logger.info("returned no message!");
       } else {
-        logger.info("returned: "+question.getFullMessageName());
+        logger.info("returned: {}", question.getFullMessageName());
       }
     }
 

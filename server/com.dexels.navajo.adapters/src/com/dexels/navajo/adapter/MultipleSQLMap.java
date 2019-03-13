@@ -54,14 +54,4 @@ public class MultipleSQLMap implements Mappable {
     @Override
 	public void kill() {}
 
-    public static void main(String args[]) {
-        MultipleSQLMap ms = new MultipleSQLMap();
-        MultipleSQLMap[] children = new MultipleSQLMap[5];
-
-        for (int i = 0; i < 5; i++) {
-            children[i] = new MultipleSQLMap();
-            children[i].setSpMap(null);
-        }
-        ms.setMultiSqlMap(children);
-    }
 }

@@ -26,10 +26,10 @@ public class SequencedInsertMap extends SQLMap {
     private static final Logger logger = LoggerFactory.getLogger(SequencedInsertMap.class);
 
     
-  public final static String ORACLEPRODUCTNAME = "Oracle";
-  public final static String HSQLPRODUCTNAME = "HSQL Database Engine";
-  public final static String SELSEQUENCESQL = "SELECT {0}.nextval FROM DUAL";
-  public final static String SELIDENTITYSQL = "CALL IDENTITY()";
+  public static final String ORACLEPRODUCTNAME = "Oracle";
+  public static final String HSQLPRODUCTNAME = "HSQL Database Engine";
+  public static final String SELSEQUENCESQL = "SELECT {0}.nextval FROM DUAL";
+  public static final String SELIDENTITYSQL = "CALL IDENTITY()";
 
   public String databaseProduct = null;
   public String sequenceName = null;

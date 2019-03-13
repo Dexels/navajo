@@ -309,7 +309,7 @@ public final class LegacyDbConnectionBroker implements DbConnectionBroker
 		}
 	}
 
-	public final static int getInstances() {
+	public static final int getInstances() {
 		return GrusManager.getInstance().getInstances();
 	}
 

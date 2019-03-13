@@ -74,7 +74,7 @@ public class PropertyMap implements Mappable {
 	public boolean multiple = false;
 	public boolean removeExisting = false;
 	
-	public List<Option> optionList = new ArrayList<Option>();
+	public List<Option> optionList = new ArrayList<>();
 	public Option currentOption = new Option();
 
 

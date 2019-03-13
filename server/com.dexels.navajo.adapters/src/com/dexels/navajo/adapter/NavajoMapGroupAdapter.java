@@ -2,6 +2,7 @@ package com.dexels.navajo.adapter;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -26,9 +27,9 @@ class AppendNavajoMap {
 
 public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListener {
 
-	private Map<String, NavajoMap> joinedMaps = new ConcurrentHashMap<String,NavajoMap>();
-	private Map<String, Boolean> finishedMap = new ConcurrentHashMap<String, Boolean>();
-	private Map<String, AppendNavajoMap> appendMap = new ConcurrentHashMap<String,AppendNavajoMap>();
+	private Map<String, NavajoMap> joinedMaps = new ConcurrentHashMap<>();
+	private Map<String, Boolean> finishedMap = new ConcurrentHashMap<>();
+	private Map<String, AppendNavajoMap> appendMap = new ConcurrentHashMap<>();
 	
 	private Object hasResult = new Object();
 	private NavajoMap resultMap = null;
@@ -55,19 +56,19 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 	public void store() throws MappableException, UserException {
 		// Check if appendMap was specified.
 		if ( appendMap.size() > 0 ) {
-			for (String id : appendMap.keySet()) {
-				AppendNavajoMap anm = appendMap.get(id);
+			for (Entry<String,AppendNavajoMap> entry : appendMap.entrySet()) {
 				NavajoMap nm = null;
+				AppendNavajoMap value = entry.getValue();
 				if ( id.equals(FIRST_RESULT) ) {
 					waitForFirstResult();
 					nm = resultMap;
 				} else {
 					nm = joinedMaps.get(id);
 				}
-				if (anm.appendTo != null) {
-					nm.setAppendTo(anm.appendTo);
+				if (value.appendTo != null) {
+					nm.setAppendTo(value.appendTo);
 				}
-				nm.setAppend(anm.append);
+				nm.setAppend(value.append);
 			}
 		}
 		Iterator<NavajoMap> all = joinedMaps.values().iterator();
@@ -93,9 +94,9 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		if ( nm.getId() == null ) {
 			id = (sequence++) + "";
 			nm.setId(id);
-			logger.warn("Cannot add NavajoMap without id to navajomapgroup. Generating id: " + id);
+			logger.warn("Cannot add NavajoMap without id to navajomapgroup. Generating id: {}", id);
 		}
-		logger.debug("Adding NavajoMap: " + nm + " with id: " + nm.getId());
+		logger.debug("Adding NavajoMap: {} with id: {}",nm, nm.getId());
 		finishedMap.put(nm.getId(), false);
 		nm.setMyResponseListener(this);
 		joinedMaps.put(nm.getId(), nm);
@@ -104,7 +105,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 
 	@Override
 	public void onNavajoResponse(NavajoMap nm) {
-		logger.debug("Received response for NavajoMap: " + nm.getId());
+		logger.debug("Received response for NavajoMap: {}", nm.getId());
 		synchronized (hasResult) {
 			finishedMap.put(nm.getId(), true);
 			if ( resultMap == null ) {
@@ -138,7 +139,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 				}
 			}
 		}
-		logger.debug("Leaving barrier with " + (started - finished) + " NavajoMaps still running");
+		logger.debug("Leaving barrier with {} NavajoMaps still running",(started - finished));
 		return (started - finished);
 
 	}
@@ -180,7 +181,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		appendMap.put(id, messageOffset);
 	}
 	
-	public Object getProperty(String id, String n) throws Exception {
+	public Object getProperty(String id, String n) throws UserException  {
 		
 		if ( joinedMaps.get(id) == null ) {
 			throw new UserException(-1, "Could not find NavajoMap with id: " + id);
@@ -189,7 +190,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		return nm.getProperty(n);
 	}
 	
-	public Object getProperty(String n) throws Exception {
+	public Object getProperty(String n) throws UserException {
 		waitForFirstResult();
 		return resultMap.getProperty(n);
 	}

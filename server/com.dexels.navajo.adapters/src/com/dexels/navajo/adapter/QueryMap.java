@@ -57,7 +57,6 @@ public void store() throws MappableException, UserException {
             Object value = columns[j].getRecordValue();
             String type = (value != null ?
                            MappingUtils.determineNavajoType(value) : "unknown");
-            //String sValue = (value != null ? Util.toString(value, type) : "");
             Property prop = NavajoFactory.getInstance().createProperty(
                 outputDoc,
                 columns[j].recordName,

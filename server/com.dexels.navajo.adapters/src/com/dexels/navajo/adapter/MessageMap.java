@@ -61,7 +61,7 @@ public class MessageMap implements Mappable {
 	private ResultMessage [] resultMessage;
 	private String joinMessage1;
 	private String joinMessage2;
-	private ArrayList<JoinCondition> joinConditions = new ArrayList<JoinCondition>();
+	private ArrayList<JoinCondition> joinConditions = new ArrayList<>();
 	private boolean removeSource = false;
 	private String joinType = INNER_JOIN;
 	private String suppressProperties = null;
@@ -160,12 +160,12 @@ public class MessageMap implements Mappable {
 		}
 	}
 
-	public void setJoinMessage1(String m) throws UserException, NavajoException {
+	public void setJoinMessage1(String m) throws UserException {
 		this.msg1 = checkMessage(m).copy();
 		this.joinMessage1 = m;
 	}
 
-	public void setJoinMessage2(String m) throws UserException, NavajoException {
+	public void setJoinMessage2(String m) throws UserException {
 		this.msg2 = checkMessage(m).copy();
 		this.joinMessage2 = m;
 	}
@@ -198,13 +198,12 @@ public class MessageMap implements Mappable {
 		this.removeDuplicates = b;
 	}
 	
-	public ResultMessage [] getResultMessage() throws UserException, NavajoException {
+	public ResultMessage [] getResultMessage() throws UserException {
 
-		//		HashSet<String> messageHash = new HashSet<String>();
 		Message definitionMsg1 = null;
 		Message definitionMsg2 = null;
 
-		ArrayList<ResultMessage> resultingMessage = new ArrayList<ResultMessage>();
+		ArrayList<ResultMessage> resultingMessage = new ArrayList<>();
 
 		List<Message> children = this.msg1.getAllMessages();
 		// Determine definition message, unless groupBy is defined.
@@ -314,7 +313,7 @@ public class MessageMap implements Mappable {
 			}
 		}
 		
-		if (children.size() == 0 && definitionMsg1 != null && msg1 != null) {
+		if (children.isEmpty() && definitionMsg1 != null && msg1 != null) {
 		    // Make sure definition message stays intact
 		    Navajo out = myAccess.getOutputDoc();
 		    Message newMessage = NavajoFactory.getInstance().createMessage(out, msg1.getName(), msg1.getType());
@@ -327,11 +326,11 @@ public class MessageMap implements Mappable {
 		if ( groupBy != null ) {
 
 			removeDuplicates = true;
-			Map<String,PropertyAggregate> aggregates = new HashMap<String,PropertyAggregate>();
+			Map<String,PropertyAggregate> aggregates = new HashMap<>();
 
 			for ( int i = 0; i < resultingMessage.size(); i++ ) {
 
-				Map<String,Object> group = new TreeMap<String,Object>();
+				Map<String,Object> group = new TreeMap<>();
 
 				ResultMessage rm = resultingMessage.get(i);
 				Message m = rm.getMsg();
@@ -408,86 +407,7 @@ public class MessageMap implements Mappable {
 	public void store() throws MappableException, UserException {
 	}
 
-	public static void main(String [] args) throws Exception {
-		Navajo out = NavajoFactory.getInstance().createNavajo();
-		Message msg1 = NavajoFactory.getInstance().createMessage(out, "message1");
-		msg1.setType("array");
-		Message msg2 = NavajoFactory.getInstance().createMessage(out, "message2");
-		msg2.setType("array");
-		out.addMessage(msg1);
-		out.addMessage(msg2);
-
-		for (int i = 0; i < 4; i++) {
-			Message m1 = NavajoFactory.getInstance().createMessage(out, "message1");
-			Message m2 = NavajoFactory.getInstance().createMessage(out, "message2");
-			msg1.addMessage(m1);
-			msg2.addMessage(m2);
-
-			Property p;
-
-			p = NavajoFactory.getInstance().createProperty(out, "propje1", Property.STRING_PROPERTY, ""+3*i, 0, "", "");
-			m1.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(out, "propje2", Property.STRING_PROPERTY, ""+8*i, 0, "", "");
-			m1.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(out, "propje3", Property.STRING_PROPERTY, "propjes"+23*i, 0, "", "");
-			m1.addProperty(p);
-
-			p = NavajoFactory.getInstance().createProperty(out, "blieblab", Property.STRING_PROPERTY, ""+3*i, 0, "", "");
-			m2.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(out, "apenoot2", Property.STRING_PROPERTY, "apenoot"+8*i, 0, "", "");
-			m2.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(out, "apfelkorn", Property.STRING_PROPERTY, "apfelkorn"+23*i, 0, "", "");
-			m2.addProperty(p);
-
-		}
-
-		Property p;
-		Message m1 = NavajoFactory.getInstance().createMessage(out, "message1");
-		msg1.addMessage(m1);
-		p = NavajoFactory.getInstance().createProperty(out, "propje1", Property.STRING_PROPERTY, "343", 0, "", "");
-		m1.addProperty(p);
-		p = NavajoFactory.getInstance().createProperty(out, "propje2", Property.STRING_PROPERTY, "12321", 0, "", "");
-		m1.addProperty(p);
-		p = NavajoFactory.getInstance().createProperty(out, "propje3", Property.STRING_PROPERTY, "propjes2321", 0, "", "");
-		m1.addProperty(p);
-
-		// Additional m2.
-		Message m2 = NavajoFactory.getInstance().createMessage(out, "message2");
-		msg2.addMessage(m2);
-		p = NavajoFactory.getInstance().createProperty(out, "blieblab", Property.STRING_PROPERTY, "0", 0, "", "");
-		m2.addProperty(p);
-		p = NavajoFactory.getInstance().createProperty(out, "apenoot2", Property.STRING_PROPERTY, "12321", 0, "", "");
-		m2.addProperty(p);
-		p = NavajoFactory.getInstance().createProperty(out, "apfelkorn", Property.STRING_PROPERTY, "propjes2321", 0, "", "");
-		m2.addProperty(p);
-
-		Access a = new Access();
-		a.setOutputDoc(out);
-
-		MessageMap mm = new MessageMap();
-		mm.load(a);
-		mm.setSuppressProperties("propje3");
-		mm.setJoinMessage1("message1");
-		mm.setJoinMessage2("message2");
-		mm.setJoinCondition("propje1=blieblab");
-		mm.setJoinType("inner");
-		//mm.setRemoveSource(true);
-
-		Message resultMessage = NavajoFactory.getInstance().createMessage(out, "ResultingMessage");
-		resultMessage.setType("array");
-		out.addMessage(resultMessage);
-
-		a.setCurrentOutMessage(resultMessage);
-
-		ResultMessage [] result = mm.getResultMessage();
-		for (int i = 0; i < result.length; i++) {
-			result[i].load(a);
-			result[i].store();
-		}
-		a.setCurrentOutMessage(null);
-		mm.store();
-	}
-
+	
 	public void setSuppressProperties(String suppressProperties) {
 		this.suppressProperties = suppressProperties;
 	}
@@ -496,7 +416,7 @@ public class MessageMap implements Mappable {
 		if ( groupBy != null ) {
 			this.groupBy = groupBy;
 			String [] props = groupBy.split(",");
-			groupByProperties = new ArrayList<String>();
+			groupByProperties = new ArrayList<>();
 			for ( int i = 0; i < props.length; i++ ) {
 				groupByProperties.add(props[i].trim());
 			}

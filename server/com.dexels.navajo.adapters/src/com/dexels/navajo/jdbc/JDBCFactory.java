@@ -10,10 +10,10 @@ import com.dexels.navajo.script.api.UserException;
 
 public class JDBCFactory {
 	
-	public final static Logger logger = LoggerFactory.getLogger(JDBCFactory.class);
+	public static final Logger logger = LoggerFactory.getLogger(JDBCFactory.class);
 	private static volatile int useOSGi = -1;
 	
-	public final static boolean useOSGi() {
+	public static final boolean useOSGi() {
 		if ( useOSGi != -1) {
 			return ( useOSGi == 1);
 		}

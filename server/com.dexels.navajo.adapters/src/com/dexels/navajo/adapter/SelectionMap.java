@@ -70,7 +70,7 @@ public class SelectionMap implements Mappable {
 
 @Override
     public void load(Access parm4) throws UserException, MappableException {
-        optionsList = new ArrayList<OptionMap>();
+        optionsList = new ArrayList<>();
     }
 
 @Override
@@ -85,9 +85,9 @@ public class SelectionMap implements Mappable {
      */
     public void setOption(String option) {
 
-        String name = option.substring(0, option.indexOf(";"));
-        String value = option.substring(option.indexOf(";") + 1, option.lastIndexOf(";"));
-        String selected = option.substring(option.lastIndexOf(";") + 1, option.length());
+        String name = option.substring(0, option.indexOf(';'));
+        String value = option.substring(option.indexOf(';') + 1, option.lastIndexOf(';'));
+        String selected = option.substring(option.lastIndexOf(';') + 1, option.length());
 
         OptionMap om = new OptionMap();
 
@@ -107,16 +107,7 @@ public class SelectionMap implements Mappable {
         return result;
     }
 
-    public static void main(String args[]) {
-        String option = ";;1";
-        String name = option.substring(0, option.indexOf(";"));
-        String value = option.substring(option.indexOf(";") + 1, option.lastIndexOf(";"));
-        String selected = option.substring(option.lastIndexOf(";") + 1, option.length());
 
-        logger.info("name = " + name);
-        logger.info("value = " + value);
-        logger.info("selected = " + selected);
-    }
 
   public void setOptions(OptionMap[] options) {
     this.options = options;

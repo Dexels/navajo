@@ -1,10 +1,8 @@
 package com.dexels.navajo.adapter;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -149,13 +147,12 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     protected Navajo inDoc;
     protected Navajo outDoc;
-    // private NavajoClient nc;
     private Property currentProperty;
     private String currentFullName;
     protected Access access;
 
     private RequestQueue myRequestQueue;
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
+    private final Map<String, Object> attributes = new HashMap<>();
 
     protected NavajoConfigInterface config;
     protected Navajo inMessage;
@@ -254,7 +251,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      * @param messageOffset
      * @throws UserException
      */
-    public final void setAppendTo(String messageOffset) throws UserException {
+    public final void setAppendTo(String messageOffset) {
         appendTo = messageOffset;
     }
 
@@ -290,10 +287,8 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                
             }
         }
-        if (!block && serviceFinished) {
-            if (myException != null) {
-                throw new UserException(-1, myException.getMessage());
-            }
+        if (!block && serviceFinished && myException != null) {
+            throw new UserException(-1, myException.getMessage());
         }
     }
 
@@ -328,12 +323,11 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             } else if (inDoc.getMessage(messageOffset) == null) {
                 return;
             } else if (!inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY)) {
-                list = new ArrayList<Message>();
+                list = new ArrayList<>();
                 list.add(inDoc.getMessage(messageOffset));
             } else { // For array messages...
-                list = new ArrayList<Message>();
+                list = new ArrayList<>();
                 list.add(inDoc.getMessage(messageOffset));
-                // list = inDoc.getMessages(messageOffset);
             }
 
             // If no messages were found, there is nothing to append
@@ -377,7 +371,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 Message inMsg = list.get(i);
                 // Clone message and append it to currentMsg if it exists, else
                 // directly under currentDoc.
-                // currentDoc.importMessage(inMsg);
+                // currentDoc.importMessage(inMsg)
                 Message clone = inDoc.copyMessage(inMsg, currentDoc);
                 if (currentMsg != null) {
                     if (appendTo != null) {
@@ -479,7 +473,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             } else if (inDoc.getMessage(messageOffset) == null) {
                 return;
             } else if (inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY)) {
-                list = new ArrayList<Message>();
+                list = new ArrayList<>();
                 list.add(inDoc.getMessage(messageOffset));
             } else {
                 list = inDoc.getMessages(messageOffset);
@@ -489,7 +483,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 Message inMsg = list.get(i);
                 // Clone message and append it to currentMsg if it exists, else
                 // directly under currentDoc.
-                // currentDoc.importMessage(inMsg);
+                // currentDoc.importMessage(inMsg)
                 Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
                 parm.addMessage(clone, true);
             }
@@ -509,10 +503,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             else
                 currentProperty = outDoc.getProperty(fullName);
             if (currentProperty == null) {
-                // System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
                 currentProperty = NavajoFactory.getInstance().createProperty(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
-            } else {
-                // System.out.println("FOUND EXISTING PROPERTY: " + fullName);
             }
         } catch (Exception e) {
             e.printStackTrace(Access.getConsoleWriter(access));
@@ -540,14 +531,12 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public final void setIntegerProperty(int i) throws UserException {
-        // System.out.println("in setIntegerProperty() : i = " + i);
         currentProperty.setType(Property.INTEGER_PROPERTY);
         currentProperty.setValue(i + "");
         addProperty(currentProperty);
     }
 
     public final void setFloatProperty(double i) throws UserException {
-        // System.out.println("in setFloatProperty() : i = " + i);
         currentProperty.setType(Property.FLOAT_PROPERTY);
         currentProperty.setValue(i + "");
         addProperty(currentProperty);
@@ -582,7 +571,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public final void setClockTimeProperty(ClockTime d) throws UserException {
-        // System.out.println("setClockTimeProperty() = " + d);
         currentProperty.setType(Property.CLOCKTIME_PROPERTY);
         if (d != null)
             currentProperty.setValue(d);
@@ -592,7 +580,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public final void setBinaryProperty(Binary d) throws UserException {
-        // System.out.println("setBinaryProperty() = " + d);
         currentProperty.setType(Property.BINARY_PROPERTY);
         if (d != null) {
             currentProperty.setValue(d);
@@ -603,7 +590,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public final void setMoneyProperty(Money d) throws UserException {
-        // System.out.println("setMoneyProperty() = " + d);
         currentProperty.setType(Property.MONEY_PROPERTY);
         if (d != null)
             currentProperty.setValue(d);
@@ -613,7 +599,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     public final void setDateProperty(Date d) throws UserException {
-        // System.out.println("setDateProperty() = " + d);
         currentProperty.setType(Property.DATE_PROPERTY);
         if (d != null)
             currentProperty.setValue(d);
@@ -744,7 +729,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             // Check for deleted messages.
-            if (deletedMessages.size() > 0) {
+            if (!deletedMessages.isEmpty()) {
                 for (String dMn : deletedMessages) {
                     Message dM = outDoc.getMessage(dMn);
                     if (dM != null) {
@@ -755,7 +740,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             // Check for deleted properties.
-            if (deletedProperties.size() > 0) {
+            if (!deletedProperties.isEmpty()) {
                 for (String dPn : deletedProperties) {
                     if (dPn != null) {
                         Property dP = outDoc.getProperty(dPn);
@@ -987,7 +972,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         
     }
 
-    public final Object getProperty(String fullName) throws Exception {
+    public final Object getProperty(String fullName) throws UserException {
 
         Property p = getPropertyObject(fullName);
 
@@ -1005,7 +990,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         this.selectionPointer = selectionPointer;
     }
 
-    public void setSelections(OptionMap[] selections) throws Exception {
+    public void setSelections(OptionMap[] selections) throws UserException {
 
         if (currentProperty == null) {
             throw new UserException(-1, "Set property name first.");
@@ -1036,7 +1021,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     }
 
-    public OptionMap[] getSelections() throws Exception {
+    public OptionMap[] getSelections() throws UserException {
 
         if (selectionPointer == null) {
             throw new UserException(-1, "Set selectionPointer first.");
@@ -1128,7 +1113,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         return (Money) p.getTypedValue();
     }
 
-    public final String getStringProperty(String fullName) throws Exception {
+    public final String getStringProperty(String fullName) throws UserException {
 
         Property p = getPropertyObject(fullName);
         if (p.getType().equals(Property.SELECTION_PROPERTY)) {
@@ -1230,7 +1215,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         if (!msgPointer.isArrayMessage())
             throw new UserException(-1, "getMessages can only be used for array messages");
         try {
-            List<Message> all = msgPointer.getAllMessages(); // inDoc.getMessages(messagePointer);
+            List<Message> all = msgPointer.getAllMessages(); 
 
             if ((all == null))
                 throw new UserException(-1, "Could not find messages: " + messagePointerString + " in response document");
@@ -1267,14 +1252,12 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             if (m.getDefinitionMessage() != null) {
                 if (!m.getDefinitionMessage().getOrderBy().equals("")) {
                     setPerformOrderBy(true);
-                    return;
                 }
             } else {
                 // It's safe to assume that the messages have the same structure, which means
                 // that if one needs ordering all of them need.
                 if (m.getMessage(0) != null && !m.getMessage(0).getOrderBy().equals("")) {
                     setPerformOrderBy(true);
-                    return;
                 }
             }
 
@@ -1330,26 +1313,19 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      *
      * @param b
      */
-    public void setSendThrough(boolean b) throws UserException {
-
-        try {
-            List<Message> all = inMessage.getAllMessages();
-            for (int i = 0; i < all.size(); i++) {
-                Message m = inMessage.copyMessage(all.get(i), outDoc);
-                outDoc.addMessage(m);
-            }
-        } catch (Exception e) {
-            logger.error("Error on setting sendthrough", e);
-            throw new UserException(-1, e.getMessage(), e);
+    public void setSendThrough(boolean b) {
+        List<Message> all = inMessage.getAllMessages();
+        for (int i = 0; i < all.size(); i++) {
+            Message m = inMessage.copyMessage(all.get(i), outDoc);
+            outDoc.addMessage(m);
         }
-
     }
 
-    public void setUseCurrentMessages(String m) throws UserException {
+    public void setUseCurrentMessages(String m) {
         this.useCurrentMessages = m;
     }
 
-    public void setCopyInputMessages(String m) throws UserException {
+    public void setCopyInputMessages(String m) {
         this.copyInputMessages = m;
     }
 
@@ -1391,7 +1367,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      *
      * @param useCurrentOutDoc
      */
-    public void setUseCurrentOutDoc(boolean b) throws NavajoException {
+    public void setUseCurrentOutDoc(boolean b) {
         if (b) {
             this.useCurrentOutDoc = b;
         }
@@ -1412,7 +1388,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             // Get task if if trigger was specified.
             if (trigger != null) {
                 taskId = inDoc.getHeader().getSchedule();
-                logger.info("************************************************* TASKID: " + taskId);
+                logger.info("************************************************* TASKID: {}", taskId);
             }
 
             // Call sorted.
@@ -1425,7 +1401,8 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 };
                 try {
                     inDoc.write(os);
-                } catch (NavajoException e) {
+                } catch (NavajoException e) { 
+                	logger.error("Error: ", e);
                 }
             }
 
@@ -1465,7 +1442,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 logger.debug("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR"); 
                 throw new ConditionErrorException(inDoc);
             } else if (inDoc.getMessage("ConditionErrors") != null) {
-                logger.debug("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");;
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");
                 return;
             }
 
@@ -1610,6 +1587,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 processPropertyDirections(list.next());
             }
         } catch (NavajoException e) {
+        	logger.error("Error: ", e);
         }
     }
 
@@ -1624,6 +1602,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 processShowProperties(list.next());
             }
         } catch (NavajoException e) {
+        	logger.error("Error: ", e);
         }
     }
 
@@ -1652,8 +1631,8 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 processSuppressedProperties(list.next());
             }
         } catch (NavajoException e) {
+        	logger.error("Error: ", e);
         }
-
     }
 
     private final void processPropertyDirections(Message m) {
@@ -1699,6 +1678,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                     return true;
                 }
             } catch (NavajoException e) {
+            	logger.error("Error: {}", propertyStringList);
             }
         }
         return false;
@@ -1810,7 +1790,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     @Override
     public void abort(String reason) {
-        logger.warn("Aborting navajomap: " + reason);
+        logger.warn("Aborting navajomap: {}", reason);
     }
 
     @Override
@@ -1865,7 +1845,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     @Override
-    public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
+    public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException {
 
     }
 

@@ -16,9 +16,11 @@ import com.dexels.navajo.server.NavajoConfigInterface;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
+ * @deprecated
  * @version 1.0
  */
 
+@Deprecated
 public class NavajoClearCache implements Mappable {
 
   private NavajoConfigInterface config;

@@ -45,16 +45,9 @@ public class NavajoAccess implements Mappable {
     }
 
     public String getRpcUser() {
-        //System.out.println("in NavajoAccess, getRpcUser()");
-        //System.out.println("Access = " + access);
-        //System.out.println("user = " + access.rpcUser);
+
         return access.rpcUser;
     }
-
-//    public String getConfigPath() {
-//      return config.getConfigPath();
-//    }
-//
 
     @Override
 	public void store() throws MappableException, UserException {}

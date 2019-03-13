@@ -120,12 +120,12 @@ public class FileMap implements Mappable {
                 throw new MappableException("SetMssage only accepts array message");
             }
             for (Message m : arrraymessage.getElements()) {
-                FileLineMap line = new FileLineMap();
-                line.setSeparator(separator);
+                FileLineMap fileLineMap = new FileLineMap();
+                fileLineMap.setSeparator(separator);
                 for (Property p : m.getAllProperties()) {
-                    line.setColumn(p.getTypedValue().toString());
+                    fileLineMap.setColumn(p.getTypedValue().toString());
                 }
-                setLine(line);
+                setLine(fileLineMap);
             }
         } else if (o instanceof List) {
             @SuppressWarnings("rawtypes")
@@ -133,19 +133,19 @@ public class FileMap implements Mappable {
             for (Object mapobject : maps) {
                 if (mapobject instanceof com.dexels.navajo.adapter.navajomap.MessageMap) {
                     com.dexels.navajo.adapter.navajomap.MessageMap map = (com.dexels.navajo.adapter.navajomap.MessageMap) mapobject;
-                    FileLineMap line = new FileLineMap();
-                    line.setSeparator(separator);
+                    FileLineMap fileLineMap = new FileLineMap();
+                    fileLineMap.setSeparator(separator);
                     for (Property p : map.getMsg().getAllProperties()) {
                         if (p.getName().equals("__id")) {
                             continue;
                         }
                         if (p.getTypedValue() != null) {
-                            line.setColumn(p.getTypedValue().toString());
+                            fileLineMap.setColumn(p.getTypedValue().toString());
                         } else {
-                            line.setColumn("");
+                            fileLineMap.setColumn("");
                         }
                     }
-                    setLine(line);
+                    setLine(fileLineMap);
                 }
             }
         } else {

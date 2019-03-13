@@ -46,9 +46,9 @@ public class SPMap extends SQLMap {
   public String outputParameter;
   public String outputParameterType;
 
-  protected final static int INPUT_PARAM = 0;
-  protected final static int OUTPUT_PARAM = 1;
-  protected final static int INOUT_PARAM = 2;
+  protected static final int INPUT_PARAM = 0;
+  protected static final int OUTPUT_PARAM = 1;
+  protected static final int INOUT_PARAM = 2;
   private static int openCallStatements = 0;
   private boolean isLegacyMode;
 

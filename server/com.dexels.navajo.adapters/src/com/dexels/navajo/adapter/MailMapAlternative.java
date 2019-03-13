@@ -208,7 +208,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 				related.addBodyPart(textBody);
 
-				if (bodyparts != null && bodyparts.size() > 0) {
+				if (bodyparts != null && !bodyparts.isEmpty()) {
 
 					// Put related bodyparts in related.
 					for (int i = 0; i < bodyparts.size(); i++) {
@@ -221,7 +221,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String attachContentType = am.getAttachContentType();
 						MimeBodyPart bp = new MimeBodyPart();
 
-						logger.debug("Embedding: " + userFileName);
+						logger.debug("Embedding: {}", userFileName);
 
 						if (file != null) {
 							if (userFileName == null) {
@@ -270,7 +270,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String attachContentDisposition = am.getAttachContentDisposition();
 						MimeBodyPart bp = new MimeBodyPart();
 
-						logger.debug("Attaching: " + userFileName);
+						logger.debug("Attaching: {}", userFileName);
 
 						if (file != null) {
 							if (userFileName == null) {
@@ -289,7 +289,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 							if (encoding != null) {
 								bp.setHeader("Content-Transfer-Encoding",
 										encoding);
-								encoding = null;
 							}
 						}
 
@@ -298,15 +297,13 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 							bp.setHeader("Content-Type", attachContentType);
 						}
 						bp.setDisposition(attachContentDisposition);
-//						bp.setDisposition("attachment");
-
 						multipart.addBodyPart(bp);
 					}
 				}
 
 				msg.setContent(multipart);
 			}
-			logger.info("Sending mail to "+recipients+" cc: "+cc+" bcc: "+bcc+" with subject: "+subject);
+			logger.info("Sending mail to {} cc: {} bcc: {} with subject: {}",recipients,cc,bcc,subject);
 
 			Transport.send(msg);
 
@@ -406,7 +403,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	public void setMultipleAttachments(AttachementMap[] c) {
 
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			attachments = new ArrayList<>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
@@ -417,7 +414,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	public void setMultipleRelatedBodyParts(AttachmentMapInterface[] c) {
 
 		if (bodyparts == null) {
-			bodyparts = new ArrayList<AttachmentMapInterface>();
+			bodyparts = new ArrayList<>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
@@ -433,14 +430,14 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	@Override
 	public void setAttachment(AttachementMap m) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(m);
 	}
 
 	public void setRelatedBodyPart(AttachmentMapInterface m) {
 		if (bodyparts == null) {
-			bodyparts = new ArrayList<AttachmentMapInterface>();
+			bodyparts = new ArrayList<>();
 		}
 		bodyparts.add(m);
 	}
@@ -555,9 +552,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		mma.setSubject("Test");
 		mma.setSender("arnoud@dexels.com");
 		mma.setRecipients("arnoud@dexels.com");
-
-		// mma.setRelatedMultipart(true);
-
 		AttachementMap am = new AttachementMap();
 		am.setAttachFileName("attachment.png");
 		am.setEncoding("base64");

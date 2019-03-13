@@ -3,12 +3,13 @@ package com.dexels.navajo.adapter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.dexels.utils.Base64;
 import org.slf4j.Logger;
@@ -50,8 +51,8 @@ public class RESTAdapter extends NavajoMap {
     private String rawResult;
     private String dateFormat;
     
-    protected List<String> parameters = new ArrayList<String>();
-    protected Map<String, String> headers = new HashMap<String, String>();
+    protected List<String> parameters = new ArrayList<>();
+    protected Map<String, String> headers = new HashMap<>();
     private String textContent;
     private boolean jsonResponse = true;
 
@@ -129,6 +130,10 @@ public class RESTAdapter extends NavajoMap {
         this.readTimeOut = readTimeOut;
     }
 
+    /**
+     * @deprecated
+     * @param format
+     */
     @Deprecated
     public void setDateformat(String format) {
         logger.warn("Deprecated dateFormat!");
@@ -221,14 +226,14 @@ public class RESTAdapter extends NavajoMap {
             try {
                 json.format(od, w, true);
                 
-                bContent.getOutputStream().write(w.toString().getBytes("UTF-8"));
+                bContent.getOutputStream().write(w.toString().getBytes(StandardCharsets.UTF_8));
             } catch (Exception e) {
                 logger.error("Exception on parsing input navajo as JSON! Not performing REST call!");
                 throw new UserException(e.getMessage(), e);
             }
         } else {
             try {
-                bContent.getOutputStream().write(textContent.toString().getBytes("UTF-8"));
+                bContent.getOutputStream().write(textContent.toString().getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 logger.error("IOException on writing textcontent! Not performing REST call!");
                 throw new UserException(e.getMessage(), e);
@@ -300,22 +305,24 @@ public class RESTAdapter extends NavajoMap {
         } catch (MappableException e) {
             throw new UserException(e.getMessage(), e);
         }
-        String fullUrl = url;
+        
+        StringBuilder fullUrl = new StringBuilder(url);
         for (int i = 0; i < parameters.size(); i++) {
             if (i == 0) {
-                fullUrl += "?";
+                fullUrl.append("?");
             } else {
-                fullUrl += "&";
+                fullUrl.append("&");
             }
-            fullUrl += parameters.get(i);
+            fullUrl.append("&");
+            fullUrl.append(parameters.get(i));
         }
 
-        for (String key : headers.keySet()) {
-            http.setHeaderKey(key);
-            http.setHeaderValue(headers.get(key));
+        for (Entry<String,String> e : headers.entrySet()) {
+            http.setHeaderKey(e.getKey());
+            http.setHeaderValue(e.getValue());
         }
 
-        http.setUrl(fullUrl);
+        http.setUrl(fullUrl.toString());
         http.setHeaderKey("Accept");
         http.setHeaderValue("application/json");
         http.setMethod(method);
@@ -329,7 +336,7 @@ public class RESTAdapter extends NavajoMap {
         if (username != null && password != null) {
             // Use HTTP Basic auth - should only be used over HTTPS!
             String authString = username + ":" + password;
-            byte[] bytes = authString.getBytes(Charset.forName("UTF-8"));
+            byte[] bytes = authString.getBytes(StandardCharsets.UTF_8);
             String encoded = Base64.encode(bytes, 0, bytes.length, 0, "");
             http.setHeaderKey("Authorization");
             http.setHeaderValue("Basic " + encoded);
@@ -339,6 +346,7 @@ public class RESTAdapter extends NavajoMap {
         
     }
 
+    @Override
     public String getUrl() {
         return url;
     }

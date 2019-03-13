@@ -234,23 +234,20 @@ public class CSVMap implements Mappable {
                 entries[i++] = ce;
             }
         }
-        if (update) {
-            try {
+        if (update && entries != null) {
+            try(FileWriter writer = new FileWriter(fileName)) {
                 // Write CSV.
-                if (entries != null) {
-                    FileWriter writer = new FileWriter(fileName);
-                    for (int i = 0; i < entries.length; i++) {
-                        CSVEntryMap e = entries[i];
-                        for (int j = 0; j < e.entries.length; j++) {
-                            writer.write(e.getEntry(Integer.valueOf(j)));
-                            if (j < (e.entries.length - 1))
-                                writer.write(separator);
-                        }
-                        if (i < (entries.length - 1))
-                            writer.write("\n");
+                for (int i = 0; i < entries.length; i++) {
+                    CSVEntryMap e = entries[i];
+                    for (int j = 0; j < e.entries.length; j++) {
+                        writer.write(e.getEntry(Integer.valueOf(j)));
+                        if (j < (e.entries.length - 1))
+                            writer.write(separator);
                     }
-                    writer.close();
+                    if (i < (entries.length - 1))
+                        writer.write("\n");
                 }
+                writer.close();
             } catch (IOException ioe) {
                 throw new UserException(-1, ioe.getMessage());
             }

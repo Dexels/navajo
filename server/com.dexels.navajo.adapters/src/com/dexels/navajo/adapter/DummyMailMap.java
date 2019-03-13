@@ -32,56 +32,56 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	
 	@Override
 	public void setAttachment(AttachementMap m) {
-		logger.info("In DummyMailMap, setAttachment(" + m + ")");
+		logger.info("In DummyMailMap, setAttachment({})", m);
 	}
 
 	@Override
 	public void setBcc(String bcc) {
-		logger.info("In DummyMailMap, setBcc(" + bcc + ")");	
+		logger.info("In DummyMailMap, setBcc({})",bcc);	
 		this.bcc = bcc;
 	}
 
 	@Override
 	public void setCc(String cc) {
-		logger.info("In DummyMailMap, setCc(" + cc + ")");	
+		logger.info("In DummyMailMap, setCc({})", cc);	
 		this.cc = cc;
 	}
 
 	@Override
 	public void setContentType(String s) {
-		logger.info("In DummyMailMap, setContentType(" + s + ")");	
+		logger.info("In DummyMailMap, setContentType({})", s);	
 	}
 
 	@Override
 	public void setIgnoreFailures(boolean b) {
-		logger.info("In DummyMailMap, setIgnoreFailures(" + b + ")");
+		logger.info("In DummyMailMap, setIgnoreFailures({})" , b);
 	}
 
 	@Override
 	public void setMailServer(String s) {
-		logger.info("In DummyMailMap, setMailServer(" + s + ")");
+		logger.info("In DummyMailMap, setMailServer({})", s );
 	}
 
 	@Override
 	public void setMultipleAttachments(AttachementMap[] c) {
-		logger.info("In DummyMailMap, setMultipleAttachments size: " + c.length );
+		logger.info("In DummyMailMap, setMultipleAttachments size: {}", c.length );
 		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
 
 	@Override
 	public void setRecipients(String s) {
-		logger.info("In DummyMailMap, setRecipients(" + s + ")");
+		logger.info("In DummyMailMap, setRecipients({})",s);
 		this.recipients = s;
 	}
 
 	@Override
 	public void setRelatedMultipart(boolean b) {
-		logger.info("In DummyMailMap, setRelatedMultipart(" + b + ")");
+		logger.info("In DummyMailMap, setRelatedMultipart({})",b);
 	}
 
 	@Override
 	public void setSender(String s) {
-		logger.info("In DummyMailMap, setSender(" + s + ")");
+		logger.info("In DummyMailMap, setSender({})",s);
 		this.sender = s;
 	}
 	
@@ -91,19 +91,19 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 
 	@Override
 	public void setSubject(String s) {
-		logger.info("In DummyMailMap, setSubject(" + s + ")");
+		logger.info("In DummyMailMap, setSubject({})",s);
 		this.subject = s;
 	}
 
 	@Override
 	public void setText(String s) {
-		logger.info("In DummyMailMap, setText(" + s + ")");
+		logger.info("In DummyMailMap, setText({})", s);
 		this.text = s;
 	}
 
 	@Override
 	public void setXslFile(String s) {
-		logger.info("In DummyMailMap, setXslFile(" + s + ")");
+		logger.info("In DummyMailMap, setXslFile({})", s);
 	}
 
 	@Override
@@ -118,6 +118,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 
 	@Override
 	public void store() throws MappableException, UserException {
+		// TODO do something more sensible with the contents
 		String mailStore = DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/log/dummymailmap.log";
 		try(FileWriter fw = new FileWriter(mailStore, true)) {
 			fw.write(this.sender + "," + this.recipients + "," + this.cc + "," + this.bcc + "," + this.subject + "," + this.text + "\n");

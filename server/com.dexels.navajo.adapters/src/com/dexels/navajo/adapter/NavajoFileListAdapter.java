@@ -51,7 +51,7 @@ private static final Logger logger = LoggerFactory
   // a dummy, actually
   public String column = null;
 
-  private final List<String> columns = new ArrayList<String>();
+  private final List<String> columns = new ArrayList<>();
 
   public NavajoFileListAdapter() {
   }
@@ -99,9 +99,6 @@ public void kill() {
 
   @Override
 public void load(Access access) throws MappableException, UserException {
-
-//    Property nameProperty = inMessage.getProperty(namePropertyPath);
-//    String name = nameProperty.getValue();
     this.access = access;
     columns.clear();
   }
@@ -109,23 +106,16 @@ public void load(Access access) throws MappableException, UserException {
   @Override
 public void store() throws MappableException, UserException {
     File f = new File(pathPrefix);
-    if (!f.exists()) {
-      if (!f.mkdirs()) {
+    if (!f.exists() && !f.mkdirs()) {
         throw new MappableException(
             "Could not open directory, and could also not create it.");
-      }
     }
     Navajo n = NavajoFactory.getInstance().createNavajo();
     Message filesMessage = NavajoFactory.getInstance().createMessage(n,"Files",Message.MSG_TYPE_ARRAY);
     n.addMessage(filesMessage);
     File[] files;
     if (fileNameFilter!=null) {
-      FilenameFilter ff = new FilenameFilter() {
-        @Override
-		public boolean accept(File f, String s) {
-          return s.endsWith(fileNameFilter);
-        }
-      };
+      FilenameFilter ff = (f1, s) -> s.endsWith(fileNameFilter);
       files = f.listFiles(ff);
     } else {
       files = f.listFiles();
@@ -149,21 +139,19 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
   Property fileSize = NavajoFactory.getInstance().createProperty(parent.getRootDoc(),"Size",Property.INTEGER_PROPERTY,""+entry.length(),0,"",Property.DIR_OUT);
 
   if (pathToDescription!=null || conditionPath!=null || !columns.isEmpty()) {
-    try {
+    try(FileInputStream fis = new FileInputStream(entry)) {
 
       logger.debug("Reading description. Might be slow");
-      logger.debug("Entry: "+entry);
+      logger.debug("Entry: {}", entry);
 
-
-      FileInputStream fis = new FileInputStream(entry);
       Navajo n = NavajoFactory.getInstance().createNavajo(fis);
       fis.close();
           Property desc = n.getProperty(pathToDescription);
 
           if (conditionPath!=null) {
-            logger.debug("Evaluating: "+conditionPath);
+            logger.debug("Evaluating: {}", conditionPath);
             Operand o = Expression.evaluate(conditionPath, n);
-            logger.debug("Result: "+o.value);
+            logger.debug("Result: {}", o.value);
             Boolean b = (Boolean)o.value;
             if (!b.booleanValue()) {
               return null;
@@ -174,9 +162,7 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
         String current = columns.get(i);
         Property p = n.getProperty(current);
         if (p!=null) {
-//          Property q = (Property)p.clone();
           Property q = NavajoFactory.getInstance().createProperty(parent.getRootDoc(),"Column"+i,p.getType(),p.getValue(),p.getLength(),p.getDescription(),p.getDescription());
-//          q.setName("Column"+i);
           m.addProperty(q);
         }
       }
@@ -186,12 +172,8 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
 
 
     }
-    catch (IOException ex) {
+    catch (IOException|TMLExpressionException|SystemException ex) {
     	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",ex);
-    } catch (TMLExpressionException e) {
-    	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",e);
-	} catch (SystemException e) {
-    	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",e);
 	}
   }
   m.addProperty(filePath);

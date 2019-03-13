@@ -30,7 +30,7 @@ public class OracleAdministratorMap extends SQLMap {
 	private static final Logger logger = LoggerFactory
 			.getLogger(OracleAdministratorMap.class);
 	
-	protected static final String constraintSQL =
+	protected static final String CONSTRAINTSQL =
 		"SELECT "
 			+ "''ALTER TABLE '' ||  T.table_name || "
 			+ "'' MODIFY CONSTRAINT '' || T.constraint_name "
@@ -39,7 +39,7 @@ public class OracleAdministratorMap extends SQLMap {
 			+ "AND T.r_owner = R.owner AND T.constraint_type=''R'' AND "
 			+ "R.owner = ''{0}'' AND T.owner = ''{0}'' AND ( R.table_name IN ( {1} ) "
 			+ "OR T.table_name IN ( {1} ) )";
-	protected static final String triggerSQL =
+	protected static final String TRIGGERSQL =
 		"SELECT "
 			+ "''ALTER TRIGGER '' || name "
 			+ "FROM user_dependencies "
@@ -47,16 +47,16 @@ public class OracleAdministratorMap extends SQLMap {
 			+ "AND referenced_owner = ''{0}'' "
 			+ "AND referenced_type = ''TABLE'' "
 			+ "AND referenced_name IN ( {1} )";
-	protected final static String loggingSQL =
+	protected static final String LOGGINGSQL =
 		"SELECT "
 			+ "''ALTER TABLE '' || table_name "
 			+ "FROM all_tables WHERE owner = ''{0}'' AND table_name IN ( {1} )";
 
-	protected static final String getownerSQL =
+	protected static final String GETOWNERSQL =
 		"SELECT " + "DISTINCT username FROM user_users";
 
 	private ResultSetMap[] rsMap = null;
-	private List<String> tableListArray = new ArrayList<String>();
+	private List<String> tableListArray = new ArrayList<>();
 
 	public String schemaOwner = null;
 	public String tableList = null;
@@ -102,8 +102,7 @@ public class OracleAdministratorMap extends SQLMap {
 			final String tname = tok.nextToken().trim().toUpperCase();
 			this.tableListArray.add(tname);
 			if (this.debug) {
-				logger.info(
-					this.getClass() + ": added table '" + tname + "' to list");
+				logger.info("added table to list {}",tname);
 			}
 		}
 
@@ -119,7 +118,7 @@ public class OracleAdministratorMap extends SQLMap {
 	public void setConstraintMode(final String m) throws UserException {
 		this.constraintMode = m.trim().toUpperCase();
 		this.checkSchemaOwner();
-		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.constraintSQL);
+		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.CONSTRAINTSQL);
 		final Object[] args = { this.schemaOwner, this.formatTableList()};
 		final String qStr = formatter.format(args);
 		this.setQuery(qStr);
@@ -136,7 +135,7 @@ public class OracleAdministratorMap extends SQLMap {
 	public void setLoggingMode(final String m) throws UserException {
 		this.loggingMode = m.trim().toUpperCase();
 		this.checkSchemaOwner();
-		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.loggingSQL);
+		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.LOGGINGSQL);
 		final Object[] args = { this.schemaOwner, this.formatTableList()};
 		final String qStr = formatter.format(args);
 		this.setQuery(qStr);
@@ -154,7 +153,7 @@ public class OracleAdministratorMap extends SQLMap {
 	public void setTriggerMode(final String m) throws UserException {
 		this.triggerMode = m.trim().toUpperCase();
 		this.checkSchemaOwner();
-		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.triggerSQL);
+		final MessageFormat formatter = new MessageFormat(OracleAdministratorMap.TRIGGERSQL);
 		final Object[] args = { this.schemaOwner, this.formatTableList()};
 		final String qStr = formatter.format(args);
 		this.setQuery(qStr);
@@ -164,7 +163,7 @@ public class OracleAdministratorMap extends SQLMap {
 	// ----------------------------------------------------------- private methods
 
 	private String formatTableList() {
-		final StringBuffer tableBuf = new StringBuffer();
+		final StringBuilder tableBuf = new StringBuilder();
 		final Iterator<String> iter = this.tableListArray.iterator();
 		while (iter.hasNext()) {
 			final String t = iter.next();
@@ -182,8 +181,8 @@ public class OracleAdministratorMap extends SQLMap {
 		this.update = null;
 		this.rsMap = this.getResultSet();
 		for (int i = 0; i < this.rsMap.length; i++) {
-			final StringBuffer s =
-				new StringBuffer(
+			final StringBuilder s =
+				new StringBuilder(
 					(String) this.rsMap[i].getColumnValue(Integer.valueOf(0)));
 			s.append(" " + modeClause);
 			if (this.debug) {
@@ -203,7 +202,7 @@ public class OracleAdministratorMap extends SQLMap {
 	private void checkSchemaOwner() throws UserException {
 		if (this.schemaOwner == null) {
 			this.update = null;
-			this.query = OracleAdministratorMap.getownerSQL;
+			this.query = OracleAdministratorMap.GETOWNERSQL;
 			this.rsMap = this.getResultSet();
 			if (rsMap != null && rsMap.length > 0) {
 				final String s =
