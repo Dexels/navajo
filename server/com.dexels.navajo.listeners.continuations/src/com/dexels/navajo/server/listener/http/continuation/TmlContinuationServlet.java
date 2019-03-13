@@ -36,7 +36,8 @@ public class TmlContinuationServlet extends HttpServlet implements
 		this.reactiveHttpServlet = servlet;
 	}
 
-	public void clearReactiveServlet() {
+	
+	public void clearReactiveServlet(HttpServlet servlet) {
 		this.reactiveHttpServlet = null;
 	}
 
