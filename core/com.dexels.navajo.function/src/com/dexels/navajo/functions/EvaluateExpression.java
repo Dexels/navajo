@@ -52,9 +52,6 @@ public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpres
       try {
         result = Expression.evaluate(expression, currentNavajo, null, currentMessage,null,null,null,null);
       }
-      catch (SystemException ex) {
-    	  logger.error("Error: ", ex);
-      }
       catch (TMLExpressionException ex) {
     	  logger.error("Error: ",ex);
       }

@@ -222,19 +222,6 @@
 			<version>1.0.38</version>
 			<scope>runtime</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.dexels.navajo</groupId>
-			<artifactId>com.dexels.navajo.rhino</artifactId>
-			<version>2.0.2</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.dexels.navajo</groupId>
-			<artifactId>com.dexels.navajo.rhino.continuations</artifactId>
-			<version>2.0.0</version>
-			<scope>runtime</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>

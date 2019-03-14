@@ -50,25 +50,12 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.rhino"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.authentication.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="com.dexels.navajo.rhino.continuations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="com.dexels.navajo.webconsole.branding"
