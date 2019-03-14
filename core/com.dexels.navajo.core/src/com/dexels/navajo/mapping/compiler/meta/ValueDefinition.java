@@ -95,9 +95,10 @@ public class ValueDefinition {
 	 *     3) <map:set field="datasource">sportlinkkernel</map:set>
 	 * @param in
 	 * @param out
+	 * @throws MetaCompileException 
 	 */
 	public XMLElement generateCode(XMLElement currentIn, String setterValue, boolean textNode, 
-			                       String condition, XMLElement out, boolean append, String filename) throws Exception {
+			                       String condition, XMLElement out, boolean append, String filename) throws MetaCompileException {
 		
 		// Case I: <field><expression/></field> construct.
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && map == null) { 

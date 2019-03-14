@@ -24,7 +24,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;

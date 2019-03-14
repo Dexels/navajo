@@ -13,7 +13,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -29,22 +28,12 @@ public final class ASTAndNode extends SimpleNode {
 		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> expressionA = expA.returnType();
 		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
-//		
-//        if (expressionA != null && expressionA.isPresent() && !expressionA.get().equals(Property.BOOLEAN_PROPERTY)
-//                && !expressionA.get().equals(Property.ANY_PROPERTY)) {
-//			problems.add("In AND expression the first expression is not a boolean but a "+expressionA.get());
-//		}
 		Optional<String> expressionB = expB.returnType();
 		checkOrAdd("In AND expression the second expression is not a boolean but a "+expressionB.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
-//		if (expressionB != null && expressionB.isPresent() && !expressionB.get().equals(Property.BOOLEAN_PROPERTY)
-//                && !expressionB.get().equals(Property.ANY_PROPERTY)) {
-//			problems.add("In AND expression the second expression is not a boolean but a "+expressionB.get());
-//		}
-
 		return new ContextExpression() {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				if(a==null) {
 		        	return Operand.ofBoolean(Boolean.FALSE);

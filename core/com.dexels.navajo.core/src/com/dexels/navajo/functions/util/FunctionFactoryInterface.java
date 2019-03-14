@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import navajo.ExtensionDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +16,8 @@ import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.script.api.UserException;
+
+import navajo.ExtensionDefinition;
 
 public abstract class FunctionFactoryInterface implements Serializable {
 

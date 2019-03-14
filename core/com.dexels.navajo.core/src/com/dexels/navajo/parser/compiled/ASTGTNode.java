@@ -28,7 +28,7 @@ public final class ASTGTNode extends SimpleNode {
 		return lazyBiFunction(problems, expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    private static final Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
+    private static final Boolean compare(Operand ao, Operand bo, String expression) {
     	Object a = ao.value;
     	Object b = bo.value;
         if (a == null || b == null) {
@@ -53,16 +53,10 @@ public final class ASTGTNode extends SimpleNode {
         else if (a instanceof ClockTime && b instanceof ClockTime)
             return Boolean.valueOf(Utils.compareDates(a, b, ">"));
         else
-            // throw new TMLExpressionException("Illegal comparison for gt; " +
-            // a.getClass().getName() + " " + b.getClass().getName());
             return Boolean.valueOf(false);
-
-        // return Boolean.valueOf(false);
-        // throw new TMLExpressionException("Illegal comparison for gt; " +
-        // a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	private final Operand interpret(Operand a, Operand b, String expression) throws TMLExpressionException {
+	private final Operand interpret(Operand a, Operand b, String expression) {
 
         if (a instanceof List) { // Compare all elements in the list.
             List list = (List) a;
@@ -73,7 +67,7 @@ public final class ASTGTNode extends SimpleNode {
 
                 if (!(dum))
                     return Operand.FALSE;
-                result = result && dum;
+                result = dum;
             }
             return Operand.ofBoolean(result);
         } else {

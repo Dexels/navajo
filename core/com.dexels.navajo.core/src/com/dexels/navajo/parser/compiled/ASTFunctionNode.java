@@ -90,7 +90,6 @@ public final class ASTFunctionNode extends SimpleNode {
 				break;
 			case REACTIVE_SOURCE:
 				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression,this);
-//				return resolveReactiveSource(l, named, problems, expression);
 			case REACTIVE_TRANSFORMER:
 				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression,this);
 	
@@ -112,10 +111,8 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		try {
 			List<String> typeProblems = typeCheckInstance.typeCheck(l,expression);
-			if(!typeProblems.isEmpty()) {
-				if(RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
-					problems.addAll(typeProblems);
-				}
+			if(!typeProblems.isEmpty() && RuntimeConfig.STRICT_TYPECHECK.getValue()!=null) {
+				problems.addAll(typeProblems);
 			}
 		} catch (Throwable e2) {
 			typechecklogger.error("Typechecker itself failed when parsing: "+expression+" function definition: "+typeCheckInstance+" Error: ", e2);
@@ -132,7 +129,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				FunctionInterface f = getFunction();
 				Map<String,Operand> resolvedNamed = named.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage)));
 				f.setInMessage(doc);
@@ -145,7 +142,7 @@ public final class ASTFunctionNode extends SimpleNode {
 						try {
 							Operand evaluated = e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink, access,immutableMessage,paramMessage);
 							if(evaluated==null) {
-								logger.warn("Problematic expression returned null object. If you really insist, return an Operand.NULL. Evaluating expression: "+expression);
+								logger.warn("Problematic expression returned null object. If you really insist, return an Operand.NULL. Evaluating expression: {}",expression);
 								
 							}
 							return evaluated;
@@ -170,8 +167,6 @@ public final class ASTFunctionNode extends SimpleNode {
 			Optional<String> returnType = dynamic.returnType();
 			String immutablExpression = dynamic.expression();
 			Operand resolved = dynamic.apply();
-//			Thread.dumpStack();
-//			logger.info("Returning pre-evaluated function call for: {} expression: {}",functionName,expression);
 			return new ContextExpression() {
 				
 				@Override
@@ -192,7 +187,7 @@ public final class ASTFunctionNode extends SimpleNode {
 				@Override
 				public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 						MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-						Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+						Optional<ImmutableMessage> paramMessage) {
 					return resolved;
 				}
 			};

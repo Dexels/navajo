@@ -8,14 +8,14 @@ import java.net.URL;
 
 import javax.script.ScriptEngineManager;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
+
+import navajocore.Version;
 
 public class DispatcherFactory {
 

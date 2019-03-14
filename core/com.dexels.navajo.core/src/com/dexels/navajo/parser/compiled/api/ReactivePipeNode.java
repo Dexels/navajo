@@ -9,12 +9,10 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactivePipe;
 import com.dexels.navajo.reactive.api.ReactiveSource;
-import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
@@ -28,7 +26,7 @@ public class ReactivePipeNode implements ContextExpression {
 	@Override
 	public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-			Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+			Optional<ImmutableMessage> paramMessage) {
 		return actual;
 	}
 

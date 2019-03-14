@@ -27,64 +27,62 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 
 public final class Expression {
-	public static String ACCESS = "ACCESS";
+	public static final String ACCESS = "ACCESS";
 
 	private static CachedExpressionEvaluator evaluator = new CachedExpressionEvaluator();
 	public static boolean compileExpressions = true; // Enabled by default
 	
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage) throws TMLExpressionException, SystemException {
+	private Expression() {
+		// no instances
+	}
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage) {
 		return evaluate(clause, inMessage, o, null, null, sel, tl, params, immutableMessage, Optional.empty());
 	}
 
-	public final static Operand evaluateImmutable(String clause, Navajo in, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException, SystemException {
+	public static final Operand evaluateImmutable(String clause, Navajo in, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		return evaluate(clause, in, null, null, null, null, null, null, immutableMessage, paramMessage);
 	}
 	
 	
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
-			throws TMLExpressionException, SystemException {
-//		Access a = params==null?null: (Access) params.get(ACCESS);
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		if (clause.trim().equals("")) {
 			return new Operand(null, "", "");
 		}
 		return evaluator.evaluate(clause, inMessage, o,  parent, paramParent,sel,tl,params,immutableMessage,paramMessage);
 	}
 
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params)
-			throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Message paramParent, Selection sel, TipiLink tl, Map<String, Object> params) {
 		return evaluate(clause, inMessage, o, parent, paramParent, sel, tl, params, Optional.empty(),Optional.empty());
 	}
 	@Deprecated
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message paramParent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Message paramParent, Selection sel, TipiLink tl) {
 		return evaluate(clause, inMessage, o, parent, paramParent, sel, tl, null);
 	}
 
 	@Deprecated
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Selection sel, TipiLink tl) {
 		return evaluate(clause, inMessage, o, parent, null, sel, tl, null);
 	}
 
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent)
-			throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) {
 		return evaluate(clause, inMessage, o, parent, null, null, null, null);
 	}
 
-	public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
-			Message parentParam) throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,
+			Message parentParam) {
 		return evaluate(clause, inMessage, o, parent, parentParam, null, null, null);
 	}
 
-	public final static Operand evaluate(String clause, Navajo inMessage)
-			throws TMLExpressionException, SystemException {
+	public static final Operand evaluate(String clause, Navajo inMessage) throws SystemException {
 		return evaluate(clause, inMessage, null, null, null, null, null, null,Optional.empty(),Optional.empty());
 	}
 
-	public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent)
-			throws TMLExpressionException, SystemException {
+	public static final Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent)
+			throws SystemException {
 
 		try {
 			StringTokenizer tokens = new StringTokenizer(matchString, ";");
@@ -118,17 +116,17 @@ public final class Expression {
 		return null;
 	}
 
-	public final static String replacePropertyValues(String clause, Navajo inMessage) {
+	public static final String replacePropertyValues(String clause, Navajo inMessage) {
 		// Find all property references in clause.
-		StringBuffer result = new StringBuffer();
-		int begin = clause.indexOf("[");
+		StringBuilder result = new StringBuilder();
+		int begin = clause.indexOf('[');
 
 		if (begin == -1) // Clause does not contain properties.
 			return clause;
 
 		result.append(clause.substring(0, begin));
 		while (begin >= 0) {
-			int end = clause.indexOf("]");
+			int end = clause.indexOf(']');
 			String propertyRef = clause.substring(begin + 1, end);
 			Property prop = inMessage.getProperty(propertyRef);
 			String value = "null";
@@ -141,7 +139,7 @@ public final class Expression {
 			}
 			result.append("{" + value + "}");
 			clause = clause.substring(end + 1, clause.length());
-			begin = clause.indexOf("[");
+			begin = clause.indexOf('[');
 			if (begin >= 0)
 				result.append(clause.substring(0, begin));
 			else

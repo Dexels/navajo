@@ -28,7 +28,7 @@ public final class ASTLENode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    public final static Boolean compare(Operand ao, Operand bo, String expression) throws TMLExpressionException {
+    public final static Boolean compare(Operand ao, Operand bo, String expression) {
     	Object a = ao.value;
     	Object b = bo.value;
         if (a == null || b == null) {
@@ -57,8 +57,6 @@ public final class ASTLENode extends SimpleNode {
     }
 
 	public final Operand interpret(Operand a, Operand b, String expression)  {
-        // System.out.println("Got second argument");
-
         if (a instanceof List) { // Compare all elements in the list.
             List list = (List) a;
             boolean result = true;

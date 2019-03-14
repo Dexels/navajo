@@ -2,11 +2,11 @@ package com.dexels.navajo.server.enterprise.queue;
 
 import java.lang.reflect.Method;
 
-import navajocore.Version;
-
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import navajocore.Version;
 
 
 public class RequestResponseQueueFactory {

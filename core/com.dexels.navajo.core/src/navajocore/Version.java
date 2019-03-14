@@ -1,7 +1,5 @@
 package navajocore;
 
-import navajoextension.AbstractCoreExtension;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -15,6 +13,8 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
 import com.dexels.navajo.util.AuditLog;
+
+import navajoextension.AbstractCoreExtension;
 
 
 public class Version extends AbstractCoreExtension {

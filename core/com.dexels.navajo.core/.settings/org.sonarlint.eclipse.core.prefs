@@ -1,0 +1,4 @@
+autoEnabled=true
+eclipse.preferences.version=1
+extraProperties=
+fileExclusions=FILE\:src/com/dexels/navajo/parser/compiled/SimpleCharStream.java\r\nFILE\:src/com/dexels/navajo/parser/compiled/JJTCompiledParserState.java\r\nFILE\:src/com/dexels/navajo/parser/compiled/CompiledParserTreeConstants.java\r\nFILE\:src/com/dexels/navajo/parser/compiled/CompiledParserTokenManager.java\r\nFILE\:src/com/dexels/navajo/parser/compiled/CompiledParser.java

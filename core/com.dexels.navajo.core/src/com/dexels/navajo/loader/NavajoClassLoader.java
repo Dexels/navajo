@@ -37,12 +37,12 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import navajocore.Version;
-
 import org.dexels.utils.scriptloader.JarResources;
 import org.dexels.utils.scriptloader.MultiClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import navajocore.Version;
 
 
 /**

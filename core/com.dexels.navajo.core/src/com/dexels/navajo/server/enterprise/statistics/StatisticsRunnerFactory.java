@@ -5,15 +5,14 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.logging.Level;
 
-import navajocore.Version;
-
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.util.AuditLog;
+
+import navajocore.Version;
 
 public class StatisticsRunnerFactory {
 

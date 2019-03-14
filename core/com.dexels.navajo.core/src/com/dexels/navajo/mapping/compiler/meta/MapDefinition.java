@@ -60,7 +60,7 @@ public class MapDefinition {
 		return value;
 	}
 	
-	public static MapDefinition parseDef(XMLElement e) throws Exception {
+	public static MapDefinition parseDef(XMLElement e) throws ClassNotFoundException, KeywordException {
 
 		MapDefinition md = new MapDefinition(MapMetaData.getInstance());
 		
@@ -102,7 +102,7 @@ public class MapDefinition {
 		return md;
 	}
 
-	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws Exception {
+	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws MetaCompileException {
 		// First process children...
 		if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
 			Vector<XMLElement> vc = child.getChildren();
@@ -186,8 +186,10 @@ public class MapDefinition {
 	 *      </map>
 	 * @param in
 	 * @param out
+	 * @throws MetaCompileException 
+	 * @throws ClassNotFoundException 
 	 */
-	public void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
+	public void generateCode(XMLElement in, XMLElement out, String filename) throws MetaCompileException, ClassNotFoundException {
 		
 		XMLElement map = null;
 		
@@ -201,7 +203,7 @@ public class MapDefinition {
 			// Parse attributes using ValueDefinition.
 			Iterator<String> attributes = in.enumerateAttributeNames();
 			
-			HashSet<String> required = new HashSet<String>();
+			Set<String> required = new HashSet<>();
 			// Get all 'automatic' parameters and determine required parameters.
 			Iterator<ValueDefinition> auto = values.values().iterator();
 			while ( auto.hasNext() )  {

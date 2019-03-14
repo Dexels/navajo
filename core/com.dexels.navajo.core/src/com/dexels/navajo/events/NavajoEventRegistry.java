@@ -13,8 +13,6 @@ import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +20,8 @@ import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.server.enterprise.scheduler.tribe.NavajoEventProxyInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
+
+import navajocore.Version;
 
 /**
  * A very simple event registry class.

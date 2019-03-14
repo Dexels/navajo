@@ -3,12 +3,12 @@ package com.dexels.navajo.functions.util;
 
 import java.security.AccessControlException;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.expression.api.FunctionInterface;
+
+import navajocore.Version;
 
 
 public class FunctionFactoryFactory {

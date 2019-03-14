@@ -13,7 +13,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -38,7 +37,7 @@ public final class ASTStringConstantNode extends SimpleNode {
 			
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		        String s = val.substring(1, val.length() - 1);
 		        String t = s.replaceAll("\\\\'","'");
 		        return Operand.ofString(t);

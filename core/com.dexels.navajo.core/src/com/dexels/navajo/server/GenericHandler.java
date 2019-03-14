@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +31,8 @@ import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
+
+import navajocore.Version;
 
 /**
  * Title:        Navajo

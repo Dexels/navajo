@@ -28,20 +28,21 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
-import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -74,9 +75,13 @@ import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
+import com.dexels.navajo.mapping.compiler.meta.KeywordException;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.MetaCompileException;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.Dependency;
+import com.dexels.navajo.script.api.MappingException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -91,36 +96,28 @@ public class TslCompiler {
 	private int messageListCounter = 0;
 	private int asyncMapCounter = 0;
 	private int lengthCounter = 0;
-	private int functionCounter = 0;
 	private int objectCounter = 0;
 	private int subObjectCounter = 0;
 	private int startIndexCounter = 0;
 	private int startElementCounter = 0;
 	private String scriptPath;
-	// private int offsetElementCounter = 0;
 	private int methodCounter = 0;
-	private ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
-	private ArrayList<String> variableClipboard = new ArrayList<String>();
-	private StringBuffer dependencies = new StringBuffer();
-	private HashSet<String> dependentObjects = new HashSet<String>();
+	private List<StringBuilder> methodClipboard = new ArrayList<>();
+	private List<String> variableClipboard = new ArrayList<>();
+	private StringBuilder dependencies = new StringBuilder();
+	private Set<String> dependentObjects = new HashSet<>();
 
 	/**
 	 * Use this as a placeholder for instantiated adapters (for meta data
 	 * usage).
 	 */
-	private HashMap<Class<?>, DependentResource[]> instantiatedAdapters = new HashMap<Class<? extends Object>, DependentResource[]>();
+	private Map<Class<?>, DependentResource[]> instantiatedAdapters = new HashMap<>();
 
-	private Stack<Class> contextClassStack = new Stack<Class>();
+	private Stack<Class> contextClassStack = new Stack<>();
 	private Class contextClass = null;
 	private int included = 0;
 
-	private JavaCompiler compiler;
-
 	private String scriptType = "tsl";
-
-	private static String hostname = null;
-
-	private static String VERSION = "$Id$";
 
 	private final NavajoIOConfig navajoIOConfig;
 
@@ -188,7 +185,7 @@ public class TslCompiler {
 	}
 
 	private String removeNewLines(String str) {
-		StringBuffer result = new StringBuffer(str.length());
+		StringBuilder result = new StringBuilder(str.length());
 		for (int i = 0; i < str.length(); i++) {
 			char c = str.charAt(i);
 			if (c == '\n') {
@@ -203,7 +200,7 @@ public class TslCompiler {
 	}
 
 	private String printIdent(int count) {
-		StringBuffer identStr = new StringBuffer();
+		StringBuilder identStr = new StringBuilder();
 		for (int i = 0; i < count; i++) {
 			identStr.append(' ');
 		}
@@ -231,7 +228,7 @@ public class TslCompiler {
 	}
 
 	private String removeWhiteSpaces(String s) {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			if (c != ' ') {
@@ -261,10 +258,10 @@ public class TslCompiler {
 			String className, String objectName) throws UserException {
 
 		boolean exact = false;
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		char firstChar = ' ';
 		boolean functionCall = false;
-		StringBuffer functionNameBuffer = new StringBuffer();
+		StringBuilder functionNameBuffer = new StringBuilder();
 		String functionName = "";
 		String call = "";
 		
@@ -288,11 +285,11 @@ public class TslCompiler {
 				functionNameBuffer.append(c);
 			} else if (functionCall && c == '(') {
 				functionName = functionNameBuffer.toString();
-				functionNameBuffer = new StringBuffer();
+				functionNameBuffer = new StringBuilder();
 			}
 
 			if (c == '$') { // New attribute found
-				StringBuffer name = new StringBuffer();
+				StringBuilder name = new StringBuilder();
 				i++;
 				c = clause.charAt(i);
 				while (c != '(' && i < clause.length() && c != ')') {
@@ -309,7 +306,7 @@ public class TslCompiler {
 				}
 				i++;
 
-				StringBuffer params = new StringBuffer();
+				StringBuilder params = new StringBuilder();
 
 				if (clause.indexOf("(") != -1) {
 					// Determine parameters.
@@ -345,7 +342,7 @@ public class TslCompiler {
 					Class expressionContextClass = null;
 
 					try {
-						StringBuffer objectizedParams = new StringBuffer();
+						StringBuilder objectizedParams = new StringBuilder();
 						StringTokenizer allParams = new StringTokenizer(
 								params.toString(), ",");
 						while (allParams.hasMoreElements()) {
@@ -375,11 +372,12 @@ public class TslCompiler {
 							} else if (v == null) {
 							    // Null support
 							    objectizedParams.append(v);
-							} else 
+							} else {
 								throw new UserException(-1,
 										"Unknown type encountered during compile time: "
 												+ v.getClass().getName()
 												+ " @clause: " + clause);
+							}
 							if (allParams.hasMoreElements()) {
 								objectizedParams.append(',');
 							}
@@ -467,9 +465,7 @@ public class TslCompiler {
 									+ v.getClass().getName() + " @clause: "
 									+ clause);
 
-			} catch (NullPointerException ne) {
-				exact = false;
-			} catch (TMLExpressionException pe) {
+			} catch (NullPointerException|TMLExpressionException ne) {
 				exact = false;
 			} catch (SystemException se) {
 				exact = false;
@@ -515,7 +511,7 @@ public class TslCompiler {
 	 * @throws Exception
 	 */
 	private Object[] getExpressionValue(Element exprElmnt,
-			Boolean isStringOperand) throws Exception {
+			Boolean isStringOperand) throws UserException {
 		String value = null;
 
 		isStringOperand = Boolean.FALSE;
@@ -529,8 +525,8 @@ public class TslCompiler {
 			if (value == null) {
 				Node child = valueElt.getFirstChild();
 				if ( child == null ) {
-					logger.error("Could not child in element: " + valueElt.getNodeName());
-					throw new Exception("Invalid script: " + valueElt.getNodeName());
+					logger.error("Could not child in element: {}", valueElt.getNodeName());
+					throw new UserException("Invalid script: " + valueElt.getNodeName());
 				}
 				value = child.getNodeValue();
 			}
@@ -547,7 +543,7 @@ public class TslCompiler {
 				isStringOperand = Boolean.TRUE;
 				value = child.getNodeValue();
 			} else {
-				throw new Exception(
+				throw new UserException(
 						"Error line "+ exprElmnt.getAttribute("linenr") +":"+ exprElmnt.getAttribute("startoffset")  +" @"
 								+ (exprElmnt.getParentNode() + "/" + exprElmnt)
 								+ ": <expression> node should either contain a value attribute or a text child node: >"
@@ -564,9 +560,9 @@ public class TslCompiler {
 	}
 
 	public String expressionNode(int ident, Element exprElmnt, int leftOver,
-			String className, String objectName) throws Exception {
+			String className, String objectName) throws UserException {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		Boolean isStringOperand = false;
 
 		String condition = exprElmnt.getAttribute("condition");
@@ -617,9 +613,9 @@ public class TslCompiler {
 
 	}
 
-	public String operationsNode(int ident, Element n) throws Exception {
+	public String operationsNode(int ident, Element n) throws MappingException {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		NodeList children = n.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -658,26 +654,28 @@ public class TslCompiler {
                     }
                 }
 
-                if (extraMessageName != null) {
-                    DOMSource domSource = new DOMSource(extraMessageElement);
-                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-                    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-                    transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                    StringWriter sw = new StringWriter();
-                    StreamResult sr = new StreamResult(sw);
-                    transformer.transform(domSource, sr);
+                try {
+					if (extraMessageName != null) {
+					    DOMSource domSource = new DOMSource(extraMessageElement);
+					    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+					    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+					    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+					    transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+					    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+					    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+					    StringWriter sw = new StringWriter();
+					    StreamResult sr = new StreamResult(sw);
+					    transformer.transform(domSource, sr);
 
-                    String extraNavajo = removeNewLines("<tml>" + sw.toString().replace('\"', '\'') + "</tml>");
+					    String extraNavajo = removeNewLines("<tml>" + sw.toString().replace('\"', '\'') + "</tml>");
 
-                    String extraNavajoOperation = "Navajo extra = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(\"" + extraNavajo
-                            + "\"));\n" + "o.setExtraMessage(extra.getMessage(\"" + extraMessageName + "\"));\n";
-
-                    result.append(printIdent(ident + 2) + extraNavajoOperation);
-
-                }
+					    String extraNavajoOperation = "Navajo extra = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(\"" + extraNavajo
+					            + "\"));\n" + "o.setExtraMessage(extra.getMessage(\"" + extraMessageName + "\"));\n";
+					    result.append(printIdent(ident + 2) + extraNavajoOperation);
+					}
+				} catch (IllegalArgumentException | TransformerFactoryConfigurationError | TransformerException e1) {
+					throw new MappingException("Error parsing operations",e1);
+				}
                 if (debug != null && !debug.equals("")) {
                     result.append(printIdent(ident + 2) + "o.setDebug(\"" + debug + "\");\n");
                 }
@@ -702,7 +700,7 @@ public class TslCompiler {
 
 	public String methodsNode(int ident, Element n) {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		// Process children.
 		NodeList children = n.getChildNodes();
@@ -753,31 +751,29 @@ public class TslCompiler {
 
 	@SuppressWarnings("unchecked")
 	public String messageNode(int ident, Element n, String className,
-			String objectName, List<Dependency> deps, String tenant)
-			throws Exception {
-		StringBuffer result = new StringBuffer();
+			String objectName, List<Dependency> deps, String tenant) throws MappingException, ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException {
+		StringBuilder result = new StringBuilder();
 
 		String messageName = n.getAttribute("name");
 		String condition = n.getAttribute("condition");
 		String type = n.getAttribute("type");
 		String mode = n.getAttribute("mode");
 		String count = n.getAttribute("count");
-		String start_index = n.getAttribute("start_index");
+		String startindex = n.getAttribute("start_index");
 		String orderby = n.getAttribute("orderby");
 		String extendsMsg = n.getAttribute("extends");
 		String scopeMsg = n.getAttribute("scope");
 		String method = n.getAttribute("method");
 		String subType = n.getAttribute("subtype");
 		
-		// //System.out.println("COUNT = " + count);
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
 		condition = (condition == null) ? "" : condition;
 		count = (count == null || count.equals("")) ? "1" : count;
 		method = (method == null) ? "" : method;
 		subType = (subType == null) ? "" : subType;
-		int startIndex = (start_index == null || start_index.equals("")) ? -1
-				: Integer.parseInt(start_index);
+		int startIndex = (startindex == null || startindex.equals("")) ? -1
+				: Integer.parseInt(startindex);
 
 		boolean conditionClause = false;
 
@@ -820,12 +816,12 @@ public class TslCompiler {
 				isMappedMessage = true;
 				isArrayAttr = true;
 				type = Message.MSG_TYPE_ARRAY;
-			} else if ( refOriginal.indexOf("$") != -1 ) {
+			} else if ( refOriginal.indexOf('$') != -1 ) {
 				// Remove leading $ (if present).
 				refOriginal = refOriginal.replaceAll("\\$", "");
 			}
 
-			if ( !isMappedMessage && refOriginal.indexOf("/") != -1) {
+			if ( !isMappedMessage && refOriginal.indexOf('/') != -1) {
 				ref = refOriginal.substring(refOriginal.lastIndexOf('/') + 1,
 						refOriginal.length());
 				mapPath = refOriginal
@@ -856,7 +852,7 @@ public class TslCompiler {
 						contextClass = Class.forName(className, false, loader);
 					}
 				} catch (Exception e) {
-					throw new Exception("Could not find field: " + className + "/" + mapPath, e);
+					throw new MappingException("Could not find field: " + className + "/" + mapPath, e);
 				}
 
 				addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -935,8 +931,8 @@ public class TslCompiler {
 				if (extendsMsg.startsWith("navajo://")) {
 				    String ext = extendsMsg.substring(9);
                     String version = "0";
-                    if (ext.indexOf(".") != -1) {
-                        version = ext.substring(ext.indexOf(".") + 1, ext.indexOf("?") == -1 ? ext.length() : ext.indexOf("?"));
+                    if (ext.indexOf('.') != -1) {
+                        version = ext.substring(ext.indexOf('.') + 1, ext.indexOf('?') == -1 ? ext.length() : ext.indexOf('?'));
                     }
                     String rep = "." + version;
                     ext = ext.replace(rep, "");
@@ -998,8 +994,6 @@ public class TslCompiler {
 					+ messageListName
 					+ " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \""
 					+ ref + "\");\n");
-			
-			//String subObjectsName = "subObject" + subObjectCounter;
 			String loopCounterName = "j" + subObjectCounter++;
 			
 			variableClipboard.add("int " + loopCounterName + ";\n");
@@ -1035,8 +1029,6 @@ public class TslCompiler {
 					+ "currentSelection = (Selection) " + messageListName
 					+ ".get(" + loopCounterName + ");\n");
 			
-			// if
-			// CONDITION.EVALUATE()!!!!!!!!!!!! {
 			// If filter is specified, evaluate filter first:
 			if (!filter.equals("")) {
 				result.append(printIdent(ident + 4)
@@ -1081,11 +1073,6 @@ public class TslCompiler {
 			ident = ident - 2;
 			result.append(printIdent(ident) + "} catch (Exception e"
 					+ ident + ") {\n");
-//			result.append(printIdent(ident + 2)
-//					+ "MappingUtils.callKillOrStoreMethod( "
-//					+ subObjectsName + "[" + loopCounterName + "], e"
-//					+ ident + ");\n");
-//			result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
 
 			result.append(printIdent(ident) + "}\n");
 
@@ -1130,7 +1117,6 @@ public class TslCompiler {
 			contextClassStack.push(contextClass);
 			String subClassName = null;
 			NodeList children = nextElt.getChildNodes();
-			// contextClass = null;
 			try {
 				subClassName = MappingUtils.getFieldType(contextClass, ref);
 				contextClass = Class.forName(subClassName, false, loader);
@@ -1142,7 +1128,7 @@ public class TslCompiler {
 				if (isDomainObjectMapper) {
 					type = "java.lang.Object";
 				} else {
-					throw new Exception("Could not find adapter: "
+					throw new MappingException("Could not find adapter: "
 							+ subClassName);
 				}
 			}
@@ -1260,7 +1246,6 @@ public class TslCompiler {
 						+ (ident + 2) + " = i" + (ident + 2) + "+"
 						+ offsetElementVar + ") {\n if (!kill) {\n");
 			} else {
-				// while ( mappableArrayName.hasNext() ) {\n if (!kill) {\n
 				result.append(printIdent(ident + 2) + "while ("
 						+ mappableArrayName + ".hasNext() ) {\n if (!kill) {\n");
 			}
@@ -1429,7 +1414,7 @@ public class TslCompiler {
 				try {
 					contextClass = Class.forName(subClassName, false, loader);
 				} catch (Exception e) {
-					throw new Exception("Could not find adapter "
+					throw new MappingException("Could not find adapter "
 							+ subClassName);
 				}
 
@@ -1487,8 +1472,8 @@ public class TslCompiler {
 	}
 
 	public String propertyNode(int ident, Element n, boolean canBeSubMapped,
-			String className, String objectName) throws Exception {
-		StringBuffer result = new StringBuffer();
+			String className, String objectName) throws UserException, ParseException {
+		StringBuilder result = new StringBuilder();
 
 		String propertyName = n.getAttribute("name");
 		String direction = n.getAttribute("direction");
@@ -1533,7 +1518,7 @@ public class TslCompiler {
 		boolean isMapped = false;
 		Element mapNode = null;
 
-		StringBuffer optionItems = new StringBuffer();
+		StringBuilder optionItems = new StringBuilder();
 
 		int exprCount = countNodes(children, "expression");
 
@@ -1543,7 +1528,7 @@ public class TslCompiler {
 		Class localContextClass = null;
 		for (int i = 0; i < children.getLength(); i++) {
 			hasChildren = true;
-			// Has condition;
+			// Has condition
 			if (children.item(i).getNodeName().equals("expression")) {
 				result.append(expressionNode(ident, (Element) children.item(i),
 						--exprCount, className, objectName));
@@ -1584,11 +1569,11 @@ public class TslCompiler {
 																		// "selection"
 																		// property!!!
 				if (!canBeSubMapped) {
-					throw new Exception("This property can not be submapped: "
+					throw new ParseException("This property can not be submapped: "
 							+ propertyName);
 				}
 				if (!type.equals("selection")) {
-					throw new Exception(
+					throw new ParseException(
 							"Only selection properties can be submapped: "
 									+ propertyName);
 				}
@@ -1599,7 +1584,7 @@ public class TslCompiler {
 			} else if (children.item(i) instanceof Element) {
 				String tagValue = "<" + n.getNodeName() + " name=\""
 						+ propertyName + "\">";
-				throw new Exception("Illegal child tag <"
+				throw new ParseException("Illegal child tag <"
 						+ children.item(i).getNodeName() + "> in " + tagValue
 						+ " (Check your script) ");
 			}
@@ -1675,7 +1660,7 @@ public class TslCompiler {
 			try {
 				localContextClass = Class.forName(className, false, loader);
 			} catch (Exception e) {
-				throw new Exception("Could not find adapter: " + className);
+				throw new ParseException("Could not find adapter: " + className);
 			}
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -1739,17 +1724,13 @@ public class TslCompiler {
 					if (!(subPropertyName.equals("name")
 							|| subPropertyName.equals("value") || subPropertyName
 								.equals("selected"))) {
-						throw new Exception(
+						throw new ParseException(
 								"Only 'name' or 'value' named properties expected when submapping a 'selection' property");
 					}
 					NodeList expressions = elt.getChildNodes();
 					int leftOver = countNodes(expressions, "expression");
-					// //System.out.println("LEFTOVER = " + leftOver +
-					// ", CHILD NODES = " + expressions.getLength());
 
 					for (int j = 0; j < expressions.getLength(); j++) {
-						// //System.out.println("expression.item("+j+") = " +
-						// expressions.item(j));
 						if ((expressions.item(j) instanceof Element)
 								&& expressions.item(j).getNodeName()
 										.equals("expression")) {
@@ -1775,7 +1756,7 @@ public class TslCompiler {
 							(Element) children.item(i), false, className,
 							objectName));
 				} else if (children.item(i) instanceof Element) {
-					throw new Exception(
+					throw new ParseException(
 							"<property> tag expected while sub-mapping a selection property: "
 									+ children.item(i).getNodeName());
 				}
@@ -1811,7 +1792,7 @@ public class TslCompiler {
 	}
 
 	private final void checkDependentFieldResource(Class localContextClass,
-			String fieldName, ArrayList<String> expressionValues,
+			String fieldName, List<String> expressionValues,
 			List<Dependency> deps) {
 
 		if (!(HasDependentResources.class.isAssignableFrom(localContextClass))) {
@@ -1854,14 +1835,14 @@ public class TslCompiler {
 								.getDependencyClass();
 						try {
 							Constructor c = depClass
-									.getConstructor(new Class[] { long.class,
+									.getConstructor(long.class,
 											String.class, String.class,
-											String.class });
+											String.class);
 							AdapterFieldDependency afd = (AdapterFieldDependency) c
-									.newInstance(new Object[] { -1,
+									.newInstance( -1,
 											localContextClass.getName(),
 											dependentFields[i].getType(),
-											expressionValue });
+											expressionValue);
 							deps.add(afd);
 							AdapterFieldDependency[] allDeps = (AdapterFieldDependency[]) afd
 									.getMultipleDependencies();
@@ -1905,9 +1886,9 @@ public class TslCompiler {
 	@SuppressWarnings("unchecked")
 	public String fieldNode(int ident, Element n, String className,
 			String objectName, List<Dependency> dependencies, String tenant)
-			throws Exception {
+			throws UserException, MappingException, ClassNotFoundException, KeywordException, IOException, MetaCompileException, ParseException {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		String attributeOriginal = n.getAttribute("name");
 		String condition = n.getAttribute("condition");
@@ -1915,7 +1896,7 @@ public class TslCompiler {
 
 		String mapPath = null;
 
-		if (attributeOriginal.indexOf("/") != -1) {
+		if (attributeOriginal.indexOf('/') != -1) {
 			attribute = attributeOriginal.substring(
 					attributeOriginal.lastIndexOf('/') + 1,
 					attributeOriginal.length());
@@ -1926,7 +1907,7 @@ public class TslCompiler {
 		}
 
 		if (attribute == null || attribute.equals(""))
-			throw new Exception("Name attribute is required for field tags");
+			throw new UserException("Name attribute is required for field tags");
 
 		condition = (condition == null) ? "" : condition;
 
@@ -1935,7 +1916,7 @@ public class TslCompiler {
 				+ attribute.substring(1, attribute.length());
 
 		String methodName = null;
-		if (totalMethodName.indexOf("/") != -1) {
+		if (totalMethodName.indexOf('/') != -1) {
 			methodName = totalMethodName.substring(
 					totalMethodName.lastIndexOf('/') + 1,
 					totalMethodName.length());
@@ -1958,9 +1939,9 @@ public class TslCompiler {
 		Element mapNode = null;
 
 		int exprCount = countNodes(children, "expression");
-		ArrayList<String> exprValues = new ArrayList<String>();
+		List<String> exprValues = new ArrayList<>();
 		for (int i = 0; i < children.getLength(); i++) {
-			// Has condition;
+			// Has condition
 			if (children.item(i).getNodeName().equals("expression")) {
 				result.append(expressionNode(ident + 2,
 						(Element) children.item(i), --exprCount, className,
@@ -1993,7 +1974,7 @@ public class TslCompiler {
 					}
 
 				} catch (Exception e) {
-					throw new Exception("Could not find adapter: " + className,
+					throw new UserException("Could not find adapter: " + className,
 							e);
 				}
 
@@ -2005,7 +1986,6 @@ public class TslCompiler {
 				String type = null;
 
 				try {
-					// logger.info("Attr: "+attribute+" class: "+localContextClass);
 					type = MappingUtils.getFieldType(localContextClass,
 							attribute);
 					checkDependentFieldResource(localContextClass, attribute,
@@ -2016,7 +1996,7 @@ public class TslCompiler {
 					if (isDomainObjectMapper) {
 						type = "java.lang.Object";
 					} else {
-						throw new Exception("Could not find field: "
+						throw new UserException("Could not find field: "
 								+ attribute + " in adapter "
 								+ localContextClass.getName(), e);
 					}
@@ -2066,7 +2046,7 @@ public class TslCompiler {
 				} else {
 					castedValue = "sValue";
 				}
-			} catch (ClassNotFoundException e) {
+			} catch (UserException e) {
 				throw new UserException(-1,
 						"Error in script: could not find mappable object: "
 								+ className, e);
@@ -2157,14 +2137,14 @@ public class TslCompiler {
 				}
 
 			} catch (Exception e) {
-				throw new Exception("Could not find adapter: " + className, e);
+				throw new UserException("Could not find adapter: " + className, e);
 			}
 
 			String type = null;
 			try {
 				type = MappingUtils.getFieldType(localContextClass, attribute);
 			} catch (Exception e) {
-				throw new Exception("Could not find field: " + attribute
+				throw new UserException("Could not find field: " + attribute
 						+ " in adapter " + localContextClass.getName()
 						+ ", mappath = " + mapPath);
 			}
@@ -2178,7 +2158,7 @@ public class TslCompiler {
 			try {
 				contextClass = Class.forName(type, false, loader);
 			} catch (Exception e) {
-				throw new Exception("Could not find adapter: " + type);
+				throw new UserException("Could not find adapter: " + type);
 			}
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -2428,7 +2408,7 @@ public class TslCompiler {
 	 * be supplied...
 	 * 
 	 */
-	private Class locateContextClass(String mapPath, int offset) throws Exception {
+	private Class locateContextClass(String mapPath, int offset) throws UserException {
 
 		StringTokenizer st = new StringTokenizer(mapPath, "/");
 
@@ -2436,7 +2416,7 @@ public class TslCompiler {
 		while (st.hasMoreTokens()) {
 			String element = st.nextToken();
 			if (!"..".equals(element)) {
-				logger.debug("Huh? : " + element);
+				logger.debug("Huh? : {}", element);
 			}
 			count++;
 		}
@@ -2444,15 +2424,14 @@ public class TslCompiler {
 			return contextClass;
 		}
 		if ( contextClassStack.size() - count - offset < 0 ) {
-			throw new Exception("Could not resolve field: " + mapPath);
+			throw new UserException("Could not resolve field: " + mapPath);
 		}
-		Class m = contextClassStack.get(contextClassStack.size() - count - offset);
-		return m;
+		return contextClassStack.get(contextClassStack.size() - count - offset);
 	}
 
-	public String breakNode(int ident, Element n) throws Exception {
+	public String breakNode(int ident, Element n) throws UserException {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		String condition = n.getAttribute("condition");
 		if (condition.equals("")) {
 			result.append(printIdent(ident) + "if (true) {");
@@ -2514,8 +2493,8 @@ public class TslCompiler {
 		return result.toString();
 	}
 
-	public String debugNode(int ident, Element n) throws Exception {
-		StringBuffer result = new StringBuffer();
+	public String debugNode(int ident, Element n) {
+		StringBuilder result = new StringBuilder();
 		String value = n.getAttribute("value");
 		String condition = n.getAttribute("condition");
         if (condition.equals("")) {
@@ -2536,8 +2515,8 @@ public class TslCompiler {
 		return result.toString();
 	}
 	
-	public String logNode(int ident, Element n) throws Exception {
-        StringBuffer result = new StringBuffer();
+	public String logNode(int ident, Element n) {
+		StringBuilder result = new StringBuilder();
         String value = n.getAttribute("value");
         String condition = n.getAttribute("condition");
         if (condition.equals("")) {
@@ -2558,25 +2537,22 @@ public class TslCompiler {
         return result.toString();
     }
 
-	public String requestNode(int ident, Element n) throws Exception {
-		StringBuffer result = new StringBuffer();
-		return result.toString();
+	public String requestNode(int ident, Element n) {
+		return "";
 	}
 
-	public String responseNode(int ident, Element n) throws Exception {
-		StringBuffer result = new StringBuffer();
-		return result.toString();
+	public String responseNode(int ident, Element n) {
+		return "";
 	}
 
-	public String runningNode(int ident, Element n) throws Exception {
-		StringBuffer result = new StringBuffer();
-		return result.toString();
+	public String runningNode(int ident, Element n) {
+		return "";
 	}
 
 	public String mapNode(int ident, Element n, List<Dependency> deps,
-			String tenant) throws Exception {
+			String tenant) throws ParseException, ClassNotFoundException, KeywordException, UserException, IOException, MetaCompileException, MappingException {
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		String object = n.getAttribute("object");
 		String condition = n.getAttribute("condition");
@@ -2598,25 +2574,17 @@ public class TslCompiler {
 		String className = object;
 		
 		if (className.equals("")) {
-		    throw new Exception("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
+		    throw new ParseException("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
 		}
 		
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
-		try {
-			contextClass = Class.forName(className, false, loader);
-		} catch (Exception e) {
-			throw new Exception("Could not find adapter: " + className
-					+ " from classloader: " + loader, e);
-		}
-
+		contextClass = Class.forName(className, false, loader);
 		addDependency("dependentObjects.add( new JavaDependency( -1, \""
 				+ className + "\"));\n", "JAVA" + className);
 
 		if (!name.equals("")) { // We have a potential async mappable object.
-			// //System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
-			// Class contextClass = null;
 			if (contextClass.getSuperclass().getName()
 					.equals("com.dexels.navajo.mapping.AsyncMappable")) {
 				asyncMap = true;
@@ -2762,8 +2730,6 @@ public class TslCompiler {
 					+ ".beforeResponse(access);\n");
 			result.append(printIdent(ident) + "  if (" + aoName
 					+ ".isActivated() && " + whileRunning + ") {\n");
-			// result.append(printIdent(ident) +
-			// "     "+aoName+".interrupt();\n");
 			result.append(printIdent(ident) + "     " + resumeAsyncName
 					+ " = true;\n");
 
@@ -2776,8 +2742,6 @@ public class TslCompiler {
 					+ ") {\n");
 			result.append(printIdent(ident) + "  " + asyncStatusName
 					+ " = \"running\";\n");
-			// result.append(printIdent(ident) + "  " + aoName +
-			// ".interrupt();\n");
 			result.append(printIdent(ident) + "  " + resumeAsyncName
 					+ " = true;\n");
 			result.append(printIdent(ident) + "}\n");
@@ -2837,10 +2801,6 @@ public class TslCompiler {
 
 			result.append(printIdent(ident) + "  throw e" + ident + ";\n");
 			result.append(printIdent(ident) + "}\n");
-
-			// result.append(printIdent(ident) +
-			// "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
-
 		} else {
 
 			result.append(printIdent(ident)
@@ -2858,7 +2818,6 @@ public class TslCompiler {
 			try {
 				objectMappable = MappingUtils.isObjectMappable(className);
 			} catch (UserException e) {
-				// logger.debug("Trouble mapping: {} doing a fallback.",className,e);
 				objectMappable = MappingUtils.isObjectMappable(className,
 						loader);
 			}
@@ -2914,10 +2873,14 @@ public class TslCompiler {
 	 * @param n
 	 * @param parent
 	 * @param deps
+	 * @throws MetaCompileException 
+	 * @throws IOException 
+	 * @throws KeywordException 
+	 * @throws ClassNotFoundException 
 	 * @throws Exception
 	 */
 	private final void includeNode(String scriptPath, Node n, Document parent,
-			String tenant, List<Dependency> deps) throws Exception {
+			String tenant, List<Dependency> deps) throws UserException, ClassNotFoundException, KeywordException, IOException, MetaCompileException {
 
 		included++;
 
@@ -2978,10 +2941,6 @@ public class TslCompiler {
 			nextNode = n;
 		}
 
-		if (nextNode == null) {
-			throw new IllegalStateException("Unexpected null nextNode");
-		}
-
 		Node parentNode = nextNode.getParentNode();
 
 		for (int i = 0; i < content.getLength(); i++) {
@@ -2996,8 +2955,8 @@ public class TslCompiler {
 
 	public String compile(int ident, Node n, String className,
 			String objectName, List<Dependency> deps, String tenant)
-			throws Exception {
-		StringBuffer result = new StringBuffer();
+			throws UserException, ClassNotFoundException, IOException, MetaCompileException, ParseException, MappingException {
+		StringBuilder result = new StringBuilder();
 
 		if (n.getNodeName().equals("include")) {
 			includeNode(scriptPath, n, n.getParentNode().getOwnerDocument(),
@@ -3024,7 +2983,7 @@ public class TslCompiler {
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");
 
-			StringBuffer methodBuffer = new StringBuffer();
+			StringBuilder methodBuffer = new StringBuilder();
 
 			methodBuffer.append(printIdent(ident) + "private final void "
 					+ methodName + "(Access access) throws Exception {\n\n");
@@ -3085,7 +3044,7 @@ public class TslCompiler {
 			result.append(breakNode(ident, (Element) n));
 		} else if ( n.getNodeName().equals("synchronized")) {
 			Element elt = (Element) n;
-			StringBuffer methodBuffer = new StringBuffer();
+			StringBuilder methodBuffer = new StringBuilder();
 
 			String context = elt.getAttribute("context");
 			String key = elt.getAttribute("key");
@@ -3170,7 +3129,7 @@ public class TslCompiler {
 	}
 
 	private final void generateFinalBlock(Document d,
-			StringBuffer generatedCode, List<Dependency> deps, String tenant)
+			StringBuilder generatedCode, List<Dependency> deps, String tenant)
 			throws Exception {
 		generatedCode
 				.append("public final void finalBlock(Access access) throws Exception {\n");
@@ -3196,7 +3155,7 @@ public class TslCompiler {
 	 * @return
 	 * @throws Exception
 	 */
-	private final void generateRules(Document d, StringBuffer generatedCode)
+	private final void generateRules(Document d, StringBuilder generatedCode)
 			throws Exception {
 
 		NodeList list = d.getElementsByTagName("defines");
@@ -3227,17 +3186,17 @@ public class TslCompiler {
 	 * @throws Exception
 	 */
 	private final void generateValidations(Document d,
-			StringBuffer generatedCode) throws Exception {
+			StringBuilder generatedCode) throws Exception {
 
 		boolean hasValidations = false;
 
-		StringBuffer conditionString = new StringBuffer(
+		StringBuilder conditionString = new StringBuilder(
 				"conditionArray = new String[]{\n");
-		StringBuffer ruleString = new StringBuffer(
+		StringBuilder ruleString = new StringBuilder(
 				"ruleArray = new String[]{\n");
-		StringBuffer codeString = new StringBuffer(
+		StringBuilder codeString = new StringBuilder(
 				"codeArray = new String[]{\n");
-		StringBuffer descriptionString = new StringBuffer(
+		StringBuilder descriptionString = new StringBuilder(
 				"descriptionArray = new String[]{\n");
 
 		NodeList list = d.getElementsByTagName("validations");
@@ -3306,7 +3265,7 @@ public class TslCompiler {
 
 	}
 
-    private void generateSetScriptDebug(String value, StringBuffer generatedCode) {
+    private void generateSetScriptDebug(String value, StringBuilder generatedCode) {
         generatedCode.append("@Override \n");
         generatedCode.append("public final String getScriptDebugMode() {\n");
         generatedCode.append("    return \"" + value + "\";");
@@ -3324,16 +3283,11 @@ public class TslCompiler {
 
 		try {
 			Document tslDoc = null;
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 
 			tslDoc = XMLDocumentUtils.createDocument(is, false);
 
 			NodeList tsl = tslDoc.getElementsByTagName("tsl");
-			// NodeList tml = tslDoc.getElementsByTagName("tml");
-			// if(tml!=null && tml.getLength()>0) {
-			// throw new
-			// SkipCompilationException("Direct tml needs no compilation");
-			// }
 			// Invesitigate if it's a direct tml script:
 			NodeList nodes = tslDoc.getChildNodes();
 			for (int i = 0; i < nodes.getLength(); i++) {
@@ -3352,9 +3306,6 @@ public class TslCompiler {
 					|| !(tsl.item(0) instanceof Element)) {
 				throw new SkipCompilationException("Ignoring file: "
 						+ scriptPath);
-				// throw new SystemException(-1,
-				// "Invalid or non existing script file: " + scriptPath + "/" +
-				// packagePath + "/" + script + ".xml");
 			}
 			Element tslElt = (Element) tsl.item(0);
 			boolean includeOnly = "true".equals(tslElt
@@ -3389,6 +3340,7 @@ public class TslCompiler {
 					+ "import com.dexels.navajo.document.*;\n"
 					+ "import com.dexels.navajo.parser.*;\n"
 					+ "import com.dexels.navajo.script.api.*;\n"
+					+ "import com.dexels.navajo.expression.api.*;\n"
 					+ "import java.util.ArrayList;\n"
 					+ "import java.util.List;\n"
 					+ "import java.util.HashMap;\n"
@@ -3409,15 +3361,13 @@ public class TslCompiler {
 
 			result.append("/**\n");
 			result.append(" * Generated Java code by TSL compiler.\n");
-			result.append(" * " + VERSION + "\n");
+			result.append(" * \n");
 			result.append(" *\n");
-			// result.append(" * Created on: " + new java.util.Date() + "\n");
 			result.append(" * Java version: "
 					+ System.getProperty("java.vm.name") + " ("
 					+ System.getProperty("java.runtime.version") + ")\n");
 			result.append(" * OS: " + System.getProperty("os.name") + " "
 					+ System.getProperty("os.version") + "\n");
-			// result.append(" * Hostname: " + this.getHostName() + "\n");
 			result.append(" *\n");
 			result.append(" * WARNING NOTICE: DO NOT EDIT THIS FILE UNLESS YOU ARE COMPLETELY AWARE OF WHAT YOU ARE DOING\n");
 			result.append(" *\n");
@@ -3500,7 +3450,7 @@ public class TslCompiler {
 				result.append(variableClipboard.get(i));
 			}
 
-			// Add public void setDependencies() {}
+			// Add public void setDependencies
 			if (!dependencies.toString().equals("")) {
 				result.append("public void setDependencies() {\n");
 				result.append(dependencies.toString());
@@ -3551,8 +3501,8 @@ public class TslCompiler {
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
 		
 
-		List<String> inheritedScripts = new ArrayList<String>();
-		List<String> extendEntities = new ArrayList<String>();
+		List<String> inheritedScripts = new ArrayList<>();
+		List<String> extendEntities = new ArrayList<>();
 		InputStream is = null;
 
 		try {
@@ -3574,7 +3524,7 @@ public class TslCompiler {
 
 			InputStream sis = navajoIOConfig.getScript(packagePath + "/"
 					+ script, tenant,extension);
-			logger.debug("Getting script: " + packagePath + "/" + script);
+			logger.debug("Getting script: {}/{}", packagePath, script);
 			if (ScriptInheritance.containsInject(sis)) {
 				// Inheritance preprocessor before compiling.
 				InputStream ais = null;
@@ -3612,11 +3562,6 @@ public class TslCompiler {
 		}
 
 	}
-
-	// private static void compileStandAlone(boolean all, String script,
-	// String input, String output, String packagePath) {
-	// compileStandAlone(all,script,input,output,packagePath,null);
-	// }
 
 	private String compileToJava(String script, String input, String output,
 			String packagePath, ClassLoader classLoader,
@@ -3667,10 +3612,6 @@ public class TslCompiler {
 				bareScript = script;
 			}
 
-			// if(!packagePath.endsWith("/")) {
-			// packagePath = packagePath + "/";
-			// }
-
 			tslCompiler.compileScript(bareScript, input, output,
 					scriptPackagePath, navajoIOConfig.getOutputWriter(output,
 							packagePath, tenantScript, ".java"), deps, tenant,
@@ -3690,7 +3631,7 @@ public class TslCompiler {
 				throw (Exception) ex;
 			}
 			return null;
-		}
+		} 
 	}
 
 	private void compileStandAlone(boolean all, String script, String input,
@@ -3714,11 +3655,11 @@ public class TslCompiler {
 				tslCompiler.compileScript(bareScript, input, output,
 						packagePath, w, deps, tenant, hasTenantSpecificScript, false);
 			} catch (Exception ex) {
-				logger.error("Error compiling script: " + script);
+				logger.error("Error compiling script: {}", script);
 				return;
 			}
 
-			StringBuffer classPath = new StringBuffer();
+			StringBuilder classPath = new StringBuilder();
 			classPath.append(System.getProperty("java.class.path"));
 
 			if (extraclasspath != null) {
@@ -3743,13 +3684,13 @@ public class TslCompiler {
 		}
 	}
 
-	private ArrayList<String> compileDirectoryToJava(File currentDir,
+	private List<String> compileDirectoryToJava(File currentDir,
 			File outputPath, String offsetPath, NavajoClassLoader classLoader,
 			NavajoIOConfig navajoConfig, String tenant,
 			boolean hasTenantSpecificScript) {
 		logger.info("Entering compiledirectory: " + currentDir
 				+ " output: " + outputPath + " offset: " + offsetPath);
-		ArrayList<String> files = new ArrayList<String>();
+		ArrayList<String> files = new ArrayList<>();
 		File[] scripts = null;
 		File f = new File(currentDir, offsetPath);
 		scripts = f.listFiles();
@@ -3759,7 +3700,7 @@ public class TslCompiler {
 				if (current.isDirectory()) {
 					logger.info("Entering directory: "
 							+ current.getName());
-					ArrayList<String> subDir = compileDirectoryToJava(
+					List<String> subDir = compileDirectoryToJava(
 							currentDir, outputPath,
 							offsetPath.equals("") ? current.getName()
 									: (offsetPath + "/" + current.getName()),
@@ -3769,8 +3710,8 @@ public class TslCompiler {
 				} else {
 					if (current.getName().endsWith(".xml")) {
 						String name = current.getName().substring(0,
-								current.getName().indexOf("."));
-						logger.debug("Compiling: " + name);
+								current.getName().indexOf('.'));
+						logger.debug("Compiling: {}", name);
 						File outp = new File(outputPath, offsetPath);
 						if (!outp.exists()) {
 							outp.mkdirs();
@@ -3805,7 +3746,7 @@ public class TslCompiler {
 			NavajoClassLoader classLoader, NavajoIOConfig navajoConfig,
 			String tenant, boolean hasTenantSpecificScript) {
 
-		StringBuffer classPath = new StringBuffer();
+		StringBuilder classPath = new StringBuilder();
 		classPath.append(System.getProperty("java.class.path"));
 
 		if (extraclasspath != null) {
@@ -3815,20 +3756,20 @@ public class TslCompiler {
 			}
 		}
 
-		ArrayList<String> javaFiles = compileDirectoryToJava(currentDir,
+		List<String> javaFiles = compileDirectoryToJava(currentDir,
 				outputPath, offsetPath, classLoader, navajoConfig, tenant,
 				hasTenantSpecificScript);
-		logger.info("javaFiles: " + javaFiles);
+		logger.info("javaFiles: {}", javaFiles);
 		JavaCompiler compiler = new SunJavaCompiler();
 		compiler.setClasspath(classPath.toString());
 		compiler.setOutputDir(outputPath.toString());
 		compiler.setClassDebugInfo(true);
 		compiler.setEncoding("UTF8");
 		compiler.setMsgOutput(System.out);
-		logger.debug("\n\nCLASSPATH: " + classPath.toString());
+		logger.debug("\n\nCLASSPATH: {}", classPath);
 		for (int i = 0; i < javaFiles.size(); i++) {
 			compiler.compile(javaFiles.get(i));
-			logger.debug("Compiled: " + javaFiles.get(i));
+			logger.debug("Compiled: {}", javaFiles.get(i));
 		}
 
 	}
@@ -3848,7 +3789,7 @@ public class TslCompiler {
 
 		final LegacyNavajoIOConfig legacyNavajoIOConfig = new LegacyNavajoIOConfig();
 		TslCompiler compiler = new TslCompiler(null, legacyNavajoIOConfig);
-		List<Dependency> deps = new ArrayList<Dependency>();
+		List<Dependency> deps = new ArrayList<>();
 		logger.info("Entering compiledirectory: " + currentDir
 				+ " output: " + outputPath + " offset: " + offsetPath);
 
@@ -3868,8 +3809,8 @@ public class TslCompiler {
 				} else {
 					if (current.getName().endsWith(".xml")) {
 						String name = current.getName().substring(0,
-								current.getName().indexOf("."));
-						logger.debug("Compiling: " + name);
+								current.getName().indexOf('.'));
+						logger.debug("Compiling: {}", name);
 						File outp = new File(outputPath, offsetPath);
 						if (!outp.exists()) {
 							outp.mkdirs();
@@ -3893,47 +3834,4 @@ public class TslCompiler {
 			}
 		}
 	}
-
-	public static String getHostName() {
-
-		if (hostname != null) {
-			return hostname;
-		}
-
-		synchronized (VERSION) {
-
-			if (hostname == null) {
-				// ArrayList list = new ArrayList();
-
-				hostname = "unknown host";
-				// long start = System.currentTimeMillis();
-
-				Enumeration all = null;
-
-				try {
-					all = java.net.NetworkInterface.getNetworkInterfaces();
-				} catch (SocketException e) {
-					hostname = "generated-host-" + System.currentTimeMillis();
-					return hostname;
-				}
-
-				while (all.hasMoreElements()) {
-					java.net.NetworkInterface nic = (java.net.NetworkInterface) all
-							.nextElement();
-					Enumeration<InetAddress> ipaddresses = nic
-							.getInetAddresses();
-					while (ipaddresses.hasMoreElements()) {
-						logger.warn("Why are we harassing the network interfaces?");
-						ipaddresses.nextElement();
-
-					}
-				}
-			}
-
-		}
-
-		return hostname;
-
-	}
-
 }

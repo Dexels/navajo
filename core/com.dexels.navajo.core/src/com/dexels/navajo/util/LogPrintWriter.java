@@ -1,5 +1,9 @@
 package com.dexels.navajo.util;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,10 +22,6 @@ package com.dexels.navajo.util;
  */
 
 import org.slf4j.Logger;
-
-import java.io.Writer;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Implements a PrintWriter which allows to alternatively plug in a

@@ -18,7 +18,7 @@ public final class ASTNegativeNode extends SimpleNode {
         super(id);
     }
 
-	public final Operand interpret(Operand ao) throws TMLExpressionException {
+	public final Operand interpret(Operand ao) {
 		Object a = ao.value;
 
         if (a instanceof String)

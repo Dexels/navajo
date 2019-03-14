@@ -56,7 +56,7 @@ public final class ASTGENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	private final Operand interpret(Operand a, Operand b, String expression) throws TMLExpressionException {
+	private final Operand interpret(Operand a, Operand b, String expression) {
 
 
 

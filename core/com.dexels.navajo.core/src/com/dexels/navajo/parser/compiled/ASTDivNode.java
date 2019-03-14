@@ -13,10 +13,9 @@ import com.dexels.navajo.parser.Utils;
 public final class ASTDivNode extends SimpleNode {
     public ASTDivNode(int id) {
         super(id);
-        // System.out.println("in ASTDivNode()");
     }
 
-	public final Operand interpret(Operand ao, Operand bo) throws TMLExpressionException {
+	public final Operand interpret(Operand ao, Operand bo) {
 		Object a = ao.value;
 		Object b = bo.value;
         if (a instanceof String || b instanceof String)

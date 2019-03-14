@@ -14,7 +14,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.DatePattern;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -38,7 +37,7 @@ public final class ASTDatePatternNode extends SimpleNode {
 		checkOrAdd("Minute (item 4) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
 		ContextExpression s = jjtGetChild(5).interpretToLambda(problems,expression,functionClassifier);
 		checkOrAdd("Second (item 5) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		final boolean isLiteral = y.isLiteral() && m.isLiteral() && d.isLiteral() && h.isLiteral() && h.isLiteral() && s.isLiteral();
+		final boolean isLiteral = y.isLiteral() && m.isLiteral() && d.isLiteral() && h.isLiteral() && min.isLiteral() && s.isLiteral();
 		
 		return new ContextExpression() {
 			
@@ -49,7 +48,7 @@ public final class ASTDatePatternNode extends SimpleNode {
 			
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		        int yearT = ((Integer) y.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
 		        int monthT = ((Integer)m.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();
 		        int dayT = ((Integer) d.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage).value).intValue();

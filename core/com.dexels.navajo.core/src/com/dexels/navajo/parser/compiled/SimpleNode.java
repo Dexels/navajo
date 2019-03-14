@@ -15,7 +15,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -153,7 +152,7 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		        Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 		        Operand b = expB.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode,tipiLink,access,immutableMessage,paramMessage);
 				return func.apply(a, b);
@@ -189,7 +188,7 @@ public abstract class SimpleNode implements Node {
 		return new ContextExpression() {
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				Operand a = expA.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 				return func.apply(a);
 			}

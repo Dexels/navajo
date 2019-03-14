@@ -26,9 +26,6 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public final class ASTForAllNode extends SimpleNode {
 
     String functionName;
-//    Navajo doc;
-//    Message parentMsg;
-//    MappableTreeNode mapObject;
     private Access access;
 
     private static final Logger logger = LoggerFactory.getLogger(ASTForAllNode.class);
@@ -57,7 +54,7 @@ public final class ASTForAllNode extends SimpleNode {
 			
 			@Override
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
+					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				List<String> problems = new ArrayList<>();
 				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
@@ -87,10 +84,9 @@ public final class ASTForAllNode extends SimpleNode {
      * `CheckRelatieCode([$x])`)
      * 
      * @return
-     * @throws TMLExpressionException
      */
     public final Operand interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) throws TMLExpressionException {
+			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) {
 
         boolean matchAll = true;
 
@@ -118,8 +114,6 @@ public final class ASTForAllNode extends SimpleNode {
                 if (parentMsg.getType().equals(Message.MSG_TYPE_DEFINITION))
                     continue;
 
-//                String expr = (String) b;
-
                 Operand apply = b.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage,paramMessage);
 				boolean result = (Boolean)apply.value;
 
@@ -130,7 +124,6 @@ public final class ASTForAllNode extends SimpleNode {
             }
 
         } catch (NavajoException ne) {
-            logger.error("Error: ", ne);
             throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + ne.getMessage());
         }
 

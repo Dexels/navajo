@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.slf4j.Logger;

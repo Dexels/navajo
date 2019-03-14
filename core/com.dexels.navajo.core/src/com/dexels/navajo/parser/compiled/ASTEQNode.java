@@ -9,7 +9,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 public final class ASTEQNode extends SimpleNode {
@@ -17,7 +16,7 @@ public final class ASTEQNode extends SimpleNode {
         super(id);
     }
 
-	public final Operand interpret( Operand a, Operand b, String expression) throws TMLExpressionException {
+	public final Operand interpret( Operand a, Operand b, String expression) {
         return Operand.ofBoolean(Utils.equals(a.value, b.value,expression));
     }
 	@Override

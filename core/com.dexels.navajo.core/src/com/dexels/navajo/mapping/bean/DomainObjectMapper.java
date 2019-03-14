@@ -1,7 +1,6 @@
 package com.dexels.navajo.mapping.bean;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;

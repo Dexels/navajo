@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import navajocore.Version;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -16,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
+
+import navajocore.Version;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 

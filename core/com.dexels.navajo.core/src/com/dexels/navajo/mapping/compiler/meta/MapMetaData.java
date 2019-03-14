@@ -4,21 +4,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 
 import javax.imageio.spi.ServiceRegistry;
-
-import navajo.ExtensionDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.test.TestDispatcher;
-import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.util.AuditLog;
+
+import navajo.ExtensionDefinition;
 
 /**
  * This class holds the metadata for adapters that can be used in new navasript 'style' scripts.
@@ -38,10 +38,9 @@ import com.dexels.navajo.util.AuditLog;
  */
 public class MapMetaData {
 
-	protected final HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
+	protected final Map<String, MapDefinition> maps = new HashMap<>();
 	
 	private static MapMetaData instance = null;
-//	private String configPath = null;
 	
 
 	private static final Logger logger = LoggerFactory
@@ -52,11 +51,10 @@ public class MapMetaData {
 		MapDefinition empty = new MapDefinition(this);
 		empty.tagName = "__empty__";
 		empty.objectName = "null";
-//		this.configPath = configPath;
 		maps.put("__empty__", empty);
 	}
 	
-	private void readConfig() throws Exception {
+	private void readConfig() throws ClassNotFoundException, KeywordException {
 
 		synchronized (instance) {
 
@@ -66,20 +64,14 @@ public class MapMetaData {
 			} else {
 				myClassLoader = getClass().getClassLoader();
 			}
-			
+			Iterator<?> iter = null;
 			try {
-				Iterator<?> iter = null;
-				try {
-					iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
-							                                        myClassLoader);
-				} catch (Exception e) {
-					logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
-					return;
-				}
+				iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 					
-					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),"UTF-8"));
+					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
 
 					XMLElement config = new CaseSensitiveXMLElement();
 					config.parseFromReader(br);
@@ -95,24 +87,19 @@ public class MapMetaData {
 					}
 					
 				}
-			} catch (Exception e) {
-				logger.error("Error: ", e);
+			} catch (IOException e) {
+				logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
 			}
-	
 		}
 	}
 
-	public MapDefinition addMapDefinition(XMLElement map) throws Exception {
+	public MapDefinition addMapDefinition(XMLElement map) throws ClassNotFoundException, KeywordException {
 		MapDefinition md = MapDefinition.parseDef(map);
 		maps.put(md.tagName, md);
 		return md;
 	}
 	
-//	public static MapMetaData getInstance() throws Exception {
-//		return getInstance("aap");
-//	}
-	
-	public static synchronized MapMetaData getInstance() throws Exception {
+	public static synchronized MapMetaData getInstance() throws ClassNotFoundException, KeywordException {
 		if ( instance != null ) {
 			return instance;
 		} else {
@@ -127,7 +114,7 @@ public class MapMetaData {
 		return maps.keySet();
 	}
 	
-	public MapDefinition getMapDefinition(String name) throws Exception {
+	public MapDefinition getMapDefinition(String name) throws ClassNotFoundException, KeywordException {
 		if ( !maps.containsKey(name) ) {
 			// Try to re-read config, maybe a new definition?
 			readConfig();
@@ -135,7 +122,7 @@ public class MapMetaData {
 		return maps.get(name);
 	}
 	
-	private void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
+	private void generateCode(XMLElement in, XMLElement out, String filename) throws MetaCompileException, ClassNotFoundException  {
 		maps.get("__empty__").generateCode(in, out, filename);
 	}
 	
@@ -143,12 +130,14 @@ public class MapMetaData {
 		return (String) e.getFirstChild().getAttribute("filename");
 	}
 
-	public String parse(String fileName) throws Exception {
+	public String parse(String fileName) throws IOException, MetaCompileException, ClassNotFoundException {
 		File f = new File(fileName);
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		StringWriter sw = new StringWriter();
-		parse(br, f.getName(),sw);
-		return sw.toString();
+		try(BufferedReader br = new BufferedReader(new FileReader(f))) {
+			StringWriter sw = new StringWriter();
+			parse(br, f.getName(),sw);
+			return sw.toString();
+				
+		}
 	}
 
 	/**
@@ -156,31 +145,33 @@ public class MapMetaData {
 	 * @param scriptName
 	 * @param is
 	 * @return
+	 * @throws MetaCompileException 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 * @throws Exception
 	 */
-	public String parse(String scriptName, InputStream is) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+	public String parse(String scriptName, InputStream is) throws IOException, MetaCompileException, ClassNotFoundException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(is,StandardCharsets.UTF_8));
 		StringWriter sw = new StringWriter();
 		parse(br, scriptName,sw);
 		return sw.toString();
 	}
 	
-	public void parse(Reader br, String scriptName, Writer sw) throws Exception {
+	public void parse(Reader br, String scriptName, Writer sw) throws IOException, MetaCompileException, ClassNotFoundException {
 		XMLElement in = new CaseSensitiveXMLElement();
-		
 		in.parseFromReader(br);
 		br.close();
 		parse(in,scriptName,sw);
 	}		
 	
-	public void parse(XMLElement in, String scriptName, Writer sw) throws Exception {
+	public void parse(XMLElement in, String scriptName, Writer sw) throws MetaCompileException, IOException, ClassNotFoundException {
 		
 		
 		// Remember tsl attributes.
-		HashMap<String,String> tslAttributes = new HashMap<String, String>();
+		Map<String,String> tslAttributes = new HashMap<>();
 		Iterator<String> all = in.enumerateAttributeNames();
 		while ( all.hasNext() ) {
-			String name = all.next().toString();
+			String name = all.next();
 			String value = in.getAttribute(name)+"";
 			tslAttributes.put(name, value);
 		}
@@ -201,11 +192,9 @@ public class MapMetaData {
 	}
 	
 	public static boolean isMetaScript(String fullScriptPath) {
-		try {
-			InputStreamReader isr =  new InputStreamReader( new FileInputStream(fullScriptPath) ,"UTF-8");
+		try(InputStreamReader isr =  new InputStreamReader( new FileInputStream(fullScriptPath) , StandardCharsets.UTF_8)) {
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(isr);
-			isr.close();
 			return ( x.getName().equals("navascript"));
 		} catch (Exception e) {
 			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + fullScriptPath + "(" + e.getMessage() + ")", Level.WARNING);
