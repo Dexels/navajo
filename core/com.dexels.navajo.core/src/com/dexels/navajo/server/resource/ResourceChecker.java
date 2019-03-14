@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +35,8 @@ import com.dexels.navajo.server.GenericHandler;
  */
 public class ResourceChecker {
 
-	HashMap<AdapterFieldDependency,Method> managedResources = new HashMap<AdapterFieldDependency,Method>();
-	HashSet<String> scriptDependencies = new HashSet<String>();
+	private final Map<AdapterFieldDependency,Method> managedResources = new HashMap<>();
+	private final Set<String> scriptDependencies = new HashSet<>();
 	
 	private Navajo inMessage = null;
 	private boolean initialized = false;
@@ -57,13 +59,13 @@ public class ResourceChecker {
 		this.webservice = webservice;
 		// Don't know if this is needed
 		GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
-		StringBuffer compilerErrors = new StringBuffer();
+		StringBuilder compilerErrors = new StringBuilder();
 		try {
 			Access a = new Access();
 			a.rpcName = webservice;
 			this.myCompiledScript = gh.compileScript(a, compilerErrors);
 			if ( myCompiledScript == null ) {
-				logger.warn("ResourceChecker: Could not find compiledscript for: " + webservice);
+				logger.warn("ResourceChecker: Could not find compiledscript for: {}", webservice);
 			} else {
 				init();
 			}
@@ -76,7 +78,7 @@ public class ResourceChecker {
 	public final void init() {
 
 		if ( myCompiledScript.getDependentObjects() == null ) {
-			logger.warn("ResourceChecker: Could not find dependent objects for: " + myCompiledScript.getClass());
+			logger.warn("ResourceChecker: Could not find dependent objects for: {}", myCompiledScript.getClass());
 			return;
 		}
 		Iterator<Dependency> dependencies = myCompiledScript.getDependentObjects().iterator();
@@ -87,7 +89,7 @@ public class ResourceChecker {
 				if ( !afd.getType().equals(GenericDependentResource.SERVICE_DEPENDENCY) ) {
 					try {
 						Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
-						Method m = c.getMethod("getResourceManager", new Class[]{String.class});
+						Method m = c.getMethod("getResourceManager", String.class);
 						if ( m != null ) {
 							managedResources.put(afd, m);
 						}
@@ -101,7 +103,7 @@ public class ResourceChecker {
 		// Also add my CPU as a resource.
 		try {
 			managedResources.put(new AdapterFieldDependency(-1, "com.dexels.navajo.server.Dispatcher", "dispatcher", "dispatcher"), 
-				com.dexels.navajo.server.Dispatcher.class.getMethod("getResourceManager", new Class[]{String.class}));
+				com.dexels.navajo.server.Dispatcher.class.getMethod("getResourceManager", String.class));
 		} catch (Throwable e) {  
 			logger.error("Error: ", e);
 		}
@@ -167,7 +169,7 @@ public class ResourceChecker {
 	 */
 	private ServiceAvailability getServiceAvailability(HashSet<String> checkedServices) {
 
-		ArrayList<String> unavailableIds = new ArrayList<String>();
+		ArrayList<String> unavailableIds = new ArrayList<>();
 
 		boolean available = true;
 		boolean unknown   = false;
@@ -178,7 +180,7 @@ public class ResourceChecker {
 			AdapterFieldDependency afd = e.getKey();
 			Method m = e.getValue();
 			try {
-				Object o = m.invoke(null, new Object[]{afd.getType()});
+				Object o = m.invoke(null, afd.getType());
 				if ( o != null ) {
 					ResourceManager rm = (ResourceManager) o;
 					String resourceId = evaluateResourceId(afd.getId());
@@ -200,7 +202,7 @@ public class ResourceChecker {
 					}
 				}
 			} catch (Exception e1) { 
-				logger.error("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
+				logger.error("Could not check avail of: {}, msg",afd.getType(),e1); 
 			}
 		}
 

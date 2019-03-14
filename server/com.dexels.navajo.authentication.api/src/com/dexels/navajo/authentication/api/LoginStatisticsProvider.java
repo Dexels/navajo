@@ -4,6 +4,10 @@ public class LoginStatisticsProvider {
 
     private static LoginStatistics instance;
 
+    private LoginStatisticsProvider() {
+    	// no instances
+    }
+    
     public static void setInstance(LoginStatistics object) {
         instance = object;
     }

@@ -118,7 +118,7 @@ public class BirtUtils {
 	}
 
 	public File createTempReport(File parentDir) {
-		String random = "report" + ((randomizer.nextInt() * 10000)) + ".rptdesign";
+		String random = "report" + (randomizer.nextInt() * 10000) + ".rptdesign";
 		File ff = new File(parentDir, random);
 		if (ff.exists()) {
 			return createTempReport(parentDir);
@@ -424,7 +424,7 @@ public class BirtUtils {
 			Object[] propertyNames, Object[] propertyWidths, Object[] propertyTitles, int left, int top, int right, int bottom,
 			boolean landscape) throws IOException {
 		createEmptyReport(n, reportFile, reportTemplateStream);
-		try(FileInputStream fis = new FileInputStream(reportFile)) {
+		try(FileInputStream fis = new FileInputStream(reportFile); FileWriter fw = new FileWriter(reportFile)) {
 			Document d = XMLDocumentUtils.createDocument(fis, false);
 
 			setupMasterPage(d, left, top, right, bottom, landscape);
@@ -459,12 +459,7 @@ public class BirtUtils {
 			}
 			createTablePart(propertyNames, propertyTitles, d, table, true);
 			createTablePart(propertyNames, propertyTitles, d, table, false);
-
-			FileWriter fw = new FileWriter(reportFile);
-
 			XMLDocumentUtils.write(d, fw, false);
-			fw.flush();
-			fw.close();			
 		}
 
 		if (messagePath == null) {
@@ -532,19 +527,23 @@ public class BirtUtils {
 			} else {
 				addProperty(d, label, "property", "style", "TableBody");
 			}
-
 			label.setAttribute("id", "" + idCounter++);
 			cell.appendChild(label);
-			String title = null;
-			if (i < propertyTitles.length) {
-				title = (String) propertyTitles[i];
-			} else {
-				title = (String) propertyNames[i];
-			}
+			String title = getTitle(propertyNames, propertyTitles, i);
 			addProperty(d, label, isHeader ? "text-property" : "property", isHeader ? "text" : "resultSetColumn", isHeader ? title
 					: (String) propertyNames[i]);
 			// add width
 		}
+	}
+
+	private String getTitle(Object[] propertyNames, Object[] propertyTitles, int i) {
+		String title = null;
+		if (i < propertyTitles.length) {
+			title = (String) propertyTitles[i];
+		} else {
+			title = (String) propertyNames[i];
+		}
+		return title;
 	}
 
 }

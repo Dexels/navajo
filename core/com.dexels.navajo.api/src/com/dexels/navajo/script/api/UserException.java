@@ -39,6 +39,11 @@ public class UserException extends Exception {
         super();
         code = -1;
     }
+    
+    public UserException(String message) {
+    	super(message);
+    	code = -1;
+    }
 
     public UserException(int code, String message, Throwable t) {
     	super(message,t);

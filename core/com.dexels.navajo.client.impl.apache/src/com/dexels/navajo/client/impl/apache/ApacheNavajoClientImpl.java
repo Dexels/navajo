@@ -275,8 +275,7 @@ public class ApacheNavajoClientImpl extends NavajoClient implements ClientInterf
                 source.close();
             }
             keyManagerFactory.init(keyStore, password);
-            // TODO
-            context = SSLContext.getInstance("TLS");
+            context = SSLContext.getInstance("TLSv1.2");
             context.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
             this.socketFactory = context.getSocketFactory();
 		} catch (UnrecoverableKeyException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException

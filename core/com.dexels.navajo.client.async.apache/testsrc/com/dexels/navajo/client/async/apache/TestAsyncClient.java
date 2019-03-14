@@ -2,11 +2,11 @@ package com.dexels.navajo.client.async.apache;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.client.async.apache.impl.AsyncClientImpl;
@@ -19,12 +19,24 @@ public class TestAsyncClient {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TestAsyncClient.class);
 
-	@Test @Ignore
-	public void test() throws IOException, InterruptedException {
+	@Test
+	public void test() throws IOException {
+		// TODO test setting client cert
+
+		final ManualAsyncClient ac = new AsyncClientImpl();
+		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
+	}
+
+	@Test
+	public void testAsync() throws IOException, InterruptedException {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
 
-		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
+		String service = "club/InitUpdateClub";
+		ac.setServer(TestConfig.NAVAJO_TEST_SERVER.getValue());
+		ac.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
+		ac.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		Navajo input = NavajoFactory.getInstance().createNavajo();
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
@@ -48,15 +60,10 @@ public class TestAsyncClient {
 				return null;
 			}
 		};
-
-		String service = "club/InitUpdateClub";
-
-		Navajo input = NavajoFactory.getInstance().createNavajo();
 		for (int i = 0; i < 10; i++) {
 			ac.callService(input, service, showOutput);
 			logger.info("Exchange sent");
 		}
 		Thread.sleep(10000);
 	}
-
 }

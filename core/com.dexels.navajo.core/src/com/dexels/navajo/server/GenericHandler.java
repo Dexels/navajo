@@ -3,6 +3,7 @@ package com.dexels.navajo.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,7 +63,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class GenericHandler extends ServiceHandler {
 
-    private static volatile ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
+    private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
@@ -70,20 +71,11 @@ public class GenericHandler extends ServiceHandler {
     
 	private static final Logger logger = LoggerFactory
 			.getLogger(GenericHandler.class);
-//    public static String applicationGroup = "";
     
     private NavajoConfigInterface tenantConfig;
 
 	protected NavajoConfigInterface navajoConfig;
     
-//    static {
-//    	try {
-//    		applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
-//    	} catch (Throwable t) {
-//    		applicationGroup = "";
-//    	}
-//    }
-//    
     public GenericHandler() {
     	if(!Version.osgiActive()) {
     		logger.warn("Warning: using OSGi constructor for GenericHandler");
@@ -97,7 +89,7 @@ public class GenericHandler extends ServiceHandler {
     	if (loadedClasses == null)
     		synchronized ( mutex1 ) {
     			if ( !finishedSync ) {
-    				loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
+    				loadedClasses = new ConcurrentHashMap<>();
     				finishedSync = true;
     			}
     		}
@@ -147,8 +139,7 @@ public class GenericHandler extends ServiceHandler {
     		return false;
     	}
     	if ( cso != null ) {
-    		boolean result = cso.hasDirtyDependencies(a);
-    		return result;
+    		return cso.hasDirtyDependencies(a);
     	} else {
     		return false;
     	}
@@ -183,9 +174,6 @@ public class GenericHandler extends ServiceHandler {
     			serviceName += "_beta";
     		} 
     		// Check if scriptFile exists.
-			if ( !scriptFile.exists() ) {
-//				scriptFile = null;
-			}
     	}
     	
     	if(!scriptFile.exists()) {
@@ -207,7 +195,6 @@ public class GenericHandler extends ServiceHandler {
        		} 
        		// Check if scriptFile exists.
    			if ( !scriptFile.exists() ) {
-//   				scriptFile = null;
    			}
        	}
 
@@ -276,8 +263,7 @@ public class GenericHandler extends ServiceHandler {
     	if ( scriptFile == null ) {
     		return false;
     	}
-    	boolean b = (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0);
-    	return b;
+    	return (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0);
     }
     
     /**
@@ -289,8 +275,7 @@ public class GenericHandler extends ServiceHandler {
      * @return
      */
     private static final boolean checkJavaRecompile(File sourceFile, File targetFile) {
-    	boolean b = !targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified());
-    	return b;
+    	return !targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified());
     }
     
     private static final NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
@@ -326,10 +311,9 @@ public class GenericHandler extends ServiceHandler {
     	File targetFile = (File) all[7];
     	boolean isCompilable = (Boolean)all[8];
 
-    	boolean nr = isCompilable && (checkScriptRecompile(scriptFile, sourceFile) || 
+    	return isCompilable && (checkScriptRecompile(scriptFile, sourceFile) || 
     	             checkJavaRecompile(sourceFile, targetFile) ||
     	             hasDirtyDepedencies(a, className));
-    	return nr;
     }
     
     @Override
@@ -344,10 +328,10 @@ public class GenericHandler extends ServiceHandler {
      * @return
      * @throws Exception
      */
-    public CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
+    public CompiledScript compileScript(Access a, StringBuilder compilerErrors) throws Exception {
     	
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
-    	List<Dependency> deps = new ArrayList<Dependency>();
+    	List<Dependency> deps = new ArrayList<>();
     	String scriptPath = properties.getScriptPath();
     	
     		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
@@ -360,7 +344,6 @@ public class GenericHandler extends ServiceHandler {
     		String sourceFileName = (String) all[3];
     		File sourceFile = (File) all[4];
     		String className = (String) all[5];
-//    		String classFileName = (String) all[6];
     		File targetFile = (File) all[7];
 
     		if (properties.isCompileScripts()) {
@@ -383,7 +366,7 @@ public class GenericHandler extends ServiceHandler {
     										properties.getCompiledScriptPath(),
     										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant, null), false);
     							} catch (SystemException ex) {
-    								sourceFile.delete();
+    								Files.delete(sourceFile.toPath());
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
     								throw ex;
     							}
@@ -408,9 +391,7 @@ public class GenericHandler extends ServiceHandler {
     			}
     		}
     
-    	    com.dexels.navajo.mapping.CompiledScript cso = getCompiledScript(a, className,sourceFile,serviceName);
-    	    
-    	    return cso;
+    		return getCompiledScript(a, className,sourceFile,serviceName);
     }
     
     /**
@@ -423,7 +404,7 @@ public class GenericHandler extends ServiceHandler {
      * @throws AuthorizationException
      */
 	@Override
-    public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
+    public final Navajo doService() throws UserException, SystemException, AuthorizationException {
 
         // Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
         // current value of outputdoc.
@@ -437,7 +418,7 @@ public class GenericHandler extends ServiceHandler {
         }
 
         Navajo outDoc = null;
-        StringBuffer compilerErrors = new StringBuffer();
+        StringBuilder compilerErrors = new StringBuilder();
         outDoc = NavajoFactory.getInstance().createNavajo();
         CompiledScriptInterface cso = null;
         try {
@@ -505,9 +486,7 @@ public class GenericHandler extends ServiceHandler {
 		} else {
 			tenant = access.getTenant();
 		}
-		
-        CompiledScriptInterface sc = BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
-		return sc;
+		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 	}
 
 	@SuppressWarnings("unused")

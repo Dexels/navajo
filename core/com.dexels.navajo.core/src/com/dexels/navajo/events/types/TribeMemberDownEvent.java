@@ -18,7 +18,7 @@ public class TribeMemberDownEvent implements NavajoEvent {
 	 */
 	private static final long serialVersionUID = -3054541910381762664L;
 	
-	private TribeMemberInterface tm;
+	private transient TribeMemberInterface tm;
 	
 	public TribeMemberDownEvent(TribeMemberInterface tm) {
 		this.tm = tm;

@@ -1,5 +1,6 @@
 package com.dexels.navajo.client.context;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -106,9 +107,11 @@ public abstract class NavajoContext implements ClientContext {
 		Object o = myElementStack.peek();
 		if(o instanceof Navajo) {
 			Navajo n = (Navajo)o;
-			logger.info("Navajo on top:");
+			StringWriter sw = new StringWriter();
+			
 			try {
-				n.write(System.err);
+				n.write(sw);
+				logger.info("Navajo on top: {}",sw);
 			} catch (NavajoException e) {
 				logger.error("Error: ", e);
 			}

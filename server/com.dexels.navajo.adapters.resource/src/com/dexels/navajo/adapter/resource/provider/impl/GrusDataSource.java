@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
+import com.dexels.navajo.script.api.UserException;
 
 public class GrusDataSource implements GrusConnection {
  
@@ -21,41 +22,26 @@ public class GrusDataSource implements GrusConnection {
 	private final int id;
 	private final Connection connection;
 
-//	private final GrusProvider grusProvider;
-
-	
 	private static final Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
 	
 	
-	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) throws Exception {
+	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) throws SQLException, UserException {
 		this.datasource = dataSourceInstance;
 		this.id = id;
-//		this.grusProvider = provider;
 
 		String user = (String) settings.get("user");
-//		final Object minObject = settings.get("min_connections");
-//		int minConns = 1;
-//		if(minObject!=null) {
-//			minConns = (Integer) minObject;
-//		}
 		int maxConns = 99;
 		final Object maxObject = settings.get("max_connections");
 		if(maxObject!=null) {
 			maxConns = (Integer) maxObject;
 		}
-		final Object refreshObject = settings.get("refresh");
-//		double refresh;
-		if(refreshObject!=null) {
-//			refresh = (Double) refreshObject;
-		}
-
 		if(this.datasource==null) {
-			throw new Exception("No datasource in GrusDataSource");
+			throw new UserException(-1,"No datasource in GrusDataSource");
 		}
 		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);   
 		this.connection = this.datasource.getConnection();
 		
-        if (connection != null && connection.getMetaData() != null) {
+        if (connection.getMetaData() != null) {
             String driverName = connection.getMetaData().getDriverName();
             if (driverName.startsWith("PostgreSQL")) {
                 dbConnectionBroker.setDbIdentifier(SQLMapConstants.POSTGRESDB);
@@ -65,8 +51,6 @@ public class GrusDataSource implements GrusConnection {
                 dbConnectionBroker.setDbIdentifier(SQLMapConstants.ORACLEDB);
             }
         }
-
-//		this.settings = settings;
 	}
 
 	@Override
@@ -117,7 +101,7 @@ public class GrusDataSource implements GrusConnection {
 	
 	@Override
 	public long setInstanceId(long l) {
-		logger.debug("Ignoring set instanceId: "+l);
+		logger.debug("Ignoring set instanceId: {}", l);
 		return 0;
 	}
 

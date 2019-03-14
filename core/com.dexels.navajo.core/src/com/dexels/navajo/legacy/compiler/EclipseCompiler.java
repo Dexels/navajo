@@ -9,7 +9,7 @@ package com.dexels.navajo.legacy.compiler;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +47,6 @@ public class EclipseCompiler implements JavaCompiler {
      */
     @Override
 	public void setCompilerPath(String compilerPath) {
-        // not used by the SunJavaCompiler
-	//this.compilerPath = compilerPath;
     }
 
     /**
@@ -111,7 +109,7 @@ public class EclipseCompiler implements JavaCompiler {
     }
 
 	@Override
-	public boolean compile(ArrayList elements) {
+	public boolean compile(List<String> elements) {
         try {
             if (compilerClass==null) {
                 if( loader==null )
@@ -120,7 +118,7 @@ public class EclipseCompiler implements JavaCompiler {
                     compilerClass=loader.loadClass("org.eclipse.jdt.internal.compiler.batch.Main");
                 
             }
-        Method compile = compilerClass.getMethod("main",new Class [] { String[].class});
+        Method compile = compilerClass.getMethod("main",String[].class);
        String[] args;
       if (classDebugInfo) {
           args = new String[]
@@ -144,9 +142,9 @@ public class EclipseCompiler implements JavaCompiler {
       System.arraycopy(args, 0, newArgs, 0, args.length);
      
       for (int i = 0; i < elements.size(); i++) {
-        newArgs[i+args.length] = (String)elements.get(i);
+        newArgs[i+args.length] = elements.get(i);
     }
-      compile.invoke(null, new Object[] {newArgs});
+      compile.invoke(null, (Object[])newArgs);
       
       return true;
        }
@@ -172,7 +170,7 @@ public class EclipseCompiler implements JavaCompiler {
                 c=loader.loadClass("org.eclipse.jdt.internal.compiler.batch.Main");
 
             Method compile = c.getMethod("main",
-                                         new Class [] { String[].class});
+                                         String[].class);
 
             String[] args;
             if (classDebugInfo) {
@@ -193,7 +191,7 @@ public class EclipseCompiler implements JavaCompiler {
                         source
                     };
             }
-            compile.invoke(null, new Object[] {args});
+            compile.invoke(null, (Object[])args);
             return true;
         }
         catch (ClassNotFoundException ex) {

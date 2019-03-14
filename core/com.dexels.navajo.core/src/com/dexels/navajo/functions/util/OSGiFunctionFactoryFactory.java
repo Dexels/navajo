@@ -46,7 +46,7 @@ public class OSGiFunctionFactoryFactory  {
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
-				logger.error("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				logger.error("Service resolution failed: Query: "+"({}={})"+" class: {}",serviceKey,name,interfaceClass.getName());
 				return null;
 			}
 			return context.getService(refs[0]);
@@ -54,7 +54,7 @@ public class OSGiFunctionFactoryFactory  {
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error: ", e);
 		}
-		logger.error("Service resolution failed: No references found for query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+		logger.error("Service resolution failed: No references found for query: "+"({}={})"+" class: ",serviceKey,name,interfaceClass.getName());
 		return null;
 	}
 }

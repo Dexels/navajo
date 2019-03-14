@@ -84,7 +84,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     private static int instances = 0;
     
-	private volatile Class<?> myScriptClass = null;
+	private Class<?> myScriptClass = null;
     
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
@@ -215,11 +215,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
 	@Override
 	public Class<?> getClass(String className) throws ClassNotFoundException {
-    	try {
-    		return Class.forName(className, false, this);
-    	} catch (ClassNotFoundException cnfe) {
-    		throw cnfe;
-    	}
+ 		return Class.forName(className, false, this);
     }
 
     @Override
@@ -473,6 +469,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     			}
     		}
     		catch (Exception e) {
+    			//
     		}
     	}
 

@@ -2,9 +2,11 @@ package com.dexels.navajo.adapter.resource;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -15,6 +17,7 @@ import java.sql.SQLWarning;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.sql.DataSource;
@@ -70,10 +73,8 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 	private PreparedStatement statement = null;
 	private ArrayList parameters = null;
 	private final ArrayList binaryStreamList = new ArrayList();
-	private boolean batchMode = false;
-	private SQLBatchUpdateHelper helper = null;
 
-	private String datasource = this.DEFAULTSRCNAME;
+	private String datasource = JDBCMap.DEFAULTSRCNAME;
 	private int connectionId = -1;
 	protected Access myAccess;
 	public int resultSetIndex = 0;
@@ -112,7 +113,7 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 			InputStream is = (InputStream) binaryStreamList.get(i);
 			try {
 				is.close();
-			} catch (Throwable e) {
+			} catch (IOException e) {
 				logger.error("Error cleaning up streams", e);
 			}
 		}
@@ -188,7 +189,7 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 			logger.info(":::Creating transactioncontext: {}", transactionContext);
 			JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
 			if (con != null) {
-				if(autoCommit==false) {
+				if(!autoCommit) {
 					try {
 						con.commit();
 					} catch (SQLException e) {
@@ -347,8 +348,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 	 */
 	@Override
 	public void setBinaryQuery(Binary b) throws UserException {
-		String query = new String(b.getData());
-		setQuery(query);
+		setQuery(new String(b.getData()));
 	}
   
 
@@ -428,7 +428,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 			try {
 				// ?
 				con.close();
-			} catch (Throwable ex) {
+			} catch (SQLException ex) {
 				logger.error("Error killing connection", ex);
 			}
 		}
@@ -547,16 +547,15 @@ public final Object getColumnName(final Integer index) throws UserException {
 			Access.writeToConsole(myAccess, "SQLMAP, GOT CONNECTION, STARTING QUERY\n");
 		}
 
-		// batch mode?
-		this.batchMode = updateOnly
+		if (updateOnly
 				&& ((this.query == null) || (this.query.length() == 0))
 				&& (this.update != null)
-				&& (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
-		if (this.batchMode) {
+				&& (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) >= 0)) {
 			if (this.debug) {
 				Access.writeToConsole(myAccess, this.getClass() + ": detected batch mode, trying a batch update\n");
 			}
-			this.helper = new SQLBatchUpdateHelper(this.update, 
+
+			SQLBatchUpdateHelper helper = new SQLBatchUpdateHelper(this.update, 
 												   this.con,
 												   this.parameters, 
 												   this.myAccess, 
@@ -565,9 +564,8 @@ public final Object getColumnName(final Integer index) throws UserException {
 												   this.isLegacyMode, 
 												   this.debug,
 												   updateOnly);
-			this.updateCount = this.helper.getUpdateCount();
-			this.batchMode = false;
-			return (this.helper.getResultSet());
+			this.updateCount = helper.getUpdateCount();
+			return (helper.getResultSet());
 		}
 
 		if (debug) {
@@ -677,7 +675,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 				} catch (Exception e) {
 					throw new UserException(-1, "Error retrieving metadata / columncount", e);
 				}
-				ArrayList dummy = new ArrayList();
+				List<ResultSetMap> dummy = new ArrayList<>();
 				int index = 1;
 				rowCount = 0;
 
@@ -724,8 +722,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 				if (debug) {
 					Access.writeToConsole(myAccess, "GOT RESULTSET. Size: " + dummy.size() + " indexcounter says: " + index + "\n");
 				}
-				resultSet = new ResultSetMap[dummy.size()];
-				resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
+				resultSet = dummy.toArray(new ResultSetMap[]{});
 				rowCount = resultSet.length;
 			}
 		} catch (SQLException sqle) {
@@ -849,15 +846,21 @@ public final Object getColumnName(final Integer index) throws UserException {
 	 */
 	@Override
 	public Binary getRecords() throws UserException {
-		java.io.File tempFile = null;
 		ResultSet rs = null;
+		File tempFile;
 		try {
+			tempFile = File.createTempFile("sqlmap_records", "navajo");
+		} catch (IOException e1) {
+			throw new UserException("Temp file faillure",e1);
+		}
+		try(
+			FileOutputStream fos = new FileOutputStream(tempFile);
+			OutputStreamWriter fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+			) {
 			Binary b = null;
 			rs = getDBResultSet(false);
 
-			tempFile = File.createTempFile("sqlmap_records", "navajo");
-			FileOutputStream fos = new FileOutputStream(tempFile);
-			OutputStreamWriter fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+			
 
 			int columns = 0;
 			ResultSetMetaData meta = null;
@@ -894,9 +897,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 				fw.write("\n");
 			}
 			fw.flush();
-			fw.close();
 			b = new Binary(tempFile, false);
-			fos.close();
 			return b;
 		} catch (Exception ioe) {
 			throw new UserException(-1, ioe.getMessage(), ioe);
@@ -912,7 +913,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 			}
 			if (tempFile != null) {
 				try {
-					tempFile.delete();
+					Files.delete(tempFile.toPath());
 				} catch (Exception ioe2) {
 					logger.error("Error writing output binary", ioe2);
 				}
@@ -975,7 +976,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 		// ignore completely
 		String[] elements = s.split("/");
 		this.username = elements[0];
-		logger.info("Username set to: " + this.username);
+		logger.info("Username set to: {}", this.username);
 	}
 
 	// dummy for now
@@ -1044,7 +1045,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 				return null;
 			}
 		} catch (SQLException sqle) {
-			logger.error("SQL Problem: " + sqle.getMessage(), sqle);
 			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		} 

@@ -21,16 +21,16 @@ import com.dexels.navajo.script.api.UserException;
 
 public class GrusProviderImpl implements GrusProvider {
 
-    public static final ThreadLocal<Map<DataSource, Integer>> userThreadLocal = new ThreadLocal<Map<DataSource, Integer>>();
+    public static final ThreadLocal<Map<DataSource, Integer>> userThreadLocal = new ThreadLocal<>();
 
-	private final Map<String, Map<String, DataSource>> instances = new HashMap<String, Map<String, DataSource>>();
-	private final Map<String, DataSource> defaultDataSources = new HashMap<String, DataSource>();
-	private final Map<DataSource, Map<String, Object>> settingsMap = new HashMap<DataSource, Map<String, Object>>();
+	private final Map<String, Map<String, DataSource>> instances = new HashMap<>();
+	private final Map<String, DataSource> defaultDataSources = new HashMap<>();
+	private final Map<DataSource, Map<String, Object>> settingsMap = new HashMap<>();
 
-	private final Map<String, Map<String, Object>> defaultSettingsMap = new HashMap<String, Map<String, Object>>();
+	private final Map<String, Map<String, Object>> defaultSettingsMap = new HashMap<>();
 
 	private final AtomicInteger connectionCounter = new AtomicInteger();
-	private final Map<Long, GrusConnection> grusIds = new HashMap<Long, GrusConnection>();
+	private final Map<Long, GrusConnection> grusIds = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(GrusProviderImpl.class);
@@ -38,35 +38,43 @@ public class GrusProviderImpl implements GrusProvider {
 	@SuppressWarnings("unchecked")
 	public void addDataSource(DataSource source, Map<String, Object> settings) {
 		settingsMap.put(source, settings);
-		List<String> instances = getInstances(settings);
+		List<String> tenants = getInstances(settings);
 
 		 String tenant = (String) settings.get("instance");
 		String name = (String) settings.get("name");
 		List<String> aliases = (List<String>) settings.get("aliases");
-		logger.debug(">|>| Name: " + name + " instances: " + instances
+		logger.debug(">|>| Name: " + name + " instances: " + tenants
 				+ " Inst: " + tenant);
 		if (tenant == null) {
-			defaultSettingsMap.put(name, settings);
-			defaultDataSources.put(name, source);
-			if (aliases != null) {
-				for (String alias : aliases) {
-					defaultSettingsMap.put("navajo.resource." + alias, settings);
-					defaultDataSources.put("navajo.resource." + alias, source);
-					defaultSettingsMap.put(alias, settings);
-					defaultDataSources.put(alias, source);
-				}
-			}
+			addTenantLessDataSource(name, aliases, source, settings);
 
 		} else {
-			logger.debug("Adding source with name: "+name+" with instances: "+instances);
-			for (String currentInstance : instances) {
-				addDataSource(source, name, currentInstance);
-				if (aliases != null) {
-					for (String alias : aliases) {
-						addDataSource(source, alias,currentInstance);
-					}
-				}
+			addTenantDataSource(name, aliases, source, tenants);
+		}
+	}
 
+	private void addTenantDataSource(String name, List<String> aliases, DataSource source, List<String> tenants) {
+		logger.debug("Adding source with name: {} with instances: {}",name,tenants);
+		for (String currentInstance : tenants) {
+			addDataSource(source, name, currentInstance);
+			if (aliases != null) {
+				for (String alias : aliases) {
+					addDataSource(source, alias,currentInstance);
+				}
+			}
+		}
+	}
+
+	private void addTenantLessDataSource(String name, List<String> aliases, DataSource source,
+			Map<String, Object> settings) {
+		defaultSettingsMap.put(name, settings);
+		defaultDataSources.put(name, source);
+		if (aliases != null) {
+			for (String alias : aliases) {
+				defaultSettingsMap.put("navajo.resource." + alias, settings);
+				defaultDataSources.put("navajo.resource." + alias, source);
+				defaultSettingsMap.put(alias, settings);
+				defaultDataSources.put(alias, source);
 			}
 		}
 	}
@@ -78,7 +86,7 @@ public class GrusProviderImpl implements GrusProvider {
 	}
 
 	private List<String> getInstances(Map<String, Object> settings) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (Entry<String, Object> e : settings.entrySet()) {
 			if (e.getValue().equals("instance")) {
 				result.add(e.getKey());
@@ -90,7 +98,7 @@ public class GrusProviderImpl implements GrusProvider {
 	private void removeInstanceDataSource(DataSource d) {
 		Collection<Map<String,DataSource>> c = instances.values();
 		for (Map<String, DataSource> map : c) {
-			Map<String, DataSource> copy = new HashMap<String, DataSource>(map);
+			Map<String, DataSource> copy = new HashMap<>(map);
 			Collection<Entry<String, DataSource>> cc = copy.entrySet();
 			for (Entry<String,DataSource> e : cc) {
 				if(e.getValue()==d) {
@@ -98,7 +106,7 @@ public class GrusProviderImpl implements GrusProvider {
 				}
 			}
 		}
-		Map<String,DataSource> defaultCopy = new HashMap<String, DataSource>(defaultDataSources);
+		Map<String,DataSource> defaultCopy = new HashMap<>(defaultDataSources);
 		Collection<Entry<String, DataSource>> cc = defaultCopy.entrySet();
 		for (Entry<String,DataSource> e : cc) {
 			if(e.getValue()==d) {
@@ -111,7 +119,7 @@ public class GrusProviderImpl implements GrusProvider {
 	private Map<String, DataSource> getInstanceDataSources(String instance) {
 		Map<String, DataSource> instanceDataSources = instances.get(instance);
 		if (instanceDataSources == null) {
-			instanceDataSources = new HashMap<String, DataSource>();
+			instanceDataSources = new HashMap<>();
 			instances.put(instance, instanceDataSources);
 		}
 		return instanceDataSources;
@@ -172,14 +180,11 @@ public class GrusProviderImpl implements GrusProvider {
 	    Map<DataSource, Integer> currentMap = userThreadLocal.get();
 	    
 	    if (currentMap == null) {
-	        currentMap = new HashMap<DataSource, Integer>();
+	        currentMap = new HashMap<>();
 	        userThreadLocal.set(currentMap);
 	    }
 	    
-	    if (currentMap.containsKey(dataSourceInstance)) {
-	        return true;
-	    }
-	    return false;
+	    return currentMap.containsKey(dataSourceInstance);
 	}
 	
 	@Override
@@ -188,7 +193,7 @@ public class GrusProviderImpl implements GrusProvider {
         Map<DataSource, Integer> currentMap = userThreadLocal.get();
         
         if (currentMap == null) {
-            currentMap = new HashMap<DataSource, Integer>();
+            currentMap = new HashMap<>();
         }
         
         if (!currentMap.containsKey(dataSourceInstance)) {
@@ -217,7 +222,6 @@ public class GrusProviderImpl implements GrusProvider {
         try {
             gc = new GrusDataSource(id, dataSourceInstance, settings, this);
         } catch (Exception e) {
-            logger.error("Exception in creating datasource connection for: {} name: {}: {}", instance, name, e);
             throw new UserException(-1, "Could not create datasource connection for: " + instance + " and name: "
                     + name, e);
         }
@@ -226,7 +230,7 @@ public class GrusProviderImpl implements GrusProvider {
         Map<DataSource, Integer> currentMap = userThreadLocal.get();
 
         if (currentMap == null) {
-            currentMap = new HashMap<DataSource, Integer>();
+            currentMap = new HashMap<>();
         }
         currentMap.put(dataSourceInstance, id);
         userThreadLocal.set(currentMap);
@@ -284,9 +288,9 @@ public class GrusProviderImpl implements GrusProvider {
 
         if (settings == null && dataSourceInstance == null) {
             settings = defaultSettingsMap.get(name);
-            if(settings==null) {
-                throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
-            }
+        }
+        if(settings==null) {
+            throw new UserException(-1, "Could not find settings for tenant-less datasource: "+name+" available (tenant-less) datasources: "+defaultSettingsMap.keySet());
         }
         String componentName = (String) settings.get("component.name");
         if (componentName.endsWith("oracle")) { 

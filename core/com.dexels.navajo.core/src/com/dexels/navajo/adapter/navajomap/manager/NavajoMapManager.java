@@ -32,7 +32,7 @@ public class NavajoMapManager implements NavajoMapManagerMBean {
 	private String constructProperResourceId(String rawId) {
 		// Construct property resourceId.
 		if ( rawId == null ) {
-			throw new RuntimeException("Illegal resource specified: " + rawId);
+			throw new NullPointerException("Illegal resource specified: " + rawId);
 		}
 		if ( rawId.indexOf(':') != -1 ) {
 			String hostId = rawId.split(":")[0];

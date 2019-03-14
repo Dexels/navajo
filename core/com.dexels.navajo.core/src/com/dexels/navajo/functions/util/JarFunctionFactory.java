@@ -39,11 +39,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
-//			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
-//				return;
-//			}
-			
-			
+
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				// Get object, usage and description.
@@ -74,13 +70,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
-//			if ( name != null ) {
-//
-//				functionDefinition.setXmlElement(element);
-//				fuds.put(name, functionDefinition);
-//				
-//			}
-
 		} else {
 			throw new UnsupportedOperationException("Can not register adapter (pre-OSGi) without a ExtensionDefinition.");
 		}
@@ -118,7 +107,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 	public void init() {
 		Map<String, FunctionDefinition> fuds = getDefaultConfig();
 		if(fuds==null) {
-			fuds = new HashMap<String, FunctionDefinition>();
+			fuds = new HashMap<>();
 			setDefaultConfig(fuds);
 		}
 		ClassLoader myClassLoader = null;
@@ -141,12 +130,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 				logger.error("But OSGi isn't active, so something is definitely wrong.",e);
 			}
 		}
-	}
-	
-	public static void main(String [] args) throws Exception {
-		
-		JarFunctionFactory jff = new JarFunctionFactory();
-		jff.init();
 	}
 
 }

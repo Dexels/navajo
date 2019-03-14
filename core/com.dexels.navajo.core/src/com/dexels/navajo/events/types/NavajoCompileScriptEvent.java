@@ -39,9 +39,9 @@ public class NavajoCompileScriptEvent implements NavajoEvent {
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
 		try {
 			input.addMessage(event);
-			Property webservice = NavajoFactory.getInstance().createProperty(input, "Webservice", 
+			Property eventWebService = NavajoFactory.getInstance().createProperty(input, "Webservice", 
 					Property.STRING_PROPERTY, getWebservice(), 0, "", Property.DIR_OUT);
-			event.addProperty(webservice);
+			event.addProperty(eventWebService);
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}

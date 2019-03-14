@@ -149,8 +149,8 @@ public class Dependency {
     }
     
     private String tenantFromScriptPath(String scriptPath) {
-        int scoreIndex = scriptPath.lastIndexOf("_");
-        int slashIndex = scriptPath.lastIndexOf("/");
+        int scoreIndex = scriptPath.lastIndexOf('_');
+        int slashIndex = scriptPath.lastIndexOf('/');
         if(scoreIndex>=0 && slashIndex < scoreIndex) {
             return scriptPath.substring(scoreIndex+1, scriptPath.length());
         } else {
@@ -158,13 +158,5 @@ public class Dependency {
         }
     }
 
-    
-    public static void main(String[] args) {
-        Dependency d = new Dependency("/home/chris/git/sportlink/settings/KNVB/config/tasks.xml", "/home/chris/git/sportlink/scripts/financial/ProcessDistrictDirectMemberContribution.xml", Dependency.TASK_DEPENDENCY, 5);
-        System.out.println(d.getScript());
-        System.out.println(d.getScriptFile());
-        System.out.println(d.getDependee());
-        System.out.println(d.getDependeeFile());
-    }
 }
 

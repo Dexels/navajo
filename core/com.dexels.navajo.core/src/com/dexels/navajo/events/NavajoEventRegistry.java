@@ -37,13 +37,13 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	private static NavajoEventRegistry instance = null;
 	
 	private final Map<Class<? extends NavajoEvent>, Set<NavajoListener>> registry = 
-															new ConcurrentHashMap<Class<? extends NavajoEvent>, Set<NavajoListener>>();
+															new ConcurrentHashMap<>();
 	
 	/**
 	 * Map contains JMX monitored eventtypes.
 	 */
 	private final Set<String> monitoredEvents = Collections.newSetFromMap( new ConcurrentHashMap<String,Boolean>() );
-	private final Map<String,HashSet<String>> monitorLeveledEvents = new ConcurrentHashMap<String,HashSet<String>>();
+	private final Map<String,HashSet<String>> monitorLeveledEvents = new ConcurrentHashMap<>();
 	private final Map<String, Object> eventLocks = new ConcurrentHashMap<>();
 	
 
@@ -217,7 +217,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
                     NavajoListener nl = i.next();
                     try {
                         if (ignoreProxyListeners && (nl instanceof NavajoEventProxyInterface)) {
-
+                        	//
                         } else {
                             nl.onNavajoEvent(ne);
                         }
@@ -277,7 +277,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		synchronized ( monitorLeveledEvents ) {
 			HashSet<String> levelSet = monitorLeveledEvents.get(level);
 			if ( levelSet == null ) {
-				levelSet = new HashSet<String>();
+				levelSet = new HashSet<>();
 				monitorLeveledEvents.put(level, levelSet);
 			}
 			levelSet.add(type);

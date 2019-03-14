@@ -65,12 +65,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//import com.sun.tools.javac.Main;
 
 /**
  * The default compiler. This is the javac present in JDK 1.1.x and
@@ -181,11 +179,9 @@ public class SunJavaCompiler implements JavaCompiler {
             Object compiler = compilerClass.getDeclaredConstructor().newInstance();
 
             // Call the compile() method
-            Method compile = compilerClass.getMethod("compile",
-                                         new Class [] { String[].class, PrintWriter.class });
+            Method compile = compilerClass.getMethod("compile",String[].class, PrintWriter.class);
 
             String[] args;
-//            Main m = null;
             if (classDebugInfo) {
                 args = new String[]
                     {
@@ -205,7 +201,7 @@ public class SunJavaCompiler implements JavaCompiler {
                     };
             }
             PrintWriter w = new PrintWriter(out);
-            compile.invoke(compiler, new Object[] {args, w});
+            compile.invoke(compiler, args, w);
             w.close();
             
             return true;
@@ -220,25 +216,8 @@ public class SunJavaCompiler implements JavaCompiler {
         }
     }
 
-    public static void main(String [] args) throws Exception {
-      String classPath = System.getProperty("java.class.path");
-      ///System.out.println("classPath = " + classPath);
-      classPath += ":/home/arjen/projecten/sportlink-serv/navajo-tester/WEB-INF/lib/sportlink_functions.jar";
-      System.setProperty("java.class.path", classPath);
-      //System.out.println("new classPath = " + System.getProperty("java.class.path"));
-
-      JavaCompiler compiler = new SunJavaCompiler();
-      compiler.setClasspath(classPath);
-      compiler.setOutputDir("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/");
-      compiler.setClassDebugInfo(true);
-      compiler.setEncoding("UTF8");
-      compiler.setMsgOutput(System.out);
-      compiler.compile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/navajo/adapters/work/InitUpdateClub.java");
-
-    }
-
     @Override
-	public boolean compile(ArrayList elements) {
+	public boolean compile(List<String> elements) {
         throw new UnsupportedOperationException("Unsupported operation. You can implement it if you want");
     }
     @Override

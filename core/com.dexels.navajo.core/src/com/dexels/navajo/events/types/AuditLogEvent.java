@@ -51,12 +51,12 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 		this.level = level;
 		this.created = new java.util.Date();
 		try {
-			if ( instanceName == null ) {
-				if ( DispatcherFactory.getInstance() != null ) {
+			if ( instanceName == null && DispatcherFactory.getInstance() != null) {
 					instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
-				}
 			}
-		} catch (Throwable te) {}
+		} catch (Throwable te) {
+			//
+		}
 	}
 
 	public String getMessage() {
@@ -100,16 +100,16 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 		try {
 			input.addMessage(event);
 			
-			Property message = NavajoFactory.getInstance().createProperty(input, "Message", 
+			Property eventMessage = NavajoFactory.getInstance().createProperty(input, "Message", 
 					Property.STRING_PROPERTY, getMessage(), 0, "", Property.DIR_OUT);
-			Property level = NavajoFactory.getInstance().createProperty(input, "Level", 
+			Property eventLevel = NavajoFactory.getInstance().createProperty(input, "Level", 
 					Property.STRING_PROPERTY, getLevel().getName(), 0, "", Property.DIR_OUT);
-			Property subsystem = NavajoFactory.getInstance().createProperty(input, "Subsystem", 
+			Property eventSubsystem = NavajoFactory.getInstance().createProperty(input, "Subsystem", 
 					Property.STRING_PROPERTY, getSubSystem(), 0, "", Property.DIR_OUT);
 		
-			event.addProperty(message);
-			event.addProperty(level);
-			event.addProperty(subsystem);
+			event.addProperty(eventMessage);
+			event.addProperty(eventLevel);
+			event.addProperty(eventSubsystem);
 			
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);

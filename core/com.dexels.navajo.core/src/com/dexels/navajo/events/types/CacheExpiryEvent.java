@@ -30,13 +30,13 @@ public class CacheExpiryEvent implements NavajoEvent {
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
 		try {
 			input.addMessage(event);
-			Property webservice = NavajoFactory.getInstance().createProperty(input, "Webservice", 
+			Property eventWebService = NavajoFactory.getInstance().createProperty(input, "Webservice", 
 					Property.STRING_PROPERTY, getWebservice(), 0, "", Property.DIR_OUT);
-			event.addProperty(webservice);
+			event.addProperty(eventWebService);
 			
-			Property key = NavajoFactory.getInstance().createProperty(input, "Key", 
+			Property eventKey = NavajoFactory.getInstance().createProperty(input, "Key", 
 					Property.STRING_PROPERTY, getKey(), 0, "", Property.DIR_OUT);
-			event.addProperty(key);
+			event.addProperty(eventKey);
 			
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);

@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
-	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<Integer, Connection>();
+	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<>();
 	private BundleContext bundleContext;
 	
 	public void activate(BundleContext bc) {
@@ -41,9 +41,7 @@ public class JdbcResourceComponent {
 
 	public static DataSource getJdbc(String name) {
 		try {
-//			final ResourceManager mngr = getInstance().manager;
-			DataSource dataSource = getDataSource(name);
-			return dataSource;
+			return getDataSource(name);
 		} catch (InvalidSyntaxException e) {
 			logger.error("Can not resolve datasource{}",name,e);
 			return null;
@@ -57,13 +55,12 @@ public class JdbcResourceComponent {
 		return instance.bundleContext.getService(ss);
 	}
 	private static ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
-		logger.debug("Getting datasource reference: "+shortName);
+		logger.debug("Getting datasource reference: {}", shortName);
 		Collection<ServiceReference<DataSource>> dlist = getInstance().bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
-		ServiceReference<DataSource> dref = dlist.iterator().next();
-		return dref;
+		return dlist.iterator().next();
 	}
 	
 

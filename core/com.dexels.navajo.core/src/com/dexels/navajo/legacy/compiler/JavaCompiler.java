@@ -63,7 +63,7 @@ package com.dexels.navajo.legacy.compiler;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * If you want to plugin your own Java compiler, you probably want to
@@ -114,7 +114,7 @@ public interface JavaCompiler {
     boolean compile(String source);
 
     public void setOutputWriter(StringWriter out);
-    public boolean compile(ArrayList elements);
+    public boolean compile(List<String> elements);
     public void setCompileClassLoader( ClassLoader cl  );
 
     public void setCompilerClass(Class c);    

@@ -22,8 +22,8 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 	private static final long serialVersionUID = 5960405491845545518L;
 	
 	private static final Logger logger = LoggerFactory.getLogger(URLMap.class);
-	private ServiceReference<?> httpResourceReference = null;
-	private HttpResource httpResource;
+	private transient ServiceReference<?> httpResourceReference = null;
+	private transient HttpResource httpResource;
 
 	
 	@Override
@@ -66,11 +66,11 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
-				logger.error("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				logger.error("Service resolution failed: Query: ({}={})"+" class: {}",serviceKey,name,interfaceClass.getName());
 				return null;
 			}
 			if(refs.length==0) {
-				logger.error("Service resolution worked but no match: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				logger.error("Service resolution worked but no match: Query: ({}={})"+" class: {}",serviceKey,name,interfaceClass.getName());
 				return null;
 			}
 			httpResourceReference = refs[0];

@@ -28,19 +28,13 @@ public class AbstractLoginStatistics implements LoginStatistics {
     @Override
     public boolean reachedAbortThreshold(String username) {
         Integer count = cache.getUnchecked(username);
-        if (count > failedLoginAbortThreshold) {
-            return true;
-        }
-        return false;
+        return count > failedLoginAbortThreshold;
     }
 
     @Override
     public boolean reachedRateLimitThreshold(String username) {
         Integer count = cache.getUnchecked(username);
-        if (count > failedLoginSlowpoolThreshold) {
-            return true;
-        }
-        return false;
+        return count > failedLoginSlowpoolThreshold;
     }
 
     

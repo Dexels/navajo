@@ -140,64 +140,40 @@ public class TslPreCompiler {
 
             String operationScript = n.getAttribute("service");
             String operationValidationScript = n.getAttribute("validationService");
-            if (operationScript == null || operationScript.equals("")) {
-                continue;
-            }
+            if(operationScript!=null && !"".equals(operationScript)) {
+                if (scriptTenant != null) {
+                    // trying tenant-specific variant first
+                    String operationScriptFile = scriptFolder + File.separator + operationScript + "_" + scriptTenant + ".xml";
 
-            if (scriptTenant != null) {
-                // trying tenant-specific variant first
-                String operationScriptFile = scriptFolder + File.separator + operationScript + "_" + scriptTenant + ".xml";
+                    // Check if exists
+                    if (new File(operationScriptFile).exists()) {
+                        deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
 
-                // Check if exists
-                if (new File(operationScriptFile).exists()) {
-                    deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-
-                    // No need to try any other tenant-specific includes since
-                    // we are tenant-specific in the first place
-                    // Thus continue with next entity
-                    continue;
-                }
-            }
-
-            String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
-            String operationValidationScriptFile = null;
-            if (operationValidationScript != null && !"".equals(operationValidationScript)) {
-                operationValidationScriptFile = scriptFolder + File.separator + operationValidationScript + ".xml";
-            }
-            // Check if exists
-            boolean isBroken = false;
-            if (!new File(operationScriptFile).exists()) {
-                isBroken = true;
-            }
-
-            deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
-
-            // Going to check for tenant-specific include-variants
-            if (scriptTenant == null) {
-                File scriptFolderFile = new File(operationScriptFile).getParentFile();
-                if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
-                    AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationScript) + "_*.xml");
-                    Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-                    for (File f : files) {
-                        deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                        // No need to try any other tenant-specific includes since
+                        // we are tenant-specific in the first place
+                        // Thus continue with next entity
+                        continue;
                     }
                 }
 
-            }
-            // Handle validation service
-            if (operationValidationScriptFile != null) {
-                isBroken = false;
-                if (!new File(operationValidationScriptFile).exists()) {
+                String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
+                String operationValidationScriptFile = null;
+                if (operationValidationScript != null && !"".equals(operationValidationScript)) {
+                    operationValidationScriptFile = scriptFolder + File.separator + operationValidationScript + ".xml";
+                }
+                // Check if exists
+                boolean isBroken = false;
+                if (!new File(operationScriptFile).exists()) {
                     isBroken = true;
                 }
 
-                deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
                 // Going to check for tenant-specific include-variants
                 if (scriptTenant == null) {
-                    File scriptFolderFile = new File(operationValidationScriptFile).getParentFile();
+                    File scriptFolderFile = new File(operationScriptFile).getParentFile();
                     if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
-                        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
+                        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationScript) + "_*.xml");
                         Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                         for (File f : files) {
                             deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
@@ -205,7 +181,30 @@ public class TslPreCompiler {
                     }
 
                 }
+                // Handle validation service
+                if (operationValidationScriptFile != null) {
+                    isBroken = false;
+                    if (!new File(operationValidationScriptFile).exists()) {
+                        isBroken = true;
+                    }
+
+                    deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+                    // Going to check for tenant-specific include-variants
+                    if (scriptTenant == null) {
+                        File scriptFolderFile = new File(operationValidationScriptFile).getParentFile();
+                        if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+                            AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
+                            Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                            for (File f : files) {
+                                deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                            }
+                        }
+
+                    }
+                }
             }
+
 
         }
 
@@ -396,7 +395,7 @@ public class TslPreCompiler {
     private List<String> getParamValue(Document tslDoc, String paramString) throws XPathExpressionException {
         String paramName = paramString.split("\\@")[1];
         paramName = paramName.substring(0, paramName.length() - 1);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         XPath xPath = XPathFactory.newInstance().newXPath();
         NodeList nodes = (NodeList) xPath.evaluate("//param[@name='" + paramName + "']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);

@@ -30,7 +30,6 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			logger.debug("OSGi function resolution for function: {} failed, going old school.",functionName);
 			return super.getInstance(cl, functionName);
 		}
-//		Class<? extends FunctionInterface> osgiResolutionClass = fd.getFunctionClass();
 		FunctionInterface osgiResolution = fd.getFunctionInstance();
 		if (osgiResolution==null) {
 			logger.debug("OSGi function resolution for function: {} failed, going old school.",functionName);
@@ -44,22 +43,21 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	public void init() {
 		Map<String, FunctionDefinition> fuds = getDefaultConfig();
 		if(fuds==null) {
-			fuds = new HashMap<String, FunctionDefinition>();
+			fuds = new HashMap<>();
 			setDefaultConfig(fuds);
 		}
-//		super.init();
 	}
 
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
-		List<XMLElement> result = new ArrayList<XMLElement>();
+		List<XMLElement> result = new ArrayList<>();
 		BundleContext context = Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
-				logger.warn("Service enumeration failed class: "+interfaceClass);
+				logger.warn("Service enumeration failed class: {}", interfaceClass);
 				return null;
 			}
 			for (ServiceReference serviceReference : refs) {
@@ -79,13 +77,14 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
+	//TODO not ok, seems to return function elements
 	public List<XMLElement> getAllAdapterElements(String interfaceClass, String propertyKey)  {
-		List<XMLElement> result = new ArrayList<XMLElement>();
+		List<XMLElement> result = new ArrayList<>();
 		BundleContext context = Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
-				logger.warn("Service enumeration failed class: "+interfaceClass);
+				logger.warn("Service enumeration failed class: {}", interfaceClass);
 				return null;
 			}
 			for (ServiceReference serviceReference : refs) {
