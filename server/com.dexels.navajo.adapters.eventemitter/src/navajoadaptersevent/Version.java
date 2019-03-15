@@ -3,6 +3,8 @@ package navajoadaptersevent;
 import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.eventemitter.EventAdapterLibrary;
 
@@ -35,9 +37,10 @@ import com.dexels.navajo.adapter.eventemitter.EventAdapterLibrary;
 
 public class Version extends AbstractCoreExtension {
 
-
 	private static BundleContext bundleContext;
 	
+	private static final Logger logger = LoggerFactory.getLogger(Version.class);
+
 	public Version() {
 	}
 

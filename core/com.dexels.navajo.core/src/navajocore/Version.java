@@ -2,6 +2,8 @@ package navajocore;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
@@ -20,6 +22,8 @@ import navajoextension.AbstractCoreExtension;
 public class Version extends AbstractCoreExtension {
 
 	private static BundleContext bundleContext;
+	
+	private static final Logger logger = LoggerFactory.getLogger(Version.class);
 
 	@Override
 	public void start(BundleContext bc) throws Exception {

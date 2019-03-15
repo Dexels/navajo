@@ -28,55 +28,21 @@ import org.osgi.framework.BundleContext;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	// Included packages.
-
-	
-
-//	private ServiceRegistration<?> legacyPostman;
-
 	private static BundleContext bundleContext;
-
+	
 	public Version() {
-		// javax.mail.Address a;
-		// setReleaseDate(RELEASEDATE);
 
 	}
 
 	
 	@Override
 	public void start(BundleContext bc) {
-		try {
-			super.start(bc);
-			bundleContext = bc;
-			if(bc!=null) {
-//				DummyScheduler ds = new DummyScheduler();
-//				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
-//				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
-//				 wb.put("ranking", 0);
-//				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
-
-				
-//				 Dictionary<String, Object> listener = new Hashtable<String, Object>();
-//				 listener.put("alias", "/PostmanLegacy");
-//				TmlHttpServlet tmlHttpServlet = new TmlHttpServlet();
-//				tmlHttpServlet.setBundleContext(bc);
-//				legacyPostman = bc.registerService(Servlet.class.getName(), tmlHttpServlet, listener);
-
-			}
-			} catch (Throwable e) {
-				logger.error("Error: ", e);
-			}
+		bundleContext = bc;
 	}
 
 
 	@Override
 	public void stop(BundleContext bc) throws Exception {
-//		if(reference!=null) {
-//			reference.unregister();
-//		}
-//		if(legacyPostman!=null) {
-//			legacyPostman.unregister();
-//		}
 		bundleContext = null;
 
 	}

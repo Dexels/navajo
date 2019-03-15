@@ -4,11 +4,16 @@ package com.dexels.navajo.version;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
-public  class AbstractVersion extends BaseVersion implements BundleActivator {
+public  class AbstractVersion implements BundleActivator {
 
+
+	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractVersion.class);
 
 	
 	protected BundleContext context = null;
@@ -43,12 +48,6 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 		context = null;
 		
 	}
-	
-	public boolean hasOSGiContext() {
-		return context!=null;
-	}
-
-
 
 	public void shutdown() {
 		if(context==null) {

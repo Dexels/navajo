@@ -2,6 +2,8 @@ package navajoadapters;
 
 import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.StandardAdapterLibrary;
 import com.dexels.navajo.adapter.functions.StandardAdapterFunctionLibrary;
@@ -39,9 +41,10 @@ import navajoextension.AbstractCoreExtension;
 @SuppressWarnings("deprecation")
 public class Version extends AbstractCoreExtension {
 
-
 	private static BundleContext bundleContext;
 	
+	private static final Logger logger = LoggerFactory.getLogger(Version.class);
+
 	public Version() {
 	}
 

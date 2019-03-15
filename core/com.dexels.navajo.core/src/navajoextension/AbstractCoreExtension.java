@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
@@ -17,9 +19,8 @@ import navajo.ExtensionDefinition;
 
 public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVersion {
 	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractCoreExtension.class);
 	private final Set<ServiceRegistration<?>> registrations = new HashSet<>();
-
-	
 
 	@Override
 	public void stop(BundleContext bc) throws Exception {
