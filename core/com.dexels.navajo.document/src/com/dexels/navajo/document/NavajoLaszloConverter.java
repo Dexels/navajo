@@ -73,7 +73,7 @@ public class NavajoLaszloConverter {
 		return n;
 	}
 
-	public static Document createLaszloFromNavajo(Navajo in) {
+	private static Document createLaszloFromNavajo(Navajo in) {
 		return createLaszloFromNavajo(in, "navajoDataSource");
 	}
 

@@ -2,7 +2,6 @@ package com.dexels.navajo.document.saximpl.qdxml;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Hashtable;
 import java.util.Map;
 
 public interface DocHandler {

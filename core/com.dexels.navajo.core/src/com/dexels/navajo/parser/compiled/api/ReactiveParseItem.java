@@ -25,11 +25,11 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public class ReactiveParseItem implements ContextExpression {
 
 
-	public final String name;
-	public final Reactive.ReactiveItemType type;
-	public final Map<String, ContextExpression> namedParams;
-	public final List<ContextExpression> unnamedParams;
-	public final String expression;
+	private final String name;
+	private final Reactive.ReactiveItemType type;
+	private final Map<String, ContextExpression> namedParams;
+	private final List<ContextExpression> unnamedParams;
+	private final String expression;
 	private final Node node;
 	
 	public ReactiveParseItem(String name, Reactive.ReactiveItemType type, Map<String,ContextExpression> namedParams, List<ContextExpression> unnamedParams, String expression, Node node) {
