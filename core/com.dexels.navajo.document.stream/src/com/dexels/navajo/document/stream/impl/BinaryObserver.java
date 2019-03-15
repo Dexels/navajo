@@ -67,7 +67,6 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 			    		binary = new Binary(dataFile,true);
 			    	}
 			    	binary.setDigest(digest);
-//			    	binary.setMimeType();
 					outgoing.onNext(binary);
 			    	outgoing.onComplete();
 				} catch (Throwable e) {
@@ -98,7 +97,7 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 	}
 	
 	
-	private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
+	private OutputStream createTempFileOutputStream() throws IOException {
 		if(messageDigest==null) {
 	        MessageDigest md = null;
 			try {
@@ -107,8 +106,9 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 				logger.warn("Failed creating messageDigest in binary. Expect problems", e1);
 			}
 			this.messageDigest = md;
+		} else {
+			messageDigest.reset();
 		}
-		messageDigest.reset();
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
     			@Override
@@ -121,7 +121,7 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 	    			inMemory = toByteArray();
     			}
     		};
-    		OutputStream dos = new DigestOutputStream(baos, messageDigest) {
+    		return new DigestOutputStream(baos, messageDigest) {
 
 				@Override
 				public void close() throws IOException {
@@ -130,13 +130,11 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 				}
     			
     		};
-    		
-    		return dos;
     	} else {
             dataFile = File.createTempFile("streamedbinary_object", "navajo", NavajoFactory.getInstance().getTempDir());
             
-            FileOutputStream fos = new FileOutputStream(dataFile);
-            OutputStream dos = new DigestOutputStream(fos, messageDigest) {
+            FileOutputStream fosStream = new FileOutputStream(dataFile);
+            return new DigestOutputStream(fosStream, messageDigest) {
 
 				@Override
 				public void close() throws IOException {
@@ -145,7 +143,6 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 				}
             	
             };
-            return dos;
     	}
     }
 	protected void setDigest(byte[] digest) {

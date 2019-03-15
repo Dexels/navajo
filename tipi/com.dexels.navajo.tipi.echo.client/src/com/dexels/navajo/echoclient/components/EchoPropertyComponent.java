@@ -1067,7 +1067,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		r.setStyle(ssss);
 
 		addPropertyComponent(r);
-		ArrayList<Selection> ss = p.getAllSelections();
+		List<Selection> ss = p.getAllSelections();
 		for (int i = 0; i < ss.size(); i++) {
 			Selection cc = ss.get(i);
 			final RadioButton rb = new RadioButton();
@@ -1154,7 +1154,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 		final Map<Selection, CheckBox> buttons = new HashMap<Selection, CheckBox>();
 		addPropertyComponent(r);
-		ArrayList<Selection> ss = p.getAllSelections();
+		List<Selection> ss = p.getAllSelections();
 		for (int i = 0; i < ss.size(); i++) {
 			Selection cc = ss.get(i);
 			final CheckBox rb = new CheckBox();

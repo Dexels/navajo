@@ -445,7 +445,7 @@ public class FilterPanel extends JPanel {
                     for (int i = 0; i < table.getArraySize(); i++) {
                         Message cur = table.getMessage(i);
                         Property selProp = cur.getProperty(id).copy(dumm);
-                        ArrayList<Selection> sels = selProp.getAllSelections();
+                        List<Selection> sels = selProp.getAllSelections();
                         for (int j = 0; j < sels.size(); j++) {
                             Selection sel = sels.get(j);
                             s.add(sel);

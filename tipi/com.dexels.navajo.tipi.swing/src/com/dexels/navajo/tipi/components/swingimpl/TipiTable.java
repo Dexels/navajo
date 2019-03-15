@@ -351,7 +351,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         // only if label is not specified (for backwards compatibility)
         String label = (String) child.getAttribute("label");
         if (label == null || label.trim().isEmpty()) {
-            throw new NavajoExceptionImpl("Missing label for column " + name);
+            throw NavajoFactory.getInstance().createNavajoException("Missing label for column " + name);
         }
 
         Message columnMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), "Columns", Message.MSG_TYPE_ARRAY_ELEMENT);

@@ -1031,7 +1031,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             throw new UserException(-1, "selections only supported for selection properties");
         }
 
-        ArrayList<Selection> all = p.getAllSelections();
+        List<Selection> all = p.getAllSelections();
         OptionMap[] om = new OptionMap[all.size()];
         for (int i = 0; i < all.size(); i++) {
             Selection s = all.get(i);

@@ -81,7 +81,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 				myProperty.removePropertyChangeListener(this);
 			}
 			myProperty = p;
-			ArrayList<Selection> selections = myProperty.getAllSelections();
+			List<Selection> selections = myProperty.getAllSelections();
 
 			if (selections.size() <= 0) {
 				logger.info("Watch it! No selection property!");

@@ -208,7 +208,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 		}
 
 		try {
-			ArrayList<Selection> alreadySelected = myProperty
+			List<Selection> alreadySelected = myProperty
 					.getAllSelectedSelections();
 			for (Selection selection : alreadySelected) {
 				ll.add(selection.getValue());
@@ -221,9 +221,9 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 
 	}
 
-	private ArrayList<String> invertSelection(Property p, ArrayList<String> ll)
+	private List<String> invertSelection(Property p, ArrayList<String> ll)
 			throws NavajoException {
-		ArrayList<Selection> all = p.getAllSelectedSelections();
+		List<Selection> all = p.getAllSelectedSelections();
 		ArrayList<String> invList = new ArrayList<String>();
 		for (int i = 0; i < all.size(); i++) {
 			Selection s = all.get(i);
@@ -246,7 +246,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 		}
 
 		try {
-			ArrayList<String> invLL = invertSelection(myProperty, ll);
+			List<String> invLL = invertSelection(myProperty, ll);
 			myProperty.setSelected(invLL);
 		} catch (NavajoException e1) {
 			logger.error("Error: ", e1);

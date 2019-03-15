@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -33,7 +34,7 @@ public abstract class BaseComboBox extends JComboBox {
 	public void loadCombobox(Property p) {
 		try {
 			defaultComboBoxModel = new DefaultComboBoxModel();
-			ArrayList<Selection> a = p.getAllSelections();
+			List<Selection> a = p.getAllSelections();
 			Selection selectedSelection = null;
 			for (int i = 0; i < a.size(); i++) {
 				Selection s = a.get(i);

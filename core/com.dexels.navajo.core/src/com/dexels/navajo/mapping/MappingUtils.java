@@ -481,10 +481,8 @@ public final class MappingUtils {
         return messages;
     }
 
-    public static final ArrayList getSelectedItems(Message msg, Navajo doc, String msgName) throws NavajoException {
-        // Message ref = null;
+    public static final List<Selection> getSelectedItems(Message msg, Navajo doc, String msgName) throws NavajoException {
         Property prop = null;
-        ArrayList result = null;
 
         if (msg != null) {
             prop = msg.getProperty(msgName);
@@ -494,13 +492,13 @@ public final class MappingUtils {
         if (!prop.getType().equals(Property.SELECTION_PROPERTY)) {
             throw doc.getNavajoFactory().createNavajoException("Selection Property expected");
         }
-        result = prop.getAllSelectedSelections();
+        List<Selection> result = prop.getAllSelectedSelections();
 
         return result;
     }
 
     public static final List<Message> getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o,
-            Message currentParamMsg, Access access) throws NavajoException, SystemException, TMLExpressionException {
+            Message currentParamMsg, Access access) throws SystemException {
         // try {
         List<Message> result = new ArrayList();
 
