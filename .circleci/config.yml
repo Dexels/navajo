@@ -16,7 +16,7 @@ jobs:
           - v1-dependencies-
 
       - run: |
-		cd setup/com.dexels.target
+                cd setup/com.dexels.target
 		mvn install
                 cd ../..
       - save_cache:
