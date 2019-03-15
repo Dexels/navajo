@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.types.Binary;
@@ -140,37 +140,37 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * @throws NavajoException
    * @return Selection
    */
-  public Selection existsSelection(String name) throws NavajoException;
+  public Selection existsSelection(String name);
 
   /**
    * Get a selection option with a specific name if it exists. If it does not exists, return null.
    * If the property is not of type "selection", a NavajoException is thrown.
    */
-  public Selection getSelection(String name) throws NavajoException;
+  public Selection getSelection(String name);
 
   /**
    * Get a selection option with a specific value if it exists. If it does not exists, return null.
    * If the property is not of type "selection", a NavajoException is thrown.
    */
-  public Selection getSelectionByValue(String value) throws NavajoException;
+  public Selection getSelectionByValue(String value);
 
   /**
    * Return all selection objects in the property. If the property object is not of a selection type,
    * a NavajoException is thrown.
    */
-  public ArrayList<Selection> getAllSelections() throws NavajoException;
+  public List<Selection> getAllSelections();
 
   /**
    * Get the full Property name
    * @throws NavajoException
    * @return String
    */
-  public String getFullPropertyName() throws NavajoException;
+  public String getFullPropertyName();
 
   /**
    * Unsets all options for a selection property.
    */
-  public void clearSelections() throws NavajoException;
+  public void clearSelections();
 
   /**
    * Creates a new property, with the supplied Navajo as root doc
@@ -181,22 +181,22 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * Removes a selection from a selection property
    * @param Selection s
    */
-  public void removeSelection(Selection s) throws NavajoException;
+  public void removeSelection(Selection s);
 
   /**
    * Removes all selections from a selection property
    * @throws NavajoException
    */
 
-  public void removeAllSelections() throws NavajoException;
+  public void removeAllSelections();
 
   /**
    * Return all selection objects in the property. If the property object is not of a selection type,
    * a NavajoException is thrown.
    */
-  public ArrayList<Selection> getAllSelectedSelections() throws NavajoException;
+  public List<Selection> getAllSelectedSelections();
 
-  public void addExpression(ExpressionTag e) throws NavajoException;
+  public void addExpression(ExpressionTag e);
 
   /**
    * Add a selection option to a "selection" property. If the option name already exists, replace
@@ -204,7 +204,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    *  @param Selection s
    * @throws NavajoException
    */
-  public void addSelection(Selection s) throws NavajoException;
+  public void addSelection(Selection s);
 
   /**
    * Add a selection option to a "selection" property. If the option name already exists, we DO NOT replace
@@ -212,7 +212,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * @param s Selection
    * @throws NavajoException
    */
-  public void addSelectionWithoutReplace(Selection s) throws NavajoException;
+  public void addSelectionWithoutReplace(Selection s);
 
   /**
    * Get the property name.
@@ -345,13 +345,13 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * Will throw a NavajoException when this is not of type EXPRESSION
    * @return String evaluated type
    */
-  public String getEvaluatedType() throws NavajoException;
+  public String getEvaluatedType();
 
   /**
    * Refresh expression
    * @throws NavajoException
    */
-  public void refreshExpression() throws NavajoException, ExpressionChangedException;
+  public void refreshExpression() throws ExpressionChangedException;
 
   /**
    * Set the type of a property (required).
@@ -426,8 +426,6 @@ public String toString();
 
   public void setValue(Binary data);
 
-  //public void setValue(File f);
-  //public void setValue(byte [] data);
   public void setValue(URL url);
 
   public void setValue(Money m);
@@ -447,7 +445,7 @@ public String toString();
   /**
    * Sets the selected option for a selection type property.
    */
-  public void setSelected(String value) throws NavajoException;
+  public void setSelected(String value);
 
   /**
    * Set multiple selections for a selection type Property with a Cardinality '+'
@@ -455,14 +453,14 @@ public String toString();
    * @param keys ArrayList
    * @throws NavajoException
    */
-  public void setSelected(ArrayList<String> keys) throws NavajoException;
+  public void setSelected(List<String> keys);
 
   /**
    * Set multiple selections for a selection type Property with a Cardinality '+'
    * @param keys String[]
    * @throws NavajoException
    */
-  public void setSelected(String[] keys) throws NavajoException;
+  public void setSelected(String[] keys);
 
   /**
    * Sets the selected option for a selection type property.
@@ -470,7 +468,7 @@ public String toString();
    * @throws NavajoException
    */
 
-  public void setSelected(Selection s) throws NavajoException;
+  public void setSelected(Selection s);
 
   /**
    * Sets the selected option for a selection type property.
@@ -478,7 +476,7 @@ public String toString();
    * @throws NavajoException
    */
 
-  public void setSelected(Selection s, boolean selected) throws NavajoException;
+  public void setSelected(Selection s, boolean selected);
 
   
   /**
@@ -541,20 +539,6 @@ public String toString();
    * @return Message parent
    */
   public Message getParentMessage();
-//
-//  /**
-//   * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
-//   * Each vector contains the "point" (of any dimensionality).
-//   *  @param Vector[] points
-//   */
-//  public void setPoints(Vector[] points) throws NavajoException;
-//
-//  /**
-//   * Return the cartesian coordinates of a "points" property.
-//   * The return value is an array of Vectors (containing floats).
-//   * @return Vectort[] points
-//   */
-//  public Vector[] getPoints() throws NavajoException;
 
   /**
    * Return the internal implementation specific representation of the Property.
@@ -595,7 +579,7 @@ public String toString();
    * @return Selection selected
    */
 
-  public Selection getSelected() throws NavajoException;
+  public Selection getSelected();
 
   /**
    * @return a cloned Property belonging to the same parent document

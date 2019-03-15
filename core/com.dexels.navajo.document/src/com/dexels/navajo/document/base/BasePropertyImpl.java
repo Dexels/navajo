@@ -1741,7 +1741,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void setSelected(ArrayList<String> al) {
+	public final void setSelected(List<String> al) {
 		List<Selection> old = new ArrayList<>(getAllSelectedSelections());
 		setAllSelected(false);
 		for (int i = 0; i < al.size(); i++) {
@@ -1753,8 +1753,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final ArrayList<Selection> getAllSelectedSelections() {
-		ArrayList<Selection>  list = new ArrayList<Selection>() {
+	public final List<Selection> getAllSelectedSelections() {
+		List<Selection>  list = new ArrayList<Selection>() {
 			private static final long serialVersionUID = -2914783936108056853L;
 
 			@Override
@@ -1873,8 +1873,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// Check for selection properties.
 		else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
 			try {
-				ArrayList<Selection> l = p.getAllSelectedSelections();
-				ArrayList<Selection> me = this.getAllSelectedSelections();
+				List<Selection> l = p.getAllSelectedSelections();
+				List<Selection> me = this.getAllSelectedSelections();
 
 				// If number of selected selections is not equal they're not
 				// equal.

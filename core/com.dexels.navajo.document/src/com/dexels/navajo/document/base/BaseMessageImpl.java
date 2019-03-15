@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -63,13 +61,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private int myIndex = -1;
 
-    protected TreeMap<String, Property> propertyMap = null;
+    protected transient Map<String, Property> propertyMap = null;
 
-    protected ArrayList<Property> propertyList = null;
+    protected transient List<Property> propertyList = null;
 
-    protected TreeMap<String, Message> messageMap = null;
+    protected transient Map<String, Message> messageMap = null;
 
-    private ArrayList<Message> messageList = null;
+    private transient List<Message> messageList = null;
 
     private BaseMessageImpl myParent = null;
 
@@ -84,9 +82,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     private String eTag = null;
 
     private List<PropertyChangeListener> myPropertyDataListeners;
-
-    // private List myDefinitionList = null;
-    // private Map myDefinitionMap = null;
 
     private static final Logger logger = LoggerFactory.getLogger(BaseMessageImpl.class);
 
@@ -734,6 +729,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (messageList == null || messageMap == null) {
             return;
         }
+        if(child == null) {
+        	return;
+        }
         if (messageList.contains(child)) {
             messageList.remove(child);
             messageMap.remove(child.getName());
@@ -950,9 +948,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     public final Message getByPath(String path) {
         if (path.startsWith("../")) {
-            Message m = getParentMessage().getMessage(path.substring(3));
+        	return getParentMessage().getMessage(path.substring(3));
             // I THINK! It did not make sense at all
-            return m;
         }
 
         if (path.length() > 0 && path.charAt(0) == '/') {

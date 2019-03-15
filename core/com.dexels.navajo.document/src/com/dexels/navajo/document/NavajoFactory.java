@@ -1,9 +1,9 @@
 package com.dexels.navajo.document;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,24 +38,24 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
  */
 
 public abstract class NavajoFactory {
-	protected static volatile NavajoFactory impl = null;
+	protected static NavajoFactory impl = null;
 	protected File tempDir = null;
-	protected static final HashMap<String, NavajoFactory> alternativeFactories = new HashMap<String, NavajoFactory>();
-	protected Map<String, String> defaultSubTypes = new HashMap<String, String>();
+	protected static final Map<String, NavajoFactory> alternativeFactories = new HashMap<>();
+	protected Map<String, String> defaultSubTypes = new HashMap<>();
 
-	private final Map<String, byte[]> binaryStorage = new HashMap<String, byte[]>();
+	private final Map<String, byte[]> binaryStorage = new HashMap<>();
 	private boolean sandboxMode = false;
 
 	private static Object semaphore = new Object();
 
-	private HashMap<String, Class<?>> toJavaType = new HashMap<String, Class<?>>();
-	private HashMap<String, String> toJavaGenericType = new HashMap<String, String>();
-	private HashMap<Class<?>, String> toNavajoType = new HashMap<Class<?>, String>();
+	private Map<String, Class<?>> toJavaType = new HashMap<>();
+	private Map<String, String> toJavaGenericType = new HashMap<>();
+	private Map<Class<?>, String> toNavajoType = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoFactory.class);
 
-    private void readTypes() throws Exception {
+    private void readTypes() throws ClassNotFoundException, IOException  {
         ClassLoader cl = getClass().getClassLoader();
         if (cl == null) {
             logger.info("Bootstrap classloader detected!");
@@ -136,7 +136,6 @@ public abstract class NavajoFactory {
 				}
 
 				if (name == null) {
-					name = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 					impl = new BaseNavajoFactoryImpl();
 					impl.sandboxMode = sbmode;
 				} else {
@@ -150,10 +149,11 @@ public abstract class NavajoFactory {
 				}
 
 				try {
-					impl.readTypes();
-				} catch (Exception e) {
-					logger.error("Error reading types ", e);
-					throw new RuntimeException(
+					if(impl!=null) {
+						impl.readTypes();
+					}
+				} catch (ClassNotFoundException | IOException e) {
+					throw new NavajoException(
 							"Could not instantiate NavajoDocument Factory, problem reading navajotypes.xml: "
 									+ e.getMessage(), e);
 				}
@@ -210,7 +210,6 @@ public abstract class NavajoFactory {
 		}
 		// Might still leak..
 		alternativeFactories.clear();
-		// alternativeFactories = null;
 		if (impl != null) {
 			impl.shutdown();
 		}
@@ -229,14 +228,14 @@ public abstract class NavajoFactory {
 	 */
 
 	public Map<String, String> parseSubTypes(String subType) {
-		Map<String, String> m = new HashMap<String, String>();
+		Map<String, String> m = new HashMap<>();
 		if (subType == null || "".equals(subType)) {
 			return m;
 		}
 		StringTokenizer st = new StringTokenizer(subType, ",");
 		while (st.hasMoreTokens()) {
 			String next = st.nextToken();
-			int i = next.indexOf("=");
+			int i = next.indexOf('=');
 			if (i >= 0) {
 				String key = next.substring(0, i);
 				String value = next.substring(i + 1, next.length());
@@ -270,12 +269,6 @@ public abstract class NavajoFactory {
 	public String getDefaultSubtypeForType(String type) {
 		return defaultSubTypes.get(type);
 	}
-
-	// public static final String[] VALID_DATA_TYPES = new String[] {
-	// STRING_PROPERTY,INTEGER_PROPERTY,LONG_PROPERTY,DATE_PROPERTY,FLOAT_PROPERTY,MONEY_PROPERTY,CLOCKTIME_PROPERTY,
-	// URL_PROPERTY,MEMO_PROPERTY,BOOLEAN_PROPERTY,POINTS_PROPERTY,DATE_PATTERN_PROPERTY,PASSWORD_PROPERTY,
-	// TIPI_PROPERTY,BINARY_PROPERTY
-	// };
 
 	private ExpressionEvaluator myExpressionEvaluator = null;
 
@@ -474,7 +467,7 @@ public abstract class NavajoFactory {
 	 * @return Header
 	 */
 	public abstract Header createHeader(Navajo n, String rpcName,
-			String rpcUser, String rpcPassword, long expiration_interval);
+			String rpcUser, String rpcPassword, long expirationinterval);
 
 	/**
 	 * Create a Message object from a given Object
@@ -538,8 +531,7 @@ public abstract class NavajoFactory {
 	 * @return Property
 	 */
 	public abstract Property createProperty(Navajo tb, String name,
-			String cardinality, String description, String direction)
-			throws NavajoException;
+			String cardinality, String description, String direction);
 
 	/**
 	 * Create a Property object with the given Navajo as his parent
@@ -563,7 +555,7 @@ public abstract class NavajoFactory {
 	 */
 	public abstract Property createProperty(Navajo tb, String name,
 			String type, String value, int length, String description,
-			String direction) throws NavajoException;
+			String direction);
 
 	/**
 	 * Create a Property object with the given Navajo as his parent
@@ -588,8 +580,7 @@ public abstract class NavajoFactory {
 	 * @return Property
 	 */
 	public abstract Property createProperty(Navajo n, String name, String type,
-			String value, int i, String desc, String direction, String subtype)
-			throws NavajoException;
+			String value, int i, String desc, String direction, String subtype);
 
 	/**
 	 * Create an ExpressionTag object
@@ -604,7 +595,7 @@ public abstract class NavajoFactory {
 	 * @return ExpressionTag
 	 */
 	public abstract ExpressionTag createExpression(Navajo tb, String condition,
-			String value) throws NavajoException;
+			String value);
 
 	/**
 	 * Create a FieldTag object
@@ -619,7 +610,7 @@ public abstract class NavajoFactory {
 	 * @return FieldTag
 	 */
 	public abstract FieldTag createField(Navajo tb, String condition,
-			String name) throws NavajoException;
+			String name);
 
 	/**
 	 * Create a ParamTag object
@@ -634,7 +625,7 @@ public abstract class NavajoFactory {
 	 * @return ParamTag
 	 */
 	public abstract ParamTag createParam(Navajo tb, String condition,
-			String name) throws NavajoException;
+			String name);
 
 	/**
 	 * Create a MapTag object
@@ -649,7 +640,7 @@ public abstract class NavajoFactory {
 	 * @return MapTag
 	 */
 	public abstract MapTag createMapObject(Navajo tb, String object,
-			String condition) throws NavajoException;
+			String condition);
 
 	/**
 	 * Create a MapTag reference
@@ -666,7 +657,7 @@ public abstract class NavajoFactory {
 	 * @return MapTag
 	 */
 	public abstract MapTag createMapRef(Navajo tb, String ref,
-			String condition, String filter) throws NavajoException;
+			String condition, String filter);
 
 	/**
 	 * Create a Selection object
@@ -746,7 +737,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return Point
 	 */
-	public abstract Point createPoint(Property p) throws NavajoException;
+	public abstract Point createPoint(Property p);
 
 	/**
 	 * Checks a message using a "definition" message.
@@ -763,7 +754,7 @@ public abstract class NavajoFactory {
 	public Map<String, String> checkTypes(Message message,
 			Message entityMessage, boolean ignoreUndefinedEntities) {
 
-		Map<String, String> problems = new HashMap<String, String>();
+		Map<String, String> problems = new HashMap<>();
 
 		Iterator<Property> inputProperties = message.getAllProperties()
 				.iterator();
@@ -865,97 +856,6 @@ public abstract class NavajoFactory {
 		binaryStorage.remove(name);
 	}
 
-	public static void main(String[] args) {
-		try {
-
-			System.setProperty("com.dexels.navajo.DocumentImplementation",
-					"com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
-			// NavajoFactory.getInstance().setExpressionEvaluator(new
-			// DefaultExpressionEvaluator());
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-
-			Message m2 = NavajoFactory.getInstance().createMessage(n,
-					"navigation", Message.MSG_TYPE_ARRAY);
-			Message e1 = NavajoFactory.getInstance().createMessage(n,
-					"navigation");
-			Message e2 = NavajoFactory.getInstance().createMessage(n,
-					"navigation");
-
-			Property nw1 = NavajoFactory.getInstance().createProperty(n, "nw",
-					"string", "0", 32, "", Property.DIR_OUT);
-			Property nw2 = NavajoFactory.getInstance().createProperty(n, "nw",
-					"string", "0", 32, "", Property.DIR_OUT);
-
-			Property l1 = NavajoFactory.getInstance().createProperty(n,
-					"label", "string", "My Shell", 32, "", Property.DIR_OUT);
-			Property l2 = NavajoFactory.getInstance().createProperty(n,
-					"label", "string", "HR", 32, "", Property.DIR_OUT);
-
-			Property u1 = NavajoFactory.getInstance()
-					.createProperty(n, "url", "string",
-							"http://www.dexels.com", 32, "", Property.DIR_OUT);
-			Property u2 = NavajoFactory.getInstance().createProperty(n, "url",
-					"string", "http://www.shell.com", 32, "", Property.DIR_OUT);
-
-			Property f1 = NavajoFactory.getInstance().createProperty(n, "f",
-					"string", "0", 32, "", Property.DIR_OUT);
-			Property f2 = NavajoFactory.getInstance().createProperty(n, "f",
-					"string", "0", 32, "", Property.DIR_OUT);
-
-			Property p1 = NavajoFactory.getInstance().createProperty(n, "p",
-					"string", "0", 32, "", Property.DIR_OUT);
-			Property p2 = NavajoFactory.getInstance().createProperty(n, "p",
-					"string", "1", 32, "", Property.DIR_OUT);
-
-			Property i1 = NavajoFactory.getInstance().createProperty(n, "id",
-					"string", "0", 32, "", Property.DIR_OUT);
-			Property i2 = NavajoFactory.getInstance().createProperty(n, "id",
-					"string", "1", 32, "", Property.DIR_OUT);
-
-			m2.addElement(e1);
-			m2.addElement(e2);
-
-			e1.addProperty(nw1);
-			e2.addProperty(nw2);
-
-			e1.addProperty(l1);
-			e2.addProperty(l2);
-
-			e1.addProperty(u1);
-			e2.addProperty(u2);
-
-			e1.addProperty(f1);
-			e2.addProperty(f2);
-
-			e1.addProperty(p1);
-			e2.addProperty(p2);
-
-			e1.addProperty(i1);
-			e2.addProperty(i2);
-
-			n.addMessage(m2);
-
-			logger.info("=================================== ORIGNAL TML ==============================");
-			n.write(System.err);
-			logger.info("==============================================================================\n\n");
-			StringWriter sw = new StringWriter();
-			n.writeJSONTypeless(sw);
-			String json = sw.getBuffer().toString();
-			// revert to navajo
-			logger.info("==============================logger.infoN ============================");
-			logger.info(json);
-			// logger.info("==============================================================================\n\n");
-			// Navajo x = NavajoFactory.getInstance().createNavajoJSON(new
-			// StringReader(json));
-			// logger.info("================================= RECONSTRUCTED TML ==========================");
-			// x.write(System.err);
-			// logger.info("==============================================================================\n\n");
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-		}
-
-	}
-	
 	public abstract Operation createOperation(Navajo n, String method,
 			String service, String entityName, Message extra);
 

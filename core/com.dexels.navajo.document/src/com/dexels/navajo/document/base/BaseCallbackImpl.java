@@ -32,7 +32,7 @@ private final List<BaseNode> myObjects = new ArrayList<>();
 
     @Override
 	public List<BaseNode> getChildren() {
-        return myObjects;
+        return getObjects();
     }
 
     @Override

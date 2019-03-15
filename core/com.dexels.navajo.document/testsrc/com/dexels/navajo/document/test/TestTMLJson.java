@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -5,6 +6,8 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -20,17 +23,19 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
 public class TestTMLJson {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestTMLJson.class);
     
     @Test
-    public void TestJson() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+    public void testJson() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
         
         Writer sw = new StringWriter();
         json.format(n,  sw, true);
         
         String result = sw.toString();
-        System.out.println(result);
+        logger.info(result);
 
         // Length should be... 64! right?
         Assert.assertEquals(64, result.length());
@@ -41,8 +46,8 @@ public class TestTMLJson {
     }
     
     @Test
-    public void TestJsonIgnoreMessage() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+    public void testJsonIgnoreMessage() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
         
         Message ignoreMessage = NavajoFactory.getInstance().createMessage(n,  "ignoreme");
@@ -58,7 +63,7 @@ public class TestTMLJson {
         json.format(n,  sw, true);
         
         String result = sw.toString();
-        System.out.println(result);
+        logger.info(result);
 
         // Length should be... 64! right?
         Assert.assertEquals(64, result.length());
@@ -73,7 +78,7 @@ public class TestTMLJson {
     
     @Test
     public void testDates() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
         
         // Add date property
@@ -91,7 +96,7 @@ public class TestTMLJson {
         json.format(n,  sw, true);
         
         String result = sw.toString();
-        System.out.println(result);
+        logger.info(result);
 
         //Length should be 133... Right?
         Assert.assertEquals(133, result.length());
@@ -105,8 +110,8 @@ public class TestTMLJson {
     }
     
     @Test
-    public void TestJsonBinary() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message.xml"));
+    public void testJsonBinary() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
         Binary binary1 = new Binary(getClass().getResourceAsStream("binary1.txt"));
         Property binProp = NavajoFactory.getInstance().createProperty(n,  "Bin", "", "", "");
@@ -121,7 +126,7 @@ public class TestTMLJson {
         json.format(n,  sw, true);
 
         String result = sw.toString();
-        System.out.println(result);
+        logger.info(result);
 
         // Length should be 113, right?
         Assert.assertEquals(113, result.length());
@@ -132,8 +137,8 @@ public class TestTMLJson {
     }
 
     @Test
-    public void TestMoney() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+    public void testMoney() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message2.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
 
         Property moneyProp = NavajoFactory.getInstance().createProperty(n, "moneyProp", "", "", "");
@@ -148,8 +153,8 @@ public class TestTMLJson {
     }
 
     @Test
-    public void TestClockTime() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+    public void testClockTime() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message2.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
 
         Property prop = NavajoFactory.getInstance().createProperty(n, "clockTimeProp", "", "", "");
@@ -164,8 +169,8 @@ public class TestTMLJson {
     }
 
     @Test
-    public void TestPercentage() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+    public void testPercentage() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message2.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
 
         Property prop = NavajoFactory.getInstance().createProperty(n, "percentageProp", "", "", "");
@@ -180,8 +185,8 @@ public class TestTMLJson {
     }
 
     @Test
-    public void TestMemo() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+    public void testMemo() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message2.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
 
         Property prop = NavajoFactory.getInstance().createProperty(n, "memoProp", "", "", "");
@@ -192,13 +197,13 @@ public class TestTMLJson {
         json.format(n, sw, true);
 
         String result = sw.toString();
-        System.out.println(result);
+        logger.info(result);
         Assert.assertEquals("{\n  \"memoProp\" : \"This is a memo value\"\n}", result);
     }
 
     @Test
-    public void TestCoordinate() throws Exception {
-        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("message2.xml"));
+    public void testCoordinate() throws Exception {
+        Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("message2.xml"));
         JSONTML json = JSONTMLFactory.getInstance();
 
         Property prop = NavajoFactory.getInstance().createProperty(n, "coordinateProp", "", "", "");

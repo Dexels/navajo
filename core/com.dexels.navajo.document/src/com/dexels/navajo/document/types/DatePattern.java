@@ -45,7 +45,6 @@ public final class DatePattern {
 
 	public static final DatePattern parseDatePattern(Date datum) {
 
-		// System.out.println("in parseDatePattern(Date)");
 		Calendar cal = Calendar.getInstance();
 
 		cal.setTime(datum);
@@ -58,14 +57,10 @@ public final class DatePattern {
 
 		// reset milis.
 		cal.set(Calendar.MILLISECOND, 0);
-
-		// System.out.println("leaving");
 		return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, false);
 	}
 
-	public static final DatePattern parseDatePattern(String value) throws NumberFormatException {
-
-		// System.out.println("in parseDatePattern(String): " + value);
+	public static final DatePattern parseDatePattern(String value) {
 		StringTokenizer dString = new StringTokenizer(value, "#");
 		String sYear = dString.nextToken();
 		String sMonth = dString.nextToken();
@@ -77,9 +72,6 @@ public final class DatePattern {
 		if ((sYear == null) || (sMonth == null) || (sDay == null) || (sHour == null) || (sMinute == null)
 				|| (sSecond == null))
 			throw new NumberFormatException("Invalid date pattern specified: " + value);
-		// System.out.println("Found date pattern: year: " + sYear + ", month: " +
-		// sMonth + ", day: " +sDay);
-
 		try {
 			int yearT = Integer.parseInt(sYear);
 			int monthT = Integer.parseInt(sMonth);
@@ -118,16 +110,9 @@ public final class DatePattern {
 	 * Add the date pattern to the specified date and return the result date.
 	 */
 	public final void add(DatePattern another) {
-
-		// System.out.println("in DatePattern.add()");
-		// System.out.println("another.isOffset: " + another.isOffset);
-		// System.out.println("this.isOffset: " + this.isOffset);
 		if (!another.isOffset) { // We have a real date.
 
 			Calendar cal = Calendar.getInstance();
-
-			// System.out.println("another: year=" + another.year + ", month=" +
-			// another.month + ", day=" + another.day + ", hour=" + another.hour);
 			cal.set(Calendar.YEAR, another.year);
 			cal.set(Calendar.MONDAY, another.month);
 			cal.set(Calendar.DATE, another.day);

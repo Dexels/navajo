@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,8 +39,6 @@ public class NavajoDocumentTestFicture  {
       
       Property prop6 = NavajoFactory.getInstance().createProperty(testDoc, "selectietje", "1", "", "in");
       prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "-", "-1", false));
-      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "aap", "aap", false));
-      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
       msg.addProperty(prop6);
       
       String binaryString = "ASSUMETHISISABINARY";
@@ -91,11 +90,4 @@ public class NavajoDocumentTestFicture  {
   @After
   public void tearDown() {
   }
-  
-  public static void main(String [] args) throws Exception {
-	  NavajoDocumentTestFicture o = new NavajoDocumentTestFicture();
-	  o.setUp();
-	  o.testDoc.write(System.err);
-  }
-
 }

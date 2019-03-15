@@ -19,19 +19,10 @@ public class PropertyTypeChecker {
 
   private static PropertyTypeChecker instance = null;
 
-  private final Map<String,TypeChecker> propertyTypeCheckMap = new HashMap<String,TypeChecker>();
+  private final Map<String,TypeChecker> propertyTypeCheckMap = new HashMap<>();
 
   private PropertyTypeChecker() {
   }
-
-//  public String getSubType(String type, String subType, String key){
-//    loadTypeChecker(type);
-//    TypeChecker tc = (TypeChecker)propertyTypeCheckMap.get(type);
-//    if(tc != null){
-//      return tc.getSubType(subType, key);
-//    }
-//    return null;
-//  }
 
   public static PropertyTypeChecker getInstance() {
     if (instance==null) {
@@ -63,7 +54,6 @@ public class PropertyTypeChecker {
     }
     catch (IllegalAccessException|InstantiationException|IllegalArgumentException|InvocationTargetException|NoSuchMethodException|SecurityException ex1) {
       propertyTypeCheckMap.put(type,null);
-      return;
     }
 
   }
@@ -76,7 +66,7 @@ public class PropertyTypeChecker {
   }
 
 
-  public String verify(Property p, String value) throws PropertyTypeException {
+  public String verify(Property p, String value)  {
     if (p==null) {
      return value;
     }

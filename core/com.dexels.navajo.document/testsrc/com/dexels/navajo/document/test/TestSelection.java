@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -61,7 +62,6 @@ public class TestSelection {
 		Assert.assertEquals(selectionRet.getName(), "firstselection");
 		Assert.assertEquals(selectionRet.getValue(), "0");
 		Assert.assertEquals(selectionRet.isSelected(), true);
-		// Assert.assertNotNull(selectionRet.getRef());
 	}
 
 	@Test

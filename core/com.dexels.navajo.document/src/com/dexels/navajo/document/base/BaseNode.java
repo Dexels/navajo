@@ -8,12 +8,11 @@ package com.dexels.navajo.document.base;
  * @author Frank Lyaruu
  * @version 1.0
  */
-
-//import nanoxml.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 public abstract class BaseNode implements java.io.Serializable{
   /**
@@ -83,7 +81,7 @@ public void printCloseTag(final Writer sw, int indent) throws IOException {
 public void printBody(final Writer sw, int indent) throws IOException {
 	 List<? extends BaseNode> list = getChildren();
 	 boolean hasText = hasTextNode();
-	 boolean hasChildren = (list!=null) && list.size()>0;
+	 boolean hasChildren = (list!=null) && !list.isEmpty();
 	 if (hasChildren && hasText) {
 		 throw new IllegalStateException("Can not have both children AND text");
 	 }
@@ -135,7 +133,7 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 	 }
 	 List<? extends BaseNode> list = getChildren();
 	 boolean hasText = hasTextNode();
-	 boolean hasChildren = (list!=null) && list.size()>0;
+	 boolean hasChildren = (list!=null) && !list.isEmpty();
 	 if (hasChildren && hasText) {
 		 throw new IllegalStateException("Can not have both children AND text");
 	 }
@@ -200,7 +198,7 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 			return;
 		}
 		// group the childred to see if JSONArrays must be created
-		Map<String, List<BaseNode>> groupedChildren = new HashMap<String,List<BaseNode>>();
+		Map<String, List<BaseNode>> groupedChildren = new HashMap<>();
 		for (int j = 0; j < list.size(); j++) {
 			BaseNode child = list.get(j);
 			String key = child.getTagName();
@@ -252,13 +250,13 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 	/**
 	 * @param sw The writer to write to 
 	 */
-	public void printElementJSONTypeless(final Writer sw) throws IOException  {
+	public void printElementJSONTypeless(final Writer sw) throws IOException {
 		getAttributes();
 		getChildren();
 	}
  
 
- public void write(final Writer w) throws NavajoException {
+ public void write(final Writer w) {
 	 try {
 		 printElement(w,0);
 	 } catch (IOException e) {
@@ -267,9 +265,9 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
  }
 
  
-    public void write(final OutputStream stream) throws NavajoException {
+    public void write(final OutputStream stream) {
         try {
-            OutputStreamWriter osw = new OutputStreamWriter(stream, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
             printElement(osw, 0);
             osw.flush();
         } catch (IOException e) {
@@ -307,7 +305,7 @@ public void writeText(Writer w) throws IOException  {
         return s;
     }
     
-      if ((s == null) || (s.length() == 0)) {
+      if (s.length() == 0) {
           return s;
       }
 

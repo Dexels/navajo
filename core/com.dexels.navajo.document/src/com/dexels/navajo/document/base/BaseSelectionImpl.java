@@ -113,10 +113,10 @@ public final String toString() {
     {
     	boolean superEquals = super.equals(o);
     	boolean newEquals = this.newEquals(o);
-    	if (superEquals != newEquals)
-    	{
-	        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
-    	}
+//    	if (superEquals != newEquals)
+//    	{
+//	        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
+//    	}
         return superEquals;
 
     }

@@ -62,9 +62,6 @@ public final class Memo extends NavajoType implements Comparable<Memo> {
 		if (s == null && contents == null) {
 			return true;
 		}
-		if (s == null) {
-			return false;
-		}
 		return contents.equals(s.toString());
 	}
 

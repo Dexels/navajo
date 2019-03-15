@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 import java.util.Map;
 import java.util.Set;
 

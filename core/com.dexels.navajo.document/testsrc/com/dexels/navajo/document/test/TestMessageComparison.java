@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -13,8 +14,8 @@ public class TestMessageComparison {
 
     @Before
     public void setup() {
-        n1 = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("messages1.xml"));
-        n2 = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("messages2.xml"));
+        n1 = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("messages1.xml"));
+        n2 = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("messages2.xml"));
 
     }
 

@@ -1,9 +1,8 @@
+package com.dexels.navajo.document.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -25,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -68,17 +66,15 @@ public class TestProperty {
 		Message m = NavajoFactory.getInstance().createMessage(n, "Soep");	
 		n.addMessage(m);
 		m.addProperty(p);
-		n.write(System.err);
 		
 		Navajo n2 = NavajoFactory.getInstance().createNavajo();
-		Property p2 = p.copy(n2);
-		System.err.println(p2.getTypedValue().getClass().getName());
+		p.copy(n2);
 		
 		
 	}
 	
 	@Test
-	public void tesSetAnyValue() throws Exception {
+	public void tesSetAnyValue() {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Property p1 = NavajoFactory.getInstance().createProperty(n, "Aap", "",
 				"", "");
@@ -158,7 +154,7 @@ public class TestProperty {
 		StopwatchTime swt = new StopwatchTime(format);
 		p1.setAnyValue(swt);
 		assertEquals("stopwatchtime", p1.getType());
-		logger.info("FORM: " + format + " val: " + p1.getValue());
+		logger.info("FORM: {} val: {}",format, p1.getValue());
 		assertEquals(format, p1.getValue());
 		assertTrue(p1.getTypedValue().equals(new StopwatchTime(format)));
 
@@ -172,7 +168,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesAddSelection() throws NavajoException {
+	public void tesAddSelection() {
 
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
@@ -185,8 +181,6 @@ public class TestProperty {
 		Assert.assertEquals(s2.isSelected(), s1.isSelected());
 		Assert.assertEquals(s2.getName(), s1.getName());
 		Assert.assertEquals(s2.getValue(), s1.getValue());
-		// ArrayList selections =
-		// ((ArrayList)testSelectionProp.getTypedValue());
 		Selection s3 = NavajoFactory.getInstance().createSelection(testDoc,
 				"firstselection", "1", false);
 		testSelectionProp.addSelection(s3);
@@ -198,7 +192,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesAddSelectionWithoutReplace() throws NavajoException {
+	public void tesAddSelectionWithoutReplace() {
 
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
@@ -225,7 +219,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesClearSelections() throws NavajoException {
+	public void tesClearSelections() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
 						Property.DIR_IN);
@@ -248,7 +242,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesCreate() throws NavajoException {
+	public void tesCreate() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -257,7 +251,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesCreate1() throws NavajoException {
+	public void tesCreate1() {
 		// Selection property.
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", "+", "", Property.DIR_IN);
@@ -267,7 +261,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetAllSelectedSelections() throws NavajoException {
+	public void tesGetAllSelectedSelections() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
 						Property.DIR_IN);
@@ -295,7 +289,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetAllSelections() throws NavajoException {
+	public void tesGetAllSelections() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
 						Property.DIR_IN);
@@ -311,7 +305,7 @@ public class TestProperty {
 		Iterator<Selection> iter = testSelectionProp.getAllSelections()
 				.iterator();
 		int count = 3;
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		while (iter.hasNext()) {
 			Selection s = iter.next();
 			set.add(s.getName());
@@ -326,7 +320,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetCardinality() throws NavajoException {
+	public void tesGetCardinality() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+", "",
 						Property.DIR_IN);
@@ -338,7 +332,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetDescription() throws NavajoException {
+	public void tesGetDescription() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -347,7 +341,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetDirection() throws NavajoException {
+	public void tesGetDirection() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -358,7 +352,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetFullPropertyName() throws NavajoException {
+	public void tesGetFullPropertyName() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -371,7 +365,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetLength() throws NavajoException {
+	public void tesGetLength() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -379,7 +373,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetName() throws NavajoException {
+	public void tesGetName() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -387,7 +381,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetSelection() throws NavajoException {
+	public void tesGetSelection() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -406,7 +400,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetSelectionByValue() throws NavajoException {
+	public void tesGetSelectionByValue() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -424,7 +418,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetType() throws NavajoException {
+	public void tesGetType() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -436,7 +430,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesGetValue() throws NavajoException {
+	public void tesGetValue() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -448,7 +442,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetCardinality() throws NavajoException {
+	public void tesSetCardinality() {
 		Property testSelectionProp = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -457,7 +451,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetDescription() throws NavajoException {
+	public void tesSetDescription() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -467,7 +461,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetDirection() throws NavajoException {
+	public void tesSetDirection() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -477,7 +471,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetLength() throws NavajoException {
+	public void tesSetLength() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -487,7 +481,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetName() throws NavajoException {
+	public void tesSetName() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -496,7 +490,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetSelected() throws NavajoException {
+	public void tesSetSelected() {
 		Property testSelectionProp1 = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "1",
 						"mydesc", Property.DIR_IN);
@@ -538,7 +532,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetSelected1() throws NavajoException {
+	public void tesSetSelected1() {
 		Property testSelectionProp1 = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -563,7 +557,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetSelected2() throws NavajoException {
+	public void tesSetSelected2() {
 		Property testSelectionProp1 = NavajoFactory.getInstance()
 				.createProperty(testDoc, "testselectionproperty", "+",
 						"mydesc", Property.DIR_IN);
@@ -579,7 +573,7 @@ public class TestProperty {
 		testSelectionProp1.addSelection(s2);
 		testSelectionProp1.addSelection(s3);
 		testSelectionProp1.addSelection(s4);
-		ArrayList<String> l = new ArrayList<String>();
+		List<String> l = new ArrayList<>();
 		l.add("0");
 		l.add("3");
 		testSelectionProp1.setSelected(l);
@@ -591,7 +585,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetType() throws NavajoException {
+	public void tesSetType() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -600,7 +594,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetValue() throws NavajoException {
+	public void tesSetValue() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -609,7 +603,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesEqualProperties() throws Exception {
+	public void tesEqualProperties() {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		BasePropertyImpl p2 = new BasePropertyImpl(n, "Noot");
@@ -660,9 +654,8 @@ public class TestProperty {
 
 	}
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void tesSelections() throws Exception {
+	@Test @Deprecated
+	public void tesSelections() {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
@@ -694,7 +687,7 @@ public class TestProperty {
 		assertFalse("3".equals(p1.getSelected().getValue()));
 		p1.setSelected("1");
 		p1.setSelected("2");
-		ArrayList<Selection> all = p1.getAllSelectedSelections();
+		List<Selection> all = p1.getAllSelectedSelections();
 		for (int i = 0; i < all.size(); i++) {
 			assertTrue(all.get(i).getValue().equals("1")
 					|| all.get(i).getValue().equals("2"));
@@ -703,7 +696,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesToString() throws NavajoException {
+	public void tesToString() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, "78", 89, "mydesc",
 				Property.DIR_IN);
@@ -712,7 +705,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesNullValues() throws NavajoException {
+	public void tesNullValues() {
 		Property testProp = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.STRING_PROPERTY, null, 89, "mydesc",
 				Property.DIR_IN);
@@ -721,7 +714,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSetValueWithString() throws NavajoException {
+	public void tesSetValueWithString() {
 
 		Property p = NavajoFactory.getInstance().createProperty(testDoc,
 				"myprop", Property.BOOLEAN_PROPERTY, "false", 89, "mydesc",
@@ -733,7 +726,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesNullEquals() throws NavajoException {
+	public void tesNullEquals() {
 
 		for (int i = 0; i < Property.VALID_DATA_TYPES.length; i++) {
 			Property p = NavajoFactory.getInstance().createProperty(testDoc,
@@ -755,22 +748,18 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesSelectionEqualsUpdateFix() throws Exception {
+	public void tesSelectionEqualsUpdateFix() {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
 		p1.setCardinality("1");
 		p1.addSelection(new BaseSelectionImpl(n, "opt1", "1", false));
 		p1.addSelection(new BaseSelectionImpl(n, "opt2", "2", true));
-		p1.addPropertyChangeListener(new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(PropertyChangeEvent e) {
-				logger.info("Old: " + e.getOldValue());
-				logger.info("New: " + e.getNewValue());
-				// no real change.
-				Assert.fail();
-			}
+		p1.addPropertyChangeListener(e -> {
+			logger.info("Old: {}", e.getOldValue());
+			logger.info("New: {}", e.getNewValue());
+			// no real change.
+			Assert.fail();
 		});
 		p1.setSelected(p1.getSelection("opt2"));
 
@@ -779,8 +768,8 @@ public class TestProperty {
 	@Test
 	public void tesMoneyFormat() {
 		Money m = new Money(10);
-		logger.info("Country: " + Locale.getDefault().getCountry());
-		logger.info("m: " + m.toTmlString() + " :: " + m.editingString());
+		logger.info("Country: {}", Locale.getDefault().getCountry());
+		logger.info("m: {} :: {}", m.toTmlString(), m.editingString());
 		Assert.assertEquals(m.toTmlString(), "10.00");
 		Assert.assertEquals(m.editingString(), "10");
 
@@ -794,7 +783,7 @@ public class TestProperty {
 	}
 
 	@Test
-	public void tesMoneyProperty() throws NavajoException {
+	public void tesMoneyProperty() {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		n.addMessage(m);
@@ -807,7 +796,6 @@ public class TestProperty {
 		StringReader sr = new StringReader(sw.toString());
 		Navajo n2 = NavajoFactory.getInstance().createNavajo(sr);
 		Property p2 = n2.getProperty("Aap/Noot");
-		// n2.write(System.err);
 		Money mon = (Money) p2.getTypedValue();
 
 		logger.info("m: " + mon.toTmlString() + " :: " + mon.editingString()
@@ -823,7 +811,7 @@ public class TestProperty {
 		double d = 10.30;
 		Money m = new Money("10.30");
 		// Strange test, but does no harm
-		logger.info(":: " + m.doubleValue());
+		logger.info(":: {}", m.doubleValue());
 		Assert.assertNotSame(d, m.doubleValue());
 
 	}
@@ -833,13 +821,13 @@ public class TestProperty {
 
 		double d = 1300.50;
 		Money m = new Money("1.300,50");
-		logger.info(":: " + m.doubleValue());
+		logger.info(":: {}", m.doubleValue());
 		Assert.assertEquals(d, m.doubleValue(),0.1);
 
 	}
 
 	@Test
-	public void tesExpression() throws NavajoException {
+	public void tesExpression() {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		n.addMessage(m);
@@ -852,13 +840,12 @@ public class TestProperty {
 		assertEquals(illegalExpression, res);
 		// Can't really test, need an expression evaluator, which has a dep to
 		// Navajo
-		// assertEquals(illegalExpression, p1.getTypedValue());
 
 	}
 
 	@Test
 	public void testDateTime() {
-		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("iphone.xml"));
+		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("iphone.xml"));
 		Property ios = n.getMessage("NewMatchEvent").getProperty("Ios");
 		Property correct = n.getMessage("NewMatchEvent").getProperty("Correct");
 		Object correctValue = correct.getTypedValue();
@@ -876,8 +863,34 @@ public class TestProperty {
 		Calendar iosCalendar = Calendar.getInstance();
 		iosCalendar.setTime(iosDate);
 		assertFalse(iosCalendar.get(Calendar.HOUR_OF_DAY)==0);
+	}
+	
+	@Test
+	public void testStopwatch() {
 
-		
-		n.write(System.err);
+		// Tests.
+
+		StopwatchTime ck = new StopwatchTime(60000);
+		logger.info("Hoea: {}", ck);
+		StopwatchTime ck2 = new StopwatchTime("01");
+		logger.info("ck3 = {}", ck2);
+		StopwatchTime ck3 = new StopwatchTime("01:999");
+		logger.info("ck3 = {}", ck3);
+		StopwatchTime ck4 = new StopwatchTime("01:100");
+		logger.info("ck4 = {}", ck4);
+		StopwatchTime ck5 = new StopwatchTime("00:67:345", "format=SS.MM");
+		logger.info("ck5 = {}", ck5);
+		StopwatchTime ck6 = new StopwatchTime("02:01:10");
+		logger.info("ck6 = {}", ck6);
+		StopwatchTime ck7 = new StopwatchTime(1100);
+		logger.info("ck7 = {}", ck7);
+
+		StopwatchTime sw1 = new StopwatchTime("12:30:00:000");
+		StopwatchTime sw2 = new StopwatchTime("04:45:12:976");
+
+		StopwatchTime result = sw1.subtract(sw2);
+
+		logger.info("result = {}", result);
+		Assert.assertTrue(true);
 	}
 }

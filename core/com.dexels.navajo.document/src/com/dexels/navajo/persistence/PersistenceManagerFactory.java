@@ -3,6 +3,8 @@ package com.dexels.navajo.persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.NavajoException;
+
 
 /**
  * Title:        Navajo Product Project
@@ -52,11 +54,11 @@ public class PersistenceManagerFactory {
 					instance = (PersistenceManager) Class.forName(className).getDeclaredConstructor().newInstance();
 
 				} catch (Exception e) {
-					logger.info("Could NOT FIND PersistenceManager: " + className + ", trying SimplePersistenceManagerImpl..");
+					logger.info("Could NOT FIND PersistenceManager: {}, trying SimplePersistenceManagerImpl..",className);
 					try {
 						instance = (PersistenceManager) Class.forName("com.dexels.navajo.persistence.SimplePersistenceManagerImpl").getDeclaredConstructor().newInstance();
 					} catch (Exception  e1) {
-						throw new RuntimeException(e1);
+						throw new NavajoException(e1);
 					} 
 
 				}

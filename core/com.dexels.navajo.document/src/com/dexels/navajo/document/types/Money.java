@@ -43,8 +43,6 @@ private Double value = null;
 	  internalTmlFormat.setGroupingUsed(false);
 	  internalTmlFormat.setMaximumFractionDigits(2);
 	  internalTmlFormat.setMinimumFractionDigits(2);
-	  //    nf.setNegativePrefix("- \u00A4");
-//    nf.setNegativeSuffix("\u00A4");
   }
 
   /**
@@ -101,7 +99,7 @@ private void setValue(Double d) {
       setValue((Double) o);
     }
     else if (o instanceof Integer) {
-      setValue(Double.valueOf( ( (Integer) o).intValue()));
+      setValue(Double.valueOf( (Integer) o));
     }
     else if (o instanceof String && ! ( (String) o).trim().equals("")) {
       Pattern p = Pattern.compile("-?[0-9]+[.,]?[0-9]{0,2}");
@@ -127,7 +125,7 @@ private void setValue(Double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     if (d != null) {
-    	setValue( Double.valueOf(d.intValue()));
+    	setValue( Double.valueOf(d));
     }
   
   }
@@ -172,7 +170,7 @@ private void setValue(Double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
  	d = d.replaceAll("\\.", "");
- 	   if (d.indexOf(",") != -1) {
+ 	   if (d.indexOf(',') != -1) {
      	d = d.replace(',', '.');
     }
     try {
@@ -222,17 +220,8 @@ private void setValue(Double d) {
       return customFormat.format(value);
 
     }
-    String formatted = nf.format(value);
-     return formatted;
+    return nf.format(value);
   }
-
-//  public String tmlString() {
-//	    if (value == null) {
-//	      return "";
-//	    }
-//	
-//	    return internalTmlFormat.format(value);
-//	  }
 
 public String editingString() {
 	    if (value == null) {
@@ -247,8 +236,7 @@ public String editingString() {
 		if (value == null) {
 			return "";
 		} else {
-			String format = internalTmlFormat.format(value);
-			return format;
+			return internalTmlFormat.format(value);
 		}
 	}
 
@@ -258,7 +246,6 @@ public String editingString() {
    */
   @Override
 public String toString() {
-//	  throw new IllegalStateException("KABLAM!");
     if (value == null) {
       return "";
     }
@@ -275,8 +262,7 @@ public String toString() {
     if (value == null) {
       return 0;
     }
-    double doubleValue = value.doubleValue();
-    return doubleValue;
+    return value.doubleValue();
   }
 
   @Override
@@ -293,13 +279,6 @@ public final int compareTo(Money o) {
     }
     return -1;
   }
-
-  public static void main(String[] args) {
-     String aap = "-225.00";
-     Money m = new Money(aap);
-     logger.info("m = " + m.formattedString());
-     logger.info("sa =" + m.doubleValue());
-  } 
 
   /**
    * TODO WTF?

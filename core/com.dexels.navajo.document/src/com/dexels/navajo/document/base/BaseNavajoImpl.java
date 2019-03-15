@@ -57,8 +57,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     protected String myLazyMessagePath = "";
     protected int myErrorNumber;
     protected String myErrorDescription;
-    private List<PropertyChangeListener> myPropertyDataListeners;
-    private final NavajoFactory myFactory;
+    private transient List<PropertyChangeListener> myPropertyDataListeners;
+    private final transient NavajoFactory myFactory;
     private HashMap<String, Navajo> navajoMap = new HashMap<>();
 
     private static final String IMPLEMENTATIONNAME = "SAXP";
@@ -278,7 +278,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
             if (index == (count - 1)) { // Reached property field.
                 if (message != null) {
                     // Check if name contains ":", which denotes a selection.
-                    if (property.indexOf(":") != -1) {
+                    if (property.indexOf(':') != -1) {
                         StringTokenizer tok2 = new StringTokenizer(property, ":");
                         String propName = tok2.nextToken();
                         String selName = tok2.nextToken();

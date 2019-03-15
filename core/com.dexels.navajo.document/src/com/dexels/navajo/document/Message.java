@@ -356,8 +356,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList of Property objects that match the given regular expression
    */
-  public List<Property> getProperties(String regularExpression) throws
-      NavajoException;
+  public List<Property> getProperties(String regularExpression);
 
   /**
    * Return all messages that match a given regular expression. Regular expression may include sub-messages and even

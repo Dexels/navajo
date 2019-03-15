@@ -402,7 +402,7 @@ public final class SaxHandler implements DocHandler {
         	  }
         	  type = Property.SELECTION_PROPERTY;
         	  
-        	  ArrayList<Selection> l = definitionProperty.getAllSelections();
+        	  List<Selection> l = definitionProperty.getAllSelections();
         	  for (int i = 0; i < l.size(); i++) {
         		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
         		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);

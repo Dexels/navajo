@@ -1,3 +1,6 @@
+package com.dexels.navajo.document.test;
+import org.junit.Test;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
@@ -7,7 +10,8 @@ import com.dexels.navajo.document.Operation;
 
 public class TestOperation {
 
-	public static void main(String [] args) {
+	@Test
+	public void testOperation() {
 		
 		NavajoFactory f = NavajoFactory.getInstance();
 		

@@ -34,26 +34,14 @@ public class XMLutils {
 	return node.getNodeValue();
     }
 
-    public static Navajo createNavajoInstance(String filename) throws FileNotFoundException {
-
-
+    public static Navajo createNavajoInstance(String filename) throws IOException {
           Document d = null;
-          FileInputStream input = null;
           Navajo navajo = null;
 
-          try {
-            input = new FileInputStream(new File(filename));
+          try(FileInputStream input = new FileInputStream(new File(filename))) {
             d = XMLDocumentUtils.createDocument(input, false);
             d.getDocumentElement().normalize();
             navajo = NavajoFactory.getInstance().createNavajo(d);
-          } finally {
-            if (input != null) {
-              try {
-                input.close();
-              }
-              catch (IOException ex) {
-              }
-            }
           }
           return navajo;
 

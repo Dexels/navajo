@@ -39,7 +39,7 @@ public class Operand {
    */
   public Operand(Object value, String type, String option) {
 	  if(value instanceof Operand) {
-		  throw new RuntimeException("Should not embed Operands in other Operands");
+		  throw new NavajoException("Should not embed Operands in other Operands");
 	  }
       this.value = value;
       this.type = type;

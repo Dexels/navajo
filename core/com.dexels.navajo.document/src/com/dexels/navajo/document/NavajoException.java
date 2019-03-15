@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-public abstract class NavajoException extends RuntimeException {
+public class NavajoException extends RuntimeException {
 
 	private static final long serialVersionUID = 8965495998372888144L;
 

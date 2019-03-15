@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 import java.util.List;
 
 import org.junit.After;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -29,7 +29,7 @@ public class TestNavajo {
   }
 
   @Test
-  public void testAddMessage() throws NavajoException {
+  public void testAddMessage() {
     Message msg = NavajoFactory.getInstance().createMessage(testDoc, "extramsg");
     testDoc.addMessage(msg);
     Message result = testDoc.getMessage("extramsg");
@@ -43,7 +43,7 @@ public class TestNavajo {
   }
 
   @Test
-  public void testAddMethod() throws NavajoException {
+  public void testAddMethod() {
     Method m = NavajoFactory.getInstance().createMethod(testDoc, "mymethod", "Postman");
     testDoc.addMethod(m);
     Method result = testDoc.getMethod("mymethod");
@@ -53,7 +53,7 @@ public class TestNavajo {
   }
 
   @Test
-  public void testAppendDocBuffer() throws NavajoException {
+  public void testAppendDocBuffer() {
     Navajo extra = NavajoFactory.getInstance().createNavajo();
     Message m = NavajoFactory.getInstance().createMessage(extra, "appendedmessage");
     Property p = NavajoFactory.getInstance().createProperty(extra, "propje", Property.STRING_PROPERTY, "", 0, "", "");
@@ -68,7 +68,7 @@ public class TestNavajo {
   }
 
   @Test
-  public void testMerge() throws NavajoException {
+  public void testMerge() {
 	  // testmessage
 	  Navajo extra = NavajoFactory.getInstance().createNavajo();
 	  Message m = NavajoFactory.getInstance().createMessage(extra, "testmessage");
@@ -105,7 +105,7 @@ public class TestNavajo {
   }
   
   @Test
-  public void testClearAllSelections() throws NavajoException {
+  public void testClearAllSelections() {
     Property sel1 = NavajoFactory.getInstance().createProperty(testDoc, "sel1", "+", "", Property.DIR_IN);
     Property sel2 = NavajoFactory.getInstance().createProperty(testDoc, "sel2", "+", "", Property.DIR_IN);
     testDoc.getMessage("testmessage").addProperty(sel1);

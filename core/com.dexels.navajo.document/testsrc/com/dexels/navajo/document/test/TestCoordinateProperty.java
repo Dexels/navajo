@@ -1,12 +1,18 @@
+package com.dexels.navajo.document.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Coordinate;
 
 public class TestCoordinateProperty {
+
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestCoordinateProperty.class);
 
     @Test
     public void testValidPropertyCreation() {
@@ -72,7 +78,7 @@ public class TestCoordinateProperty {
         try {
             new Coordinate("[-1s,3]");
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info("Error",e);
             assertTrue(true);
         }
 
@@ -80,7 +86,7 @@ public class TestCoordinateProperty {
             new Coordinate("-1s,/3");
             fail();
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info("Error",e);
             assertTrue(true);
         }
 
@@ -88,7 +94,7 @@ public class TestCoordinateProperty {
             new Coordinate("-1000,3");
             fail();
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info("Error",e);
             assertTrue(true);
         }
 
@@ -96,7 +102,7 @@ public class TestCoordinateProperty {
             new Coordinate("-12.89", -800);
             fail();
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info("Error",e);
             assertTrue(true);
         }
     }
@@ -123,7 +129,7 @@ public class TestCoordinateProperty {
             c.setLatitude(-900);
             assertTrue(false);
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info("Error",e);
             assertTrue(true);
         }
 

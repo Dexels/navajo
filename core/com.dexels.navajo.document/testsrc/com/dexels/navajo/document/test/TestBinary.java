@@ -1,3 +1,4 @@
+package com.dexels.navajo.document.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -85,14 +86,14 @@ public class TestBinary {
 	@Test
 	public void testSandBox() {
 		NavajoFactory.getInstance().setSandboxMode(true);
-		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
-		long l = binary_x.getLength();
+		Binary binaryx = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		long l = binaryx.getLength();
 		Assert.assertEquals(7, l);
 	}
 //
 	@Test
 	public void testEqual1() {
-		Assert.assertEquals(new String(binary1.getDigest().hex()),new String(binary2.getDigest().hex()));
+		Assert.assertEquals(binary1.getDigest().hex(),binary2.getDigest().hex());
 	}
 
 	@Test
@@ -138,22 +139,22 @@ public class TestBinary {
 		// File-based test - no sandbox mode
 		NavajoFactory.getInstance().setSandboxMode(false);
 		URL url = this.getClass().getResource("doc1.doc");
-		Binary binary_x = new Binary(new File(url.getFile()));
-		Assert.assertEquals("application/msword", binary_x.guessContentType());
+		Binary binaryx = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/msword", binaryx.guessContentType());
 	}
 
 	@Test
 	public void testBinarySerialize() throws IOException, ClassNotFoundException {
 		NavajoFactory.getInstance().setSandboxMode(true);
-		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
-		binary_x.getLength();
+		Binary binaryx = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		binaryx.getLength();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(binary_x);
+		oos.writeObject(binaryx);
 		byte[] bb = baos.toByteArray();
 		ObjectInputStream ois =  new ObjectInputStream(new ByteArrayInputStream(bb));
 		Binary ooo = (Binary) ois.readObject();
-		Assert.assertTrue(ooo.equals(binary_x));
+		Assert.assertTrue(ooo.equals(binaryx));
 	}
 
 	@Test
@@ -162,8 +163,8 @@ public class TestBinary {
 		// File-based test - no sandbox mode
 		NavajoFactory.getInstance().setSandboxMode(false);
 		URL url = this.getClass().getResource("binary1.txt");
-		Binary binary_x = new Binary(new File(url.getFile()));
-		Assert.assertEquals("text/plain", binary_x.guessContentType());
+		Binary binaryx = new Binary(new File(url.getFile()));
+		Assert.assertEquals("text/plain", binaryx.guessContentType());
 	}
 
 	@Test
@@ -172,8 +173,8 @@ public class TestBinary {
 		// File-based test - no sandbox mode
 		NavajoFactory.getInstance().setSandboxMode(false);
 		URL url = this.getClass().getResource("doc2.odt");
-		Binary binary_x = new Binary(new File(url.getFile()));
-		Assert.assertEquals("application/vnd.oasis.opendocument.text", binary_x.guessContentType());
+		Binary binaryx = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/vnd.oasis.opendocument.text", binaryx.guessContentType());
 	}
 
 	@Test
@@ -182,8 +183,8 @@ public class TestBinary {
 		// File-based test - no sandbox mode
 		NavajoFactory.getInstance().setSandboxMode(false);
 		URL url = this.getClass().getResource("doc3.docx");
-		Binary binary_x = new Binary(new File(url.getFile()));
-		Assert.assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", binary_x.guessContentType());
+		Binary binaryx = new Binary(new File(url.getFile()));
+		Assert.assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", binaryx.guessContentType());
 	}
 	
 	@Test
@@ -274,7 +275,7 @@ public class TestBinary {
 			i++;
 			size += e.length;
 		}
-		System.err.println(">>> "+size);
+		logger.info(">>> {}",size);
 		Assert.assertEquals(5969, size);
 		Assert.assertEquals(93, i);
 	}

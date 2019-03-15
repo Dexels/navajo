@@ -7,10 +7,10 @@ import com.dexels.navajo.document.Navajo;
 
 public class BaseTransactionImpl extends BaseNode {
 	private static final long serialVersionUID = -6325965122672286543L;
-private String rpc_name;
-private String rpc_usr;
-private String rpc_pwd;
-private String rpc_schedule;
+private String rpcname;
+private String rpcusr;
+private String rpcpwd;
+private String rpcschedule;
 protected String myRequestId;
 
 
@@ -22,17 +22,17 @@ protected String myRequestId;
   @Override
 public Map<String,String> getAttributes() {
       Map<String,String> m = new HashMap<>();
-      if (rpc_name!=null) {
-          m.put("rpc_name", rpc_name);
+      if (rpcname!=null) {
+          m.put("rpc_name", rpcname);
       }
-      if (rpc_usr!=null) {
-          m.put("rpc_usr", rpc_usr);
+      if (rpcusr!=null) {
+          m.put("rpc_usr", rpcusr);
       }
-      if (rpc_pwd!=null) {
-          m.put("rpc_pwd", rpc_pwd);
+      if (rpcpwd!=null) {
+          m.put("rpc_pwd", rpcpwd);
       }
-      if (rpc_schedule!=null) {
-          m.put("rpc_schedule", rpc_schedule);
+      if (rpcschedule!=null) {
+          m.put("rpc_schedule", rpcschedule);
       }
       if (myRequestId!=null) {
           m.put("requestid", myRequestId);
@@ -50,30 +50,30 @@ public String getTagName() {
     return "transaction";
 }
 public final String getRpc_name() {
-    return rpc_name;
+    return rpcname;
 }
 public final void setRpc_name(String rpc_name) {
-    this.rpc_name = rpc_name;
+    this.rpcname = rpc_name;
 }
 public final String getRpc_pwd() {
-    return rpc_pwd;
+    return rpcpwd;
 }
 public final void setRpc_pwd(String rpc_pwd) {
-    this.rpc_pwd = rpc_pwd;
+    this.rpcpwd = rpc_pwd;
 }
 public final String getRpc_usr() {
-    return rpc_usr;
+    return rpcusr;
 }
 
 
 public final void setRpc_usr(String rpc_usr) {
-    this.rpc_usr = rpc_usr;
+    this.rpcusr = rpc_usr;
 }
 public final void setRpc_schedule(String rpc_schedule) {
-    this.rpc_schedule = rpc_schedule;
+    this.rpcschedule = rpc_schedule;
 }
 public final String getRpc_schedule() {
-    return rpc_schedule;
+    return rpcschedule;
 }
 public String getRequestId() {
     return myRequestId;

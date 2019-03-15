@@ -455,7 +455,6 @@ public class Base64 {
 					}
 				} else {
 					if (eofBytes > 0) {
-//                        Thread.dumpStack();
 //                        return;
                         throw new Base64DecodingFinishedException(pData,pOffset,pLen);
                         //						throw new DecodingException("Base64 characters after end of stream character (=) detected.");

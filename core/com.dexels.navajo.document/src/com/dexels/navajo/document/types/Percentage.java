@@ -16,7 +16,7 @@ import com.dexels.navajo.document.Property;
 public final class Percentage extends NavajoType implements Comparable<Percentage> {
 
 	private static final long serialVersionUID = -4200780883826849390L;
-private Double value;
+private final Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
   static {
     nf.setMaximumFractionDigits(2);
@@ -46,24 +46,17 @@ private Double value;
    * @param o Object
    */
   public Percentage(Object o) {
-    super(Property.PERCENTAGE_PROPERTY);
-    if (o instanceof Percentage) {
-      value = ( (Percentage) o).value;
-    }
-    else if (o instanceof Double) {
-      value = (Double) o;
-    }
-    else if (o instanceof Integer) {
-      value = Double.valueOf( ( (Integer) o).intValue());
-    }
-    else {
-      value = Double.valueOf(o + "");
-    }
-    if (Double.isNaN(value.doubleValue())) {
-      value = null;
-    }
-
-  }
+		super(Property.PERCENTAGE_PROPERTY);
+		if (o instanceof Percentage) {
+			value = ((Percentage) o).value;
+		} else if (o instanceof Double) {
+			value = (Double) o;
+		} else if (o instanceof Integer) {
+			value = Double.valueOf(((Integer) o));
+		} else {
+			value = Double.valueOf(o + "");
+		}
+	}
 
   /**
    * Create new Percentage object from a given Integer
@@ -72,7 +65,9 @@ private Double value;
   public Percentage(Integer d) {
     super(Property.PERCENTAGE_PROPERTY);
     if (d != null) {
-      value = Double.valueOf(d.intValue());
+      value = Double.valueOf(d);
+    } else {
+    	value = null;
     }
   }
 
@@ -110,14 +105,11 @@ private Double value;
    */
   public Percentage(String d) {
     super(Property.PERCENTAGE_PROPERTY);
-    try {
-      if (d != null) {
-        value = Double.valueOf(d);
-      }
-    }
-    catch (Throwable t) {
-      value = null;
-    }
+	  if (d != null) {
+	    value = Double.valueOf(d);
+	  } else {
+		  value = null;
+	  }
   }
 
   /**

@@ -45,8 +45,8 @@ public class RequestHeader {
       try {
         String methodName = "get" + ((name.charAt(0)+"").toUpperCase()) + name.substring(1);
         Class<?> c = requestHeader.getClass();
-        java.lang.reflect.Method m = c.getMethod(methodName,new Class[]{} );
-        String result = (String) m.invoke(requestHeader, new Object[]{});
+        java.lang.reflect.Method m = c.getMethod(methodName);
+        String result = (String) m.invoke(requestHeader);
         return result;
       } catch (Exception e) {
     	  logger.error("Error: ", e);

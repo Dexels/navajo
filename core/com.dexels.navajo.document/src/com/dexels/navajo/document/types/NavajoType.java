@@ -17,15 +17,16 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public abstract class NavajoType implements  Serializable {
 	private static final long serialVersionUID = -112880355087638085L;
-private Map<String,String> subTypeMap = null;
+	private transient Map<String, String> subTypeMap = null;
 
-  public abstract boolean isEmpty();
-  public NavajoType(String type) {
-    String subtype = NavajoFactory.getInstance().getDefaultSubtypeForType(type);
-    if (subtype!=null) {
-      subTypeMap = NavajoFactory.getInstance().parseSubTypes(subtype);
-    }
-  }
+	public abstract boolean isEmpty();
+
+	public NavajoType(String type) {
+		String subtype = NavajoFactory.getInstance().getDefaultSubtypeForType(type);
+		if (subtype != null) {
+			subTypeMap = NavajoFactory.getInstance().parseSubTypes(subtype);
+		}
+	}
 
   public NavajoType() {
 	  
@@ -62,7 +63,7 @@ private Map<String,String> subTypeMap = null;
   
   public void putSubType(String key, String value) {
 	  if(subTypeMap==null) {
-		  subTypeMap = new HashMap<String, String>();
+		  subTypeMap = new HashMap<>();
 	  }
 	  subTypeMap.put(key, value);
   }

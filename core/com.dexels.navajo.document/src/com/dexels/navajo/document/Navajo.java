@@ -82,7 +82,7 @@ public interface Navajo extends Persistable {
      * @param String
      *            name, String filename
      */
-    public void writeMessage(String name, String filename) throws NavajoException;
+    public void writeMessage(String name, String filename);
 
     /**
      * Return the names of the required messages of a specific method (Given the
@@ -98,14 +98,14 @@ public interface Navajo extends Persistable {
      * 
      * @return ArrayList of allMessage objects in this Navajo
      */
-    public List<Message> getAllMessages() throws NavajoException;
+    public List<Message> getAllMessages();
 
     /**
      * Return a method object given a method name.
      * 
      * @return Method with the given name, null if not found
      */
-    public Method getMethod(String name) throws NavajoException;
+    public Method getMethod(String name);
 
     /**
      * Return an arraylist of message objects given a regular expression name.
@@ -113,7 +113,7 @@ public interface Navajo extends Persistable {
      * @return ArrayList of all Message objects that match the given regular
      *         expression
      */
-    public List<Message> getMessages(String name) throws NavajoException;
+    public List<Message> getMessages(String name);
 
     /**
      * Return a message object given a message name.
@@ -129,7 +129,7 @@ public interface Navajo extends Persistable {
      *         expression
      */
 
-    public List<Property> getProperties(String regularExpression) throws NavajoException;
+    public List<Property> getProperties(String regularExpression);
 
     /**
      * Get the property, give the property path: <message>.[...].<property>.
@@ -146,7 +146,7 @@ public interface Navajo extends Persistable {
      * 
      * @return Selected selection of the given property
      */
-    public Selection getSelection(String property) throws NavajoException;
+    public Selection getSelection(String property);
 
     /**
      * Return true if a message with a specific name exists in the Navajo
@@ -226,9 +226,9 @@ public interface Navajo extends Persistable {
      *            Method
      * @throws NavajoException
      */
-    public void addMethod(Method m) throws NavajoException;
+    public void addMethod(Method m);
 
-    public void addOperation(Operation o) throws NavajoException;
+    public void addOperation(Operation o);
 
     /**
      * Add a Message object tot the current Navajo
@@ -238,22 +238,22 @@ public interface Navajo extends Persistable {
      * @throws NavajoException
      * @return Message
      */
-    public Message addMessage(Message message) throws NavajoException;
+    public Message addMessage(Message message);
 
-    public void addMap(MapTag map) throws NavajoException;
+    public void addMap(MapTag map);
 
     /**
      * Add a message to the Navajo document. If the message name already exists,
      * replace the old one.
      */
-    public Message addMessage(Message message, boolean overwrite) throws NavajoException;
+    public Message addMessage(Message message, boolean overwrite);
 
     /**
      * Replaces a message to the Navajo document. If original does not exist, do
      * nothing and return null.
      * 
      */
-    public Message mergeMessage(Message newMsg) throws NavajoException;
+    public Message mergeMessage(Message newMsg);
 
     /**
      * Removes the given Message from the current Navajo
@@ -262,7 +262,7 @@ public interface Navajo extends Persistable {
      *            Message
      * @throws NavajoException
      */
-    public void removeMessage(Message message) throws NavajoException;
+    public void removeMessage(Message message);
 
     /**
      * Delete a message from a specified message.
@@ -292,14 +292,14 @@ public interface Navajo extends Persistable {
      *            Object
      * @throws NavajoException
      */
-    public void appendDocBuffer(Object d) throws NavajoException;
+    public void appendDocBuffer(Object d);
 
     /**
      * Clear all selections
      * 
      * @throws NavajoException
      */
-    public void clearAllSelections() throws NavajoException;
+    public void clearAllSelections();
 
     /**
      * Write the current Navajo object to the given writer
@@ -314,7 +314,7 @@ public interface Navajo extends Persistable {
      *            optionally the method to optimize for can be specified.
      * @throws NavajoException
      */
-    public void write(java.io.Writer writer, boolean condense, String method) throws NavajoException;
+    public void write(java.io.Writer writer, boolean condense, String method);
 
     /**
      * Write the current Navajo object to the given writer
@@ -329,7 +329,7 @@ public interface Navajo extends Persistable {
      *            optionally the method to optimize for can be specified.
      * @throws NavajoException
      */
-    public void write(OutputStream stream, boolean condense, String method) throws NavajoException;
+    public void write(OutputStream stream, boolean condense, String method);
 
     /**
      * Write the current Navajo object to the given writer
@@ -338,7 +338,7 @@ public interface Navajo extends Persistable {
      *            Writer
      * @throws NavajoException
      */
-    public void write(java.io.Writer writer) throws NavajoException;
+    public void write(java.io.Writer writer);
 
     /**
      * Write the current Navajo object to the given writer
@@ -347,7 +347,7 @@ public interface Navajo extends Persistable {
      *            Writer
      * @throws NavajoException
      */
-    public void writeJSON(java.io.Writer writer) throws NavajoException;
+    public void writeJSON(java.io.Writer writer);
 
     /**
      * Write the current Navajo object to the given writer
@@ -356,7 +356,7 @@ public interface Navajo extends Persistable {
      *            Writer
      * @throws NavajoException
      */
-    public void writeJSONTypeless(java.io.Writer writer) throws NavajoException;
+    public void writeJSONTypeless(java.io.Writer writer);
 
     /**
      * Write the current Navajo object to the given outputstream
@@ -365,7 +365,7 @@ public interface Navajo extends Persistable {
      *            OutputStream
      * @throws NavajoException
      */
-    public void write(java.io.OutputStream stream) throws NavajoException;
+    public void write(java.io.OutputStream stream);
 
     /**
      * Remove this Navajo objects' header.
@@ -416,7 +416,7 @@ public interface Navajo extends Persistable {
      * @throws NavajoException
      * @return List expression properties
      */
-    public List<Property> refreshExpression() throws NavajoException;
+    public List<Property> refreshExpression();
 
     public void addPropertyChangeListener(PropertyChangeListener p);
 
@@ -436,7 +436,7 @@ public interface Navajo extends Persistable {
      * @return
      * @throws NavajoException
      */
-    public Navajo merge(Navajo with) throws NavajoException;
+    public Navajo merge(Navajo with);
 
     /**
      * Mask Navajo with other Navajo.
@@ -445,7 +445,7 @@ public interface Navajo extends Persistable {
      * @return
      * @throws NavajoException
      */
-    public Navajo mask(Navajo with, String method) throws NavajoException;
+    public Navajo mask(Navajo with, String method);
 
     /**
      * Merge Navajo with other Navajo. Navajo is merged by merging Messages.
@@ -460,7 +460,7 @@ public interface Navajo extends Persistable {
      * @return
      * @throws NavajoException
      */
-    public Navajo merge(Navajo with, boolean preferThis) throws NavajoException;
+    public Navajo merge(Navajo with, boolean preferThis);
 
     public Map<String, Message> getMessages();
 

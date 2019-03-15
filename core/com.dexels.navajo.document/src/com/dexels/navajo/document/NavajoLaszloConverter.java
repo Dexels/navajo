@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +22,9 @@ import com.dexels.navajo.document.types.ClockTime;
 
 public class NavajoLaszloConverter {
 	
+	private NavajoLaszloConverter() {
+		// no instances
+	}
 	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoLaszloConverter.class);
 	
@@ -43,8 +45,6 @@ public class NavajoLaszloConverter {
 					Element rootElement = (Element)nn;
 					if("tml".equals(rootElement.getNodeName())) {
 						return convertNodeToNavajo(rootElement);
-//					} else {
-//						return convertChildrenToNavajo(rootElement);
 					}
 				}
 			}
@@ -58,12 +58,12 @@ public class NavajoLaszloConverter {
 	private static Navajo convertNodeToNavajo(Element tml) {
 		Navajo n;
 		n = NavajoFactory.getInstance().createNavajo();
-			String rpc_name = tml.getAttribute("rpc_name");
-			rpc_name = rpc_name.replaceAll("_", "/");
-			String rpc_usr = tml.getAttribute("rpc_usr");
-			String rpc_pwd = tml.getAttribute("rpc_pwd");
+			String rpcname = tml.getAttribute("rpc_name");
+			rpcname = rpcname.replaceAll("_", "/");
+			String rpcusr = tml.getAttribute("rpc_usr");
+			String rpcpwd = tml.getAttribute("rpc_pwd");
  
-			Header h = NavajoFactory.getInstance().createHeader(n, rpc_name, rpc_usr, rpc_pwd, -1);
+			Header h = NavajoFactory.getInstance().createHeader(n, rpcname, rpcusr, rpcpwd, -1);
 			n.addHeader(h);
 			NodeList children = tml.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
@@ -337,10 +337,10 @@ public class NavajoLaszloConverter {
 				NodeList options = prop.getChildNodes();
 				for (int k = 0; k < options.getLength(); k++) {
 					Element op = (Element) options.item(k);
-					String op_name = op.getAttribute("name");
-					String op_value = op.getAttribute("value");
-					String op_selected = op.getAttribute("selected");
-					Selection s = NavajoFactory.getInstance().createSelection(n, op_name, op_value, "true".equals(op_selected));
+					String opname = op.getAttribute("name");
+					String opvalue = op.getAttribute("value");
+					String opselected = op.getAttribute("selected");
+					Selection s = NavajoFactory.getInstance().createSelection(n, opname, opvalue, "true".equals(opselected));
 					p.addSelection(s);
 				}
 				row.addProperty(p);
@@ -386,7 +386,7 @@ public class NavajoLaszloConverter {
 				prop.setAttribute("length", "" + current.getLength());
 	
 				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
-					ArrayList<Selection> sel = current.getAllSelections();
+					List<Selection> sel = current.getAllSelections();
 					for (int j = 0; j < sel.size(); j++) {
 						Selection s = sel.get(j);
 						Element option = d.createElement("option");
