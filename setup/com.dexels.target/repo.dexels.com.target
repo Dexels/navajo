@@ -23,8 +23,8 @@
 		<repository location="http://download.eclipse.org/egit/updates"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.9.201811291621"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.9"/>
+		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.10.201811291621"/>
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.10"/>
 	</location>
 </locations>
 <includeBundles>
@@ -132,13 +132,9 @@
 <plugin id="org.apache.servicemix.bundles.jcip-annotations"/>
 <plugin id="org.apache.servicemix.bundles.junit"/>
 <plugin id="org.apache.servicemix.bundles.jzlib"/>
-<plugin id="org.apache.servicemix.bundles.lucene"/>
 <plugin id="org.apache.servicemix.bundles.saaj-impl"/>
 <plugin id="org.apache.servicemix.specs.saaj-api-1.3"/>
 <plugin id="org.apache.sshd.core"/>
-<plugin id="org.apache.tika.bundle"/>
-<plugin id="org.apache.tika.core"/>
-<plugin id="org.apache.tika.parsers"/>
 <plugin id="org.apache.xbean.bundleutils"/>
 <plugin id="org.apache.xbean.finder"/>
 <plugin id="org.eclipse.equinox.app"/>
@@ -264,7 +260,6 @@
 	<plugin id="org.objectweb.asm.util"/>
 	<plugin id="org.eclipse.jetty.xml" version="9.4.14.v20181113"/>
 	<plugin id="javax.annotation-api"/>
-	<plugin id="com.sun.activation.javax.activation"/>
 	<plugin id="jaxb-api"/>
 	<plugin id="org.apache.commons.lang3"/>
 	<plugin id="org.apache.commons.lang"/>
@@ -277,5 +272,6 @@
 	<plugin id="org.osgi.service.cm"/>
 	<plugin id="org.osgi.service.component.annotations"/>
 	<plugin id="org.apache.commons.compress" version="1.18.0.v20181121-2221"/>
+	<plugin id="javax.activation"/>
 </includeBundles>
 </target>
