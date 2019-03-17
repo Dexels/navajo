@@ -23,8 +23,8 @@
 		<repository location="http://download.eclipse.org/egit/updates"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.10.201811291621"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.10"/>
+		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.11.201811291621"/>
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.11"/>
 	</location>
 </locations>
 <includeBundles>
@@ -272,6 +272,6 @@
 	<plugin id="org.osgi.service.cm"/>
 	<plugin id="org.osgi.service.component.annotations"/>
 	<plugin id="org.apache.commons.compress" version="1.18.0.v20181121-2221"/>
-	<plugin id="javax.activation"/>
+	<plugin id="com.sun.activation.javax.activation"/>
 </includeBundles>
 </target>
