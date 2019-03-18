@@ -12,24 +12,22 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
+            - v1-dependencies-
 
       - run: |
-                cd setup/com.dexels.target
-                mvn install
-                cd ../..
+          cd setup/com.dexels.target
+          mvn install
+          cd ../..
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
-        
+
       # run tests!
       - run: mvn install
       - run: |
-        cd ~
-        zip navajo_maven.zip .m2
+          cd ~
+          zip navajo_maven.zip .m2
       - store_artifacts:
           path: ~/navajo_maven.zip
-
-
