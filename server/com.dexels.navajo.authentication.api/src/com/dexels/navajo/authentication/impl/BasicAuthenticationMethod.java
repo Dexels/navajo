@@ -12,64 +12,62 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public class BasicAuthenticationMethod implements AuthenticationMethod {
-    private static final Logger logger = LoggerFactory.getLogger(BasicAuthenticationMethod.class);
-    
-    private Base64 base64;
-    private AAAQuerier authenticator;
-    
-    private String username;
-    private String password;
+	private static final Logger logger = LoggerFactory.getLogger(BasicAuthenticationMethod.class);
 
-    public void setAAAQuerier(AAAQuerier aa) {
-        authenticator = aa;
-    }
+	private Base64 base64;
+	private AAAQuerier authenticator;
 
-    public void clearAAAQuerier(AAAQuerier aa) {
-        authenticator = null;
-    }
+	private String username;
+	private String password;
 
-    @Override
-    public String getIdentifier() {
-        return BASIC_IDENTIFIER;
-    }
+	public void setAAAQuerier(AAAQuerier aa) {
+		authenticator = aa;
+	}
 
-    @Override
-    public void process(Access access) throws AuthorizationException {
-        access.rpcUser = username;
-        access.rpcPwd = password;
-        authenticator.process(access);
-    }
+	public void clearAAAQuerier(AAAQuerier aa) {
+		authenticator = null;
+	}
 
-    @Override
-    public AuthenticationMethod getInstanceForRequest(String header) {
-        BasicAuthenticationMethod newInstance = new BasicAuthenticationMethod();
-        newInstance.base64 = new Base64();
+	@Override
+	public String getIdentifier() {
+		return BASIC_IDENTIFIER;
+	}
 
-        newInstance.getAuthenticationFromHeader(header);
-        newInstance.setAAAQuerier(this.authenticator);
-        return newInstance;
+	@Override
+	public void process(Access access) throws AuthorizationException {
+		access.rpcUser = username;
+		access.rpcPwd = password;
+		authenticator.process(access);
+	}
 
-    }
+	@Override
+	public AuthenticationMethod getInstanceForRequest(String header) {
+		BasicAuthenticationMethod newInstance = new BasicAuthenticationMethod();
+		newInstance.base64 = new Base64();
 
-    private void getAuthenticationFromHeader(String authHeader) {
-        StringTokenizer st = new StringTokenizer(authHeader);
-        if (st.hasMoreTokens()) {
-            if (st.nextToken().equalsIgnoreCase(getIdentifier())) {
-                String credentials;
+		newInstance.getAuthenticationFromHeader(header);
+		newInstance.setAAAQuerier(this.authenticator);
+		return newInstance;
 
-                credentials = new String(base64.decode(st.nextToken()));
+	}
 
-                int p = credentials.indexOf(":");
-                if (p != -1) {
-                    this.username = credentials.substring(0, p).trim();
-                    this.password = credentials.substring(p + 1).trim();
-                    logger.debug("Successfully authenticated: {}", username);
-                } else {
-                    logger.warn("Invalid authentication token: {}", credentials);
-                }
-            }
-        }
+	private void getAuthenticationFromHeader(String authHeader) {
+		StringTokenizer st = new StringTokenizer(authHeader);
+		if (st.hasMoreTokens() && st.nextToken().equalsIgnoreCase(getIdentifier())) {
+			String credentials;
 
-    }
+			credentials = new String(base64.decode(st.nextToken()));
+
+			int p = credentials.indexOf(':');
+			if (p != -1) {
+				this.username = credentials.substring(0, p).trim();
+				this.password = credentials.substring(p + 1).trim();
+				logger.debug("Successfully authenticated: {}", username);
+			} else {
+				logger.warn("Invalid authentication token: {}", credentials);
+			}
+		}
+
+	}
 
 }
