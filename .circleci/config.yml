@@ -28,6 +28,7 @@ jobs:
       - run: mvn install
       - run: |
           cd ~
-          zip navajo_maven.zip .m2
+          du -hs .m2
+          zip -r navajo_maven.zip .m2
       - store_artifacts:
           path: ~/navajo_maven.zip
