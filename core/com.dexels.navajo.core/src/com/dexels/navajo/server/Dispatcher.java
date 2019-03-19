@@ -111,19 +111,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public static final String product = "Navajo Service Delivery Platform";
     public static final String NAVAJO_TOPIC = "navajo/request";
     
-    public volatile static String edition;
     private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
 
     private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
-    static {
-        try {
-            Class.forName("com.dexels.navajo.tribe.TribeManager");
-            edition = "Enterprise";
-        } catch (Throwable e) {
-            edition = "Standard";
-        }
-    }
 
     /**
      * Unique dispatcher instance.
@@ -359,7 +350,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * 
      * @return
      */
-    public final NavajoClassSupplier getNavajoClassLoader() {
+    public final ClassLoader getNavajoClassLoader() {
         if (navajoConfig == null) {
             return null;
         } else {

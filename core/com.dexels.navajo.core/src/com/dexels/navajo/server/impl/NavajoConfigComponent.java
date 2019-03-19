@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
@@ -37,7 +36,6 @@ import com.dexels.navajo.sharedstore.SharedStoreInterface;
 public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
-	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
 	private Map<String, Object> properties;
 	private BundleContext bundleContext;

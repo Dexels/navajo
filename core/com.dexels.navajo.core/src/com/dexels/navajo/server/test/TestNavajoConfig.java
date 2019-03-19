@@ -40,7 +40,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	
 	public TestNavajoConfig(File configRoot) {
 		this.configRoot = configRoot;
-		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
 	}
 	
 	public TestNavajoConfig(String name, String group) {

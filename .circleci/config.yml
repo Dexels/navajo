@@ -9,8 +9,8 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - run: |
-          git clone git@github.com:Dexels/enterprise.git
+#      - run: |
+#          git clone git@github.com:Dexels/enterprise.git
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}

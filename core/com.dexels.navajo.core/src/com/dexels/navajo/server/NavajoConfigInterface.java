@@ -22,9 +22,8 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public PersistenceManager getPersistenceManager();
 	public SharedStoreInterface getSharedStore();
 	public StatisticsRunnerInterface getStatisticsRunner();
-	public NavajoClassSupplier getClassloader();
+	public ClassLoader getClassloader();
 	
-	public void setClassloader(NavajoClassSupplier classloader);
 	public AsyncStore getAsyncStore();
 	public DescriptionProviderInterface getDescriptionProvider();
 	public WorkerInterface getIntegrityWorker();
