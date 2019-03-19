@@ -14,7 +14,7 @@ public class GetRemoteObjectAnswer extends Answer {
 	private Object myObject;
 	private boolean isSoftReference = false;
 	
-	public GetRemoteObjectAnswer(GetRemoteObjectRequest request, Object o) {
+	GetRemoteObjectAnswer(GetRemoteObjectRequest request, Object o) {
 		super(request);
 		
 		if ( o instanceof SoftReference<?>) {

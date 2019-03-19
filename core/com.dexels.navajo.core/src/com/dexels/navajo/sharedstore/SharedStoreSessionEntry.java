@@ -5,7 +5,7 @@ public class SharedStoreSessionEntry {
 	private final String objectName;
 	private final String formattedName;
 	
-	public SharedStoreSessionEntry(final String name, final String formattedName) {
+	SharedStoreSessionEntry(final String name, final String formattedName) {
 		this.objectName = name;
 		this.formattedName = formattedName;
 	}

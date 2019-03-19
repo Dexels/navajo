@@ -147,18 +147,18 @@ public class SharedStoreSession {
 		if ( !parent.exists() ) {
 			throw new Exception("Could not find destination path " + destination);
 		}
-		try {
-
 			String [] matchingObjects = mySharedStore.getObjects(parentPath);
-			File url = null;
 			int count = 0;
 			for ( int i = 0; i < matchingObjects.length; i++ ) {
 				if ( matchingObjects[i].matches(source) ) {
-					url = new File(parent, matchingObjects[i]);
-					OutputStream os = new FileOutputStream(url);
-					InputStream is = mySharedStore.getStream(parentPath, matchingObjects[i]);
-					count++;
-					copyResource(os, is);
+					File url = new File(parent, matchingObjects[i]);
+					try(	OutputStream os = new FileOutputStream(url);
+							InputStream is = mySharedStore.getStream(parentPath, matchingObjects[i])) {
+						count++;
+						copyResource(os, is);
+					} catch(IOException e) {
+						throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
+					}
 				}
 			}
 
@@ -167,9 +167,6 @@ public class SharedStoreSession {
 			} else {
 				return "No matching files";
 			}
-		} catch (Exception e) {
-			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
-		}
 	}
 
 	private boolean parentExists(String parent) {

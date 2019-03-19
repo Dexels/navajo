@@ -45,7 +45,6 @@ public class TestClient {
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "single");
-		result.write(System.err);
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
@@ -60,8 +59,7 @@ public class TestClient {
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
-		Navajo result2 = cl.doSimpleSend(result, "club/ProcessQueryClub");
-		result2.write(System.err);
+		cl.doSimpleSend(result, "club/ProcessQueryClub");
 	}
 	
 	@Test 

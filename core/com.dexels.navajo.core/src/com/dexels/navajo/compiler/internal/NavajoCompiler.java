@@ -38,16 +38,13 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
-@Deprecated
 /**
  * @deprecated
  * @author frank
  *
  */
-public class NavajoCompiler
-{
-		public static final String VERSION = "$Id$";
-		
+@Deprecated
+public class NavajoCompiler {
 		private static final Logger logger = LoggerFactory
 				.getLogger(NavajoCompiler.class);
 		public String errors;

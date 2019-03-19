@@ -83,13 +83,13 @@ import org.slf4j.LoggerFactory;
 
 public class SunJavaCompiler implements JavaCompiler {
 
-    String encoding;
-    String classpath; // ignored
-    String compilerPath;
-    String outdir;
-    StringWriter out;
-    boolean classDebugInfo=false;
-    ClassLoader loader=null;
+    private String encoding;
+    private String classpath; // ignored
+    private String compilerPath;
+    private String outdir;
+    private StringWriter out;
+    private boolean classDebugInfo=false;
+    private ClassLoader loader=null;
     private Class compilerClass;
 
     

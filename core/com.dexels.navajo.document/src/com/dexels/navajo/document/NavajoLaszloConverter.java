@@ -99,7 +99,7 @@ public class NavajoLaszloConverter {
 	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections) {
 		return createLaszloFromNavajo(in, includeSelections, "navajoDataSource");
 	}
-	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
+	private static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
 			String nodeName = serviceName.replaceAll("/", "_");

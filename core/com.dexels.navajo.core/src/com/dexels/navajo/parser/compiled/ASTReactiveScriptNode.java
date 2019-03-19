@@ -32,7 +32,7 @@ class ASTReactiveScriptNode extends SimpleNode {
   public boolean hasHeader = false;
   public ASTFunctionNode header = null;
   private final Map<String,Operand> headerMap = new HashMap<>();
-  public ASTReactiveScriptNode(int id) {
+  ASTReactiveScriptNode(int id) {
     super(id);
   }
 

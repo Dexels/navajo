@@ -18,7 +18,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 public final class ASTAndNode extends SimpleNode {
-    public ASTAndNode(int id) {
+    ASTAndNode(int id) {
         super(id);
     }
 

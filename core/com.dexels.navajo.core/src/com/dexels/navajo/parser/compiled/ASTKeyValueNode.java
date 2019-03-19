@@ -15,9 +15,9 @@ class ASTKeyValueNode extends SimpleNode {
     int args = 0;
     String val = "";
 
-	public ASTKeyValueNode(int id) {
-    super(id);
-  }
+    ASTKeyValueNode(int id) {
+    	super(id);
+    }
 
   public ASTKeyValueNode(CompiledParser p, int id) {
     super(id);
@@ -29,7 +29,6 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	if(num!=1) {
 		problems.add("Incorrect # of params in named parameter");
 	}
-//	String id = ((Token)jjtGetChild(0)).image;
 	ContextExpression exp = jjtGetChild(0).interpretToLambda(problems, originalExpression,functionClassifier);
 	return new NamedExpression(val, exp);
 }

@@ -39,15 +39,11 @@ import com.dexels.navajo.util.Util;
  */
 public final class ASTTmlNode extends SimpleNode {
     String val = "";
-//    Navajo doc = null;
-//    Message parentMsg = null;
-//    Message parentParamMsg = null;
-//    Selection parentSel = null;
     String option = "";
     String selectionOption = "";
     boolean exists = false;
     
-    public ASTTmlNode(int id) {
+    ASTTmlNode(int id) {
         super(id);
     }
 
@@ -64,7 +60,7 @@ public final class ASTTmlNode extends SimpleNode {
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				List<Property> match = null;
-				List<Object> resultList = new ArrayList<Object>();
+				List<Object> resultList = new ArrayList<>();
 		        boolean singleMatch = true;
 		        String parts[] = val.split("\\|");
 		        String text = parts.length > 1 ? parts[1] : val;
@@ -72,17 +68,15 @@ public final class ASTTmlNode extends SimpleNode {
 		        Property prop = null;
 				if (parentSel != null) {
 					String dum = text;
-					if (dum.length() > 1) {
-						if(dum.startsWith("[")) {
-							dum = dum.substring(1, text.length());
-						}
+					if (dum.length() > 1 && dum.startsWith("[")) {
+						dum = dum.substring(1, text.length());
 					}
 					if (dum.equals("name") || selectionOption.equals("name")) {
 						return Operand.ofString(parentSel.getName());
 					} else if (dum.equals("value") || selectionOption.equals("value")) {
 						return Operand.ofString(parentSel.getValue());
 					} else if (dum.equals("selected") || selectionOption.equals("selected")) {
-						return Operand.ofBoolean(Boolean.valueOf(parentSel.isSelected()));
+						return Operand.ofBoolean(parentSel.isSelected());
 					}
 				}
 
@@ -141,7 +135,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                    }
 		                }
 		                else {
-		                   throw new RuntimeException("No parent message present for property: " + text+" -> "+ImmutableFactory.getInstance().describe(immutableMessage.orElse(ImmutableFactory.empty())));
+		                   throw new TMLExpressionException("No parent message present for property: " + text+" -> "+ImmutableFactory.getInstance().describe(immutableMessage.orElse(ImmutableFactory.empty())));
 		                }
 		            } else if (parentParamMsg == null && isParam) {
 		            	parentParamMsg = doc.getMessage("__parms__");
@@ -152,7 +146,7 @@ public final class ASTTmlNode extends SimpleNode {
 		                    }  
 		                }
 		                else
-		                    throw new RuntimeException("No parent message present for param: " + text);
+		                    throw new TMLExpressionException("No parent message present for param: " + text);
 		            } else {
 		                if (text.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
 		                  match = (!isParam ? parentMsg.getProperties(text) : parentParamMsg.getProperties(text));
@@ -166,15 +160,15 @@ public final class ASTTmlNode extends SimpleNode {
 		                }
 		            }
 		        } catch (NavajoException te) {
-		            throw new RuntimeException(te.getMessage(),te);
+		            throw new TMLExpressionException(te.getMessage(),te);
 		        }
 		         for (int j = 0; j < match.size(); j++) {
 		            prop = (Property) match.get(j);
 		              if (!exists && (prop == null))
 		            	  if (parentMsg!=null) {
-		                      throw new RuntimeException("TML property does not exist: " + text+" parent message: "+parentMsg.getFullMessageName());
+		                      throw new TMLExpressionException("TML property does not exist: " + text+" parent message: "+parentMsg.getFullMessageName());
 						} else {
-			                throw new RuntimeException("TML property does not exist: " + text+" exists? "+exists);
+			                throw new TMLExpressionException("TML property does not exist: " + text+" exists? "+exists);
 						}
 		            else if (exists) { // Check for existence and datatype validity.
 		                if (prop != null) {
@@ -250,27 +244,27 @@ public final class ASTTmlNode extends SimpleNode {
 		                    try {
 		                        List<Selection> list = prop.getAllSelectedSelections();
 
-		                        if (list.size() > 0) {
-		                            Selection sel = (Selection) list.get(0);
+		                        if (!list.isEmpty()) {
+		                            Selection sel = list.get(0);
 		                            resultList.add((selectionOption.equals("name") ? sel.getName() : sel.getValue()));
 		                        } else {
 		                          return Operand.NULL;
 		                        }
 		                    } catch (com.dexels.navajo.document.NavajoException te) {
-		                        throw new RuntimeException(te.getMessage());
+		                        throw new TMLExpressionException(te.getMessage());
 		                    }
 		                } else { // Multi-selection property.
 		                    try {
 		                        List<Selection> list = prop.getAllSelectedSelections();
-		                        List<Object> result = new ArrayList<Object>();
+		                        List<Object> result = new ArrayList<>();
 		                        for (int i = 0; i < list.size(); i++) {
-		                            Selection sel = (Selection) list.get(i);
+		                            Selection sel = list.get(i);
 		                            Object o = (selectionOption.equals("name")) ? sel.getName() : sel.getValue();
 		                            result.add(o);
 		                        }
 		                        resultList.add(result);
-		                    } catch (com.dexels.navajo.document.NavajoException te) {
-		                        throw new RuntimeException(te.getMessage());
+		                    } catch (NavajoException te) {
+		                        throw new TMLExpressionException(te.getMessage(),te);
 		                    }
 		                }
 		            } else
@@ -308,15 +302,10 @@ public final class ASTTmlNode extends SimpleNode {
 		                        throw new TMLExpressionException("Option not supported: " +
 		                                                         option + ", for type: " + type);
 		                      }
-		                      try {
-		                        resultList.add(Integer.valueOf(altA));
-		                      }
-		                      catch (Exception e) {
-		                        throw new TMLExpressionException(e.getMessage());
-		                      }
+		                      resultList.add(altA);
 		                    }
 		                    catch (Exception ue) {
-		                      throw new RuntimeException("Invalid date: " + prop.getValue());
+		                      throw new TMLExpressionException("Invalid date: " + prop.getValue(),ue);
 		                    }
 		                  }
 		                  else {
@@ -336,14 +325,14 @@ public final class ASTTmlNode extends SimpleNode {
 		                try {
 		                    resultList.add(value);
 		                } catch (Exception e) {
-		                    throw new RuntimeException(e.getMessage());
+		                    throw new TMLExpressionException(e.getMessage(),e);
 		                }
 		            }
 		        }
 
 		        if (!singleMatch)
 		            return Operand.ofList(resultList);
-		        else if (resultList.size() > 0)
+		        else if (!resultList.isEmpty())
 		            return Operand.ofDynamic(resultList.get(0));
 		        else if (!exists)
 		            throw new TMLExpressionException("Property does not exist: " + text);
@@ -362,7 +351,7 @@ public final class ASTTmlNode extends SimpleNode {
 			}
 
 			private Operand parseImmutableMessagePath(List<String> path, ImmutableMessage rm) {
-				if(path.size()==0) {
+				if(!path.isEmpty()) {
 					return Operand.ofImmutable(rm);
 				}
 				String first = path.get(0);

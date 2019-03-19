@@ -54,7 +54,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 			if ( instanceName == null && DispatcherFactory.getInstance() != null) {
 					instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 			}
-		} catch (Throwable te) {
+		} catch (NavajoException te) {
 			//
 		}
 	}

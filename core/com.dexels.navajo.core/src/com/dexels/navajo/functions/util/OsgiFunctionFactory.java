@@ -108,7 +108,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
-				logger.error("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				logger.error("Service resolution failed: Query: ({}={}) class: {}",serviceKey,name,interfaceClass.getName());
 				return null;
 			}
 			return context.getService(refs[0]);

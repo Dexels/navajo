@@ -46,7 +46,7 @@ public final class ASTFunctionNode extends SimpleNode {
 	String functionName;
 	int args = 0;
 	
-	public ASTFunctionNode(int id) {
+	ASTFunctionNode(int id) {
 		super(id);
 	}
 	
@@ -58,9 +58,8 @@ public final class ASTFunctionNode extends SimpleNode {
 			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
 		} 
 
-		FunctionInterface f = AbstractVersion.osgiActive() ? OSGiFunctionFactoryFactory.getFunctionInterface(functionName) :
+		return AbstractVersion.osgiActive() ? OSGiFunctionFactoryFactory.getFunctionInterface(functionName) :
 			FunctionFactoryFactory.getInstance().getInstance(cl, functionName);
-		return f;
 	}
 	
 	@Override
@@ -147,7 +146,7 @@ public final class ASTFunctionNode extends SimpleNode {
 							}
 							return evaluated;
 						} catch (TMLExpressionException e1) {
-							throw new RuntimeException("Error parsing parameters for function: "+functionName, e1);
+							throw new TMLExpressionException("Error parsing parameters for function: "+functionName, e1);
 						}
 					})
 					.forEach(e->f.insertOperand(e));

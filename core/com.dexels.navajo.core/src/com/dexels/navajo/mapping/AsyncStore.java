@@ -45,12 +45,10 @@ import com.dexels.navajo.util.AuditLog;
 
 public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
 
-  private static final String VERSION = "$Id$";
-	
-  private static volatile AsyncStore instance = null;
+  private static AsyncStore instance = null;
   
-  public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<String,AsyncMappable>());
-  public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<String,Access>());
+  public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<>());
+  public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<>());
   private float timeout = 3600000; 
   private static final int threadWait = 2000;
   private static final String id = "Navajo AsyncStore";
@@ -192,11 +190,6 @@ public final void worker() {
 		  }
 		  o = null;
 	  }
-  }
-  
-  @Override
-public String getVERSION() {
-	  return VERSION;
   }
   
   @Override

@@ -58,7 +58,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 			
 			try {
 				c = Class.forName(adapterClass,true,this.getClass().getClassLoader());
-				 Dictionary<String, Object> props = new Hashtable<String, Object>();
+				 Dictionary<String, Object> props = new Hashtable<>();
 				 props.put("adapterName", adapterName);
 				 props.put("adapterClass", c.getName());
 				 props.put("type", "adapter");

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 
 import navajocore.Version;
 
@@ -26,8 +27,6 @@ public class FunctionFactoryFactory {
 		
 	@SuppressWarnings("unchecked")
 	public static FunctionFactoryInterface getInstance() {
-//		FunctionFactoryInterface fii;
-		
 		if ( instance != null ) {
 			return instance;
 		}
@@ -63,7 +62,7 @@ public class FunctionFactoryFactory {
 					Class<? extends FunctionFactoryInterface> c = (Class<? extends FunctionFactoryInterface>) Class.forName(func);
 					instance = c.getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					throw new TMLExpressionException("Error resolving function", e);
 				}
 				
 			} else {
@@ -76,9 +75,7 @@ public class FunctionFactoryFactory {
 		
 	}
 	
-	public static void main(String [] args) throws Exception {
-		
-		//System.setProperty("NavajoFunctionFactory", "com.dexels.navajo.functions.util.JarFunctionFactory");
+	public static void main(String [] args) {
 		FunctionFactoryInterface fii = FunctionFactoryFactory.getInstance();
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 	

@@ -20,13 +20,12 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public
 class ASTReactiveElementNode extends SimpleNode {
   public int args = 0;
-  public ASTReactiveElementNode(int id) {
+  ASTReactiveElementNode(int id) {
     super(id);
   }
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
-//	int children = super.children.length;
 	return new ContextExpression() {
 
 		@Override

@@ -28,8 +28,8 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 			super.start(bc);
-			bundleContext = bc;
-			logger.debug("Bundle context set in Navajo Version: "+osgiActive()+" hash: "+Version.class.hashCode());
+			setBundleContext(bc);
+			logger.debug("Bundle context set in Navajo Version: {} hash: {}",osgiActive(), Version.class.hashCode());
 			NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
 			registerAll(library);
 
@@ -65,8 +65,6 @@ public class Version extends AbstractCoreExtension {
 			  // - OSGi package lifecycles
 			  // right now I just dug up 
 
-//			  NavajoConfig.terminate();
-			
 			  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
 			
 		}
@@ -80,9 +78,14 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
-		bundleContext = null;
+		setBundleContext(null);
 	}
-	
+
+
+	public static void setBundleContext(BundleContext bundleContext) {
+		Version.bundleContext = bundleContext;
+	}
+
 	public static BundleContext getDefaultBundleContext() {
 		Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
 		if(b!=null) {

@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.Utils;
 
 public final class ASTMulNode extends SimpleNode {
 
-    public ASTMulNode(int id) {
+    ASTMulNode(int id) {
         super(id);
     }
 	@Override
@@ -25,7 +25,7 @@ public final class ASTMulNode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty(),functionClassifier);
 	}
 	
-	public  Operand interpret(Operand ao, Operand bo) {
+	private  Operand interpret(Operand ao, Operand bo) {
 		Object a = ao.value;
 		Object b = bo.value;
 
@@ -44,7 +44,6 @@ public final class ASTMulNode extends SimpleNode {
           else if (a instanceof Percentage || b instanceof Percentage)
               return Operand.ofMoney(new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
         else
-//            throw new TMLExpressionException("Unknown type");
         	return null;
     }
 

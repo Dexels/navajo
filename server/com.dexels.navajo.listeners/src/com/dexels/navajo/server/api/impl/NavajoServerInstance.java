@@ -18,12 +18,10 @@ public class NavajoServerInstance implements NavajoServerContext {
     private static final Logger logger = LoggerFactory.getLogger(NavajoServerInstance.class);
 
 	private final String installationPath;
-//	private final DispatcherInterface dispatcher;
 
 	public NavajoServerInstance(String installationPath,
 			DispatcherInterface dispatcher) {
 		this.installationPath = installationPath;
-//		this.dispatcher = dispatcher;
 	}
 
 
@@ -63,19 +61,6 @@ public class NavajoServerInstance implements NavajoServerContext {
 			}
 		}
 	}
-
-
-	@Override
-	public String getOutputPath() {
-		return installationPath;
-	}
-
-
-	@Override
-	public String getTempPath() {
-		return installationPath;
-	}
-
 
     @Override
     public String getDeployment() {

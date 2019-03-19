@@ -25,7 +25,7 @@ class ASTReactivePipe extends SimpleNode {
 	private static final Logger logger = LoggerFactory.getLogger(ASTReactivePipe.class);
 
 public int args = 0;
-  public ASTReactivePipe(int id) {
+  ASTReactivePipe(int id) {
     super(id);
   }
 
@@ -36,9 +36,6 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 
 	int count = actual.jjtGetNumChildren();
 	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE).apply().value;
-//	for (int i = 1; i < actual.jjtGetNumChildren(); i++) {
-//		ASTFunctionNode sdn = (ASTFunctionNode)actual.jjtGetChild(i);
-//	}
 	List<Object> pipeElements = new ArrayList<>();
 
 	for (int i = 1; i < count; i++) {
@@ -52,12 +49,11 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 			ReactiveTransformer transformer = (ReactiveTransformer) result;
 			pipeElements.add(transformer);
 		} else {
-			logger.warn("huh?"+result);
+			logger.warn("huh? {}",result);
 			// something weird
 		}
 	}
-	ReactivePipeNode pipe = new ReactivePipeNode(sourceNode, pipeElements);
-	return pipe;
+	return new ReactivePipeNode(sourceNode, pipeElements);
 }
 
 public void addSource() {

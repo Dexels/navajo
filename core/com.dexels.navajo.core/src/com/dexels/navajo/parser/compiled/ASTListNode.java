@@ -25,7 +25,7 @@ public final class ASTListNode extends SimpleNode {
 
     int args = 0;
 
-    public ASTListNode(int id) {
+    ASTListNode(int id) {
         super(id);
     }
 

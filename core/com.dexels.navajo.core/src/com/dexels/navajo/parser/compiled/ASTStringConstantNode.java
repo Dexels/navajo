@@ -22,7 +22,7 @@ public final class ASTStringConstantNode extends SimpleNode {
 
     String val;
 
-    public ASTStringConstantNode(int id) {
+    ASTStringConstantNode(int id) {
         super(id);
     }
 

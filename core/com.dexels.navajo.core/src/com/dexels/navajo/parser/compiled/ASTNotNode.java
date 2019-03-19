@@ -13,7 +13,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class ASTNotNode extends SimpleNode {
-    public ASTNotNode(int id) {
+    ASTNotNode(int id) {
         super(id);
     }
 	@Override
@@ -22,7 +22,7 @@ public final class ASTNotNode extends SimpleNode {
 		return lazyFunction(problems,expression, a->interpret(a),Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 
-	public final Operand interpret(Operand a) {
+	private final Operand interpret(Operand a) {
         if (!(a.value instanceof Boolean)) {
             throw new TMLExpressionException("Not operator only allowed for Boolean values");
         } else {

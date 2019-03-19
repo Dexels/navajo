@@ -6,11 +6,11 @@ import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 
 public class TribalMapSignal extends SmokeSignal {
 
-	public final static String PUT       = "put";
-	public final static String CLEAR     = "clear";
-	public final static String REMOVE    = "remove";
-	public final static String CREATEMAP = "createmap";
-	public final static String DELETEMAP = "deletemap";
+	public static final String PUT       = "put";
+	public static final String CLEAR     = "clear";
+	public static final String REMOVE    = "remove";
+	public static final String CREATEMAP = "createmap";
+	public static final String DELETEMAP = "deletemap";
 	
 	public TribalMapSignal(String key, Serializable value) {
 		super(key, value);

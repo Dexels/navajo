@@ -43,13 +43,13 @@ public abstract class JavaPlugin extends CompiledScript {
 	}
 	
 	protected final Property addProperty(Navajo n, String path, Object value) throws Exception {
-		if(path.indexOf("/")==-1) {
+		if(path.indexOf('/')==-1) {
 			throw NavajoFactory.getInstance().createNavajoException("Invalid property specified: " + path);
 		}
-		String messagePath = path.substring(0, path.lastIndexOf("/"));
+		String messagePath = path.substring(0, path.lastIndexOf('/'));
 		Message parent = addMessage(n, messagePath);
 		
-		String propertyName = path.substring(path.lastIndexOf("/")+1,path.length());
+		String propertyName = path.substring(path.lastIndexOf('/')+1,path.length());
 		
 		Property p;
 	
@@ -86,8 +86,8 @@ public abstract class JavaPlugin extends CompiledScript {
 			}
 			return mm;
 		}
-		String parentPath = path.substring(0, path.lastIndexOf("/"));
-		String messageName = path.substring(path.lastIndexOf("/")+1,path.length());
+		String parentPath = path.substring(0, path.lastIndexOf('/'));
+		String messageName = path.substring(path.lastIndexOf('/')+1,path.length());
 		
 		Message parentResult = addMessage(n, parent, parentPath);
 		
@@ -116,6 +116,7 @@ public abstract class JavaPlugin extends CompiledScript {
 		// Do nothing.
 	}
 
+	@Override
 	public Access getAccess() {
 		return myAccess;
 	}

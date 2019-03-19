@@ -40,7 +40,7 @@ public class OSGiFunctionFactoryFactory  {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
+	private static Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 	    
 		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {

@@ -57,7 +57,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		functionResolvers.remove(fr);
 	}
 	
-	public final FunctionDefinition getDef(String name)  {
+	private final FunctionDefinition getDef(String name)  {
 		if(defaultConfig!=null) {
 			FunctionDefinition fd = defaultConfig.get(name);
 			if(fd!=null) {
@@ -125,12 +125,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		return functionDefinition.getObject().trim();
 	}
 
-	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {
-		Map<String, FunctionDefinition> configMap = getAdapterConfig(ed);
-		return configMap.get(name);
-	}
-
-	
 	public final Object getAdapterInstance(String name, ClassLoader cl)  {
 		try {
 			// Old skool, adapter should have been supplied by an OSGi service
@@ -163,15 +157,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		
 		}
 
-	public  Class<?> getAdapterClass(String name, ClassLoader cl, ExtensionDefinition ed) {
-		try {
-			return Class.forName(getAdapterClass(name,ed),true,cl);
-		} catch (ClassNotFoundException e) {
-			logger.error("Caught exception. ",e);
-		}
-		return null;
-	}
-
 	
 	public Set<String> getFunctionNames(ExtensionDefinition ed) {
 		final Map<String, FunctionDefinition> functionsForExtension = functionConfig.get(ed);
@@ -188,9 +173,9 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public Set<String> getAdapterNames(ExtensionDefinition ed) {
 		return getAdapterConfig(ed).keySet();
 	}
-	public void clearAdapterNames() {
-		adapterConfig.clear();
-	}
+//	public void clearAdapterNames() {
+//		adapterConfig.clear();
+//	}
 
 	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
@@ -215,7 +200,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	
 	
-	public Map<String, FunctionDefinition> getConfig(ExtensionDefinition ed) {
+	private Map<String, FunctionDefinition> getConfig(ExtensionDefinition ed) {
 		Map<String, FunctionDefinition> map = functionConfig.get(ed);
 		if(map!=null) {
 			return map;

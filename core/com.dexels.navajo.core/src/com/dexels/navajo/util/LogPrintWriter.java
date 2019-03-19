@@ -32,23 +32,12 @@ public class LogPrintWriter extends PrintWriter {
     /**
      * Internal buffer.
      */
-    private StringBuffer buffer = new StringBuffer();
+    private StringBuilder buffer = new StringBuilder();
 
     /**
      * Logger for message output.
      */
     private Logger log;
-
-    /**
-     * Creates a new <code>LogPrintWriter</code> which is based on a
-     * <code>Writer</code>.
-     *
-     * @param out
-     *            the base <code>Writer</code>.
-     */
-    public LogPrintWriter(Writer out) {
-        super(out);
-    }
 
     /**
      * Creates a new <code>LogPrintWriter</code> which is based on a
@@ -91,28 +80,34 @@ public class LogPrintWriter extends PrintWriter {
 
     // ------------------< overrides from PrintWriter >-------------------------
 
+    @Override
     public void close() {
         flushBuffer();
         super.close();
     }
 
+    @Override
     public void flush() {
         flushBuffer();
         super.flush();
     }
 
+    @Override
     public void write(int c) {
         buffer.append(c);
     }
 
-    public void write(char cbuf[], int off, int len) {
+    @Override
+    public void write(char[] cbuf, int off, int len) {
         buffer.append(cbuf, off, len);
     }
 
+    @Override
     public void write(String str, int off, int len) {
         buffer.append(str.substring(off, off + len));
     }
 
+    @Override
     public void println() {
         if (log == null) {
             // only add newline when operating on a writer
@@ -149,15 +144,18 @@ public class LogPrintWriter extends PrintWriter {
      */
     private static class NullWriter extends Writer {
 
+        @Override
         public void close() throws IOException {
             // ignore
         }
 
+        @Override
         public void flush() throws IOException {
             // ignore
         }
 
-        public void write(char cbuf[], int off, int len) throws IOException {
+        @Override
+        public void write(char[] cbuf, int off, int len) throws IOException {
             // ignore
         }
     }

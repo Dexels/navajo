@@ -20,7 +20,7 @@ import com.dexels.navajo.parser.Utils;
 
 @SuppressWarnings({"rawtypes"})
 public final class ASTGENode extends SimpleNode {
-    public ASTGENode(int id) {
+    ASTGENode(int id) {
         super(id);
     }
 	@Override
@@ -62,17 +62,15 @@ public final class ASTGENode extends SimpleNode {
 
         if (a instanceof List) { // Compare all elements in the list.
         		List list = (List) a;
-            boolean result = true;
-
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = compare(Operand.ofDynamic(list.get(i)), b, expression).booleanValue();
 
 
-                if (!(dum))
+                if (!(dum)) {
                     return Operand.FALSE;
-                result = result && dum;
+                }
             }
-            return Operand.ofBoolean(result);
+            return Operand.ofBoolean(true);
         } else {
             return Operand.ofBoolean(compare(a, b,expression));
         }

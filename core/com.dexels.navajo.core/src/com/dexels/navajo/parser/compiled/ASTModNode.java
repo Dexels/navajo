@@ -12,7 +12,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public final class ASTModNode extends SimpleNode {
-    public ASTModNode(int id) {
+    ASTModNode(int id) {
         super(id);
     }
 	@Override
@@ -20,7 +20,7 @@ public final class ASTModNode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),functionClassifier);
 	}
 
-	public final Operand interpret(Operand ao, Operand bo){
+	private final Operand interpret(Operand ao, Operand bo){
 		Object a = ao.value;
 		Object b = bo.value;
 		if(a==null) {

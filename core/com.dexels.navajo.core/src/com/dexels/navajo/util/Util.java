@@ -19,9 +19,6 @@ import com.dexels.navajo.document.Navajo;
 
 public final class Util {
 
-    @SuppressWarnings("unused")
-	private static ResourceBundle rb = null;
-
     private static final Random random;
     private static String id;
     
@@ -34,13 +31,16 @@ public final class Util {
 		}
     }
     
-    public final static boolean isRegularExpression(String s) {
+    private Util() {
+    	// - no instances
+    }
+    public static final boolean isRegularExpression(String s) {
 
         if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
           return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
-        return (s.indexOf("*") != -1) || (s.indexOf(".") != -1)
-                || (s.indexOf("\\") != -1) || (s.indexOf("?") != -1)
-                || (s.indexOf("[") != -1) || (s.indexOf("]") != -1);
+        return (s.indexOf('*') != -1) || (s.indexOf('.') != -1)
+                || (s.indexOf('\\') != -1) || (s.indexOf('?') != -1)
+                || (s.indexOf('[') != -1) || (s.indexOf(']') != -1);
 
     }
 
@@ -49,7 +49,7 @@ public final class Util {
      */
     public static String getRandomGuid() {
             MessageDigest md5 = null;
-            StringBuffer sbValueBeforeMD5 = new StringBuffer();
+            StringBuilder sbValueBeforeMD5 = new StringBuilder();
 
             try {
                     md5 = MessageDigest.getInstance("MD5");
@@ -80,7 +80,7 @@ public final class Util {
             md5.update(valueBeforeMD5.getBytes());
 
             byte[] array = md5.digest();
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int j = 0; j < array.length; ++j) {
                     int b = array[j] & 0xFF;
                     if (b < 0x10)

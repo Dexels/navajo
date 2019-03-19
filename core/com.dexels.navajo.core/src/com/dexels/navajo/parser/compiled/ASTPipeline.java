@@ -32,10 +32,10 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 @Override
 public void jjtClose() {
 	super.jjtClose();
-	logger.info(">->Children: "+jjtGetNumChildren()+" > "+this);
+	logger.info(">->Children: {} > {}",jjtGetNumChildren(),this);
 	for (int i = 0; i < jjtGetNumChildren(); i++) {
 		SimpleNode sn = (SimpleNode) jjtGetChild(i);
-		logger.info("    Child: --> "+sn);
+		logger.info("    Child: --> {}",sn);
 	}
 }
 

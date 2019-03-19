@@ -26,12 +26,10 @@ import org.slf4j.LoggerFactory;
 public final class JarResources {
 
     // external debug flag
-    public boolean debugOn = false;
-
     // jar resource mapping tables
-    private Hashtable<String,Integer> htSizes = new Hashtable<String,Integer>();
+    private Hashtable<String,Integer> htSizes = new Hashtable<>();
 
-    private Hashtable<String,byte[]> htJarContents = new Hashtable<String,byte[]>();
+    private Hashtable<String,byte[]> htJarContents = new Hashtable<>();
 
     // a jar file
     private File jarFile;
@@ -50,7 +48,7 @@ public final class JarResources {
     * @throws IOException 
     * @throws ZipException 
      */
-    public JarResources(File jarFile) throws ZipException, IOException {
+    public JarResources(File jarFile) throws IOException {
         this.jarFile = jarFile;
         init();
     }

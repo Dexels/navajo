@@ -21,7 +21,7 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 
 public final class ASTTodayNode extends SimpleNode {
-    public ASTTodayNode(int id) {
+    ASTTodayNode(int id) {
         super(id);
     }
 

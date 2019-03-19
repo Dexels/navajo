@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.slf4j.Logger;
@@ -46,15 +47,14 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	private String sharedStoreClass;
 	
 	private String auditLevel;
-	private HashMap<String,Object> dbProperties = new HashMap<String,Object>();
+	private Map<String,Object> dbProperties = new HashMap<>();
 	public String store;
 	
 	private String resourcePath;
 	public int dbPort = -1;
 	public boolean compileScripts = false;
-	protected HashMap<String,String> properties = new HashMap<String,String>();
+	protected Map<String,String> properties = new HashMap<>();
 	private String configPath;
-	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
 	protected Navajo configuration;
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
@@ -185,21 +185,11 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		
     		if(adapterClassloader == null) {
     			if(!navajocore.Version.osgiActive()) {
-        			adapterClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
-        			logger.warn("Setting non-OSGi legacy adapter classloader: " + adapterClassloader);
-    			} else {
-    				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
+    				logger.error("ERROR NON-OSGi no longer supported");
     			}
+				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
     		}
 
-    		if(betaClassloader==null) {
-    			if(!navajocore.Version.osgiActive()) {
-        			betaClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
-    			} else {
-    				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
-    			}
-    		}
-    		
     		// Read monitoring configuration options
     		Property monitoringAgentClass = body.getProperty("monitoring-agent/class");
     		Property monitoringAgentProperties = body.getProperty("monitoring-agent/properties");
@@ -469,10 +459,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
         return configPath;
     }
 
-    public final NavajoClassLoader getBetaClassLoader() {
-    	return betaClassloader;
-    }
-
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     @Override
 	public final NavajoClassSupplier getClassloader() {
@@ -576,9 +562,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     public final synchronized void doClearCache() {
 
     	if(!navajocore.Version.osgiActive()) {
-    		adapterClassloader = new NavajoLegacyClassLoader(adapterPath, null, getClass().getClassLoader());
-    		betaClassloader = new NavajoLegacyClassLoader(adapterPath, null, true, getClass().getClassLoader());
-    		GenericHandler.doClearCache();
+			logger.error("ERROR NON-OSGi no longer supported");
     	}
 
     }

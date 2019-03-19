@@ -17,7 +17,7 @@ import com.dexels.navajo.parser.Utils;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class ASTSubtractNode extends SimpleNode {
-    public ASTSubtractNode(int id) {
+    ASTSubtractNode(int id) {
         super(id);
     }
     
@@ -26,7 +26,7 @@ public final class ASTSubtractNode extends SimpleNode {
 		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b),equalOrEmptyTypesOrDateWithDatePattern(),(a,b)->Optional.empty(),functionClassifier);
 	}
 	
-    protected BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypesOrDateWithDatePattern() {
+    private BiFunction<Optional<String>, Optional<String>, Boolean> equalOrEmptyTypesOrDateWithDatePattern() {
     		return (a,b)->{
     			boolean res = equalOrEmptyTypes().apply(a, b);
     			if(res) {
@@ -42,7 +42,7 @@ public final class ASTSubtractNode extends SimpleNode {
     }
 
 
-	public final Operand interpret(Operand ao, Operand bo) {
+	private final Operand interpret(Operand ao, Operand bo) {
 		Object a = ao.value;
 		Object b = bo.value;
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {

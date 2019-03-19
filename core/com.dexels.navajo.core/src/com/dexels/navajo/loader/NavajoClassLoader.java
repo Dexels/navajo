@@ -69,8 +69,8 @@ class BetaJarFilter implements FilenameFilter {
 
 public class NavajoClassLoader extends MultiClassLoader {
 
-	protected String adapterPath = "";
-	protected String compiledScriptPath = "";
+	private String adapterPath = "";
+	private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
     protected HashSet<JarResources> jarResources = null;
@@ -81,8 +81,6 @@ public class NavajoClassLoader extends MultiClassLoader {
 			.getLogger(NavajoClassLoader.class);
 	
     private boolean noCaching = false;
-    
-    private static int instances = 0;
     
 	private Class<?> myScriptClass = null;
     
@@ -95,18 +93,15 @@ public class NavajoClassLoader extends MultiClassLoader {
     	super(parent);
     }
     
-    public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta, ClassLoader parent) {
+    NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta, ClassLoader parent) {
     	super(parent);
         this.adapterPath = adapterPath;
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
-        instances++;
         initializeJarResources();
     }
 
-    public static int getInstances() {
-    	return instances;
-    }
+
     
     public NavajoClassLoader(String adapterPath, String compiledScriptPath, ClassLoader parent) {
     	
@@ -114,7 +109,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     	this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
-        instances++;
         if(Version.osgiActive()) {
         	logger.info("OSGi environment detected. Disabling traditional jar discovery.");
         } else {
@@ -195,8 +189,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     	  catch (Exception e) {
     		  // Try normal classloader...
     		  try {
-    			  Class<?> c = getClass(className);
-    			  return c;
+    			  return getClass(className);
     		  } catch (Exception e2) {
     			  throw new ClassNotFoundException("Could not find script: " + script,e2);
     		  }
@@ -204,7 +197,9 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  if ( fis != null ) {
     			  try {
     				  fis.close();
-    			  } catch (IOException e) { }
+    			  } catch (IOException e) { 
+    				  logger.error("Error: ", e);
+    			  }
     		  }
     	  }
       }
@@ -257,10 +252,10 @@ public class NavajoClassLoader extends MultiClassLoader {
 
 
     			if (jarResources == null) {
-    				jarResources = new HashSet<JarResources>();
+    				jarResources = new HashSet<>();
     				for (int i = 0; i < files.length; i++) {
     					try {
-    						logger.debug("Checking file: "+files[i].getAbsolutePath());
+    						logger.debug("Checking file: {}", files[i].getAbsolutePath());
 							JarResources d = new JarResources(files[i]);
 							jarResources.add(d);
 						} catch (Throwable e) {
@@ -281,7 +276,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
 
     			if (betaJarResources == null) {
-    				betaJarResources = new HashSet<JarResources>();
+    				betaJarResources = new HashSet<>();
     				for (int i = 0; i < files.length; i++) {
     					try { 
 							JarResources d = new JarResources(files[i]);
@@ -323,8 +318,8 @@ public class NavajoClassLoader extends MultiClassLoader {
         		  if (resource != null) {
         			  return new java.io.ByteArrayInputStream(resource);
         		  }
-        	  }
-        	  catch (Exception e) {
+        	  } catch (Exception e) { 
+        	  	logger.error("Error: ", e);
         	  }
           }
 
@@ -344,6 +339,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  }
     	  }
     	  catch (Exception e) {
+    	  	logger.error("Error: ", e);
     	  }
       }
 
@@ -383,45 +379,35 @@ public class NavajoClassLoader extends MultiClassLoader {
                            return resource;
                         }
                     } catch (Exception e) {
-                      
+                      logger.error("Error: ", e);
                     }
                 }
                
         }
 
 
-        if (resource == null) {
 
-           Iterator<JarResources> allResources = jarResources.iterator();
-         
-           while (allResources.hasNext()) {
+       Iterator<JarResources> allResources = jarResources.iterator();
+     
+       while (allResources.hasNext()) {
 
-              JarResources d = allResources.next();
+          JarResources d = allResources.next();
 
-                try {
-                   
-                    resource = d.getResource(className);
+            try {
+               
+                resource = d.getResource(className);
 
-                    if (resource != null) {
-                        break;
-                    }
-                } catch (Exception e) {
-                  
+                if (resource != null) {
+                    break;
                 }
+            } catch (Exception e) {
+            	logger.error("Error: ", e);
+              
             }
         }
-    
+
         return resource;
 
-    }
-
-    @Override
-	protected void finalize() {
-        instances--;
-    }
-
-    public static int getIntances() {
-    	return instances;
     }
     
     @Override 
@@ -450,6 +436,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     				}
     			}
     			catch (Exception e) {
+    				logger.error("Error: ", e);
     			}
     		}
 

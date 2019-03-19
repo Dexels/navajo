@@ -32,10 +32,9 @@ public final class ASTMappableNode extends SimpleNode {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ASTMappableNode.class);
     String val = "";
-//    MappableTreeNode mapObject;
     int args = 0;
 
-    public ASTMappableNode(int id) {
+    ASTMappableNode(int id) {
         super(id);
     }
     
@@ -82,30 +81,35 @@ public final class ASTMappableNode extends SimpleNode {
 		        }
 
 		        try {
-		        	Object oValue = null;
-		        	try {
-		        		oValue = MappingUtils.getAttributeValue(mapNode, val, parameterArray);
-		        	} catch (Exception e2) {
-		        		logger.error("Error: ", e2);
-		        		// Maybe domainobjectmapper?
-		        		if ( mapNode.myObject instanceof DomainObjectMapper ) {
-		        			oValue = ((DomainObjectMapper) mapNode.myObject).getDomainObjectAttribute(val, parameterArray);
-		        		} else {
-		        			throw new TMLExpressionException("Can not resolve attribute value",e2);
-		        		}
-		        	}
+		        	Object oValue = maybeGetMapAttribute(mapNode, parameterArray);
 		            if (oValue == null)
 		                return Operand.NULL;
 		            else if (oValue instanceof Float) {
-		              return Operand.ofFloat(((Float) oValue).doubleValue()); //  Double.valueOf(((Float) oValue).doubleValue());
+		              return Operand.ofFloat(((Float) oValue).doubleValue()); 
 		            } else if (oValue instanceof Long) {
-			              return Operand.ofLong(((Long) oValue).longValue()); //  Double.valueOf(((Float) oValue).doubleValue());
-		            } else
-		              return Operand.ofDynamic(oValue);
-
+			              return Operand.ofLong(((Long) oValue).longValue());
+		            } else {
+			              return Operand.ofDynamic(oValue);
+		            }
 		        } catch (Exception me) {
 		            throw new TMLExpressionException(me.getMessage(),me);
 		        }
+			}
+
+			private Object maybeGetMapAttribute(MappableTreeNode mapNode, Object[] parameterArray) throws Exception {
+				Object oValue = null;
+				try {
+					oValue = MappingUtils.getAttributeValue(mapNode, val, parameterArray);
+				} catch (Exception e2) {
+					logger.error("Error: ", e2);
+					// Maybe domainobjectmapper?
+					if ( mapNode.myObject instanceof DomainObjectMapper ) {
+						oValue = ((DomainObjectMapper) mapNode.myObject).getDomainObjectAttribute(val, parameterArray);
+					} else {
+						throw new TMLExpressionException("Can not resolve attribute value",e2);
+					}
+				}
+				return oValue;
 			}
 
 			@Override

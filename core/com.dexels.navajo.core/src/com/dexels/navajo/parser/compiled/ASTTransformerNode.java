@@ -26,45 +26,44 @@ public class ASTTransformerNode extends SimpleNode {
 
 	public int args = 0;
 	public String transformerName;
-  public ASTTransformerNode(int id) {
-    super(id);
-  }
-
-@Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
-	List<ContextExpression> parameters = new ArrayList<>();
-	for (int i = 0; i < jjtGetNumChildren(); i++) {
-		Node node = jjtGetChild(i);
-//		SimpleNode expr = (SimpleNode)node;
-		parameters.add(node.interpretToLambda(problems, originalExpression,functionClassifier));
+	ASTTransformerNode(int id) {
+		super(id);
 	}
-	return new ContextExpression() {
-		
-		@Override
-		public Optional<String> returnType() {
-			return Optional.of("transformer");
+
+	@Override
+	public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+		List<ContextExpression> parameters = new ArrayList<>();
+		for (int i = 0; i < jjtGetNumChildren(); i++) {
+			Node node = jjtGetChild(i);
+			parameters.add(node.interpretToLambda(problems, originalExpression,functionClassifier));
 		}
+		return new ContextExpression() {
 		
-		@Override
-		public boolean isLiteral() {
-			return false;
-		}
-		
-		@Override
-		public String expression() {
-			return originalExpression;
-		}
-		
-		@Override
-		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
-				MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-				Optional<ImmutableMessage> paramMessage) {
-			List<Operand> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
-			System.err.println(">>> "+transformerName);
-			TransformerFunction ff = new RenameTransformerFunction();
-			return Operand.ofCustom(ff.create(params, problems),Reactive.ReactiveItemType.REACTIVE_TRANSFORMER.toString());
-		}
-	};
-}
+			@Override
+			public Optional<String> returnType() {
+				return Optional.of("transformer");
+			}
+			
+			@Override
+			public boolean isLiteral() {
+				return false;
+			}
+			
+			@Override
+			public String expression() {
+				return originalExpression;
+			}
+			
+			@Override
+			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+					MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
+					Optional<ImmutableMessage> paramMessage) {
+				List<Operand> params = parameters.stream().map(e->e.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access, immutableMessage, paramMessage)).collect(Collectors.toList());
+				System.err.println(">>> "+transformerName);
+				TransformerFunction ff = new RenameTransformerFunction();
+				return Operand.ofCustom(ff.create(params, problems),Reactive.ReactiveItemType.REACTIVE_TRANSFORMER.toString());
+			}
+		};
+	}
 }
 /* JavaCC - OriginalChecksum=1d2eb60a4b53e6f73d69612ad626466b (do not edit this line) */

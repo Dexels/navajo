@@ -20,7 +20,8 @@ import com.dexels.navajo.parser.Utils;
 @SuppressWarnings({"rawtypes"})
 
 public final class ASTGTNode extends SimpleNode {
-    public ASTGTNode(int id) {
+    
+	ASTGTNode(int id) {
         super(id);
     }
 	@Override

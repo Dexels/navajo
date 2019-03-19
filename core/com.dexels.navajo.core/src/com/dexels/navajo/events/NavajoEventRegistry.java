@@ -30,7 +30,7 @@ import navajocore.Version;
  *
  */
 public class NavajoEventRegistry extends NotificationBroadcasterSupport implements NavajoEventRegistryMXBean, NotificationListener {
-    private static final String id = "Navajo Event Registry";
+    private static final String ID = "Navajo Event Registry";
     private static final Logger logger = LoggerFactory.getLogger(NavajoEventRegistry.class);
     private static final Object semaphore = new Object();
     public static long notificationSequence = 0;
@@ -51,6 +51,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	public static void clearInstance() {
 		instance = null;
 	}
+	
+	
 	
 	public void shutdown() {
 		monitoredEvents.clear();
@@ -74,7 +76,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 					if ( instance == null ) {
 						instance = new NavajoEventRegistry();
 						try {
-							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, ID);
 						} catch (Exception t) {
 							logger.error("Error: ", t);
 						} 
@@ -329,7 +331,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	public void activate() {
 		instance = this;
 		try {
-			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, ID);
 		} catch (Exception e) {
 			logger.error("Caught Error: ", e);
 		}

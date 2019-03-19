@@ -14,11 +14,11 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
 public final class ASTNegativeNode extends SimpleNode {
-    public ASTNegativeNode(int id) {
+    ASTNegativeNode(int id) {
         super(id);
     }
 
-	public final Operand interpret(Operand ao) {
+	private final Operand interpret(Operand ao) {
 		Object a = ao.value;
 
         if (a instanceof String)

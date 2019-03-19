@@ -20,7 +20,8 @@ import com.dexels.navajo.parser.Utils;
 @SuppressWarnings({"rawtypes"})
 
 public final class ASTLENode extends SimpleNode {
-    public ASTLENode(int id) {
+    
+	ASTLENode(int id) {
         super(id);
     }
 	@Override
@@ -28,7 +29,7 @@ public final class ASTLENode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),(a,b)->true,(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-    public final static Boolean compare(Operand ao, Operand bo, String expression) {
+    private static final Boolean compare(Operand ao, Operand bo, String expression) {
     	Object a = ao.value;
     	Object b = bo.value;
         if (a == null || b == null) {
@@ -56,19 +57,16 @@ public final class ASTLENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for le; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-	public final Operand interpret(Operand a, Operand b, String expression)  {
+	private final Operand interpret(Operand a, Operand b, String expression)  {
         if (a instanceof List) { // Compare all elements in the list.
             List list = (List) a;
-            boolean result = true;
-
             for (int i = 0; i < list.size(); i++) {
                 boolean dum = compare(Operand.ofDynamic(list.get(i)), b, expression).booleanValue();
 
                 if (!(dum))
                     return Operand.FALSE;
-                result = result && dum;
             }
-            return Operand.ofBoolean(result);
+            return Operand.ofBoolean(true);
         } else {
             return Operand.ofBoolean(compare(a, b,expression));
         }

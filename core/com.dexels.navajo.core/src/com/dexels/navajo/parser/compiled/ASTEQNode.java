@@ -12,11 +12,11 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.Utils;
 
 public final class ASTEQNode extends SimpleNode {
-    public ASTEQNode(int id) {
+    ASTEQNode(int id) {
         super(id);
     }
 
-	public final Operand interpret( Operand a, Operand b, String expression) {
+	private final Operand interpret( Operand a, Operand b, String expression) {
         return Operand.ofBoolean(Utils.equals(a.value, b.value,expression));
     }
 	@Override

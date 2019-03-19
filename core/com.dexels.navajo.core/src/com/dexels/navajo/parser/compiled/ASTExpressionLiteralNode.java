@@ -13,7 +13,7 @@ public final class ASTExpressionLiteralNode extends SimpleNode {
 
     String val;
 
-    public ASTExpressionLiteralNode(int id) {
+    ASTExpressionLiteralNode(int id) {
         super(id);
     }
 

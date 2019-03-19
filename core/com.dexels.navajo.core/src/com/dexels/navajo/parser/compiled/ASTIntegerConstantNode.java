@@ -21,11 +21,11 @@ public final class ASTIntegerConstantNode extends SimpleNode {
 
     int val;
 
-    public ASTIntegerConstantNode(int id) {
+    ASTIntegerConstantNode(int id) {
         super(id);
     }
 
-	public final  Operand interpret() {
+	private final  Operand interpret() {
         return Operand.ofInteger(val);
     }
 

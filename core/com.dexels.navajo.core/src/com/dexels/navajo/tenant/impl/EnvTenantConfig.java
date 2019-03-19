@@ -14,8 +14,8 @@ import com.dexels.navajo.tenant.TenantConfig;
 public class EnvTenantConfig implements TenantConfig {
 
 	private NavajoIOConfig config;
-	private final Set<String> tenants = new HashSet<String>();
-	private final Set<String> mastertenants = new HashSet<String>();
+	private final Set<String> tenants = new HashSet<>();
+	private final Set<String> mastertenants = new HashSet<>();
 	
 	private boolean wildcard = false;
 	
@@ -76,7 +76,7 @@ public class EnvTenantConfig implements TenantConfig {
 			logger.warn("Tenant master operations blocked. No tasks/workflows will be activated");
 		    return Collections.emptySet();
 		}
-		String parts[] = tenantlist.split(",");
+		String[] parts = tenantlist.split(",");
 		for (String tenant : parts) {
 			masters.add(tenant);
 		}

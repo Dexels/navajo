@@ -27,54 +27,27 @@ public final class AuditLog implements Mappable {
 	public String message;
 	public String level;
 	
-	public final static String AUDIT_MESSAGE_TASK_SCHEDULER = "Task Scheduler";
-	public final static String AUDIT_MESSAGE_ASYNC_RUNNER = "Async Runner";
-	public final static String AUDIT_MESSAGE_STAT_RUNNER = "Statistics Runner";
-	public final static String AUDIT_MESSAGE_INTEGRITY_WORKER = "Integrity Worker";
-	public final static String AUDIT_MESSAGE_LOCK_MANAGER = "Locking Manager";
-	public final static String AUDIT_MESSAGE_DISPATCHER = "Dispatcher";
-	public final static String AUDIT_MESSAGE_CLOCK = "Clock";
-	public final static String AUDIT_MESSAGE_WORKFLOW = "Workflow";
-	public final static String AUDIT_MESSAGE_TRIBEMANAGER = "TribeManager";
-	public final static String AUDIT_MESSAGE_SHAREDSTORE = "SharedStore";
-	public final static String AUDIT_MESSAGE_MONITOR = "Monitoring Agent";
-	public final static String AUDIT_MESSAGE_QUEUEDADAPTERS = "Queued Adapters";
-	public final static String AUDIT_MESSAGE_USER = "User Log";
-	public final static String AUDIT_MESSAGE_SCRIPTCOMPILER = "Script Compiler";
-	public final static String AUDIT_MESSAGE_AUTHORISATION = "Authorisation Repository";
+	public static final String AUDIT_MESSAGE_TASK_SCHEDULER = "Task Scheduler";
+	public static final String AUDIT_MESSAGE_ASYNC_RUNNER = "Async Runner";
+	public static final String AUDIT_MESSAGE_STAT_RUNNER = "Statistics Runner";
+	public static final String AUDIT_MESSAGE_INTEGRITY_WORKER = "Integrity Worker";
+	public static final String AUDIT_MESSAGE_LOCK_MANAGER = "Locking Manager";
+	public static final String AUDIT_MESSAGE_DISPATCHER = "Dispatcher";
+	public static final String AUDIT_MESSAGE_CLOCK = "Clock";
+	public static final String AUDIT_MESSAGE_WORKFLOW = "Workflow";
+	public static final String AUDIT_MESSAGE_TRIBEMANAGER = "TribeManager";
+	public static final String AUDIT_MESSAGE_SHAREDSTORE = "SharedStore";
+	public static final String AUDIT_MESSAGE_MONITOR = "Monitoring Agent";
+	public static final String AUDIT_MESSAGE_QUEUEDADAPTERS = "Queued Adapters";
+	public static final String AUDIT_MESSAGE_USER = "User Log";
+	public static final String AUDIT_MESSAGE_SCRIPTCOMPILER = "Script Compiler";
+	public static final String AUDIT_MESSAGE_AUTHORISATION = "Authorisation Repository";
 
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(AuditLog.class);
-	
-//	private volatile static String instanceName;
-	
-//	private static final Logger logger = LoggerFactory
-//			.getLogger(AuditLog.class);
-	
 	private String accessId;
-	
-//	NavajoEventRegistry eventRegistry;
-	
-//	private static AuditLog instance;
-	
-//	static {
-//		if ( !Version.osgiActive() ) {
-//			instance = new AuditLog();
-//			instance.eventRegistry = NavajoEventRegistry.getInstance();
-//		}
-//	}
-	
-//	public AuditLog() {
-//	}
-	
-//	public AuditLog(String name, NavajoEventRegistry ner) {
-//		instanceName = name;
-//		eventRegistry = ner;
-//		instance = this;
-//	}
-//	
-	
+
 	private static final void logToSlf(String message, String subsystem, Level l) {
 		Logger instanceLog = LoggerFactory.getLogger("NavajoLog");
 		if(Level.INFO.equals(l)) {
@@ -110,17 +83,17 @@ public final class AuditLog implements Mappable {
 		instanceLog.info(message, exception);
 	}
 
-	public final static void log(String message, final Throwable exception, Level level) {
+	public static final void log(String message, final Throwable exception, Level level) {
 		logToSlf(message,exception,  level);
 	}
 	
 	
-	public final static void log(final String subsystem, final String message, Level level) {
+	public static final void log(final String subsystem, final String message, Level level) {
 		logToSlf(message, subsystem, level);
 		publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, level));
 	}
 	
-	public final static void log(final String subsystem, final String message) {
+	public static final void log(final String subsystem, final String message) {
 		logToSlf(message, subsystem, Level.INFO);
 
 		publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, Level.INFO));

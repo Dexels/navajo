@@ -2,6 +2,7 @@ package com.dexels.navajo.sharedstore.map;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
@@ -24,14 +25,13 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	private static final long serialVersionUID = -1122073018927967102L;
 	
-	private static volatile HashMap<String,SharedTribalMap> registeredMaps = new HashMap<String,SharedTribalMap>();
+	private static Map<String,SharedTribalMap> registeredMaps = new HashMap<>();
 	private boolean tribalSafe = false;
 	
-	private static volatile Object semaphore = new String();
-	public  volatile Object semaphoreLocal = new String();
+	private static Object semaphore = new String();
+	private Object semaphoreLocal = new String();
 	
 	protected SharedTribalMap() {
-		//throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	 * 
 	 * @param stm
 	 */
-	public static void deregisterMap(SharedTribalMap stm) {
+	static void deregisterMap(SharedTribalMap stm) {
 		synchronized (semaphore) {
 			deregisterMapLocal(stm.getId());
 			TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.DELETEMAP, stm.getId());
@@ -115,7 +115,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
-	public static SharedTribalMap getMap(String id) {
+	static SharedTribalMap getMap(String id) {
 		return registeredMaps.get(id);
 	}
 	

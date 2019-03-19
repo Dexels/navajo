@@ -11,11 +11,10 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 public final class ASTDivNode extends SimpleNode {
-    public ASTDivNode(int id) {
+    ASTDivNode(int id) {
         super(id);
     }
-
-	public final Operand interpret(Operand ao, Operand bo) {
+    private final Operand interpret(Operand ao, Operand bo) {
 		Object a = ao.value;
 		Object b = bo.value;
         if (a instanceof String || b instanceof String)

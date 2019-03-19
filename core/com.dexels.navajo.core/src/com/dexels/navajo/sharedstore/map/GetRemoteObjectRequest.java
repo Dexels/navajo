@@ -12,7 +12,7 @@ public class GetRemoteObjectRequest extends Request {
 	
 	private String guid = null;
 	
-	public GetRemoteObjectRequest(RemoteReference remote) {
+	GetRemoteObjectRequest(RemoteReference remote) {
 		guid = remote.getRef();
 	}
 	

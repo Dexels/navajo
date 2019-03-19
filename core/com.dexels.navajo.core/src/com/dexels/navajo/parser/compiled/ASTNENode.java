@@ -13,7 +13,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.Utils;
 
 public final class ASTNENode extends SimpleNode {
-    public ASTNENode(int id) {
+    ASTNENode(int id) {
         super(id);
     }
 	@Override
@@ -21,7 +21,7 @@ public final class ASTNENode extends SimpleNode {
 		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
 	}
 	
-	public final Operand interpret(Operand a, Operand b, String expression) {
+	private final Operand interpret(Operand a, Operand b, String expression) {
 
         return Operand.ofBoolean(!Utils.equals(a.value, b.value,expression));
 

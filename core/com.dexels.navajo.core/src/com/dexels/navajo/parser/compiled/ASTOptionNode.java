@@ -22,12 +22,12 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 public final class ASTOptionNode extends SimpleNode {
 
-    String option = "";
+    private String option = "";
     
 	private static final Logger logger = LoggerFactory.getLogger(ASTOptionNode.class);
 
 
-    public ASTOptionNode(int id) {
+    ASTOptionNode(int id) {
         super(id);
     }
 

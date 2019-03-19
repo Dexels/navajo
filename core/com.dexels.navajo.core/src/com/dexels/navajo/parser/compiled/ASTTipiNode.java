@@ -23,7 +23,7 @@ public final class ASTTipiNode extends SimpleNode {
   String val = "";
 //  TipiLink tipiLink;
 
-  public ASTTipiNode(int id) {
+  ASTTipiNode(int id) {
     super(id);
   }
 

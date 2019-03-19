@@ -1,6 +1,5 @@
 package com.dexels.navajo.sharedstore.map;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -22,8 +21,6 @@ public class TestAdapter implements Mappable {
 	public boolean remove;
 	public boolean clear;
 	
-	public static HashSet preventCollection = new HashSet();
-	
 	private static final Logger logger = LoggerFactory.getLogger(TestAdapter.class);
 
 	@Override
@@ -39,7 +36,6 @@ public class TestAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		if ( value != null ) {
 			SharedTribalMap stm = SharedTribalMap.getMap(id);
-			//preventCollection.add(stm);
 			
 			if ( stm == null ) {
 				stm = new SharedTribalMap(id);
@@ -64,7 +60,7 @@ public class TestAdapter implements Mappable {
 			RemoteReference rr = (RemoteReference) stm.get(key);
 			return (String) rr.getObject();
 		} else {
-			logger.warn("Could not find sharedtribalmap with id: " + id);
+			logger.warn("Could not find sharedtribalmap with id: {}", id);
 			return null;
 		}
 	}

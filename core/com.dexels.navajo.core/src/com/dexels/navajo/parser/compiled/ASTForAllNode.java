@@ -30,7 +30,7 @@ public final class ASTForAllNode extends SimpleNode {
 
     private static final Logger logger = LoggerFactory.getLogger(ASTForAllNode.class);
 
-    public ASTForAllNode(int id) {
+    ASTForAllNode(int id) {
         super(id);
     }
 
@@ -85,7 +85,7 @@ public final class ASTForAllNode extends SimpleNode {
      * 
      * @return
      */
-    public final Operand interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
+    private final Operand interpret(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 			 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage, ContextExpression a,ContextExpression b) {
 
         boolean matchAll = true;

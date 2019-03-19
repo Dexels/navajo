@@ -18,7 +18,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 public final class ASTOrNode extends SimpleNode {
-    public ASTOrNode(int id) {
+    ASTOrNode(int id) {
         super(id);
     }
 	@Override
@@ -51,7 +51,7 @@ public final class ASTOrNode extends SimpleNode {
 		        		bb = Boolean.FALSE;
 		        }
 
-		        return Operand.ofBoolean(Boolean.valueOf(ba.booleanValue() || bb.booleanValue()));
+		        return Operand.ofBoolean(ba.booleanValue() || bb.booleanValue());
 			}
 
 			@Override

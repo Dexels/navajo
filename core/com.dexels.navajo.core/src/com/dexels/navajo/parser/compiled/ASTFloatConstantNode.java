@@ -21,7 +21,7 @@ public final class ASTFloatConstantNode extends SimpleNode {
 
     double val;
 
-    public ASTFloatConstantNode(int id) {
+    ASTFloatConstantNode(int id) {
         super(id);
     }
 

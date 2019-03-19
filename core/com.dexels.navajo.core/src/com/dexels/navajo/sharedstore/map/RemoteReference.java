@@ -67,7 +67,7 @@ public class RemoteReference implements Serializable {
 	 * 
 	 * @param o
 	 */
-	public RemoteReference(Object o) {
+	RemoteReference(Object o) {
 		myObject = o;
 		guid = Util.getRandomGuid();
 		myObjectRegistry.put(guid, o );
@@ -81,7 +81,7 @@ public class RemoteReference implements Serializable {
 	 * @param o
 	 * @param keepRemote
 	 */
-	public RemoteReference(Object o, boolean keepRemote) {
+	RemoteReference(Object o, boolean keepRemote) {
 		this(o);
 		this.keepRemote = keepRemote;
 	}
@@ -93,7 +93,7 @@ public class RemoteReference implements Serializable {
 	 * @param ref
 	 * @return
 	 */
-	public static Object getObject(String ref) {
+	static Object getObject(String ref) {
 		return myObjectRegistry.get(ref);
 	}
 	
