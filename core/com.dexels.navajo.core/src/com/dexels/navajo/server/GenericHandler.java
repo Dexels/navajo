@@ -375,17 +375,18 @@ public class GenericHandler extends ServiceHandler {
     				} // end of sync block.
 
     				// Java recompile.
-    				compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
+    				// TODO check if this removal is ok
+//    				compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
 
     			} else {
-
+    				
     				// Maybe the jave file exists in the script path.
     				if ( !sourceFile.exists() ) { // There is no java file present.
     					AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, a.accessID);
     				} else {
     					// Compile java file using normal java compiler.
     					if(sourceFile.getName().endsWith("java")) {
-       					compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
+    						logger.error("Separate java scripts not supported!");
     					}
     				}
     			}
@@ -432,19 +433,10 @@ public class GenericHandler extends ServiceHandler {
         }
         try {
 
-            // (access.rpcName);
             if (cso == null) {
                 if (Version.osgiActive()) {
                     logger.warn("Script not found from OSGi registry while OSGi is active");
-                } else {
-                    cso = compileScript(access, compilerErrors);
-                    if (cso == null) {
-                        logger.error("Can not find OSGi script for rpc: {} ", access.rpcName);
-                        throw new RuntimeException("Can not resolve script (non OSGi): " + access.rpcName);
-                    }
                 }
-            }
-            if (cso == null) {
                 logger.error("No compiled script found, proceeding further is useless.");
                 throw new RuntimeException("Can not resolve script: " + access.rpcName);
             }
@@ -488,50 +480,6 @@ public class GenericHandler extends ServiceHandler {
 		}
 		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 	}
-
-	@SuppressWarnings("unused")
-	@Deprecated
-	private static String recompileJava(
-			Access a,
-			String sourceFileName,
-			File sourceFile, String className, File targetFile,String scriptName) {
-		
-		String compilerErrors = "";
-		
-		
-		if ( checkJavaRecompile(sourceFile, targetFile) ) { // Create class file
-
-			synchronized(mutex2) {
-
-				if ( checkJavaRecompile(sourceFile, targetFile) ) {
-
-					NavajoClassSupplier loader = null;
-					if ( ( loader = loadedClasses.get(className) ) != null) {
-						// Get previous version of CompiledScript.
-						try {
-							CompiledScriptInterface prev = getCompiledScript(a, className,sourceFile,scriptName);
-							prev.releaseCompiledScript();
-						} catch (Exception e) {
-						}
-						loadedClasses.remove(className);
-						loader = null;
-					}
-
-					com.dexels.navajo.compiler.internal.NavajoCompiler compiler = new com.dexels.navajo.compiler.internal.NavajoCompiler();
-					try {
-						compiler.compile(DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
-						compilerErrors = compiler.errors;
-						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(a.rpcName));
-					}
-					catch (Throwable t) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already", Level.WARNING, a.accessID);
-					}
-				}
-			}
-		} // end of sync block.
-		return compilerErrors;
-	}
-    
     /**
      * Return load script class count.
      * @return

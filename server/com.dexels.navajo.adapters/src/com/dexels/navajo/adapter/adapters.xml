@@ -21,10 +21,6 @@
 		<object>com.dexels.navajo.adapter.QueryMap</object>
 	</map>
 	<map>
-		<tagname>runtime</tagname>
-		<object>com.dexels.navajo.adapter.RuntimeAdapter</object>
-	</map>
-	<map>
 		<tagname>filemap</tagname>
 		<object>com.dexels.navajo.adapter.FileMap</object>
 	</map>
