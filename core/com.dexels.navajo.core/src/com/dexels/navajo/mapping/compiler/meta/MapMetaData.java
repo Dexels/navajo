@@ -14,11 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
-
-import javax.imageio.spi.ServiceRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +65,10 @@ public class MapMetaData {
 			}
 			Iterator<?> iter = null;
 			try {
-				iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
-						                                        myClassLoader);
+				ServiceLoader<ExtensionDefinition> loader = ServiceLoader.load(ExtensionDefinition.class,myClassLoader);
+				iter = loader.iterator();
+//				ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+//						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 					
