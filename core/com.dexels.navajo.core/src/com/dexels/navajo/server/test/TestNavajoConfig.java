@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.FileNavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
@@ -26,7 +24,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	String group = "testgroup";
 	
 	private PersistenceManager myPersistenceManager;
-	private NavajoClassSupplier myClassloader;
 	private final File configRoot;
 	
 	
@@ -82,13 +79,8 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 
 	@Override
-	public NavajoClassSupplier getClassloader() {
-		return myClassloader;
-	}
-
-	@Override
-	public void setClassloader(NavajoClassSupplier classloader) {
-		myClassloader = classloader;
+	public ClassLoader getClassloader() {
+		return getClass().getClassLoader();
 	}
 
 	@Override

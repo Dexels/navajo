@@ -233,16 +233,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	}
 
 	@Override
-	public NavajoClassSupplier getClassloader() {
+	public ClassLoader getClassloader() {
 		if ( WebserviceListenerFactory.getInstance() != null ) {
 			return new NavajoBasicClassLoader(WebserviceListenerFactory.getInstance().getClass().getClassLoader());
 		}
-		return adapterClassloader;
-	}
-
-	@Override
-	public void setClassloader(NavajoClassSupplier classloader) {
-		adapterClassloader = classloader;
+		return getClass().getClassLoader();
 	}
 
 	public void setAsyncStore(AsyncStore as) {
