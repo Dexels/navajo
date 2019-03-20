@@ -33,4 +33,4 @@ jobs:
           zip -r navajo_maven.zip .m2
       - store_artifacts:
           path: ~/navajo_maven.zip
-workflows:
+          destination: navajo_maven.zip
