@@ -1,0 +1,9 @@
+<adapterdef>
+
+   <map>
+        <tagname>kml</tagname>
+        <object>com.dexels.navajo.geo.KMLMap</object>
+        <values>
+        </values>
+    </map>
+</adapterdef>
