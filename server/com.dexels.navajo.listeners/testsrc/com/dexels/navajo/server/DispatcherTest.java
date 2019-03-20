@@ -12,14 +12,16 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class DispatcherTest {
 
 	@Before public void setUp() throws Exception {
-		TribeManagerFactory.useTestVersion();
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		TribeManagerFactory.setInstance(new DefaultTribeManager());
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 	}
 
 	@Test public void testHandle1() throws Exception {

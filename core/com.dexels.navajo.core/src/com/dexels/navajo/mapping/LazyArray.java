@@ -13,7 +13,7 @@ import com.dexels.navajo.script.api.UserException;
  *
  * The interface defines the support for lazy arrays.
  * A lazy array contains elements that are not neccessarily all instantiated.
- *
+ * @deprecated
  */
 
 public interface LazyArray {

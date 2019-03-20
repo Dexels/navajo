@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ import com.dexels.navajo.functions.WeekDay;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -52,12 +54,12 @@ public class StandardFunctionsTest {
 	ClassLoader cl;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		fff = FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 
-	private Navajo createTestNavajo() throws Exception {
+	private Navajo createTestNavajo() {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message array = NavajoFactory.getInstance().createMessage(doc, "Aap");
 		array.setType(Message.MSG_TYPE_ARRAY);
@@ -122,7 +124,7 @@ public class StandardFunctionsTest {
 		assertEquals(array2, result);
 	}
 	@Test
-	public void testAbs() throws Exception {
+	public void testAbs() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Abs");
 
@@ -175,7 +177,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testZipArchive() throws Exception {
+	public void testZipArchive() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ZipArchive");
 		fi.reset();
@@ -186,7 +188,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testZip() throws Exception {
+	public void testZip() {
 
 		Binary b = new Binary(new byte[] { 1, 1, 1 });
 		FunctionInterface fi = fff.getInstance(cl, "Zip");
@@ -199,7 +201,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testXmlUnescape() throws Exception {
+	public void testXmlUnescape() {
 
 		FunctionInterface fi = fff.getInstance(cl, "XmlUnescape");
 		fi.reset();
@@ -221,7 +223,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testXmlEscape() throws Exception {
+	public void testXmlEscape() {
 
 		FunctionInterface fi = fff.getInstance(cl, "XmlEscape");
 		fi.reset();
@@ -233,7 +235,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testWeekday() throws Exception {
+	public void testWeekday() {
 
 		FunctionInterface fi = fff.getInstance(cl, "WeekDay");
 		fi.reset();
@@ -252,7 +254,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testWait() throws Exception {
+	public void testWait() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Wait");
 		fi.reset();
@@ -263,7 +265,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testUnicode() throws Exception {
+	public void testUnicode() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Unicode");
 		fi.reset();
@@ -274,7 +276,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testURLEncode() throws Exception {
+	public void testURLEncode() {
 
 		FunctionInterface fi = fff.getInstance(cl, "URLEncode");
 		fi.reset();
@@ -286,7 +288,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testTrim() throws Exception {
+	public void testTrim() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Trim");
 		fi.reset();
@@ -298,7 +300,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToUpper() throws Exception {
+	public void testToUpper() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToUpper");
 		fi.reset();
@@ -310,7 +312,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToString() throws Exception {
+	public void testToString() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToString");
 		fi.reset();
@@ -334,7 +336,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToStopwatchTime() throws Exception {
+	public void testToStopwatchTime() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToStopwatchTime");
 		fi.reset();
@@ -346,7 +348,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToSecureImage() throws Exception {
+	public void testToSecureImage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToSecureImage");
 		fi.reset();
@@ -370,7 +372,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToPercentage() throws Exception {
+	public void testToPercentage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToPercentage");
 		fi.reset();
@@ -394,7 +396,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToMoney() throws Exception {
+	public void testToMoney() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMoney");
 		fi.reset();
@@ -418,7 +420,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToMilliseconds() throws Exception {
+	public void testToMilliseconds() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMilliseconds");
 		fi.reset();
@@ -436,7 +438,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToMemo() throws Exception {
+	public void testToMemo() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToMemo");
 		fi.reset();
@@ -448,7 +450,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToLower() throws Exception {
+	public void testToLower() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToLower");
 		fi.reset();
@@ -460,7 +462,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToInteger() throws Exception {
+	public void testToInteger() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToInteger");
 		fi.reset();
@@ -473,7 +475,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToDouble() throws Exception {
+	public void testToDouble() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToDouble");
 		fi.reset();
@@ -486,7 +488,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToClockTime() throws Exception {
+	public void testToClockTime() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToClockTime");
 		fi.reset();
@@ -499,7 +501,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testToBinaryFromUrl() throws Exception {
+	public void testToBinaryFromUrl() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToBinaryFromUrl");
 		fi.reset();
@@ -512,7 +514,7 @@ public class StandardFunctionsTest {
 
 
 	@Test
-	public void testToBinary() throws Exception {
+	public void testToBinary() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToBinary");
 		fi.reset();
@@ -524,7 +526,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSumProperties() throws Exception {
+	public void testSumProperties() {
 
 		FunctionInterface fi = fff.getInstance(cl, "SumProperties");
 		fi.setInMessage(createTestNavajo());
@@ -542,7 +544,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSumMessage() throws Exception {
+	public void testSumMessage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "SumMessage");
 		Navajo doc = createTestNavajo();
@@ -561,7 +563,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSumExpressions() throws Exception {
+	public void testSumExpressions() {
 
 		FunctionInterface fi = fff.getInstance(cl, "SumExpressions");
 		Navajo doc = createTestNavajo();
@@ -580,7 +582,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSum() throws Exception {
+	public void testSum() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Sum");
 
@@ -600,7 +602,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringPadding() throws Exception {
+	public void testStringPadding() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
@@ -617,7 +619,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringPadding2() throws Exception {
+	public void testStringPadding2() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
@@ -635,7 +637,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringPadding3() throws Exception {
+	public void testStringPadding3() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringPadding");
 		fi.reset();
@@ -651,7 +653,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringStringFunction() throws Exception {
+	public void testStringStringFunction() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringFunction");
 		fi.reset();
@@ -678,7 +680,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringField() throws Exception {
+	public void testStringField() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringField");
 		fi.reset();
@@ -696,7 +698,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testStringDistance() throws Exception {
+	public void testStringDistance() {
 
 		FunctionInterface fi = fff.getInstance(cl, "StringDistance");
 		fi.reset();
@@ -711,7 +713,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSize() throws Exception {
+	public void testSize() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Size");
 		fi.reset();
@@ -747,7 +749,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testSetAllProperties() throws Exception {
+	public void testSetAllProperties() {
 
 		FunctionInterface fi = fff.getInstance(cl, "SetAllProperties");
 		fi.reset();
@@ -763,7 +765,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testScaleImageMin() throws Exception {
+	public void testScaleImageMin() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ScaleImageMin");
 		fi.reset();
@@ -778,7 +780,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testScaleImageFree() throws Exception {
+	public void testScaleImageFree() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ScaleImageFree");
 		fi.reset();
@@ -793,7 +795,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testRound() throws Exception {
+	public void testRound() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Round");
 		fi.reset();
@@ -807,7 +809,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testRandomString() throws Exception {
+	public void testRandomString() {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomString");
 		fi.reset();
@@ -820,7 +822,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testRandomString2() throws Exception {
+	public void testRandomString2() {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomString");
 		fi.reset();
@@ -835,7 +837,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testRandomInt() throws Exception {
+	public void testRandomInt() {
 
 		FunctionInterface fi = fff.getInstance(cl, "RandomInt");
 		fi.reset();
@@ -850,7 +852,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testRandom() throws Exception {
+	public void testRandom() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Random");
 		fi.reset();
@@ -863,7 +865,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testParseStringList() throws Exception {
+	public void testParseStringList() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseStringList");
 		fi.reset();
@@ -878,7 +880,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testParseSelection() throws Exception {
+	public void testParseSelection() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseSelection");
 		fi.reset();
@@ -892,7 +894,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testParseDate() throws Exception {
+	public void testParseDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParseDate");
 		fi.reset();
@@ -907,7 +909,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testParameterList() throws Exception {
+	public void testParameterList() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ParameterList");
 		fi.reset();
@@ -921,7 +923,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testOffsetDate() throws Exception {
+	public void testOffsetDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "OffsetDate");
 		fi.reset();
@@ -941,7 +943,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testNow() throws Exception {
+	public void testNow() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Now");
 		fi.reset();
@@ -954,7 +956,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testNextMonth() throws Exception {
+	public void testNextMonth() {
 
 		FunctionInterface fi = fff.getInstance(cl, "NextMonth");
 		fi.reset();
@@ -968,7 +970,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testMin() throws Exception {
+	public void testMin() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Min");
 		fi.reset();
@@ -983,7 +985,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testMax() throws Exception {
+	public void testMax() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Max");
 		fi.reset();
@@ -998,7 +1000,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testMergeNavajo() throws Exception {
+	public void testMergeNavajo() {
 
 		FunctionInterface fi = fff.getInstance(cl, "MergeNavajo");
 		fi.reset();
@@ -1013,7 +1015,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testIsServiceCached() throws Exception {
+	public void testIsServiceCached() {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsServiceCached");
 		fi.reset();
@@ -1031,7 +1033,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testIsNull() throws Exception {
+	public void testIsNull() {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsNull");
 		fi.reset();
@@ -1045,7 +1047,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testInMonthTurnInterval() throws Exception {
+	public void testInMonthTurnInterval() {
 
 		FunctionInterface fi = fff.getInstance(cl, "InMonthTurnInterval");
 		fi.reset();
@@ -1061,7 +1063,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetWeekDayDate() throws Exception {
+	public void testGetWeekDayDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetWeekDayDate");
 		fi.reset();
@@ -1077,7 +1079,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetWeekDayDate2() throws Exception {
+	public void testGetWeekDayDate2() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetWeekDayDate");
 		fi.reset();
@@ -1093,7 +1095,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetUrlTime() throws Exception {
+	public void testGetUrlTime() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlTime");
 		fi.reset();
@@ -1106,7 +1108,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetUrlModificationTime() throws Exception {
+	public void testGetUrlModificationTime() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlModificationTime");
 		fi.reset();
@@ -1119,7 +1121,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetUrlMimeType() throws Exception {
+	public void testGetUrlMimeType() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetUrlMimeType");
 		fi.reset();
@@ -1132,7 +1134,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetSelectedValue() throws Exception {
+	public void testGetSelectedValue() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetSelectedValue");
 		fi.reset();
@@ -1147,7 +1149,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetSelectedName() throws Exception {
+	public void testGetSelectedName() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetSelectedName");
 		fi.reset();
@@ -1162,7 +1164,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetPropertyValue() throws Exception {
+	public void testGetPropertyValue() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetPropertyValue");
 		fi.reset();
@@ -1178,7 +1180,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetPropertyType() throws Exception {
+	public void testGetPropertyType() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetPropertyType");
 		fi.reset();
@@ -1193,7 +1195,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetPropertyDirection1() throws Exception {
+	public void testGetPropertyDirection1() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetPropertyDirection");
 		fi.reset();
@@ -1209,7 +1211,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetPropertyDirection2() throws Exception {
+	public void testGetPropertyDirection2() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetPropertyDirection");
 		fi.reset();
@@ -1225,7 +1227,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetPropertySubType() throws Exception {
+	public void testGetPropertySubType() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetPropertySubType");
 		fi.reset();
@@ -1241,7 +1243,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetProperty() throws Exception {
+	public void testGetProperty() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetProperty");
 		fi.reset();
@@ -1257,7 +1259,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetMimeType() throws Exception {
+	public void testGetMimeType() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetMimeType");
 		fi.reset();
@@ -1269,7 +1271,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetMessage() throws Exception {
+	public void testGetMessage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetMessage");
 		Navajo doc = createTestNavajo();
@@ -1285,7 +1287,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetLogoImage() throws Exception {
+	public void testGetLogoImage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetLogoImage");
 		Navajo doc = createTestNavajo();
@@ -1301,7 +1303,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetInitials() throws Exception {
+	public void testGetInitials() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetInitials");
 		Navajo doc = createTestNavajo();
@@ -1317,7 +1319,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetFileExtension() throws Exception {
+	public void testGetFileExtension() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetFileExtension");
 		Navajo doc = createTestNavajo();
@@ -1333,7 +1335,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetDescription() throws Exception {
+	public void testGetDescription() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetDescription");
 		fi.reset();
@@ -1348,7 +1350,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetCurrentMessage() throws Exception {
+	public void testGetCurrentMessage() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetCurrentMessage");
 		fi.reset();
@@ -1362,7 +1364,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testGetCents() throws Exception {
+	public void testGetCents() {
 
 		FunctionInterface fi = fff.getInstance(cl, "GetCents");
 		fi.reset();
@@ -1377,7 +1379,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFormatStringList() throws Exception {
+	public void testFormatStringList() {
 
 		FunctionInterface fi = fff.getInstance(cl, "FormatStringList");
 		fi.reset();
@@ -1395,7 +1397,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFormatDecimal() throws Exception {
+	public void testFormatDecimal() {
 
 		FunctionInterface fi = fff.getInstance(cl, "FormatDecimal");
 		fi.reset();
@@ -1410,7 +1412,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFormatDate() throws Exception {
+	public void testFormatDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "FormatDate");
 		fi.reset();
@@ -1425,7 +1427,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testForAll() throws Exception {
+	public void testForAll() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ForAll");
 		fi.reset();
@@ -1440,7 +1442,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFileSize() throws Exception {
+	public void testFileSize() {
 
 		FunctionInterface fi = fff.getInstance(cl, "FileSize");
 		fi.reset();
@@ -1454,7 +1456,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFileExists() throws Exception {
+	public void testFileExists() {
 
 		FunctionInterface fi = fff.getInstance(cl, "FileExists");
 		fi.reset();
@@ -1468,7 +1470,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testFile() throws Exception {
+	public void testFile() {
 
 		FunctionInterface fi = fff.getInstance(cl, "File");
 		fi.reset();
@@ -1480,7 +1482,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testExistsProperty() throws Exception {
+	public void testExistsProperty() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ExistsProperty");
 		fi.reset();
@@ -1493,7 +1495,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testExists() throws Exception {
+	public void testExists() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Exists");
 		fi.reset();
@@ -1508,11 +1510,9 @@ public class StandardFunctionsTest {
 
 
 	@Test
-	public void testEvaluateExpression() throws Exception {
+	public void testEvaluateExpression() {
 
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
-
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		FunctionInterface fi = fff.getInstance(cl, "EvaluateExpression");
 		fi.reset();
 		Navajo doc = createTestNavajo();
@@ -1530,11 +1530,8 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testEuro() throws Exception {
-
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
-
+	public void testEuro() {
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		FunctionInterface fi = fff.getInstance(cl, "Euro");
 		fi.reset();
 
@@ -1544,7 +1541,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testEqualsPattern() throws Exception {
+	public void testEqualsPattern() {
 
 		FunctionInterface fi = fff.getInstance(cl, "EqualsPattern");
 		fi.reset();
@@ -1558,7 +1555,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testEqualsIgnoreCase() throws Exception {
+	public void testEqualsIgnoreCase() {
 
 		FunctionInterface fi = fff.getInstance(cl, "EqualsIgnoreCase");
 		fi.reset();
@@ -1573,7 +1570,7 @@ public class StandardFunctionsTest {
 
 
 	@Test
-	public void testDecimalChar() throws Exception {
+	public void testDecimalChar() {
 
 		FunctionInterface fi = fff.getInstance(cl, "DecimalChar");
 		fi.reset();
@@ -1586,7 +1583,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testDateSubtract() throws Exception {
+	public void testDateSubtract() {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateSubtract");
 		fi.reset();
@@ -1600,7 +1597,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testDateField() throws Exception {
+	public void testDateField() {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateField");
 		fi.reset();
@@ -1614,7 +1611,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testDateAdd() throws Exception {
+	public void testDateAdd() {
 
 		FunctionInterface fi = fff.getInstance(cl, "DateAdd");
 		fi.reset();
@@ -1629,7 +1626,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testDate() throws Exception {
+	public void testDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Date");
 		fi.reset();
@@ -1642,7 +1639,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCurrentTimeMillis() throws Exception {
+	public void testCurrentTimeMillis() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CurrentTimeMillis");
 		fi.reset();
@@ -1654,7 +1651,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCreateExpression() throws Exception {
+	public void testCreateExpression() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CreateExpression");
 		fi.reset();
@@ -1667,7 +1664,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testContains() throws Exception {
+	public void testContains() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Contains");
 		fi.reset();
@@ -1684,7 +1681,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckUrl() throws Exception {
+	public void testCheckUrl() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckUrl");
 		fi.reset();
@@ -1697,7 +1694,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckUniqueness() throws Exception {
+	public void testCheckUniqueness() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckUniqueness");
 		fi.reset();
@@ -1712,7 +1709,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckRange() throws Exception {
+	public void testCheckRange() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckRange");
 
@@ -1732,7 +1729,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckInteger() throws Exception {
+	public void testCheckInteger() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckInteger");
 
@@ -1747,7 +1744,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckFloat() throws Exception {
+	public void testCheckFloat() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckFloat");
 
@@ -1762,7 +1759,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckEmail() throws Exception {
+	public void testCheckEmail() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckEmail");
 
@@ -1777,7 +1774,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testCheckDate() throws Exception {
+	public void testCheckDate() {
 
 		FunctionInterface fi = fff.getInstance(cl, "CheckDate");
 
@@ -1792,7 +1789,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testBase64Encode() throws Exception {
+	public void testBase64Encode() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Base64Encode");
 		byte[] bytes = "tralala".getBytes();
@@ -1808,7 +1805,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testArraySelection() throws Exception {
+	public void testArraySelection() {
 
 		FunctionInterface fi = fff.getInstance(cl, "ArraySelection");
 
@@ -1825,7 +1822,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testAppendArray() throws Exception {
+	public void testAppendArray() {
 
 		FunctionInterface fi = fff.getInstance(cl, "AppendArray");
 
@@ -1841,7 +1838,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testAge() throws Exception {
+	public void testAge() {
 
 		FunctionInterface fi = fff.getInstance(cl, "Age");
 		fi.reset();
@@ -1854,7 +1851,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testTrunc() throws Exception {
+	public void testTrunc() throws ParseException {
 
 		FunctionInterface fi = fff.getInstance(cl, "Trunc");
 		fi.reset();
@@ -1873,7 +1870,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testNavajoRequestToString() throws Exception {
+	public void testNavajoRequestToString() {
 		Navajo n = createTestNavajo();
 		FunctionInterface fi = fff.getInstance(cl, "NavajoRequestToString");
 		fi.setInMessage(n);
@@ -1883,7 +1880,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testIsEmpty() throws Exception {
+	public void testIsEmpty() {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsEmpty");
 
@@ -1946,7 +1943,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testPhone() throws Exception {
+	public void testPhone() {
 	    ValidatePhoneNumber e1 = new ValidatePhoneNumber();
 	    e1.reset();
 	    e1.insertStringOperand("+31 (0)20 490 4977");
@@ -1960,7 +1957,7 @@ public class StandardFunctionsTest {
 	}
 
 	@Test
-	public void testWeekDay() throws Exception {
+	public void testWeekDay() {
 
 		    // Tests.
 		    WeekDay wd = new WeekDay();
@@ -1993,7 +1990,7 @@ public class StandardFunctionsTest {
 	}
 	
 	@Test
-	public void testCheckFloatExtended() throws Exception {
+	public void testCheckFloatExtended() {
 		CheckFloat cf = new CheckFloat();
 
 		cf.reset();
@@ -2033,7 +2030,7 @@ public class StandardFunctionsTest {
 	}
 	
 	@Test
-	  public void testCheckIntegerExtended() throws Exception {
+	  public void testCheckIntegerExtended() {
 		    CheckInteger ci = new CheckInteger();
 		    ci.reset();
 		    ci.insertStringOperand("aap");
@@ -2048,7 +2045,7 @@ public class StandardFunctionsTest {
 		  }
 	
 	@Test
-	  public void testCheckUniquenessExtended() throws Exception {
+	  public void testCheckUniquenessExtended() throws SystemException {
 		    String expression = "Hallo \n Hoe is het nou?";
 		    CreateExpression ce = new CreateExpression();
 		    ce.reset();

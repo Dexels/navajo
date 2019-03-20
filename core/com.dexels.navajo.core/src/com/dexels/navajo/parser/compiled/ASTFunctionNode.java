@@ -35,7 +35,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.version.AbstractVersion;
 
 
-public final class ASTFunctionNode extends SimpleNode {
+final class ASTFunctionNode extends SimpleNode {
 
 	
 	private static final Logger typechecklogger = LoggerFactory.getLogger("navajo.typecheck");

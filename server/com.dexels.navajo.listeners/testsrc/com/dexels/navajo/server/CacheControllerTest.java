@@ -92,7 +92,7 @@ public class CacheControllerTest  {
 	
 	@Before
 	public void setUp() throws Exception {
-		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		// injected the dispatcher
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		createCacheConfig();

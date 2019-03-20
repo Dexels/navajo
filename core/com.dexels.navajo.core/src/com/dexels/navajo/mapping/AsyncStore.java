@@ -50,15 +50,15 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<>());
   public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<>());
   private float timeout = 3600000; 
-  private static final int threadWait = 2000;
-  private static final String id = "Navajo AsyncStore";
+  private static final int THREADWAIT = 2000;
+  private static final String ID = "Navajo AsyncStore";
   
   private static final Logger logger = LoggerFactory.getLogger(AsyncStore.class);
 
   private static Object semaphore = new Object();
   
   public AsyncStore() {
-	  super(id);
+	  super(ID);
   }
   
   /**
@@ -66,28 +66,32 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
    *
    * @return
    */
-  public final static AsyncStore getInstance() {
+  public static final AsyncStore getInstance() {
     return instance;
   }
 
-  public void activate() {
-	  try {
-		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
-	} catch (Throwable e) {
-		logger.error("Caught Error: ", e);
-	}
-	  instance = this;
-	  this.setSleepTime(threadWait);
-	  this.startThread(this);
+  public static final void setInstance(AsyncStore asyncStore) {
+	  instance = asyncStore;
   }
-  
+
+	public void activate() {
+		try {
+			JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, ID);
+		} catch (Throwable e) {
+			logger.error("Caught Error: ", e);
+		}
+		setInstance(this);
+		this.setSleepTime(THREADWAIT);
+		this.startThread(this);
+	}
+
   /**
    * Get the singleton AsyncStore object instance given an async inactive timeout.
    *
    * @param timeout
    * @return
    */
-  public final static AsyncStore getInstance(float timeout) {
+  public static final AsyncStore getInstance(float timeout) {
 	
 	  /** Make sure new instance determination is thread safe */
 	  synchronized ( semaphore ) {
@@ -107,18 +111,17 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 public final void worker() {
 	  
 	  synchronized (instance) {
-		  Set<String> s = new HashSet<String>(objectStore.keySet());
+		  Set<String> s = new HashSet<>(objectStore.keySet());
 		  Iterator<String> iter = s.iterator();
 		  while (iter.hasNext()) {
 			  String ref = iter.next();
 			  AsyncMappable a = objectStore.get(ref);
 			  long now = System.currentTimeMillis();
 			  if ( (now - a.getLastAccess()) > timeout ) {
-				 logger.info("About to kill: " + a);
+				 logger.info("About to kill: {}", a);
 				  a.kill();
 				  objectStore.remove(ref);
 				  accessStore.remove(ref);
-				  a = null;
 			  }
 		  }
 	  }
@@ -179,16 +182,11 @@ public final void worker() {
    */
   public final synchronized void removeInstance(String ref) {
 	  AsyncMappable o = objectStore.get(ref);
-
-	  if (o == null) {
-		  return;
-	  }
-	  else {
+	  if (o != null) {
 		  objectStore.remove(ref);
 		  if (accessStore.containsKey(ref)) {
 			  accessStore.remove(ref);
 		  }
-		  o = null;
 	  }
   }
   
@@ -217,7 +215,7 @@ public int getStoreSize() {
 		  objectStore.clear();
 		  accessStore.clear();
 		  try {
-			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, ID);
 		  } catch (Throwable e) {
 			  logger.error("Throwable caught: ", e);
 		  }

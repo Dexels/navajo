@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
@@ -57,8 +58,8 @@ public class SharedStoreInterfaceTest {
 			.getLogger(SharedStoreInterfaceTest.class);
 	
 	@Before
-	public void setUp() throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+	public void setUp() {
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
 	}
@@ -83,15 +84,6 @@ public class SharedStoreInterfaceTest {
 		SharedStoreFactory.clear();
 	}
 
-	public static void main(String [] args) throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		DispatcherFactory.getInstance().setUseAuthorisation(false);
-		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
-		t.setUp();
-		t.testLockStringStringStringIntBoolean();
-	}
-	
-	
 	@Test public void testStoreWithoutLock() throws Exception {
 		si.store("myparent", "mystoredobject", new SerializableObject(), false, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject").exists());

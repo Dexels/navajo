@@ -1,5 +1,7 @@
 package com.dexels.navajo.mapping;
 
+import java.io.StringWriter;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -48,6 +50,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
 import com.dexels.navajo.script.api.Dependency;
@@ -83,7 +86,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     protected MappableTreeNode currentMap = null;
     protected final Stack treeNodeStack = new Stack();
-    // protected Navajo outDoc = null;
     protected Navajo inDoc = null;
     protected Message currentOutMsg = null;
     protected Access myAccess = null;
@@ -192,7 +194,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     @Override
     public String getStackTrace() {
 
-        StringBuffer stackTrace = new StringBuffer();
+        StringBuilder stackTrace = new StringBuilder();
         StackTraceElement[] elt = myAccess.getThread().getStackTrace();
         for (int i = 0; i < elt.length; i++) {
             stackTrace.append(elt[i].getClassName() + "." + elt[i].getMethodName() + " (" + elt[i].getFileName() + ":"
@@ -260,35 +262,18 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.dexels.navajo.script.api.CompiledScriptInterface#finalBlock(com.dexels
-     * .navajo.api.Access)
-     */
-    @Override
-    public abstract void finalBlock(Access access) throws Exception;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.dexels.navajo.script.api.CompiledScriptInterface#setValidations()
-     */
-    @Override
-    public abstract void setValidations();
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.dexels.navajo.script.api.CompiledScriptInterface#dumpRequest()
      */
     @Override
     public void dumpRequest() {
         String scriptName = getScriptName();
+        StringWriter buffer = new StringWriter();
         if (debugRequest() &&  System.getenv("DEBUG_SCRIPTS") != null &&  System.getenv("DEBUG_SCRIPTS").equals("true") ) {
-            System.err.println(" --------- BEGIN NAVAJO REQUEST --------- "  + scriptName);
-            myAccess.getInDoc().write(System.err);
-            System.err.println("--------- END NAVAJO REQUEST --------- " + scriptName);
+            buffer.append(" --------- BEGIN NAVAJO REQUEST --------- "  + scriptName+"\n");
+            myAccess.getInDoc().write(buffer);
+            buffer.append("--------- END NAVAJO REQUEST --------- " + scriptName+"\n");
         }
+        logger.info(buffer.toString());
     }
 
     /*
@@ -374,13 +359,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public void setDependencies() {
-        // Example:
-        // dependentObjects.add( new
-        // IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"),
-        // "MyScript1"));
-        // dependentObjects.add( new
-        // IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript2"),
-        // "MyScript2"));
     }
 
     /*
@@ -403,17 +381,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public Dependency[] getDependencies() {
-
         Dependency[] all = new Dependency[getDependentObjects().size()];
-        all = getDependentObjects().toArray(all);
-        // for ( int i = 0; i < all.length; i++ ) {
-        // // Normalize id's
-        // if ( all[i] instanceof AdapterFieldDependency ) {
-        // all[i].setId( ((AdapterFieldDependency) all[i]).getEvaluatedId() );
-        // }
-        // }
-        return all;
-
+        return getDependentObjects().toArray(all);
     }
 
     /*
@@ -503,13 +472,13 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      * @throws UserException
      */
     private final Message[] checkValidationRules(ConditionData[] conditions, Navajo inMessage, Navajo outMessage,
-            Access a) throws NavajoException, SystemException, UserException {
+            Access a) throws SystemException, UserException {
 
         if (conditions == null) {
             return null;
         }
 
-        ArrayList<Message> messages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<>();
         int index = 0;
 
         for (int i = 0; i < conditions.length; i++) {
@@ -556,7 +525,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             }
         }
 
-        if (messages.size() > 0) {
+        if (!messages.isEmpty()) {
             Message[] msgArray = new Message[messages.size()];
 
             messages.toArray(msgArray);
@@ -569,7 +538,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     private final ConditionData[] getValidationRules(Access access) throws Exception {
         Navajo inMessage = access.getInDoc();
         if (conditionArray != null) {
-            List<ConditionData> conditions = new ArrayList<ConditionData>();
+            List<ConditionData> conditions = new ArrayList<>();
             for (int i = 0; i < conditionArray.length; i++) {
                 boolean check = (conditionArray[i].equals("") ? true : Condition.evaluate(conditionArray[i], inMessage,
                         access));
@@ -613,14 +582,14 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             return f;
         }
         // Ignore
-        f = Class.forName(name, false, this.getClass().getClassLoader()).newInstance();
+        f = Class.forName(name, false, this.getClass().getClassLoader()).getConstructor().newInstance();
         functions.put(name, f);
         return f;
     }
 
  
     protected Map<String, Object> getEvaluationParams() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put(Expression.ACCESS, myAccess);
         return params;
     }
@@ -636,18 +605,15 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     public final Object findMapByPath(String path) {
 
         StringTokenizer st = new StringTokenizer(path, "/");
-        int count = 0;
+        int found = 0;
         while (st.hasMoreTokens()) {
             String element = st.nextToken();
             if (!"..".equals(element)) {
-                logger.warn("Huh? : " + element);
+                logger.warn("Huh? : {}", element);
             }
-            count++;
+            found++;
         }
-
-        Object m = ((MappableTreeNode) treeNodeStack.get(treeNodeStack.size() - count)).getMyMap();
-
-        return m;
+        return ((MappableTreeNode) treeNodeStack.get(treeNodeStack.size() - found)).getMyMap();
     }
 
     /*
@@ -817,17 +783,16 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
 
     /**
      * Get a lock for the synchronized block.
+     * @throws CompilationException 
      * 
      */
-    public Lock getLock(String user, String service, String key) throws Exception {
+    public Lock getLock(String user, String service, String key) throws CompilationException {
         if (user == null && service == null && key == null) {
-            throw new Exception("Either user or service or both should be specified.");
+            throw new CompilationException("Either user or service or both should be specified.");
         }
-        String lockName = user + "-" + service + "-" + key;
-        logger.debug("lockname: " + lockName);
-        Lock l = TribeManagerFactory.getInstance().getLock(lockName);
- 
-        return l;
+        String name = user + "-" + service + "-" + key;
+        logger.debug("lockname: {}", name);
+        return TribeManagerFactory.getInstance().getLock(name);
     }
     
     public void acquiredLock(Lock l ) {

@@ -80,6 +80,7 @@ import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MetaCompileException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.ParseException;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.MappingException;
 import com.dexels.navajo.script.api.SystemException;
@@ -3594,7 +3595,7 @@ public class TslCompiler {
 			String packagePath, String scriptPackagePath,
 			ClassLoader classLoader, NavajoIOConfig navajoIOConfig,
 			List<Dependency> deps, String tenant,
-			boolean hasTenantSpecificScript, boolean forceTenant) throws Exception {
+			boolean hasTenantSpecificScript, boolean forceTenant) throws CompilationException,SkipCompilationException {
 		String tenantScript = script;
 		if (forceTenant) {
 			tenantScript = script + "_" + tenant;
@@ -3619,7 +3620,7 @@ public class TslCompiler {
 
 			return javaFile;
 		} catch (SkipCompilationException ex) {
-			throw ex;
+			throw new SkipCompilationException("Skip compilation exception, script: "+script+" does not need compiling");
 		} catch (Throwable ex) {
 			logger.error("Error compiling script: " + script, ex);
 			// Isn't this what 'finally' is for?
@@ -3628,7 +3629,7 @@ public class TslCompiler {
 				f.delete();
 			}
 			if (ex instanceof Exception) {
-				throw (Exception) ex;
+				throw new CompilationException("Other compilation exception:", ex);
 			}
 			return null;
 		} 

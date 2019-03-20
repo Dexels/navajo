@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -23,12 +20,10 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTForAllNode extends SimpleNode {
+final class ASTForAllNode extends SimpleNode {
 
     String functionName;
     private Access access;
-
-    private static final Logger logger = LoggerFactory.getLogger(ASTForAllNode.class);
 
     ASTForAllNode(int id) {
         super(id);
@@ -126,11 +121,7 @@ public final class ASTForAllNode extends SimpleNode {
         } catch (NavajoException ne) {
             throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + ne.getMessage());
         }
-
-        if (matchAll)
-            return Operand.ofBoolean(true);
-        else
-            return Operand.ofBoolean(false);
+        return Operand.ofBoolean(matchAll); 
     }
 
 }

@@ -21,7 +21,7 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTListNode extends SimpleNode {
+final class ASTListNode extends SimpleNode {
 
     int args = 0;
 

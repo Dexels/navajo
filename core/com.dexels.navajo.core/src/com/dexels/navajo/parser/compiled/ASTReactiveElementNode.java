@@ -17,7 +17,6 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public
 class ASTReactiveElementNode extends SimpleNode {
   public int args = 0;
   ASTReactiveElementNode(int id) {

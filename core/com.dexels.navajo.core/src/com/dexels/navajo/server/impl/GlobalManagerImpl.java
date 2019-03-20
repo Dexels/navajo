@@ -19,7 +19,7 @@ import com.dexels.navajo.server.global.GlobalManager;
 
 public class GlobalManagerImpl implements GlobalManager {
 
-    private final Map<String, String> settings = new HashMap<String, String>();
+    private final Map<String, String> settings = new HashMap<>();
     private static final List<String> osgiSettings = Arrays.asList("component.id", "component.name", "service.factoryPid", "service.pid");
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalManagerImpl.class);
@@ -50,7 +50,7 @@ public class GlobalManagerImpl implements GlobalManager {
     }
 
     @Override
-    public void initGlobals(String method, String username, Navajo inMessage, Map<String, String> extraParams) throws NavajoException {
+    public void initGlobals(String method, String username, Navajo inMessage, Map<String, String> extraParams) {
 
         Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
@@ -100,9 +100,9 @@ public class GlobalManagerImpl implements GlobalManager {
         }
 
         if (extraParams != null) {
-            for (String key : extraParams.keySet()) {
-                Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY, "", 10, "", Property.DIR_OUT);
-                p2.setAnyValue(extraParams.get(key));
+            for (Entry<String,Object> e : extraParams.entrySet()) {
+                Property p2 = NavajoFactory.getInstance().createProperty(inMessage, e.getKey(), Property.STRING_PROPERTY, "", 10, "", Property.DIR_OUT);
+                p2.setAnyValue(e.getValue());
                 paramMsg.addProperty(p2);
             }
         }

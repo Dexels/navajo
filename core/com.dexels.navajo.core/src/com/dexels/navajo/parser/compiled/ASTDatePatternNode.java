@@ -18,7 +18,7 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTDatePatternNode extends SimpleNode {
+final class ASTDatePatternNode extends SimpleNode {
     ASTDatePatternNode(int id) {
         super(id);
     }

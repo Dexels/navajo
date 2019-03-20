@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
@@ -64,8 +65,8 @@ public class SharedStoreInterfaceTest {
     public TemporaryFolder folder= new TemporaryFolder();
     
     public SharedStoreInterfaceTest()throws Exception  {
-        new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-        DispatcherFactory.getInstance().setUseAuthorisation(false);
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
+		DispatcherFactory.getInstance().setUseAuthorisation(false);
         si = SharedStoreFactory.getInstance();
     }
     
@@ -104,14 +105,6 @@ public class SharedStoreInterfaceTest {
 		File f = new File(System.getProperty("java.io.tmpdir"), "/sharedstore");
 		deleteFiles(f);
 		SharedStoreFactory.clear();
-	}
-
-	public static void main(String[] args) throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		DispatcherFactory.getInstance().setUseAuthorisation(false);
-		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
-		t.setUp();
-		t.testLockStringStringStringIntBoolean();
 	}
 
 	@Test

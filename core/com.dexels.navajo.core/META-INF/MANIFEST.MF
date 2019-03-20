@@ -8,7 +8,6 @@ Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.compiler;uses:="com.dexels.navajo.script.api",
- com.dexels.navajo.compiler.internal;uses:="com.dexels.navajo.server",
  com.dexels.navajo.dependency;uses:="org.w3c.dom,com.dexels.navajo.server",
  com.dexels.navajo.enterprise.scheduler.tribe;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.script.api,com.dexels.navajo.document",
  com.dexels.navajo.events,

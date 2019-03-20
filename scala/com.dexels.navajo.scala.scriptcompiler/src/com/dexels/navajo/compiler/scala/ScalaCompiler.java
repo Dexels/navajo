@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -27,7 +27,7 @@ import scala.tools.reflect.ReflectGlobal;
 
 public class ScalaCompiler extends ScriptCompiler {
 	private static final String SCRIPT_PATH = "scripts";
-    private static String SCRIPTEXTENSION = ".scala";
+    private static final String SCRIPTEXTENSION = ".scala";
     
     private ClassLoader navajoScriptClassLoader;
     private File commonDir;
@@ -51,7 +51,7 @@ public class ScalaCompiler extends ScriptCompiler {
     		 "com.sportlink.financial.adapters"};
     
 
-    private final static Logger logger = LoggerFactory.getLogger(ScalaCompiler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScalaCompiler.class);
 
     public void activate(Map<String, Object> osgisettings) {
        if (osgisettings.containsKey("whitelist")) {
@@ -71,7 +71,7 @@ public class ScalaCompiler extends ScriptCompiler {
     
     @Override
     protected Set<String> compileScript(File scriptFile, String script, String packagePath, List<Dependency> dependencies, String tenant,
-            boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
+            boolean hasTenantSpecificFile, boolean forceTenant) throws CompilationException {
     	final Set<String> packages = new HashSet<>();
     	
         for (String pkg : standardPackages) {
@@ -79,14 +79,11 @@ public class ScalaCompiler extends ScriptCompiler {
         }
         
         PackageReportingClassLoader prc = new PackageReportingClassLoader(navajoScriptClassLoader);
-        prc.addPackageListener(new PackageListener() {
-            @Override
-            public void packageFound(String name) {
-                if (whitelist.contains(name)) {
-                    packages.add(name);
-                }
-            }
-        });
+        prc.addPackageListener(name -> {
+		    if (whitelist.contains(name)) {
+		        packages.add(name);
+		    }
+		});
         
 
         File targetDir = new File(navajoIOConfig.getCompiledScriptPath(), packagePath + File.separator + script);
@@ -118,9 +115,9 @@ public class ScalaCompiler extends ScriptCompiler {
     private void addScalaCommon(ListBuffer<String> files) {
         try {
             Files.walk(Paths.get(commonDir.toURI()))
-            .filter(Files::isRegularFile)
-            .filter(f -> f.normalize().toString().endsWith(".scala"))
-            .forEach(f -> files.$plus$eq(f.normalize().toString()));
+	            .filter(Files::isRegularFile)
+	            .filter(f -> f.normalize().toString().endsWith(".scala"))
+	            .forEach(f -> files.$plus$eq(f.normalize().toString()));
         } catch (IOException e) {
             logger.error("IOException on adding scala common!", e);
         }
@@ -159,7 +156,7 @@ public class ScalaCompiler extends ScriptCompiler {
 
 	@Override
 	public Set<String> getRequiredBundles() {
-		return new HashSet<String>(Arrays.asList(standardReqBundles));
+		return new HashSet<>(Arrays.asList(standardReqBundles));
 	}
 
 

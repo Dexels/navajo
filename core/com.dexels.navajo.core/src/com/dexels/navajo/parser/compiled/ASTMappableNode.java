@@ -26,7 +26,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 @SuppressWarnings({"unchecked","rawtypes"})
-public final class ASTMappableNode extends SimpleNode {
+final class ASTMappableNode extends SimpleNode {
 
 	
 	private static final Logger logger = LoggerFactory

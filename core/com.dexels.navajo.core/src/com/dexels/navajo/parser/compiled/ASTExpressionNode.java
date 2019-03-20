@@ -8,7 +8,7 @@ import java.util.function.Function;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 
-public final class ASTExpressionNode extends SimpleNode {
+final class ASTExpressionNode extends SimpleNode {
     ASTExpressionNode(int id) {
         super(id);
     }

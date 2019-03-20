@@ -10,7 +10,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
-public final class ASTDivNode extends SimpleNode {
+final class ASTDivNode extends SimpleNode {
     ASTDivNode(int id) {
         super(id);
     }

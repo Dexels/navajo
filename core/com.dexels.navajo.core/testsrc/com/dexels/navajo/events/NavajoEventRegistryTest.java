@@ -28,8 +28,8 @@ public class NavajoEventRegistryTest {
 			.getLogger(NavajoEventRegistryTest.class);
 	
 	@Before
-	public void setUp() throws Exception {
-		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+	public void setUp() {
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		NavajoEventRegistry.clearInstance();
 		message = null;
 		instance1 = null;

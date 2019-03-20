@@ -31,13 +31,13 @@ public class DefaultTribeManager implements TribeManagerInterface {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DefaultTribeManager.class);
 
-	private Map<String,Lock> mLocks = new ConcurrentHashMap<String,Lock>();
-	private Map<String,TribalTopic> topics = new ConcurrentHashMap<String,TribalTopic>();
-	private Map<String,TribalNumber> counters = new ConcurrentHashMap<String,TribalNumber>();
-	private Map<String,Map> distributedMaps = new ConcurrentHashMap<String,Map>();
-	private Map<String,Set> distributedSets = new ConcurrentHashMap<String,Set>();
+	private Map<String,Lock> mLocks = new ConcurrentHashMap<>();
+	private Map<String,TribalTopic> topics = new ConcurrentHashMap<>();
+	private Map<String,TribalNumber> counters = new ConcurrentHashMap<>();
+	private Map<String,Map> distributedMaps = new ConcurrentHashMap<>();
+	private Map<String,Set> distributedSets = new ConcurrentHashMap<>();
 	private ConfigurationAdmin configAdmin;
-	private final Map<String, Configuration> resourcePids = new HashMap<String, Configuration>();
+	private final Map<String, Configuration> resourcePids = new HashMap<>();
 	
 	@Override
 	public void terminate() {
@@ -95,7 +95,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	@Override
 	public Set<TribeMemberInterface> getAllMembers() {
-		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
+		Set<TribeMemberInterface> s =  new HashSet<>();
 		s.add(new SimpleTribeMember());
 		return s;
 	}
@@ -270,7 +270,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 
 	private void becomeChief() {
 		try {
-			Hashtable<String, Object> settings = new Hashtable<String,Object>();
+			Hashtable<String, Object> settings = new Hashtable<>();
 			settings.put("cluster.owner", "local");
 			emitFactoryIfChanged("navajo.cluster.chief","(cluster.implementation=local)",settings);
 		} catch (IOException e) {
@@ -292,7 +292,7 @@ public class DefaultTribeManager implements TribeManagerInterface {
 		updateIfChanged(createOrReuseFactoryConfiguration(factoryPid, filter), settings);
 	}
 
-	protected Configuration createOrReuseFactoryConfiguration(String factoryPid, final String filter)
+	private Configuration createOrReuseFactoryConfiguration(String factoryPid, final String filter)
 			throws IOException {
 		Configuration cc = null;
 		try {

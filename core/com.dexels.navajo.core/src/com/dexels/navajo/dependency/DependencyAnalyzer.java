@@ -14,12 +14,12 @@ import com.dexels.navajo.server.NavajoIOConfig;
 public class DependencyAnalyzer {
     private static final Logger logger = LoggerFactory.getLogger(DependencyAnalyzer.class);
 
-    protected TslPreCompiler precompiler;
+    private TslPreCompiler precompiler;
     private NavajoIOConfig navajoIOConfig = null;
 
-    protected Map<String, List<Dependency>> dependencies;
-    protected Map<String, List<Dependency>> reverseDependencies;
-    protected String scriptFolder;
+    private Map<String, List<Dependency>> dependencies;
+    private Map<String, List<Dependency>> reverseDependencies;
+    private String scriptFolder;
     private Object sync = new Object();
 
     public void activate() {
@@ -38,7 +38,7 @@ public class DependencyAnalyzer {
     }
 
 
-    protected void initialize() {
+    private void initialize() {
         dependencies = new HashMap<>();
         reverseDependencies = new HashMap<>();
     }
@@ -137,7 +137,7 @@ public class DependencyAnalyzer {
     }
 
 
-    protected void updateReverseDependencies(List<Dependency> dependencies) {
+    private void updateReverseDependencies(List<Dependency> dependencies) {
 
         for (Dependency dep : dependencies) {
 

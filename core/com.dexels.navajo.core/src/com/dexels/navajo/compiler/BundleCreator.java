@@ -2,6 +2,7 @@ package com.dexels.navajo.compiler;
 
 import java.util.List;
 
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
 
 /**
@@ -12,7 +13,7 @@ import com.dexels.navajo.script.api.CompiledScriptInterface;
 public interface BundleCreator {
 
 	public void createBundle(String script, List<String> failures,
-			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles) throws Exception;
+			List<String> success, List<String> skipped, boolean force, boolean keepIntermediateFiles) throws CompilationException;
 
 	public void installBundle(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force);
 
@@ -20,9 +21,10 @@ public interface BundleCreator {
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
 	 * @param rpcName
 	 * @return
+	 * @throws CompilationException 
 	 * @throws Exception
 	 */
-	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant) throws Exception;
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant) throws CompilationException;
 
 	/**
 	 * Uninstall the bundle belonging to <code>scriptName</code>. If <code>scriptName</code> is tenant-specific, only that 

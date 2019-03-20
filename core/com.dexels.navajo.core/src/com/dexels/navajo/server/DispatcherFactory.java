@@ -5,10 +5,13 @@ public class DispatcherFactory {
 	private static DispatcherInterface instance;
 
   
-	public DispatcherFactory(DispatcherInterface injectedDispatcher) {	
+	private DispatcherFactory(DispatcherInterface injectedDispatcher) {	
 		instance = injectedDispatcher;
 	}
 	
+	public static DispatcherFactory createDispatcher(DispatcherInterface injectedDispatcher) {
+		return new DispatcherFactory(injectedDispatcher);
+	}
 	public static synchronized DispatcherInterface getInstance() {
 		return instance;
 	}

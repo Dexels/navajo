@@ -42,6 +42,7 @@ import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.dependency.Dependency;
 import com.dexels.navajo.dependency.DependencyAnalyzer;
 import com.dexels.navajo.mapping.compiler.SkipCompilationException;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -127,13 +128,14 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	/**
 	 * scriptName can include the _TENANT part
+	 * @throws CompilationException 
 	 */
 	@Override
 	public void createBundle(String scriptName, List<String> failures, List<String> success, List<String> skipped,
-			boolean force, boolean keepIntermediate) throws Exception {
+			boolean force, boolean keepIntermediate) throws CompilationException {
 
 		File scriptPath = getApplicableScriptFile(scriptName, null);
-		logger.info("No known path for {} - determined {} as script path!", scriptName, scriptPath);
+		logger.debug("No known path for {} - determined {} as script path!", scriptName, scriptPath);
 		
 
 		String bareScript = scriptName.substring(scriptName.lastIndexOf('/') + 1);
@@ -162,7 +164,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
     private void createBundleNoLocking(String rpcName, List<String> failures, List<String> success, List<String> skipped,
-            boolean force, boolean keepIntermediate) throws Exception {
+            boolean force, boolean keepIntermediate) throws CompilationException {
 
     	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
@@ -202,13 +204,12 @@ public class BundleCreatorComponent implements BundleCreator {
     	}
     	
     	if (!matchedScript) {
-    		throw new FileNotFoundException("Unable to find script for " + rpcName);
+    		throw new CompilationException("Unable to find script for " + rpcName);
     	}
     }
 
 	private void createBundleForScript(String script, String rpcName, File scriptFile, Collection<String> ignoreTenants, boolean isGenericVersion,
-			List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate)
-			throws Exception {
+			List<String> failures, List<String> success, List<String> skipped, boolean keepIntermediate) throws CompilationException {
       
         String scriptTenant = tenantFromScriptPath(script);
 
@@ -305,7 +306,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
     private void compileAndCreateBundle(String script, File scriptPath, final String scriptTenant,
             boolean hasTenantSpecificFile, boolean forceTenant, boolean keepIntermediate, List<String> success,
-            List<String> skipped, List<String> failures) throws Exception {
+            List<String> skipped, List<String> failures) throws CompilationException {
         String myScript = script;
         if (forceTenant) {
             myScript = script + "_" + scriptTenant;
@@ -320,11 +321,12 @@ public class BundleCreatorComponent implements BundleCreator {
             createBundleJar(myScript,scriptPath, scriptTenant, keepIntermediate, hasTenantSpecificFile);
             success.add(myScript);
         } catch (SkipCompilationException e) {
-            logger.debug("Script fragment: {} ignored: {}", script, e);
+            logger.debug("Script fragment: {} ", script);
             skipped.add(script);
+            return;
         } catch (Exception e) {
             failures.add(script);
-            throw e;
+            throw new CompilationException("Error compiling script", e);
         }
         if (forceTenant) {
             logger.info("Finished compiling and bundling {} for {}", script, scriptTenant);
@@ -644,7 +646,7 @@ public class BundleCreatorComponent implements BundleCreator {
      * @throws Exception 
      */
     @Override 
-    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant) throws Exception {
+    public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant) throws CompilationException {
 
         if (rpcName.indexOf('/') == -1) {
             if (rpcName.indexOf('_') != -1) {
@@ -704,8 +706,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
     @SuppressWarnings("unchecked")
-    private CompiledScriptInterface getCompiledScript(String rpcName, String tenant)
-            throws ClassNotFoundException {
+    private CompiledScriptInterface getCompiledScript(String rpcName, String tenant) throws CompilationException {
         String scriptName = rpcName.replaceAll("/", ".");
         
         String realTenant = "default";
@@ -720,7 +721,7 @@ public class BundleCreatorComponent implements BundleCreator {
             if (csf != null) {
                 try {
                     return csf.getCompiledScript();
-                } catch (InstantiationException | IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
                     logger.error("Exception on retrieving cached CompiledScriptFactory for {} {} - going to try non-cached one", rpcName, realTenant);
                 }
             }
@@ -760,8 +761,8 @@ public class BundleCreatorComponent implements BundleCreator {
                 }
             }
             
-        } catch (InvalidSyntaxException|InstantiationException|IllegalAccessException e) {
-            throw new ClassNotFoundException("Error resolving script service for: " + rpcName, e);
+        } catch (InvalidSyntaxException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new CompilationException("Error resolving script service for: " + rpcName, e);
         }
 
         return null;

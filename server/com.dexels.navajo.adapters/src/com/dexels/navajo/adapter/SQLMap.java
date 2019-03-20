@@ -1342,6 +1342,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 
 	}
+	
+	public String getDatabaseInfo() {
+		return "DatabaseInfo no longer supported";
+	}
 
 	public String getDatabaseSessionId() throws UserException {
 		if (con != null) {

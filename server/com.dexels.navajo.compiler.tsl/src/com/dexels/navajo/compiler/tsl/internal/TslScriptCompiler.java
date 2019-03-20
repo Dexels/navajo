@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.mapping.compiler.SkipCompilationException;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -43,7 +45,7 @@ public class TslScriptCompiler extends ScriptCompiler {
  
     @Override
     public Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
-            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception {
+            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws CompilationException, SkipCompilationException {
 
         final Set<String> packages = new HashSet<>();
         for (String pkg : standardPackages) {

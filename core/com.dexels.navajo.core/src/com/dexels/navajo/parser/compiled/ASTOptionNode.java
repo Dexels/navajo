@@ -20,7 +20,7 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTOptionNode extends SimpleNode {
+final class ASTOptionNode extends SimpleNode {
 
     private String option = "";
     

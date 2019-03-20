@@ -25,9 +25,9 @@ package com.dexels.navajo.parser;
  * ====================================================================
  */
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -44,10 +44,10 @@ public final class Utils extends Exception {
 
 	private static final long serialVersionUID = -5520295170789410974L;
 
-	public Utils() {
+	private Utils() {
 	}
 
-	public final static int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
+	private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
 	private static final boolean compare(int a, int b, String c) {
 
@@ -84,7 +84,7 @@ public final class Utils extends Exception {
 			return false;
 	}
 
-	public final static boolean compareDates(Object a, Object b, String compareChar) throws TMLExpressionException {
+	public static final boolean compareDates(Object a, Object b, String compareChar) {
 		if (b instanceof Integer) {
 			int offset = ((Integer) b).intValue();
 			Calendar cal = Calendar.getInstance();
@@ -98,10 +98,10 @@ public final class Utils extends Exception {
 
 			today = cal.getTime();
 			if (compareChar.equals("==")) {
-				// return (compare(today.getYear(), ((Date) a).getYear(), compareChar));
 				return (compare(cal.get(Calendar.YEAR), cal2.get(Calendar.YEAR), compareChar));
-			} else
+			} else {
 				return (compare(today, (Date) a, compareChar));
+			}
 		} else if (b instanceof Date) {
 			return (compare((Date) a, (Date) b, compareChar));
 		} else if (b instanceof ClockTime) {
@@ -110,13 +110,14 @@ public final class Utils extends Exception {
 			if (compareChar.equals("==")) {
 				return a == null;
 			} else {
-				return !(a == null);
+				return a != null;
 			}
-		} else
+		} else {
 			throw new TMLExpressionException("Invalid date comparison (a =" + a + ", b = " + b + ")");
+		}
 	}
 
-	public final static double getDoubleValue(Object o) throws TMLExpressionException {
+	public static final double getDoubleValue(Object o) {
 		if (o instanceof Integer)
 			return ((Integer) o).intValue();
 		else if (o instanceof Double)
@@ -132,8 +133,7 @@ public final class Utils extends Exception {
 		throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
 	}
 
-	// TODO This method fails for binaries.
-	public final static String getStringValue(Object o) throws TMLExpressionException {
+	private static final String getStringValue(Object o) {
 		if (o instanceof Integer)
 			return (((Integer) o).intValue() + "");
 		else if (o instanceof Double)
@@ -167,18 +167,18 @@ public final class Utils extends Exception {
 	 * @return
 	 * @throws TMLExpressionException
 	 */
-	public final static Object subtract(Object a, Object b) throws TMLExpressionException {
+	public static final Object subtract(Object a, Object b) {
 		if ((a instanceof Integer) && (b instanceof Integer))
 			return Integer.valueOf(((Integer) a).intValue() - ((Integer) b).intValue());
 		else if ((a instanceof String) || (b instanceof String)) {
 			throw new TMLExpressionException("Subtraction not defined for Strings");
-		} else if (a instanceof Double && b instanceof Integer)
+		} else if (a instanceof Double && b instanceof Integer) {
 			return Double.valueOf(((Double) a).doubleValue() - ((Integer) b).intValue());
-		else if (a instanceof Integer && b instanceof Double)
+		} else if (a instanceof Integer && b instanceof Double) {
 			return Double.valueOf(((Integer) a).intValue() - ((Double) b).doubleValue());
-		else if (a instanceof Double && b instanceof Double)
+		} else if (a instanceof Double && b instanceof Double) {
 			return Double.valueOf(((Double) a).doubleValue() - ((Double) b).doubleValue());
-		else if ((a instanceof Money || b instanceof Money)) {
+		} else if ((a instanceof Money || b instanceof Money)) {
 			if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
 			if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
@@ -251,7 +251,7 @@ public final class Utils extends Exception {
 	 * @return
 	 * @throws TMLExpressionException
 	 */
-	public final static Object add(Object a, Object b, String expression) throws TMLExpressionException {
+	public static final Object add(Object a, Object b, String expression) {
 		if ((a == null) && (b == null))
 			return null;
 		else if (a == null)
@@ -265,13 +265,13 @@ public final class Utils extends Exception {
 			String sB = Utils.getStringValue(b);
 
 			return sA + sB;
-		} else if (a instanceof Double && b instanceof Integer)
+		} else if (a instanceof Double && b instanceof Integer) {
 			return Double.valueOf(((Double) a).doubleValue() + ((Integer) b).intValue());
-		else if (a instanceof Integer && b instanceof Double)
+		} else if (a instanceof Integer && b instanceof Double) {
 			return Double.valueOf(((Integer) a).intValue() + ((Double) b).doubleValue());
-		else if (a instanceof Double && b instanceof Double)
+		} else if (a instanceof Double && b instanceof Double) {
 			return Double.valueOf(((Double) a).doubleValue() + ((Double) b).doubleValue());
-		else if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
+		} else if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
 			DatePattern dp1 = null;
 			DatePattern dp2 = null;
 
@@ -301,9 +301,7 @@ public final class Utils extends Exception {
 			Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
 			Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
 			return new Percentage(arg1.doubleValue() + arg2.doubleValue());
-		}
-
-		else if ((a instanceof ClockTime && b instanceof DatePattern)) {
+		} else if ((a instanceof ClockTime && b instanceof DatePattern)) {
 			DatePattern dp1 = DatePattern.parseDatePattern(((ClockTime) a).dateValue());
 			DatePattern dp2 = (DatePattern) b;
 			dp1.add(dp2);
@@ -322,8 +320,9 @@ public final class Utils extends Exception {
 			Boolean ba = (Boolean) a;
 			Boolean bb = (Boolean) b;
 			return Integer.valueOf((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
-		} else
+		} else {
 			throw new TMLExpressionException("Addition: Unknown type. "+" expression: "+expression);
+		}
 	}
 
 	/**
@@ -395,10 +394,10 @@ public final class Utils extends Exception {
 	 * @throws TMLExpressionException
 	 */
 	@SuppressWarnings("rawtypes")
-	public final static boolean equals(Object a, Object b, String expression) throws TMLExpressionException {
-		if (a instanceof ArrayList) {
+	public static final boolean equals(Object a, Object b, String expression) throws TMLExpressionException {
+		if (a instanceof List) {
 			boolean result = true;
-			ArrayList list = (ArrayList) a;
+			List list = (List) a;
 
             if (list.size() == 0) {
                 return isEqual(a, b);

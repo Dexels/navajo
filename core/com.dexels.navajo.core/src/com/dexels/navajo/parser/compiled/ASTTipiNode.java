@@ -18,10 +18,9 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTTipiNode extends SimpleNode {
+final class ASTTipiNode extends SimpleNode {
 
   String val = "";
-//  TipiLink tipiLink;
 
   ASTTipiNode(int id) {
     super(id);

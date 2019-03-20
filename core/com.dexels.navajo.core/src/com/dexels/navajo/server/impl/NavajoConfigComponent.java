@@ -39,8 +39,8 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	protected NavajoClassSupplier adapterClassloader;
 	private Map<String, Object> properties;
 	private BundleContext bundleContext;
-	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
-	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
+	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<>();
+	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 	private ConfigurationAdmin myConfigurationAdmin;
 	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
@@ -85,9 +85,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		this.myConfigurationAdmin = null;
 	}
 	
-	public void activate(Map<String,Object> props, BundleContext bundleContext) {
-		logger.info("========>  Activating");
-		try {
+	public void activate(Map<String,Object> props, BundleContext bundleContext) throws InstantiationException {
 			this.properties = props;
 			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl(this.tribeManager);
@@ -95,9 +93,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 				// just for non-osgi, to be sure
 				this.persistenceManager.setSharedStore(getSharedStore());
 			}
-		} catch (Throwable e) {
-			logger.error("activation error",bundleContext);
-		}
 	}
 
 	public void deactivate() {
@@ -410,17 +405,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 			return true;
 		}
 		return result;
-	}
-
-	@Override
-	public void startTaskRunner() {
-		logger.info("Ignoring start task runner");
-		
-	}
-
-	@Override
-	public void startStatisticsRunner() {
-		logger.info("Ignoring start statistics runner");
 	}
 
 	@Override

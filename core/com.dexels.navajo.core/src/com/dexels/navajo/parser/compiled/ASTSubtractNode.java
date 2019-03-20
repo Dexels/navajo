@@ -16,7 +16,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 @SuppressWarnings({"unchecked","rawtypes"})
-public final class ASTSubtractNode extends SimpleNode {
+final class ASTSubtractNode extends SimpleNode {
     ASTSubtractNode(int id) {
         super(id);
     }

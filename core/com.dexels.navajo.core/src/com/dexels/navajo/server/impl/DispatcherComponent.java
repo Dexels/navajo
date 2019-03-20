@@ -14,18 +14,16 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 public class DispatcherComponent extends Dispatcher implements
 		DispatcherInterface {
 
-//	AuditLog auditLog = null;
 	BundleContext myContext = null;
 	NavajoEventRegistry myRegistry = null;
 	TribeManagerInterface tribeManager = null;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DispatcherComponent.class);
-//	private ServiceRegistration<AuditLog> auditLogSr;
 	
 	public void activate(BundleContext context) {
 		try {
 			logger.info("Activate dispatcher!");
-			new DispatcherFactory(this);
+			DispatcherFactory.createDispatcher(this);
 			myContext = context;
 			if ("true".equals(System.getenv("SIMULATION_MODE"))) {
 			    simulationMode = true;
@@ -38,7 +36,6 @@ public class DispatcherComponent extends Dispatcher implements
 		logger.debug("Deactivate dispatcher!");
 		DispatcherFactory.setInstance(null);
 		myContext = null;
-//		auditLogSr.unregister();
 	}
 
 	@Override

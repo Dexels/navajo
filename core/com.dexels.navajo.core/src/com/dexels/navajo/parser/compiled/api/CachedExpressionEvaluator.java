@@ -10,7 +10,6 @@ import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -25,8 +24,7 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
     private static final Logger logger = LoggerFactory.getLogger(CachedExpressionEvaluator.class);
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)
-			throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		ExpressionCache ce = ExpressionCache.getInstance();
 		
 		Object val;
@@ -46,12 +44,11 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 
 	@Override
 	public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent,
-			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
+			Message currentParam, Selection selection, Object tipiLink, Map<String,Object> params, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		try {
 			ExpressionCache ce = ExpressionCache.getInstance();
 			Access access = params == null? null : (Access)params.get(Expression.ACCESS);
 			Operand val =ce.evaluate(clause, inMessage, parent, currentParam, selection, (MappableTreeNode)mappableTreeNode, (TipiLink) tipiLink, access,immutableMessage,paramMessage);
-//			String type = MappingUtils.determineNavajoType(val);
 			if(val==null) {
 				throw new TMLExpressionException("Clause resolved to null, shouldnt happen:  expression: "+clause);
 			}
@@ -66,7 +63,7 @@ public class CachedExpressionEvaluator extends DefaultExpressionEvaluator implem
 	}
 
 	@Override
-	public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) throws NavajoException {
+	public Operand evaluate(String clause, Navajo inMessage, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		try {
 			ExpressionCache ce = ExpressionCache.getInstance();
 			return ce.evaluate(clause, inMessage, null, null, null, null, null, null, immutableMessage,paramMessage);

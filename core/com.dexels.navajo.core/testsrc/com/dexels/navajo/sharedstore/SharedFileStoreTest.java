@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -18,8 +19,8 @@ public class SharedFileStoreTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		TribeManagerFactory.useTestVersion();
-		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		TribeManagerFactory.setInstance(new DefaultTribeManager());
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = new SharedFileStore(new File("sharedstore"), new TestNavajoConfig());
 	}

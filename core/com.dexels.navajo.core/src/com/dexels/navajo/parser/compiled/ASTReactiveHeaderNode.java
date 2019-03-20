@@ -8,7 +8,6 @@ import java.util.function.Function;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 
-public
 class ASTReactiveHeaderNode extends SimpleNode {
   public int args = 0;
   ASTReactiveHeaderNode(int id) {

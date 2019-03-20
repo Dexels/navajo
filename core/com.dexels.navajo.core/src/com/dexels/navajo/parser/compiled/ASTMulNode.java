@@ -14,7 +14,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 
-public final class ASTMulNode extends SimpleNode {
+final class ASTMulNode extends SimpleNode {
 
     ASTMulNode(int id) {
         super(id);

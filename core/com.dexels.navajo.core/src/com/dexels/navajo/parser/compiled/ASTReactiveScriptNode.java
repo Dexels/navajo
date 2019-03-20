@@ -25,8 +25,7 @@ import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public
-class ASTReactiveScriptNode extends SimpleNode {
+public class ASTReactiveScriptNode extends SimpleNode {
   public int args = 0;
   public int headers = 0;
   public boolean hasHeader = false;

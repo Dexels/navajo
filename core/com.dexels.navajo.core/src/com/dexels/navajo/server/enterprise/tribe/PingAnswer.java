@@ -40,7 +40,6 @@ public class PingAnswer extends Answer implements Mappable {
 	public double cpuLoad;
 	public int threadCount;
 	public long requestCount;
-	public long uptime;
 	public boolean busy = false;
 	public String statistics;
 	public String postmanURL;
@@ -54,7 +53,6 @@ public class PingAnswer extends Answer implements Mappable {
 		cpuLoad = DispatcherFactory.getInstance().getNavajoConfig().getCurrentCPUload();
 		threadCount = DispatcherFactory.getInstance().getAccessSet().size();
 		requestCount = DispatcherFactory.getInstance().getRequestCount();
-		uptime = DispatcherFactory.getInstance().getUptime();
 		busy = DispatcherFactory.getInstance().isBusy();
 		statistics = TribeManagerFactory.getInstance().getStatistics();
 //		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
@@ -75,10 +73,6 @@ public class PingAnswer extends Answer implements Mappable {
 
 	public long getRequestCount() {
 		return requestCount;
-	}
-
-	public long getUptime() {
-		return uptime;
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.script.api.Access;
@@ -251,10 +250,6 @@ public class AdminMap implements Mappable {
 
     public void setAsyncThreads(AsyncProxy[] asyncThreads) {
         this.asyncThreads = asyncThreads;
-    }
-
-    public Date getStartTime() {
-        return com.dexels.navajo.server.DispatcherFactory.getInstance().getStartTime();
     }
 
     public float getRequestRate() {

@@ -47,7 +47,7 @@ public class AsyncTest extends AsyncMappable {
 	}
 
 	public void setD(double d) {
-		logger.info("in AsyncTest setD(), d = " + d);
+		logger.info("in AsyncTest setD(), d = {}", d);
 		this.d = d;
 	}
 
@@ -74,8 +74,9 @@ public class AsyncTest extends AsyncMappable {
 			} else if (this.isInterrupted()) {
 				goToSleep();
 			}
-			if (i % 1000000 == 0)
-				System.out.print(".");
+			if (i % 1000000 == 0) {
+				logger.info(".");
+			}
 			result = a;
 		}
 		logger.info("leaving AsyncTest run()");

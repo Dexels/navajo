@@ -60,7 +60,6 @@ public class TslPreCompiler {
             }
             tslDoc = XMLDocumentUtils.createDocument(is, false);
         } catch (Exception e) {
-            logger.error("Pre-compiler failed!", e);
             throw new UserException(-1, "Exception on pre-compiling script: " + script);
         } finally {
         	if (is != null) {
@@ -77,14 +76,14 @@ public class TslPreCompiler {
         getAllDependencies(script.getAbsolutePath(), scriptTenant, scriptFolder, deps, tslDoc);
     }
 
-    protected void getAllDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException, XPathExpressionException {
+    private void getAllDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException, XPathExpressionException {
         findIncludeDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findMapDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findMethodDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findEntityDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
     }
 
-    protected void findMethodDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
+    private void findMethodDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
         NodeList methods = tslDoc.getElementsByTagName("method");
         for (int i = 0; i < methods.getLength(); i++) {
             Element n = (Element) methods.item(i);
@@ -129,7 +128,7 @@ public class TslPreCompiler {
         }
     }
 
-    protected void findEntityDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
+    private void findEntityDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
         if (scriptFile.indexOf("entity") < 1) {
             return;
         }
@@ -272,7 +271,7 @@ public class TslPreCompiler {
 
     }
 
-    protected void findIncludeDependencies(String fullScriptPath, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException {
+    private void findIncludeDependencies(String fullScriptPath, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException {
         NodeList includes = tslDoc.getElementsByTagName("include");
         for (int i = 0; i < includes.getLength(); i++) {
             Element n = (Element) includes.item(i);
@@ -320,7 +319,7 @@ public class TslPreCompiler {
         }
     }
 
-    protected void findMapDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws XPathExpressionException {
+    private void findMapDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
 
         // Tsl scripts seem to have a slightly different xml model than

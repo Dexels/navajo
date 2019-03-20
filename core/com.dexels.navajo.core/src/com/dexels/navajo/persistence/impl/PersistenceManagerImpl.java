@@ -38,24 +38,14 @@ import com.dexels.navajo.util.AuditLog;
 
 class Frequency implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 459349380931775302L;
 
 	public Frequency(String name) {
 		this.name = name;
 		this.frequency = 0;
-		this.creationDate = System.currentTimeMillis();
-	}
-
-	public boolean isExpired(long interval) {
-		return ((creationDate + interval) < System.currentTimeMillis());
 	}
 
 	public void setCreation() {
-		this.creationDate = System.currentTimeMillis();
-		
 	}
 
 	public String getName() {
@@ -66,7 +56,6 @@ class Frequency implements Serializable {
 		return this.frequency;
 	}
 
-	private long creationDate;
 	private String name;
 	private int frequency = 0;
 	
@@ -93,11 +82,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     private long totalhits = 0;
     private long cachehits = 0;
     
-    private volatile SharedTribalMap<String,PersistentEntry> inMemoryCache = null;
-    private volatile SharedTribalMap<String,Frequency> accessFrequency = null;
-	private volatile SharedStoreInterface sharedPersistenceStore = null;
+    private SharedTribalMap<String,PersistentEntry> inMemoryCache = null;
+    private SharedTribalMap<String,Frequency> accessFrequency = null;
+	private SharedStoreInterface sharedPersistenceStore = null;
 	
-	private static final Object semaphore = new Object();
 	
 	private static final String CACHE_PATH = "navajocache";
 	private static final String MEMORY_CACHE_ID = "inMemoryCache";
@@ -117,33 +105,28 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		this.sharedPersistenceStore = sharedStore;
 	}
 	
-	public void init() {
+	@SuppressWarnings("unchecked")
+	synchronized void init() {
 		if ( this.sharedPersistenceStore == null ) {
-			synchronized ( semaphore ) {
-				if ( this.sharedPersistenceStore == null ) {
-					sharedPersistenceStore = SharedStoreFactory.getInstance();
-					if(sharedPersistenceStore==null) {
-						// now what?
-						// just ignore?
-						return;
-					}
-					if ( tribeManager.getIsChief() ) {
-						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
-					}
-					inMemoryCache = new SharedTribalMap<String,PersistentEntry>(MEMORY_CACHE_ID);
-					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
-					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
-					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
-					logger.info("============================================================================");
-					logger.info("inMemoryCache = " + inMemoryCache);
-					logger.info("accessFrequency = " + accessFrequency);
-					logger.info("sharedPersistenceStore = " + sharedPersistenceStore);
-					logger.info("============================================================================");
-					// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
-					// cached scripts accordingly.
-					NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
-				}
+			sharedPersistenceStore = SharedStoreFactory.getInstance();
+			if(sharedPersistenceStore==null) {
+				return;
 			}
+			if ( tribeManager.getIsChief() ) {
+				sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
+			}
+			inMemoryCache = new SharedTribalMap<>(MEMORY_CACHE_ID);
+			accessFrequency = new SharedTribalMap<>(FREQUENCE_MAP_ID);
+			inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
+			accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
+			logger.info("============================================================================");
+			logger.info("inMemoryCache = {}", inMemoryCache);
+			logger.info("accessFrequency = {}", accessFrequency);
+			logger.info("sharedPersistenceStore = {}", sharedPersistenceStore);
+			logger.info("============================================================================");
+			// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
+			// cached scripts accordingly.
+			NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
 		}
 	}
     
@@ -157,7 +140,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     	if ( persist ) {
     		totalhits++;
-    		synchronized (semaphore) {
+    		synchronized (this) {
     			result = read(key, service, expirationInterval);
     		}
     	}
@@ -165,7 +148,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	if (result == null) {
     		result = c.construct();
     		if (persist) {
-    			synchronized (semaphore) {
+    			synchronized (this) {
     				write(result, key, service);
     			}
     		}
@@ -176,14 +159,14 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	return result;
     }
 
-    private final String constructServiceKeyValues(String serviceKeys, Navajo in) throws Exception {
+    private final String constructServiceKeyValues(String serviceKeys, Navajo in) {
     	
     	if ( serviceKeys == null ) {
     		return "";
     	}
     	
     	String [] properties = serviceKeys.split(",");
-    	StringBuffer result = new StringBuffer();
+    	StringBuilder result = new StringBuilder();
     	
     	for (int i = 0; i < properties.length; i++) {
     		Property p = in.getProperty(properties[i]);
@@ -198,21 +181,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     private final Persistable memoryOperation(String key, String service, Persistable document, boolean read ) throws Exception {
 
     	if (read) {
-//    		SoftReference<PersistentEntry> pc = null;
-//    		Frequency freq = (Frequency) accessFrequency.get(key);
-//    		if (freq != null && !freq.isExpired(expirationInterval)) {
-//    			pc = (SoftReference<PersistentEntry>) inMemoryCache.get(key);
-//    			if ( pc != null && pc.get() != null ) {
-//    				return pc.get().getDocument();
-//    			} else if ( pc != null ){
-//    				inMemoryCache.remove(key);
-//    			}
-//    		} else if (freq != null && freq.isExpired(expirationInterval)) { 
-//    			SoftReference<PersistentEntry> rr = (SoftReference<PersistentEntry>) inMemoryCache.get(freq.getName());
-//    			if ( rr != null && rr.get() != null ) {
-//    				inMemoryCache.remove(freq.getName());
-//    			}
-//    		}
     		return null;
     	} else { // WRITE (ONLY WRITE METADATA TO MEMORY NOT ENTIRE NAVAJO!)
     		if (inMemoryCache.get(key) == null) {

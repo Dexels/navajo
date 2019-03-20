@@ -71,7 +71,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		pm.clearCache();
 		TestNavajoConfig tnc = new TestNavajoConfig();
 		tnc.setMyPersistenceManager(pm);
-		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 	}
 

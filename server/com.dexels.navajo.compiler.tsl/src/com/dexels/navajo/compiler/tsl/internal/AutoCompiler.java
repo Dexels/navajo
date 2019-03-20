@@ -47,7 +47,7 @@ public class AutoCompiler {
 		}
 		long warmupWait = parseValue(settings,"warmupWait",DEFAULT_WARMUP_WAIT);
 		this.scheduleWait = parseValue(settings,"scheduleWait",DEFAULT_SCHEDULE_WAIT);
-		logger.info("Scanning auto");
+		logger.info("Activating autocompiling starting warm up of {}",warmupWait);
 		this.executor = Executors.newFixedThreadPool(1);
 		this.executor.execute(() -> {
 			try {
@@ -56,6 +56,7 @@ public class AutoCompiler {
 				logger.trace("Error: ", e);
 			}
 		});
+		logger.info("Scanning auto starting");
 		active.set(enabled);
 		scanFiles();
 	}

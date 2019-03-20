@@ -13,7 +13,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
 
-public final class ASTNegativeNode extends SimpleNode {
+final class ASTNegativeNode extends SimpleNode {
     ASTNegativeNode(int id) {
         super(id);
     }

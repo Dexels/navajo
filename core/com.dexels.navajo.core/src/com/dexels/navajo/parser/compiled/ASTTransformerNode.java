@@ -22,7 +22,7 @@ import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public class ASTTransformerNode extends SimpleNode {
+class ASTTransformerNode extends SimpleNode {
 
 	public int args = 0;
 	public String transformerName;

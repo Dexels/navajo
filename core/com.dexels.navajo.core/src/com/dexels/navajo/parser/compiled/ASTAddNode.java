@@ -9,10 +9,11 @@ import java.util.function.Function;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
 @SuppressWarnings({"unchecked","rawtypes"})
-public final class ASTAddNode extends SimpleNode {
+final class ASTAddNode extends SimpleNode {
 
     ASTAddNode(int id) {
         super(id);
@@ -24,7 +25,7 @@ public final class ASTAddNode extends SimpleNode {
 		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),functionClassifier);
 	}
 	
-	public final Operand interpret(Operand ao,Operand bo, String expression) {
+	private final Operand interpret(Operand ao,Operand bo, String expression) {
 		Object a = ao.value;
 		Object b = bo.value;
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
@@ -56,7 +57,7 @@ public final class ASTAddNode extends SimpleNode {
             ArrayList list2 = (ArrayList) b;
 
             if (list1.size() != list2.size())
-                throw new RuntimeException("Can only add lists of equals length. Lengths found: "+list1.size()+" and"+list2.size()+" expression: "+expression);
+                throw new TMLExpressionException("Can only add lists of equals length. Lengths found: "+list1.size()+" and"+list2.size()+" expression: "+expression);
             ArrayList result = new ArrayList();
 
             for (int i = 0; i < list1.size(); i++) {
@@ -68,7 +69,7 @@ public final class ASTAddNode extends SimpleNode {
             }
             return Operand.ofList(result);
         } else
-            throw new RuntimeException("Unknown type");
+            throw new TMLExpressionException("Unknown type");
     }
 
 }

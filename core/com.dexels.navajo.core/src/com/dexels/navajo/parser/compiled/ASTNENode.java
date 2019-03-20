@@ -12,7 +12,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.Utils;
 
-public final class ASTNENode extends SimpleNode {
+final class ASTNENode extends SimpleNode {
     ASTNENode(int id) {
         super(id);
     }

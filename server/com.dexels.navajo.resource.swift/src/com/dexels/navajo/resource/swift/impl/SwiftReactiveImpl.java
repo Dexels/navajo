@@ -2,10 +2,9 @@ package com.dexels.navajo.resource.swift.impl;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
 import org.eclipse.jetty.http.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class SwiftReactiveImpl implements BinaryStore {

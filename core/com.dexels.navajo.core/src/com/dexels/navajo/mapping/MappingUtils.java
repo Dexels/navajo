@@ -67,7 +67,7 @@ public final class MappingUtils {
     }
 
     public static final Message getMessageObject(String name, Message parent, boolean messageOnly, Navajo source, boolean array,
-            String mode, int useElementIndex) throws NavajoException {
+            String mode, int useElementIndex) {
         Message msg = parent;
 
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute message reference.
@@ -97,7 +97,7 @@ public final class MappingUtils {
 
             if (i < count) {
 
-                int arrayChild = messageName.indexOf("@");
+                int arrayChild = messageName.indexOf('@');
                 if (arrayChild != -1) {
                     useElementIndex = Integer.parseInt(messageName.substring(arrayChild + 1));
                     messageName = messageName.substring(0, arrayChild);
@@ -174,7 +174,7 @@ public final class MappingUtils {
 
     public static final Property setProperty(boolean parameter, Message msg, String name, Object value, String type, String subtype,
             String direction, String description, int length, Navajo outputDoc, Navajo tmlDoc, boolean remove)
-            throws NavajoException, MappingException {
+            throws MappingException {
 
         Message ref = null;
 
@@ -218,7 +218,7 @@ public final class MappingUtils {
 
         if (prop == null) { // Property does not exist.
             if (!parameter) {
-                if (value != null && value instanceof Property) {
+                if (value instanceof Property) {
                     // Value is a property itself!
                     prop = (Property) ((Property) value).clone(name);
                 } else if (Property.SELECTION_PROPERTY.equals(type)) {
@@ -230,7 +230,7 @@ public final class MappingUtils {
                 } else if (Property.BINARY_PROPERTY.equals(type)) {
                     prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description,
                             direction);
-                    if (value != null && value instanceof Binary) {
+                    if (value instanceof Binary) {
                         prop.setValue((Binary) value);
                     }
                 } else {
@@ -259,7 +259,7 @@ public final class MappingUtils {
                     }
                 } else if (Property.BINARY_PROPERTY.equals(type)) {
                     prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
-                    if (value != null && value instanceof Binary) {
+                    if (value instanceof Binary) {
                         prop.setValue((Binary) value);
                     }
                 } else {
@@ -275,11 +275,11 @@ public final class MappingUtils {
         } else { // Existing property.
             prop.clearValue();
 
-            if (value != null && value instanceof Property) {
+            if (value instanceof Property) {
                 // Value is a property itself!
                 prop = (Property) ((Property) value).clone(name);
             } else if (Property.BINARY_PROPERTY.equals(type)) {
-                if (value != null && (value instanceof Binary)) {
+                if (value instanceof Binary) {
                     prop.setValue((Binary) value);
                 } else {
                     prop.clearValue();
@@ -318,7 +318,7 @@ public final class MappingUtils {
     }
 
     public static final Message[] addMessage(Navajo doc, Message parent, String message, String template, int count, String type,
-            String mode, String orderby) throws NavajoException, MappingException {
+            String mode, String orderby) throws MappingException {
 
         Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
 

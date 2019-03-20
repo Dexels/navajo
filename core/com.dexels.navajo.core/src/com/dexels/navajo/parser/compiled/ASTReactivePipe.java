@@ -18,7 +18,6 @@ import com.dexels.navajo.reactive.api.ReactiveSource;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 
 
-public
 class ASTReactivePipe extends SimpleNode {
 	
 	

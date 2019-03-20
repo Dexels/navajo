@@ -11,7 +11,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-public final class ASTModNode extends SimpleNode {
+final class ASTModNode extends SimpleNode {
     ASTModNode(int id) {
         super(id);
     }

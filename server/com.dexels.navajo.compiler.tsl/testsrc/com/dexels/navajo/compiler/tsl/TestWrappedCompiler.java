@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dexels.navajo.compiler.CompilationException;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.osgicompiler.internal.OSGiJavaCompilerImplementation;
 
 public class TestWrappedCompiler {

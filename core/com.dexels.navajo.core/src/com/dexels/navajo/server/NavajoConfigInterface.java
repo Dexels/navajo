@@ -2,7 +2,6 @@ package com.dexels.navajo.server;
 
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -32,23 +31,10 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public double getCurrentCPUload();
 	
 	 public boolean useLegacyDateMode();
-	 
-	// Webservice, user monitoring options
-//	public void setMonitorOn(boolean b);
-//	public boolean isMonitorOn();
-//	public int getMonitorExceedTotaltime();
-//	public String getMonitorUsers();
-//	public String getMonitorWebservices();
-//	public void setMonitorWebservices(String monitorWebservices);
-//	public void setMonitorUsers(String monitorUsers);
-//	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
-//	
-	
+
    
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
-
-//	public HashMap<String,String> getProperties();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
 	public void doClearCache();
@@ -71,10 +57,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public boolean isStatisticsRunnerEnabled();
 	public boolean isCompileScripts();
 	
-	// Start modules.
-//	public Message getMessage(String msg);
-	public void startTaskRunner();
-	public void startStatisticsRunner();
+
 	public Object getParameter(String string);
 	
 }

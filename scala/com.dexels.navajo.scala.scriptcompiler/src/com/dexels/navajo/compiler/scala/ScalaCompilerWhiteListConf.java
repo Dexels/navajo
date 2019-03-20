@@ -21,7 +21,7 @@ public class ScalaCompilerWhiteListConf {
     private Configuration configuration;
     private RepositoryInstance repository;
 
-    private final static Logger logger = LoggerFactory.getLogger(ScalaCompilerWhiteListConf.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScalaCompilerWhiteListConf.class);
 
     public void deactivate() {
         try {
@@ -35,7 +35,7 @@ public class ScalaCompilerWhiteListConf {
 
     private void injectConfig() throws IOException {
         Configuration c = createOrReuse("navajo.enterprise.compiler.scala");
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+        Dictionary<String, Object> properties = new Hashtable<>();
 
         String importsString = "";
         File manifestFile = new File(repository.getRepositoryFolder(), "META-INF" + File.separator + "MANIFEST.MF");

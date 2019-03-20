@@ -9,7 +9,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
 
-public final class ASTExpressionLiteralNode extends SimpleNode {
+final class ASTExpressionLiteralNode extends SimpleNode {
 
     String val;
 

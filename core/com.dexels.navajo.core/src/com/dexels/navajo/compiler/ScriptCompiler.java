@@ -19,9 +19,11 @@ import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.mapping.compiler.SkipCompilationException;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -39,7 +41,7 @@ public abstract class ScriptCompiler {
     protected NavajoIOConfig navajoIOConfig = null;
 
     public void compile(File scriptPath, String tenant, boolean hasTenantSpecificFile, boolean forceTenant)
-            throws Exception {
+            throws CompilationException, IOException, SkipCompilationException {
         List<Dependency> dependencies = new ArrayList<>();
         File scriptsMap = new File(navajoIOConfig.getRootPath(), getRelativeScriptPath());
         String script = getRelative(scriptsMap, scriptPath);
@@ -54,13 +56,7 @@ public abstract class ScriptCompiler {
             scriptName = script;
         }
         
-        Set<String> packages;
-        try {
-            packages = compileScript(scriptPath, scriptName, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
-        } catch (Exception e) {
-            logger.error("Exception on compiling script {}!", scriptName, e);
-            throw e;
-        }
+        Set<String> packages = compileScript(scriptPath, scriptName, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
         
         // Before generating OSGi stuff, check forceTenant
         if (forceTenant) {
@@ -94,25 +90,23 @@ public abstract class ScriptCompiler {
         Set<String> dependentResources = new HashSet<>();
 
         for (Dependency d : dependencies) {
-            if ("resource".equals(d.getType())) {
-                if (d instanceof AdapterFieldDependency) {
-                    final AdapterFieldDependency adapterFieldDep = (AdapterFieldDependency) d;
-                    logger.info("ID: {}. It's an aadapter field. with multiple: {} type {}", adapterFieldDep.getId(),
-                            adapterFieldDep.hasMultipleDependencies(), adapterFieldDep.getClass());
-                    
-                    Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty(),Optional.empty());
-                    if (op != null && op.value instanceof String) {
-                        logger.debug("Succeeded evaluation of id: {}", ((String) op.value));
-                        dependentResources.add((String) op.value);
-                    }
-                    logger.info("Resource dependency detected: {} type: {} dependency id: {}", d.getClass().getName(),
-                            d.getType(), d.getId());
+            if ("resource".equals(d.getType()) && (d instanceof AdapterFieldDependency)) {
+                final AdapterFieldDependency adapterFieldDep = (AdapterFieldDependency) d;
+                logger.info("ID: {}. It's an aadapter field. with multiple: {} type {}", adapterFieldDep.getId(),
+                        adapterFieldDep.hasMultipleDependencies(), adapterFieldDep.getClass());
+                
+                Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty(),Optional.empty());
+                if (op != null && op.value instanceof String) {
+                    logger.debug("Succeeded evaluation of id: {}", ((String) op.value));
+                    dependentResources.add((String) op.value);
+                }
+                logger.info("Resource dependency detected: {} type: {} dependency id: {}", d.getClass().getName(),
+                        d.getType(), d.getId());
 
-                    Dependency[] subs = adapterFieldDep.getMultipleDependencies();
-                    if (subs != null) {
-                        for (Dependency dependency : subs) {
-                            logger.info("Nested dependency detected: {}, type {}", dependency.getClass().getName(), dependency.getType());
-                        }
+                Dependency[] subs = adapterFieldDep.getMultipleDependencies();
+                if (subs != null) {
+                    for (Dependency dependency : subs) {
+                        logger.info("Nested dependency detected: {}, type {}", dependency.getClass().getName(), dependency.getType());
                     }
                 }
             }
@@ -182,7 +176,7 @@ public abstract class ScriptCompiler {
         w.print("Bundle-ManifestVersion: 2\r\n");
         w.print("Bundle-ClassPath: .\r\n");
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator<String> it = packages.iterator();
         boolean first = true;
         while (it.hasNext()) {
@@ -199,7 +193,7 @@ public abstract class ScriptCompiler {
         }
         w.print("Import-Package: " + sb.toString() + "\r\n");
 
-        sb = new StringBuffer();
+        sb = new StringBuilder();
         it = getRequiredBundles().iterator();
         first = true;
         while (it.hasNext()) {
@@ -254,7 +248,6 @@ public abstract class ScriptCompiler {
             tenant = getTentantSpecificDependency(dependencies);
         }
         String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
-        // symbolicName = fullName.replaceAll("/", ".");
         boolean hasTenantSpecificFile = tenant != null;
 
         XMLElement xe = new CaseSensitiveXMLElement("scr:component");
@@ -320,8 +313,8 @@ public abstract class ScriptCompiler {
     }
 
     private String tenantFromScriptPath(String scriptPath) {
-        int scoreIndex = scriptPath.lastIndexOf("_");
-        int slashIndex = scriptPath.lastIndexOf("/");
+        int scoreIndex = scriptPath.lastIndexOf('_');
+        int slashIndex = scriptPath.lastIndexOf('/');
         if (scoreIndex >= 0 && slashIndex < scoreIndex) {
             return scriptPath.substring(scoreIndex + 1, scriptPath.length());
         } else {
@@ -350,7 +343,7 @@ public abstract class ScriptCompiler {
         } else {
             fullName = packagePath + "/" + script;
         }
-        String entityName = fullName.substring(fullName.indexOf("/") + 1).replaceAll("/", ".");
+        String entityName = fullName.substring(fullName.indexOf('/') + 1).replaceAll("/", ".");
 
         String symbolicName = rpcNameFromScriptPath(fullName).replaceAll("/", ".");
 
@@ -432,8 +425,8 @@ public abstract class ScriptCompiler {
 
 
     private String rpcNameFromScriptPath(String scriptPath) {
-        int scoreIndex = scriptPath.lastIndexOf("_");
-        int slashIndex = scriptPath.lastIndexOf("/");
+        int scoreIndex = scriptPath.lastIndexOf('_');
+        int slashIndex = scriptPath.lastIndexOf('/');
         if (scoreIndex >= 0 && slashIndex < scoreIndex) {
             return scriptPath.substring(0, scoreIndex);
         } else {
@@ -441,7 +434,7 @@ public abstract class ScriptCompiler {
         }
     }
 
-    protected void addProperty(final String key, final String type, final String value, final XMLElement xe) {
+    private void addProperty(final String key, final String type, final String value, final XMLElement xe) {
         XMLElement property = new CaseSensitiveXMLElement("property");
         xe.addChild(property);
         property.setAttribute("name", key);
@@ -456,7 +449,7 @@ public abstract class ScriptCompiler {
      * Takes care of any script-language specific compilation. Returns a set of required packages
      */
     protected abstract Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
-            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws Exception;
+            String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws CompilationException,SkipCompilationException;
 
     /**
      * @return A boolean to indicate whether the script has been compiled to a

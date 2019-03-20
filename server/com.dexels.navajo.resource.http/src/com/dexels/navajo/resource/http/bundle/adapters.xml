@@ -7,6 +7,7 @@
             <value name="bucket" type="string" required="true" direction="in"/>
             <value name="binaryHash" type="string" required="false" direction="in"/>
             <value name="binary" type="binary" required="false" direction="in"/>
+            <value name="expiration" type="long" required="false" direction="in"/>
             <value name="putResult" type="string" required="false" direction="out"/>
             <value name="headResult" type="integer" required="false" direction="out"/>
             <value name="deleteResult" type="integer" required="false" direction="out"/>

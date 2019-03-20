@@ -38,7 +38,7 @@ public class ExpressionCache {
 
 	private static ExpressionCache instance;
 
-    private final LoadingCache<String, Optional<ContextExpression>> expressionCache;
+    private final LoadingCache<String, Optional<ContextExpression>> exprCache;
     private final LoadingCache<String, Optional<Operand>> expressionValueCache;
 
 	private final AtomicLong hitCount = new AtomicLong();
@@ -46,7 +46,7 @@ public class ExpressionCache {
 	private final AtomicLong parsedCount = new AtomicLong();
 	
 	public ExpressionCache() {
-		expressionCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<ContextExpression>>() {
+		exprCache = CacheBuilder.from(DEFAULT_CACHE_SPEC).build(new CacheLoader<String, Optional<ContextExpression>>() {
 			public Optional<ContextExpression> load(String key) {
 				// Return empty optional and let the application handle it.
 				return Optional.empty();
@@ -89,8 +89,6 @@ public class ExpressionCache {
 			problems.forEach(problem->
 				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
 			);
-			
-//			throw new TMLExpressionException(problems,expression);
 		}
 		return parse.apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink,access,immutableMessage,paramMessage);
 		
@@ -100,7 +98,7 @@ public class ExpressionCache {
 		return parse(problems, expression,functionClassifier,true);
 	}
 	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier, boolean allowLiteralResolve) {
-		Optional<ContextExpression> cachedParsedExpression = expressionCache.getUnchecked(expression);
+		Optional<ContextExpression> cachedParsedExpression = exprCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
 			return cachedParsedExpression.get();
@@ -114,7 +112,7 @@ public class ExpressionCache {
 	        parsedCount.incrementAndGet();
 	        if(parsed.isLiteral() && allowLiteralResolve) {
 	        		Operand result = parsed.apply();
-	        		expressionCache.put(expression, Optional.ofNullable(parsed));
+	        		exprCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {
 		        		expressionValueCache.put(expression,  Optional.of(result));
 	        		}
@@ -142,7 +140,7 @@ public class ExpressionCache {
 						}
 					};
 	        } else {
-	        		expressionCache.put(expression, Optional.ofNullable(parsed));
+	        		exprCache.put(expression, Optional.ofNullable(parsed));
 	        		return parsed;
 	        }
 	        
@@ -155,7 +153,7 @@ public class ExpressionCache {
 	}
 	
 	public void printStats() {
-		logger.info("Function cache stats. Value hit: {} expression hit: {} parse count: {} cached expression size: {} cached value size: {}",pureHitCount.get(),hitCount.get(), parsedCount.get(),this.expressionCache.size(),this.expressionValueCache.size());
+		logger.info("Function cache stats. Value hit: {} expression hit: {} parse count: {} cached expression size: {} cached value size: {}",pureHitCount.get(),hitCount.get(), parsedCount.get(),this.exprCache.size(),this.expressionValueCache.size());
 	}
 	
 	public static ExpressionCache getInstance() {
@@ -165,7 +163,7 @@ public class ExpressionCache {
 		return instance;
 	}
 	
-	private synchronized static void createInstance() {
+	private static synchronized void createInstance() {
 		if(instance==null) {
 			instance = new ExpressionCache();
 		}

@@ -19,7 +19,7 @@ import com.dexels.navajo.parser.Utils;
 
 
 @SuppressWarnings({"rawtypes"})
-public final class ASTGENode extends SimpleNode {
+final class ASTGENode extends SimpleNode {
     ASTGENode(int id) {
         super(id);
     }

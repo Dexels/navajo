@@ -2,6 +2,7 @@ package com.dexels.navajo.server;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,10 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	public static final String VERSION = "$Id$";
 	private static final String CACHE_CONFIG = "cache.xml";
 	
-	private volatile static CacheController instance = null;
+	private static CacheController instance = null;
 	private static Object semaphore = new Object();
 	
-	private volatile static HashMap<String, CacheEntry> expirations = new HashMap<String,CacheEntry>();
+	private static Map<String, CacheEntry> expirations = new HashMap<>();
 	
 	private long configTimestamp = -1;
 	

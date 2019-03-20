@@ -19,7 +19,7 @@ import com.dexels.navajo.parser.Utils;
 
 @SuppressWarnings({"rawtypes"})
 
-public final class ASTLTNode extends SimpleNode {
+final class ASTLTNode extends SimpleNode {
     
 	ASTLTNode(int id) {
         super(id);

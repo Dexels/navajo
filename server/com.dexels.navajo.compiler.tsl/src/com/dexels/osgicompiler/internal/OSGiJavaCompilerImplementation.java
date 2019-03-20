@@ -31,10 +31,10 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.CompilationException;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassLoader;
 import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
+import com.dexels.navajo.script.api.CompilationException;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {

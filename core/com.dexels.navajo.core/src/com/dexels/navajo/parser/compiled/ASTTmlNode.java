@@ -37,7 +37,7 @@ import com.dexels.navajo.util.Util;
  * @author Arjen Schoneveld
  * @version $Id$
  */
-public final class ASTTmlNode extends SimpleNode {
+final class ASTTmlNode extends SimpleNode {
     String val = "";
     String option = "";
     String selectionOption = "";

@@ -9,7 +9,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.NamedExpression;
 
-public
+
 class ASTKeyValueNode extends SimpleNode {
 
     int args = 0;

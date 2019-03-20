@@ -5,7 +5,9 @@ package com.dexels.navajo.parser.compiled;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -135,10 +137,10 @@ public abstract class SimpleNode implements Node {
     		};
     }
     
-    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BiFunction<Operand, Operand, Operand> func,Function<String,FunctionClassification> functionClassifier) {
+    public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BinaryOperator<Operand> func,Function<String,FunctionClassification> functionClassifier) {
     		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),functionClassifier);
 	}
-    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BiFunction<Operand, Operand, Operand> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
+    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BinaryOperator<Operand> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> aType = expA.returnType();
@@ -175,7 +177,7 @@ public abstract class SimpleNode implements Node {
 		};
 	}
 	
-	public ContextExpression lazyFunction(List<String> problems, String expression, Function<Operand, Operand> func, Optional<String> requiredReturnType, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression lazyFunction(List<String> problems, String expression, UnaryOperator<Operand> func, Optional<String> requiredReturnType, Function<String, FunctionClassification> functionClassifier) {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		if(requiredReturnType.isPresent() && expA.returnType().isPresent()) {
 			String expectedType = requiredReturnType.get();

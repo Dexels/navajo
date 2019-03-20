@@ -194,19 +194,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return 0;
 	}
 
-
-
-	@Override
-	public void startStatisticsRunner() {
-		
-		
-	}
-
-	@Override
-	public void startTaskRunner() {
-			
-	}
-	
 	public static void main(String [] args) throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(doc, "Input");

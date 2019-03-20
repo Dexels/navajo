@@ -29,13 +29,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -70,7 +71,6 @@ import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
-import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -87,7 +87,6 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
-import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.tenant.TenantConfig;
 import com.dexels.navajo.util.AuditLog;
@@ -98,38 +97,22 @@ import com.dexels.navajo.util.AuditLog;
  * and finally dispatching to the proper dispatcher class.
  */
 
-public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
-
-    protected static int instances = 0;
+public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     /**
      * Fields accessable by webservices
      */
-    public Access[] users;
-    public static final String FILE_VERSION = "$Id$";
-    public static final String vendor = "Dexels BV";
-    public static final String product = "Navajo Service Delivery Platform";
     public static final String NAVAJO_TOPIC = "navajo/request";
     
-    private final Map<String, GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
+    private final Map<String, GlobalManager> globalManagers = new HashMap<>();
 
     private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
+    private final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access, Boolean>());
 
-    /**
-     * Unique dispatcher instance.
-     */
-    // private static volatile Dispatcher instance = null;
-    private static boolean servicesBeingStarted = false;
-    private static boolean servicesStarted = false;
+    private boolean useAuthorisation = true;
 
-    protected boolean matchCN = false;
-    public final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access, Boolean>());
-
-    public boolean useAuthorisation = true;
-    public static java.util.Date startTime = new java.util.Date();
-
-    public long requestCount = 0;
+    private long requestCount = 0;
     private NavajoConfigInterface navajoConfig;
 
     private EventAdmin eventAdmin;
@@ -139,23 +122,16 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     private String keyStore;
     private String keyPassword;
 
-    public static final int rateWindowSize = 20;
-    public static final double requestRate = 0.0;
+    private static final int rateWindowSize = 20;
+    private static final double requestRate = 0.0;
     private long[] rateWindow = new long[rateWindowSize];
 
-    // private static Object semaphore = new Object();
     private int peakAccessSetSize = 0;
-
-    /**
-     * Registered SNMP managers.
-     */
-    private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
     protected boolean simulationMode;
     private AuthenticationMethodBuilder authMethodBuilder;
 
     // optional, can be null
-    // private BundleCreator bundleCreator;
 
     public Dispatcher(NavajoConfigInterface nc) {
         navajoConfig = nc;
@@ -187,60 +163,17 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         // Startup user defined services.
         UserDaemon.startup();
 
-        // Startup statistics runnner.
-        navajoConfig.startStatisticsRunner();
-
-        // Startup task runner.
-        navajoConfig.startTaskRunner();
-
         // Startup queued adapter.
         RequestResponseQueueFactory.getInstance();
 
         // Bootstrap integrity worker.
         navajoConfig.getIntegrityWorker();
-
-        // Start NavajoMapManager to register health of foreign (non-tribal)
-        // Navajo Server instances.
-
-        // Startup tribal status collector.
-        TribeManagerFactory.startStatusCollector();
-
-    }
-
-    // @Override
-    // public void setBundleCreator(BundleCreator bc) {
-    // this.bundleCreator = bc;
-    // }
-    //
-    // protected void clearBundleCreator(BundleCreator bc) {
-    // this.bundleCreator = null;
-    // }
-    // @Override
-    // public BundleCreator getBundleCreator() {
-    // return this.bundleCreator;
-    // }
-
-    protected final void init() {
-
-        // Init tribe, if initializing it returns null, should not matter, let
-        // it do its thing.
-        if (!servicesBeingStarted && !servicesStarted) {
-            servicesBeingStarted = true;
-            if (TribeManagerFactory.getInstance() != null) {
-                // After tribe exists, start other service (there are
-                // dependencies on existence of tribe!).
-                startUpServices();
-            }
-            servicesStarted = true;
-            servicesBeingStarted = false;
-        }
-
     }
 
     public Access[] getUsers() {
-        Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
+        Set<Access> all = new HashSet<>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
         Iterator<Access> iter = all.iterator();
-        ArrayList<Access> d = new ArrayList<Access>();
+        List<Access> d = new ArrayList<>();
         while (iter.hasNext()) {
             Access a = iter.next();
             d.add(a);
@@ -294,8 +227,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public float getRequestRate() {
         if (rateWindow[0] > 0) {
             float time = (rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float) 1000.0;
-            float avg = rateWindowSize / time;
-            return avg;
+            return rateWindowSize / time;
         }
         return 0.0f;
     }
@@ -305,11 +237,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * Adapters.
      */
     @Override
-    public synchronized final void doClearCache() {
+    public final synchronized void doClearCache() {
         navajoConfig.doClearCache();
         GenericHandler.doClearCache();
         System.runFinalization();
-        // System.gc();
     }
 
     /**
@@ -317,11 +248,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
      * alone
      */
     @Override
-    public synchronized final void doClearScriptCache() {
+    public final synchronized void doClearScriptCache() {
         navajoConfig.doClearScriptCache();
         GenericHandler.doClearCache();
-        // System.runFinalization();
-        // System.gc();
     }
 
     /*
@@ -426,7 +355,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
         try {
 
-            ServiceHandler sh = createHandler(access);
+            ServiceHandler sh = HandlerFactory.createHandler(navajoConfig, access, simulationMode); 
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
@@ -463,15 +392,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 integ.removeFromRunningRequestsList(in);
             }
         }
-    }
-
-    // Overridden for OSGi
-    protected ServiceHandler createHandler(Access access) {
-        return HandlerFactory.createHandler(navajoConfig, access, simulationMode);
-    }
-
-    public final boolean doMatchCN() {
-        return matchCN;
     }
 
     /**
@@ -578,8 +498,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             }
             return outMessage;
         } catch (Exception e) {
-            logger.error("Error: ", e);
-            throw new FatalException(e.getMessage());
+            throw new FatalException(e.getMessage(),e);
         }
     }
 
@@ -680,15 +599,12 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     public final Navajo removeInternalMessages(Navajo doc) {
         if (doc != null) {
             try {
-                // if ( doc.getMessage("__globals__") != null ) {
                 doc.removeMessage(doc.getMessage("__globals__"));
-                // }
-                // if ( doc.getMessage("__parms__") != null ) {
                 doc.removeMessage(Message.MSG_AAA_BLOCK);
                 doc.removeMessage(Message.MSG_PARAMETERS_BLOCK);
                 doc.removeMessage(Message.MSG_TOKEN_BLOCK);
-                // }
             } catch (Exception e) {
+            	logger.error("Error: ", e);
             }
         }
         return doc;
@@ -928,13 +844,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
             if (origRunnable != null) {
                 access.setOriginalRunnable(origRunnable);
-                // and vice versa, for the endTransaction;
+                // and vice versa, for the endTransaction
                 origRunnable.setAttribute("access", access);
             }
 
             String fullLog = inMessage.getHeader().getHeaderAttribute("fullLog");
             if ("true".equals(fullLog)) {
-                logger.info("Full debug detected. Accesshash: " + access.hashCode());
+                logger.info("Full debug detected. Accesshash: {}", access.hashCode());
                 access.setDebugAll(true);
             }
 
@@ -1011,10 +927,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
 
                     // Create beforeWebservice event.
                     access.setInDoc(inMessage);
-                    long b_start = System.currentTimeMillis();
+                    long bstart = System.currentTimeMillis();
                     Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?  
                     		WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
-                    access.setBeforeServiceTime((int) (System.currentTimeMillis() - b_start));
+                    access.setBeforeServiceTime((int) (System.currentTimeMillis() - bstart));
 
                     if (useAuthorisation) {
                         if (useProxy == null) {
@@ -1101,14 +1017,13 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
             if (AsyncStore.getInstance().getInstance(allRefs[0]) == null) {
                 RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
                 
-                logger.info("Broadcasting async pointer: "+allRefs[0]);
+                logger.info("Broadcasting async pointer: {}", allRefs[0]);
                 RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
                 if (rasa != null) {
                     logger.info("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef()
                             + ")" + " FOR REF " + allRefs[0]);
                     try {
-                        Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(),tenant);
-                        return result;
+                    	return TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef(),tenant);
                     } catch (Exception e) {
                         logger.error("Error: ", e);
                     }
@@ -1151,10 +1066,10 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                 // Call after web service event...
                 access.setAfterServiceTime(0);
                 if (access.getExitCode() != Access.EXIT_AUTH_EXECPTION) {
-                    long a_start = System.currentTimeMillis();
-                    afterWebServiceActivated = ( WebserviceListenerFactory.getInstance() != null ? 
+                    long astart = System.currentTimeMillis();
+                    boolean after = ( WebserviceListenerFactory.getInstance() != null ? 
                             WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
-                    access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
+                    access.setAfterServiceTime((int) (System.currentTimeMillis() - astart));
                 }
                 // Set access to finished state.
                 access.setFinished();
@@ -1248,11 +1163,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     }
 
     @Override
-    protected void finalize() {
-        instances--;
-    }
-
-    @Override
     public String getApplicationId() {
         return getNavajoConfig().getInstanceName();
     }
@@ -1282,9 +1192,17 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
                     deleteFiles(dirs[i]);
                 }
             }
-            f.delete();
+            try {
+				Files.deleteIfExists(f.toPath());
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
         } else if (f != null) {
-            f.delete();
+            try {
+				Files.deleteIfExists(f.toPath());
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
         }
     }
 
@@ -1303,42 +1221,14 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         File f = File.createTempFile(prefix, suffix, getTempDir());
         // Don't use deleteOnExit until Java 1.6, lower version contain memory
         // leak (approx. 1K per call!).
-        // f.deleteOnExit();
+         f.deleteOnExit();
         return f;
-    }
-
-    public Access getAccessObject(String id) {
-
-        Iterator<Access> iter = accessSet.iterator();
-        boolean found = false;
-        Access a = null;
-        while (iter.hasNext() && !found) {
-            a = iter.next();
-            if (a.accessID.equals(id)) {
-                found = true;
-            }
-        }
-        return a;
     }
 
     @Override
     public int getAccessSetSize() {
         return DispatcherFactory.getInstance().getAccessSet().size();
     }
-
-    @Override
-    public void kill() {
-    }
-
-    @Override
-    public void load(Access access) throws MappableException, UserException {
-
-    }
-
-    @Override
-    public void store() throws MappableException, UserException {
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -1362,65 +1252,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     /*
      * (non-Javadoc)
      * 
-     * @see com.dexels.navajo.server.DispatcherMXBean#getStarttime()
-     */
-    @Override
-    public Date getStarttime() {
-        return startTime;
-    }
-
-    public static int getInstances() {
-        return instances;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.dexels.navajo.server.DispatcherMXBean#getUptime()
-     */
-    @Override
-    public long getUptime() {
-        return (System.currentTimeMillis() - startTime.getTime());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.dexels.navajo.server.DispatcherMXBean#getSnmpManangers()
-     */
-    @Override
-    public String getSnmpManangers() {
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < snmpManagers.size(); i++) {
-            SNMPManager snmp = snmpManagers.get(i);
-            s.append(snmp.getHost() + ":" + snmp.getPort() + ":" + snmp.getSnmpVersion());
-            s.append(',');
-        }
-        String result = s.toString();
-        if (result.length() > 0) {
-            result = result.substring(0, result.length() - 1);
-        }
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.dexels.navajo.server.DispatcherMXBean#setSnmpManagers(java.lang.String
-     * )
-     */
-    @Override
-    public void setSnmpManagers(String s) {
-        StringTokenizer st = new StringTokenizer(s, ",");
-        while (st.hasMoreTokens()) {
-            snmpManagers.add(new SNMPManager(st.nextToken()));
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.dexels.navajo.server.DispatcherMXBean#getRequestCount()
      */
     @Override
@@ -1428,7 +1259,7 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return requestCount;
     }
 
-    public static boolean validTimeSpecification(String dateString) {
+    private static boolean validTimeSpecification(String dateString) {
 
         boolean result = false;
 
@@ -1482,30 +1313,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
         return result;
     }
 
-    // public String getVersion() {
-    // return "";
-    // }
-    //
-    // public String getVendor() {
-    // return vendor;
-    // }
-    //
-    // public String getProduct() {
-    // return product;
-    // }
-    //
-    // public String getEdition() {
-    // return edition;
-    // }
-
     @Override
     public Set<Access> getAccessSet() {
         return accessSet;
-    }
-
-    @Override
-    public java.util.Date getStartTime() {
-        return startTime;
     }
 
     @Override
@@ -1536,10 +1346,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
     @Override
     public void setHealth(String resourceId, int h) {
         health = h;
-    }
-
-    public static ResourceManager getResourceManager(String id) {
-        return DispatcherFactory.getInstance();
     }
 
     @Override

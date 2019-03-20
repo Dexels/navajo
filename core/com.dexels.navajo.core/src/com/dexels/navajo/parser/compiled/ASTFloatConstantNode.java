@@ -17,7 +17,7 @@ import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
-public final class ASTFloatConstantNode extends SimpleNode {
+final class ASTFloatConstantNode extends SimpleNode {
 
     double val;
 

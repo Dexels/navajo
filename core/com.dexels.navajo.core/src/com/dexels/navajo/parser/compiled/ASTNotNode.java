@@ -12,7 +12,7 @@ import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-public final class ASTNotNode extends SimpleNode {
+final class ASTNotNode extends SimpleNode {
     ASTNotNode(int id) {
         super(id);
     }

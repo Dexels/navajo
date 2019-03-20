@@ -70,10 +70,8 @@ public interface DispatcherInterface extends ResourceManager {
 	 */
 	public Set<Access> getAccessSet();
 	
-	public java.util.Date getStartTime();
 	public int getRateWindowSize();
 	public boolean isBusy();
-	public long getUptime();
 	public long getRequestCount();
 	public float getRequestRate();
 	
@@ -85,28 +83,11 @@ public interface DispatcherInterface extends ResourceManager {
 	public String getApplicationGroup();
 
 	public String getThreadName(Access a);
-	
-	/*
-	 * Product information.
-	 */
-//	public  String getVersion();
-//	public  String getVendor();
-//	public  String getProduct();
-//	public  String getEdition();
-	
+
 	
 	  public  Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException;
 	
 	  
 	  public Navajo handleCallbackPointers(Navajo inMessage, String tenant);
 
-
-	//
-	/**
-	 * Associates a BundleCreator with this dispatcher object, might be called multiple times, might be null.
-	 * @param bc
-	 */
-//	public void setBundleCreator(BundleCreator bc);
-//	
-//	public BundleCreator getBundleCreator();
 }

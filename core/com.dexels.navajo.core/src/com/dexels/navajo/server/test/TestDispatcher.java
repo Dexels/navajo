@@ -90,11 +90,6 @@ public class TestDispatcher implements DispatcherInterface {
 		return 0;
 	}
 
-	@Override
-	public long getUptime() {
-		
-		return 0;
-	}
 
 	@Override
 	public boolean isBusy() {
@@ -124,11 +119,6 @@ public class TestDispatcher implements DispatcherInterface {
 	public float getRequestRate() {
 		
 		return 0;
-	}
-
-	@Override
-	public Date getStartTime() {
-		return null;
 	}
 
 	@Override

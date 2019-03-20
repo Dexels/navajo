@@ -1,7 +1,5 @@
 package com.dexels.navajo.server;
 
-import java.util.Date;
-
 import com.dexels.navajo.server.resource.ResourceManager;
 
 public interface DispatcherMXBean extends ResourceManager {
@@ -30,17 +28,6 @@ public interface DispatcherMXBean extends ResourceManager {
 	public void resetAccessSetPeakSize();
 	
 	/**
-	 * Return the time in millis since startup.
-	 * @return
-	 */
-	public long getUptime();
-	
-	/**
-	 * Returns the startup time of this Navajo instance.
-	 */
-	public Date getStarttime();
-	
-	/**
 	 * Gets the (normalized) CPU load.
 	 * @return
 	 */
@@ -56,19 +43,5 @@ public interface DispatcherMXBean extends ResourceManager {
 	 * @return
 	 */
 	public long getRequestCount();
-	
-	/**
-	 * SNMP stuff (not fully operational)
-	 * SNMP managers are coded as follows:
-     * hostname:port[:V1|V2][,hostname:port[:V1|V2]]*
-	 */
-	public String getSnmpManangers();
-	
-	/**
-	 * Sets SNMP managers (not fully operational).
-	 * @param s
-	 */
-	public void setSnmpManagers(String s);
-	
-	
+
 }

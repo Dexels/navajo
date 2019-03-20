@@ -18,7 +18,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 
 
-public final class ASTStringConstantNode extends SimpleNode {
+final class ASTStringConstantNode extends SimpleNode {
 
     String val;
 
