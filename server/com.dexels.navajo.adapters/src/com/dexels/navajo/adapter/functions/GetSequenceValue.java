@@ -26,7 +26,7 @@ public class GetSequenceValue extends FunctionInterface {
     }
 
     @Override
-	public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
+	public Object evaluate(){
         Integer transactionContext = -1;
         String datasource = null;
         String sequencename = null;
@@ -34,7 +34,7 @@ public class GetSequenceValue extends FunctionInterface {
         Object o1 = operand(0).value;
         String sql = "";
         if (o1 instanceof Integer) {  // TransactionContext set.
-            transactionContext = ((Integer) o1).intValue();
+            transactionContext = (Integer) o1;
             Object o2 = operand(1).value;
             if (!(o2 instanceof String))
                 throw new TMLExpressionException(this, "Invalid argument: " + o2);

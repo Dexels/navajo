@@ -260,13 +260,12 @@ public void kill() {
     return requestNavajo;
   }
 
-  @SuppressWarnings("rawtypes")
 private String getOutMessageStack() {
-    StringBuffer stackBuffer = new StringBuffer();
-    Stack s = myAccess.getCompiledScript().getOutMsgStack();
-    Iterator iter = s.iterator();
+    StringBuilder stackBuffer = new StringBuilder();
+    Stack<Message> s = myAccess.getCompiledScript().getOutMsgStack();
+    Iterator<Message> iter = s.iterator();
     while (iter.hasNext()) {
-      Object o = iter.next();
+    	Message o = iter.next();
       if (o != null) {
         stackBuffer.append(o + "\n");
       }

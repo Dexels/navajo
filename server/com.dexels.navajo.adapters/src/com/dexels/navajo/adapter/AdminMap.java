@@ -30,7 +30,9 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 @Deprecated
 public class AdminMap implements Mappable {
 
-    private static final String UNDEFINED = "Undefined, check OSGi";
+    private static final String UNDEFINEDVENDOR = "Undefined vendor, check OSGi";
+    private static final String UNDEFINEDVERSION = "Undefined version, check OSGi";
+    private static final String UNDEFINEDPRODUCTNAME = "Undefined product name, check OSGi";
 	public int openConnections;
     public int requestCount;
     public float requestRate;
@@ -38,7 +40,6 @@ public class AdminMap implements Mappable {
     public String scriptPath;
     public AccessMap[] users;
     public AsyncProxy[] asyncThreads;
-    public ClassCount[] classCounts;
     public String accessId;
     public String vendor;
     public String productName;
@@ -258,15 +259,15 @@ public class AdminMap implements Mappable {
     }
 
     public String getProductName() {
-        return UNDEFINED;
+        return UNDEFINEDPRODUCTNAME;
     }
 
     public String getVendor() {
-        return UNDEFINED;
+        return UNDEFINEDVENDOR;
     }
 
     public String getVersion() {
-        return UNDEFINED;
+        return UNDEFINEDVERSION;
     }
 
     public String getConfigPath() {
@@ -397,14 +398,6 @@ public class AdminMap implements Mappable {
         NavajoFactory.getInstance().setTempDir(DispatcherFactory.getInstance().getTempDir());
         NavajoFactory.getInstance().setExpressionEvaluator(new CachedExpressionEvaluator());
         logger.debug("Document class is now: {}", getDocumentClass());
-    }
-
-    @Deprecated
-    public ClassCount[] getClassCounts() {
-        ClassCount[] cc = new ClassCount[1];
-        cc[0].className = "com.dexels.navajo.server.Dispatcher";
-        cc[0].count = -1;
-        return cc;
     }
 
     /**
