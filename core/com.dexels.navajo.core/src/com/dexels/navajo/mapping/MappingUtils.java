@@ -366,6 +366,10 @@ public final class MappingUtils {
         if (description != null && !description.equals("")) {
             prop.setDescription(description);
         }
+        // Set length if not empty ( = -1) .
+        if (length != -1 ) {
+            prop.setLength(length);
+        }
         return prop;
     }
 
