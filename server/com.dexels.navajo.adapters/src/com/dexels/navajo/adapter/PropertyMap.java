@@ -9,9 +9,11 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.MappingException;
 import com.dexels.navajo.script.api.UserException;
 
 /**
@@ -99,34 +101,21 @@ public class PropertyMap implements Mappable {
 			{
 				throw new UserException(-1, "Cannot add already existing property " + name + " when removeExisting is false."); 
 			}
-			else if (prop == null) {
-				prop = NavajoFactory.getInstance().createProperty(outMessage, name, (multiple ? "+" : "1"), description, direction);
-				msg.addProperty(prop);
-			} else {
-				prop.setDirection(direction);
-				prop.removeAllSelections();
-			}
+			// this will create if property not found and otherwise update value and other attributes, except for subtype and the options
+			// Do not have to pass inDoc as we're not creating a param
+		    prop = MappingUtils.setProperty(false, msg, name, currentValue, type, null, direction, description, length == null ? -1 : length, outMessage, null, false);
 
-            if (description != null) {
-                prop.setDescription(description);
-            }
-
-			// continue with shared setters
-            prop.setType(type);
-			if (length != null)
-			{
-			    prop.setLength(length);
-			}
 			if (subtype != null) 
 			{
 				prop.setSubType(subtype);
 			}
 
-			// One of two cases: Either a selection property or another type of property
+			// For the selection property, parse the given optionList and the multiple setting
 			if (Property.SELECTION_PROPERTY.equals(type))
 			{
 				if (optionList != null)
 				{
+					prop.clearSelections();
 					for(Option o : optionList)
 					{
 						Selection sel = NavajoFactory.getInstance().createSelection(outMessage, o.getName(), o.getValue(), o.getSelected());
@@ -135,36 +124,29 @@ public class PropertyMap implements Mappable {
 				}
 				prop.setCardinality(multiple ? "+" : "1");
 			}
-			else
-			{
-				prop.setAnyValue(currentValue);
-			}
 
-		} catch (NavajoException ne) {
-			throw new UserException(-1, ne.getMessage(),ne);
+		} catch (Exception e) {
+			throw new UserException(-1, e.getMessage(), e);
 		}
 	}
 	
 	public void setOptionName(String name) {
 		currentOption.setName(name);
-		if (currentOption.completelyDefined())
-		{
-			optionList.add(currentOption);
-			currentOption = new Option();
-		}
+		possiblyFinalizeOption();
 	}
 	
 	public void setOptionValue(String value) {
 		currentOption.setValue(value);
-		if (currentOption.completelyDefined())
-		{
-			optionList.add(currentOption);
-			currentOption = new Option();
-		}
+		possiblyFinalizeOption();
 	}
 	
 	public void setOptionSelected(boolean selected) {
 		currentOption.setSelected(selected);
+		possiblyFinalizeOption();
+	}
+	
+	private void possiblyFinalizeOption()
+	{
 		if (currentOption.completelyDefined())
 		{
 			optionList.add(currentOption);
