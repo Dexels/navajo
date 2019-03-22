@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.BaseSelectionImpl;
 import com.dexels.navajo.script.api.*;
 
 public class PropertyMapTest {
@@ -678,19 +677,47 @@ public class PropertyMapTest {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, "Message");
 		m.setType(Message.MSG_TYPE_SIMPLE);
-		Property p2 = NavajoFactory.getInstance().createProperty(n, "Property", Property.SELECTION_PROPERTY, value, -1, "Marte", Property.DIR_OUT);
-		p2.setCardinality(Property.CARDINALITY_SINGLE);
-		p2.addSelection( new BaseSelectionImpl(n, "Tesselschadestraat", "Leiden", true) );
-		p2.addSelection( new BaseSelectionImpl(n, "Grasweg", "Amsterdam", false) );
-		p2.addSelection( new BaseSelectionImpl(n, "van Marnixlaan", "Amersfoort", false) );
-		p2.addSelection( new BaseSelectionImpl(n, "Cambridgelaan", "Utrecht", false) );
-		// create the selections
-		m.addProperty(p2);
 		n.addMessage(m);
 		Access a = new Access();
 		a.setOutputDoc(n);
 		a.setCurrentOutMessage(m);
+		// Use the propertymap to setup the final bit of the test. The only reason is to avoid using BaseSelectionImpl which is not readily available without changing the manifest
+		PropertyMap pm2 = new PropertyMap();
+		pm2.load(a);
+		// define the specific variables for this test
+		pm2.setRemoveExisting(true);
+		pm2.setName("Property");
+		pm2.setType(Property.SELECTION_PROPERTY);
+		// Add options, option 1
+		pm2.setOptionName("Tesselschadestraat");
+		pm2.setOptionValue("Leiden");
+		pm2.setOptionSelected(true);
+		// option 2
+		pm2.setOptionName("Grasweg");
+		pm2.setOptionValue("Amsterdam");
+		pm2.setOptionSelected(false);		
+		// option 3
+		pm2.setOptionName("van Marnixlaan");
+		pm2.setOptionValue("Amersfoort");
+		pm2.setOptionSelected(false);
+		// option 4
+		pm2.setOptionName("Cambridgelaan");
+		pm2.setOptionValue("Utrecht");
+		pm2.setOptionSelected(false);
 		
+		// do it
+		pm2.store();
+		// verify setup is correct
+		assertNotNull( n.getMessage("Message").getProperty("Property") );
+		Property p2 = n.getMessage("Message").getProperty("Property");
+		assertNotNull( p2.getSelected() );
+		assertEquals( p2.getAllSelections().size(), 4 );
+		assertNotNull( p2.getAllSelectedSelections() );
+		assertEquals( p2.getAllSelectedSelections().size(), 1 );
+		assertEquals( p2.getSelected().getValue(), "Leiden" );
+		assertEquals( p2.getCardinality(), Property.CARDINALITY_SINGLE );
+		
+		// now start the real test
 		PropertyMap pm = new PropertyMap();
 		pm.load(a);
 		// define the specific variables for this test
