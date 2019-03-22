@@ -204,6 +204,11 @@ public final class MappingUtils {
         if (ref == null) {
             throw new MappingException("Property can only be created under a message");
         }
+        // with ../ constructions in the name of the new property, it is possible to create a property at the rootMessage of a NavajoDoc but that will never be serialized. Logger message to see how often it happens
+        if (ref.equals(ref.getRootDoc().getRootMessage()))
+        {
+        	logger.warn("WARNING - Adding property to rootMessage of NavajoDoc - property will not be findable");
+        }
 
         Property prop = ref.getProperty(actualName);
 
