@@ -2,6 +2,10 @@ package com.dexels.navajo.adapter.dirmap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -14,6 +18,8 @@ public class FileEntryMap implements Mappable {
 	private File file = null;
 	private Binary contents = null;
 	
+	private static final Logger logger = LoggerFactory.getLogger(FileEntryMap.class);
+
 	
 	public void setAbsolutePath(String path) throws IOException {
 		setFile(new File(path));
@@ -27,7 +33,7 @@ public class FileEntryMap implements Mappable {
 		createBinary(file);
 	}
 
-	protected Binary createBinary(File file) throws IOException {
+	private Binary createBinary(File file) throws IOException {
 		contents = new Binary(file);
 		return contents;
 	}
@@ -61,11 +67,15 @@ public class FileEntryMap implements Mappable {
 	 * @param b  
 	 */
 	public void setDelete(boolean b) {
-		file.delete();
+		setDelete();
 	}
 
 	public void setDelete() {
-		file.delete();
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
 	}
 
 	public String getName() {

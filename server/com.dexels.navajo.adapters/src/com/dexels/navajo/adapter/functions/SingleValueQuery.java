@@ -24,8 +24,8 @@ import com.dexels.navajo.jdbc.JDBCMappable;
 public class SingleValueQuery extends FunctionInterface {
     private static final Logger logger = LoggerFactory.getLogger(SingleValueQuery.class);
 
-  public static final String DATASOURCEDELIMITER = ":";
-  public static final String USERDELIMITER = "@";
+  static final String DATASOURCEDELIMITER = ":";
+  private static final String USERDELIMITER = "@";
   private String dbIdentifier = null;
 
   public String getDbIdentifier() { return this.dbIdentifier; }
@@ -37,7 +37,7 @@ public class SingleValueQuery extends FunctionInterface {
 	  super();
   }
   
-  protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.expression.api.TMLExpressionException {
+  protected final JDBCMappable evaluateQuery() {
 	  String query = "";
 	  JDBCMappable sql = null;
 
@@ -45,7 +45,6 @@ public class SingleValueQuery extends FunctionInterface {
 
 	  // String read query.
 	  Object o1 = operand(0).value;
-	  query = "";
 	  if (o1 instanceof Integer) {  // TransactionContext set.
 		  transactionContext = ((Integer) o1).intValue();
 		  Object o2 = operand(1).value;
@@ -54,12 +53,11 @@ public class SingleValueQuery extends FunctionInterface {
 		  query = (String) o2;
 	  } else if (o1 instanceof String) { // No TransactionContext set.
 		  query = (String) o1;
-	  } else
+	  } else {
 		  throw new TMLExpressionException(this, "Invalid argument: " + o1);
+	  }
 
 
-	  //if ((query.indexOf("COUNT") == -1) && (query.indexOf("count") == -1))
-	  //  throw new TMLExpressionException(this, "Only queries with count constructs supported " + o1);
 
 	  StringTokenizer tokens = new StringTokenizer(query, "?");
 	  int parameterCount = tokens.countTokens() - 1;
@@ -94,7 +92,6 @@ public class SingleValueQuery extends FunctionInterface {
 
 		  }
 		  if (transactionContext != -1) {
-			  //logger.debug("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
 			  sql.setTransactionContext(transactionContext);
 		  }
 		  sql.setQuery(query);
@@ -112,7 +109,7 @@ public class SingleValueQuery extends FunctionInterface {
   }
   
   @Override
-public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
+public Object evaluate() {
 	  JDBCMappable sql = evaluateQuery();
 	  setDbIdentifier(sql.getDbIdentifier());
 	  Object result = null;
@@ -129,9 +126,8 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 		  try {
 			  sql.store();
 		  } catch (Exception e1) {
-			  throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage() + ", query = " + sql.getQuery(),e1);
+			  logger.error("Fatal error: query = "+sql.getQuery(), e1);
 		  }
-		  //System.out.println("SingleValueQuery(), result = " + result);
 	  }
 
 	  return result;

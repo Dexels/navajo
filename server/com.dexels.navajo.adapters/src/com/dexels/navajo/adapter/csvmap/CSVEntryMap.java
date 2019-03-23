@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.csvmap;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -28,7 +29,7 @@ public class CSVEntryMap implements Mappable {
   public int column;
   public String [] entries;
 
-  private HashMap<Integer,String> newEntries;
+  private Map<Integer,String> newEntries;
   private int max = -1;
   private boolean update = false;
 

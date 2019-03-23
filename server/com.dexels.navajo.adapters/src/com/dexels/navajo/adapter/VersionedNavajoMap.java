@@ -59,13 +59,13 @@ public void setDoSend(String method) throws UserException, ConditionErrorExcepti
          List<Method> allMethods = inMessage.getAllMethods();
          for (int i = 0; i < allMethods.size(); i++) {
            Method m = allMethods.get(i);
-           logger.debug("Adding method: " + m.getName());
+           logger.debug("Adding method: {}", m.getName());
            Method a = NavajoFactory.getInstance().createMethod(currentOutDoc,
                m.getName(), "");
            List<String> required = m.getRequiredMessages();
            for (int j = 0; j < required.size(); j++) {
              String name = required.get(j);
-              logger.debug("Adding required message: " + name);
+              logger.debug("Adding required message: {}", name);
              a.addRequired(name);
            }
            currentOutDoc.addMethod(a);

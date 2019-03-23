@@ -2,6 +2,9 @@ package com.dexels.navajo.adapter.functions;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.jdbc.JDBCMappable;
@@ -9,8 +12,11 @@ import com.dexels.navajo.jdbc.JDBCMappable;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class MultipleValueQuery extends SingleValueQuery {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(MultipleValueQuery.class);
+
 	@Override
-	public final Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
+	public final Object evaluate() {
 
 
 		JDBCMappable sql = evaluateQuery();
@@ -22,7 +28,6 @@ public final class MultipleValueQuery extends SingleValueQuery {
 				for (int i = 0; i < resultSet.length; i++ ) {
 					result.add(resultSet[i].getColumnValue(Integer.valueOf(0)));
 				}
-			} else {
 			}
 		} catch (Exception e) {
 			sql.kill();
@@ -31,9 +36,8 @@ public final class MultipleValueQuery extends SingleValueQuery {
 			try {
 				sql.store();
 			} catch (Exception e1) {
-				throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage(),e1);
+				logger.error("Error: ", e1);
 			}
-			//System.out.println("SingleValueQuery(), result = " + result);
 		}
 
 		return result;

@@ -55,10 +55,10 @@ class JoinCondition {
 
 public class MessageMap implements Mappable {
 
-	private static String INNER_JOIN = "inner";
-	private static String OUTER_JOIN = "outer";
+	private static final String INNER_JOIN = "inner";
+	private static final String OUTER_JOIN = "outer";
 
-	private ResultMessage [] resultMessage;
+//	private ResultMessage [] resultMessage;
 	private String joinMessage1;
 	private String joinMessage2;
 	private ArrayList<JoinCondition> joinConditions = new ArrayList<>();
@@ -203,7 +203,7 @@ public class MessageMap implements Mappable {
 		Message definitionMsg1 = null;
 		Message definitionMsg2 = null;
 
-		ArrayList<ResultMessage> resultingMessage = new ArrayList<>();
+		List<ResultMessage> resultingMessage = new ArrayList<>();
 
 		List<Message> children = this.msg1.getAllMessages();
 		// Determine definition message, unless groupBy is defined.
@@ -388,13 +388,7 @@ public class MessageMap implements Mappable {
 				iter.remove();
 			}
 		}
-		
-		
-		this.resultMessage = new ResultMessage[resultingMessage.size()];
-		this.resultMessage = resultingMessage.toArray(resultMessage);
-
-
-		return this.resultMessage;
+		return resultingMessage.toArray(new ResultMessage[] {});
 	}
 
 	

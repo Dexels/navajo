@@ -26,7 +26,9 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -91,22 +93,16 @@ public class XMLMap extends TagMap implements Mappable {
 
 	public Binary getContent() {
 		String r = getString();
-		Binary b = new Binary();
-		
-        try {
-            byte[] bytes = r.getBytes("UTF-8");
-            b = new Binary(bytes);
-            if ( debug ) {
-                logger.debug(new String(bytes));
-            }
-        } catch (UnsupportedEncodingException e) {
-           logger.error("UnsupportedEncodingException on getting bytes: {}", e);
+        byte[] bytes = r.getBytes(StandardCharsets.UTF_8);
+        Binary b = new Binary(bytes);
+        if ( debug ) {
+            logger.debug(new String(bytes));
         }
 
 		return b;
 	}
 
-	protected void parseXML(XMLElement e) throws UserException {
+	private void parseXML(XMLElement e) throws UserException {
 
 		String startName = e.getName();
 		this.setName(startName);
@@ -154,8 +150,8 @@ public class XMLMap extends TagMap implements Mappable {
 	}
 
 	public void setContent(Binary b) throws UserException {
-		String stringContent = new String(b.getData());
-		setStringContent(stringContent);
+		String str = new String(b.getData());
+		setStringContent(str);
 	}
 
 	public void setStringContent(String s) throws UserException {
@@ -178,7 +174,7 @@ public class XMLMap extends TagMap implements Mappable {
 		xml.setChild(district);
 		district.setName("DISTRIKTJE");
 		district.setName("WERKT DIT NOG STEEDS");
-		logger.info("child = " + xml.getChildTag("district", 0));
+		logger.info("child = {}", xml.getChildTag("district", 0));
 
 		TagMap n = new TagMap();
 		n.setName("apenoot");
@@ -189,9 +185,9 @@ public class XMLMap extends TagMap implements Mappable {
 
 		xml.setChildName("district");
 		TagMap kind = xml.getChild();
-		logger.info("kind = " + kind.getName());
-
-		b.write(System.err);
-
+		logger.info("kind = {}", kind.getName());
+		StringWriter sw = new StringWriter();
+		b.writeBase64(sw);
+		logger.info("Result: {}",sw);
 	}
 }

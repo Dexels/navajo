@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class TmlToXmlMap implements Mappable {
 	
 	private boolean hasBeenBuild = false;
 	
-	ArrayList<String[]> attributes = new ArrayList<String[]>();
+	List<String[]> attributes = new ArrayList<>();
 	private String targetNamespace;
 
 	public String getTargetNamespace() {
@@ -96,8 +97,7 @@ public class TmlToXmlMap implements Mappable {
 				Message root = document.getMessage(rootPath);
 				
 				if(root == null){
-					logger.error("ERROR! Could not find message: " + rootPath);
-					throw new UserException(1200, "Root message not found for TML2XML map");
+					throw new UserException(1200, "Root message not found for TML2XML map. Rootpath: "+rootPath);
 				}
 				content.setStart(root.getName());
 				// Add the target namespace 
@@ -126,8 +126,11 @@ public class TmlToXmlMap implements Mappable {
 
 	public void setDumpObject(boolean b) {
 		try {
+			
 			if (b) {
-				getContent().write(System.err);
+				StringWriter sw = new StringWriter();
+				getContent().writeBase64(sw);
+				logger.info("Dump of TmlToXML: {}",sw);
 			}
 		} catch (Exception e) {
 			logger.error("Error: ", e);
@@ -140,11 +143,8 @@ public class TmlToXmlMap implements Mappable {
 			if ( !attr[0].equals(content.getName())) {
 				content.setChildName(attr[0]);
 			}
-			// TagMap child = content.getChild();
-			// if(child != null){
 			content.setAttributeName(attr[1]);
 			content.setAttributeText(attr[2]);
-			// }
 		}
 	}
 
@@ -198,12 +198,12 @@ public class TmlToXmlMap implements Mappable {
 		settings.setMode(Message.MSG_MODE_IGNORE);
 		headers.setMode(Message.MSG_MODE_IGNORE);
 		setTargetNamespace(settings.getProperty("TargetNamespace").getValue());
-		logger.debug("Using namespace: "+settings.getProperty("TargetNamespace").getValue());
+		logger.debug("Using namespace: {}",settings.getProperty("TargetNamespace").getValue());
 		Property parts = settings.getProperty("Parts");
 		String partList = parts.getValue();
 		String[] partArray = partList.split(",");
 		for (String pt : partArray) {
-			logger.debug("Part: "+pt);
+			logger.debug("Part: {}", pt);
 			Message rootParent = this.document.getMessage(pt);
 			// should have only one child, if I'm not mistaken.
 			for (Message child : rootParent.getAllMessages()) {

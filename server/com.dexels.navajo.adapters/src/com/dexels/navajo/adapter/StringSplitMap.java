@@ -17,7 +17,7 @@ public class StringSplitMap implements Mappable{
 	public Token[] getTokens(){
 		if (value != null)
 		{
-			List<Token> toks = new ArrayList<Token>();
+			List<Token> toks = new ArrayList<>();
 			String[] result = value.split(delimiter);
 			for(int i = 0; i < result.length; i++){
 				Token t = new Token();

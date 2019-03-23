@@ -353,17 +353,17 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
     		} 
 	}
 
-	protected void increaseInstanceCount() {
+	private static void increaseInstanceCount() {
 		instances++;
 	}
 
-	protected void decreaseInstanceCount() {
+	private static void decreaseInstanceCount() {
 		instances--;
 	}
 	
 
 
-	protected boolean isBelowInstanceThreshold() {
+	private static boolean isBelowInstanceThreshold() {
 		return instances < 100;
 	}
 

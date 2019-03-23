@@ -11,26 +11,26 @@ import com.dexels.navajo.document.types.Binary;
 public class BinaryDataSource implements DataSource {
 
 
-    private Binary m_data;
-    private String m_name;
+    private Binary mData;
+    private String mName;
 
 
    
 
     public BinaryDataSource (Binary data, String name)
     {
-        m_data = data;
-        m_name = name;
+        mData = data;
+        mName = name;
     }
 
   
 
     @Override
 	public InputStream getInputStream() throws IOException {
-        if (m_data == null) {
+        if (mData == null) {
             throw new IOException("no data");
         }
-        return m_data.getDataAsStream();
+        return mData.getDataAsStream();
     }
 
     @Override
@@ -40,11 +40,11 @@ public class BinaryDataSource implements DataSource {
 
     @Override
 	public String getContentType() {
-        return m_data.getMimeType();
+        return mData.getMimeType();
     }
 
     @Override
 	public String getName() {
-        return m_name;
+        return mName;
     }
 }
