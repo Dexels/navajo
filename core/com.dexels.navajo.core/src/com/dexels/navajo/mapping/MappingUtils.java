@@ -51,6 +51,9 @@ public final class MappingUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(MappingUtils.class);
 
+    private MappingUtils() {
+    	// --- no instances
+    }
     public static final String getStrippedPropertyName(String name) {
         StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
         String result = "";
@@ -326,20 +329,6 @@ public final class MappingUtils {
         return prop;
     }
 
-    public static final Message[] addMessage(Navajo doc, Message parent, String message, String template, int count, String type,
-            String mode, String orderby) throws MappingException {
-
-        Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
-
-        if (orderby != null && !orderby.equals("")) {
-            for (int i = 0; i < msgs.length; i++) {
-                msgs[i].setOrderBy(orderby);
-            }
-        }
-
-        return msgs;
-    }
-
     public static final String getBaseMessageName(String name) {
         if (name.startsWith("../")) {
             return getBaseMessageName(name.substring(3));
@@ -357,7 +346,7 @@ public final class MappingUtils {
      * @param name
      * @return
      */
-    public static final Message getParentMessage(Message parent, String name) {
+    private static final Message getParentMessage(Message parent, String name) {
         if (name.startsWith("../")) {
             return getParentMessage(parent.getParentMessage(), name.substring(3));
         }
@@ -683,18 +672,22 @@ public final class MappingUtils {
         return prop.getType().equals(Property.SELECTION_PROPERTY);
     }
 
-    public static final String constructGetMethod(String name) {
+    private static final String constructGetMethod(String name) {
 
-        StringBuffer methodNameBuffer = new StringBuffer();
-        methodNameBuffer.append("get").append((name.charAt(0) + "").toUpperCase()).append(name.substring(1, name.length()));
+        StringBuilder methodNameBuffer = new StringBuilder();
+        methodNameBuffer.append("get")
+        	.append((name.charAt(0) + "").toUpperCase())
+        	.append(name.substring(1, name.length()));
 
         return methodNameBuffer.toString();
     }
 
-    public static final String constructSetMethod(String name) {
+    private static final String constructSetMethod(String name) {
 
-        StringBuffer methodNameBuffer = new StringBuffer();
-        methodNameBuffer.append("set").append((name.charAt(0) + "").toUpperCase()).append(name.substring(1, name.length()));
+    	StringBuilder methodNameBuffer = new StringBuilder();
+        methodNameBuffer.append("set")
+        	.append((name.charAt(0) + "").toUpperCase())
+        	.append(name.substring(1, name.length()));
 
         return methodNameBuffer.toString();
     }
@@ -724,8 +717,8 @@ public final class MappingUtils {
 
     private static final Type getTypeForField(String name, Class c, boolean fetchGenericType) throws MappingException {
 
-        if (name.indexOf("(") != -1) {
-            name = name.substring(0, name.indexOf("("));
+        if (name.indexOf('(') != -1) {
+            name = name.substring(0, name.indexOf('('));
         }
 
         try {
@@ -760,8 +753,7 @@ public final class MappingUtils {
 
                     } else if (methods[j].getName().equals(setMethod)) {
                         Class[] types = methods[j].getParameterTypes();
-                        Type type = types[0];
-                        return type;
+                        return types[0];
                     }
                 }
                 throw new MappingException(
@@ -786,19 +778,7 @@ public final class MappingUtils {
         return packagePath;
     }
 
-    public static final String createPackagePath(String packageName) {
-
-        if (packageName.equals(""))
-            return "";
-
-        packageName = packageName.replaceAll("\\.", System.getProperty("file.separator"));
-
-        // packagePath = (packagePath.charAt(packagePath.length()-1) == '.' ?
-        // packagePath.substring(0, packagePath.length()-1) : packagePath);
-        return System.getProperty("file.separator") + packageName;
-    }
-
-    public final static Object getAttributeObject(MappableTreeNode o, String name, Object[] arguments)
+    private static final  Object getAttributeObject(MappableTreeNode o, String name, Object[] arguments)
             throws UserException, MappingException {
 
         Object result = null;
@@ -828,10 +808,9 @@ public final class MappingUtils {
      * double noot; within a Mappable object, the following methods need to be
      * implemented: public double getNoot(); and public void setNoot(double d);
      */
-    public final static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments)
+    public static final Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments)
             throws UserException, MappingException {
 
-        Object result = null;
         // The ../ token is used to denote the parent of the current MappableTreeNode.
         // e.g., $../myField or $../../myField is used to identifiy respectively the
         // parent
@@ -845,7 +824,7 @@ public final class MappingUtils {
             name = name.substring(3, name.length());
         }
 
-        result = getAttributeObject(o, name, arguments);
+        Object result = getAttributeObject(o, name, arguments);
 
         if (result != null && result.getClass().isArray()) {
             // Encountered array cast to ArrayList.
