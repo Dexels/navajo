@@ -61,20 +61,6 @@
 		<tagname>description</tagname>
 		<object>com.dexels.navajo.adapter.DescriptionMap</object>
 	</map>
-	<map>
-		<tagname>save</tagname>
-		<object>com.dexels.navajo.adapter.NavajoSaveAdapter</object>
-	</map>
-
-	<map>
-		<tagname>load</tagname>
-		<object>com.dexels.navajo.adapter.NavajoLoadAdapter</object>
-	</map>
-	<map>
-		<tagname>filelist</tagname>
-		<object>com.dexels.navajo.adapter.NavajoFileListAdapter</object>
-	</map>
-
 
 	<map>
 		<tagname>option</tagname>
