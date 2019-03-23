@@ -35,7 +35,7 @@ public class TestClient {
 	public TestClient() {
 	}
 
-	@Test 
+	@Test (timeout=10000)
 	public void testClient() throws ClientException {
 		NavajoClient cl = new JavaNetNavajoClientImpl();
 		cl.setAllowCompression(true);
@@ -48,7 +48,7 @@ public class TestClient {
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
-	@Test 
+	@Test (timeout=10000)
 	public void testClientBig() throws ClientException {
 		NavajoClient cl = new JavaNetNavajoClientImpl();
 		cl.setAllowCompression(true);
@@ -62,7 +62,7 @@ public class TestClient {
 		cl.doSimpleSend(result, "club/ProcessQueryClub");
 	}
 	
-	@Test 
+	@Test (timeout=10000)
 	public void testDirect() throws IOException {
 		Map<String,String> headers = new HashMap<>();
 		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
