@@ -14,6 +14,7 @@ public class PropertyDescription implements Mappable {
 	private String name;
 	private String context;
 	private String description;
+	private boolean published;
 	
 	public int getId() {
 		return id;
@@ -69,6 +70,14 @@ public class PropertyDescription implements Mappable {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public boolean getPublished() {
+		return published;
+	}
+
+	public void setPublished(boolean published) {
+		this.published = published;
 	}
 
 	@Override
