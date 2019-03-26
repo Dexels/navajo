@@ -14,8 +14,7 @@ public class RemoteAsyncRequest extends Request {
 
     @Override
     public Answer getAnswer() {
-        Answer a = new RemoteAsyncAnswer(this);
-        return a;
+    	return new RemoteAsyncAnswer(this);
     }
 
     public String getRef() {

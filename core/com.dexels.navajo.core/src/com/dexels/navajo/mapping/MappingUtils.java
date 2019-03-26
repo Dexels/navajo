@@ -666,10 +666,7 @@ public final class MappingUtils {
     }
 
     public static final boolean isSelection(Message msg, Navajo doc, String msgName) {
-
-        // Message ref = null;
         Property prop = null;
-
         if (msgName.startsWith(Navajo.MESSAGE_SEPARATOR)) { // Absolute reference!
             msg = null;
             msgName = msgName.substring(1, msgName.length());

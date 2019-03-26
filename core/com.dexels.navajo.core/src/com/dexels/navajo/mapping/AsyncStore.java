@@ -55,8 +55,6 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   
   private static final Logger logger = LoggerFactory.getLogger(AsyncStore.class);
 
-  private static Object semaphore = new Object();
-  
   public AsyncStore() {
 	  super(ID);
   }
@@ -70,7 +68,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     return instance;
   }
 
-  public static final void setInstance(AsyncStore asyncStore) {
+  private static final void setInstance(AsyncStore asyncStore) {
 	  instance = asyncStore;
   }
 
@@ -85,24 +83,6 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 		this.startThread(this);
 	}
 
-  /**
-   * Get the singleton AsyncStore object instance given an async inactive timeout.
-   *
-   * @param timeout
-   * @return
-   */
-  public static final AsyncStore getInstance(float timeout) {
-	
-	  /** Make sure new instance determination is thread safe */
-	  synchronized ( semaphore ) {
-		  if (instance == null) {
-			  instance = new AsyncStore();
-			  instance.timeout = timeout;
-			  instance.activate();
-		  }
-	  }
-    return instance;
-  }
 
   /**
    * Start the main AsyncStore loop.
@@ -147,7 +127,7 @@ public final void worker() {
    * @param ref
    * @return
    */
-  public final Access getAccessObject(String ref) {
+  final Access getAccessObject(String ref) {
     Access o = accessStore.get(ref);
     if (o == null) {
       return null;

@@ -47,6 +47,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.Access;
@@ -101,7 +102,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     protected String type = "";
     protected String subtype = "";
     protected Property p = null;
-    protected LazyArray la = null;
     protected String fullMsgName = "";
     protected boolean matchingConditions = false;
     protected HashMap evaluatedAttributes = null;
@@ -194,13 +194,13 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     @Override
     public String getStackTrace() {
 
-        StringBuilder stackTrace = new StringBuilder();
+        StringBuilder stackTraceBuild = new StringBuilder();
         StackTraceElement[] elt = myAccess.getThread().getStackTrace();
         for (int i = 0; i < elt.length; i++) {
-            stackTrace.append(elt[i].getClassName() + "." + elt[i].getMethodName() + " (" + elt[i].getFileName() + ":"
+            stackTraceBuild.append(elt[i].getClassName() + "." + elt[i].getMethodName() + " (" + elt[i].getFileName() + ":"
                     + elt[i].getLineNumber() + ")\n");
         }
-        return stackTrace.toString();
+        return stackTraceBuild.toString();
     }
 
     @Override
@@ -370,7 +370,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      */
     @Override
     public ArrayList<Dependency> getDependentObjects() {
-        return new ArrayList<Dependency>();
+        return new ArrayList<>();
     }
 
     /*
@@ -535,11 +535,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
         }
     }
 
-    private final ConditionData[] getValidationRules(Access access) throws Exception {
+    private final ConditionData[] getValidationRules(Access access) throws SystemException{
         Navajo inMessage = access.getInDoc();
         if (conditionArray != null) {
             List<ConditionData> conditions = new ArrayList<>();
             for (int i = 0; i < conditionArray.length; i++) {
+            	// TODO conditionArray[i].equals("") always returns false. What was the intention here?
                 boolean check = (conditionArray[i].equals("") ? true : Condition.evaluate(conditionArray[i], inMessage,
                         access));
                 if (check) {
@@ -778,7 +779,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
     
     protected void writeToLog(String msg) {
         myAccess.addScriptLogging(msg);
-        logger.info(myAccess.getRpcName() + " (" + myAccess.getAccessID() + "): " +  msg);
+        logger.info("{} ({}): {}",myAccess.getRpcName(),myAccess.getAccessID() + "): ",msg);
     }
 
     /**

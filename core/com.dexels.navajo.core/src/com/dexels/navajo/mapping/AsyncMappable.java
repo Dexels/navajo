@@ -130,24 +130,17 @@ private static final Logger logger = LoggerFactory
   private boolean logged = false;
 
   /**
-   * JMX stuff.
-   */
-//  private JMXHelper jmx = null;
-//  private boolean connected = false;
-//  private ThreadInfo myThread = null;
-  
-  /**
    * This class implements the asynchronous thread.
    * It runs the run() method of the parent object that instantiates this class.
    * After the thread is finished, the thread instance calls the setIsFinished() method
    * of it's parent to indicate the parent's finalization.
    * Upon an exception, the parent's setException() method is called and the exception instance is passed.
    */
-  final class RequestThread extends Thread {
+  private final class RequestThread extends Thread {
 
     private AsyncMappable parent;
 
-    public RequestThread(AsyncMappable parent, String name) {
+    private RequestThread(AsyncMappable parent, String name) {
     	super(name);
     	this.parent = parent;
     }
@@ -176,8 +169,6 @@ private static final Logger logger = LoggerFactory
    * Note that the store() method is ONLY called upon thread finalization and after the final request by the client has been handled.
    *
    */
-  @Override
-public abstract void kill();
 
   public void setKill(boolean b) { 
 	  if ( myRequest != null ) {
@@ -188,11 +179,6 @@ public abstract void kill();
 		  kill();
 	  }
   }
-
-  @Override
-public abstract void store() throws MappableException, UserException;
-  @Override
-public abstract void load(Access access) throws MappableException, UserException;
   public abstract int getPercReady()  throws UserException;
   /**
    * The method afterRequest() is executed right after the </request> tag.
@@ -301,7 +287,6 @@ protected void finalize() {
 	  }
 	  if (killOnFinnish) {
 		  kill = true;
-		  //disconnectJMX();
 		  AsyncStore.getInstance().removeInstance(this.pointer);
 		  
 	  }
@@ -385,8 +370,9 @@ protected void finalize() {
         throw new UserException(-1, caught.getMessage());
       }
       h.setCallBack(this.name, this.pointer, getPercReady(), true, "");
-    } else
-      h.setCallBack(this.name, this.pointer, getPercReady(), false, "");
+    } else {
+        h.setCallBack(this.name, this.pointer, getPercReady(), false, "");
+    }
 
     return isFinished;
   }
@@ -438,9 +424,7 @@ protected void finalize() {
 		  kill = true;
 		  try {
 			  store();
-		  } catch (MappableException e) {
-			  logger.error("Error: ", e);
-		  } catch (UserException e) {
+		  } catch (MappableException|UserException e) {
 			  logger.error("Error: ", e);
 		  }
 		  AsyncStore.getInstance().removeInstance(this.pointer);
@@ -487,7 +471,7 @@ public boolean getInterrupt() {
 public long getLastAccess() {
     return this.lastAccess;
   }
-  public void setLastAccess() {
+  void setLastAccess() {
 	  this.lastAccess = System.currentTimeMillis();
   }
   public void setKillOnFinnish(boolean killOnFinnish) {
