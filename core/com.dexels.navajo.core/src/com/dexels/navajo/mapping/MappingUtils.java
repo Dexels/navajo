@@ -329,6 +329,20 @@ public final class MappingUtils {
         return prop;
     }
 
+    public static final Message[] addMessage(Navajo doc, Message parent, String message, String template, int count, String type,
+            String mode, String orderby) throws MappingException {
+
+        Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
+
+        if (orderby != null && !orderby.equals("")) {
+            for (int i = 0; i < msgs.length; i++) {
+                msgs[i].setOrderBy(orderby);
+            }
+        }
+
+        return msgs;
+    }
+
     public static final String getBaseMessageName(String name) {
         if (name.startsWith("../")) {
             return getBaseMessageName(name.substring(3));
