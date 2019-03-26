@@ -328,14 +328,6 @@ public class EntityApiDocListener extends HttpServlet  {
             rows += propertiesResult;
         }
 
-        // And other submessages
-        for (Message submessage : m.getAllMessages()) {
-			propertiesResult = printPropertiesForMessage(submessage, op, method);
-            if (!propertiesResult.equals("")){
-                rows += propertiesResult;
-            }
-        }
-
         if (!rows.equals("")) {
             String modelTable = opmodeltemplate.replace("{{MODEL_TABLE_ROWS}}", rows);
             return modelTable;
@@ -355,9 +347,10 @@ public class EntityApiDocListener extends HttpServlet  {
             String propertyMethod = p.getMethod();
             if (propertyMethod.equals("")) {
                 Message parentMessage = p.getParentMessage();
-                while (parentMessage != null && !parentMessage.getMethod().equals("") && propertyMethod.equals("")) {
+                while (parentMessage != null && propertyMethod.equals("")) {
                     propertyMethod = parentMessage.getMethod();
-                    parentMessage = parentMessage.getParentMessage();
+                    // the normal getParentMessage method skips the messages with type = Array which typically hold the method we're interested in so use this getter instead
+                    parentMessage = parentMessage.getArrayParentMessage();
                 }
             }
 			
@@ -386,6 +379,24 @@ public class EntityApiDocListener extends HttpServlet  {
 
             }
         }
+        
+        // check if we have a definition message and call us for that:
+        if (m.getDefinitionMessage() != null) {
+			String propertiesResult = printPropertiesForMessage(m.getDefinitionMessage(), op, method);
+	        if (!propertiesResult.equals("")){
+	            rows += propertiesResult;
+	        }
+	    }
+    
+        // And other submessages - go recursively
+        for (Message submessage : m.getAllMessages()) {
+			String propertiesResult = printPropertiesForMessage(submessage, op, method);
+            if (!propertiesResult.equals("")){
+                rows += propertiesResult;
+            }
+        }
+
+
 
         return rows;
     }
