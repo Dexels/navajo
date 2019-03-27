@@ -60,6 +60,9 @@
    <feature url="features/com.dexels.navajo.server.feature_1.0.11.jar" id="com.dexels.navajo.server.feature" version="1.0.11">
       <category name="Navajo Core"/>
    </feature>
+   <feature url="features/com.dexels.navajo.server.feature_1.0.11.jar" id="com.dexels.navajo.reactive.feature" version="1.0.11">
+      <category name="Navajo Core"/>
+   </feature>
    <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
       <category name="Navajo SDK"/>
    </feature>

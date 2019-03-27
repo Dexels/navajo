@@ -14,6 +14,7 @@ import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.sharedstore.SharedMemoryStore;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
@@ -51,11 +52,12 @@ public class PersistenceManagerImplTest {
 	public void setUp() throws Exception {
 		final TestNavajoConfig navajoConfig = new TestNavajoConfig();
 		final Dispatcher injectedDispatcher = new Dispatcher(navajoConfig);
-//		DispatcherFactory. new DispatcherFactory(injectedDispatcher);
+		final DefaultTribeManager tribeManager = new DefaultTribeManager();
 		DispatcherFactory.setInstance(injectedDispatcher);
 		injectedDispatcher.setUseAuthorisation(false);
+		TribeManagerFactory.setInstance(tribeManager);
 		si = new SharedMemoryStore();
-		pi = new PersistenceManagerImpl(new DefaultTribeManager());
+		pi = new PersistenceManagerImpl(tribeManager);
 		pi.init();
 		navajoConfig.setMyPersistenceManager(pi);
 		pi.setSharedStore(si);

@@ -161,32 +161,6 @@
 			<id>dexels</id>
 			<build>
 				<plugins>
-<!--
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jarsigner-plugin</artifactId>
-						<version>1.2</version>
-						<executions>
-							<execution>
-								<id>sign</id>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<keystore>${user.home}/.m2/sportlink.ks</keystore>
-							<alias>server</alias>
-							<storepass>${storepass}</storepass>
-							<keypass></keypass>
-							<arguments>
-								<argument>-tsa</argument>
-								<argument>http://sha256timestamp.ws.symantec.com/sha256/timestamp</argument>
-							</arguments>
-						</configuration>
-					</plugin>
-
--->
 					<plugin>
 						<artifactId>maven-deploy-plugin</artifactId>
 						<version>2.5</version>
@@ -233,12 +207,8 @@
 							</execution>
 						</executions>
 						<configuration>
-
 						</configuration>
 					</plugin>
-
-
-
 				</plugins>
 			</build>
 		</profile>
