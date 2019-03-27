@@ -84,6 +84,8 @@ public final class Access implements java.io.Serializable, Mappable {
     private static final String VERSION = "$Id$";
 
     public java.util.Date created = new java.util.Date();
+    private static int accessCount = 0;
+    
     public int threadCount = 0;
     public double cpuload = -1.0;
     public String accessID = "";
@@ -170,7 +172,6 @@ public final class Access implements java.io.Serializable, Mappable {
         this();
 
         this.accessID = accessID;
-        int accessCount = 0;
         if (accessID == null) {
             synchronized (Access.class) {
             	accessCount++;
