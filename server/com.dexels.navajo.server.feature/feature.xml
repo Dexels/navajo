@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.server.feature"
       label="Navajo Server Feature"
-      version="1.0.8"
+      version="1.0.11"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="com.dexels.navajo.core.feature" version="1.0.7.qualifier"/>
+      <import feature="com.dexels.navajo.core.feature" version="1.0.11.qualifier"/>
    </requires>
 
    <plugin
@@ -27,14 +27,55 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+   <plugin
+         id="com.dexels.navajo.adapters.binarystore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
+      <plugin
+         id="com.dexels.navajo.adapters.eventemitter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+      <plugin
+         id="com.dexels.navajo.adapters.resource"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+   <plugin
+         id="com.dexels.navajo.instance.factory"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+   <plugin
+         id="com.dexels.navajo.mgmt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
    <plugin
          id="com.dexels.navajo.listeners"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+   <plugin
+         id="com.dexels.navajo.tester.js"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>         
+   <plugin
+         id="com.dexels.navajo.entity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
    <plugin
          id="com.dexels.navajo.listeners.continuations"
          download-size="0"

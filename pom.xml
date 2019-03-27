@@ -11,8 +11,8 @@
 	<modules>
 		<module>setup/com.dexels.target/</module>	
 		<module>setup/com.dexels.repository/</module>	
-		<module>core/com.dexels.navajo.core.feature/allgit/</module>
-		<module>server/com.dexels.navajo.server.feature/allgit/</module>
+		<module>core/</module>
+		<module>server/</module>
 		<module>tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
 		<module>dev/com.dexels.navajo.dev.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.other.feature/allgit/</module>
