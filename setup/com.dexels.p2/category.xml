@@ -3,10 +3,7 @@
    <feature url="features/com.dexels.navajo.twitter.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.twitter.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.echo.feature_1.0.28.qualifier.jar" id="com.dexels.navajo.tipi.echo.feature" version="1.0.28.qualifier">
-      <category name="Tipi"/>
-   </feature>
-   <feature url="features/com.dexels.navajo.tipi.feature_1.1.16.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="1.1.16.qualifier">
+   <feature url="features/com.dexels.navajo.tipi.feature_2.0.1.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="2.0.1.qualifier">
       <category name="Tipi"/>
    </feature>
    <feature url="features/com.dexels.navajo.tipi.swing.feature_1.2.1.qualifier.jar" id="com.dexels.navajo.tipi.swing.feature" version="1.2.1.qualifier">
@@ -16,9 +13,6 @@
       <category name="Tipi"/>
    </feature>
    <feature url="features/com.dexels.navajo.tipi.css.feature_1.0.12.qualifier.jar" id="com.dexels.navajo.tipi.css.feature" version="1.0.12.qualifier">
-      <category name="TipiOptional"/>
-   </feature>
-   <feature url="features/com.dexels.navajo.tipi.extensions.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.tipi.extensions.feature" version="1.0.2.qualifier">
       <category name="TipiOptional"/>
    </feature>
    <feature url="features/com.dexels.navajo.tipi.mail.feature_1.0.25.qualifier.jar" id="com.dexels.navajo.tipi.mail.feature" version="1.0.25.qualifier">
