@@ -4,14 +4,14 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>temp</groupId>
-	<artifactId>com.dexels.navajo.dev.aggr</artifactId>
-	<version>1.0.4</version>
+	<artifactId>com.dexels.navajo.feature.aggr</artifactId>
+	<version>0.9.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.navajo.birt.push</module>
-		<module>../../com.dexels.navajo.dev.console</module>
-		<module>../</module>
+	    	<module>com.dexels.navajo.scala.scriptcompiler</module>
+		<module>com.dexels.navajo.scala.navajoscala</module>
+		<module>com.dexels.navajo.scala.feature</module>
 
 	</modules>
         <parent>
