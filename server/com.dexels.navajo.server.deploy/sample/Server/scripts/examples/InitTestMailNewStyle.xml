@@ -1,5 +1,0 @@
-<navascript>
-	<message name="Result">
-		<map.mail recipients="'frank@dexels.com'" mailServer="'smtp.gmail.com'" subject="'Navajo map test'" sender="'info@dexels.com'" text="'blabla'" smtpUser="'user'" smtpPass="'pass'" useEncryption="true"/>
-	</message>
-</navascript>

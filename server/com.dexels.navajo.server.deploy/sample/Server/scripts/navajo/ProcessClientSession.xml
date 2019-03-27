@@ -1,8 +1,0 @@
-<tsl>
-    <map object="com.dexels.navajo.jabber.JabberWorker">
-        <debug value="'About to join room: ' + [/SessionParameters/ChatRoom]"/>
-        <field name="registerCallback">
-           <expression value="[/SessionParameters/ChatNickname] + '@' + [/SessionParameters/ChatRoom]"/>
-        </field>
-    </map>
-</tsl>

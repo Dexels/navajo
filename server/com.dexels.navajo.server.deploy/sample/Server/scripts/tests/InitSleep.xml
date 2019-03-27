@@ -1,5 +1,0 @@
-<tsl debug="request">
- <param name="A">
-     <expression value="Wait(10000)"/>
- </param>
-</tsl>

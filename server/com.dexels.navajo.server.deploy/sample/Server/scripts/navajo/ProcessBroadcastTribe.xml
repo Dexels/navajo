@@ -1,7 +1,0 @@
-<tsl>
-  <map object="com.dexels.navajo.tribe.TribeManager">
-    <field name="broadcast"> 
-       <expression value="[/Broadcast/Message]"/>
-    </field>
-  </map>
-</tsl>
