@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../com.dexels.repository</relativePath>
 	</parent>
 	
