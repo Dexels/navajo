@@ -16,7 +16,7 @@ jobs:
 
       - run: |
           cd setup/com.dexels.target
-          mvn -s .circleci/conf/settings.xml install 
+          mvn -s ../../.circleci/conf/settings.xml install 
           cd ../..
       - save_cache:
           paths:
