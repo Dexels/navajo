@@ -9,8 +9,6 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      #      - run: |
-      #          git clone git@github.com:Dexels/enterprise.git
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
@@ -18,15 +16,15 @@ jobs:
 
       - run: |
           cd setup/com.dexels.target
-          mvn install
+          mvn -s .circleci/conf/settings.xml install 
           cd ../..
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
 
-      # run tests!
-      - run: mvn install
+      # run tests
+      - run: mvn -s .circleci/conf/settings.xml deploy -Denvironment=release
       - run: |
           cd ~
           du -hs .m2
