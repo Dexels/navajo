@@ -272,8 +272,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
             buffer.append(" --------- BEGIN NAVAJO REQUEST --------- "  + scriptName+"\n");
             myAccess.getInDoc().write(buffer);
             buffer.append("--------- END NAVAJO REQUEST --------- " + scriptName+"\n");
+            logger.info(buffer.toString());
         }
-        logger.info(buffer.toString());
     }
 
     /*

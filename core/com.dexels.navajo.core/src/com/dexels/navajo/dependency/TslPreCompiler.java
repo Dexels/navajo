@@ -60,7 +60,7 @@ public class TslPreCompiler {
             }
             tslDoc = XMLDocumentUtils.createDocument(is, false);
         } catch (Exception e) {
-            throw new UserException(-1, "Exception on pre-compiling script: " + script);
+            throw new UserException(-1, "Exception on pre-compiling script: " + script,e);
         } finally {
         	if (is != null) {
         		try {
