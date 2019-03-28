@@ -10,7 +10,7 @@ import org.apache.felix.service.command.Parameter;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
-public class CompileCommand extends ConsoleCommand {
+public class CompileCommand implements ConsoleCommand {
 	
 //	import org.osgi.service.command.CommandProcessor;
 	

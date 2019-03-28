@@ -9,7 +9,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
-public class CallCommand extends ConsoleCommand {
+public class CallCommand implements ConsoleCommand {
 	
 	private LocalClient localClient;
 	

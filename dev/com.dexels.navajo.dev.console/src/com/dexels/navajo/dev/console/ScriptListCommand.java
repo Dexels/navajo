@@ -4,7 +4,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-public class ScriptListCommand extends ConsoleCommand {
+public class ScriptListCommand implements ConsoleCommand {
 
 	private final BundleContext bundleContext;
 

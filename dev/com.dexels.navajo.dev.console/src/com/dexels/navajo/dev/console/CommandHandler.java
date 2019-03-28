@@ -10,32 +10,17 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.script.api.LocalClient;
 
 public class CommandHandler {
-	private final static Logger logger = LoggerFactory .getLogger(CommandHandler.class);
+	private static final Logger logger = LoggerFactory .getLogger(CommandHandler.class);
 	
 	private BundleCreator bundleCreator = null;
-	protected final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
+	protected final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<>();
 	protected BundleContext bundleContext;
 	
 	private LocalClient localClient;
-	private NqlContextApi nqlContext;
-	
-	public void setNqlContext(NqlContextApi n) {
-		this.nqlContext = n;
-	}
-
-	/**
-	 * 
-	 * @param n the nql context to clear
-	 */
-	public void clearNqlContext(NqlContextApi n) {
-		this.nqlContext = null;
-	}
-
 	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
@@ -86,15 +71,6 @@ public class CommandHandler {
 		cc.setLocalClient(localClient);
 		registerCommand(cc, "call");
 		
-		NqlCommand nql = new NqlCommand();
-		nql.setNqlContext(nqlContext);
-		registerCommand(nql,"nql");
-
-		
-		LoginCommand login = new LoginCommand();
-		login.setNqlContext(nqlContext);
-		registerCommand(login,"login");
-		
 		SharedStore_ls ls = new SharedStore_ls();
 		registerCommand(ls, "ls");
 		
@@ -138,12 +114,12 @@ public class CommandHandler {
 	}
 
 	private void registerCommand(ConsoleCommand c, String command) {
-		Dictionary<String,String> dd = new Hashtable<String,String>();
+		Dictionary<String,String> dd = new Hashtable<>();
 		dd.put("osgi.command.scope", "navajo");
 		dd.put("osgi.command.function", command);
 		ServiceRegistration<?> sr = bundleContext.registerService(c.getClass().getName(), c,dd );
 		registeredCommands.add(sr);
-		logger.debug("registered: "+command+" with class: "+c.getClass().getName());
+		logger.debug("registered: {} with class: {}",command,c.getClass().getName());
 
 	}
 

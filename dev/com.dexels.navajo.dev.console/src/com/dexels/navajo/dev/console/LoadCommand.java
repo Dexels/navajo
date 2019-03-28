@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
-public class LoadCommand extends ConsoleCommand {
+public class LoadCommand implements ConsoleCommand {
 	
 	
 	private final static Logger logger = LoggerFactory

@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.felix.service.command.CommandSession;
 import org.osgi.framework.ServiceRegistration;
 
-public class HelpCommand extends ConsoleCommand {
+public class HelpCommand implements ConsoleCommand {
 
 	private final CommandHandler myCommandHandler;
 	

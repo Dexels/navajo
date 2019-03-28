@@ -9,7 +9,7 @@ import org.osgi.framework.ServiceReference;
 import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
 
-public class FunctionListCommand extends ConsoleCommand {
+public class FunctionListCommand implements ConsoleCommand {
 
 	private final BundleContext bundleContext;
 

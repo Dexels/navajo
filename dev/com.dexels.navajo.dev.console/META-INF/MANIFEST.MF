@@ -7,7 +7,6 @@ Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context;version="1.0.0",
- com.dexels.navajo.client.nql,
  com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
  com.dexels.navajo.document;version="2.2.0",

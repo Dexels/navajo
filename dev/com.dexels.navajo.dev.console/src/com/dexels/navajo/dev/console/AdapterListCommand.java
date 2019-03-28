@@ -6,7 +6,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-public class AdapterListCommand extends ConsoleCommand {
+public class AdapterListCommand implements ConsoleCommand {
 
 	private final BundleContext bundleContext;
 
