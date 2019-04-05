@@ -41,24 +41,6 @@
 						</artifact>
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
-					<filters>
-						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
-						<filter>
-							<type>java-package</type>
-							<id>javax.persistence</id>
-							<restrictTo>
-								<type>eclipse-plugin</type>
-								<id>javax.persistence</id>
-							</restrictTo>
-						</filter>
-
-						<!-- example 3: work around Equinox bug 348045 -->
-						<filter>
-							<type>p2-installable-unit</type>
-							<id>org.eclipse.equinox.servletbridge.extensionbundle</id>
-							<removeAll />
-						</filter>
-					</filters>
 					<environments>
 						<environment>
 							<os>win32</os>
@@ -158,68 +140,9 @@
 
 	<profiles>
 		<profile>
-			<id>dexels</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<version>2.5</version>
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.maven.wagon</groupId>
-								<artifactId>wagon-ssh</artifactId>
-								<version>1.0-beta-7</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-					<plugin>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>2.5</version>
-						<executions>
-							<execution>
-								<id>auto-clean</id>
-								<phase>initialize</phase>
-								<goals>
-									<goal>clean</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.22.0</version>
-						<executions>
-							<execution>
-								<id>test</id>
-								<phase>test</phase>
-								<configuration>
-									<includes>
-										<include>**/*.java</include>
-									</includes>
-                                                                         <reuseForks>false</reuseForks>
-                                                                        <forkCount>1</forkCount>
-									<testFailureIgnore>true</testFailureIgnore>
-								</configuration>
-								<goals>
-									<goal>test</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>release</id>
 			<activation>
-				<property>
-					<name>environment</name>
-					<value>release</value>
-				</property>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<repositories>
 				<repository>
@@ -279,112 +202,6 @@
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
-		</profile>
-
-		<profile>
-			<id>maintenance</id>
-			<activation>
-				<property>
-					<name>environment</name>
-					<value>maintenance</value>
-				</property>
-			</activation>
-			<repositories>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>central</id>
-					<name>Dexels Third party</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/other/</url>
-					<layout>default</layout>
-				</repository>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<id>navajo_release</id>
-					<name>Navajo Release Repository</name>
-					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo/</url>
-					<layout>default</layout>
-				</repository>
-			</repositories>
-			<distributionManagement>
-				<repository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>dexels</id>
-					<name>Dexels Repository</name>
-					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_release/</url>
-					<layout>default</layout>
-				</repository>
-				<snapshotRepository>
-					<uniqueVersion>true</uniqueVersion>
-					<id>dexels_snap</id>
-					<name>Dexels Snapshots</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_snapshot</url>
-					<layout>default</layout>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-
-
-
-		<profile>
-			<id>test</id>
-			<activation>
-				<property>
-					<name>environment</name>
-					<value>test</value>
-				</property>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>dexels_test</id>
-					<name>Dexels Repository</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
-
-					<layout>default</layout>
-				</repository>
-				<snapshotRepository>
-					<uniqueVersion>true</uniqueVersion>
-					<id>dexels_snap_test</id>
-					<name>Dexels Snapshots</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
-					<layout>default</layout>
-				</snapshotRepository>
-			</distributionManagement>
-			<repositories>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-					<id>dexels_test_snap</id>
-					<name>Dexels Test Snap</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
-					<layout>default</layout>
-				</repository>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>repo_thirdparty</id>
-					<name>Dexels Central</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
-					<layout>default</layout>
-				</repository>
-			</repositories>
 		</profile>
 	</profiles>
 	<organization>
