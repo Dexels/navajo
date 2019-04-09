@@ -24,6 +24,7 @@
 		<module>com.dexels.navajo.resource.manager</module>
 		<module>com.dexels.navajo.resource.jdbc.h2</module>
 		<module>com.dexels.navajo.resource.jdbc.oracle</module>
+		<module>com.dexels.navajo.resource.jdbc.postgres</module>
 		<module>com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>com.dexels.navajo.resource.http</module>
 		<module>com.dexels.navajo.resource.binarystore</module>
