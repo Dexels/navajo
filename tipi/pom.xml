@@ -13,7 +13,6 @@
 		<module>com.dexels.navajo.tipi.swing.mig</module>
 		<module>com.dexels.navajo.tipi.swing.mig.feature</module>
 		<module>com.dexels.navajo.tipi.feature</module>
-		<module>com.dexels.navajo.tipi.vaadin.feature</module>
 		<module>com.dexels.navajo.tipi.vaadin.feature/allgit</module>
 		<module>com.dexels.navajo.tipi.swing.charting</module>
 		<module>com.dexels.navajo.tipi.swing.charting.feature</module>
