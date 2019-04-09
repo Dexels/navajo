@@ -17,8 +17,6 @@
       [Enter License Description here.]
    </license>
 
-com.dexels.config.runtime
-
    <plugin
          id="com.dexels.config.runtime"
          download-size="0"
@@ -105,6 +103,13 @@ com.dexels.config.runtime
 
    <plugin
          id="com.dexels.navajo.listeners.external"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.client.nql"
          download-size="0"
          install-size="0"
          version="0.0.0"
