@@ -24,6 +24,9 @@
    <feature url="features/com.dexels.navajo.tipi.vaadin.feature_1.0.4.qualifier.jar" id="com.dexels.navajo.tipi.vaadin.feature" version="1.0.4.qualifier">
       <category name="Tipi"/>
    </feature>
+   <feature url="features/com.dexels.navajo.reactive.feature_1.0.12.qualifier.jar" id="com.dexels.navajo.reactive.feature" version="1.0.12.qualifier">
+      <category name="Navajo Core"/>
+   </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
    <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
