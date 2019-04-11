@@ -90,7 +90,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   @Override
 public final void worker() {
 	  
-	  synchronized (instance) {
+	  synchronized (this) {
 		  Set<String> s = new HashSet<>(objectStore.keySet());
 		  Iterator<String> iter = s.iterator();
 		  while (iter.hasNext()) {
