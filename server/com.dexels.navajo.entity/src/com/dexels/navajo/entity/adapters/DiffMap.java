@@ -129,13 +129,17 @@ public class DiffMap implements Mappable {
 		for (Property previousProperty : previous.getAllProperties()) {
 			Property currentProperty = current.getProperty(previousProperty.getName());
 			// it can happen that a previous property does not exist for this property
-			if (currentProperty == null && previousProperty.getValue() == null) {
-				continue;
-			}
-			if (!previousProperty.isEqual(currentProperty)) {
-				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> " + (currentProperty == null ? "null" : currentProperty.getValue()) + ");";
+			if (currentProperty == null) {
+				if (previousProperty.getValue() == null) {
+					continue;
+				}
+				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> null);";
 				// IMPORTANT: As a side effect set the previous property to the value of the current property
-				previousProperty.setAnyValue(currentProperty == null ? null : currentProperty.getTypedValue());
+				previousProperty.setAnyValue(null);
+			} else if (!previousProperty.isEqual(currentProperty)) {
+				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> " + currentProperty.getValue() + ");";
+				// IMPORTANT: As a side effect set the previous property to the value of the current property
+				previousProperty.setAnyValue(currentProperty.getTypedValue());
 			}
 		}
 		for (Message previousMessage : previous.getAllMessages()) {
