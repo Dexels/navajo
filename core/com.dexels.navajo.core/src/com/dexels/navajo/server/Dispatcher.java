@@ -69,9 +69,6 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.Mappable;
-import com.dexels.navajo.script.api.MappableException;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.UserException;
@@ -87,7 +84,6 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
-import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.tenant.TenantConfig;
 import com.dexels.navajo.util.AuditLog;
 
@@ -945,10 +941,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 }
 
             }
-        } catch (NavajoDoneException e) {
-            preventFinalize = true;
-            throw e;
-
         } catch (AuthorizationException aee) {
             outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
             AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser

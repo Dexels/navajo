@@ -7,7 +7,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.AuthorizationException;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 
@@ -15,7 +14,7 @@ public class StressTestHandler  extends ServiceHandler {
     private static final Logger logger = LoggerFactory.getLogger(StressTestHandler.class);
     @Override
     public Navajo doService()
-            throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException {
+            throws NavajoException, UserException, SystemException, AuthorizationException {
         if (access.getInDoc().getMessage("stress") == null || access.getInDoc().getMessage("stress").getProperty("sleep") == null) {
             throw new UserException(-1, "Stresstest mode but no sleep parameter set!");
         }
