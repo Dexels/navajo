@@ -3,6 +3,7 @@ package com.dexels.navajo.script.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 
 	private final ThreadPoolExecutor tpe;
 	
-	protected ThreadPoolRequestQueue(String id, ThreadPoolExecutor tpe, Scheduler ms) {
+	private ThreadPoolRequestQueue(String id, ThreadPoolExecutor tpe, Scheduler ms) {
 		super(ms, id);
 		this.tpe = tpe;
 	}
@@ -109,4 +110,24 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 		return new ArrayList<>();
 	}
 
+	private static class NamedThreadFactory implements ThreadFactory {
+
+		private final String name;
+		private long counter = 0;
+		public NamedThreadFactory(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread t = Executors.defaultThreadFactory().newThread(r);
+			t.setName(name+"_"+getSuffix());
+			return t;
+		}
+
+		private long getSuffix() {
+			return ++counter;
+		}
+
+	}
 }
