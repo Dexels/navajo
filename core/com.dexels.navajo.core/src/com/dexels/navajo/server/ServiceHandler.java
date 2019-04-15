@@ -53,7 +53,6 @@ public abstract class ServiceHandler implements Constructor {
      * @throws NavajoException
      * @throws UserException
      * @throws SystemException
-    * @throws NavajoDoneException 
      */
     public abstract Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException;
 
