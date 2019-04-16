@@ -256,7 +256,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 					throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString());
 				} 
 			} catch (IOException e) {
-				throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString() + ", message: " + e.getMessage());
+				throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString() + ", message: " + e.getMessage()+" path: "+f.toPath().toAbsolutePath().toString(),e);
 			}
 		} else {
 			throw new SharedStoreException("Lock already exists");
