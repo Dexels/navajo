@@ -200,22 +200,15 @@ public class ReactiveResolvedParameters {
 	private Operand resolveParam(String key,Optional<String> expectedType, ContextExpression function) {
 		Operand applied;
 		try {
-			// TODO test for streaming
 			// TODO move this to constructor or something
-			System.err.println("Resoving: "+key);
 			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : resolvedInput;
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);
 			if(expectedType.isPresent()) {
 				resolvedTypes.put(key, expectedType.get());
 			}
-			
-//			if(expectedType.isPresent() && !applied.type.equals(expectedType.get())) {
-//				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType.get()+" but of type: "+applied.type+" with value: "+applied.value+" path: "+sourcePath+" element: "+sourceElement+" -> "+ sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>")+" message: "+currentMessage+" statemessage: "+paramMessage);
-//			}
 			return applied;
 		} catch (Exception e1) {
-			logger.error("Error applying param function for named param: "+key+" will put null.", e1);
 			throw new ReactiveParameterException("Error applying param function for named param: "+key,e1);
 		}
 	}

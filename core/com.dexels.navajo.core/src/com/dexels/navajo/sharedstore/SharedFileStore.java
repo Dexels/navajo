@@ -35,11 +35,13 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -64,8 +66,8 @@ import navajocore.Version;
  */
 class LockFiles implements FilenameFilter {
 
-	String parent;
-	String basename;
+	private String parent;
+	private String basename;
 
 	public LockFiles(String parent, String name) {
 		this.parent = parent.replace('/', '_');
@@ -139,7 +141,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	
 	@Override
 	public Map<String, String> getMetrics() {
-		Map<String,String> metrics = new HashMap<String, String>();
+		Map<String,String> metrics = new HashMap<>();
 		metrics.put("storeCount", storeCount + "");
 		metrics.put("deleteCount", deleteCount + "");
 		metrics.put("getCount", getCount + "");
@@ -208,7 +210,12 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 			// Check age of lock.
 
 				if ( ( System.currentTimeMillis() - files[0].lastModified() ) > ssl.getLockTimeOut() ) {
-					files[0].delete();
+					File f = files[0];
+					try {
+						Files.delete(f.toPath());
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+					}
 					return false;
 				} else {
 					return true;
@@ -268,7 +275,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	 * 
 	 * @throws Exception when SharedFileStore could not be created.
 	 */
-	public SharedFileStore() throws Exception {
+	public SharedFileStore() {
 		if(!Version.osgiActive()) {
 			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
 			tribeManagerInterface = TribeManagerFactory.getInstance();
@@ -276,7 +283,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 		} 
 	}
 	
-	public SharedFileStore(File store, NavajoConfigInterface c) {
+	SharedFileStore(File store, NavajoConfigInterface c) {
 		sharedStore = store;
 		navajoConfig = c;
 	}
@@ -345,8 +352,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	@Override
 	public SharedStoreLock getLock(String parent, String name, String owner) {
 		try {
-			SharedStoreLock ssl = readLock(parent, name, owner);
-			return ssl;
+			return readLock(parent, name, owner);
 		} catch (Exception e) {
 			return null;
 		}
@@ -360,7 +366,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	@Override
 	public String [] getParentObjects(String parent) {
 		
-		ArrayList<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		File p = ( parent != null ? new File(sharedStore, parent) : sharedStore );
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
@@ -382,7 +388,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	 */
 	@Override
 	public String [] getObjects(String parent) {
-		ArrayList<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		File p = new File(sharedStore, parent);
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
@@ -466,7 +472,11 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
 					File f = new File(sharedStore, constructLockName(lock));
-					f.delete();
+					try {
+						Files.delete(f.toPath());
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+					}
 				}
 				lockSemaphore.notify();
 			}
@@ -553,7 +563,11 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 	public void remove(String parent, String name) {
 	    long start = System.currentTimeMillis();
         File f = new File(sharedStore, parent + "/" + name);
-        f.delete();
+        try {
+			Files.delete(f.toPath());
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
         deleteCount++;
         deleteLatency += ( System.currentTimeMillis() - start );
 	}
@@ -609,28 +623,13 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 				p.mkdirs();
 			}
 			File f = new File(p, name);
-			FileOutputStream fos = null;
-			OutputStreamWriter sw = null;
-			try {
-				fos = new FileOutputStream(f, append);
-				sw = new OutputStreamWriter(fos);
+			try(OutputStreamWriter sw = new OutputStreamWriter(new FileOutputStream(f, append))) {
 				sw.write(str);
 				storeCount++;
 				storeLatency += ( System.currentTimeMillis() - start );
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 					f.delete();
-			} finally {
-				if ( sw != null ) {
-					try {
-						sw.close();
-					} catch (Exception e) {}
-				}
-				if ( fos != null )  {
-					try {
-						fos.close();
-					} catch (Exception e) {}
-				}
 			}
 			f.setLastModified(System.currentTimeMillis());
 		} finally {
