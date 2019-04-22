@@ -60,24 +60,22 @@ public class NonBlockingListener extends HttpServlet {
 
 	private LocalClient localClient;
 				
-	private final static Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
+	private static final Logger logger = LoggerFactory.getLogger(NonBlockingListener.class);
 
 	private AuthenticationMethodBuilder authMethodBuilder;
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
 	
-//	private final static ObjectMapper objectMapper = new ObjectMapper();
-
 	private RunningReactiveScripts runningReactiveScripts = new RunningReactiveScriptsImpl();
 	
 
 	
 	public NonBlockingListener() {
-		Observable.interval(10, TimeUnit.SECONDS)
+		Observable.interval(30, TimeUnit.SECONDS)
 			.subscribe(i->{
 				List<String> scripts = runningReactiveScripts.services();
-				if(scripts.size()>0) {
-					logger.info("Running scripts: "+scripts);
+				if(!scripts.isEmpty()) {
+					logger.info("Running scripts: {}", scripts);
 				}
 			});
 	}
@@ -112,7 +110,7 @@ public class NonBlockingListener extends HttpServlet {
 
 	private static Map<String, Object> extractHeaders(HttpServletRequest req) {
 		Map<String, Object> attributes = 
-			    new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
+			    new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		Enumeration<String> en = req.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String headerName = en.nextElement();
@@ -172,12 +170,9 @@ public class NonBlockingListener extends HttpServlet {
 			return;
 		} catch (Throwable e3) {
 			logger.error("Low level problem: ",e3);
-			// TODO do something prettier?
 			response.sendError(500,"Server error");
 			return;
 		}
-//		runningReactiveScripts.submit(context);
-		
 			
 		try {
 
@@ -188,13 +183,11 @@ public class NonBlockingListener extends HttpServlet {
 				return errorMessage(true,serviceHeader,Optional.of(e), e.getMessage()).map(DataItem::of);
 			};
 
-//			if(!rs.streamInput()) {			}
-
 			Flowable<DataItem> execution = context
 					.map(ctx->rs.execute(ctx))
-					.toFlowable().flatMap(e->e).concatMapEager(e->e)
-//					.doOnComplete(()->ac.complete())
-//					.doOnCancel(()->ac.complete())
+					.toFlowable()
+					.flatMap(e->e)
+					.concatMapEager(e->e)
 	                .doOnError((e)->context.error(e))
 	                .doOnCancel(()->removeRunningScript(uuid));
 						
@@ -273,7 +266,6 @@ public class NonBlockingListener extends HttpServlet {
 			}
 		} catch (Throwable e1) {
 			respondError("General error", serviceHeader,uuid, responseEncoding, response, responseSubscriber, e1);
-			return;
 		}
 	}
 
@@ -281,10 +273,7 @@ public class NonBlockingListener extends HttpServlet {
 	private void cancel(String cancel, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
 		runningReactiveScripts.cancel(cancel);
-//		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, r);
 		response.sendRedirect("/stream?list");
-//		listScriptsHtml(request, response);
-		
 	}
 
 	private void listScriptsHtml(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -297,12 +286,6 @@ public class NonBlockingListener extends HttpServlet {
 		});
 		writer.write("<ul></body></html>");
 	}
-//	private void listScriptsJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//		response.setContentType("application/json");
-//		PrintWriter writer = response.getWriter();
-//
-//		objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, runningReactiveScripts.asJson());
-//	}
 
 	private void respondError(String message, String service, String uuid, Optional<String> responseEncoding, HttpServletResponse response,
 			Subscriber<ByteBuffer> responseSubscriber, Throwable e1) {
