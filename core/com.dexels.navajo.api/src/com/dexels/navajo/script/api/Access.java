@@ -63,7 +63,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
     private static final long serialVersionUID = -7782160335447961196L;
 
-    static final Logger logger = LoggerFactory.getLogger(Access.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Access.class.getName());
 
     public static final int EXIT_OK = 1;
     public static final int EXIT_VALIDATION_ERR = 2;
