@@ -98,7 +98,7 @@ public class TestTMLJson {
         result = result.substring(0, result.length()-5);
         logger.info(result);
         //Length should be 133... Right?
-        Assert.assertEquals(133, result.length());
+        Assert.assertEquals(128, result.length());
         
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
