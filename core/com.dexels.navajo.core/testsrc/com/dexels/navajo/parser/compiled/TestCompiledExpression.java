@@ -324,7 +324,7 @@ public class TestCompiledExpression {
 	
 	@Test
 	public void testUnicodeExpression() throws Exception {
-		Operand result = Expression.evaluate("'\u20AC2,29'", null,null,null);
+		Operand result = Expression.evaluate("'耀'", null,null,null);
 		System.err.println("Result:"+result.value);
 	}	
 	@Test
