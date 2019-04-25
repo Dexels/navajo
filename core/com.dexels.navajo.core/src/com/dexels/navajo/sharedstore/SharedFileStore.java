@@ -473,7 +473,7 @@ public class SharedFileStore extends AbstractSharedStore implements SharedStoreI
 				if ( lock != null ) {
 					File f = new File(sharedStore, constructLockName(lock));
 					try {
-						Files.delete(f.toPath());
+						Files.deleteIfExists(f.toPath());
 					} catch (IOException e) {
 						logger.error("Error: ", e);
 					}
