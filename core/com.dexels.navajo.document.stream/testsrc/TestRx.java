@@ -179,7 +179,7 @@ public class TestRx {
 	public void testGzip() throws FileNotFoundException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] original = 
-				Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
+				Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"))
 				.reduce(baos, (byteout,bytes)->{try {
 					byteout.write(bytes);
 					} catch (Exception e) {
@@ -188,7 +188,7 @@ public class TestRx {
 				.toByteArray();
 		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
 		
-		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class"))
+		byte[] compressed = Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("tml_with_binary.xml"))
 				.compose(StreamCompress.gzip())
 				.doOnError(e->e.printStackTrace())
 				.reduce(baos_compressed, (byteout,bytes)->{byteout.write(bytes); return byteout;})
