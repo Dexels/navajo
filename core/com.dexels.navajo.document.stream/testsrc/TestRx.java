@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.GZIPInputStream;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -229,7 +230,9 @@ public class TestRx {
 		Assert.assertArrayEquals(Bytes.from(TestRx.class.getClassLoader().getResourceAsStream("TestBinaries.class")).blockingFirst(), baos_decompressed.toByteArray());
 	}
 	
-	@Test
+	// TODO, reinstate this test. randomfile has been excluded from the build (it's 10M), create some random generation, I'd like
+	// to remove the randomdile from git as well
+	@Test @Ignore
 	public void testGzipBig() throws IOException {
 		ByteArrayOutputStream baos_compressed = new ByteArrayOutputStream();
 		AtomicInteger size = new AtomicInteger();
