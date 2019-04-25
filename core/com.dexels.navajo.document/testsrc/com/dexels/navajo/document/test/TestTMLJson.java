@@ -95,16 +95,16 @@ public class TestTMLJson {
         json.format(n,  sw, true);
         
         String result = sw.toString();
-        result = result.substring(0, result.length()-5);
         logger.info(result);
         //Length should be 133... Right?
-        Assert.assertEquals(128, result.length());
+        Assert.assertEquals(133, result.length());
         
         // Turn back into a Navajo and compare
         Navajo n2 = json.parse(new StringReader(result), "SimpleMessage");
         
         Assert.assertEquals("2016-10-25", n2.getMessage("SimpleMessage").getProperty("date").getValue());
-        Assert.assertEquals("2016-10-25T12:57:07", n2.getMessage("SimpleMessage").getProperty("timestamp").getValue());
+        String resultValue = n2.getMessage("SimpleMessage").getProperty("timestamp").getValue();
+		Assert.assertEquals("2016-10-25T12:57:07", resultValue.substring(0, resultValue.length()-5));
 
     }
     
