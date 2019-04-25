@@ -315,6 +315,7 @@ public class ExpressionTest {
 		ImmutableMessage combined = outer.withSubMessage("sub", inner);
 		Operand o = Expression.evaluateImmutable("[sub/]", null, Optional.of(combined), Optional.empty());
 		ImmutableMessage s = o.immutableMessageValue();
+		ImmutableFactory.getInstance().describe(s);
 		assertEquals(3, s.value("innerint").get());
 	}
 
