@@ -43,6 +43,7 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		cl.useBasicAuthentication(true);
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "single");
 		Assert.assertTrue(result.getErrorDescription()==null);
@@ -56,6 +57,7 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		cl.useBasicAuthentication(true);
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
