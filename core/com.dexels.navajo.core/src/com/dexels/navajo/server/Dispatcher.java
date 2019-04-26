@@ -98,7 +98,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     /**
      * Fields accessable by webservices
      */
-    public static final String NAVAJO_TOPIC = "navajo/request";
+    private static final String NAVAJO_TOPIC = "navajo/request";
     
     private final Map<String, GlobalManager> globalManagers = new HashMap<>();
 
