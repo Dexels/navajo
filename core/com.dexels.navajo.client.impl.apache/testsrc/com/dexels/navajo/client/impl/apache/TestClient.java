@@ -40,6 +40,7 @@ public class TestClient {
 		NavajoClient cl = new ApacheNavajoClientImpl();
 		cl.setAllowCompression(true);
 		cl.setForceGzip(true);
+		cl.useBasicAuthentication(true);
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
@@ -57,6 +58,7 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		cl.useBasicAuthentication(true);
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
@@ -64,64 +66,6 @@ public class TestClient {
 		result2.write(System.err);
 	}
 	
-	@Test (timeout=5000)
-	public void testDirect() throws IOException {
-		Map<String,String> headers = new HashMap<>();
-		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
-		headers.put("X-Navajo-Password", TestConfig.NAVAJO_TEST_PASS.getValue());
-		headers.put("X-Navajo-Service", "single");
-		headers.put("Accept-Encoding", "jzlib");
-
-		String url = TestConfig.NAVAJO_TEST_SERVER.getValue();
-		Navajo nc = NavajoFactory.getInstance().createNavajo();
-		StringWriter sw = new StringWriter();
-		nc.write(sw);
-		byte[] res = sendPOST(url, sw.toString().getBytes(), headers);
-		System.err.println("RESULT: "+new String(res));
-	}
-	private static byte[] sendPOST(String url, byte[] data,Map<String,String> headers) throws IOException {
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("POST");
-
-		for (Entry<String, String> e : headers.entrySet()) {
-			con.setRequestProperty(e.getKey(), e.getValue());
-		}
-		// For POST only - START
-		con.setDoOutput(true);
-		OutputStream os = con.getOutputStream();
-		os.write(data);
-		os.flush();
-		os.close();
-		// For POST only - END
-
-		int responseCode = con.getResponseCode();
-		logger.info("POST Response Code :: {}", responseCode);
-		String encoding = con.getHeaderField("Content-Encoding");
-		if(encoding==null) {
-			encoding = "";
-		}
-		if (responseCode == HttpURLConnection.HTTP_OK) { //success
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			switch(encoding) {
-			case "deflate":
-			case "jzlib":
-				copyResource(baos,new InflaterInputStream(con.getInputStream()));
-				break;
-			case "gzip":
-				copyResource(baos,new GZIPInputStream(con.getInputStream()));
-				break;
-			default:
-				copyResource(baos,con.getInputStream());
-				break;
-			}
-			return baos.toByteArray();
-		} else {
-			logger.info("POST request not worked");
-			return null;
-		} 
-	}
-
 	private static final void copyResource(OutputStream out, InputStream in) throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
