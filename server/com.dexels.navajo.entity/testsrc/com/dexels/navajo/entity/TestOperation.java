@@ -1,7 +1,8 @@
 package com.dexels.navajo.entity;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
@@ -15,10 +16,10 @@ import com.dexels.navajo.server.DispatcherInterface;
 
 public class TestOperation {
 
-	static EntityManager manager;
+	EntityManager manager;
 
-	@BeforeClass
-    public static void setup() {
+	@Before
+    public void setup() {
 
         manager = new EntityManager();
 
@@ -76,6 +77,14 @@ public class TestOperation {
         manager.registerEntity(e1);
         manager.registerEntity(e2);
 
+    }
+	
+    @After
+    public void teardown() {
+    	System.err.println("TEARDOWN!");
+    	this.manager.deactivate();
+    	this.manager = null;
+    	NavajoFactory.resetImplementation();
     }
 
 	@Test
