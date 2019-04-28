@@ -1,14 +1,14 @@
 package com.dexels.navajo.reactive;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -20,9 +20,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
-import com.dexels.navajo.reactive.api.ReactiveFinder;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -35,15 +33,10 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 
 public class TestSingle {
 	
-	private ReactiveFinder reactiveFinder;
-
-	@Before
-	public void setup() {
-		reactiveFinder = TestSetup.setup();
-	}
+	private static final Logger logger = LoggerFactory.getLogger(TestSingle.class);
 
 	@Test
-	public void testSingleSource() throws UnsupportedEncodingException, IOException {
+	public void testSingleSource() {
 		SingleSourceFactory ssf = new SingleSourceFactory();
 		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
@@ -54,11 +47,11 @@ public class TestSingle {
 //		ssf.build("",parameters, problems, Collections.emptyList(), DataItem.Type.MESSAGE)
 //			.execute(context, Optional.empty())
 			.map(e->e.message())
-			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
+			.blockingForEach(e->logger.info("S: {}",e.toFlatString(ImmutableFactory.getInstance())));
 	}
 	
 	@Test
-	public void testTake() throws UnsupportedEncodingException, IOException {
+	public void testTake() {
 		SingleSourceFactory ssf = new SingleSourceFactory();
 		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
@@ -68,7 +61,6 @@ public class TestSingle {
 		
 		ReactiveParameters transformerParameter = ReactiveParameters.empty(takeTransformerFactory)
 				.withConstant(Operand.ofInteger(5));
-//				.withConstant("count", 5, Property.INTEGER_PROPERTY);
 		
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 
@@ -81,13 +73,18 @@ public class TestSingle {
 			.map(msg->(Integer)msg.value("index").get())
 			.blockingGet();
 
-		System.err.println("Count: "+lastIndex);
+		logger.info("Count: {}", lastIndex);
 		Assert.assertEquals(4, lastIndex);
-//			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
 	}
 
 	@Test
-	public void testFilter() throws UnsupportedEncodingException, IOException {
+	public void testNdJSON() throws IOException {
+		ImmutableMessage m = ImmutableFactory.empty().with("somenumber", 3, "integer");
+		logger.info(ImmutableFactory.ndJson(m));
+
+	}
+	@Test
+	public void testFilter() {
 		List<ReactiveParseProblem> problems = new ArrayList<>();
 		SingleSourceFactory ssf = new SingleSourceFactory();
 		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
@@ -118,17 +115,21 @@ public class TestSingle {
 					@Override
 					public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 							MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage,
-							Optional<ImmutableMessage> paramMessage) throws TMLExpressionException {
-						try {
-							System.err.println(ImmutableFactory.ndJson(paramMessage.get()));
-						} catch (IOException e) {
-							e.printStackTrace();
+							Optional<ImmutableMessage> paramMessage) {
+						if(paramMessage.isPresent()) {
+							ImmutableMessage prm = paramMessage.get();
+							try {
+								logger.info(ImmutableFactory.ndJson(prm));
+							} catch (IOException e) {
+								logger.error("Error: ", e);
+							}
+							
+							int i = ((Integer)prm.value("index").orElse(0)).intValue();
+							boolean isEven = i % 2 == 0;
+							logger.info("Even numer? {} is even: {}",i,isEven);
+							return Operand.ofBoolean(isEven);
 						}
-						
-						int i = ((Integer)paramMessage.get().value("index").get()).intValue();
-						boolean isEven = i % 2 == 0;
-						System.err.println("Even numer? "+i+" is even: "+isEven);
-						return Operand.ofBoolean(isEven);
+						return Operand.FALSE;
 					}
 				});
 		ReactiveTransformer filterTransformer = filterFactory.build(problems,transformerParameter);
@@ -138,26 +139,24 @@ public class TestSingle {
 			.execute(context, Optional.empty(), ImmutableFactory.empty())
 			.doOnNext(item->{
 				try {
-					System.err.println(">>>> "+ImmutableFactory.ndJson(item.message()));
+					logger.info(">>>> {}",ImmutableFactory.ndJson(item.message()));
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 				
 			})
 			.compose(filterTransformer.execute(context, Optional.empty(), ImmutableFactory.empty()))
-			.doOnNext(e->System.err.println("<< "+e.stateMessage()))
 			.map(
 					e->e.message()
 					)
 			.count()
 			.blockingGet();
-		System.err.println("Number of even: "+lastIndex);
+		logger.info("Number of even: {}", lastIndex);
 		Assert.assertEquals(5, lastIndex);
-//			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
 	}
 	
 	@Test
-	public void testSkip() throws UnsupportedEncodingException, IOException {
+	public void testSkip() {
 		SingleSourceFactory ssf = new SingleSourceFactory();
 		ReactiveParameters parameters = ReactiveParameters.empty(ssf)
 				.withConstant("debug", true, Property.BOOLEAN_PROPERTY)
@@ -178,9 +177,8 @@ public class TestSingle {
 			.lastOrError()
 			.map(msg->(Integer)msg.value("index").get())
 			.blockingGet();
-		System.err.println("Count: "+lastIndex);
+		logger.info("Count: {}",lastIndex);
 		Assert.assertEquals(9, lastIndex);
-//			.blockingForEach(e->System.err.println("S: "+e.toFlatString(ImmutableFactory.getInstance())));
 	}
 	
 }

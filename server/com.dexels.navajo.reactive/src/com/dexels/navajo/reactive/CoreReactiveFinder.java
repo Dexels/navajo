@@ -28,6 +28,7 @@ import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.ToSubMessageList;
 import com.dexels.navajo.reactive.source.input.InputSourceFactory;
+import com.dexels.navajo.reactive.source.input.TmlInputSourceFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
@@ -73,6 +74,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
 		addReactiveSourceFactory(new InputSourceFactory(),"input");
+		addReactiveSourceFactory(new TmlInputSourceFactory(),"tmlinput");
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
@@ -116,6 +118,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 
 	@Override
 	public final ReactiveSourceFactory getSourceFactory(String name) {
+		System.err.println("Looking for source factoru: "+name);
 		return factories.get(name);
 	}
 

@@ -18,14 +18,14 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
-public class InputSource implements ReactiveSource {
+public class TmlInputSource implements ReactiveSource {
 	
 	private final ReactiveParameters params;
 //	private final Optional<XMLElement> sourceElement;
 //	private final String sourcePath;
 	private final SourceMetadata metadata;
 	
-	public InputSource(SourceMetadata metadata, ReactiveParameters params) {
+	public TmlInputSource(SourceMetadata metadata, ReactiveParameters params) {
 		this.metadata = metadata;
 		this.params = params;
 //		this.sourceElement = sourceElement;
@@ -59,7 +59,7 @@ public class InputSource implements ReactiveSource {
 
 	@Override
 	public Type sourceType() {
-		return Type.MESSAGE;
+		return Type.EVENTSTREAM;
 	}
 
 }

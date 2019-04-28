@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
@@ -19,6 +22,9 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 
 
 public class SetSingle implements ReactiveMerger {
+
+	
+	private static final Logger logger = LoggerFactory.getLogger(SetSingle.class);
 
 	public SetSingle() {
 	}
@@ -36,6 +42,7 @@ public class SetSingle implements ReactiveMerger {
 			for (Entry<String,Operand> elt : parms.namedParameters().entrySet()) {
 				if(!elt.getKey().equals("condition")) {
 					String type = parms.namedParamType(elt.getKey());
+					System.err.println("KEY: "+elt.getKey()+" value: "+elt.getValue());
 					s = addColumn(s, elt.getKey(), elt.getValue(), type);
 				}
 			}
@@ -49,7 +56,7 @@ public class SetSingle implements ReactiveMerger {
 	}
 
 	private ImmutableMessage addColumn(ImmutableMessage input, List<String> path, Operand value, String type) {
-//		logger.info("Setting path: {} value: {} type: {}",path,value.value,type);
+		logger.info("Setting path: {} value: {} type: {}",path,value.value,type);
 		if(path.size()>1) {
 			String submessage = path.get(0);
 			Optional<ImmutableMessage> im = input.subMessage(submessage);
