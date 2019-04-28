@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,10 @@ public class TestSingle {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TestSingle.class);
 
+	@Before
+	public void setup() {
+		ImmutableFactory.setInstance(ImmutableFactory.createParser());
+	}
 	@Test
 	public void testSingleSource() {
 		SingleSourceFactory ssf = new SingleSourceFactory();
