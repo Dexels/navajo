@@ -17,8 +17,6 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -29,7 +27,6 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
-import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 
 import navajocore.Version;
@@ -66,7 +63,6 @@ public class GenericHandler extends ServiceHandler {
     private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
-    private static Object mutex2 = new Object();
    
     
 	private static final Logger logger = LoggerFactory
@@ -109,13 +105,6 @@ public class GenericHandler extends ServiceHandler {
     	Class<?> cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
     		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.getDeclaredConstructor().newInstance();
-    		if(cso instanceof GenericScriptEngine) {
-    			GenericScriptEngine gse = (GenericScriptEngine)cso;
-    			gse.setScriptFile(scriptFile);
-    			gse.setScriptName(scriptName);
-    			gse.setAccess(a);
-    			
-    		}
     		cso.setClassLoader(loader);
     		return cso;
     	}
