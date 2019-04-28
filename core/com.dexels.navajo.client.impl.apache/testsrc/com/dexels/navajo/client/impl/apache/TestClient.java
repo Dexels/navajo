@@ -34,7 +34,7 @@ public class TestClient {
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
-	@Test (timeout=10000)
+	@Test (timeout=20000)
 	public void testClientBig() throws ClientException {
 		NavajoClient cl = new ApacheNavajoClientImpl();
 		cl.setAllowCompression(true);
