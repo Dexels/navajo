@@ -24,21 +24,17 @@ import io.reactivex.Flowable;
 
 public class ReactiveResolvedParameters {
 
-//	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
 	Map<String,Operand> resolvedNamed = new HashMap<>();
 	List<Operand> resolvedUnnamed = new ArrayList<>();
 	Map<String,String> resolvedTypes = new HashMap<>();
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
-//	private final StreamScriptContext context;
 	private boolean allResolved = false;
 	private final Optional<ImmutableMessage> currentMessage;
 	private final ImmutableMessage paramMessage;
 	private final Optional<Map<String,String>> expectedTypes;
 
 	private final Map<String, ContextExpression> named;
-//	private final Optional<XMLElement> sourceElement;
-//	private final String sourcePath;
 
 	private final List<ContextExpression> unnamed;
 
@@ -180,9 +176,15 @@ public class ReactiveResolvedParameters {
 	}
 	
 	private void resolveUnnamed() {
+		
 		List<? extends Operand> resolved = unnamed.stream()
 				.map(e->{
-					return e.apply(this.resolvedInput, this.currentMessage, Optional.of(this.paramMessage));
+					Operand value = e.apply(this.resolvedInput, this.currentMessage, Optional.of(this.paramMessage));
+					if(value==null) {
+						throw new NullPointerException("Unnamed expression resolved to null");
+					}
+
+					return value;
 				}).collect(Collectors.toList());
 		this.allResolved=true;
 		this.resolvedUnnamed.addAll(resolved);
@@ -191,7 +193,11 @@ public class ReactiveResolvedParameters {
 	private void resolveNamed() {
 		named.entrySet().forEach(e->{
 			Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(e.getKey())) : Optional.empty();
-			resolveParam(e.getKey(),expectedType,e.getValue());
+			ContextExpression value = e.getValue();
+			if(value==null) {
+				throw new NullPointerException("Named Expression with key: "+e.getKey()+" resolved to null");
+			}
+			resolveParam(e.getKey(),expectedType,value);
 		});
 		allResolved = true;
 	}

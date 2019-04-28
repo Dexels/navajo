@@ -2,6 +2,7 @@ package com.dexels.navajo.document.stream;
 
 import java.util.List;
 
+
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
@@ -236,31 +237,52 @@ public class DataItem {
 	}
 
 	public static DataItem of(ImmutableMessage repl) {
+		if(repl==null) {
+			throw new NullPointerException("Can't instantiate data item with null message");
+		}
 		return new DataItem(repl);
 	}
 	
 	public static DataItem of(List<ImmutableMessage> msgList) {
+		if(msgList==null) {
+			throw new NullPointerException("Can't instantiate data item with null messageList");
+		}
 		return new DataItem(msgList);
 	}
 
 	public static DataItem of(ImmutableMessage repl, ImmutableMessage stateMessage) {
+		if(repl==null) {
+			throw new NullPointerException("Can't instantiate data item with null message");
+		}
 		return new DataItem(repl,stateMessage);
 	}
 
 	
 	public static DataItem of(byte[] data) {
+		if(data==null) {
+			throw new NullPointerException("Can't instantiate data item with null data");
+		}
 		return new DataItem(data);
 	}
 	
 	public static DataItem of(NavajoStreamEvent event) {
+		if(event==null) {
+			throw new NullPointerException("Can't instantiate data item with null event");
+		}
 		return new DataItem(event);
 	}
 
 	public static DataItem ofEventStream(Flowable<NavajoStreamEvent> eventStream) {
+		if(eventStream==null) {
+			throw new NullPointerException("Can't instantiate data item with null eventStream");
+		}
 		return new DataItem(null,eventStream);
 	}
 
 	public static DataItem of(Flowable<ImmutableMessage> msgList) {
+		if(msgList==null) {
+			throw new NullPointerException("Can't instantiate data item with null msgList");
+		}
 		return new DataItem(msgList,(Flowable<NavajoStreamEvent>)null);
 	}
 //	private DataItem(Flowable<ImmutableMessage> msgList, Flowable<NavajoStreamEvent> event) {

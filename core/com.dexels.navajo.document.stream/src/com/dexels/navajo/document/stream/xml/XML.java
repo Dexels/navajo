@@ -11,6 +11,7 @@ import org.reactivestreams.Subscription;
 
 import com.dexels.navajo.document.stream.impl.SaxXmlFeeder;
 import com.dexels.navajo.document.stream.io.BaseFlowableOperator;
+import com.fasterxml.aalto.AsyncByteArrayFeeder;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
@@ -19,6 +20,7 @@ import io.reactivex.internal.util.BackpressureHelper;
 public class XML {
 	
 	public static FlowableOperator<Flowable<XMLEvent>, byte[]> parseFlowable(int queueSize) {
+		AsyncByteArrayFeeder aaf;
 		return new BaseFlowableOperator<Flowable<XMLEvent>, byte[]>(queueSize) {
 			
 			@Override
