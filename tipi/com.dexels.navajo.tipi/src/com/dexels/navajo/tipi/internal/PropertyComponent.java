@@ -21,7 +21,7 @@ import com.dexels.navajo.tipi.TipiEventListener;
  * @author not attributable
  * @version 1.0
  */
-public interface PropertyComponent extends TipiComponent {
+public interface PropertyComponent extends Dirtyable, TipiComponent {
 	public String getPropertyName();
 
 	public void addTipiEventListener(TipiEventListener listener);
@@ -32,10 +32,6 @@ public interface PropertyComponent extends TipiComponent {
 	public Property getProperty();
 
 	public void setProperty(Property p);
-	
-	public Boolean isDirty();
-
-	public void setDirty(Boolean b);
 
 	// public void checkForConditionErrors(Message m);
 
