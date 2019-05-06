@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>targetplatform</artifactId>
-	<version>1.8.2</version>
+	<version>1.8.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Tycho build examples - Target platform</name>
 
