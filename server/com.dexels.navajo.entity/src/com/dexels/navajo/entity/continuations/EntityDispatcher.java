@@ -1,11 +1,14 @@
 package com.dexels.navajo.entity.continuations;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.activation.MimeType;
@@ -36,6 +39,7 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.server.NavajoIOConfig;
 
 public class EntityDispatcher {
     private static final String HTTP_METHOD_DELETE = "DELETE";
@@ -51,6 +55,11 @@ public class EntityDispatcher {
     private EntityManager myManager;
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
+    private NavajoIOConfig navajoIOConfig;
+    
+	public void setConfig(NavajoIOConfig navajoIOConfig) {
+		this.navajoIOConfig = navajoIOConfig;
+	}
 
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
@@ -63,6 +72,10 @@ public class EntityDispatcher {
         Navajo input = null;
         String inputEtag = null;
         boolean entityFound = false;
+        
+        String locale = runner.getHttpRequest().getHeader("X-Navajo-Locale");
+        String userAgent = runner.getHttpRequest().getHeader("User-Agent");
+        
         try {
 
             // Check for a .<format> in the URL - can be in RequestURI
@@ -217,12 +230,10 @@ public class EntityDispatcher {
             // Create a header from the input
             Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
 
-            String locale = runner.getHttpRequest().getHeader("X-Navajo-Locale");
             if (locale != null) {
                 header.setHeaderAttribute("locale", locale);
             }
 
-            String userAgent = runner.getHttpRequest().getHeader("User-Agent");
             if (userAgent != null) {
                 header.setHeaderAttribute("user_agent", userAgent);
             }
@@ -274,7 +285,7 @@ public class EntityDispatcher {
             }
 
         } catch (Throwable ex) {
-            result = handleException(ex, runner.getHttpResponse());
+            result = handleException(ex, runner.getHttpResponse(), locale);
 
             if (access != null) {
                 boolean skipLogging = false;
@@ -399,7 +410,7 @@ public class EntityDispatcher {
     // In case of an exception, we create a Navajo document with some messages
     // describing the error. This allows us to output the exception in the
     // format the user requested(eg.g JSON).
-    private Navajo handleException(Throwable ex, HttpServletResponse response) {
+    private Navajo handleException(Throwable ex, HttpServletResponse response, String locale) {
         Navajo result = null;
         if (ex instanceof EntityException) {
         	EntityException entityEx = (EntityException) ex;
@@ -428,8 +439,14 @@ public class EntityDispatcher {
                 ArrayList<String> viols = new ArrayList<String>();
                 HashMap<String, String> detailedViols = new HashMap<String,String>();
                 for (Message message : n.getMessage("ConditionErrors").getAllMessages()) {
-                    viols.add(message.getProperty("Id").getValue());
-                    violationsMessage.addProperty(NavajoFactory.getInstance().createProperty(result, message.getProperty("Id").getValue(), "string", message.getProperty("Description").getValue(), 1, null, null));
+                    String id = message.getProperty("Id").getValue();
+                	viols.add(id);
+                    String description = message.getProperty("Description").getValue();
+                    if (description == null || "null".equals(description)) {
+                    	// try to load it from the validation.properties with the current locale
+                    	description = getValidationDescription(locale, id);
+                    }
+                    violationsMessage.addProperty(NavajoFactory.getInstance().createProperty(result, id, "string", description, 1, null, null));
                 }
                 m.addProperty(
                         NavajoFactory.getInstance().createProperty(result, "ViolationCodes", "list", viols.toString(), 1, null, null));
@@ -447,6 +464,21 @@ public class EntityDispatcher {
         response.addHeader("Connection", "close");
         return result;
     }
+
+	private String getValidationDescription(String locale, String id) {
+		String description;
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream(navajoIOConfig.getResourcePath() + "/texts/validation_" + locale + ".properties"));
+		} catch (IOException e) {
+			try {
+				properties.load(new FileInputStream(navajoIOConfig.getResourcePath() + "/texts/validation.properties"));
+			} catch (IOException e1) {
+			}
+		}
+		description = properties.getProperty(id, "");
+		return description;
+	}
 
     private String getOutputFormat(HttpServletRequest request, String urlOutput) {
         if (urlOutput != null) {
