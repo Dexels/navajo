@@ -194,18 +194,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return 0;
 	}
 
-	public static void main(String [] args) throws Exception {
-		Navajo doc = NavajoFactory.getInstance().createNavajo();
-		Message m = NavajoFactory.getInstance().createMessage(doc, "Input");
-		doc.addMessage(m);
-		doc.write(System.err);
-		TestNavajoConfig tnc = new TestNavajoConfig();
-		tnc.writeConfig("aap.xml", doc);
-		Navajo read = NavajoFactory.getInstance().createNavajo(tnc.getConfig("aap.xml"));
-		read.write(System.err);
-		
-		
-	}
 
 	@Override
 	public String getCompilationLanguage() {
