@@ -23,8 +23,8 @@
 		<unit id="org.eclipse.jgit.http.apache.feature.group" version="5.3.0.201903130848-r"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.13.201811291621"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.13"/>
+		<unit id="com.dexels.thirdparty.feature.feature.group" version="2.0.14.201811291621"/>
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_2.0.14"/>
 	</location>
 </locations>
 <includeBundles>
