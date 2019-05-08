@@ -86,7 +86,7 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 
 	@Override
 	public String getResourcePath() {
-		return new File(rootPath,"resource").getAbsolutePath();
+		return new File(rootPath,"resources").getAbsolutePath();
 	}
 
     @Override

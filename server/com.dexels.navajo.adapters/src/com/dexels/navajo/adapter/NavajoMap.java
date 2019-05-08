@@ -688,8 +688,8 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 for (String msgName : copy) {
                     Message msg = null;
                     if ((msg = access.getOutputDoc().getMessage(msgName)) != null) {
-                        if (this.outDoc.getMessage(msgName) != null) {
-                            this.outDoc.getMessage(msgName).merge(msg, true);
+                        if (this.outDoc.getMessage(msg.getName()) != null) {
+                            this.outDoc.getMessage(msg.getName()).merge(msg, true);
                         } else {
                             this.outDoc.addMessage(msg);
                         }
@@ -705,8 +705,8 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             for (String msgName : copy) {
                 Message msg = null;
                 if ((msg = access.getInDoc().getMessage(msgName)) != null) {
-                    if (this.outDoc.getMessage(msgName) != null) {
-                        this.outDoc.getMessage(msgName).merge(msg);
+                    if (this.outDoc.getMessage(msg.getName()) != null) {
+                        this.outDoc.getMessage(msg.getName()).merge(msg);
                     } else {
                         this.outDoc.addMessage(msg);
                     }

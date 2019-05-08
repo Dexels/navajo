@@ -96,7 +96,7 @@ public void store() throws MappableException, UserException {
         }
         // Solution to issue 411
         // if the message does not exist in the indoc and if the type is array_element
-        if (!inDoc.getMessages().containsKey(copyMessageTo) && type.equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
+        if (!outputDoc.getMessages().containsKey(copyMessageTo) && type.equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
             type = Message.MSG_TYPE_SIMPLE;
         }
     		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 

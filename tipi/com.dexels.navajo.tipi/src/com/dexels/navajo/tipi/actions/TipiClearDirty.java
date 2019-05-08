@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.internal.Dirtyable;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -52,9 +52,9 @@ public final class TipiClearDirty extends TipiAction {
 	{
 		if (root.getChildCount() == 0)
 		{
-			if (root instanceof PropertyComponent)
+			if (root instanceof Dirtyable)
 			{
-				((PropertyComponent) root).setDirty(Boolean.FALSE);
+				((Dirtyable) root).setDirty(Boolean.FALSE);
 			}
 		}
 		else
