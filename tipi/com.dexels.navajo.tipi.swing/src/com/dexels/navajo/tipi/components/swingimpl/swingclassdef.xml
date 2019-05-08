@@ -1680,6 +1680,7 @@
          <value direction="in" name="font" type="font" />
          <value direction="in" name="enabled" type="boolean"  property="enabled"/>
          <value direction="in" name="editable" type="boolean" property="editable"/>
+         <value direction="in" name="linewrap" type="boolean" property="linewrap"/>
       </values>
       <methods>
          <method name="selectAll" />
