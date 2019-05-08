@@ -675,10 +675,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         if (this.useCurrentOutDoc || this.useCurrentMessages != null) {
             if (this.useCurrentOutDoc) {
                 if (this.outDoc != null) {
-                    /**
-                     * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
-                     * THIS IS NOT EXPECTED BEHAVIOR.
-                     */
                     this.outDoc.merge(access.getOutputDoc().copy(), true);
                 } else {
                     this.outDoc = access.getOutputDoc().copy();
@@ -706,7 +702,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 Message msg = null;
                 if ((msg = access.getInDoc().getMessage(msgName)) != null) {
                     if (this.outDoc.getMessage(msg.getName()) != null) {
-                        this.outDoc.getMessage(msg.getName()).merge(msg);
+                        this.outDoc.getMessage(msg.getName()).merge(msg, true);
                     } else {
                         this.outDoc.addMessage(msg);
                     }
