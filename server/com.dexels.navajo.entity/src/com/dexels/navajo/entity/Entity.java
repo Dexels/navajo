@@ -278,7 +278,7 @@ public class Entity {
             if (Arrays.asList(VALID_CACHING_PROPERTIES).contains(prop.getName())) {
                 myCaching.put(prop.getName(), prop.getValue());
             } else {
-                logger.error("Skiping invalid caching property: " + prop.getName());
+                logger.error("Skipping invalid caching property: " + prop.getName());
             }
         });
 
