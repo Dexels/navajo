@@ -1721,8 +1721,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             p.setDirection(m_p.getDirection());
 
             // A method that is null or "" is considered to always match
-            boolean matchMethod = m_p.getMethod() == null || m_p.getMethod().equals("") || p.getMethod().equals("")
-                    || p.getMethod().equals(method);
+            boolean matchMethod = method.equals("") || m_p.getMethod() == null || m_p.getMethod().equals("")
+                    || m_p.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeProperty(p);
@@ -1759,8 +1759,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 continue;
             }
 
-            boolean matchMethod = m.getMethod().equals("") || method.equals("") || maskMessage.getMethod().equals("")
-                    || m.getMethod().equals(method);
+            boolean matchMethod = method.equals("") || maskMessage.getMethod().equals("")
+                    || maskMessage.getMethod().equals(method);
 
             if (!matchMethod) {
                 removeMessage(m);
@@ -1771,15 +1771,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             if (m.isArrayMessage()) {
                 Message definitionMessage = maskMessage.getDefinitionMessage();
                 if (definitionMessage == null) {
-                    logger.debug("Unable to mask {} since the mask has no defintion message", m.getName());
+                    logger.debug("Unable to mask {} since the mask has no definition message", m.getName());
 
                 } else {
 
                     for (int i = 0; i < m.getElements().size(); i++) {
-                        m.getElements().get(i).maskMessage(maskMessage, method);
+                        m.getElements().get(i).maskMessage(definitionMessage, method);
                     }
                     // also mask the definition message
-                    definitionMessage.maskMessage(maskMessage, method);
+                    if (m.getDefinitionMessage() != null)
+                    {
+                    	m.getDefinitionMessage().maskMessage(definitionMessage, method);
+                    }
                 }
             } else {
                 m.maskMessage(maskMessage, method);
