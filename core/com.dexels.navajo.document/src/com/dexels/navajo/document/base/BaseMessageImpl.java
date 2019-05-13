@@ -1750,7 +1750,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             Message m = allMessages.next();
             Message maskMessage = mask.getMessage(m.getName());
-            if (maskMessage == null && this.getIndex() > -1) {
+            if (maskMessage == null && this.getIndex() > -1 && mask.getDefinitionMessage() != null) {
                 maskMessage = mask.getDefinitionMessage().getMessage(m.getName());
             }
 
