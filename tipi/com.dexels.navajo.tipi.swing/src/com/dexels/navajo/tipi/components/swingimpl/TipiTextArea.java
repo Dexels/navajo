@@ -109,6 +109,15 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 			});
 			return;
 		}
+		if (name.equals("linewrap")) {
+			runSyncInEventThread(new Runnable() {
+				@Override
+				public void run() {
+					myTextArea.setLineWrap((Boolean) object);
+				}
+			});
+			return;
+		}
 		// if(name.equals("editable")) {
 		// myTextArea.setEditable((Boolean)object);
 		// }
