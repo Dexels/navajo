@@ -15,8 +15,6 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
-            - v1-dependencies-
-
       - run: |
           cd setup/com.dexels.target
           mvn -s ../../.circleci/conf/settings.xml install 
