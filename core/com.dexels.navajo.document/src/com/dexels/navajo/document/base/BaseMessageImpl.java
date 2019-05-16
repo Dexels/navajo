@@ -1407,7 +1407,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
         if (getArrayParentMessage() != null) {
             getArrayParentMessage().firePropertyDataChanged(p, oldValue, newValue);
-        } else {
+        } else if (getRootDoc() != null) {
             getRootDoc().firePropertyDataChanged(p, oldValue, newValue);
         }
         if (myPropertyDataListeners != null) {
