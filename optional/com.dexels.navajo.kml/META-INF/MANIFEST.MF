@@ -8,7 +8,6 @@ Navajo-Name: Kml
 Navajo-Extension: com/dexels/navajo/geo/kmladapterdef.xml
 Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.navajo.adapters.svg,
  com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
