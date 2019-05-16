@@ -230,6 +230,9 @@ public class Entity {
     	for(Message subM : m.getAllMessages()) {
     		cleanMessageProperties(subM);
     	}
+		if (m.getDefinitionMessage() != null) {
+			cleanMessageProperties(m.getDefinitionMessage());
+		}
     }
 
     public void setMyValidations(Message validationsMessage) {
