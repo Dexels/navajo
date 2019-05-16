@@ -168,7 +168,6 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
             entityFound = true;
-            Message entityMessage = e.getMessage(Entity.DEFAULT_VERSION);
 
             String version = runner.getHttpRequest().getHeader("X-Navajo-Version");
             if (version == null) {
@@ -180,6 +179,8 @@ public class EntityDispatcher {
             } else {
                 logger.debug("Requesting entity {} version {}", e.getName(), version);
             }
+            
+            Message entityMessage = e.getMessage(version);
 
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
