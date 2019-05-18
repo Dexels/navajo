@@ -160,6 +160,7 @@ public class TestReactiveParser {
 	@Test
 	public void testAddressSubMessage( ) throws ParseException, IOException {
 		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/addresssubmessage.rr");
+		n.write(System.err);
 		String val = (String) n.getMessage("Test/bla").getProperty("prop2").getTypedValue();
 		Assert.assertEquals("prop2value",val);
 	}

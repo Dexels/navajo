@@ -118,7 +118,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 
 	@Override
 	public final ReactiveSourceFactory getSourceFactory(String name) {
-		System.err.println("Looking for source factoru: "+name);
+		System.err.println("Looking for source factory: "+name);
 		return factories.get(name);
 	}
 

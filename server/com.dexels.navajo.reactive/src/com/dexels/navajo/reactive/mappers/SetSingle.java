@@ -42,7 +42,6 @@ public class SetSingle implements ReactiveMerger {
 			for (Entry<String,Operand> elt : parms.namedParameters().entrySet()) {
 				if(!elt.getKey().equals("condition")) {
 					String type = parms.namedParamType(elt.getKey());
-					System.err.println("KEY: "+elt.getKey()+" value: "+elt.getValue());
 					s = addColumn(s, elt.getKey(), elt.getValue(), type);
 				}
 			}
@@ -69,7 +68,13 @@ public class SetSingle implements ReactiveMerger {
 				return input.withSubMessage(submessage, nw);
 			}
 		} else {
-			return input.with(path.get(0), value.value, value.type);
+			// TODO use enum
+			if("immutable".equals(value.type)) {
+				ImmutableMessage im = value.immutableMessageValue();
+				return input.withSubMessage(path.get(0), im);
+			} else {
+				return input.with(path.get(0), value.value, value.type);
+			}
 		}
 		
 	}
