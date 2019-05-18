@@ -49,8 +49,8 @@
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>1.8.3-SNAPSHOT</version>
-							<classifier>repo.dexels.com</classifier>
+							<version>2.0.0-SNAPSHOT</version>
+							<classifier>maven</classifier>
 						</artifact>
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
