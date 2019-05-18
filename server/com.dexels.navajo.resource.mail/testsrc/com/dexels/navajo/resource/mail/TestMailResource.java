@@ -20,7 +20,7 @@ import com.dexels.navajo.script.api.UserException;
 public class TestMailResource {
 
 	// TODO find unit test smtp server
-	@Before @Ignore
+	@Before
 	public void setUp() {
 		MailResourceFactory factory = new MailResourceFactory();
 		ResourceComponent component = new ResourceComponent();
@@ -46,7 +46,7 @@ public class TestMailResource {
 		MailResourceFactory.getInstance().deactivate();	
 	}
 
-	@Test
+	@Test @Ignore
 	public void testSimple() throws MappableException {
 		ResourceMailAdapter rma = new ResourceMailAdapter();
         try {
