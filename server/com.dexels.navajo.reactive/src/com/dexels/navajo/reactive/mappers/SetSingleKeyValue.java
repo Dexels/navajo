@@ -29,7 +29,6 @@ public class SetSingleKeyValue implements ReactiveMerger {
 			if(!condition) {
 				return item;
 			}
-//			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
 			return DataItem.of(item.message().with(toValue, parms.namedParameters().get("value"), parms.namedParamType("value")));
 		};
@@ -39,12 +38,12 @@ public class SetSingleKeyValue implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value","condition"}));
+		return Optional.of(Arrays.asList("to","value","condition"));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList("to","value"));
 	}
 
 	@Override
