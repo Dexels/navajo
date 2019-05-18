@@ -2,10 +2,14 @@ package com.dexels.navajo.dev.ant;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,12 +47,7 @@ public class CreateP2RepoPom extends Task {
 				xe.parseFromReader(r);
 			}
 			for (String inputFile : input) {
-				File bundleFile = new File(inputFile);
-				Properties prop = new Properties();
-				try(FileInputStream fis = new FileInputStream(bundleFile)) {
-					prop.load(fis);
-				}
-				p.putAll(prop);
+				p.putAll(parseToMap(inputFile));
 			}
 			
 			for (java.util.Map.Entry<Object, Object> e : p.entrySet()) {
@@ -64,9 +63,6 @@ public class CreateP2RepoPom extends Task {
 						log("Ignoring module: "+name+" it is not in groups: "+this.groups);
 					}
 				}
-				if(name.startsWith("core")) {
-				}
-
 			}
 			File output = new File(destination);
 			try(Writer w = new FileWriter(output)) {
@@ -78,12 +74,29 @@ public class CreateP2RepoPom extends Task {
 		}
 	}
 
+	private Map<Object,Object> parseToMap(String inputFile) throws IOException {
+		if(inputFile.endsWith(".maven")) {
+			String joined = Files.lines(Paths.get(inputFile))
+				.map(line->"mvn:"+line.replaceAll(":","/"))
+				.collect(Collectors.joining(",\\\n "));
+			Map<Object,Object> result = new HashMap<>();
+			result.put(inputFile.split("\\.")[0], joined);
+			return result;
+		}
+		Properties prop = new Properties();
+		File bundleFile = new File(inputFile);
+		try(FileInputStream fis = new FileInputStream(bundleFile)) {
+			prop.load(fis);
+		}
+		return prop;
+	}
+
 	private void addDependencies(String bootrepo) {
 		log("Added dependency: "+bootrepo);
 		if(bootrepo==null) {
 			return;
 		}
-		XMLElement featureDefs = xe.getAllElementsByTagName("featureDefinitions").stream().findFirst().get();
+		XMLElement featureDefs = xe.getAllElementsByTagName("featureDefinitions").stream().findFirst().orElseThrow(()->new UnsupportedOperationException("Missing 'featureDefinitions' tag in pom feature template"));
 
 
 		updateVersionTags(featureDefs.getChildByTagName("feature"),id,version);
@@ -91,6 +104,7 @@ public class CreateP2RepoPom extends Task {
 		
 		List<String> lines =Arrays.asList(bootrepo.split(",")).stream().sorted().collect(Collectors.toList());
 		for (String line : lines) {
+			super.log("Adding  dependency line: "+line);
 			String[] proto = line.split(":");
 			if(!proto[0].equals("mvn")) {
 				throw new IllegalArgumentException("Only mvn url are supported, not: "+proto[0]);
@@ -124,9 +138,6 @@ public class CreateP2RepoPom extends Task {
 
 	// TODO classifier?
 	private XMLElement createArtifact(String groupId, String artifactId, String version, Optional<String> type, Optional<String> classifier) {
-//        <artifact>
-//        	<id>org.springframework:spring-core:jar:4.3.11.RELEASE</id>
-//        </artifact>
 		XMLElement artifact = new CaseSensitiveXMLElement("artifact");
 		String uri = groupId+":"+artifactId+":"+version;
 		if(type.isPresent()) {
