@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -23,7 +24,7 @@ public class StoreSingle implements ReactiveMerger {
 
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
-		return context->(item)->{
+		return context->item->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
 			ImmutableMessage state = item.stateMessage();
@@ -32,10 +33,9 @@ public class StoreSingle implements ReactiveMerger {
 			if(!condition) {
 				return item;
 			}			
-			Object resolvedValue = parms.namedParameters().get("value");
-			String type = parms.namedParamType("value");
+			Operand resolvedValue = parms.namedParameters().get("value");
 			String toValue = parms.paramString("to");
-			ImmutableMessage di = item.stateMessage().with(toValue, resolvedValue,type);
+			ImmutableMessage di = item.stateMessage().with(toValue, resolvedValue.value,resolvedValue.type);
 
 			return DataItem.of(s,di);
 		};
@@ -44,12 +44,12 @@ public class StoreSingle implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value","condition"}));
+		return Optional.of(Arrays.asList("to","value","condition"));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList("to","value"));
 	}
 
 	@Override

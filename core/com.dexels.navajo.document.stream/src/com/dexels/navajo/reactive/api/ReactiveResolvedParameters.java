@@ -28,7 +28,7 @@ public class ReactiveResolvedParameters {
 	List<Operand> resolvedUnnamed = new ArrayList<>();
 	Map<String,String> resolvedTypes = new HashMap<>();
 	
-	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
 	private boolean allResolved = false;
 	private final Optional<ImmutableMessage> currentMessage;
 	private final ImmutableMessage paramMessage;
@@ -91,9 +91,6 @@ public class ReactiveResolvedParameters {
 		return Collections.unmodifiableMap(resolvedNamed);
 	}
 
-	public String namedParamType(String key) {
-		return this.resolvedTypes.get(key);
-	}
 	private Optional<Operand> paramValue(String key) {
 		if(resolvedNamed.containsKey(key)) {
 			return Optional.ofNullable(resolvedNamed.get(key));
