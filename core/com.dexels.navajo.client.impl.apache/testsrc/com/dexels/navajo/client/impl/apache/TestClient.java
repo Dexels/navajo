@@ -20,7 +20,7 @@ public class TestClient {
 	public TestClient() {
 	}
 
-	@Test(timeout=5000)
+	@Test(timeout=10000)
 	public void testClient() throws ClientException {
 		NavajoClient cl = new ApacheNavajoClientImpl();
 		cl.setAllowCompression(true);
