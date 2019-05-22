@@ -13,6 +13,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -44,6 +45,7 @@ public class ResourceChecker {
 	private boolean initialized = false;
 	private CompiledScriptInterface myCompiledScript = null;
 	private String webservice;
+	private BundleCreator bundleCreator;
 	
 	
 	private static final Logger logger = LoggerFactory
@@ -60,7 +62,7 @@ public class ResourceChecker {
 
 		this.webservice = webservice;
 		// Don't know if this is needed
-		GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
+		GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig(),bundleCreator);
 		StringBuilder compilerErrors = new StringBuilder();
 		try {
 			Access a = new Access();
@@ -224,4 +226,12 @@ public class ResourceChecker {
 
 	}
 	
+
+	public void setBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = bundleCreator;
+	}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
 }

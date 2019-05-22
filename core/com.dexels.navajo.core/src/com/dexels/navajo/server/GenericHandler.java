@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -71,15 +72,19 @@ public class GenericHandler extends ServiceHandler {
     private NavajoConfigInterface tenantConfig;
 
 	protected NavajoConfigInterface navajoConfig;
+
+	private final BundleCreator bundleCreator;
     
     public GenericHandler() {
     	if(!Version.osgiActive()) {
     		logger.warn("Warning: using OSGi constructor for GenericHandler");
     	}
+    	this.bundleCreator = null;
     }
     
-    public GenericHandler(NavajoConfigInterface tenantConfig) {
+    public GenericHandler(NavajoConfigInterface tenantConfig, BundleCreator creator) {
     	this.tenantConfig = tenantConfig;
+    	this.bundleCreator = creator;
     	boolean finishedSync = false;
     	
     	if (loadedClasses == null)
@@ -460,14 +465,14 @@ public class GenericHandler extends ServiceHandler {
 	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(String rpcName) throws Exception {
 		
-		
+		logger.info("Loading script: {}",rpcName);
 		final String tenant;
 		if (access.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
 		} else {
 			tenant = access.getTenant();
 		}
-		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
+		return bundleCreator.getOnDemandScriptService(rpcName, tenant);
 	}
     /**
      * Return load script class count.

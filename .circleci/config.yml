@@ -3,7 +3,7 @@ jobs:
   build:
     branches:
       only:
-        - newmaven
+        newmaven
     docker:
       - image: circleci/openjdk:11-jdk
     working_directory: ~/repo

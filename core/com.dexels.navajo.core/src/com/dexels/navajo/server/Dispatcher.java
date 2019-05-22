@@ -51,6 +51,7 @@ import org.slf4j.MDC;
 
 import com.dexels.navajo.authentication.api.AuthenticationMethod;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -350,8 +351,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         }
 
         try {
-
-            ServiceHandler sh = HandlerFactory.createHandler(navajoConfig, access, simulationMode); 
+            ServiceHandler sh = HandlerFactory.createHandler(navajoConfig, access, simulationMode, this.bundleCreator); 
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
@@ -1324,6 +1324,8 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     private TenantConfig tenantConfig;
 
+	private BundleCreator bundleCreator;
+
 
     @Override
     public int getHealth(String resourceId) {
@@ -1392,4 +1394,11 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         this.tenantConfig = null;
     }
 
+	public void setBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = bundleCreator;
+	}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
 }

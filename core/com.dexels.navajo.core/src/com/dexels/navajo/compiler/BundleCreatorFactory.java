@@ -12,7 +12,7 @@ public class BundleCreatorFactory {
         BundleCreatorFactory.instance = instance;
     }
     
-    public static BundleCreator getInstance() {
-        return instance;
-    }
+//    public static BundleCreator getInstance() {
+//        return instance;
+//    }
 }
