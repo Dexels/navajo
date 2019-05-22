@@ -72,16 +72,16 @@ public class TipiSwingExportSortingPanel extends JPanel {
 
 	private final void fillAvailableList(Message m) {
 		List<Property> props = m.getAllProperties();
+		DefaultListModel<Object> am = (DefaultListModel<Object>) availableColumnsList.getModel();
 		for (int i = 0; i < props.size(); i++) {
 			Property p = props.get(i);
 			String name = p.getName();
 			String description = p.getDescription();
 			descIdMap.put(description, name);
 			descPropMap.put(description, p);
-//			DefaultListModel<Object> am = (DefaultListModel<Object>) availableColumnsList.getModel();
-            // if (!description.equals("")) {
-            // am.addElement(description);
-            // }
+
+			// Add nonempty property descriptions to the available column list.
+			if (!description.isEmpty()) am.addElement(description);
 		}
 	}
 
