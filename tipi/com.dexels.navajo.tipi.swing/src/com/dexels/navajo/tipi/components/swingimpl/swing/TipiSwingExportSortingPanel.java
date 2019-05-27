@@ -81,7 +81,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 			descPropMap.put(description, p);
 
 			// Add nonempty property descriptions to the available column list.
-			if (!description.isEmpty()) am.addElement(description);
+			if (description != null && !description.isEmpty()) am.addElement(description);
 		}
 	}
 
