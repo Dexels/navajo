@@ -52,14 +52,14 @@ public class DiffMap implements Mappable {
 		if (previous == null || current == null || appendTo == null || messageName == null) {
 			throw new UserException(-1, "missing required fields: previous, current, appendTo or messageName is null");
 		}
-		Message previousMessage = getMessage(previous);
+		Message previousMessage = getMessage(previous).copy();
 		if (previousMessage == null) {
 			throw new UserException(-1, "Not found: previous " + previous + " is not found");
 		}
 		if (!previousMessage.isArrayMessage()) {
 			throw new UserException(-1, "Not supported: previous " + previous + " is not an array message");
 		}
-		Message currentMessage = getMessage(current);
+		Message currentMessage = getMessage(current).copy();
 		if (currentMessage == null) {
 			throw new UserException(-1, "Not found: current " + current + " is not found");
 		}
@@ -72,7 +72,10 @@ public class DiffMap implements Mappable {
 		}
 		Message result = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), messageName, Message.MSG_TYPE_ARRAY);
 		appendToMessage.addMessage(result);
+		// diff should 'consume' the message to handle multiple matching elements correctly
 		for (Message element : previousMessage.getElements()) {
+			// first check all existing elements and compare them with the new message, see if any of the elements need to be modified or deleted.
+			
 			// make a copy to leave the original untouched
 			Message resultElement = element.copy(myAccess.getOutputDoc());
 			try {
@@ -91,6 +94,8 @@ public class DiffMap implements Mappable {
 			}
 		}
 		for (Message element : currentMessage.getElements()) {
+			// then check all new elements and compare them with the existing message, see if there's anything new that needs to be inserted.
+			
 			Message resultElement = element.copy(myAccess.getOutputDoc());
 			try {
 				getDiffForMatchingKeys(previousMessage, resultElement);
@@ -108,6 +113,9 @@ public class DiffMap implements Mappable {
 	
 	private String getDiffForMatchingKeys(Message checkArrayMessage, Message previous) {
 		for (Message checkArrayElement : checkArrayMessage.getElements()) {
+			if ("ignore".equals(checkArrayElement.getMode())) {
+				continue;
+			}
 			boolean allKeysEqual = true;
 			for (Object keyObject : keys) {
 				String key = keyObject.toString();
@@ -117,6 +125,7 @@ public class DiffMap implements Mappable {
 				}
 			}
 			if (allKeysEqual) {
+				checkArrayElement.setMode("ignore");
 				return diff(previous, checkArrayElement);
 			}
  		}
@@ -130,7 +139,8 @@ public class DiffMap implements Mappable {
 			Property currentProperty = current.getProperty(previousProperty.getName());
 			// it can happen that a previous property does not exist for this property
 			if (currentProperty == null) {
-				if (previousProperty.getValue() == null) {
+				if (previousProperty.getValue() == null || (previousProperty.getValue().isEmpty() && previousProperty.getType().equals(Property.STRING_PROPERTY))) {
+					previous.removeProperty(previousProperty);
 					continue;
 				}
 				diff += previousProperty.getName() + "(" + previousProperty.getValue() + " -> null);";
