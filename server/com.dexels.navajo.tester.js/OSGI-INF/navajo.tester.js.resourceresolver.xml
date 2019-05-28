@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.tester.js.resourceresolver">
   <implementation class="com.dexels.navajo.tester.js.servlet.NavajoTesterResourceResolver"/>
   <property name="osgi.http.whiteboard.resource.prefix" type="String" value="/resources"/>
-  <property name="osgi.http.whiteboard.resource.pattern" type="String" value="/*"/>
+  <property name="osgi.http.whiteboard.resource.pattern" type="String" value="/"/>
   <service>
      <provide interface="java.lang.Object"/>
   </service>
