@@ -29,7 +29,7 @@ function createEditor() {
 function updateTenants() {
 	$.ajax({
 		dataType: "json",
-        url: "/testerapi?query=gettenants",
+        url: "testerapi?query=gettenants",
 	    type : "GET",
 	    async : true,
 	    success : function(response) {
@@ -101,7 +101,7 @@ function getScripts() {
     try {
         $.ajax({
             dataType: "json",
-            url: "/testerapi?query=getscripts",
+            url: "testerapi?query=getscripts",
             success: function(data) {
                 sortFileObject(data)
                 $("#scripts").html(scriptstemplate(data));
@@ -278,7 +278,7 @@ function runScript(script) {
         hourglassOff();
     }
 
-    $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
+    $.get("testerapi?query=getfilecontent&file=" + script, function(data) {
     	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
         if (data.length < pretty_max_source_length) {
@@ -596,7 +596,7 @@ $(document).on('click', '.scriptsource', function() {
         scrollTop : 0
     }, 50);
 
-    $.get("/testerapi?query=getfilecontent&file=" + script, function(data) {
+    $.get("testerapi?query=getfilecontent&file=" + script, function(data) {
     	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
         $('#scriptsourcecontent').text(data)
         if (data.length < pretty_max_source_length) {
@@ -629,7 +629,7 @@ $(document).on('click', '.compiledsource', function() {
         url: "/compile?script=" + script + '&keepIntermediateFiles=true',
         dataType: "text",
         success: function() {
-        	$.get("/testerapi?query=getcompiledcontent&file=" + script, function(data) {
+        	$.get("testerapi?query=getcompiledcontent&file=" + script, function(data) {
                 $('#scriptsourcecontent').attr('class', 'prettyprint lang-java linenums');
                 $('#scriptsourcecontent').text(data)
                 prettyPrint();
