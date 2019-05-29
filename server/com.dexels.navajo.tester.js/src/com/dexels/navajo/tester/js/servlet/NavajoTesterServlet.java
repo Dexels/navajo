@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tester.js.NavajoTesterHelper;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemEntry;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NavajoTesterServlet extends HttpServlet {
@@ -40,6 +41,11 @@ public class NavajoTesterServlet extends HttpServlet {
                 List<String> files = helper.getSupportedTenants();
                 result = mapper.writeValueAsString(files);
                 response.setContentType("text/json");
+        } else if (query.equals("getapplications")) {
+            response.setContentType("text/json");
+            JsonNode node = helper.getApplicationListContent();
+            result = mapper.writeValueAsString(node);
+            
         } else {
             logger.warn("Unsupported request: {}", query);
         }

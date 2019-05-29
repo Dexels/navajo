@@ -50,8 +50,29 @@ function updateTenants() {
 	        $("#handlers").trigger("chosen:updated");
 	    }
 	});
-
 }
+
+function updateApplications() {
+	$.ajax({
+		dataType: "json",
+        url: "testerapi?query=getapplications",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	        $.each(response, function(key, value) {
+	           $('#applications').append($('<option>').text(value));
+
+	           // If we don't have a instance in our session storage, check if a part of
+	           // the url matches this instance
+	        });
+	        if (sessionStorage.instance) {
+	        	 $('#applications').val(sessionStorage.app);
+	        }
+	        $("#applications").trigger("chosen:updated");
+	    }
+	});
+}
+
 
 function updateFavorites() {
 	$("#favorites").html("");

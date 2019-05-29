@@ -2,6 +2,8 @@ package com.dexels.navajo.tester.js;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.slf4j.Logger;
@@ -17,12 +20,18 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.xalan.internal.xsltc.dom.ArrayNodeListIterator;
 
 public class NavajoTesterHelper {
     private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala",".rr");
 
     private static final Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;
+    private ObjectMapper mapper = new ObjectMapper();
     
     public void setNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = nci;
@@ -35,7 +44,7 @@ public class NavajoTesterHelper {
     public List<String> getSupportedTenants() {
         // A bit ugly - going to navigate to the Settings folder to find out for which
         // tenants we have config to handle their requests
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         File scriptsPath = new File(navajoConfig.getScriptPath());
         File settingsPath = new File(scriptsPath.getParent(), "settings");
         if (settingsPath.exists()) {
@@ -112,13 +121,31 @@ public class NavajoTesterHelper {
         if (f.exists()) {
             try {
                byte[] bytes =  Files.readAllBytes(f.toPath());
-               return new String(bytes, "UTF-8");
+               return new String(bytes, StandardCharsets.UTF_8);
             } catch (IOException e) {
                 logger.error("Exception on getting file contents: ", e);
             }
         }
         return "";
     }
+    
+    public ArrayNode getApplicationListContent() {
+    	ArrayNode result = mapper.createArrayNode();
+//    	ObjectNode res = mapper.createObjectNode();
+    	Arrays.asList("VOETBALNL","KNKV-MEMBERPORTAL","NHV-MEMBERPORTAL","KNZB-MEMBERPORTAL","KNBSB-MEMBERPORTAL","NBB-MEMBERPORTAL","KBHB-MEMBERPORTAL").stream()
+    			.forEach(e->result.add(e));
+    	return result;
+    }
+//    <select data-placeholder="Select an Application" id="applications">
+//    <option value="legacy" selected="1">Oracle</option>
+//    <option value="VOETBALNL" >VoetbalNL</option>
+//    <option value="KNKV-MEMBERPORTAL" >KNKV</option>
+//    <option value="NHV-MEMBERPORTAL" >NHV</option>
+//    <option value="KNZB-MEMBERPORTAL" >KNZB</option>
+//    <option value="KNBSB-MEMBERPORTAL" >KNBSB</option>                         
+//    <option value="NBB-MEMBERPORTAL" >NBB</option>
+//    <option value="KBHB-MEMBERPORTAL" >KBHB</option>                                                  
+// </select>
 
    
 }
