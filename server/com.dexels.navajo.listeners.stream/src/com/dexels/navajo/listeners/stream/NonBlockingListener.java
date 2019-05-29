@@ -138,7 +138,8 @@ public class NonBlockingListener extends HttpServlet {
 		}
 		String serviceHeader = request.getHeader("X-Navajo-Service");
 		if(serviceHeader==null) {
-		    throw new NullPointerException("Missing service header. Streaming Endpoint requires a 'X-Navajo-Service' header");
+			response.sendError(400,"Missing service header: X-Navajo-Service");
+			return;
 		}
 		AsyncContext ac = request.startAsync();
 		ResponseSubscriber responseSubscriber = new ResponseSubscriber(ac);
