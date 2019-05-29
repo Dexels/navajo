@@ -3,19 +3,19 @@
 <head>
 <title>Navajo Entity API documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="../entityApi/css/style.css" type="text/css" rel="stylesheet"/>
-<link href="../entityApi/css/prettify.css" type="text/css" rel="stylesheet" />
-<link href="../entityApi/css/tingle.min.css" type="text/css" rel="stylesheet" />
-<link href="../entityApi/css/rotate.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/style.css" type="text/css" rel="stylesheet"/>
+<link href="/entityApi/css/prettify.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/tingle.min.css" type="text/css" rel="stylesheet" />
+<link href="/entityApi/css/rotate.css" type="text/css" rel="stylesheet" />
 
 
 
-<script type="text/javascript" src="../entityApi/js/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../entityApi/js/prettify.js"></script>
-<script type="text/javascript" src="../entityApi/js/tingle.min.js"></script>
+<script type="text/javascript" src="/entityApi/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/entityApi/js/prettify.js"></script>
+<script type="text/javascript" src="/entityApi/js/tingle.min.js"></script>
 
-<script type="text/javascript" src="../entityApi/js/dexels/entityapidoc.js"></script>
-<script type="text/javascript" src="../entityApi/js/dexels/navajofeeds-json-parser.js"></script>
+<script type="text/javascript" src="/entityApi/js/dexels/entityapidoc.js"></script>
+<script type="text/javascript" src="/entityApi/js/dexels/navajofeeds-json-parser.js"></script>
 
 </head>
 
