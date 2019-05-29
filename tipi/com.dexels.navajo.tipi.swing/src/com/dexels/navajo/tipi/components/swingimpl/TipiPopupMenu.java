@@ -25,7 +25,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 	private static final long serialVersionUID = -3119612802393524077L;
@@ -40,6 +43,18 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 		return myMenu;
 	}
 
+	@Override
+	protected synchronized void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
+		super.performComponentMethod(name, compMeth, event);
+
+		JPopupMenu jp = (JPopupMenu) getContainer();
+		if (name.equals("hide")) {
+			jp.setVisible(false);
+		}
+	}
+	
 	@Override
 	public void showPopup(MouseEvent e) {
 		JPopupMenu jp = (JPopupMenu) getContainer();
