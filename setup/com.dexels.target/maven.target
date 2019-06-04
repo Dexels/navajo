@@ -428,7 +428,6 @@
 	<plugin id="org.eclipse.jetty.servlet" version="9.4.18.v20190429"/>
 	<plugin id="org.eclipse.jetty.servlets"/>
 	<plugin id="org.eclipse.jetty.util" version="9.4.18.v20190429"/>
-	<plugin id="org.eclipse.jetty.webapp"/>
 	<plugin id="org.eclipse.jetty.websocket.api"/>
 	<plugin id="org.eclipse.jetty.websocket.client"/>
 	<plugin id="org.eclipse.jetty.websocket.common"/>
@@ -447,5 +446,6 @@
 	<plugin id="com.googlecode.javaewah.JavaEWAH"/>
 	<plugin id="com.ibm.icu"/>
 	<plugin id="org.osgi.service.jdbc"/>
+	<plugin id="org.eclipse.jetty.webapp"/>
 </includeBundles>
 </target>
