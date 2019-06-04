@@ -9,7 +9,6 @@ function setupLoginDialog() {
     // extract tenant from the url
     // ONLY if it's local host in the url
     var url = window.location.href;
-    console.log('URLL: '+url);
     if(url.indexOf('localhost') > -1){
         sessionStorage.setItem('isLocalhost', '1');
         var regex = /entityDocumentation\/(\w+)\//;
@@ -186,9 +185,7 @@ $(document).ready(function() {
         var method = $(this).attr('method');
         myOp.find('.entityresponsebody').children().remove();
         myOp.find('.shell-body').text('');
-        var windowLocation = window.location;
-        console.log('WinLoc: '+window.location);
-        var url = window.location.origin + "../entity/"+ myOp.find('.url').text();
+        var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
         
         var requestVersionNum = 0;
         
@@ -206,7 +203,7 @@ $(document).ready(function() {
                 var name = $(this).find('.propname').text();
                 var value = $(this).find('input').val();
                 if (value !== '') {
-                    url += "&" + name + "=" + value;
+                    url += "&" + name + "=" + encodeURIComponent(value);
                     $(this).find('input').removeClass('missinginput');
                 } else {
                     // Check if this was required
@@ -223,7 +220,6 @@ $(document).ready(function() {
             url = url.replace('&', '?'); // replace first & with ?
             addSpinner();
             // Do request
-            console.log("")
             $.ajax({
                 beforeSend: function(req) {
                 		if(sessionStorage.authType == 'oauth'){
@@ -336,7 +332,7 @@ $(document).ready(function() {
             if(sessionStorage.locale !== "n/a"){
             	curl += ' -H "X-Navajo-Locale: ' + sessionStorage.locale + '"' ;
             }
-            curl += '"' + encodeURI(url) + '"'
+            curl += '"' + url + '"'
             return curl;
         }
         
@@ -352,7 +348,7 @@ $(document).ready(function() {
             curl += '-d "';
             curl += data.replace(new RegExp('\"', 'g'), '\\"').replace(new RegExp('\n', 'g'), '')
             curl += '" ';
-            curl += '"' + encodeURI(url) + '"'
+            curl += '"' + url + '"'
             return curl;
         }
         
