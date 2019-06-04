@@ -9,7 +9,6 @@ function setupLoginDialog() {
     // extract tenant from the url
     // ONLY if it's local host in the url
     var url = window.location.href;
-    console.log('URLL: '+url);
     if(url.indexOf('localhost') > -1){
         sessionStorage.setItem('isLocalhost', '1');
         var regex = /entityDocumentation\/(\w+)\//;
@@ -186,9 +185,7 @@ $(document).ready(function() {
         var method = $(this).attr('method');
         myOp.find('.entityresponsebody').children().remove();
         myOp.find('.shell-body').text('');
-        var windowLocation = window.location;
-        console.log('WinLoc: '+window.location);
-        var url = window.location.origin + "../entity/"+ myOp.find('.url').text();
+        var url = window.location.origin + "/entity/"+ myOp.find('.url').text();
         
         var requestVersionNum = 0;
         
@@ -223,7 +220,6 @@ $(document).ready(function() {
             url = url.replace('&', '?'); // replace first & with ?
             addSpinner();
             // Do request
-            console.log("")
             $.ajax({
                 beforeSend: function(req) {
                 		if(sessionStorage.authType == 'oauth'){
