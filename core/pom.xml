@@ -17,7 +17,6 @@
 		<module>com.dexels.navajo.client</module>
 		<module>com.dexels.navajo.client.stream</module>
                 <module>com.dexels.navajo.client.impl.javanet</module>
-                <module>com.dexels.navajo.client.impl.apache</module>
                 <module>com.dexels.navajo.client.nql</module>
 		<module>com.dexels.navajo.core</module>
 		<module>com.dexels.navajo.client.async</module>
