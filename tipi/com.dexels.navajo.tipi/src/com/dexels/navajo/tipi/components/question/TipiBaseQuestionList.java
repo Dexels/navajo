@@ -230,7 +230,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 			Message group = questionGroups.get(i);
 			flattenGroup(group, answers);
 		}
-		logger.info("Flatten complete: Final input for output: ", n.toString());
+		logger.info("Flatten complete: Final input for output: {}", n.toString());
 		myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1,
 				server, username, password, keystore, keypass);
 	}
