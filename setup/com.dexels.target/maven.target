@@ -119,7 +119,7 @@
 		<unit id="org.apache.felix.inventory" version="1.0.6"/>
 		<unit id="org.apache.felix.log" version="1.2.0"/>
 		<unit id="org.apache.felix.metatype" version="1.2.2"/>
-		<unit id="org.apache.felix.scr" version="2.1.16"/>
+		<unit id="org.apache.felix.scr" version="2.1.17.SNAPSHOT"/>
 		<unit id="org.apache.felix.webconsole" version="4.3.8"/>
 		<unit id="org.apache.felix.webconsole.plugins.ds" version="2.1.0"/>
 		<unit id="org.apache.felix.webconsole.plugins.event" version="1.1.8"/>
@@ -143,7 +143,7 @@
 		<unit id="org.apache.servicemix.bundles.jcip-annotations" version="1.0.0.2"/>
 		<unit id="org.apache.servicemix.bundles.jsch" version="0.1.55.1"/>
 		<unit id="org.apache.servicemix.bundles.junit" version="4.12.0.1"/>
-		<unit id="org.apache.servicemix.bundles.jzlib" version="1.1.1.1"/>
+		<unit id="org.apache.servicemix.bundles.jzlib" version="1.1.3.2"/>
 		<unit id="org.apache.servicemix.bundles.xalan" version="2.7.2.3"/>
 		<unit id="org.apache.servicemix.bundles.xerces" version="2.11.0.1"/>
 		<unit id="org.apache.servicemix.bundles.xmlresolver" version="1.2.0.5"/>
@@ -216,7 +216,6 @@
 		<unit id="org.ops4j.base.util.collections" version="1.5.0"/>
 		<unit id="org.ops4j.base.util.xml" version="1.5.0"/>
 		<unit id="org.ops4j.pax.logging.pax-logging-api" version="1.10.1"/>
-		<unit id="org.ops4j.pax.logging.pax-logging-service" version="1.10.1"/>
 		<unit id="org.ops4j.pax.swissbox.core" version="1.8.2"/>
 		<unit id="org.ops4j.pax.swissbox.lifecycle" version="1.8.2"/>
 		<unit id="org.ops4j.pax.swissbox.optional.jcl" version="1.8.2"/>
@@ -250,7 +249,7 @@
 		<unit id="xml-apis" version="1.4.1"/>
 		<unit id="xml-apis.ext" version="1.3.4"/>
 		<unit id="xmlpull" version="1.1.3.1"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_3.1.441"/>
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_3.3.28"/>
 	</location>
 </locations>
 <includeBundles>
@@ -410,7 +409,7 @@
 	<plugin id="ch.qos.logback.core"/>
 	<plugin id="ch.qos.logback.classic"/>
 	<plugin id="org.apache.servicemix.bundles.junit"/>
-	<plugin id="org.apache.felix.scr" version="2.1.16"/>
+	<plugin id="org.apache.felix.scr" version="2.1.17.SNAPSHOT"/>
 	<plugin id="bcpg"/>
 	<plugin id="bcpkix"/>
 	<plugin id="bcprov"/>
