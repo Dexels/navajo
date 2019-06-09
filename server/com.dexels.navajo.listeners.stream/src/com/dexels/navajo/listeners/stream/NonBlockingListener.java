@@ -189,7 +189,7 @@ public class NonBlockingListener extends HttpServlet {
 					.toFlowable()
 					.flatMap(e->e)
 					.concatMapEager(e->e)
-	                .doOnError((e)->context.error(e))
+	                .doOnError(e->Single.error(e))
 	                .doOnCancel(()->removeRunningScript(uuid));
 						
 //					: context.map(ctx->rs.execute(ctx)).toFlowable().
