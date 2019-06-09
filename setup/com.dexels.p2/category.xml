@@ -3,7 +3,7 @@
    <feature url="features/com.dexels.navajo.twitter.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.twitter.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature url="features/com.dexels.navajo.server.feature_1.0.12.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.12.qualifier">
+   <feature url="features/com.dexels.navajo.server.feature_1.0.14.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.14.qualifier">
       <category name="Navajo Core"/>
    </feature>
    <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
