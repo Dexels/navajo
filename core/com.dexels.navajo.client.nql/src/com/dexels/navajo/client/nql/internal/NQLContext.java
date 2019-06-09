@@ -1,6 +1,5 @@
 package com.dexels.navajo.client.nql.internal;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.nql.NQLCommand;
 import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
@@ -287,42 +285,6 @@ public class NQLContext implements NqlContextApi {
 	}
 	
 	
-
-	public static void main(String[] args) throws IOException {
-		NQLContext nq = new NQLContext();
-		NavajoRemoteContext nc = new NavajoRemoteContext();
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final OutputCallback outputCallback = new OutputCallback(){
-
-			@Override
-			public OutputStream getOutputStream() {
-				return baos;
-			}
-
-			@Override
-			public void setOutputType(String mime) {
-				logger.info("Output detected: {}",mime);
-			}
-			
-			@Override
-			public void setContentLength(long l) {
-				logger.info("Content length detected: {}",l);
-			}
-		};
-		
-		
-		nc.setupClient("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "xyz", "abc");
-		nq.setNavajoContext(nc);
-		String nql = "service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv";
-	
-		nq.executeCommand(nql,"sometenant","abc","def",outputCallback);
-		
-		String nql2 = "service:club/InitUpdateClub|Club/ClubIdentifier:BBFW63X|call:club/ProcessQueryClub|output:ClubData/Logo|format:binary";
-		nq.executeCommand(nql2,"sometenant","xyz","uvw",outputCallback);
-		logger.info("TYPE: {}", nq.mimeType);
-		logger.info("Bytes written: {}",baos.size());
-	}
-
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.nql.NqlContextApi#executeCommand(java.lang.String)
 	 */
