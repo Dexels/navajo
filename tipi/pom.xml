@@ -10,6 +10,11 @@
 
 	<modules>
 		<module>com.dexels.navajo.tipi</module>
+		<module>com.dexels.navajo.tipi.css</module>
+		<module>com.dexels.navajo.tipi.css.tkui</module>
+		<module>com.dexels.navajo.tipi.css.feature</module>
+		<module>com.dexels.navajo.tipi.mail</module>
+		<module>com.dexels.navajo.tipi.mail.feature</module>
 		<module>com.dexels.navajo.tipi.swing.mig</module>
 		<module>com.dexels.navajo.tipi.swing.mig.feature</module>
 		<module>com.dexels.navajo.tipi.feature</module>
