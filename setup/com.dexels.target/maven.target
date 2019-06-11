@@ -9,6 +9,8 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<repository location="http://repo.dexels.com/eclipse/3rdparty_3.3.49"/>
+		<unit id="dexels-navajo-target.feature.group" version="3.3.49"/>
 		<unit id="bcpg" version="1.61.0"/>
 		<unit id="bcpkix" version="1.61.0"/>
 		<unit id="bcprov" version="1.61.0"/>
@@ -24,6 +26,8 @@
 		<unit id="com.dexels.immutable.impl" version="1.4.5"/>
 		<unit id="com.dexels.index.api" version="1.0.0.201608241244"/>
 		<unit id="com.dexels.kafka.impl.rx2" version="6.1.5"/>
+		<unit id="com.dexels.kafka.streams" version="1.0.18"/>
+		<unit id="com.dexels.kafka.streams.api" version="2.1.2"/>
 		<unit id="com.dexels.keystoreprovider" version="1.0.0.201711171136"/>
 		<unit id="com.dexels.log4j.server" version="1.0.12.201602171050"/>
 		<unit id="com.dexels.logback.redis" version="2.2.2.201711221509"/>
@@ -250,7 +254,6 @@
 		<unit id="xml-apis" version="1.4.1"/>
 		<unit id="xml-apis.ext" version="1.3.4"/>
 		<unit id="xmlpull" version="1.1.3.1"/>
-		<repository location="http://repo.dexels.com/eclipse/3rdparty_3.3.43"/>
 	</location>
 </locations>
 <includeBundles>
@@ -277,11 +280,11 @@
 <plugin id="com.dexels.repository.file"/>
 <plugin id="com.dexels.repository.git"/>
 <plugin id="com.dexels.repository.git.api"/>
-<plugin id="com.dexels.resourcebundle"/>
+<plugin id="com.dexels.resourcebundle" version="2.0.3"/>
 <plugin id="com.dexels.server.mgmt.api"/>
 <plugin id="com.dexels.server.mgmt.impl"/>
 <plugin id="com.dexels.sharedconfigstore"/>
-<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
+<plugin id="com.fasterxml.jackson.core.jackson-annotations" version="2.9.8"/>
 <plugin id="com.fasterxml.jackson.core.jackson-core"/>
 <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
 <plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
@@ -300,13 +303,13 @@
 <plugin id="net.minidev.json-smart"/>
 <plugin id="org.apache.aries.spifly.dynamic.bundle"/>
 <plugin id="org.apache.aries.util"/>
-<plugin id="org.apache.commons.codec"/>
+<plugin id="org.apache.commons.codec" version="1.11.0"/>
 <plugin id="org.apache.commons.email"/>
 <plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.apache.commons.io"/>
+<plugin id="org.apache.commons.io" version="2.6.0"/>
 <plugin id="org.apache.commons.logging"/>
 <plugin id="org.apache.commons.net"/>
-<plugin id="org.apache.commons.pool"/>
+<plugin id="org.apache.commons.pool" version="1.6.0"/>
 <plugin id="org.apache.felix.configadmin"/>
 <plugin id="org.apache.felix.eventadmin"/>
 <plugin id="org.apache.felix.fileinstall"/>
@@ -359,7 +362,7 @@
 <plugin id="org.eclipse.osgi"/>
 <plugin id="org.eclipse.osgi.services"/>
 <plugin id="org.eclipse.osgi.util"/>
-<plugin id="org.mongodb.driver-async"/>
+<plugin id="org.mongodb.driver-async" version="3.9.1"/>
 <plugin id="org.mongodb.driver-reactivestreams"/>
 <plugin id="org.mongodb.mongo-java-driver"/>
 <plugin id="org.ops4j.base.lang"/>
@@ -382,23 +385,23 @@
 <plugin id="org.scala-lang.scala-reflect"/>
 <plugin id="org.yaml.snakeyaml"/>
 <plugin id="redis.clients.jedis"/>
-<plugin id="slf4j.api"/>
-<plugin id="stax2-api"/>
+<plugin id="slf4j.api" version="1.7.26"/>
+<plugin id="stax2-api" version="4.2.0"/>
 	<plugin id="org.postgresql.jdbc42"/>
 	<plugin id="javax.transaction-api"/>
 	<plugin id="org.apache.commons.dbcp"/>
 	<plugin id="javax.enterprise.cdi-api"/>
-	<plugin id="javax.interceptor-api"/>
+	<plugin id="javax.interceptor-api" version="1.2.2"/>
 	<plugin id="javax.servlet"/>
 	<plugin id="javax.el-api"/>
 	<plugin id="org.objectweb.asm.all"/>
-	<plugin id="org.objectweb.asm.commons"/>
-	<plugin id="org.objectweb.asm.tree"/>
-	<plugin id="org.objectweb.asm.tree.analysis"/>
+	<plugin id="org.objectweb.asm.commons" version="7.1.0"/>
+	<plugin id="org.objectweb.asm.tree" version="7.1.0"/>
+	<plugin id="org.objectweb.asm.tree.analysis" version="7.1.0"/>
 	<plugin id="org.objectweb.asm.util"/>
-	<plugin id="javax.annotation-api"/>
+	<plugin id="javax.annotation-api" version="1.3.2"/>
 	<plugin id="jaxb-api"/>
-	<plugin id="org.apache.commons.lang3"/>
+	<plugin id="org.apache.commons.lang3" version="3.7.0"/>
 	<plugin id="org.apache.commons.lang"/>
 	<plugin id="org.apache.servicemix.bundles.javax-inject"/>
 	<plugin id="javax.xml.soap-api"/>
@@ -406,17 +409,17 @@
 	<plugin id="com.jcraft.jzlib"/>
 	<plugin id="com.sun.activation.javax.activation"/>
 	<plugin id="com.fasterxml.aalto-xml"/>
-	<plugin id="com.sun.mail.javax.mail"/>
+	<plugin id="com.sun.mail.javax.mail" version="1.6.1"/>
 	<plugin id="ch.qos.logback.core"/>
 	<plugin id="ch.qos.logback.classic"/>
 	<plugin id="org.apache.servicemix.bundles.junit"/>
 	<plugin id="org.apache.felix.scr" version="2.1.17.SNAPSHOT"/>
-	<plugin id="bcpg"/>
-	<plugin id="bcpkix"/>
-	<plugin id="bcprov"/>
+	<plugin id="bcpg" version="1.61"/>
+	<plugin id="bcpkix" version="1.61"/>
+	<plugin id="bcprov" version="1.61"/>
 	<plugin id="org.apache.servicemix.bundles.jsch"/>
 	<plugin id="org.eclipse.jetty.annotations"/>
-	<plugin id="org.eclipse.jetty.client"/>
+	<plugin id="org.eclipse.jetty.client" version="9.4.18.v20190429"/>
 	<plugin id="org.eclipse.jetty.continuation" version="9.4.18.v20190429"/>
 	<plugin id="org.eclipse.jetty.http" version="9.4.18.v20190429"/>
 	<plugin id="org.eclipse.jetty.io" version="9.4.18.v20190429"/>
@@ -436,16 +439,18 @@
 	<plugin id="org.eclipse.jetty.websocket.server"/>
 	<plugin id="org.eclipse.jetty.websocket.servlet"/>
 	<plugin id="org.eclipse.jetty.xml"/>
-	<plugin id="org.mongodb.bson"/>
+	<plugin id="org.mongodb.bson" version="3.9.1"/>
 	<plugin id="org.eclipse.jetty.reactive.client"/>
 	<plugin id="org.apache.commons.commons-compress"/>
-	<plugin id="org.objectweb.asm"/>
+	<plugin id="org.objectweb.asm" version="7.1.0"/>
 	<plugin id="org.apache.httpcomponents.httpasyncclient"/>
-	<plugin id="org.apache.httpcomponents.httpcore"/>
-	<plugin id="org.apache.httpcomponents.httpclient"/>
+	<plugin id="org.apache.httpcomponents.httpcore" version="4.4.10"/>
+	<plugin id="org.apache.httpcomponents.httpclient" version="4.5.6"/>
 	<plugin id="com.googlecode.javaewah.JavaEWAH"/>
 	<plugin id="com.ibm.icu"/>
 	<plugin id="org.osgi.service.jdbc"/>
 	<plugin id="org.eclipse.jetty.webapp"/>
+	<plugin id="com.dexels.kafka.streams"/>
+	<plugin id="com.dexels.kafka.streams.api"/>
 </includeBundles>
 </target>
