@@ -25,7 +25,7 @@ jobs:
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # run tests
-      - run: mvn -s .circleci/conf/settings.xml deploy -Denvironment=release
+      - run: mvn -s .circleci/conf/settings.xml -T 1.5C deploy -Denvironment=release
       - run: |
           cd ~
           du -hs .m2
