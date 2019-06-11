@@ -17,41 +17,71 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import feature="com.dexels.navajo.core.feature" version="1.0.11.qualifier"/>
-      <import feature="com.dexels.navajo.server.feature" version="1.0.11.qualifier"/>
-   </requires>
-
    <plugin
-         id="com.dexels.navajo.reactive"
+         id="com.dexels.kafka.impl.rx2"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.reactive.subscriber"
+         id="com.dexels.kafka.streams"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.listeners.stream"
+         id="com.dexels.kafka.streams.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.adapters.stream"
+         id="com.dexels.replication.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.client.stream"
+         id="com.dexels.replication.impl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.replication.impl.json"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.replication.impl.protobuf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.protobuf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.immutable.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.immutable.impl"
          download-size="0"
          install-size="0"
          version="0.0.0"
