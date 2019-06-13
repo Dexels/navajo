@@ -152,26 +152,6 @@ public class NavajoConfigEmitter implements EventHandler {
 				: "");
 		data.put("compiledScriptPath", compiledScriptPath);
 
-		// Read monitoring configuration options
-		Property monitoringAgentClass = body
-				.getProperty("monitoring-agent/class");
-		Property monitoringAgentProperties = body
-				.getProperty("monitoring-agent/properties");
-		// Set properties.
-		if (monitoringAgentProperties != null) {
-			String[] properties = monitoringAgentProperties.getValue().split(
-					";");
-			for (int i = 0; i < properties.length; i++) {
-				String[] keyValue = properties[i].split("=");
-				String key = (keyValue.length > 1) ? keyValue[0] : "";
-				String value = (keyValue.length > 1) ? keyValue[1] : "";
-				System.setProperty(key, value);
-			}
-		}
-		if (monitoringAgentClass != null) {
-			AgentFactory.getInstance(monitoringAgentClass.getValue()).start();
-		}
-
 		Property descriptionProviderProperty = body
 				.getProperty("description-provider/class");
 		String descriptionProviderClass = null;
@@ -180,26 +160,6 @@ public class NavajoConfigEmitter implements EventHandler {
 			if (descriptionProviderClass != null) {
 				data.put("descriptionProviderClass", descriptionProviderClass);
 			}
-		}
-
-		if (body.getProperty("repository/class") != null) {
-			String repositoryClass = body.getProperty("repository/class")
-					.getValue();
-			data.put("repositoryClass", repositoryClass);
-		}
-
-		Message navajostore = body.getMessage("navajostore");
-		if (navajostore != null) {
-			String store = (navajostore.getProperty("store") != null ? navajostore
-					.getProperty("store").getValue() : null);
-			String auditLevel = (navajostore.getProperty("auditlevel") != null ? navajostore
-					.getProperty("auditlevel").getValue() : Level.WARNING
-					.getName());
-			Dictionary<String, Object> d = new Hashtable<>();
-			d.put("type", store);
-			d.put("name", "navajostore");
-			d.put("level", auditLevel);
-			injectConfiguration("navajo.server.store", d);
 		}
 
 		boolean enableStatisticsRunner = (body
@@ -247,25 +207,7 @@ public class NavajoConfigEmitter implements EventHandler {
 				: Integer.parseInt(body.getProperty(
 						"parameters/max_webservices").getValue()));
 		data.put("maxAccessSetSize", maxAccessSetSize);
-
-		s = body.getProperty("parameters/compile_scripts");
-		boolean compileScripts;
-		if (s != null) {
-			compileScripts = (s.getValue().equals("true"));
-		} else {
-			compileScripts = false;
-		}
-		data.put("compileScripts", compileScripts);
-
-		// Get compilation class.
-		// TODO refactor into intelligent discovery
-		String compilationLanguage = (body
-				.getProperty("parameters/compilation_language") != null ? body
-				.getProperty("parameters/compilation_language").getValue()
-				: null);
-		if(compilationLanguage!=null) {
-			data.put("compilationLanguage", compilationLanguage);
-		}
+		data.put("compileScripts", true);
 
 		// Get document class implementation.
 		String documentClass = (body.getProperty("documentClass") != null ? body

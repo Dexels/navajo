@@ -49,7 +49,6 @@ public class AdminMap implements Mappable {
     public String compiledScriptPath;
     public String rootPath;
     public String webservice;
-    public String documentClass;
     public boolean supportsHotCompile;
     public boolean supportsAsync;
     public boolean supportsStore;
@@ -91,9 +90,9 @@ public class AdminMap implements Mappable {
         adapterPath = ensurePathEndsWithSeparator(nc.getAdapterPath());
         compiledScriptPath = ensurePathEndsWithSeparator(nc.getCompiledScriptPath());
         rootPath = ensurePathEndsWithSeparator(nc.getRootPath());
-        supportsAsync = nc.isAsyncEnabled();
+        supportsAsync = true;
         supportsStore = (nc.getAsyncStore() != null);
-        supportsIntegrity = nc.isIntegrityWorkerEnabled();
+        supportsIntegrity = false;
         supportsStatistics = nc.isEnableStatisticsRunner();
         supportsLocks = nc.isLockManagerEnabled();
 

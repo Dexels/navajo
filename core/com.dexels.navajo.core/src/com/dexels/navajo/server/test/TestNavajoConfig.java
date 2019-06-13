@@ -125,18 +125,9 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return new File(configRoot,"scripts").getAbsolutePath();
 	}
 
-	@Override
-	public boolean isAsyncEnabled() {
-		return false;
-	}
 
 	@Override
 	public boolean isEnableStatisticsRunner() {
-		return false;
-	}
-
-	@Override
-	public boolean isIntegrityWorkerEnabled() {
 		return false;
 	}
 
@@ -179,13 +170,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	@Override
 	public int getMaxAccessSetSize() {
 		return 0;
-	}
-
-
-	@Override
-	public String getCompilationLanguage() {
-		
-		return "javascript";
 	}
 
 	@Override

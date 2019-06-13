@@ -330,24 +330,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		logger.info("Ignoring doClearScriptCache");
 	}
 
-	@Override
-	public String getCompilationLanguage() {
-		return (String) properties.get("compilationLanguage");
-	}
-
-	@Override
-	public boolean isAsyncEnabled() {
-		return true;
-	}
-
-	@Override
-	public boolean isIntegrityWorkerEnabled() {
-		Boolean b =(Boolean) getExternalConfigurationValue("navajo.server.integrity","enabled");
-		if(b!=null) {
-			return b;
-		}
-		return false;
-	}
 
 	@Override
 	public boolean isLockManagerEnabled() {
