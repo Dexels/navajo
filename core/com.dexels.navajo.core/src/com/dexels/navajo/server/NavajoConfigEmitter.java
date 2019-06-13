@@ -132,8 +132,8 @@ public class NavajoConfigEmitter implements EventHandler {
 		data.put("instanceGroup", getInstanceGroup(body));
 
 		String configPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "config", body));
-		String adapterPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "adapters", body));
-		String scriptPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "scripts", body));
+		String adapterPath = properDir(rootPath + getMessageValueWithDefault("paths/adapters", "adapters", body));
+		String scriptPath = properDir(rootPath + getMessageValueWithDefault("paths/scripts", "scripts", body));
 		data.put("configPath", configPath);
 		data.put("adapterPath", adapterPath);
 		data.put("scriptPath", scriptPath);
