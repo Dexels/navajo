@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -28,7 +27,6 @@ import com.dexels.navajo.parser.compiled.api.CachedExpressionEvaluator;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.api.NavajoServerContext;
-import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 
 public class NavajoConfigEmitter implements EventHandler {
 
@@ -162,13 +160,8 @@ public class NavajoConfigEmitter implements EventHandler {
 			}
 		}
 
-		boolean enableStatisticsRunner = (body
-				.getProperty("parameters/enable_statistics") == null || body
-				.getProperty("parameters/enable_statistics").getValue()
-				.equals("true"));
-
 		Dictionary<String, Object> d = new Hashtable<>();
-		d.put("enable", enableStatisticsRunner);
+		d.put("enable", true);
 		injectConfiguration("navajo.server.statistics", d);
 
 		Property s = body.getProperty("parameters/async_timeout");
@@ -210,8 +203,7 @@ public class NavajoConfigEmitter implements EventHandler {
 		data.put("compileScripts", true);
 
 		// Get document class implementation.
-		String documentClass = (body.getProperty("documentClass") != null ? body
-				.getProperty("documentClass").getValue() : null);
+		String documentClass = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
 		data.put("documentClass", documentClass);
 
