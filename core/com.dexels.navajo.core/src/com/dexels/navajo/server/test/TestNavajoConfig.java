@@ -5,9 +5,6 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.FileNavajoConfig;
@@ -167,16 +164,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	@Override
 	public boolean isCompileScripts() {
 		return false;
-	}
-
-	@Override
-	public File getJarFolder() {
-		return null;
-	}
-
-	@Override
-	public String getClassPath() {
-		return null;
 	}
 
 	@Override

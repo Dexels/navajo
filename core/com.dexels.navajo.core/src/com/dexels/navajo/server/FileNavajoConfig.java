@@ -114,38 +114,6 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     }
 
 	@Override
-	public Date getScriptModificationDate(String rpcName, String tenant, String extension) throws FileNotFoundException {
-		File scr = getApplicableScriptFile(rpcName, tenant, extension);
-		return new Date(scr.lastModified());
-		
-	}
-	
-	@Override
-	/**
-	 * rpcName does not include tenant suffix
-	 */
-	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
-
-		try {
-			if(hasTenantScriptFile(rpcName, tenant,extension)) {
-                return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar", false);
-			} else {
-				return getGenericFile(rpcName, getCompiledScriptPath(),  ".jar");
-			}
-//			File script = getApplicableFile(rpcName, tenant, getScriptPath(), ".xml",true);
-//			return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar",false);
-		} catch (FileNotFoundException e) {
-			logger.error("Missing file",e);
-			return null;
-		}
-	}
-	
-	@Override
-	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException {
-		return getApplicableFile(rpcName, tenant, getScriptPath(), extension ,true);
-	}
-
-	@Override
 	/**
 	 * Name does not include tenant suffix
 	 */
