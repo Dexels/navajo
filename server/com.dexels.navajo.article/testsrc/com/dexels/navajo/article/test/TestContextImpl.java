@@ -1,12 +1,10 @@
 package com.dexels.navajo.article.test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Date;
 
 import com.dexels.navajo.article.command.impl.ElementCommand;
 import com.dexels.navajo.article.command.impl.ServiceCommand;

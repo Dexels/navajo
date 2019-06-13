@@ -38,9 +38,8 @@ public class NavajoConfigEmitter implements EventHandler {
 			.getLogger(NavajoConfigEmitter.class);
 
 	private NavajoServerContext navajoContext;
-//	private NavajoServerInstance wrapped = null;
 	private ConfigurationAdmin myConfigurationAdmin = null;
-	private final Set<Configuration> registeredConfigurations = new HashSet<Configuration>();
+	private final Set<Configuration> registeredConfigurations = new HashSet<>();
 	
 	public void setContext(NavajoServerContext nsc) {
 		this.navajoContext = nsc;
@@ -103,12 +102,24 @@ public class NavajoConfigEmitter implements EventHandler {
 		registeredConfigurations.clear();
 	}	
 	
+	private String getMessageValueWithDefault(String path, String defaultValue, Message body) {
+		Property p = body.getProperty(path);
+		if(p==null) {
+			return defaultValue;
+		}
+		String val = (String) p.getTypedValue();
+		if(val==null) {
+			return defaultValue;
+		}
+		return val;
+	}
+	
 	private void createNavajoConfigConfiguration(URL configurationUrl,
 			String rootPath) throws IOException, SystemException {
 		InputStream is = configurationUrl.openStream();
 		logger.debug("Setting up configuration for rootpath: {}",rootPath);
 		logger.debug("Setting up configuration url: {}",configurationUrl);
-		Dictionary<String, Object> data = new Hashtable<String, Object>();
+		Dictionary<String, Object> data = new Hashtable<>();
 		Navajo configuration = NavajoFactory.getInstance().createNavajo(is);
 
 		Message body = configuration.getMessage("server-configuration");
@@ -122,18 +133,12 @@ public class NavajoConfigEmitter implements EventHandler {
 		// Get the instance group.
 		data.put("instanceGroup", getInstanceGroup(body));
 
-//		File rootFile = new File(rootPath);
-
-		String configPath = properDir(rootPath
-				+ body.getProperty("paths/configuration").getValue());
-		String adapterPath = properDir(rootPath
-				+ body.getProperty("paths/adapters").getValue());
-		String scriptPath = properDir(rootPath
-				+ body.getProperty("paths/scripts").getValue());
+		String configPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "config", body));
+		String adapterPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "adapters", body));
+		String scriptPath = properDir(rootPath + getMessageValueWithDefault("paths/configuration", "scripts", body));
 		data.put("configPath", configPath);
 		data.put("adapterPath", adapterPath);
 		data.put("scriptPath", scriptPath);
-		// changed to more defensive behaviour
 		Property resourceProperty = body.getProperty("paths/resource");
 		if (resourceProperty != null) {
 			String resourcePath = properDir(rootPath
@@ -167,7 +172,6 @@ public class NavajoConfigEmitter implements EventHandler {
 			AgentFactory.getInstance(monitoringAgentClass.getValue()).start();
 		}
 
-//		Message descriptionMessage = body.getMessage("description-provider");
 		Property descriptionProviderProperty = body
 				.getProperty("description-provider/class");
 		String descriptionProviderClass = null;
@@ -184,8 +188,6 @@ public class NavajoConfigEmitter implements EventHandler {
 			data.put("repositoryClass", repositoryClass);
 		}
 
-		// Read navajostore parameters.
-
 		Message navajostore = body.getMessage("navajostore");
 		if (navajostore != null) {
 			String store = (navajostore.getProperty("store") != null ? navajostore
@@ -193,7 +195,7 @@ public class NavajoConfigEmitter implements EventHandler {
 			String auditLevel = (navajostore.getProperty("auditlevel") != null ? navajostore
 					.getProperty("auditlevel").getValue() : Level.WARNING
 					.getName());
-			Dictionary<String, Object> d = new Hashtable<String, Object>();
+			Dictionary<String, Object> d = new Hashtable<>();
 			d.put("type", store);
 			d.put("name", "navajostore");
 			d.put("level", auditLevel);
@@ -205,7 +207,7 @@ public class NavajoConfigEmitter implements EventHandler {
 				.getProperty("parameters/enable_statistics").getValue()
 				.equals("true"));
 
-		Dictionary<String, Object> d = new Hashtable<String, Object>();
+		Dictionary<String, Object> d = new Hashtable<>();
 		d.put("enable", enableStatisticsRunner);
 		injectConfiguration("navajo.server.statistics", d);
 
@@ -218,7 +220,7 @@ public class NavajoConfigEmitter implements EventHandler {
 		boolean enableAsync = (body.getProperty("parameters/enable_async") == null || body
 				.getProperty("parameters/enable_async").getValue()
 				.equals("true"));
-		d = new Hashtable<String, Object>();
+		d = new Hashtable<>();
 		d.put("enable", enableAsync);
 		d.put("asyncTimeout", asyncTimeout);
 		injectConfiguration("navajo.server.async", d);
@@ -228,7 +230,7 @@ public class NavajoConfigEmitter implements EventHandler {
 				.getProperty("parameters/enable_integrity").getValue()
 				.equals("true"));
 
-		d = new Hashtable<String, Object>();
+		d = new Hashtable<>();
 		d.put("enable", enableIntegrityWorker);
 		injectConfiguration( "navajo.server.integrity", d);
 
@@ -237,7 +239,7 @@ public class NavajoConfigEmitter implements EventHandler {
 				.getProperty("parameters/enable_locks").getValue()
 				.equals("true"));
 
-		d = new Hashtable<String, Object>();
+		d = new Hashtable<>();
 		d.put("enable", enableLockManager);
 		injectConfiguration("navajo.server.lockmanager", d);
 
@@ -249,7 +251,6 @@ public class NavajoConfigEmitter implements EventHandler {
 		s = body.getProperty("parameters/compile_scripts");
 		boolean compileScripts;
 		if (s != null) {
-			// System.out.println("s.getValue() = " + s.getValue());
 			compileScripts = (s.getValue().equals("true"));
 		} else {
 			compileScripts = false;
@@ -292,7 +293,7 @@ public class NavajoConfigEmitter implements EventHandler {
 		String env = System.getenv("CLUSTER");
 		if(env!=null) {
 			if(instanceGroup!=null) {
-				logger.warn("Instance group defined in server.xml: "+instanceGroup+" but overridden by environment var CLUSTER: "+env);
+				logger.warn("Instance group defined in server.xml: {} but overridden by environment var CLUSTER: {}",instanceGroup,env);
 			}
 			return env;
 		}
@@ -310,7 +311,7 @@ public class NavajoConfigEmitter implements EventHandler {
 		String env = System.getenv("INSTANCENAME");
 		if(env!=null) {
 			if(instanceName!=null) {
-				logger.warn("Instance name defined in server.xml: "+instanceName+" but overridden by environment var INSTANCENAME: "+env);
+				logger.warn("Instance name defined in server.xml: {} but overridden by environment var INSTANCENAME: {}",instanceName, env);
 			}
 			return env;
 		}
@@ -333,7 +334,7 @@ public class NavajoConfigEmitter implements EventHandler {
 			final Object old = data.get(name);
 			final Object newValue = property.getTypedValue();
 			if(old!=null) {
-				logger.warn("Will not append property: "+ name+" (with value: "+newValue+") to configuration, as it will overwrite the present value of: "+old);
+				logger.warn("Will not append property: {} (with value: {}) to configuration, as it will overwrite the present value of: {}",name,newValue,old);
 			} else {
 				data.put(name, newValue);
 			}
@@ -359,21 +360,20 @@ public class NavajoConfigEmitter implements EventHandler {
 				logger.info("Ignoring equal");
 			}
 		} else {
-			logger.info("Updating config for pid: "+c.getPid());
+			logger.info("Updating config for pid: {}", c.getPid());
 			c.update(settings);
 		}
 	}
 
 	private static final String properDir(String in) {
-		String result = in + (in.endsWith("/") ? "" : "/");
-		return result;
+		return in + (in.endsWith("/") ? "" : "/");
 	}
 
 
 	@Override
 	public void handleEvent(Event e) {
 		
-		List<String> paths = new ArrayList<String>();
+		List<String> paths = new ArrayList<>();
 		paths.add(CONFIG_SERVER_XML);
 		if(RepositoryEventParser.touched(e,paths)) {
 			parseServerXml();
