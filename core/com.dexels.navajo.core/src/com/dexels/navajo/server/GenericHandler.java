@@ -77,13 +77,16 @@ public class GenericHandler extends ServiceHandler {
 	protected NavajoConfigInterface navajoConfig;
     
     public GenericHandler() {
-    	if(!Version.osgiActive()) {
-    		logger.warn("Warning: using OSGi constructor for GenericHandler");
-    	}
     }
     
-    public GenericHandler(NavajoConfigInterface tenantConfig) {
-    	this.tenantConfig = tenantConfig;
+	@Override
+	public String getIdentifier() {
+		return "default";
+	}
+
+	@Override
+	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
+    	this.tenantConfig = navajoConfig;
     	boolean finishedSync = false;
     	
     	if (loadedClasses == null)
@@ -93,7 +96,7 @@ public class GenericHandler extends ServiceHandler {
     				finishedSync = true;
     			}
     		}
-    }
+	}
 
 	public static void doClearCache() {
     	// fix ugly shutdown npe in some cases
@@ -491,5 +494,4 @@ public class GenericHandler extends ServiceHandler {
     		return 0;
     	}
     }
-
 }

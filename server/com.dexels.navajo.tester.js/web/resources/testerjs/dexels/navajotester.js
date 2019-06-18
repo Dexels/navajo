@@ -237,7 +237,8 @@ function runScript(script) {
             $('#HTMLview').show();
         }
 
-        var navajoinput = prepareInputNavajo(script);
+        var birtMode = (script == "BIRT")
+        var navajoinput = prepareInputNavajo(script, birtMode);
         var authHeader = "Basic " + btoa(sessionStorage.user + ":" + sessionStorage.password)
         
         $.ajax({
@@ -337,8 +338,11 @@ function hourglassOff() {
     $('html').removeClass('wait');
 }
 
-
 function prepareInputNavajo(script) {
+	return prepareInputNavajo(script, false);
+}
+
+function prepareInputNavajo(script, birtMode) {
     var $xml = $(xml);
     var $transaction = $xml.find('tml header transaction')
 
@@ -349,7 +353,11 @@ function prepareInputNavajo(script) {
     if (sessionStorage.locale) {
     		$xml.find('tml header').attr('locale', sessionStorage.locale);
     }
-   
+
+    if (birtMode)
+	{
+	    $xml.find('tml header').attr('GenerateBirt',birtMode);
+	}
     
 
     var $header = $xml.find('tml header ');
@@ -426,34 +434,42 @@ function getMyEntries(data, element) {
     }
 };
 
-/* Event handlers */
-
-
-$(document).on('click', '.script', function() {
+function callScript(script, addToRecentScripts)
+{
     var oldScript =  $('#loadedScript').text();
     var stateObj = {script: oldScript,  xml:  serializer.serializeToString(xml) };
     try {
     		history.replaceState(stateObj, oldScript, "tester.html?script=" + oldScript);
     }
     catch(err) {
-        console.log(err)
+        console.log(err) 
     }
 
-    var newScript = $(this).attr("id");
     // Remove all hoover divs and append the one to the current script
     $('.customRunOptionContainer').remove();
-
-    var isRecent = $('li.recentScript>[id=\''+newScript+'\']').length > 0
-    if (!$(this).parent().hasClass('recentScript') && !isRecent) {
-    	var clonedDiv = $(this).parent().clone(true);
-        clonedDiv.addClass('recentScript')
-        clonedDiv.find('.script').text(newScript)
-        $('#recentscriptslist').prepend(clonedDiv);
-        $('#recentscriptslist').find(".scriptli").slice(5, 10).remove();
+  
+    if (addToRecentScripts)
+    {
+	    var isRecent = $('li.recentScript>[id=\''+script+'\']').length > 0
+	    if (!$(this).parent().hasClass('recentScript') && !isRecent) {
+	    	var clonedDiv = $(this).parent().clone(true);
+	        clonedDiv.addClass('recentScript')
+	        clonedDiv.find('.script').text(script)
+	        $('#recentscriptslist').prepend(clonedDiv);
+	        $('#recentscriptslist').find(".scriptli").slice(5, 10).remove();
+	    }
+	    $('li.recentScript>[id=\''+script+'\']').parent().append(hooverdiv);
     }
-    $('li.recentScript>[id=\''+newScript+'\']').parent().append(hooverdiv);
 
-    runScript(newScript);
+    runScript(script);
+}
+
+/* Event handlers */
+
+
+$(document).on('click', '.script', function() {
+	var script = $(this).attr("id");
+	callScript(script, true);
 });
 
 $(document).on('click', '.folder', function() {
@@ -463,6 +479,11 @@ $(document).on('click', '.folder', function() {
 
 $(document).on('click', '.refreshscripts', function() {
 	getScripts();
+});
+
+$(document).on('click', '.birttitle', function() {
+	var script = $(this).attr("id");
+	callScript(script, false);
 });
 
 

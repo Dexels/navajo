@@ -13,7 +13,19 @@ import com.dexels.navajo.script.api.UserException;
 
 public class StressTestHandler  extends ServiceHandler {
     private static final Logger logger = LoggerFactory.getLogger(StressTestHandler.class);
-    @Override
+
+	@Override
+	public String getIdentifier() {
+		return "stress";
+	}
+
+	@Override
+	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
+		// Not interested
+		
+	}
+
+	@Override
     public Navajo doService()
             throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException {
         if (access.getInDoc().getMessage("stress") == null || access.getInDoc().getMessage("stress").getProperty("sleep") == null) {

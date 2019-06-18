@@ -524,6 +524,14 @@ h3 {
 	overflow-y:auto;
 }
 
+.birttitle:after {
+    display: inline;
+    content: url('/testerimg/export.png');
+    cursor: pointer;
+    margin-left: 4px;
+    overflow: visible
+}
+
 .exportcsv:after {
 	content: url('/testerimg/export.png');
 	cursor: pointer;
