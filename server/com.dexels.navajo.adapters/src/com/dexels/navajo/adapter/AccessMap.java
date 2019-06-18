@@ -235,11 +235,7 @@ public void kill() {
 	  if (responseNavajo == null) {
 
 		  Navajo in = myAccess.getOutputDoc().copy();
-		  if (in.getMessage("__globals__") != null)
-		      in.removeMessage("__globals__");
-		  if (in.getMessage(Message.MSG_PARAMETERS_BLOCK) != null) in.removeMessage(Message.MSG_PARAMETERS_BLOCK);
-		  if (in.getMessage(Message.MSG_TOKEN_BLOCK) != null) in.removeMessage(Message.MSG_TOKEN_BLOCK);
-		  if (in.getMessage(Message.MSG_AAA_BLOCK) != null) in.removeMessage(Message.MSG_AAA_BLOCK);
+		  in.removeInternalMessages();
 	      
 		  java.io.StringWriter sw = new java.io.StringWriter();
 		  in.write(sw);

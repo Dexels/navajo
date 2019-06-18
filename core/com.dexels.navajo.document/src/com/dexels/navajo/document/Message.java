@@ -34,6 +34,8 @@ public interface Message
   public static final String MSG_METHOD = "method";
   public static final String MSG_CONDITION = "condition";
   public static final String MSG_ETAG = "etag";
+  // internal messages when found on root level
+  public static final String MSG_GLOBALS_BLOCK = "__globals__";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
   public static final String MSG_AAA_BLOCK = "__aaa__";
   public static final String MSG_ENTITY_BLOCK = "__entity__";
@@ -626,6 +628,13 @@ public interface Message
 	public void printCloseTag(final Writer sw, int indent) throws IOException;
 
 	public void setValue(String propertyName, Object value);
+	
+	/**
+	 * Whether this message represents an internal message
+	 * @return
+	 */
+	public boolean isInternal();
+	
 
 
 }

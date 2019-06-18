@@ -600,7 +600,11 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		if(dis==null) {
 			throw new FatalException("Navajo configuration problem: No dispatcher available.");
 		}
-		Navajo outDoc = dis.removeInternalMessages(dis.handle(in,"default", certObject,clientInfo));
+		Navajo outDoc = dis.handle(in,"default", certObject,clientInfo);
+		if (outDoc != null)
+		{
+			outDoc.removeInternalMessages();
+		}
 		return outDoc;
 	}
 	

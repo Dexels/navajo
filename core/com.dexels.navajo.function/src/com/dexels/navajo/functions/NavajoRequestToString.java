@@ -14,22 +14,7 @@ public class NavajoRequestToString extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		Navajo in = getNavajo().copy();
 		in.removeHeader();
-		Message m = in.getMessage("__globals__");
-		if ( m != null ) {
-			in.removeMessage("__globals__");
-		}
-		m = in.getMessage(Message.MSG_PARAMETERS_BLOCK);
-		if ( m != null ) {
-			in.removeMessage(Message.MSG_PARAMETERS_BLOCK);
-		}
-		m = in.getMessage(Message.MSG_AAA_BLOCK);
-        if ( m != null ) {
-            in.removeMessage(Message.MSG_AAA_BLOCK);
-        }
-        m = in.getMessage(Message.MSG_TOKEN_BLOCK);
-        if ( m != null ) {
-            in.removeMessage(Message.MSG_TOKEN_BLOCK);
-        }
+		in.removeInternalMessages();
 		StringWriter ws = new StringWriter();
 		try {
 			in.write(ws);
