@@ -27,7 +27,7 @@ public class StressTestHandler  extends ServiceHandler {
 
 	@Override
     public Navajo doService( Access a )
-            throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException {
+            throws NavajoException, UserException, SystemException, AuthorizationException {
         if (a.getInDoc().getMessage("stress") == null || a.getInDoc().getMessage("stress").getProperty("sleep") == null) {
             throw new UserException(-1, "Stresstest mode but no sleep parameter set!");
         }
