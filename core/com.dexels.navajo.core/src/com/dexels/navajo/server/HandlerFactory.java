@@ -64,7 +64,6 @@ public class HandlerFactory {
 	    	sh = getDefaultServiceHandler();
 	    }
 	    sh.setNavajoConfig( navajoConfig );
-		sh.setInput(access);
 		return sh;
 	}
 	

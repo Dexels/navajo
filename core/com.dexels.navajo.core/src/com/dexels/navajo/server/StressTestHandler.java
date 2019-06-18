@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
@@ -26,13 +27,13 @@ public class StressTestHandler  extends ServiceHandler {
 	}
 
 	@Override
-    public Navajo doService()
+    public Navajo doService( Access a )
             throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException {
-        if (access.getInDoc().getMessage("stress") == null || access.getInDoc().getMessage("stress").getProperty("sleep") == null) {
+        if (a.getInDoc().getMessage("stress") == null || a.getInDoc().getMessage("stress").getProperty("sleep") == null) {
             throw new UserException(-1, "Stresstest mode but no sleep parameter set!");
         }
-        Long sleep = (Long) access.getInDoc().getMessage("stress").getProperty("sleep").getTypedValue();
-        logger.debug("Running: {}; Going to sleep {}",access.getRpcName(), sleep);
+        Long sleep = (Long) a.getInDoc().getMessage("stress").getProperty("sleep").getTypedValue();
+        logger.debug("Running: {}; Going to sleep {}", a.getRpcName(), sleep);
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
@@ -42,7 +43,7 @@ public class StressTestHandler  extends ServiceHandler {
     }
 
     @Override
-    public boolean needsRecompile() throws Exception {
+    public boolean needsRecompile( Access a ) throws Exception {
         return false;
     }
 

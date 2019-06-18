@@ -362,7 +362,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
             long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-            if (expirationInterval > 0 && sh.needsRecompile()) {
+            if (expirationInterval > 0 && sh.needsRecompile( access )) {
                 expirationInterval = -1;
             }
 
@@ -370,9 +370,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             // persistenceKey.
             in.getHeader().setRPCPassword("");
 
-            out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-                    CacheController.getInstance().getCacheKey(access.rpcUser, access.rpcName, in), access.rpcName,
-                    expirationInterval, (expirationInterval != -1));
+            out = sh.doService( access ); 
 
             access.setOutputDoc(out);
 

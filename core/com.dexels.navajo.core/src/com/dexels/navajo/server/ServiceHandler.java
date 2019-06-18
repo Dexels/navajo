@@ -37,18 +37,7 @@ import com.dexels.navajo.script.api.UserException;
 
 public abstract class ServiceHandler implements Constructor {
 
-    protected Access access;
-
     public abstract String getIdentifier();
-    /**
-     *
-     * @param access
-     * @param parms
-     * @param properties
-     */
-    public final void setInput(Access access) {
-        this.access = access;
-    }
 
     /**
      * @return
@@ -57,7 +46,7 @@ public abstract class ServiceHandler implements Constructor {
      * @throws SystemException
     * @throws NavajoDoneException 
      */
-    public abstract Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException;
+    public abstract Navajo doService( Access a ) throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException;
 
     /**
      *
@@ -66,11 +55,11 @@ public abstract class ServiceHandler implements Constructor {
      */
     @Override
 	public final Persistable construct() throws Exception {
-        return doService();
+        return doService( null );
     }
 
-    public abstract boolean needsRecompile() throws Exception;
+    public abstract boolean needsRecompile( Access a ) throws Exception;
 
-    public abstract void setNavajoConfig(NavajoConfigInterface navajoConfig);
+    public abstract void setNavajoConfig( NavajoConfigInterface navajoConfig );
     
 }
