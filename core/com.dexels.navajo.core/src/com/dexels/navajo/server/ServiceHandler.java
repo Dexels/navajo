@@ -38,6 +38,7 @@ public abstract class ServiceHandler implements Constructor {
 
     protected Access access;
 
+    public abstract String getIdentifier();
     /**
      *
      * @param access
@@ -67,5 +68,7 @@ public abstract class ServiceHandler implements Constructor {
     }
 
     public abstract boolean needsRecompile() throws Exception;
+
+    public abstract void setNavajoConfig(NavajoConfigInterface navajoConfig);
     
 }

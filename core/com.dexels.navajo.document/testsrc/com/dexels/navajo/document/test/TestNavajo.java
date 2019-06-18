@@ -1,4 +1,5 @@
 package com.dexels.navajo.document.test;
+
 import java.util.List;
 
 import org.junit.After;
@@ -239,4 +240,21 @@ public class TestNavajo {
   @Test
   public void testWriteMessage() {
   }
+  
+	@Test
+	public void testRemoveInternalMessages() throws Exception {
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message globals = NavajoFactory.getInstance().createMessage(doc, "__globals__");
+		Message parms = NavajoFactory.getInstance().createMessage(doc, "__parms__");
+		Message something = NavajoFactory.getInstance().createMessage(doc, "something");
+		doc.addMessage(globals);
+		doc.addMessage(something);
+		doc.addMessage(parms);
+		Assert.assertNotNull(doc.getMessage("__parms__"));
+		Assert.assertNotNull(doc.getMessage("__globals__"));
+		doc.removeInternalMessages();
+		Assert.assertNull(doc.getMessage("__parms__"));
+		Assert.assertNull(doc.getMessage("__globals__"));
+		Assert.assertNotNull(doc.getMessage("something"));
+	}
 }

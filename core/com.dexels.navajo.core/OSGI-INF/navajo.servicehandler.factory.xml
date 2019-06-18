@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.servicehandler.factory">
+   <implementation class="com.dexels.navajo.server.HandlerFactory"/>
+   <reference bind="addHandler" cardinality="1..n" interface="com.dexels.navajo.server.ServiceHandler" name="ServiceHandler" policy="dynamic" unbind="removeHandler"/>
+   <service>
+      <provide interface="com.dexels.navajo.server.HandlerFactory"/>
+   </service>
+</scr:component>

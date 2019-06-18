@@ -27,7 +27,7 @@ public interface Navajo extends Persistable {
     public static final String SCRIPT_BODY_DEFINITION = "tsl";
     public static final String MESSAGE_SEPARATOR = "/";
     public static final String PARENT_MESSAGE = "..";
-
+    
     /**
      * Set the errorDescription class property.
      * 
@@ -486,5 +486,11 @@ public interface Navajo extends Persistable {
      * @param key
      */
     public void removeNavajo(String key);
+    
+    /**
+     * Removes all messages on rootlevel marked as internal by Message.java
+     */
+    public void removeInternalMessages();
+    
 
 }

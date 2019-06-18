@@ -127,12 +127,6 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 
-
-	@Override
-	public Navajo removeInternalMessages(Navajo doc) {
-		return doc;
-	}
-
 	@Override
 	public int getHealth(String resourceId) {
 		return 0;

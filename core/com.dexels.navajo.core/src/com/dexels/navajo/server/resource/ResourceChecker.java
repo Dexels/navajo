@@ -62,7 +62,8 @@ public class ResourceChecker {
 
 		this.webservice = webservice;
 		// Don't know if this is needed
-		GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig(),bundleCreator);
+		GenericHandler gh = new GenericHandler();
+		gh.setNavajoConfig( DispatcherFactory.getInstance().getNavajoConfig() );
 		StringBuilder compilerErrors = new StringBuilder();
 		try {
 			Access a = new Access();

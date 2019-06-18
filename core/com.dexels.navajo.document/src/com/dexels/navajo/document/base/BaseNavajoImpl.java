@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -700,5 +701,18 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     public void addOperation(Operation o) {
         myOperations.addOperation(o);
     }
+
+	@Override
+	public void removeInternalMessages() {
+		Iterator<Message> iterator = this.getRootMessage().getAllMessages().iterator();
+		while (iterator.hasNext())
+		{
+			Message m = iterator.next();
+			if (m.isInternal())
+			{
+				this.getRootMessage().removeMessage(m);
+			}
+		}
+	}
 
 }

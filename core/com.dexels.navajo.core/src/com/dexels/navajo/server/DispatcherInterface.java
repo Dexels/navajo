@@ -25,15 +25,6 @@ public interface DispatcherInterface extends ResourceManager {
 	
 	public void finalizeService(Navajo inMessage, Access access, String rpcName, String rpcUser,		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit);
 
-
-	/**
-	 * Special method to remove internal Server messages.
-	 * 
-	 * @param doc
-	 * @return
-	 */
-	public Navajo removeInternalMessages(Navajo doc);
-	
 	/**
 	 * Create a temp file with the names prefix and suffix in the designated temp path.
 	 * @param prefix

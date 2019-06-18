@@ -27,8 +27,25 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.BinaryOpener;
+import com.dexels.navajo.document.BinaryOpenerFactory;
 
 public class BirtUtils {
+	
+	public static void main(String [] args) throws Exception {
+		
+		System.out.println("***IS IT A BIRT?***");
+		// Change the path to the file to match your filesystem
+		FileInputStream fis = new java.io.FileInputStream("C:/Users/Robin/Documents/Test.xml");
+		Navajo navajo = NavajoFactory.getInstance().createNavajo(fis);
+		
+		Binary template = null;
+		BirtUtils report = new BirtUtils();
+		Binary result = report.createEmptyReport(navajo,template);
+		
+		BinaryOpener bo = BinaryOpenerFactory.getInstance(); 
+		bo.open(result);
+	}
 
 	// for XML tag id's. Start at 10
 	private int idCounter = 10;

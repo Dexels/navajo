@@ -160,3 +160,4 @@ Service-Component: OSGI-INF/*.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.core
+Require-Bundle: com.dexels.navajo.birt.push
