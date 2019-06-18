@@ -44,7 +44,7 @@ final class ASTMulNode extends SimpleNode {
           else if (a instanceof Percentage || b instanceof Percentage)
               return Operand.ofMoney(new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
         else
-        	return null;
+        	return Operand.NULL;
     }
 
 }
