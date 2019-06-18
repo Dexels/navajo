@@ -106,7 +106,11 @@ private final Double value;
   public Percentage(String d) {
     super(Property.PERCENTAGE_PROPERTY);
 	  if (d != null) {
-	    value = Double.valueOf(d);
+		if("".equals(d)) {
+			value = null;
+		} else {
+		    value = Double.valueOf(d);
+		}
 	  } else {
 		  value = null;
 	  }

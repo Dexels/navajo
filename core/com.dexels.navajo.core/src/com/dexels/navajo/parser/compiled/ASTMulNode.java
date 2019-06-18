@@ -13,38 +13,40 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Utils;
 
-
 final class ASTMulNode extends SimpleNode {
 
-    ASTMulNode(int id) {
-        super(id);
-    }
-	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		// TODO We can do *some* type restriction, just not much.
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),(a,b)->true,(a,b)->Optional.empty(),functionClassifier);
+	ASTMulNode(int id) {
+		super(id);
 	}
-	
-	private  Operand interpret(Operand ao, Operand bo) {
+
+	@Override
+	public ContextExpression interpretToLambda(List<String> problems, String expression,
+			Function<String, FunctionClassification> functionClassifier) {
+		// TODO We can do *some* type restriction, just not much.
+		return lazyBiFunction(problems, expression, (a, b) -> interpret(a, b), (a, b) -> true,
+				(a, b) -> Optional.empty(), functionClassifier);
+	}
+
+	private Operand interpret(Operand ao, Operand bo) {
 		Object a = ao.value;
 		Object b = bo.value;
 
-        if ((a instanceof Integer) && (b instanceof Integer))
-            return  Operand.ofInteger(((Integer) a).intValue() * ((Integer) b).intValue());
-        else if ((a instanceof String) || (b instanceof String))
-            throw new TMLExpressionException("Multiplication not defined for String values");
-        else if (a instanceof Double && b instanceof Integer)
-            return Operand.ofFloat(((Double) a).doubleValue() * ((Integer) b).intValue());
-        else if (a instanceof Integer && b instanceof Double)
-            return Operand.ofFloat(((Double) b).doubleValue() * ((Integer) a).intValue());
-        else if (a instanceof Double && b instanceof Double)
-            return Operand.ofFloat(((Double) b).doubleValue() * ((Double) a).doubleValue());
-        else if (a instanceof Money || b instanceof Money)
-            return Operand.ofMoney(new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
-          else if (a instanceof Percentage || b instanceof Percentage)
-              return Operand.ofMoney(new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
-        else
-        	return null;
-    }
+		if ((a instanceof Integer) && (b instanceof Integer))
+			return Operand.ofInteger(((Integer) a).intValue() * ((Integer) b).intValue());
+		else if ((a instanceof String) || (b instanceof String))
+			throw new TMLExpressionException("Multiplication not defined for String values");
+		else if (a instanceof Double && b instanceof Integer)
+			return Operand.ofFloat(((Double) a).doubleValue() * ((Integer) b).intValue());
+		else if (a instanceof Integer && b instanceof Double)
+			return Operand.ofFloat(((Double) b).doubleValue() * ((Integer) a).intValue());
+		else if (a instanceof Double && b instanceof Double)
+			return Operand.ofFloat(((Double) b).doubleValue() * ((Double) a).doubleValue());
+		else if (a instanceof Money || b instanceof Money)
+			return Operand.ofMoney(new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
+		else if (a instanceof Percentage || b instanceof Percentage)
+			return Operand.ofPercentage(new Percentage(Utils.getDoubleValue(a) * Utils.getDoubleValue(b)));
+		else
+			return Operand.NULL;
+	}
 
 }

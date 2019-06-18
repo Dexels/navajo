@@ -25,7 +25,7 @@ public class BirtHandler extends ServiceHandler {
 		return "birt";
 	}
 	
-	public Navajo makeNavajoBirt(Binary b) {
+	public Navajo makeNavajoBirt( Binary b ) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message msg = NavajoFactory.getInstance().createMessage(n,"Birt");
 		msg.setType("simple");
@@ -37,7 +37,7 @@ public class BirtHandler extends ServiceHandler {
 		return n;
 	}
 	
-	public Binary getBirtBinary(Navajo n) {
+	public Binary getBirtBinary( Navajo n ) {
 		Binary template = null;
 		BirtUtils report = new BirtUtils();
 		Binary result = new Binary();
@@ -50,19 +50,19 @@ public class BirtHandler extends ServiceHandler {
 		return result;
 	}
 	
-	public Navajo getInDoc(Access a) {
+	public Navajo getInDoc( Access a ) {
 		Navajo result = a.getInDoc();
 		return result;
 	}
 	
 	@Override
-	public boolean needsRecompile() {
+	public boolean needsRecompile( Access a ) {
 		return false;
 	}
 	
 	@Override
-    public final Navajo doService() {
-		Navajo inDoc = getInDoc(access);
+    public final Navajo doService( Access a ) {
+		Navajo inDoc = getInDoc( a );
 		inDoc.removeInternalMessages();
 		Binary birtBinary = getBirtBinary(inDoc);
 		Navajo navajoBirt = makeNavajoBirt(birtBinary);
@@ -70,7 +70,7 @@ public class BirtHandler extends ServiceHandler {
 	}
 
 	@Override
-	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
+	public void setNavajoConfig( NavajoConfigInterface navajoConfig ) {
 		// Not interested in the NavajoConfig
 	}
 
