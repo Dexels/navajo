@@ -272,7 +272,7 @@ public abstract class FunctionInterface {
 
 	public final void insertOperand(Operand o) {
 		if(o==null) {
-			throw new NullPointerException("Don't add null operands, you can add Operand.NULL though.");
+			throw new NullPointerException("Don't add null operands, you can add Operand.NULL though. Function: "+this.getClass().getName());
 		}
 		operandList.add(o);
 	}
