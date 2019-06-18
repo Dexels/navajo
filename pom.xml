@@ -22,6 +22,7 @@
 		<module>setup/com.dexels.p2</module>
 		<module>setup/com.dexels.vaadin.p2</module>
 		<module>setup/com.dexels.streams.p2</module>
+		<module>setup/com.dexels.navajo.bridge</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
