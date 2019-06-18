@@ -73,8 +73,6 @@ public class GenericHandler extends ServiceHandler {
 
 	protected NavajoConfigInterface navajoConfig;
 
-	private final BundleCreator bundleCreator;
-    
     public GenericHandler() {
 
     }
@@ -415,16 +413,16 @@ public class GenericHandler extends ServiceHandler {
         }
 
         Navajo outDoc = null;
-//        StringBuilder compilerErrors = new StringBuilder();
+        StringBuilder compilerErrors = new StringBuilder();
         outDoc = NavajoFactory.getInstance().createNavajo();
         CompiledScriptInterface cso = null;
         try {
             cso = loadOnDemand(access.rpcName);
-        } catch (FileNotFoundException e) {
-            access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
-            throw new SystemException(-1, e.getMessage(), e);
         } catch (Throwable e) {
             logger.error("Exception on getting compiledscript", e);
+            if (e instanceof FileNotFoundException) {
+                access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+            }
             throw new SystemException(-1, e.getMessage(), e);
         }
         try {
@@ -467,14 +465,14 @@ public class GenericHandler extends ServiceHandler {
 	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(String rpcName) throws Exception {
 		
-		logger.info("Loading script: {}",rpcName);
+		
 		final String tenant;
 		if (access.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
 		} else {
 			tenant = access.getTenant();
 		}
-		return bundleCreator.getOnDemandScriptService(rpcName, tenant);
+		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 	}
     /**
      * Return load script class count.

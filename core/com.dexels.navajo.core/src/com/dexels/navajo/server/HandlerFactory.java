@@ -1,10 +1,6 @@
 package com.dexels.navajo.server;
 
-<<<<<<< HEAD
-import com.dexels.navajo.compiler.BundleCreator;
-=======
 import com.dexels.navajo.document.Header;
->>>>>>> master
 import com.dexels.navajo.script.api.Access;
 
 import java.util.HashMap;
@@ -21,14 +17,7 @@ public class HandlerFactory {
 	
     private Map<String, ServiceHandler> instances = new HashMap<>();
 
-<<<<<<< HEAD
-	public static ServiceHandler createHandler(NavajoConfigInterface navajoConfig, Access access, Boolean simulationMode, BundleCreator creator) {
-	    ServiceHandler sh = null;
-	    if (simulationMode) { 
-	        sh = new StressTestHandler();
-	    } else {
-	        sh = new GenericHandler(navajoConfig,creator);
-=======
+
     public void addHandler(ServiceHandler handler) {
         logger.info("Added servicehandler {}", handler.getIdentifier());
         instances.put(handler.getIdentifier(), handler);
@@ -74,7 +63,6 @@ public class HandlerFactory {
 	    {
 	    	logger.error("Problem finding handler, falling back on default: ", e);
 	    	sh = getDefaultServiceHandler();
->>>>>>> master
 	    }
 	    sh.setNavajoConfig( navajoConfig );
 		sh.setInput(access);
