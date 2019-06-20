@@ -53,6 +53,8 @@ private final Double value;
 			value = (Double) o;
 		} else if (o instanceof Integer) {
 			value = Double.valueOf(((Integer) o));
+		} else if (o==null) {
+			value = null;
 		} else {
 			value = Double.valueOf(o + "");
 		}

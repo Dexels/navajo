@@ -37,6 +37,7 @@ import com.dexels.navajo.functions.CheckFloat;
 import com.dexels.navajo.functions.CheckInteger;
 import com.dexels.navajo.functions.CreateExpression;
 import com.dexels.navajo.functions.DateTime;
+import com.dexels.navajo.functions.ToPercentage;
 import com.dexels.navajo.functions.ValidatePhoneNumber;
 import com.dexels.navajo.functions.WeekDay;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -2083,6 +2084,15 @@ public class StandardFunctionsTest {
 		dateTime.reset();
 		dateTime.insertStringOperand("cc");
 		dateTime.evaluate();
+	}
+	
+	@Test
+	public void testNullToPercentage() {
+		ToPercentage toPerc = new ToPercentage();
+		toPerc.reset();
+		toPerc.insertStringOperand(null);
+		Object result = toPerc.evaluate();
+		System.err.println("Result: "+result);
 	}
 	@Test
 	public void testDateTime() {
