@@ -1,0 +1,21 @@
+<tml documentImplementation="SAXP">
+   <message name="NewVat">
+      <property name="VatCode" description="BTW-code *" type="string" value="" direction="in"/>
+      <property name="Percentage" description="Percentage *" type="percentage" value="" direction="in"/>
+      <property name="Description" description="Omschrijving" type="string" value="" direction="in"/>
+      <property name="InExclusive" description="Inclusief" type="boolean" value="false" direction="in"/>
+      <property name="LedgerKeyIdToPay" description="id" type="integer" value="" direction="in"/>
+      <property name="LedgerKeyNumberToPay" description="Rekening af te dragen" type="integer" value="" direction="in"/>
+      <property name="LedgerKeyDescriptionToPay" description="Rekening af te dragen" type="string" value="" direction="in"/>
+      <property name="LedgerKeyIdToCollect" description="id" type="integer" value="" direction="in"/>
+      <property name="LedgerKeyNumberToCollect" description="Rekening te vorderen" type="integer" value="" direction="in"/>
+      <property name="LedgerKeyDescriptionToCollect" description="Rekening te vorderen" type="string" value="" direction="in"/>
+      <property name="PreferredBuy" description="Standaard BTW-code inkoop" type="boolean" value="false" direction="in"/>
+      <property name="PreferredSell" description="Standaard BTW-code verkoop" type="boolean" value="false" direction="in"/>
+   </message>
+   <message name="LedgerKey">
+      <property name="LedgerKeyNumber" description="Grootboek" type="integer" value="" direction="in"/>
+   </message>
+   <methods/>
+   <operations/>
+</tml>

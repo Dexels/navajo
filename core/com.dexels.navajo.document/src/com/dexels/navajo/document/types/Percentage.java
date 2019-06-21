@@ -53,6 +53,8 @@ private final Double value;
 			value = (Double) o;
 		} else if (o instanceof Integer) {
 			value = Double.valueOf(((Integer) o));
+		} else if (o==null) {
+			value = null;
 		} else {
 			value = Double.valueOf(o + "");
 		}
@@ -106,7 +108,11 @@ private final Double value;
   public Percentage(String d) {
     super(Property.PERCENTAGE_PROPERTY);
 	  if (d != null) {
-	    value = Double.valueOf(d);
+		if("".equals(d)) {
+			value = null;
+		} else {
+		    value = Double.valueOf(d);
+		}
 	  } else {
 		  value = null;
 	  }

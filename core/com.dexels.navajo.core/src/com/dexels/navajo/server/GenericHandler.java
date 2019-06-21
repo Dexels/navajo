@@ -17,8 +17,6 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -77,13 +75,16 @@ public class GenericHandler extends ServiceHandler {
 	protected NavajoConfigInterface navajoConfig;
     
     public GenericHandler() {
-    	if(!Version.osgiActive()) {
-    		logger.warn("Warning: using OSGi constructor for GenericHandler");
-    	}
     }
     
-    public GenericHandler(NavajoConfigInterface tenantConfig) {
-    	this.tenantConfig = tenantConfig;
+	@Override
+	public String getIdentifier() {
+		return "default";
+	}
+
+	@Override
+	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
+    	this.tenantConfig = navajoConfig;
     	boolean finishedSync = false;
     	
     	if (loadedClasses == null)
@@ -93,7 +94,7 @@ public class GenericHandler extends ServiceHandler {
     				finishedSync = true;
     			}
     		}
-    }
+	}
 
 	public static void doClearCache() {
     	// fix ugly shutdown npe in some cases
@@ -146,7 +147,7 @@ public class GenericHandler extends ServiceHandler {
 
     }
     
-    private final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) throws Exception {
+    private final Object[] getScriptPathServiceNameAndScriptFile(Access a, String rpcName, boolean betaUser) throws Exception {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	int strip = rpcName.lastIndexOf("/");
         String pathPrefix = "";
@@ -156,10 +157,10 @@ public class GenericHandler extends ServiceHandler {
           pathPrefix = rpcName.substring(0, strip) + "/";
         }
         final String applicationGroup;
-        if (access.getTenant()==null) {
+        if (a.getTenant()==null) {
         	applicationGroup = this.tenantConfig.getInstanceGroup();
 		} else {
-			applicationGroup = access.getTenant();
+			applicationGroup = a.getTenant();
 		}
         
     	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
@@ -299,8 +300,8 @@ public class GenericHandler extends ServiceHandler {
      * @param a
      * @return
      */
-    public final boolean needsRecompileForScript(Access a) throws Exception {
-    	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
+    public final boolean needsRecompile(Access a) throws Exception {
+    	Object [] all = getScriptPathServiceNameAndScriptFile(a, a.rpcName, a.betaUser);
  		if(all==null) {
  			return false;
  		}
@@ -316,11 +317,6 @@ public class GenericHandler extends ServiceHandler {
     	             hasDirtyDepedencies(a, className));
     }
     
-    @Override
-	public boolean needsRecompile() throws Exception {
-    	return needsRecompileForScript(this.access);
-    }
-    
     /**
      * Non-OSGi only
      * @param a
@@ -334,7 +330,7 @@ public class GenericHandler extends ServiceHandler {
     	List<Dependency> deps = new ArrayList<>();
     	String scriptPath = properties.getScriptPath();
     	
-    		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
+    		Object [] all = getScriptPathServiceNameAndScriptFile(a, a.rpcName, a.betaUser);
     		if(all==null) {
     			throw new FileNotFoundException("No script found for: "+a.rpcName);
     		}
@@ -405,17 +401,17 @@ public class GenericHandler extends ServiceHandler {
      * @throws AuthorizationException
      */
 	@Override
-    public final Navajo doService() throws UserException, SystemException, AuthorizationException {
+    public final Navajo doService( Access a ) throws UserException, SystemException, AuthorizationException {
 
         // Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
         // current value of outputdoc.
 
-        if (access.isBreakWasSet()) {
-            if (access.getOutputDoc() == null) {
+        if (a.isBreakWasSet()) {
+            if (a.getOutputDoc() == null) {
                 Navajo outDoc = NavajoFactory.getInstance().createNavajo();
-                access.setOutputDoc(outDoc);
+                a.setOutputDoc(outDoc);
             }
-            return access.getOutputDoc();
+            return a.getOutputDoc();
         }
 
         Navajo outDoc = null;
@@ -423,11 +419,11 @@ public class GenericHandler extends ServiceHandler {
         outDoc = NavajoFactory.getInstance().createNavajo();
         CompiledScriptInterface cso = null;
         try {
-            cso = loadOnDemand(access.rpcName);
+            cso = loadOnDemand(a, a.rpcName);
         } catch (Throwable e) {
             logger.error("Exception on getting compiledscript", e);
             if (e instanceof FileNotFoundException) {
-                access.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
+                a.setExitCode(Access.EXIT_SCRIPT_NOT_FOUND);
             }
             throw new SystemException(-1, e.getMessage(), e);
         }
@@ -438,21 +434,21 @@ public class GenericHandler extends ServiceHandler {
                     logger.warn("Script not found from OSGi registry while OSGi is active");
                 }
                 logger.error("No compiled script found, proceeding further is useless.");
-                throw new RuntimeException("Can not resolve script: " + access.rpcName);
+                throw new RuntimeException("Can not resolve script: " + a.rpcName);
             }
-            access.setOutputDoc(outDoc);
-            access.setCompiledScript(cso);
+            a.setOutputDoc(outDoc);
+            a.setCompiledScript(cso);
             if (cso.getClassLoader() == null) {
                 logger.error("No classloader present!");
             }
 
-            cso.run(access);
+            cso.run(a);
 
-            return access.getOutputDoc();
+            return a.getOutputDoc();
         } catch (Throwable e) {
 
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
-                outDoc = access.getOutputDoc(); // Outdoc might have been changed by running script
+                outDoc = a.getOutputDoc(); // Outdoc might have been changed by running script
                 // Create dummy header to set breakwasset attribute.
 
                 Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
@@ -469,14 +465,14 @@ public class GenericHandler extends ServiceHandler {
     }
 
 	// THIS rpcName seems to have a tenant suffix
-	private CompiledScriptInterface loadOnDemand(String rpcName) throws Exception {
+	private CompiledScriptInterface loadOnDemand(Access a, String rpcName) throws Exception {
 		
 		
 		final String tenant;
-		if (access.getTenant()==null) {
+		if (a.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
 		} else {
-			tenant = access.getTenant();
+			tenant = a.getTenant();
 		}
 		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 	}
@@ -491,5 +487,4 @@ public class GenericHandler extends ServiceHandler {
     		return 0;
     	}
     }
-
 }

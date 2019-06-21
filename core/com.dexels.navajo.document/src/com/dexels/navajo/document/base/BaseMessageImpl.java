@@ -1959,4 +1959,27 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
     }
 
+    /**
+     * isInternal: message name equals one of the five constants starting with __
+     * Require this message is on rootlevel of the Navajo
+     */
+	@Override
+	public boolean isInternal() {
+		if( this.getParentMessage() != null && this.getRootDoc().getRootMessage().equals( this.getParentMessage() ) )
+		{
+			switch(myName) {
+				case MSG_GLOBALS_BLOCK: return true;
+				case MSG_PARAMETERS_BLOCK: return true;
+				case MSG_AAA_BLOCK: return true;
+				case MSG_ENTITY_BLOCK: return true;
+				case MSG_TOKEN_BLOCK: return true;
+				default: return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 }

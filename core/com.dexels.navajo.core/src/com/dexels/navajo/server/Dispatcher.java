@@ -130,6 +130,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     protected boolean simulationMode;
     private AuthenticationMethodBuilder authMethodBuilder;
+    private HandlerFactory handlerFactory;
 
     // optional, can be null
 
@@ -312,6 +313,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         }
 
         Navajo in = access.getInDoc();
+        boolean birtMode = false;
 
         if (in != null) {
             Header h = in.getHeader();
@@ -335,6 +337,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                         access.addPiggybackData(element);
                     }
                 }
+                
             }
         } else {
             throw NavajoFactory.getInstance().createNavajoException("Null input message in dispatch");
@@ -354,13 +357,12 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         }
 
         try {
-
-            ServiceHandler sh = HandlerFactory.createHandler(navajoConfig, access, simulationMode); 
+            ServiceHandler sh = handlerFactory.createHandler(navajoConfig, access, simulationMode); 
 
             // If recompile is needed ALWAYS set expirationInterval to -1.
             // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
             long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-            if (expirationInterval > 0 && sh.needsRecompile()) {
+            if (expirationInterval > 0 && sh.needsRecompile( access )) {
                 expirationInterval = -1;
             }
 
@@ -368,9 +370,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             // persistenceKey.
             in.getHeader().setRPCPassword("");
 
-            out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-                    CacheController.getInstance().getCacheKey(access.rpcUser, access.rpcName, in), access.rpcName,
-                    expirationInterval, (expirationInterval != -1));
+            out = sh.doService( access ); 
 
             access.setOutputDoc(out);
 
@@ -429,7 +429,10 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 swriter = new StringWriter();
                 writer = new PrintWriter(swriter);
                 // Remove some messages that might contain sensitive info.
-                removeInternalMessages(inMessage);
+                if (inMessage != null)
+                {
+                	inMessage.removeInternalMessages();
+                }
                 inMessage.write(writer);
 
                 message += swriter.getBuffer().toString();
@@ -585,29 +588,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     @Override
     public final void setUseAuthorisation(boolean a) {
         useAuthorisation = a;
-    }
-
-    /**
-     * Method can be used to remove special message before returning Navajo to
-     * some client.
-     * 
-     * 
-     * @param doc
-     * @return
-     */
-    @Override
-    public final Navajo removeInternalMessages(Navajo doc) {
-        if (doc != null) {
-            try {
-                doc.removeMessage(doc.getMessage("__globals__"));
-                doc.removeMessage(Message.MSG_AAA_BLOCK);
-                doc.removeMessage(Message.MSG_PARAMETERS_BLOCK);
-                doc.removeMessage(Message.MSG_TOKEN_BLOCK);
-            } catch (Exception e) {
-            	logger.error("Error: ", e);
-            }
-        }
-        return doc;
     }
 
     @Override
@@ -1381,6 +1361,14 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
+    }
+    
+    public void setHandlerFactory(HandlerFactory hf) {
+        this.handlerFactory = hf;
+    }
+
+    public void clearHandlerFactory(HandlerFactory hf) {
+        this.handlerFactory = null;
     }
     
     public void addDescriptionProvider(DescriptionProviderInterface dpi) {

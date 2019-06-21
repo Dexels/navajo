@@ -893,4 +893,14 @@ public class TestProperty {
 		logger.info("result = {}", result);
 		Assert.assertTrue(true);
 	}
+	
+	@Test
+	public void testPercentageInTml() {
+			Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("percentage.xml"));
+			System.err.println("n: "+n);
+			Object o = n.getMessage("NewVat").getProperty("Percentage").getTypedValue();
+			System.err.println("o: "+o);
+
+	}
+
 }
