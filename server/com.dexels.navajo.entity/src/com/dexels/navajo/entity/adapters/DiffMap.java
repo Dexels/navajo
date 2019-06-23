@@ -91,6 +91,7 @@ public class DiffMap implements Mappable {
 			} catch (NoSuchElementException e) {
 				// delete
 				resultElement.addProperty(NavajoFactory.getInstance().createProperty(myAccess.getOutputDoc(), "Delete", Property.BOOLEAN_PROPERTY, String.valueOf(true), 0, null, Property.DIR_OUT));
+				result.addElement(resultElement);
 			}
 		}
 		for (Message element : currentMessage.getElements()) {
