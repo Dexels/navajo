@@ -81,7 +81,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.resource.swift"
+         id="com.dexels.navajo.resource.jdbc.mssql"
          download-size="0"
          install-size="0"
          version="0.0.0"
