@@ -2103,14 +2103,7 @@ public class StandardFunctionsTest {
 		System.err.println("Result: "+result);
 	}
 	
-	@Test
-	public void testNullToPercentage() {
-		ToPercentage toPerc = new ToPercentage();
-		toPerc.reset();
-		toPerc.insertStringOperand(null);
-		Object result = toPerc.evaluate();
-		System.err.println("Result: "+result);
-	}
+
 	@Test
 	public void testDateTime() {
 		// Test using default parameter
