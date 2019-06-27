@@ -20,7 +20,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	private static final long serialVersionUID = -8645365233991777113L;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TmlContinuationMultitenantServlet.class);
 
 	public static final String COMPRESS_GZIP = "gzip";
@@ -30,7 +30,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	private LocalClient localClient;
 	private TmlScheduler tmlScheduler;
 
-	// private boolean jmxRegistered = false;
 
 
 	private HttpServlet reactiveHttpServlet;
@@ -112,10 +111,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		if(this.reactiveScriptEnvironment!=null && this.reactiveHttpServlet!=null && serviceHeader!=null) {
 			return this.reactiveScriptEnvironment.acceptsScript(serviceHeader);
 		}
-//		String header = req.getHeader("X-Navajo-Reactive");
-//		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
 		return false;
-//		return useReactive && serviceHeader != null;
 	}
 
 	private String determineTenantFromRequest(final HttpServletRequest req) {
@@ -152,8 +148,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		final LocalClient lc = tempClient;
 		if (lc == null) {
 			logger.error("No localclient found");
-//				resp.sendError(500,
-//						"No local client registered in servlet context");
 			throw new ServletException("No local client registered in servlet context");
 		}
 		return lc;

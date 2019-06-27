@@ -49,7 +49,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		try {
 			logger.warn("Aborting: {}. Generating outdoc and resuming", reason);
 			setResponseNavajo(getLocalClient().generateAbortMessage(reason));
-//			resumeContinuation();
 			
 		} catch (FatalException e) {
 			logger.error("Error: ", e);
