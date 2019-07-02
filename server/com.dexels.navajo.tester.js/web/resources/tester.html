@@ -68,11 +68,10 @@
 </script>
 
 <script>
-
 updateTenants();
 updateApplications();
 getScripts();
-
+checkUseAAA();
 $(document).ready(function() {
     updateFavorites();
 
@@ -137,7 +136,7 @@ $(document).ready(function() {
                            <option value=""></option>
                        </select>
                      <select data-placeholder="Select an Application" id="applications">
-                          <option value="legacy" selected="1">Default</option>
+ <!--                          <option value="legacy" selected="1">Default</option> -->
                        </select>
                        <select data-placeholder="Locale" id="locale">
                           <option value="empty" selected="1">n/a</option>

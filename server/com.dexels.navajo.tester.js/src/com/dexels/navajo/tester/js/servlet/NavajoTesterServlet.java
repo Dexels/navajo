@@ -30,7 +30,7 @@ public class NavajoTesterServlet extends HttpServlet {
         if (query.equals("getscripts")) {
             List<NavajoFileSystemEntry> files = helper.getAllScripts().getEntries();
             result = mapper.writeValueAsString(files);
-            response.setContentType("text/json");
+            response.setContentType("application/json");
         } else if (query.equals("getfilecontent")) {
             result = helper.getFileContent(request.getParameter("file"));
             response.setContentType("text/plain");
@@ -40,11 +40,16 @@ public class NavajoTesterServlet extends HttpServlet {
         } else if (query.equals("gettenants")) {
                 List<String> files = helper.getSupportedTenants();
                 result = mapper.writeValueAsString(files);
-                response.setContentType("text/json");
+                response.setContentType("application/json");
         } else if (query.equals("getapplications")) {
-            response.setContentType("text/json");
+            response.setContentType("application/json");
             JsonNode node = helper.getApplicationListContent();
             result = mapper.writeValueAsString(node);
+        } else if (query.equals("useaaa")) {
+            response.setContentType("application/json");
+//            JsonNode node = helper.getApplicationListContent();
+            
+            result = mapper.writeValueAsString(mapper.createObjectNode().put("useAAA", false));
             
         } else {
             logger.warn("Unsupported request: {}", query);

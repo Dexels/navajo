@@ -26,6 +26,22 @@ function createEditor() {
     editor.setHighlightActiveLine(true);
 }
 
+
+function checkUseAAA() {
+	$.ajax({
+		dataType: "json",
+        url: "testerapi?query=useaaa",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	        	console.log("use aaaaaaaa   ");
+	        	console.log("use aaa:"+response.useAAA);
+	        	if(response.useAAA===false) {
+		        	hideLoginTable();
+	        	}
+	    }
+	})
+	};
 function updateTenants() {
 	$.ajax({
 		dataType: "json",
@@ -33,9 +49,15 @@ function updateTenants() {
 	    type : "GET",
 	    async : true,
 	    success : function(response) {
+	    	var cnt = 0;
 	        $.each(response, function(key, value) {
-	           $('#handlers').append($('<option>').text(value));
-
+	            console.log(">>>>> value::: "+response+" index: "+cnt);
+	            if(cnt==0) {
+	 	           $('#handlers').append($('<option selected=true>').text(value));
+	            } else {
+	 	           $('#handlers').append($('<option>').text(value));
+	            }
+	           
 	           // If we don't have a instance in our session storage, check if a part of
 	           // the url matches this instance
 	           if (!sessionStorage.instance) {
@@ -43,6 +65,7 @@ function updateTenants() {
 	                    sessionStorage.instance = value;
 	               }
 	           }
+	           cnt++;
 	        });
 	        if (sessionStorage.instance) {
 	        	 $('#handlers').val(sessionStorage.instance);
@@ -59,15 +82,24 @@ function updateApplications() {
 	    type : "GET",
 	    async : true,
 	    success : function(response) {
-	        $.each(response, function(key, value) {
-	           $('#applications').append($('<option>').text(value));
-
-	           // If we don't have a instance in our session storage, check if a part of
-	           // the url matches this instance
-	        });
-	        if (sessionStorage.instance) {
-	        	 $('#applications').val(sessionStorage.app);
-	        }
+	    	console.log("aap: "+response.length);
+	    	if(response.length == 1) {
+	    		$('#applications').attr('disabled',true);
+	    	} else {
+	    		$('#applications').attr('disabled',false);
+		        $.each(response, function(key, value) {
+		        	console.log(key)
+		        	console.log(value)
+			        $('#applications').append($('<option></options>').text(value.description).attr('value',value.id));
+		        	
+			           // If we don't have a instance in our session storage, check if a part of
+			           // the url matches this instance
+			        });
+			        if (sessionStorage.instance) {
+			        	 $('#applications').val(sessionStorage.app);
+			        }
+	    		
+	    	}
 	        $("#applications").trigger("chosen:updated");
 	    }
 	});
@@ -382,7 +414,7 @@ function prepareInputNavajo(script, birtMode) {
     
 
     var $header = $xml.find('tml header ');
-
+    console.log('using application: '+sessionStorage.app);
     if (sessionStorage.app === 'legacy') {
     	 $header.attr('application', null)
     } else {

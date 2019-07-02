@@ -2,16 +2,16 @@ package com.dexels.navajo.tester.js;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.slf4j.Logger;
@@ -20,11 +20,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sun.org.apache.xalan.internal.xsltc.dom.ArrayNodeListIterator;
 
 public class NavajoTesterHelper {
     private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala",".rr");
@@ -32,7 +29,8 @@ public class NavajoTesterHelper {
     private static final Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;
     private ObjectMapper mapper = new ObjectMapper();
-    
+    private NavajoTesterApplicationList applicationList;
+
     public void setNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = nci;
     }
@@ -129,11 +127,36 @@ public class NavajoTesterHelper {
         return "";
     }
     
+
+    public void setNavajoTesterApplicationList(NavajoTesterApplicationList testerApplicationList) {
+    	this.applicationList = testerApplicationList;
+    }
+
+    public void clearNavajoTesterApplicationList(NavajoTesterApplicationList testerApplicationList) {
+    	this.applicationList = null;
+    }
+    
+    private Map<String,String> determineApplications() {
+    	if(this.applicationList==null) {
+    		Map<String,String> result = new HashMap<String, String>();
+    		result.put("legacy", "Default");
+    		return result;
+    	}
+    	return this.applicationList.applications();
+    }
+    
     public ArrayNode getApplicationListContent() {
+    	
+    	
     	ArrayNode result = mapper.createArrayNode();
-//    	ObjectNode res = mapper.createObjectNode();
-    	Arrays.asList("VOETBALNL","KNKV-MEMBERPORTAL","NHV-MEMBERPORTAL","KNZB-MEMBERPORTAL","KNBSB-MEMBERPORTAL","NBB-MEMBERPORTAL","KBHB-MEMBERPORTAL").stream()
-    			.forEach(e->result.add(e));
+    	
+    	determineApplications().entrySet()
+    		.stream()
+    		.map(e->mapper.createObjectNode().put("id", e.getKey()).put("description", e.getValue())
+    				
+    				)
+    		.forEach(e->result.add(e));
+    	
     	return result;
     }
 //    <select data-placeholder="Select an Application" id="applications">
