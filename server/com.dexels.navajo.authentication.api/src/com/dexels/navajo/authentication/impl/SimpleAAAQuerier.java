@@ -1,59 +1,62 @@
 package com.dexels.navajo.authentication.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.authentication.api.AuthenticationResult;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
-public class DefaultAAAQuerier implements AAAQuerier {
-
-	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultAAAQuerier.class);
+public class SimpleAAAQuerier implements AAAQuerier {
 
 	@Override
 	public AuthenticationResult authenticateUsernamePassword(Access access) {
+		String userName = access.getRpcUser();
+		System.err.println("UserName: "+userName);
 		return AuthenticationResult.AUTHENTICATION_OK;
 	}
 
-	@Override
-	public void process(Access access) throws AuthorizationException {
-		logger.info("Processing using default authenticator using userid: {}  ",access.userID);
-		
-
-	}
-
-    @Override
-    public void authorize(Access access, Integer userid) throws AuthorizationException {
-		logger.info("Authorizing using default authenticator using userid: {} and from accessid: {}",userid,access.userID);
+    /**
+     * Perform the full authentication and authorization stack
+     */
+    public void process(Access access) throws AuthorizationException {
+    	
     }
+    
+    /**
+     * Skips authentication 
+     */
+    public void authorize(Access access, Integer userid) throws AuthorizationException {
+    	
+    }
+
 
 	@Override
 	public void reset() {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void resetCachedUserCredential(String tenant, String username) {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public Integer getUserId(Access a) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isFirstUseAccount(Access access) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int getDaysUntilExpiration(Access access) {
+		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 }
