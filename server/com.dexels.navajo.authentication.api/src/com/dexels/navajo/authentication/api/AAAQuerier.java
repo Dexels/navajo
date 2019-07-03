@@ -17,12 +17,6 @@ import com.dexels.navajo.script.api.AuthorizationException;
  */
 
 public interface AAAQuerier {
-    public static final int AUTHENTICATION_OK = 0;
-    public static final int AUTHENTICATION_FAILED = 1;
-    public static final int AUTHENTICATION_FAILED_BLOCKED = 2;
-    public static final int AUTHENTICATION_FAILED_EXPIRED= 3;
-    
-
     public static final String UNKNOWN_USER = "Unknown user";
     public static final String INVALID_PASSWORD = "Invalid password";
     public static final String ACCOUNT_BLOCKED = "Account blocked";
@@ -31,7 +25,7 @@ public interface AAAQuerier {
     public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
     
     
-    public int authenticateUsernamePassword(Access access);
+    public AuthenticationResult authenticateUsernamePassword(Access access);
     
     
     /**
