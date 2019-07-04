@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
 import com.dexels.navajo.authentication.api.AuthenticationResult;
+import com.dexels.navajo.authentication.api.AuthenticationType;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
@@ -53,6 +54,11 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	@Override
 	public int getDaysUntilExpiration(Access access) {
 		return 0;
+	}
+
+	@Override
+	public AuthenticationType type() {
+		return AuthenticationType.NONE;
 	}
 
 

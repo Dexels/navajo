@@ -16,7 +16,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.navajo.authentication.api.AAAQuerier;
+import com.dexels.navajo.authentication.api.AuthenticationType;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemFolder;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemScript;
@@ -31,12 +32,23 @@ public class NavajoTesterHelper {
     private ObjectMapper mapper = new ObjectMapper();
     private NavajoTesterApplicationList applicationList;
 
+	private AAAQuerier aaaQuerier;
+
     public void setNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = nci;
     }
 
     public void clearNavajoConfig(NavajoConfigInterface nci) {
         this.navajoConfig = null;
+    }
+    
+    public void setAAAQuerier(AAAQuerier aaaQuerier) {
+    	this.aaaQuerier = aaaQuerier;
+    	
+    }
+
+    public void clearAAAQuerier(AAAQuerier aaaQuerier) {
+    	this.aaaQuerier = null;
     }
     
     public List<String> getSupportedTenants() {
@@ -61,7 +73,6 @@ public class NavajoTesterHelper {
         
         File root = new File(navajoConfig.getRootPath());
 		File reactivePath = new File(root,"reactive");
-//		return new File(rootPath,"scripts").getAbsolutePath();
 
         NavajoFileSystemFolder result = new NavajoFileSystemFolder(scriptsPath);
         NavajoFileSystemFolder reactiveFolder = new NavajoFileSystemFolder(reactivePath);
@@ -105,7 +116,7 @@ public class NavajoTesterHelper {
         if (f.exists()) {
             try {
                byte[] bytes =  Files.readAllBytes(f.toPath());
-               return new String(bytes, "UTF-8");
+               return new String(bytes, StandardCharsets.UTF_8);
             } catch (IOException e) {
                 logger.error("Exception on getting file contents: ", e);
             }
@@ -138,7 +149,7 @@ public class NavajoTesterHelper {
     
     private Map<String,String> determineApplications() {
     	if(this.applicationList==null) {
-    		Map<String,String> result = new HashMap<String, String>();
+    		Map<String,String> result = new HashMap<>();
     		result.put("legacy", "Default");
     		return result;
     	}
@@ -159,16 +170,10 @@ public class NavajoTesterHelper {
     	
     	return result;
     }
-//    <select data-placeholder="Select an Application" id="applications">
-//    <option value="legacy" selected="1">Oracle</option>
-//    <option value="VOETBALNL" >VoetbalNL</option>
-//    <option value="KNKV-MEMBERPORTAL" >KNKV</option>
-//    <option value="NHV-MEMBERPORTAL" >NHV</option>
-//    <option value="KNZB-MEMBERPORTAL" >KNZB</option>
-//    <option value="KNBSB-MEMBERPORTAL" >KNBSB</option>                         
-//    <option value="NBB-MEMBERPORTAL" >NBB</option>
-//    <option value="KBHB-MEMBERPORTAL" >KBHB</option>                                                  
-// </select>
+
+    public AuthenticationType authenticationType() {
+    	return this.aaaQuerier.type();
+    }
 
    
 }

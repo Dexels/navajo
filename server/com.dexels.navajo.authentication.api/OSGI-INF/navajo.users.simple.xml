@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="navajo.users.simple">
+   <implementation class="com.dexels.navajo.authentication.impl.SimpleAAAQuerier"/>
+   <service>
+      <provide interface="com.dexels.navajo.authentication.api.AAAQuerier"/>
+   </service>
+</scr:component>
