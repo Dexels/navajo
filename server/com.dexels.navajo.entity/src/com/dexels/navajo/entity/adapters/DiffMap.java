@@ -121,8 +121,14 @@ public class DiffMap implements Mappable {
 			for (Object keyObject : keys) {
 				String key = keyObject.toString();
 				if (checkArrayElement.getProperty(key) == null || previous.getProperty(key) == null || !checkArrayElement.getProperty(key).isEqual(previous.getProperty(key))) {
-					allKeysEqual = false;
-					break;
+					// value null and missing property are considered valid
+					if ((checkArrayElement.getProperty(key) == null || checkArrayElement.getProperty(key).getValue() == null) && (previous.getProperty(key) == null || previous.getProperty(key).getValue() == null)) {
+						continue;
+					} else {
+						allKeysEqual = false;
+						break;
+					}
+					
 				}
 			}
 			if (allKeysEqual) {
