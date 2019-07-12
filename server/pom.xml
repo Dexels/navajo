@@ -22,7 +22,6 @@
 		<module>com.dexels.navajo.adapters.binarystore</module>
 		<module>com.dexels.navajo.resource</module>
 		<module>com.dexels.navajo.resource.manager</module>
-		<module>com.dexels.navajo.resource.jdbc.h2</module>
 		<module>com.dexels.navajo.resource.jdbc.oracle</module>
 		<module>com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>com.dexels.navajo.resource.http</module>
@@ -31,7 +30,6 @@
 		<module>com.dexels.navajo.resource.mail</module>
 		<module>com.dexels.navajo.resource.sftp</module>
 		<module>com.dexels.navajo.resource.test</module>
-		<module>com.dexels.navajo.server.logback</module>
 		<module>com.dexels.navajo.mgmt</module>
 		<module>com.dexels.navajo.tester.js</module>
 		<module>com.dexels.navajo.authentication.api</module>
