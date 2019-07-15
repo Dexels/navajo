@@ -169,9 +169,11 @@ public class EntityApiDocListener extends HttpServlet  {
             } else {
                 skipAutoKeysIfRequired = false;
             }
-            requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(n, "request", skipAutoKeysIfRequired));
+            // Create the masked navajo for the request
+            Navajo maskedRequest = n.copy().mask(n, "request");
+            requestBody = requestbodyTemplate.replace("{{REQUEST_BODY}}", writeEntityJson(maskedRequest, skipAutoKeysIfRequired));
             // Add descriptions in request
-            requestBody = requestBody.replace("{{PP_DESCRIPTIONS}}", printModel(e.getMessage(entityVersion), method, "request"));
+            requestBody = requestBody.replace("{{PP_DESCRIPTIONS}}", printModel(maskedRequest.getMessage(e.getMessageName()), method));
         }
         
 
@@ -204,10 +206,13 @@ public class EntityApiDocListener extends HttpServlet  {
             result = result.replace("{{DESCRIPTION}}", operationDescription(method) + e.getMessage(entityVersion).getName());
         }
 
-        String modelBody = printModel(e.getMessage(entityVersion), method, "response");
+        // Create the masked navajo for the response
+        Navajo maskedResponse = n.copy().mask(n, "response");
+
+        String modelBody = printModel(maskedResponse.getMessage( e.getMessageName() ), method);
         result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         
-        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, "response"));
+        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(maskedResponse, false));
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
@@ -238,28 +243,26 @@ public class EntityApiDocListener extends HttpServlet  {
         result = result.replace("{{OPREQUEST}}", "");
         result = result.replace("{{OPREQUESTMODEL}}", "");
         
-        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, ""));
+        String responseBody = opresponsetemplate.replace("{{RESPONSE_JSON}}", writeEntityJson(n, false));
         responseBody = responseBody.replace("{{OP}}", method);
         responseBody = responseBody.replace("{{RESPONSE_XML}}", StringEscapeUtils.escapeHtml(writeEntityXml(n)));
         result = result.replace("{{OPRESPONSE}}", responseBody);
         
-        String modelBody = printModel(e.getMessage(entityVersion), method, "request");
-        modelBody += printModel(e.getMessage(entityVersion), method, "response");
+        Navajo maskedRequest = n.copy().mask(n, "request");
+        String modelBody = printModel(maskedRequest.getMessage( e.getMessageName() ), method);
+
+        Navajo maskedResponse = n.copy().mask(n, "response");
+    	modelBody += printModel(maskedResponse.getMessage( e.getMessageName() ), method);
         result = result.replace("{{OPRESPONSEMODEL}}", modelBody);
         return result;
     }
 
-    private String writeEntityJson(Navajo n, String method) throws ServletException {
-        return writeEntityJson(n, method, false);
-    }
-
-    private String writeEntityJson(Navajo n, String method, Boolean skipAutoKeysIfRequired) throws ServletException {
+    private String writeEntityJson(Navajo n, Boolean skipAutoKeysIfRequired) throws ServletException {
         StringWriter writer = new StringWriter();
         JSONTML json = JSONTMLFactory.getInstance();
-        Navajo masked = n.copy().mask(n, method);
-        if (method.equals("request")) {
+        if (skipAutoKeysIfRequired) {
             // Remove all auto keys since they are not
-            for (Message m : masked.getAllMessages()) {
+            for (Message m : n.getAllMessages()) {
                 for (Property p : m.getAllProperties()) {
                     if (p.getKey() != null && p.getKey().contains("auto") && skipAutoKeysIfRequired) {
                         m.removeProperty(p);
@@ -268,7 +271,7 @@ public class EntityApiDocListener extends HttpServlet  {
             }
         }
         try {
-            json.formatDefinition(masked, writer, true);
+            json.formatDefinition(n, writer, true);
         } catch (Exception ex) {
             logger.error("Error in writing entity output in JSON!", ex);
             throw new ServletException("Error producing output");
@@ -325,11 +328,11 @@ public class EntityApiDocListener extends HttpServlet  {
 
     }
     
-    private String printModel(Message m, String op, String method) {
+    private String printModel(Message m, String op) {
         String rows = "";
         String opmodeltemplate = getTemplate("operationmodel.template");
 
-        String propertiesResult = printPropertiesForMessage(m, op, method);
+        String propertiesResult = printPropertiesForMessage(m, op, "");
         if (!propertiesResult.equals("")){
             rows += propertiesResult;
         }
@@ -341,54 +344,25 @@ public class EntityApiDocListener extends HttpServlet  {
         return "";
     }
     
-    private String printPropertiesForMessage(Message m, String op, String method) {
+    private String printPropertiesForMessage(Message m, String op, String path) {
         // Check entity message
         String rows = "";
-
+        
         for (Property p : m.getAllProperties()) {
             if (p.getDescription().equals("")) {
                 continue;
             }
 
-            String propertyMethod = p.getMethod();
-            if (propertyMethod.equals("")) {
-                Message parentMessage = p.getParentMessage();
-                while (parentMessage != null && propertyMethod.equals("")) {
-                    propertyMethod = parentMessage.getMethod();
-                    // the normal getParentMessage method skips the messages with type = Array which typically hold the method we're interested in so use this getter instead
-                    parentMessage = parentMessage.getArrayParentMessage();
-                }
-            }
-			
-            // Print if the property matches the method, OR if we are a request, or if we are request,response
-            // if we are a key and this is a GET or DELETE operation.
-            if (method.equals("response") && propertyMethod.equals("response")
-                    || (method.equals("request") && (op.equals(Operation.PUT) || op.equals(Operation.POST))
-                            && (propertyMethod.equals("") || propertyMethod.equals("request")))
-                    || (method.equals("request") && (op.equals(Operation.GET) || op.equals(Operation.DELETE)) && Key.isKey(p.getKey()))) {
-                
-                // Create the path of the property:
-                String path = "";
-                Message parent = p.getParentMessage();
-                while (parent != null) {
-                    if (parent.getParentMessage() != null && !parent.getParentMessage().getName().equals("")) {
-                        path = parent.getName() + "/" + path;
-                    }
-                    parent = parent.getParentMessage();
-                }
-                // path = path.substring(1, path.length() - 1);
+            String modelRow = getTemplate("operationmodelrow.template");
+            modelRow = modelRow.replace("{{NAME}}", "/" + path + p.getName());
+            modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
+            rows += modelRow;
 
-                String modelRow = getTemplate("operationmodelrow.template");
-                modelRow = modelRow.replace("{{NAME}}", "/" + path + p.getName());
-                modelRow = modelRow.replace("{{COMMENT}}", p.getDescription());
-                rows += modelRow;
-
-            }
         }
         
         // check if we have a definition message and call us for that:
         if (m.getDefinitionMessage() != null) {
-			String propertiesResult = printPropertiesForMessage(m.getDefinitionMessage(), op, method);
+			String propertiesResult = printPropertiesForMessage(m.getDefinitionMessage(), op, path);
 	        if (!propertiesResult.equals("")){
 	            rows += propertiesResult;
 	        }
@@ -396,7 +370,7 @@ public class EntityApiDocListener extends HttpServlet  {
     
         // And other submessages - go recursively
         for (Message submessage : m.getAllMessages()) {
-			String propertiesResult = printPropertiesForMessage(submessage, op, method);
+			String propertiesResult = printPropertiesForMessage(submessage, op, path + submessage.getName() + "/");
             if (!propertiesResult.equals("")){
                 rows += propertiesResult;
             }
