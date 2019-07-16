@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -35,6 +38,9 @@ public class TMLSerializer  {
 	protected static final char[] hexArray = { '0', '1', '2', '3', '4', '5',
 		'6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(TMLSerializer.class);
+
 	/**
 	 * types:
 	 * message: 1
@@ -55,8 +61,8 @@ public class TMLSerializer  {
 	 * 
 	 * 1[len]Visitor4[len]RFID[len]aap6[len]FestivalTokens[len]3099
 	 */
-	private Navajo myNavajo;
-	private String webservice;
+	private volatile Navajo myNavajo;
+	private volatile String webservice;
 	
 	int arrayEltIndex = 0;
 
@@ -193,7 +199,7 @@ public class TMLSerializer  {
 			gzipOut.write(baos.toByteArray());
 			gzipOut.close();
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 	}
 	

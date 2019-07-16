@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class WrappedClassLoader extends ClassLoader {
 
-	private ClassLoader parent;
+	private volatile ClassLoader parent;
 	
 	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 

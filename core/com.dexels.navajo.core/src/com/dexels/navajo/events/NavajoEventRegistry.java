@@ -21,8 +21,6 @@ import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.server.enterprise.scheduler.tribe.NavajoEventProxyInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
-import navajocore.Version;
-
 /**
  * A very simple event registry class.
  * 
@@ -48,13 +46,17 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	
 
 	
-	public static void clearInstance() {
+	public static synchronized void clearInstance() {
 		instance = null;
 	}
 	
 	
+	private static synchronized void setInstance(NavajoEventRegistry navajoEventRegistry) {
+		instance = navajoEventRegistry;
+	}
 	
-	public void shutdown() {
+	
+	private void shutdown() {
 		monitoredEvents.clear();
 		monitorLeveledEvents.clear();
 		clearInstance();
@@ -65,28 +67,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * 
 	 * @return
 	 */
-	public static NavajoEventRegistry getInstance() {
-		if ( instance != null ) {
-			return instance;
-		} else {
-			
-			if ( !Version.osgiActive() ) {
-				synchronized (semaphore ) {
-
-					if ( instance == null ) {
-						instance = new NavajoEventRegistry();
-						try {
-							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, ID);
-						} catch (Exception t) {
-							logger.error("Error: ", t);
-						} 
-					}
-				}
-			} else {
-				logger.warn("No NavajoEventRegistry instance found");
-			}
-			return instance;
+	public static synchronized NavajoEventRegistry getInstance() {
+		if(instance == null) {
+			logger.warn("No NavajoEventRegistry instance found");
 		}
+		return instance;
 	}
 	
 	/**
@@ -333,14 +318,17 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	}
 	
 	public void activate() {
-		instance = this;
+		setInstance(this);
 		try {
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, ID);
 		} catch (Exception e) {
 			logger.error("Caught Error: ", e);
 		}
 	}
-	
+
+
+
+
 	public void deactivate() {
 		shutdown();
 	}

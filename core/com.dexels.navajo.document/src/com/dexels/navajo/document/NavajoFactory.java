@@ -7,7 +7,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -40,7 +39,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public abstract class NavajoFactory {
 	protected static NavajoFactory impl = null;
 	protected File tempDir = null;
-	protected static final Map<String, NavajoFactory> alternativeFactories = new HashMap<>();
 	protected Map<String, String> defaultSubTypes = new HashMap<>();
 
 	private final Map<String, byte[]> binaryStorage = new HashMap<>();
@@ -164,55 +162,6 @@ public abstract class NavajoFactory {
 
 	public static void resetImplementation() {
 		impl = null;
-	}
-
-	/**
-	 * Get a specific NavajoFactory implementation.
-	 * 
-	 * @param className
-	 * @return NavajoFactory instance
-	 */
-	public static NavajoFactory getInstance(String className) {
-
-		synchronized (semaphore) {
-			if (alternativeFactories.get(className) != null) {
-
-				if (impl != null) {
-					String cls = impl.getClass().getName();
-					if (!(className.equals(cls))) {
-						logger.warn("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
-					}
-				}
-				return alternativeFactories.get(className);
-
-			}
-			try {
-				NavajoFactory alt = (NavajoFactory) Class.forName(className).getDeclaredConstructor()
-						.newInstance();
-				alternativeFactories.put(className, alt);
-				return alt;
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Clean up static references
-	 */
-	public static void terminate() {
-		for (Entry<String, NavajoFactory> element : alternativeFactories
-				.entrySet()) {
-			if (element.getValue() != null) {
-				element.getValue().shutdown();
-			}
-		}
-		// Might still leak..
-		alternativeFactories.clear();
-		if (impl != null) {
-			impl.shutdown();
-		}
 	}
 
 	public void shutdown() {

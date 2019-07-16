@@ -7,7 +7,6 @@ public class SessionTokenFactory {
 
     private static SessionTokenProvider instance = null;
 
-    @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(SessionTokenFactory.class);
 
     private SessionTokenFactory() {
@@ -16,6 +15,7 @@ public class SessionTokenFactory {
 
     public static synchronized SessionTokenProvider getSessionTokenProvider() {
         if (instance == null) {
+        	logger.error("Uninitialized token manager, falling back to default");
             instance = new DefaultSessionTokenProvider();
         }
         return instance;

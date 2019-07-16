@@ -322,8 +322,9 @@ public class AdminMap implements Mappable {
         return supportsStore;
     }
 
+    // TODO remove
     public int getScriptClassInstances() {
-        return GenericHandler.getLoadedClassesSize();
+    	return -1;
     }
 
     public String getServerId() {
