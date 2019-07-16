@@ -21,6 +21,8 @@ import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.server.enterprise.scheduler.tribe.NavajoEventProxyInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
+import navajocore.Version;
+
 /**
  * A very simple event registry class.
  * 
@@ -68,10 +70,27 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * @return
 	 */
 	public static synchronized NavajoEventRegistry getInstance() {
-		if(instance == null) {
-			logger.warn("No NavajoEventRegistry instance found");
+		if ( instance != null ) {
+			return instance;
+		} else {
+			
+			if ( !Version.osgiActive() ) { // Also for JUnit!
+				synchronized (semaphore ) {
+
+					if ( instance == null ) {
+						instance = new NavajoEventRegistry();
+						try {
+							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, ID);
+						} catch (Exception t) {
+							logger.error("Error: ", t);
+						} 
+					}
+				}
+			} else {
+				logger.warn("No NavajoEventRegistry instance found");
+			}
+			return instance;
 		}
-		return instance;
 	}
 	
 	/**
