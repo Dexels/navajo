@@ -75,12 +75,15 @@ public class TribeManagerFactory {
 		if(i==null) {
 			return;
 		}
-		setInstance(null);
+//		setInstance(null);
 		i.terminate();
 	}
 
 	public static synchronized void setInstance(TribeManagerInterface tm) {
 		logger.info("Setting TribeManagerFactory: {}",tm);
+		if(tm==null) {
+			logger.error("Wololo Setting tribemanager to null. Could be a shutdown? ", new Exception());
+		}
 		instance = tm;
 	}
 }
