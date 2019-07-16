@@ -11,7 +11,7 @@ import navajocore.Version;
 
 public class TribeManagerFactory {
 
-	private static TribeManagerInterface instance = null;
+	private static volatile TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
 	private static boolean tribeManagerFound = false;
 	
