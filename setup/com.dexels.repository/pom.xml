@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.super</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<tycho-version>1.3.0</tycho-version>
@@ -12,7 +12,18 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
+		<navajo.version>5.0.0</navajo.version>
 	</properties>
+	  <reporting>
+	    <plugins>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-surefire-report-plugin</artifactId>
+	        <version>3.0.0-M3</version>
+	      </plugin>
+	    </plugins>
+	  </reporting>
+  
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -25,6 +36,23 @@
 	<build>
 		<testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
 		<plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>3.0.0-M3</version>
+      </plugin>
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.0.0-M3</version>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.maven.surefire</groupId>
+        <artifactId>surefire-junit47</artifactId>
+        <version>3.0.0-M3</version>
+      </dependency>
+    </dependencies>
+  </plugin>
 			<plugin>
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -36,29 +64,11 @@
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>1.8.2</version>
-							<classifier>repo.dexels.com</classifier>
+							<version>2.0.0-SNAPSHOT</version>
+							<classifier>maven</classifier>
 						</artifact>
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
-					<filters>
-						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
-						<filter>
-							<type>java-package</type>
-							<id>javax.persistence</id>
-							<restrictTo>
-								<type>eclipse-plugin</type>
-								<id>javax.persistence</id>
-							</restrictTo>
-						</filter>
-
-						<!-- example 3: work around Equinox bug 348045 -->
-						<filter>
-							<type>p2-installable-unit</type>
-							<id>org.eclipse.equinox.servletbridge.extensionbundle</id>
-							<removeAll />
-						</filter>
-					</filters>
 					<environments>
 						<environment>
 							<os>win32</os>
@@ -122,6 +132,11 @@
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence
 					on the Maven build itself. -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -152,15 +167,6 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
-	<profiles>
-		<profile>
-			<id>dexels</id>
-			<build>
-				<plugins>
 					<plugin>
 						<artifactId>maven-deploy-plugin</artifactId>
 						<version>2.5</version>
@@ -185,6 +191,11 @@
 							</execution>
 						</executions>
 					</plugin>
+			      <plugin>
+			        <groupId>org.sonarsource.scanner.maven</groupId>
+			        <artifactId>sonar-maven-plugin</artifactId>
+			        <version>3.6.0.1398</version>
+			      </plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
@@ -199,7 +210,7 @@
 									</includes>
                                                                          <reuseForks>false</reuseForks>
                                                                         <forkCount>1</forkCount>
-									<testFailureIgnore>true</testFailureIgnore>
+									<testFailureIgnore>false</testFailureIgnore>
 								</configuration>
 								<goals>
 									<goal>test</goal>
@@ -209,17 +220,16 @@
 						<configuration>
 						</configuration>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
+				
+			</plugins>
+		</pluginManagement>
+	</build>
 
+	<profiles>
 		<profile>
 			<id>release</id>
 			<activation>
-				<property>
-					<name>environment</name>
-					<value>release</value>
-				</property>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<repositories>
 				<repository>
@@ -279,112 +289,6 @@
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
-		</profile>
-
-		<profile>
-			<id>maintenance</id>
-			<activation>
-				<property>
-					<name>environment</name>
-					<value>maintenance</value>
-				</property>
-			</activation>
-			<repositories>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>central</id>
-					<name>Dexels Third party</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/other/</url>
-					<layout>default</layout>
-				</repository>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<id>navajo_release</id>
-					<name>Navajo Release Repository</name>
-					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo/</url>
-					<layout>default</layout>
-				</repository>
-			</repositories>
-			<distributionManagement>
-				<repository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>dexels</id>
-					<name>Dexels Repository</name>
-					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_release/</url>
-					<layout>default</layout>
-				</repository>
-				<snapshotRepository>
-					<uniqueVersion>true</uniqueVersion>
-					<id>dexels_snap</id>
-					<name>Dexels Snapshots</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/maintenance_snapshot</url>
-					<layout>default</layout>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-
-
-
-		<profile>
-			<id>test</id>
-			<activation>
-				<property>
-					<name>environment</name>
-					<value>test</value>
-				</property>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<uniqueVersion>false</uniqueVersion>
-					<id>dexels_test</id>
-					<name>Dexels Repository</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
-
-					<layout>default</layout>
-				</repository>
-				<snapshotRepository>
-					<uniqueVersion>true</uniqueVersion>
-					<id>dexels_snap_test</id>
-					<name>Dexels Snapshots</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
-					<layout>default</layout>
-				</snapshotRepository>
-			</distributionManagement>
-			<repositories>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-					<id>dexels_test_snap</id>
-					<name>Dexels Test Snap</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
-					<layout>default</layout>
-				</repository>
-				<repository>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>repo_thirdparty</id>
-					<name>Dexels Central</name>
-					<url>http://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
-					<layout>default</layout>
-				</repository>
-			</repositories>
 		</profile>
 	</profiles>
 	<organization>
