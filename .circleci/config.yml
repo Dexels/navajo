@@ -13,7 +13,7 @@ jobs:
       #          git clone git@github.com:Dexels/enterprise.git
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
+            - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
             - v1-dependencies-
 
       - run: |
@@ -23,7 +23,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "setup/com.dexels.target/repo.dexels.com.target" }}
+          key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # run tests!
       - run: mvn install
