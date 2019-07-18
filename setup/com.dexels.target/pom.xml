@@ -29,9 +29,9 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>repo.dexels.com.target</file>
+									<file>maven.target</file>
 									<type>target</type>
-									<classifier>repo.dexels.com</classifier>
+									<classifier>maven</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>
