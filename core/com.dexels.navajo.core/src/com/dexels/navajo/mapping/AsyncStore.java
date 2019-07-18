@@ -45,7 +45,8 @@ import com.dexels.navajo.util.AuditLog;
 
 public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
 
-  private static AsyncStore instance = null;
+	// volatile seems legit here
+  private static volatile AsyncStore instance = null;
   
   public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<>());
   public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<>());

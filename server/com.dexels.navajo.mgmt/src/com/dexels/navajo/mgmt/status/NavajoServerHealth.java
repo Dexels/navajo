@@ -1,10 +1,13 @@
 package com.dexels.navajo.mgmt.status;
 
+import java.util.Optional;
+
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 import com.dexels.server.mgmt.api.ServerHealthCheck;
@@ -22,7 +25,7 @@ public class NavajoServerHealth implements ServerHealthCheck {
     public boolean isOk() {
         boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null 
-                && tribeManagerInterface != null && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling() 
+                && !getTribeManagerProblem().isPresent() && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling() 
                 && !threadsFull;
     }
 
@@ -41,12 +44,12 @@ public class NavajoServerHealth implements ServerHealthCheck {
         if (javaCompiler == null) {
             return "No java compiler";
         }
-        if (tribeManagerInterface == null) {
-            return "No tribe manager";
+        //
+        Optional<String> tribeIssue = getTribeManagerProblem();
+        if(tribeIssue.isPresent()) {
+        	return tribeIssue.get();
         }
-        if (!tribeManagerInterface.isActive()) {
-            return "No activate tribe manager";
-        }
+        
         if (workflowManagerInterface == null) {
             return "No workflow manager";
         }
@@ -59,11 +62,24 @@ public class NavajoServerHealth implements ServerHealthCheck {
         if (!entityManager.isFinishedCompiling()) {
             return "EntityManager compiling";
         }
-        boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
+        boolean threadsFull = (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
         if (threadsFull) {
             return "Queue size";
         }
         return "";
+    }
+    
+    private Optional<String> getTribeManagerProblem() {
+        if (tribeManagerInterface == null) {
+            return Optional.of("No tribe manager");
+        }
+        if (!tribeManagerInterface.isActive()) {
+            return Optional.of("No active tribe manager");
+        }
+        if(TribeManagerFactory.getInstance()==null) {
+            return Optional.of("No active tribe manager from factory");
+        }
+        return Optional.empty();
     }
 
     public void setNavajoConfig(NavajoConfigInterface nci) {

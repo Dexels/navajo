@@ -24,62 +24,7 @@
  */
 package navajodocument;
 
-
-import com.dexels.navajo.document.NavajoFactory;
-
-/**
- * VERSION HISTORY
- *
- * 8.2.19 Added setting of property types when calling setAnyValue() method of Property object.
- *
- * 8.2.20 Added pattern matching to ToMoney in case of string argument.
- *
- * 8.2.21 Added StopwatchTime type property
- *
- * 8.2.22 Fixed bug in StopwatchTime type property
- *
- * 8.2.23 ...
- * 
- * 8.2.24 ...
- *
- * 8.2.25 Added request id to header
- * 
- * 9.0.00 Refactored NANO: split the generic functions and the XML-implementation specific
- *        functions.
- *        
- *        Changed the encoding of binaries. Binary data will be added as text node under a
- *        property, instead of an attribute. So it is NOT backwards compatible. If you upgrade
- *        a server, you will need to upgrade the client too.
- *        
- *        Added QDSSSax parser implementation (Quick 'n Dirty Stream Sharing SAX) 
- *        This implementation can handle binaries of any size*
- *        
- * 9.0.1 Binary now supports proper compare function.
- *        
- *     * limited only by diskspace
- * 
- * 9.0.2 Fixed problem with not setting mimetype in Binary when using reader.
- * 
- * 9.0.3 Fixed problem with getting not existing array message child by index in SAXP/NANO.
- * 
- * 9.0.4 Fixed problem with async webservice callback.
- * 
- * 9.1.0 Support for orderby construct in array messages. Message implements Comparable now.
- * 
- * 9.1.1 Order by of messages now support java comparator functions
- * 
- * 9.2.0 Changed Navajo merged semantics.
- * 
- */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
-
-	@Override
-	public void shutdown() {
-		super.shutdown();
-		NavajoFactory.terminate();
-	}
-
-
 
 
 }

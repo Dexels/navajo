@@ -38,37 +38,6 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void shutdown() {
 		super.shutdown();
-		if(!osgiActive()) {
-			 // Stop JMX.
-			  JMXHelper.destroy();
-				ResourceCheckerManager.clearInstance();
-			  
-			  // 1. Kill all supporting threads.
-			  GenericThread.killAllThreads();
-			  // remove the static links
-			  StatisticsRunnerFactory.shutdown();
-			  
-			  // 2. Clear all classloaders.
-			  GenericHandler.doClearCache();
-			  
-		      // 3. Shutdown monitoring agent.
-			  AgentFactory.shutdown();
-			  
-			  // 4. Kill tribe manager.
-			  TribeManagerFactory.shutdown();
-			  
-			  NavajoEventRegistry.getInstance().shutdown();
-			  NavajoEventRegistry.clearInstance();
-			  // 5. Shut down DbConnectionBroker
-			  // Very ugly should be handled in a better way:
-			  // - By registering 'resources' to be killable
-			  // - OSGi package lifecycles
-			  // right now I just dug up 
-
-			  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
-			
-		}
-		  
 	
 	}
 

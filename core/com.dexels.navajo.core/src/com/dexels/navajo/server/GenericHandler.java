@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -61,7 +62,7 @@ import navajocore.Version;
 
 public class GenericHandler extends ServiceHandler {
 
-    private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
+    private static final Map<String,NavajoClassSupplier> loadedClasses = new ConcurrentHashMap<>();
 
     private static Object mutex1 = new Object();
    
@@ -85,15 +86,7 @@ public class GenericHandler extends ServiceHandler {
 	@Override
 	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
     	this.tenantConfig = navajoConfig;
-    	boolean finishedSync = false;
-    	
-    	if (loadedClasses == null)
-    		synchronized ( mutex1 ) {
-    			if ( !finishedSync ) {
-    				loadedClasses = new ConcurrentHashMap<>();
-    				finishedSync = true;
-    			}
-    		}
+
 	}
 
 	public static void doClearCache() {
@@ -101,8 +94,6 @@ public class GenericHandler extends ServiceHandler {
     	if(loadedClasses!=null) {
         	loadedClasses.clear();
     	}
-       loadedClasses = null;
-       loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
     }
 
     private static final CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
@@ -469,15 +460,4 @@ public class GenericHandler extends ServiceHandler {
 		}
 		return BundleCreatorFactory.getInstance().getOnDemandScriptService(rpcName, tenant);
 	}
-    /**
-     * Return load script class count.
-     * @return
-     */
-    public static int getLoadedClassesSize() {
-    	if ( loadedClasses != null ) {
-    		return loadedClasses.size();
-    	} else {
-    		return 0;
-    	}
-    }
 }

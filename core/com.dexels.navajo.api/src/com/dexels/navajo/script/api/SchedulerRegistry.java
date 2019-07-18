@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class SchedulerRegistry {
     private static final Logger logger = LoggerFactory.getLogger(SchedulerRegistry.class);
 
-    private Scheduler tmlScheduler;
+    private volatile Scheduler tmlScheduler;
     private static SchedulerRegistry instance;
     
     public void activate() {
@@ -29,6 +29,7 @@ public class SchedulerRegistry {
     }
     public void deactivate() {
         logger.info("Deactivating SchedulerRegistry" );
+        
         setInstance(null);
     }
 

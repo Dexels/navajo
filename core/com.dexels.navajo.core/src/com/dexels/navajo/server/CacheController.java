@@ -43,7 +43,6 @@ class CacheEntry {
 public class CacheController extends GenericThread implements CacheControllerMXBean  {
 
 	private static String id = "Cache Controller";
-	public static final String VERSION = "$Id$";
 	private static final String CACHE_CONFIG = "cache.xml";
 	
 	private static CacheController instance = null;
@@ -234,7 +233,9 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	}
 
 	public static void setInstance(CacheController c) {
-		instance = c;
+		synchronized (semaphore) {
+			instance = c;
+		}
 	}
 
 	@Override

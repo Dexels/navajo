@@ -74,17 +74,5 @@ public class FunctionFactoryFactory {
 		return instance;
 		
 	}
-	
-	public static void main(String [] args) {
-		FunctionFactoryInterface fii = FunctionFactoryFactory.getInstance();
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-	
-		FunctionInterface fi = fii.getInstance(cl, "SingleValueQuery");
-		fi.reset();
-		fi.insertIntegerOperand(Integer.valueOf(21210));
-		fi.insertStringOperand("SELECT * FROM AAP WHERE noot = ?");
-		fi.insertStringOperand("PIPO");
-		fi.evaluateWithTypeChecking();
-		
-	}
+
 }

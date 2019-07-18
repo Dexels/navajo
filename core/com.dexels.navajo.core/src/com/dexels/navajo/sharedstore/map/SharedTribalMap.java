@@ -25,7 +25,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	private static final long serialVersionUID = -1122073018927967102L;
 	
-	private static Map<String,SharedTribalMap> registeredMaps = new HashMap<>();
+	private static volatile Map<String,SharedTribalMap> registeredMaps = new HashMap<>();
 	private boolean tribalSafe = false;
 	
 	private static Object semaphore = new String();
