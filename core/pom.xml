@@ -20,6 +20,7 @@
                 <module>com.dexels.navajo.client.nql</module>
 		<module>com.dexels.navajo.core</module>
 		<module>com.dexels.navajo.client.async</module>
+		<module>com.dexels.navajo.client.async.apache</module>
 		<module>com.dexels.navajo.function</module>
 		<module>com.dexels.navajo.api</module>
 		<module>com.dexels.navajo.log</module>
