@@ -163,7 +163,7 @@ public class BirtUtils {
 			origW.flush();
 			origW.close();
 		}
-		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, false);
+		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, "navajoDataSource");
 		FileWriter fw = new FileWriter(sourceFile);
 		logger.debug("Data source created: {}", sourceFile.getAbsolutePath());
 		XMLDocumentUtils.write(t, fw, false);

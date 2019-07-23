@@ -1389,17 +1389,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
             // Call sorted.
             if (performOrderBy) {
-                OutputStream os = new OutputStream() {
-                    @Override
-                    public void write(int b) throws IOException {
-                        // do nothing
-                    }
-                };
-                try {
-                    inDoc.write(os);
-                } catch (NavajoException e) { 
-                	logger.error("Error: ", e);
-                }
+            	inDoc.performOrdering();
             }
 
             Message error = inDoc.getMessage("error");

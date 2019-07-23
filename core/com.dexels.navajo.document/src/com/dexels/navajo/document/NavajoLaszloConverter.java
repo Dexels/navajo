@@ -1,8 +1,6 @@
 package com.dexels.navajo.document;
 
 import java.io.BufferedInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,9 +94,7 @@ public class NavajoLaszloConverter {
 	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
 		return createLaszloFromNavajo(in, false, serviceName);
 	}
-	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections) {
-		return createLaszloFromNavajo(in, includeSelections, "navajoDataSource");
-	}
+
 	private static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
@@ -122,7 +118,7 @@ public class NavajoLaszloConverter {
 		return doc;
 	}
 
-	public static Document createLaszloFromNavajo(Message in, boolean includeSelections) {
+	private static Document createLaszloFromNavajo(Message in, boolean includeSelections) {
 		Document doc = XMLDocumentUtils.createDocument();
 		Element root = doc.createElement("navajoDataSource");
 		doc.appendChild(root);
@@ -403,12 +399,4 @@ public class NavajoLaszloConverter {
 			logger.error("Error: ", ex);
 		}
 	}
-
-	public static void dumpNavajoLaszloStyle(Navajo n, String filename, String serviceName) throws IOException {
-		Document d = createLaszloFromNavajo(n, serviceName);
-		FileWriter fw = new FileWriter(filename);
-		XMLDocumentUtils.write(d, fw, false);
-		fw.close();
-	}
-
 }

@@ -492,5 +492,10 @@ public interface Navajo extends Persistable {
      */
     public void removeInternalMessages();
     
+    /**
+     * Normally message ordering is done when the Navajo object is being serialized.
+     * If you want to perform the sorting *before* serializing, call this method
+     */
+    public void performOrdering();
 
 }
