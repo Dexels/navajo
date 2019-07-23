@@ -1738,6 +1738,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         // If we are an array message, mask all submessages with definition message in
         // mask
         if (isArrayMessage() && mask.isArrayMessage()) {
+        	setOrderBy(mask.getOrderBy());
             for (Message child : getElements()) {
                 child.maskMessage(mask, method);
             }
@@ -1769,6 +1770,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
             // If message m is an array message, mask each element
             if (m.isArrayMessage()) {
+            	m.setOrderBy(mask.getOrderBy());
                 Message definitionMessage = maskMessage.getDefinitionMessage();
                 if (definitionMessage == null) {
                     logger.debug("Unable to mask {} since the mask has no definition message", m.getName());

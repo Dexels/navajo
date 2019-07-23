@@ -218,7 +218,6 @@ public class EntityContinuationRunner implements TmlRunnable {
                 Writer w = new OutputStreamWriter(out);
                 JSONTML json = JSONTMLFactory.getInstance();
                 try {
-                	responseNavajo.performOrdering();
                     json.format(responseNavajo, w, true);
                 } catch (Exception e) {
                     logger.error("Error in writing entity output in JSON!", e);
