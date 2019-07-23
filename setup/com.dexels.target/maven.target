@@ -9,8 +9,8 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.179"/>
-		<unit id="dexels-navajo-target.feature.group" version="3.3.179"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.188"/>
+		<unit id="dexels-navajo-target.feature.group" version="3.3.188"/>
 	</location>
 </locations>
 <includeBundles>
@@ -211,12 +211,14 @@
 	<plugin id="org.eclipse.jetty.servlet" version="9.4.17.v20190418"/>
 	<plugin id="org.eclipse.jetty.util" version="9.4.17.v20190418"/>
 	<plugin id="com.dexels.navajo.webconsole.branding"/>
-	<plugin id="com.microsoft.sqlserver.mssql-jdbc"/>
 	<plugin id="com.dexels.oauth.generic.web"/>
 	<plugin id="junit"/>
 	<plugin id="org.apache.httpcomponents.fluent-hc"/>
 	<plugin id="org.apache.httpcomponents.httpclient-cache"/>
 	<plugin id="org.apache.httpcomponents.httpcore-nio"/>
 	<plugin id="org.apache.httpcomponents.httpmime"/>
+	<plugin id="org.osgi.util.promise"/>
+	<plugin id="org.osgi.util.function"/>
+	<plugin id="slf4j.simple"/>
 </includeBundles>
 </target>
