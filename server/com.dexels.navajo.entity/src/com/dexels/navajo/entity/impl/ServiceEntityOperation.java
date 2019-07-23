@@ -805,6 +805,7 @@ public class ServiceEntityOperation implements EntityOperation {
 
 		}
 
+		result.performOrdering();
         clean(result, "response", true, true, entityVersion);
         try {
         	checkSubTypes(result.getRootMessage());

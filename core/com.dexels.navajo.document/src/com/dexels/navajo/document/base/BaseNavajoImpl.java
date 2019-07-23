@@ -715,4 +715,20 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 		}
 	}
 
+	// Not pretty but gets the job done and is consistent with actually serializing
+	@Override
+	public void performOrdering() {
+            OutputStream os = new OutputStream() {
+                @Override
+                public void write(int b) throws IOException {
+                    // do nothing
+                }
+            };
+            try {
+                write(os);
+            } catch (NavajoException e) { 
+            	logger.error("Error: ", e);
+            }
+	}
+
 }
