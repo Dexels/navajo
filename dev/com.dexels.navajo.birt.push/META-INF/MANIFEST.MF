@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Birt
 Bundle-SymbolicName: com.dexels.navajo.birt.push
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.3.qualifier
+Bundle-Version: 2.0.5.qualifier
 Bundle-Activator: navajobirt.Version
 Export-Package: com.dexels.navajo.birt,
  com.dexels.navajo.birt.adapter
