@@ -10,6 +10,9 @@ public class NavajoTesterApplicationList {
 	public void activate(Map<String,Object> settings) {
 		applicationMap.clear();
 		applicationMap.put("legacy","Default");
+		if(settings==null) {
+			return;
+		}
 		settings.entrySet()
 			.stream()
 			.filter(e->e.getKey().startsWith("application."))
@@ -18,6 +21,10 @@ public class NavajoTesterApplicationList {
 				String value = ""+e.getValue();
 				applicationMap.put(key, value);
 		});
+	}
+
+	public void deactivate() {
+		applicationMap.clear();
 	}
 	
 	public Map<String,String> applications() {

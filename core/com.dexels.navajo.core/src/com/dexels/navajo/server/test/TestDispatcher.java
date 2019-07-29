@@ -11,6 +11,7 @@ import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.HandlerFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 public class TestDispatcher implements DispatcherInterface {
@@ -183,6 +184,12 @@ public class TestDispatcher implements DispatcherInterface {
 	
 	@Override
 	public void generateServerReadyEvent() {
+		
+	}
+
+	@Override
+	public void setHandlerFactory(HandlerFactory handlerFactory) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -58,8 +58,7 @@ public class SchedulerRegistry {
     	return true;
     }
 
-    public static void setScheduler(TmlScheduler scheduler) {
-        logger.warn("Non-osgi mode!");
+    public static void setScheduler(Scheduler scheduler) {
         if (instance == null) {
             instance = new SchedulerRegistry();
         }

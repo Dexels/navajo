@@ -15,7 +15,9 @@ Export-Package: com.dexels.navajo.server.api.impl,
  com.dexels.navajo.server.listener.http.schedulers,
  navajolisteners;uses:="dexels"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.client,
+Import-Package: com.dexels.immutable.api;version="2.3.0",
+ com.dexels.immutable.api.customtypes;version="2.3.0",
+ com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",

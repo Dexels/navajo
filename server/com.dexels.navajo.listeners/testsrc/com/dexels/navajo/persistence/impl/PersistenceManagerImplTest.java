@@ -16,8 +16,11 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.CacheControllerTest;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
+import com.dexels.navajo.sharedstore.SharedMemoryStore;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 class TestConstructor1 implements Constructor {
 
@@ -66,12 +69,20 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		super.setUp();
 		CacheController.getInstance().kill();
 		PersistenceManagerFactory.clearInstance();
-		PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		PersistenceManagerImpl pm =  new PersistenceManagerImpl();
+//		(PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager tribeManager = new com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager();
+		TribeManagerFactory.setInstance(tribeManager);
+		pm.setTribeManager(tribeManager);
+		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
+		DispatcherFactory.getInstance().getNavajoConfig().setPersistenceManager(pm);
+		SharedMemoryStore sms = new SharedMemoryStore();
+		pm.setSharedStore(sms);
+		PersistenceManagerFactory.setInstance(pm);
 		pm.init();
 		pm.clearCache();
 		TestNavajoConfig tnc = new TestNavajoConfig();
 		tnc.setMyPersistenceManager(pm);
-		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 	}
 

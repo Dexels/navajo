@@ -13,7 +13,6 @@ public class TribeManagerFactory {
 
 	private static volatile TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
-	private static boolean tribeManagerFound = false;
 	
 	private static final Logger logger = LoggerFactory.getLogger(TribeManagerFactory.class);
 
@@ -25,11 +24,6 @@ public class TribeManagerFactory {
 				synchronized (semaphore) {
 					if ( instance == null ) {
 						instance = getTribeManagerService();
-						if(instance == null || instance instanceof DefaultTribeManager) {
-							tribeManagerFound = false;
-						} else {
-							tribeManagerFound = true;
-						}
 					}
 				}
 			}

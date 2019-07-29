@@ -4,9 +4,7 @@ import java.util.HashMap;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
-import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
-import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 
 /**
  * This class is used to fetch (cached) ResourceChecker objects. The cached objects are invalidated upon NavajoCompileScript
@@ -21,7 +19,7 @@ public class ResourceCheckerManager implements NavajoListener {
 	
 	static {
 		myResourceCheckerMngr = new ResourceCheckerManager();
-		NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, myResourceCheckerMngr);
+//		NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, myResourceCheckerMngr);
 	}
 
 	private HashMap<String, ResourceChecker> checkedService = new HashMap<String, ResourceChecker>();
@@ -32,7 +30,7 @@ public class ResourceCheckerManager implements NavajoListener {
 	
 	public static void clearInstance() {
 		if(myResourceCheckerMngr!=null) {
-			NavajoEventRegistry.getInstance().removeListener(NavajoCompileScriptEvent.class, myResourceCheckerMngr);
+//			NavajoEventRegistry.getInstance().removeListener(NavajoCompileScriptEvent.class, myResourceCheckerMngr);
 		}
 		myResourceCheckerMngr = null;
 	}
@@ -68,9 +66,9 @@ public class ResourceCheckerManager implements NavajoListener {
 	 */
 	@Override
 	public void onNavajoEvent(NavajoEvent ne) {
-		if ( ne instanceof NavajoCompileScriptEvent ) {
-			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;
-			checkedService.remove(ncse.getWebservice());
-		}
+//		if ( ne instanceof NavajoCompileScriptEvent ) {
+//			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;
+//			checkedService.remove(ncse.getWebservice());
+//		}
 	}
 }

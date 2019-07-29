@@ -53,7 +53,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	}
 	
 	
-	private static synchronized void setInstance(NavajoEventRegistry navajoEventRegistry) {
+	public static synchronized void setInstance(NavajoEventRegistry navajoEventRegistry) {
 		instance = navajoEventRegistry;
 	}
 	
@@ -336,7 +336,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return registry.size();
 	}
 	
-	@SuppressWarnings("ucd")
 	public void activate() {
 		setInstance(this);
 		try {

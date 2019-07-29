@@ -58,7 +58,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
    com.dexels.navajo.events,
    com.dexels.navajo.script.api,
    com.dexels.navajo.mapping",
- com.dexels.navajo.server.enterprise.tribe;version="1.0.0";uses:="com.dexels.navajo.server",
+ com.dexels.navajo.server.enterprise.tribe;version="1.0.1",
  com.dexels.navajo.server.enterprise.workflow,
  com.dexels.navajo.server.global,
  com.dexels.navajo.server.impl;
@@ -156,7 +156,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.reactivestreams;version="1.0.0.release";resolution:=optional,
  org.slf4j,
  org.w3c.dom
-Service-Component: OSGI-INF/*.xml
+Service-Component: OSGI-INF/*.xml,
+ OSGI-INF/navajo.persistence.manager.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.core
