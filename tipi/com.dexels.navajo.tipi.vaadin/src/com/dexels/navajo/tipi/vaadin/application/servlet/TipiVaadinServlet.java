@@ -194,7 +194,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}
 		if(logoutURL.contains("/UIDL")) {
 			logger.warn("Weird /UIDL deceted... Removing");
-			logoutURL.replace("/UIDL", "");
+			logoutURL = logoutURL.replace("/UIDL", "");
 		}
 		tipiApplication.setReferer(logoutURL);
 		logger.info("Setting logout url to: "+logoutURL);
