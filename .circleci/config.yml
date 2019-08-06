@@ -43,5 +43,8 @@ jobs:
           path: ~/repo/setup/com.dexels.streams.p2/target/com.dexels.streams.p2-1.0.0-SNAPSHOT.zip
           destination: streams_p2.zip
       - run: |
+          ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
+          scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
+      - run: |
           curl -X POST --header "Content-Type: application/json" -d '{"branch":"newmaven"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
           #curl -X POST --header "Content-Type: application/json" -d '{"branch":"newbuild"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-platform/build?circle-token=${CIRCLE_TOKEN}"
