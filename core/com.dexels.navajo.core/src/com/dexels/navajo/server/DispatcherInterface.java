@@ -81,6 +81,4 @@ public interface DispatcherInterface extends ResourceManager {
 	  
 	  public Navajo handleCallbackPointers(Navajo inMessage, String tenant);
 
-	public void setHandlerFactory(HandlerFactory handlerFactory);
-
 }

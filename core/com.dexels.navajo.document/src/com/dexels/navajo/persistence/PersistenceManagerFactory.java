@@ -48,7 +48,7 @@ public class PersistenceManagerFactory {
 		}
 
 		synchronized (object) {
-			
+
 			if ( instance == null ) {
 				try {
 					instance = (PersistenceManager) Class.forName(className).getDeclaredConstructor().newInstance();
@@ -65,8 +65,5 @@ public class PersistenceManagerFactory {
 			}
 		}
 		return instance;
-	}
-	public static void setInstance(PersistenceManager persistenceManager) {
-		instance = persistenceManager;
 	}
 }

@@ -22,7 +22,6 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -92,33 +91,20 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	private static final String MEMORY_CACHE_ID = "inMemoryCache";
 	private static final String FREQUENCE_MAP_ID = "accessFrequency";
 	
-	private TribeManagerInterface tribeManager;
-	
-	public void activate() {
-		PersistenceManagerFactory.setInstance(this);
+	private final TribeManagerInterface tribeManager;
+	public PersistenceManagerImpl(TribeManagerInterface tribeManager) throws InstantiationException {
+		this.tribeManager = tribeManager;
+		try {
+			Class.forName("com.dexels.navajo.sharedstore.map.SharedTribalMap");
+		} catch (ClassNotFoundException e) {
+			throw new InstantiationException(e.getMessage());
+		}
 	}
-	
-	public void deactivate() {
-		
-	}
-
-	public void setTribeManager(TribeManagerInterface tmi) {
-		tribeManager = tmi;
-	}
-	
-	public void clearTribeManager(TribeManagerInterface tmi) {
-		tribeManager = null;
-	}
-	
 	
 	public void setSharedStore(SharedStoreInterface sharedStore) {
 		this.sharedPersistenceStore = sharedStore;
 	}
-
-	public void clearSharedStore(SharedStoreInterface sharedStore) {
-		this.sharedPersistenceStore = sharedStore;
-	}
-
+	
 	@SuppressWarnings("unchecked")
 	synchronized void init() {
 		if ( this.sharedPersistenceStore == null ) {
@@ -129,17 +115,19 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			if ( tribeManager.getIsChief() ) {
 				sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
 			}
+			inMemoryCache = new SharedTribalMap<>(MEMORY_CACHE_ID);
+			accessFrequency = new SharedTribalMap<>(FREQUENCE_MAP_ID);
+			inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
+			accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
+			logger.info("============================================================================");
+			logger.info("inMemoryCache = {}", inMemoryCache);
+			logger.info("accessFrequency = {}", accessFrequency);
+			logger.info("sharedPersistenceStore = {}", sharedPersistenceStore);
+			logger.info("============================================================================");
+			// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
+			// cached scripts accordingly.
+			NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
 		}
-		inMemoryCache = SharedTribalMap.registerMap(new SharedTribalMap<>(MEMORY_CACHE_ID), false);
-		accessFrequency = SharedTribalMap.registerMap(new SharedTribalMap<>(FREQUENCE_MAP_ID), false);
-		logger.info("============================================================================");
-		logger.info("inMemoryCache = {}", inMemoryCache);
-		logger.info("accessFrequency = {}", accessFrequency);
-		logger.info("sharedPersistenceStore = {}", sharedPersistenceStore);
-		logger.info("============================================================================");
-		// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
-		// cached scripts accordingly.
-		NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
 	}
     
 
@@ -311,9 +299,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	public boolean isCached(String service, String serviceKeyValues) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		final SharedTribalMap<String, PersistentEntry> inMemoryCache2 = pm.inMemoryCache;
-		if(pm!=this) {
-			System.err.println("whoops");
-		}
 		Iterator<PersistentEntry> iter = inMemoryCache2.values().iterator();
 		while ( iter.hasNext() ) {
 			PersistentEntry pe = iter.next();
@@ -399,10 +384,14 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			//AuditLog.log("PERSISTENCEMANAGER", "Received NavajoCompileScriptEvent for " + ncse.getWebservice(), Level.INFO);
 			// No idea what this is about. Todo remove?
 			PersistenceManagerImpl p;
-			p = new PersistenceManagerImpl();
-			p.setTribeManager(this.tribeManager);
-			p.setKey(ncse.getWebservice());
-			p.setDoClear(true);
+			try {
+				p = new PersistenceManagerImpl(this.tribeManager);
+				p.setKey(ncse.getWebservice());
+				p.setDoClear(true);
+			} catch (InstantiationException e) {
+				AuditLog.log("PERSISTENCEMANAGER", e.getMessage(), Level.SEVERE);
+			}
+			
 		}
 	}
 

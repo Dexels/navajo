@@ -42,12 +42,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 	private ConfigurationAdmin myConfigurationAdmin;
-	private PersistenceManager persistenceManager;
+	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
 	private SharedStoreInterface sharedStore;
 	private TribeManagerInterface tribeManager;
-//	private TribeManagerInterface tribeManager;
 	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
@@ -86,14 +85,14 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		this.myConfigurationAdmin = null;
 	}
 	
-	public void setPersistenceManager(PersistenceManager persistenceManager) {
-		this.persistenceManager = persistenceManager;
-	}
-
-	
 	public void activate(Map<String,Object> props, BundleContext bundleContext) throws InstantiationException {
 			this.properties = props;
 			this.bundleContext = bundleContext;
+			this.persistenceManager = new PersistenceManagerImpl(this.tribeManager);
+			if(bundleContext==null) {
+				// just for non-osgi, to be sure
+				this.persistenceManager.setSharedStore(getSharedStore());
+			}
 	}
 
 	public void deactivate() {
@@ -411,7 +410,5 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
     public String getDeployment() {
         return navajoIOConfig.getDeployment();
     }
-
-
 
 }

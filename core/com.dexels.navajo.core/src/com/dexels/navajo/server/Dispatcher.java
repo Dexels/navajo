@@ -917,9 +917,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                             outMessage = useProxy;
                         }
                     } else {
-                        outMessage = dispatch(access);
-
-//                        throw new UnsupportedOperationException("I've removed this code because I assumed it wasn't used any more");
+                        throw new UnsupportedOperationException("I've removed this code because I assumed it wasn't used any more");
                     }
                 }
 

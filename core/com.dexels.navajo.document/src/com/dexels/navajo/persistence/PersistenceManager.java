@@ -54,15 +54,6 @@ public interface PersistenceManager {
     public static final int UNIT_WEEKS = 3;
     public static final int UNIT_MONTHS = 4;
 
-
-//	public void setTribeManager(TribeManagerInterface tmi);
-//	
-//	public void clearTribeManager(TribeManagerInterface tmi);
-//	
-//	public void setSharedStore(SharedStoreInterface sharedStore);
-//
-//	public void clearSharedStore(SharedStoreInterface sharedStore);
-
     /**
      * Get the persistent object and pass the constructor that is responsible for its creation.
      */

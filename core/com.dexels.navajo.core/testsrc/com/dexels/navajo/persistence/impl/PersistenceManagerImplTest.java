@@ -57,8 +57,7 @@ public class PersistenceManagerImplTest {
 		injectedDispatcher.setUseAuthorisation(false);
 		TribeManagerFactory.setInstance(tribeManager);
 		si = new SharedMemoryStore();
-		pi = new PersistenceManagerImpl();
-		pi.setTribeManager(tribeManager);
+		pi = new PersistenceManagerImpl(tribeManager);
 		pi.init();
 		navajoConfig.setMyPersistenceManager(pi);
 		pi.setSharedStore(si);

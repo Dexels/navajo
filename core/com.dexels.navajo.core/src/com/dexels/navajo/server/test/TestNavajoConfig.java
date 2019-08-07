@@ -198,11 +198,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
         return false;
     }
 
-	@Override
-	public void setPersistenceManager(PersistenceManager manager) {
-		this.myPersistenceManager = manager;
-	}
-
 
 
 }
