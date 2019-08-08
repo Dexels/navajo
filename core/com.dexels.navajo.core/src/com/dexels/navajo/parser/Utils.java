@@ -84,6 +84,27 @@ public final class Utils extends Exception {
 			return false;
 	}
 
+	public static final <T extends Comparable<T>> boolean compare(T a, T b, String c) {
+
+		int compareResult = a.compareTo(b);
+		
+		if (c.equals(">"))
+			return compareResult > 0;
+		else if (c.equals("<"))
+			return compareResult < 0;
+		else if (c.equals("=="))
+			return compareResult == 0;
+		else if (c.equals("!="))
+			return compareResult != 0;
+		else if (c.equals(">="))
+			return compareResult >= 0;
+		else if (c.equals("<="))
+			return compareResult <= 0;
+		else
+			return false;
+	}
+
+
 	public static final boolean compareDates(Object a, Object b, String compareChar) {
 		if (b instanceof Integer) {
 			int offset = ((Integer) b).intValue();
