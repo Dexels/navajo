@@ -17,7 +17,7 @@ jobs:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
       - run: |
           cd setup/com.dexels.target
-          mvn -s ../../.circleci/conf/settings.xml install 
+          mvn -s ../../.circleci/conf/settings.xml -B install 
           cd ../..
       - save_cache:
           paths:
@@ -25,7 +25,7 @@ jobs:
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # run tests
-      - run: mvn -s .circleci/conf/settings.xml -T 1.5C deploy -Denvironment=release
+      - run: mvn -B -s .circleci/conf/settings.xml -T 1.5C deploy -Denvironment=release
       - run: |
           cd ~
           du -hs .m2
