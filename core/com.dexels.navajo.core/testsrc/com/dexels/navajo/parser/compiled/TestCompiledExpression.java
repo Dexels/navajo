@@ -322,6 +322,7 @@ public class TestCompiledExpression {
         Assert.assertEquals("aap,noot", ss.apply().value);
 	}
 	
+	//	Unicode(hex-string)
 	@Test
 	public void testUnicodeExpression() throws Exception {
 		Operand result = Expression.evaluate("'耀'", null,null,null);
@@ -333,6 +334,138 @@ public class TestCompiledExpression {
 		System.err.println("Result:"+result.value);
 	}	
 	
+	@Test
+	public void testDoubleComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" 1.0 < 1.1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1.0 < 1.0 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 <= 1.1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1.0 <= 1.0 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1.0 > 1.1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 > 1.0 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 >= 1.1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 >= 1.0 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
 	
-//	Unicode(hex-string)
+	@Test
+	public void testDoubleIntegerComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" 0.9 < 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1.0 < 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 0.9 <= 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1.0 <= 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 0.9 > 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 > 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 0.9 >= 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1.0 >= 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
+	
+	@Test
+	public void testIntegerDoubleComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" 1 < 1.1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 < 1.0 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 <= 1.1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 <= 1.0 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 > 1.1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 > 1.0 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 >= 1.1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 >= 1.0 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
+	
+	@Test
+	public void testIntegerComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" 1 < 2 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 < 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 <= 2 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 <= 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" 1 > 2 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 > 1 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 >= 2 ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" 1 >= 1 ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
+	
+	@Test
+	public void testStringComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" '010' < '020' ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" '010' < '010' ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" '010' <= '020' ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" '010' <= '010' ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" '010' > '020' ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" '010' > '010' ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" '010' >= '020' ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" '010' >= '010' ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
+	
+	// Missing date comparison where the right hand operand is not a date
+	@Test
+	public void testDateComparison()
+	{
+		Operand result; 
+		result = Expression.evaluate(" TODAY < ( TODAY + 0#0#1#0#0#0 ) ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" TODAY < TODAY ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" TODAY <= ( TODAY + 0#0#1#0#0#0 ) ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" TODAY <= TODAY ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+		result = Expression.evaluate(" TODAY > ( TODAY + 0#0#1#0#0#0 ) ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" TODAY > TODAY ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" TODAY >= ( TODAY + 0#0#1#0#0#0 ) ", null, null, null);
+		Assert.assertFalse((boolean) result.value);
+		result = Expression.evaluate(" TODAY >= TODAY ", null, null, null);
+		Assert.assertTrue((boolean) result.value);
+	}
+
+	// Missing testMoneyComparison,  testPercentageComparison and testClockTimeComparison as I don't know how to express these types without using functions and functions are not available here
 }

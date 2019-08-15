@@ -17,8 +17,8 @@ import com.dexels.navajo.document.NavajoException;
 
 public class PersistenceManagerFactory {
 
-	static PersistenceManager instance;
-	static final Object object = new Object();
+	static volatile PersistenceManager instance;
+	final static Object object = new Object();
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(PersistenceManagerFactory.class);
@@ -52,7 +52,7 @@ public class PersistenceManagerFactory {
 			if ( instance == null ) {
 				try {
 					instance = (PersistenceManager) Class.forName(className).getDeclaredConstructor().newInstance();
-
+					
 				} catch (Exception e) {
 					logger.info("Could NOT FIND PersistenceManager: {}, trying SimplePersistenceManagerImpl..",className);
 					try {
