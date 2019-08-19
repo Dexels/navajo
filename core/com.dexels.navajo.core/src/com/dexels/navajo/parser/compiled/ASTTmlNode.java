@@ -69,7 +69,7 @@ final class ASTTmlNode extends SimpleNode {
 				if (parentSel != null) {
 					String dum = text;
 					if (dum.length() > 1 && dum.startsWith("[")) {
-						dum = dum.substring(1, text.length());
+						dum = dum.substring(1, dum.length());
 					}
 					if (dum.equals("name") || selectionOption.equals("name")) {
 						return Operand.ofString(parentSel.getName());
