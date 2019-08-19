@@ -9,6 +9,10 @@ import com.dexels.navajo.document.Selection;
 public class TypeUtils {
 
     public static final String determineNavajoType(Object o) {
+    	return determineNavajoType(o, "unknown");
+    }
+
+    public static final String determineNavajoType(Object o, String defaultType) {
 
         if (o == null) {
             return "";
@@ -53,7 +57,7 @@ public class TypeUtils {
         } else if (o instanceof Property) {
             return "property";
         } else
-            return "unknown";
+            return defaultType;
     }
 
 }
