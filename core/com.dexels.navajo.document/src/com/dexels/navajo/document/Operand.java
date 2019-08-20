@@ -80,6 +80,13 @@ public static Operand ofDynamic(Object o) {
 	return new Operand(o,TypeUtils.determineNavajoType(o));
 }
 
+public static Operand ofDynamic(Object o, String defaultType) {
+	if(o==null) {
+		return NULL;
+	}
+	return new Operand(o,TypeUtils.determineNavajoType(o, defaultType));
+}
+
 public static Operand ofList(List<? extends Object> result) {
 	return new Operand(result,Property.LIST_PROPERTY);
 }

@@ -8,6 +8,7 @@
  */
 package com.dexels.navajo.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -132,10 +133,42 @@ public final class Expression {
 			String value = "null";
 
 			if (prop != null) {
-				if (prop.getType().equals(Property.STRING_PROPERTY))
+				String type = prop.getType();
+	            if (type.equals(Property.SELECTION_PROPERTY)) {
+	                if (!prop.getCardinality().equals("+")) { // Uni-selection property.
+	                    try {
+	                        List<Selection> list = prop.getAllSelectedSelections();
+
+	                        if (!list.isEmpty()) {
+	                            Selection sel = list.get(0);
+	                            value = sel.getValue();
+	                        } 
+	                    } catch (com.dexels.navajo.document.NavajoException te) {
+	                        throw new TMLExpressionException(te.getMessage());
+	                    }
+	                } else { // Multi-selection property.
+	                    try {
+	                        List<Selection> list = prop.getAllSelectedSelections();
+	                        List<String> selectedValues = new ArrayList<>();
+	                        for (int i = 0; i < list.size(); i++) {
+	                            Selection sel = list.get(i);
+	                            String o = sel.getValue();
+	                            selectedValues.add(o);
+	                        }
+	                        value = String.join(";", selectedValues);
+	                    } catch (NavajoException te) {
+	                        throw new TMLExpressionException(te.getMessage(),te);
+	                    }
+	                }
+	            } 
+	            else if (type.equals(Property.STRING_PROPERTY))
+	            {
 					value = "\"" + prop.getValue() + "\"";
+	            }
 				else
+				{
 					value = prop.getValue();
+				}
 			}
 			result.append("{" + value + "}");
 			clause = clause.substring(end + 1, clause.length());
