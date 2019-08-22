@@ -39,7 +39,7 @@ public ContextExpression interpretToLambda(List<String> problems, String express
 		public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 				 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage)  {
 		      try {
-				return Operand.ofCustom(tipiLink.evaluateExpression(val),"tipi");
+				return Operand.ofDynamic(tipiLink.evaluateExpression(val),"tipi");
 			} catch (Exception e) {
 				throw new TMLExpressionException("Error evaluating tipiLink: "+val, e);
 			}

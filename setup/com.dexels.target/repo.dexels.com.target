@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform" sequenceNumber="2802">
+<locations>
+	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
+		<unit id="org.eclipse.equinox.core.feature.feature.group" version="1.6.0.v20180903-1343"/>
+		<unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.15.0.v20180827-1536"/>
+		<unit id="org.eclipse.equinox.server.core.feature.group" version="1.7.0.v20180903-1546"/>
+		<unit id="org.eclipse.equinox.sdk.feature.group" version="3.15.0.v20180904-1442"/>
+		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
+	</location>
+	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.188"/>
+		<unit id="dexels-navajo-target.feature.group" version="3.3.188"/>
+	</location>
+</locations>
+<includeBundles>
+<plugin id="com.dexels.appstore.ant"/>
+<plugin id="com.dexels.appstore.core"/>
+<plugin id="com.dexels.appstore.server"/>
+<plugin id="com.dexels.hazelcast"/>
+<plugin id="com.dexels.immutable.api"/>
+<plugin id="com.dexels.immutable.impl"/>
+<plugin id="com.dexels.index.api"/>
+<plugin id="com.dexels.kafka.impl.rx2"/>
+<plugin id="com.dexels.log4j.server"/>
+<plugin id="com.dexels.logback.redis"/>
+<plugin id="com.dexels.oauth.api"/>
+<plugin id="com.dexels.oauth.impl"/>
+<plugin id="com.dexels.oauth.web"/>
+<plugin id="com.dexels.osgi.bundlesync"/>
+<plugin id="com.dexels.pubsub.rx2.api"/>
+<plugin id="com.dexels.replication.api"/>
+<plugin id="com.dexels.replication.impl"/>
+<plugin id="com.dexels.replication.impl.json"/>
+<plugin id="com.dexels.replication.impl.protobuf"/>
+<plugin id="com.dexels.repository.api"/>
+<plugin id="com.dexels.repository.file"/>
+<plugin id="com.dexels.repository.git"/>
+<plugin id="com.dexels.repository.git.api"/>
+<plugin id="com.dexels.resourcebundle"/>
+<plugin id="com.dexels.server.mgmt.api"/>
+<plugin id="com.dexels.server.mgmt.impl"/>
+<plugin id="com.dexels.sharedconfigstore"/>
+<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
+<plugin id="com.fasterxml.jackson.core.jackson-core"/>
+<plugin id="com.fasterxml.jackson.core.jackson-databind"/>
+<plugin id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml"/>
+<plugin id="com.google.guava"/>
+<plugin id="com.google.protobuf"/>
+<plugin id="com.hazelcast"/>
+<plugin id="com.jcraft.jsch"/>
+<plugin id="com.mysql.jdbc"/>
+<plugin id="com.nimbusds.nimbus-jose-jwt"/>
+<plugin id="com.oracle.jdbc.driver"/>
+<plugin id="com.vaadin"/>
+<plugin id="io.reactivex.rxjava2.rxjava"/>
+<plugin id="json"/>
+<plugin id="lz4-java"/>
+<plugin id="net.minidev.accessors-smart"/>
+<plugin id="net.minidev.json-smart"/>
+<plugin id="org.apache.aries.spifly.dynamic.bundle"/>
+<plugin id="org.apache.aries.util"/>
+<plugin id="org.apache.commons.codec"/>
+<plugin id="org.apache.commons.email"/>
+<plugin id="org.apache.commons.fileupload"/>
+<plugin id="org.apache.commons.io"/>
+<plugin id="org.apache.commons.logging"/>
+<plugin id="org.apache.commons.net"/>
+<plugin id="org.apache.commons.pool"/>
+<plugin id="org.apache.felix.configadmin"/>
+<plugin id="org.apache.felix.eventadmin"/>
+<plugin id="org.apache.felix.fileinstall"/>
+<plugin id="org.apache.felix.framework"/>
+<plugin id="org.apache.felix.gogo.command"/>
+<plugin id="org.apache.felix.gogo.runtime"/>
+<plugin id="org.apache.felix.gogo.shell"/>
+<plugin id="org.apache.felix.inventory"/>
+<plugin id="org.apache.felix.metatype"/>
+<plugin id="org.apache.felix.webconsole"/>
+<plugin id="org.apache.felix.webconsole.plugins.ds"/>
+<plugin id="org.apache.felix.webconsole.plugins.event"/>
+<plugin id="org.apache.felix.webconsole.plugins.memoryusage"/>
+<plugin id="org.apache.felix.webconsole.plugins.packageadmin"/>
+<plugin id="org.apache.felix.webconsole.plugins.scriptconsole"/>
+<plugin id="org.apache.mina.core"/>
+<plugin id="org.apache.pdfbox"/>
+<plugin id="org.apache.pdfbox.fontbox"/>
+<plugin id="org.apache.pdfbox.jempbox"/>
+<plugin id="org.apache.servicemix.bundles.ant"/>
+<plugin id="org.apache.servicemix.bundles.jcip-annotations"/>
+<plugin id="org.apache.servicemix.bundles.jzlib"/>
+<plugin id="org.apache.sshd.core"/>
+<plugin id="org.apache.xbean.bundleutils"/>
+<plugin id="org.apache.xbean.finder"/>
+<plugin id="org.eclipse.equinox.app"/>
+<plugin id="org.eclipse.equinox.cm"/>
+<plugin id="org.eclipse.equinox.concurrent"/>
+<plugin id="org.eclipse.equinox.console.ssh"/>
+<plugin id="org.eclipse.equinox.coordinator"/>
+<plugin id="org.eclipse.equinox.device"/>
+<plugin id="org.eclipse.equinox.ds"/>
+<plugin id="org.eclipse.equinox.frameworkadmin"/>
+<plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
+<plugin id="org.eclipse.equinox.io"/>
+<plugin id="org.eclipse.equinox.ip"/>
+<plugin id="org.eclipse.equinox.launcher"/>
+<plugin id="org.eclipse.equinox.metatype"/>
+<plugin id="org.eclipse.equinox.registry"/>
+<plugin id="org.eclipse.equinox.security"/>
+<plugin id="org.eclipse.equinox.security.macosx"/>
+<plugin id="org.eclipse.equinox.simpleconfigurator"/>
+<plugin id="org.eclipse.equinox.supplement"/>
+<plugin id="org.eclipse.equinox.util"/>
+<plugin id="org.eclipse.jgit"/>
+<plugin id="org.eclipse.jgit.archive"/>
+<plugin id="org.eclipse.jgit.http.apache"/>
+<plugin id="org.eclipse.jgit.lfs"/>
+<plugin id="org.eclipse.jgit.lfs.server"/>
+<plugin id="org.eclipse.osgi"/>
+<plugin id="org.eclipse.osgi.services"/>
+<plugin id="org.eclipse.osgi.util"/>
+<plugin id="org.mongodb.driver-async"/>
+<plugin id="org.mongodb.driver-reactivestreams"/>
+<plugin id="org.mongodb.mongo-java-driver"/>
+<plugin id="org.ops4j.base.lang"/>
+<plugin id="org.ops4j.pax.logging.pax-logging-api"/>
+<plugin id="org.ops4j.pax.logging.pax-logging-service"/>
+<plugin id="org.ops4j.pax.swissbox.core"/>
+<plugin id="org.ops4j.pax.swissbox.lifecycle"/>
+<plugin id="org.ops4j.pax.swissbox.optional.jcl"/>
+<plugin id="org.ops4j.pax.swissbox.tracker"/>
+<plugin id="org.ops4j.pax.url.mvn"/>
+<plugin id="org.ops4j.pax.web.pax-web-api"/>
+<plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
+<plugin id="org.ops4j.pax.web.pax-web-jetty"/>
+<plugin id="org.ops4j.pax.web.pax-web-runtime"/>
+<plugin id="org.ops4j.pax.web.pax-web-spi"/>
+<plugin id="org.reactivestreams.reactive-streams"/>
+<plugin id="org.scala-lang.modules.scala-xml"/>
+<plugin id="org.scala-lang.scala-compiler"/>
+<plugin id="org.scala-lang.scala-library"/>
+<plugin id="org.scala-lang.scala-reflect"/>
+<plugin id="org.yaml.snakeyaml"/>
+<plugin id="redis.clients.jedis"/>
+<plugin id="slf4j.api"/>
+<plugin id="stax2-api"/>
+	<plugin id="org.postgresql.jdbc42"/>
+	<plugin id="javax.transaction-api"/>
+	<plugin id="org.apache.commons.dbcp"/>
+	<plugin id="javax.enterprise.cdi-api"/>
+	<plugin id="javax.interceptor-api"/>
+	<plugin id="javax.servlet"/>
+	<plugin id="javax.el-api"/>
+	<plugin id="org.objectweb.asm.all"/>
+	<plugin id="org.objectweb.asm.commons"/>
+	<plugin id="org.objectweb.asm.tree"/>
+	<plugin id="org.objectweb.asm.tree.analysis"/>
+	<plugin id="org.objectweb.asm.util"/>
+	<plugin id="javax.annotation-api"/>
+	<plugin id="jaxb-api"/>
+	<plugin id="org.apache.commons.lang3"/>
+	<plugin id="org.apache.commons.lang"/>
+	<plugin id="org.apache.servicemix.bundles.javax-inject"/>
+	<plugin id="javax.xml.soap-api"/>
+	<plugin id="org.slf4j.api"/>
+	<plugin id="com.jcraft.jzlib"/>
+	<plugin id="com.sun.activation.javax.activation"/>
+	<plugin id="com.fasterxml.aalto-xml"/>
+	<plugin id="com.sun.mail.javax.mail"/>
+	<plugin id="org.apache.servicemix.bundles.junit"/>
+	<plugin id="bcpg"/>
+	<plugin id="bcpkix"/>
+	<plugin id="bcprov"/>
+	<plugin id="org.apache.servicemix.bundles.jsch"/>
+	<plugin id="org.eclipse.jetty.annotations"/>
+	<plugin id="org.eclipse.jetty.client"/>
+	<plugin id="org.eclipse.jetty.jndi"/>
+	<plugin id="org.eclipse.jetty.plus"/>
+	<plugin id="org.eclipse.jetty.proxy"/>
+	<plugin id="org.eclipse.jetty.servlets"/>
+	<plugin id="org.eclipse.jetty.websocket.api"/>
+	<plugin id="org.eclipse.jetty.websocket.client"/>
+	<plugin id="org.eclipse.jetty.websocket.common"/>
+	<plugin id="org.eclipse.jetty.websocket.javax.websocket"/>
+	<plugin id="org.eclipse.jetty.websocket.javax.websocket.server"/>
+	<plugin id="org.eclipse.jetty.websocket.server"/>
+	<plugin id="org.eclipse.jetty.websocket.servlet"/>
+	<plugin id="org.eclipse.jetty.xml"/>
+	<plugin id="org.mongodb.bson"/>
+	<plugin id="org.eclipse.jetty.reactive.client"/>
+	<plugin id="org.apache.commons.commons-compress"/>
+	<plugin id="org.objectweb.asm"/>
+	<plugin id="org.apache.httpcomponents.httpasyncclient"/>
+	<plugin id="org.apache.httpcomponents.httpcore"/>
+	<plugin id="org.apache.httpcomponents.httpclient"/>
+	<plugin id="com.googlecode.javaewah.JavaEWAH"/>
+	<plugin id="com.ibm.icu"/>
+	<plugin id="org.osgi.service.jdbc"/>
+	<plugin id="org.eclipse.jetty.webapp"/>
+	<plugin id="com.dexels.kafka.streams"/>
+	<plugin id="com.dexels.kafka.streams.api"/>
+	<plugin id="org.apache.felix.scr" version="2.1.18"/>
+	<plugin id="com.dexels.kafka.streams.sink.mongo"/>
+	<plugin id="org.apache.commons.text"/>
+	<plugin id="org.apache.commons.pool2"/>
+	<plugin id="org.eclipse.jetty.continuation" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.io" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.http" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.security" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.server" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.servlet" version="9.4.17.v20190418"/>
+	<plugin id="org.eclipse.jetty.util" version="9.4.17.v20190418"/>
+	<plugin id="com.dexels.navajo.webconsole.branding"/>
+	<plugin id="com.dexels.oauth.generic.web"/>
+	<plugin id="junit"/>
+	<plugin id="org.apache.httpcomponents.fluent-hc"/>
+	<plugin id="org.apache.httpcomponents.httpclient-cache"/>
+	<plugin id="org.apache.httpcomponents.httpcore-nio"/>
+	<plugin id="org.apache.httpcomponents.httpmime"/>
+	<plugin id="org.osgi.util.promise"/>
+	<plugin id="org.osgi.util.function"/>
+	<plugin id="slf4j.simple"/>
+</includeBundles>
+</target>
