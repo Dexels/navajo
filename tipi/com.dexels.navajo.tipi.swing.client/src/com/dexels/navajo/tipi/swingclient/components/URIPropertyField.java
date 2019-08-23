@@ -88,7 +88,7 @@ public class URIPropertyField extends TextPropertyField {
 
 	private boolean isURI() {
 		String text = getText();
-		if (text.startsWith("http://") || text.startsWith("www.")
+		if (text.startsWith("http://") || text.startsWith("https://") || text.startsWith("www.")
 				|| text.indexOf("@") >= 0) {
 			return true;
 		}
@@ -117,7 +117,7 @@ public class URIPropertyField extends TextPropertyField {
 						url = "mailto:" + url;
 						return url;
 					}
-				} else if (!url.startsWith("http://")) {
+				} else if (!url.startsWith("http://") && !url.startsWith("https://")) {
 					url = "http://" + url;
 					return url;
 				} else {
