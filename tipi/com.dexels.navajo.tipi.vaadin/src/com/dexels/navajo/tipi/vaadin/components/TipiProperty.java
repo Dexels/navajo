@@ -249,10 +249,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			value = new TwinColSelect("caption",property.getAllSelections());
 		} else {
 			if("list".equals(selectiontype)) {
-				value = new ListSelect("",selectionListBridge);
+				value = new ListSelect( "", selectionListBridge );
 				((ListSelect)value).setMultiSelect(true);
 			} else {
-				value = new OptionGroup("",selectionListBridge);
+				value = new OptionGroup( "", selectionListBridge );
 				((OptionGroup)value).setMultiSelect(true);
 			}
 		}
@@ -261,7 +261,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		Collection<Object> selectedCollection = selectionListBridge.getSelectedCollection();
 		t.setValue(selectedCollection);
 		t.setImmediate(true);
-		t.setNullSelectionAllowed(false);
+		t.setNullSelectionAllowed( true );
 		t.addListener(new Property.ValueChangeListener() {
 			
 			private static final long serialVersionUID = 1L;
@@ -323,7 +323,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			});
 			
 //			value = new OptionGroup("Combo:",new SelectionListBridge(property));
-			t.setNullSelectionAllowed(false);
+
+			// Should never be true, but for consistency's sake...
+			t.setNullSelectionAllowed( false );
 			t.setImmediate(true);
 			addPropertyComponent(value);
 			SelectionBridge selected = selectionListBridge.getSelected();
