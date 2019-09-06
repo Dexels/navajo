@@ -280,69 +280,79 @@ public class MessageMapTest {
 		Message array = NavajoFactory.getInstance().createMessage(n, "productArray");
 		n.addMessage(array);
 		array.setType(Message.MSG_TYPE_ARRAY);
-		for ( int i = 0; i < 2; i++ ) {
-			Message c = NavajoFactory.getInstance().createMessage(n, "productArray");
-			
-			c.setIndex(i);
-			c.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
-			
-			array.addElement(c);
-			if ( i % 2 == 0) {
-				
-				
-				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
-				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
-				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 10 )+ "", 0, "", "out");
-				
-				c.addProperty(p1);
-				c.addProperty(p1a);
-				c.addProperty(p2);
-			} else {
-				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
-				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Desktop", 0, "", "out");
-				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 20 )+ "", 0, "", "out");
-				
-				c.addProperty(p1);
-				c.addProperty(p1a);
-				c.addProperty(p2);
-			}
-		}
+		
+		
+		/*Creating the first element of the message array productArray*/
+		Message c1e1 = NavajoFactory.getInstance().createMessage(n, "productArray");
+		c1e1.setIndex(0);
+		c1e1.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+		array.addElement(c1e1);
+		
+		Property c1e1p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+		Property c1e1p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
+		Property c1e1p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (0)+ "", 0, "", "out");
+		
+		c1e1.addProperty(c1e1p1);
+		c1e1.addProperty(c1e1p1a);
+		c1e1.addProperty(c1e1p2);
+		
+		/*Creating the second element of the message array productArray */
+		Message c1e2 = NavajoFactory.getInstance().createMessage(n, "productArray");
+		c1e2.setIndex(1);
+		c1e2.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+		array.addElement(c1e2);
+		
+		Property c1e2p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+		Property c1e2p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Desktop", 0, "", "out");
+		Property c1e2p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (20)+ "", 0, "", "out");
+		
+		c1e2.addProperty(c1e2p1);
+		c1e2.addProperty(c1e2p1a);
+		c1e2.addProperty(c1e2p2);
+		
 		n.write(System.err);
 		
 		
 		/* building message 2 array*/
-		
 		Navajo n2 = NavajoFactory.getInstance().createNavajo();
 		Message array2 = NavajoFactory.getInstance().createMessage(n2, "coreArray");
 		n2.addMessage(array2);
 		array2.setType(Message.MSG_TYPE_ARRAY);
-		for ( int j = 0; j < 2; j++ ) {
-			Message c2 = NavajoFactory.getInstance().createMessage(n2, "coreArray");
-			
-			c2.setIndex(j);
-			c2.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
-			
-			array2.addElement(c2);
-			if ( j % 2 == 0) {
-				
-				
-				Property p1 = NavajoFactory.getInstance().createProperty(n2, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
-				Property p2 = NavajoFactory.getInstance().createProperty(n2, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
-				Property p3 = NavajoFactory.getInstance().createProperty(n2, "Core", Property.STRING_PROPERTY, "I", 0, "", "out");
-				
-				c2.addProperty(p1);
-				c2.addProperty(p2);
-				c2.addProperty(p3);
-			} else {
-				Property p1 = NavajoFactory.getInstance().createProperty(n2, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
-				Property p2 = NavajoFactory.getInstance().createProperty(n2, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
-				Property p3 = NavajoFactory.getInstance().createProperty(n2, "Core", Property.STRING_PROPERTY, "A", 0, "", "out");
-				
-				c2.addProperty(p1);
-				c2.addProperty(p2);
-				c2.addProperty(p3);
-			}
-		}
+		
+		
+		/*Creating the first element of the message array coreArray */
+		Message c2e1 = NavajoFactory.getInstance().createMessage(n2, "coreArray");
+		
+		c2e1.setIndex(0);
+		c2e1.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+		
+		array2.addElement(c2e1);
+		
+		Property c2e1p1 = NavajoFactory.getInstance().createProperty(n2, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+		Property c2e1p2 = NavajoFactory.getInstance().createProperty(n2, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
+		Property c2e1p3 = NavajoFactory.getInstance().createProperty(n2, "Core", Property.STRING_PROPERTY, "I", 0, "", "out");
+		
+		c2e1.addProperty(c2e1p1);
+		c2e1.addProperty(c2e1p2);
+		c2e1.addProperty(c2e1p3);
+		
+		/*Creating the second element of the message array coreArray */	
+		Message c2e2 = NavajoFactory.getInstance().createMessage(n2, "coreArray");
+		
+		c2e2.setIndex(0);
+		c2e2.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+		
+		array2.addElement(c2e2);
+		
+		Property c2e2p1 = NavajoFactory.getInstance().createProperty(n2, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+		Property c2e2p2 = NavajoFactory.getInstance().createProperty(n2, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
+		Property c2e2p3 = NavajoFactory.getInstance().createProperty(n2, "Core", Property.STRING_PROPERTY, "A", 0, "", "out");
+		
+		c2e2.addProperty(c2e2p1);
+		c2e2.addProperty(c2e2p2);
+		c2e2.addProperty(c2e2p3);
+		
+		
 		n2.write(System.err);
 		
 		
