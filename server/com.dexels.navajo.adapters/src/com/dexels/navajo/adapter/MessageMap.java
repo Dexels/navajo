@@ -264,55 +264,6 @@ public class MessageMap implements Mappable {
 			    	isSingleMessage = true;
 			    	
 			    	
-			    	
-			    	//msg2pointer = msg2;  //v
-			
-			    	// for checking join conditions if are duplicates
-			    	/*
-			    	Object [] joinValues2 = new Object[joinConditions.size()];
-					for (int p = 0; p < joinConditions.size(); p++ ) {
-						JoinCondition jc = joinConditions.get(p);
-						Property prop = msg2pointer.getProperty(jc.property2);
-						if ( prop == null ) {
-							throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property2);
-						}
-						joinValues2[p] = prop.getValue();
-					}
-					// Compare joinValues...
-					boolean equal = true;
-					for (int jv = 0; jv < joinConditions.size(); jv++) {
-						if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
-							equal = false;
-						} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {
-							equal = false;
-						} else if ( joinValues1[jv] != null && joinValues2[jv] == null ) {
-							equal = false;
-						}
-					}
-					
-					if ( joinExpression != null ) {
-						// Evaluate joinExpression.
-						try {
-							Operand ro = Expression.evaluate(joinExpression.toString(), myAccess.getInDoc(), myAccess.getCompiledScript().getCurrentMap(), myAccess.getCurrentInMessage());
-							equal = (Boolean) ro.value;
-						} catch (Exception e) {
-							throw new UserException(-1, "Exception joining messages: " + e.getMessage(), e);
-						}
-					}
-
-					if ( equal ) {
-						Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
-						// Check for duplicate property names. If found, rename to _1 _2 respectively
-						// DO NOT, CAN LEAD TO STRANGE BEHAVIOR: renameDuplicates(msg1pointer, msg2pointer);
-						newMsg.merge(msg1pointer);
-						newMsg.merge(msg2pointer);
-						ResultMessage rm = new ResultMessage();
-						rm.setMessage(definitionMsg1, newMsg, this.suppressProperties);
-						resultingMessage.add(rm);
-						foundJoinMessage = true;
-					}
-					*/
-			    	
 			    } // ========== // v SIMPLE MESSAGE end if
 			    else { // ==========
 
