@@ -750,6 +750,45 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	//method for implementing if-condition --b
+	public String blockNode(int ident, Element n, String className,
+			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
+				
+		StringBuilder result = new StringBuilder();
+
+		String condition = n.getAttribute("condition");
+
+		condition = (condition == null) ? "" : condition;
+		
+		boolean conditionClause = false;
+
+		if (!condition.equals("")) {
+			conditionClause = true;
+			result.append(printIdent(ident)
+					+ "if (Condition.evaluate("
+					+ replaceQuotes(condition)
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
+			ident += 2;
+		}
+
+//		Element nextElt = getNextElement(n);
+
+		NodeList children = n.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				if (children.item(i) instanceof Element) {
+					result.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
+				}
+			}
+		
+			if (conditionClause) {
+				ident -= 2;
+				result.append(printIdent(ident) + "} // EOF message condition \n");
+			}
+	
+			return result.toString();
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	public String messageNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws MappingException, ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException {
@@ -3122,6 +3161,8 @@ public class TslCompiler {
 			methodBuffer.append(printIdent(ident) +"}\n");
 
 			methodClipboard.add(methodBuffer);
+		}else if (n.getNodeName().equals("block")) {
+			result.append(blockNode(ident, (Element) n, className, objectName, deps, tenant));
 		}
 
 		return result.toString();

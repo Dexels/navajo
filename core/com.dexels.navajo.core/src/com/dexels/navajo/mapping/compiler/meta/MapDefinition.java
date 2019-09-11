@@ -314,6 +314,7 @@ public class MapDefinition {
 					    child.getName().equals("operations") ||
 					    child.getName().equals("operation") ||
 					    child.getName().equals("synchronized") ||
+					    child.getName().equals("block") ||
 					    child.getName().equals("finally") ||
 					    child.getName().equals("check") ) ) {
 				throw new MetaCompileException(filename, child, "Unknown tag/method <" + child.getName() + "/> encountered");
