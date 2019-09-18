@@ -204,8 +204,8 @@
 		<unit id="slf4j.api" version="1.7.28"/>
 		<unit id="slf4j.simple" version="1.7.28"/>
 		<unit id="stax2-api" version="4.2.0"/>
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.283"/>
-		<unit id="dexels-navajo-target.feature.group" version="3.3.283"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.286"/>
+		<unit id="dexels-navajo-target.feature.group" version="3.3.286"/>
 	</location>
 </locations>
 </target>
