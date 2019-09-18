@@ -81,6 +81,7 @@ public class AddDependenciesToPom extends Task {
 		XMLElement deps = xe.getChildByTagName("dependencies");
 		String[] lines = bootrepo.split(",");
 		for (String line : lines) {
+			super.log("Adding url: "+line);
 			String[] proto = line.split(":");
 			if(!proto[0].equals("mvn")) {
 				throw new IllegalArgumentException("Only mvn url are supported, not: "+proto[0]);
