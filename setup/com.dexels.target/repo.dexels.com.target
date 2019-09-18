@@ -42,7 +42,7 @@
 		<unit id="com.dexels.replication.impl.protobuf" version="4.1.1"/>
 		<unit id="com.dexels.repository.api" version="10.0.3"/>
 		<unit id="com.dexels.repository.file" version="1.0.38"/>
-		<unit id="com.dexels.repository.git" version="4.0.44"/>
+		<unit id="com.dexels.repository.git" version="4.0.45"/>
 		<unit id="com.dexels.repository.git.api" version="1.2.10"/>
 		<unit id="com.dexels.resourcebundle" version="2.0.3"/>
 		<unit id="com.dexels.server.mgmt.api" version="1.0.0.201606031246"/>
