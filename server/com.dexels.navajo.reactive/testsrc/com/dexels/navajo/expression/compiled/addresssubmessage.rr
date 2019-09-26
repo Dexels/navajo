@@ -1,5 +1,5 @@
 single()
 	->set(sub/prop1='prop1value')
 	->set(sub/prop2='prop2value')
-	->set(bla=[sub/])	
+	->set(bla=[sub/])
 	->tml(messageName='Test',isArray=false)

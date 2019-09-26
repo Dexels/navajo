@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.DefaultTribeManager;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
@@ -67,6 +69,7 @@ public class SharedStoreInterfaceTest {
     public SharedStoreInterfaceTest()throws Exception  {
 		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
+		TribeManagerFactory.setInstance(new DefaultTribeManager());
         si = SharedStoreFactory.getInstance();
     }
     

@@ -323,12 +323,6 @@
       </values>
    </tipiclass>
 
-   <!-- This is not a tipi component. Need to look into this one. -->
-   <tipiclass addtocontainer="true" deprecated="true" childcount="0" class="TipiSwingErrorHandler" layoutmanager="false" module="abstract" name="error"
-      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi">
-      <description>This component is not used in its current form</description>
-   </tipiclass>
-
    <tipiclass addtocontainer="true" childcount="0" implements="basecomponent,datacomponent,swingcomponent,dragdrop" class="TipiTable" layoutmanager="false" module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi" customstructure="true">
       <description>

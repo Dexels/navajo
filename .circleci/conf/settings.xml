@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<activeProfiles>
+		<activeProfile>dexels</activeProfile>
+	</activeProfiles>
+	<servers>
+		<server>
+			<id>http://*.dexels.com</id>
+			<username>deployment</username>
+			<password>${env.DEPLOYPASS}</password>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+		</server>
+		<server>
+			<id>dexels</id>
+			<username>deployment</username>
+			<password>${env.DEPLOYPASS}</password>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+		</server>
+                <server>
+                        <id>everywear_release</id>
+                        <username>deployment</username>
+                        <password>${env.DEPLOYPASS}</password>
+                        <configuration>
+                                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
+                        </configuration>
+                </server>
+                <server>
+                        <id>everywear_snapshot</id>
+                        <username>deployment</username>
+                        <password>${env.DEPLOYPASS}</password>
+                        <configuration>
+                                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
+                        </configuration>
+                </server>
+		<server>
+			<id>dexels_snap</id>
+			<username>deployment</username>
+			<password>${env.DEPLOYPASS}</password>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+		</server>
+		<server>
+			<id>dexels_oh_snap</id>
+			<username>deployment</username>
+			<password>${env.DEPLOYPASS}</password>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+		</server>
+		<server>
+			<id>dexels_test</id>
+			<username>deployment</username>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+			<password>${env.DEPLOYPASS}</password>
+		</server>
+		<server>
+			<id>dexels_snap_test</id>
+			<username>deployment</username>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+			<password>${env.DEPLOYPASS}</password>
+		</server>
+		<server>
+			<id>dexels_thirdparty</id>
+			<username>deployment</username>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+			<password>${env.DEPLOYPASS}</password>
+		</server>
+		<server>
+			<id>dexels_source</id>
+			<username>deployment</username>
+			<configuration>
+				<timeout>120000</timeout> <!-- your timeout in milliseconds -->
+			</configuration>
+			<password>${env.SOURCEDEPLOYPASS}</password>
+		</server>
+	</servers>
+	<profiles>
+		<profile>
+			<id>dexels</id>
+			<properties>
+				<storepass>${env.SIGNPASS}</storepass>
+			</properties>
+		</profile>
+	</profiles>
+</settings>

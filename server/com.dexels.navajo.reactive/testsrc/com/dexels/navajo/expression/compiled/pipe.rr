@@ -1,4 +1,3 @@
 single(count=5,debug=true)
 	->set(number=[@index])
-	->pipe(service='input',debug=true)
-	->tml(messageName='Result',isArray=true)
+	->pipe(service='pipeinput',debug=true)

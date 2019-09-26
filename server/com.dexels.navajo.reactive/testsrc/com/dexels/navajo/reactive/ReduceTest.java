@@ -1,6 +1,8 @@
 package com.dexels.navajo.reactive;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
@@ -14,8 +16,10 @@ import io.reactivex.functions.BiFunction;
 
 public class ReduceTest {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(ReduceTest.class);
+
 	public ReduceTest() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public ImmutableMessage createMessage(int suffix) {
@@ -31,12 +35,7 @@ public class ReduceTest {
 		Flowable<DataItem> input = Flowable.just(createMessage(1), createMessage(2),createMessage(3)).map(DataItem::of);
 
 		DataItem empty = DataItem.of(ImmutableFactory.empty());
-		BiFunction<DataItem, DataItem, DataItem> reducer = (acc,i)->{
-			return DataItem.of(acc.message().withAddedSubMessage("names", i.message()));
-		};
-		
-		input.scan(empty, reducer).blockingForEach(e->{
-			System.err.println("> "+ImmutableFactory.getInstance().describe(e.message()));
-		});
+		BiFunction<DataItem, DataItem, DataItem> reducer = (acc,i)->DataItem.of(acc.message().withAddedSubMessage("names", i.message()));
+		input.scan(empty, reducer).blockingForEach(e->logger.info("> {}",ImmutableFactory.getInstance().describe(e.message())));
 	}
 }

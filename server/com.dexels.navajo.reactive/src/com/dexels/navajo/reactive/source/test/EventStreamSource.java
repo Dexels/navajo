@@ -32,19 +32,15 @@ public class EventStreamSource implements ReactiveSource {
 	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,
 			ImmutableMessage paramMessage) {
 
-//	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current) {
 		ReactiveResolvedParameters parameters = this.parameters.resolve(context, current, ImmutableFactory.empty(), metadata);
 		Optional<String> classpath = parameters.optionalString("classpath");
 		if(classpath.isPresent()) { // TODO other sources
 			InputStream is = getClass().getClassLoader().getResourceAsStream(classpath.get());
-			Flowable<DataItem> flow = StreamDocument.dataFromInputStream(is)
+			return StreamDocument.dataFromInputStream(is)
 					.lift(XML.parseFlowable(10))
 					.concatMap(e->e)
 					.lift(StreamDocument.parse())
-//					.concatMap(e->e)
 					.map(DataItem::ofEventStream);
-			return flow;
-					//			Bytes/ b;
 		}
 		return null;
 	}

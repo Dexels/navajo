@@ -39,10 +39,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public float getAsyncTimeout();
 	public void doClearCache();
 	public void doClearScriptCache();
-	public String getCompilationLanguage();
-
-	public boolean isAsyncEnabled();
-	public boolean isIntegrityWorkerEnabled();
 	public boolean isLockManagerEnabled();
 
 	/**

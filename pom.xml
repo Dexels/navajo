@@ -20,11 +20,14 @@
 		<module>scala/</module>
 		<module>example/</module>
 		<module>setup/com.dexels.p2</module>
+		<module>setup/com.dexels.vaadin.p2</module>
+		<module>setup/com.dexels.streams.p2</module>
+		<module>setup/com.dexels.navajo.bridge</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>setup/com.dexels.repository/</relativePath>
 	</parent>
 	

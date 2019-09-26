@@ -15,9 +15,12 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.StreamDocument;
+import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public class StreamScriptContext {
 //    private final Access access;
@@ -163,6 +166,22 @@ public class StreamScriptContext {
 		return inputFlowable;
 	}
 	
+	public Flowable<DataItem> input() {
+		return inputFlowable.orElseGet(()->
+		{
+			Flowable<NavajoStreamEvent> flowable = Single.just(resolvedNavajo())
+				.compose(StreamDocument
+				.domStreamTransformer())
+				.flatMapObservable(r->r)
+//				.map(e->DataItem.of((NavajoStreamEvent)e))
+				.toFlowable(BackpressureStrategy.BUFFER);
+			
+			return Flowable.just(DataItem.ofEventStream(flowable));
+		}
+			);
+	}
+	
+//	private static Flowable<Flowable>
 	public void cancel() {
 	    
 		if(this.onDispose.isPresent()) {

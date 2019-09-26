@@ -336,6 +336,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return registry.size();
 	}
 	
+	@SuppressWarnings("ucd")
 	public void activate() {
 		setInstance(this);
 		try {

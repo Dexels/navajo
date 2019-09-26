@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -28,7 +29,6 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
-import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 
 import navajocore.Version;
@@ -65,7 +65,6 @@ public class GenericHandler extends ServiceHandler {
     private static final Map<String,NavajoClassSupplier> loadedClasses = new ConcurrentHashMap<>();
 
     private static Object mutex1 = new Object();
-    private static Object mutex2 = new Object();
    
     
 	private static final Logger logger = LoggerFactory
@@ -74,8 +73,9 @@ public class GenericHandler extends ServiceHandler {
     private NavajoConfigInterface tenantConfig;
 
 	protected NavajoConfigInterface navajoConfig;
-    
+
     public GenericHandler() {
+
     }
     
 	@Override
@@ -101,13 +101,6 @@ public class GenericHandler extends ServiceHandler {
     	Class<?> cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
     		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.getDeclaredConstructor().newInstance();
-    		if(cso instanceof GenericScriptEngine) {
-    			GenericScriptEngine gse = (GenericScriptEngine)cso;
-    			gse.setScriptFile(scriptFile);
-    			gse.setScriptName(scriptName);
-    			gse.setAccess(a);
-    			
-    		}
     		cso.setClassLoader(loader);
     		return cso;
     	}
@@ -328,10 +321,10 @@ public class GenericHandler extends ServiceHandler {
     		String pathPrefix = (String) all[0];
     		String serviceName = (String) all[1];
     		File scriptFile = (File) all[2];
-    		String sourceFileName = (String) all[3];
+//    		String sourceFileName = (String) all[3];
     		File sourceFile = (File) all[4];
     		String className = (String) all[5];
-    		File targetFile = (File) all[7];
+//    		File targetFile = (File) all[7];
 
     		if (properties.isCompileScripts()) {
 
@@ -353,7 +346,7 @@ public class GenericHandler extends ServiceHandler {
     										properties.getCompiledScriptPath(),
     										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant, null), false);
     							} catch (SystemException ex) {
-    								Files.delete(sourceFile.toPath());
+    								Files.deleteIfExists(sourceFile.toPath());
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
     								throw ex;
     							}

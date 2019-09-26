@@ -29,19 +29,13 @@ import com.dexels.replication.factory.ReplicationFactory;
 import com.dexels.replication.impl.json.JSONReplicationMessageParserImpl;
 
 public class TestSetup {
+	
+	private TestSetup() {} // no instances
 
 	public static ReactiveFinder setup() {
 		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
-//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
-//		File root = new File("testscripts");
-//		env = new ReactiveScriptEnvironment(root);
-//		ReactiveScriptParser reactiveScriptParser = new ReactiveScriptParser();
 		ReactiveFinder finder = new CoreReactiveFinder();
-//		reactiveScriptParser = new ReactiveScriptParser();
-//		reactiveScriptParser.setReactiveFinder(finder);
-//		ReplicationFactory.setInstance(new JSONReplicationMessageParserImpl());
 		Expression.compileExpressions = true;
-//		finder.a
 		finder.addReactiveSourceFactory(new SQLReactiveSourceFactory(),"sql");
 		finder.addReactiveSourceFactory(new SingleSourceFactory(),"single");
 		finder.addReactiveSourceFactory(new InputStreamSourceFactory(),"inputstream");
@@ -58,21 +52,18 @@ public class TestSetup {
 		finder.addReactiveTransformerFactory(new ParseEventStreamFactory(),"streamtoimmutable");
 		finder.addReactiveTransformerFactory(new FlattenEventStreamFactory(),"flatten");
 		finder.addReactiveTransformerFactory(new IntervalTransformerFactory(),"interval");
-//		env.setReactiveScriptParser(reactiveScriptParser);
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 		return finder;
 	}
 	
 	public static StreamScriptContext createContext(String serviceName, Optional<ReactiveScriptRunner> runner) {
-//		Flowable<NavajoStreamEvent> inStream = Observable.just(input).lift(StreamDocument.domStream()).toFlowable(BackpressureStrategy.BUFFER);
-		StreamScriptContext context = new StreamScriptContext("tenant", serviceName
+		return new StreamScriptContext("tenant", serviceName
 				, Optional.of("username")
 				, Optional.of("password")
 				, NavajoFactory.getInstance().createNavajo()
 				, Collections.emptyMap()
 				, Optional.empty()
 				, runner,Collections.emptyList(), Optional.empty(),Optional.empty());
-		return context;
 	}
 	
 }

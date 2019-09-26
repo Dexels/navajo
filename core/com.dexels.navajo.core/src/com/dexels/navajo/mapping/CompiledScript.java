@@ -47,7 +47,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.Access;
@@ -59,7 +58,6 @@ import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
@@ -567,7 +565,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, 
      * .navajo.api.Access)
      */
     @Override
-    public abstract void execute(Access access) throws Exception, NavajoDoneException;
+    public abstract void execute(Access access) throws Exception;
 
     /*
      * (non-Javadoc)

@@ -18,22 +18,12 @@ public class LegacyNavajoIOConfig extends FileNavajoConfig implements NavajoIOCo
 		return DispatcherFactory.getInstance().getNavajoConfig().getRootPath();
 	}
 
-	@Override
-	@Deprecated
-	public String getClassPath() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getClassPath();
-	}
 
 	@Override
 	public String getAdapterPath() {
 		return DispatcherFactory.getInstance().getNavajoConfig().getAdapterPath();
 	}
 
-	@Override
-	@Deprecated
-	public File getJarFolder() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getJarFolder();
-	}
 
 	@Override
 	public String getScriptPath() {

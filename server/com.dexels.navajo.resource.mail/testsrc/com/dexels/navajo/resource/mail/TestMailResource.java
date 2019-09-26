@@ -7,6 +7,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
@@ -18,11 +19,12 @@ import com.dexels.navajo.script.api.UserException;
 
 public class TestMailResource {
 
+	// TODO find unit test smtp server
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MailResourceFactory factory = new MailResourceFactory();
 		ResourceComponent component = new ResourceComponent();
-		Map<String,Object> settings = new HashMap<String, Object>();
+		Map<String,Object> settings = new HashMap<>();
 		settings.put("name", "junit.mail");
 		settings.put("host", "smtp.gmail.com");
 		settings.put("user", "dexels@gmail.com");
@@ -40,11 +42,11 @@ public class TestMailResource {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		MailResourceFactory.getInstance().deactivate();	
 	}
 
-	@Test
+	@Test @Ignore
 	public void testSimple() throws MappableException {
 		ResourceMailAdapter rma = new ResourceMailAdapter();
         try {
@@ -60,7 +62,7 @@ public class TestMailResource {
         
 	}
 
-	@Test
+	@Test @Ignore
     public void testAttach() throws MappableException, UserException {
         ResourceMailAdapter rma = new ResourceMailAdapter();
         try {

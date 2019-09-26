@@ -19,7 +19,7 @@ public class ReactivePipe implements ReactiveSource {
 	public final List<Object> transformers;
 	Optional<String> binaryMime = Optional.empty();
 
-	private final static Logger logger = LoggerFactory.getLogger(ReactivePipe.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReactivePipe.class);
 
 	public ReactivePipe(ReactiveSource source, List<Object> transformers) {
 		this.source = source;
@@ -46,7 +46,8 @@ public class ReactivePipe implements ReactiveSource {
 				
 			} else {
 				current = matchType(last,lastTransformer,current, new ImplicitTransformerMetadata());
-				logger.info("Type checking implicit");
+				
+				logger.info("Type checking implicit, from type: {} to type: {}",last,current);
 				lastTransformer = Optional.of("implicit");
 			}
 			last = Optional.of(current);

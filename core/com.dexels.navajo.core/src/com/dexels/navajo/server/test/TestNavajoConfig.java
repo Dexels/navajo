@@ -5,9 +5,6 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.FileNavajoConfig;
@@ -128,18 +125,9 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return new File(configRoot,"scripts").getAbsolutePath();
 	}
 
-	@Override
-	public boolean isAsyncEnabled() {
-		return false;
-	}
 
 	@Override
 	public boolean isEnableStatisticsRunner() {
-		return false;
-	}
-
-	@Override
-	public boolean isIntegrityWorkerEnabled() {
 		return false;
 	}
 
@@ -170,16 +158,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public File getJarFolder() {
-		return null;
-	}
-
-	@Override
-	public String getClassPath() {
-		return null;
-	}
-
-	@Override
 	public void doClearScriptCache() {
 	}
 
@@ -192,25 +170,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	@Override
 	public int getMaxAccessSetSize() {
 		return 0;
-	}
-
-	public static void main(String [] args) throws Exception {
-		Navajo doc = NavajoFactory.getInstance().createNavajo();
-		Message m = NavajoFactory.getInstance().createMessage(doc, "Input");
-		doc.addMessage(m);
-		doc.write(System.err);
-		TestNavajoConfig tnc = new TestNavajoConfig();
-		tnc.writeConfig("aap.xml", doc);
-		Navajo read = NavajoFactory.getInstance().createNavajo(tnc.getConfig("aap.xml"));
-		read.write(System.err);
-		
-		
-	}
-
-	@Override
-	public String getCompilationLanguage() {
-		
-		return "javascript";
 	}
 
 	@Override

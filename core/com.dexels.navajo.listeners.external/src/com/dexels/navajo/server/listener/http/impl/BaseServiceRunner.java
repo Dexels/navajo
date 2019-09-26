@@ -20,7 +20,6 @@ import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
@@ -150,11 +149,6 @@ public abstract class BaseServiceRunner  implements
 					} else {
 						logger.warn("Aborted: Can't write output!");
 					}
-				} catch (NavajoDoneException e) {
-					// temp catch, to be able to pre
-					continuationFound = true;
-					logger.info("Navajo done in service runner. Thread disconnected...");
-					throw (e);
 				} finally {
 					if (!continuationFound) {
 						// this will be the responsibility of the next thread,
@@ -163,8 +157,6 @@ public abstract class BaseServiceRunner  implements
 					}
 				}
 			}
-		} catch (NavajoDoneException e) {
-			throw (e);
 		} catch (Throwable e) {
 			if (e instanceof FatalException) {
 				FatalException fe = (FatalException) e;
@@ -203,8 +195,6 @@ public abstract class BaseServiceRunner  implements
 		try {
 			this.startedAt = System.currentTimeMillis();
 			execute();
-		} catch (NavajoDoneException e) {
-			logger.info("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
 			getRequest().fail(e);
 		}

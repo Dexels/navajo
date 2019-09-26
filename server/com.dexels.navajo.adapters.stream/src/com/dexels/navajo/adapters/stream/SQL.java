@@ -79,7 +79,7 @@ public class SQL {
 		}
 		GrusProvider instance = GrusProviderFactory.getInstance();
 		DataSource source = instance.getInstanceDataSource(tenant, dataSourceName);
-		return Optional.of(source);
+		return Optional.ofNullable(source);
 	}
 	
 	public static Flowable<ImmutableMessage> query(String datasource, String tenant, String query, Operand... params) {

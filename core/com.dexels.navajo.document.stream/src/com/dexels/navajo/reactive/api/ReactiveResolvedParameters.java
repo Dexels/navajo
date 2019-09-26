@@ -24,21 +24,17 @@ import io.reactivex.Flowable;
 
 public class ReactiveResolvedParameters {
 
-//	public final Map<String,Function3<StreamScriptContext,Optional<ImmutableMessage>,ImmutableMessage,Operand>> named;
 	Map<String,Operand> resolvedNamed = new HashMap<>();
 	List<Operand> resolvedUnnamed = new ArrayList<>();
 	Map<String,String> resolvedTypes = new HashMap<>();
 	
-	private final static Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
-//	private final StreamScriptContext context;
+	private static final Logger logger = LoggerFactory.getLogger(ReactiveResolvedParameters.class);
 	private boolean allResolved = false;
 	private final Optional<ImmutableMessage> currentMessage;
 	private final ImmutableMessage paramMessage;
 	private final Optional<Map<String,String>> expectedTypes;
 
 	private final Map<String, ContextExpression> named;
-//	private final Optional<XMLElement> sourceElement;
-//	private final String sourcePath;
 
 	private final List<ContextExpression> unnamed;
 
@@ -95,9 +91,6 @@ public class ReactiveResolvedParameters {
 		return Collections.unmodifiableMap(resolvedNamed);
 	}
 
-	public String namedParamType(String key) {
-		return this.resolvedTypes.get(key);
-	}
 	private Optional<Operand> paramValue(String key) {
 		if(resolvedNamed.containsKey(key)) {
 			return Optional.ofNullable(resolvedNamed.get(key));
@@ -180,9 +173,15 @@ public class ReactiveResolvedParameters {
 	}
 	
 	private void resolveUnnamed() {
+		
 		List<? extends Operand> resolved = unnamed.stream()
 				.map(e->{
-					return e.apply(this.resolvedInput, this.currentMessage, Optional.of(this.paramMessage));
+					Operand value = e.apply(this.resolvedInput, this.currentMessage, Optional.of(this.paramMessage));
+					if(value==null) {
+						throw new NullPointerException("Unnamed expression resolved to null");
+					}
+
+					return value;
 				}).collect(Collectors.toList());
 		this.allResolved=true;
 		this.resolvedUnnamed.addAll(resolved);
@@ -191,7 +190,11 @@ public class ReactiveResolvedParameters {
 	private void resolveNamed() {
 		named.entrySet().forEach(e->{
 			Optional<String> expectedType = expectedTypes.isPresent() ? Optional.ofNullable(expectedTypes.get().get(e.getKey())) : Optional.empty();
-			resolveParam(e.getKey(),expectedType,e.getValue());
+			ContextExpression value = e.getValue();
+			if(value==null) {
+				throw new NullPointerException("Named Expression with key: "+e.getKey()+" resolved to null");
+			}
+			resolveParam(e.getKey(),expectedType,value);
 		});
 		allResolved = true;
 	}
@@ -200,22 +203,15 @@ public class ReactiveResolvedParameters {
 	private Operand resolveParam(String key,Optional<String> expectedType, ContextExpression function) {
 		Operand applied;
 		try {
-			// TODO test for streaming
 			// TODO move this to constructor or something
-			System.err.println("Resoving: "+key);
 			Navajo in = this.resolvedInput!=null ? this.resolvedInput : inputFlowable.isPresent() ? null : resolvedInput;
 			applied = function.apply(in, currentMessage,Optional.of(paramMessage));
 			resolvedNamed.put(key, applied);
 			if(expectedType.isPresent()) {
 				resolvedTypes.put(key, expectedType.get());
 			}
-			
-//			if(expectedType.isPresent() && !applied.type.equals(expectedType.get())) {
-//				throw new ReactiveParameterException("Error evaluating key: "+key+" it is not of the expected type: "+expectedType.get()+" but of type: "+applied.type+" with value: "+applied.value+" path: "+sourcePath+" element: "+sourceElement+" -> "+ sourceElement.map(xml->""+xml.getStartLineNr()).orElse("<unknown>")+" message: "+currentMessage+" statemessage: "+paramMessage);
-//			}
 			return applied;
 		} catch (Exception e1) {
-			logger.error("Error applying param function for named param: "+key+" will put null.", e1);
 			throw new ReactiveParameterException("Error applying param function for named param: "+key,e1);
 		}
 	}
