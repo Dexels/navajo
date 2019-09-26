@@ -32,14 +32,56 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.resource.manager"
+         id="com.dexels.navajo.resource.jdbc.oracle"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.resource.test"
+         id="com.dexels.navajo.resource.binarystore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.resource.http"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.resource.jdbc.postgresql"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.resource.mail"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.resource.sftp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.resource.jdbc.mssql"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.microsoft.sqlserver.mssql-jdbc"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -53,21 +95,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.h2"
+         id="org.postgresql.jdbc42"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.resource.jdbc.oracle"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mongodb.mongo-java-driver"
+         id="com.oracle.jdbc.driver"
          download-size="0"
          install-size="0"
          version="0.0.0"

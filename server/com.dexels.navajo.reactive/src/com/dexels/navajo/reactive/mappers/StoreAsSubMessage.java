@@ -23,14 +23,14 @@ import com.dexels.navajo.reactive.api.ReactiveResolvedParameters;
 public class StoreAsSubMessage implements ReactiveMerger {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(StoreAsSubMessage.class);
+	private static final Logger logger = LoggerFactory.getLogger(StoreAsSubMessage.class);
 
 	public StoreAsSubMessage() {
 	}
 
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
-		return context->(item)->{
+		return context->item->{
 			ImmutableMessage message = item.message();
 			ImmutableMessage stateMessage = item.stateMessage();
 			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(message),stateMessage, this);
@@ -56,7 +56,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"name","condition","debug"}));
+		return Optional.of(Arrays.asList("name","condition","debug"));
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class StoreAsSubMessage implements ReactiveMerger {
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		Map<String,String> result = new HashMap<String, String>();
+		Map<String,String> result = new HashMap<>();
 		result.put("name", Property.STRING_PROPERTY);
 		result.put("condition", Property.BOOLEAN_PROPERTY);
 		result.put("debug", Property.BOOLEAN_PROPERTY);

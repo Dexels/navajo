@@ -7,6 +7,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -94,6 +95,9 @@ public abstract class BaseContextImpl implements ArticleContext {
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);
 		File articles = new File(rootFolder, "article");
+		if(!articles.exists() || !articles.isDirectory()) {
+			return Collections.emptyList();
+		}
 		String[] list = articles.list(new FilenameFilter() {
 
 			@Override

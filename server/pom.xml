@@ -23,13 +23,16 @@
 		<module>com.dexels.navajo.resource</module>
 		<module>com.dexels.navajo.resource.manager</module>
 		<module>com.dexels.navajo.resource.jdbc.oracle</module>
+		<module>com.dexels.navajo.resource.jdbc.postgresql</module>
 		<module>com.dexels.navajo.resource.jdbc.mysql</module>
+		<module>com.dexels.navajo.resource.jdbc.mssql</module>
 		<module>com.dexels.navajo.resource.http</module>
 		<module>com.dexels.navajo.resource.binarystore</module>
 		<module>com.dexels.navajo.resource.swift</module>
 		<module>com.dexels.navajo.resource.mail</module>
 		<module>com.dexels.navajo.resource.sftp</module>
-		<module>com.dexels.navajo.resource.test</module>
+		<module>com.dexels.navajo.resource.feature</module>
+		<module>com.dexels.navajo.streams.feature</module>
 		<module>com.dexels.navajo.mgmt</module>
 		<module>com.dexels.navajo.tester.js</module>
 		<module>com.dexels.navajo.authentication.api</module>
@@ -45,7 +48,7 @@
         <parent>
                 <groupId>com.dexels.navajo</groupId>
                 <artifactId>com.dexels.navajo.super</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
                 <relativePath>../setup/com.dexels.repository</relativePath>
         </parent>
 

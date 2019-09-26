@@ -90,7 +90,6 @@ public abstract class SimpleNode implements Node {
      out its children. */
 
     public void dump(String prefix) {
-        //System.out.println(toString(prefix));
         if (children != null) {
             for (int i = 0; i < children.length; ++i) {
                 SimpleNode n = (SimpleNode) children[i];
@@ -140,7 +139,8 @@ public abstract class SimpleNode implements Node {
     public ContextExpression untypedLazyBiFunction(List<String> problems, String expression, BinaryOperator<Operand> func,Function<String,FunctionClassification> functionClassifier) {
     		return lazyBiFunction(problems,expression, func, (a,b)->true, (a,b)->Optional.empty(),functionClassifier);
 	}
-    	public ContextExpression lazyBiFunction(List<String> problems, String expression, BinaryOperator<Operand> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
+    
+    public ContextExpression lazyBiFunction(List<String> problems, String expression, BinaryOperator<Operand> func, BiFunction<Optional<String>, Optional<String>, Boolean> acceptTypes,  BiFunction<Optional<String>, Optional<String>, Optional<String>> returnTypeResolver, Function<String, FunctionClassification> functionClassifier) {
 		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
 		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
 		Optional<String> aType = expA.returnType();

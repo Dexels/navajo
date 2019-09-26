@@ -87,7 +87,7 @@ public class JSONTMLImpl implements JSONTML {
 			JsonParser jp = jsonFactory.createParser(r);
 			return parse(jp);
 		} catch (Exception e) {
-			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
+			throw new Exception("Could not parse JSON inputstream: " + e.getMessage(),e);
 		} 
 	}
 

@@ -17,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class TestClient {
 	public TestClient() {
 	}
 
-	@Test (timeout=10000)
+	@Test (timeout=10000) @Ignore
 	public void testClient() throws ClientException {
 		NavajoClient cl = new JavaNetNavajoClientImpl();
 		cl.setAllowCompression(true);
@@ -43,12 +44,13 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		cl.useBasicAuthentication(true);
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "single");
 		Assert.assertTrue(result.getErrorDescription()==null);
 	}
 	
-	@Test (timeout=10000)
+	@Test (timeout=20000) @Ignore
 	public void testClientBig() throws ClientException {
 		NavajoClient cl = new JavaNetNavajoClientImpl();
 		cl.setAllowCompression(true);
@@ -56,13 +58,14 @@ public class TestClient {
 		cl.setServerUrls(new String[] {TestConfig.NAVAJO_TEST_SERVER.getValue()});
 		cl.setUsername(TestConfig.NAVAJO_TEST_USER.getValue());
 		cl.setPassword(TestConfig.NAVAJO_TEST_PASS.getValue());
+		cl.useBasicAuthentication(true);
 		Navajo nc = NavajoFactory.getInstance().createNavajo();
 		Navajo result = cl.doSimpleSend(nc, "club/InitUpdateClub");
 		result.getMessage("Club").getProperty("ClubIdentifier").setAnyValue("BBFX31R");
 		cl.doSimpleSend(result, "club/ProcessQueryClub");
 	}
 	
-	@Test (timeout=10000)
+	@Test (timeout=20000) @Ignore
 	public void testDirect() throws IOException {
 		Map<String,String> headers = new HashMap<>();
 		headers.put("X-Navajo-Username", TestConfig.NAVAJO_TEST_USER.getValue());
@@ -143,10 +146,4 @@ public class TestClient {
 			logger.error("Error: ", e);
 		}
 	}	
-	
-	@Test
-	public void testEnv() {
-		logger.info("Environments: {}",System.getenv());
-	}
-
 }

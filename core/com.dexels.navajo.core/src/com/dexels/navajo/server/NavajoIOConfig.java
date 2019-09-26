@@ -39,26 +39,6 @@ public interface NavajoIOConfig {
 	void writeOutput(String scriptName, String suffix, InputStream is)
 			throws IOException;
 	
-	/**
-	 * Modification date of a script, returns null when missing
-	 * @param scriptPath
-	 * @return
-	 * @throws FileNotFoundException 
-	 */
-	@Deprecated
-	public Date getScriptModificationDate(String rpcName, String tenant,String extension) throws FileNotFoundException;
-
-	@Deprecated
-	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException;
-	
-	@Deprecated
-	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) ;
-
-    @Deprecated
-    public String getClassPath();
-
-	@Deprecated
-	public File getJarFolder();
 
 	/**
 	 * Name does not include tenant suffix

@@ -17,6 +17,7 @@ public class HandlerFactory {
 	
     private Map<String, ServiceHandler> instances = new HashMap<>();
 
+
     public void addHandler(ServiceHandler handler) {
         logger.info("Added servicehandler {}", handler.getIdentifier());
         instances.put(handler.getIdentifier(), handler);

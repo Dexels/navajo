@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.filter" >
-   <implementation class="org.eclipse.jetty.servlets.GzipFilter"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" enabled="false" name="navajo.server.article.filter">
+   <implementation class="com.dexels.navajo.article.impl.CompressionFilter"/>
    <property name="filter-name" type="String" value="compression"/>
    <property name="urlPatterns" type="String" value="/article/*"/>
    <property name="servletNames" value="article.list,article"/>

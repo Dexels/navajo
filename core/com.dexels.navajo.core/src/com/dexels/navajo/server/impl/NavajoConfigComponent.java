@@ -173,23 +173,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException {
-		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant,extension);
-	}
-
-	@Override
-	@Deprecated
-	public String getClassPath() {
-		return navajoIOConfig.getClassPath();
-	}
-
-	@Override
-	@Deprecated
-	public File getJarFolder() {
-		return navajoIOConfig.getJarFolder();
-	}
-
-	@Override
 	public String getInstanceName() {
 		return (String) properties.get("instanceName");
 	}
@@ -347,24 +330,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		logger.info("Ignoring doClearScriptCache");
 	}
 
-	@Override
-	public String getCompilationLanguage() {
-		return (String) properties.get("compilationLanguage");
-	}
-
-	@Override
-	public boolean isAsyncEnabled() {
-		return true;
-	}
-
-	@Override
-	public boolean isIntegrityWorkerEnabled() {
-		Boolean b =(Boolean) getExternalConfigurationValue("navajo.server.integrity","enabled");
-		if(b!=null) {
-			return b;
-		}
-		return false;
-	}
 
 	@Override
 	public boolean isLockManagerEnabled() {
@@ -415,17 +380,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	@Override
 	public SharedStoreInterface getSharedStore() {
 		return sharedStore;
-	}
-
-	@Override
-	public File getApplicableScriptFile(String rpcName, String tenant, String extension)
-			throws FileNotFoundException {
-		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant,extension);
-	}
-
-	@Override
-	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
-		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant,extension);
 	}
 
 	@Override

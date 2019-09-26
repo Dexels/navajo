@@ -1,0 +1,14 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo MSSQL driver" name="Navajo MSSQL driver" id="navajo.resource.postgresql">
+    <AD name="url" id="url" required="true" type="String" default="jdbc:sqlserver"/>
+    <AD name="user" id="user" required="false" type="String" default="demo"/>
+    <AD name="password" id="password" required="false" type="String" default="demo"/>
+    <AD name="name" id="name" required="false" type="String" default="pjdbc"/>
+    <AD name="navajo.resource.name" id="navajo.resource.name" required="false" type="String" default="navajo.resource.mssql"/>
+    <AD name="databaseName" id="databaseName" required="false" type="String" default="navajo.resource.mssql"/>
+    <AD name="instance" id="instance" required="false" type="String" default="*"/>
+  </OCD>
+  <Designate pid="navajo.resource.mssql" factoryPid="navajo.resource.mssql">
+    <Object ocdref="navajo.resource.mssql"/>
+  </Designate>
+</metatype:MetaData>

@@ -351,7 +351,7 @@ final class ASTTmlNode extends SimpleNode {
 			}
 
 			private Operand parseImmutableMessagePath(List<String> path, ImmutableMessage rm) {
-				if(!path.isEmpty()) {
+				if(path.isEmpty()) {
 					return Operand.ofImmutable(rm);
 				}
 				String first = path.get(0);

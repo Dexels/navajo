@@ -2654,8 +2654,6 @@ public class TslCompiler {
 			variableClipboard.add("String " + asyncStatusName + ";\n");
 			variableClipboard.add("String " + interruptTypeName + ";\n");
 
-			result.append(printIdent(ident)
-					+ "if (!DispatcherFactory.getInstance().getNavajoConfig().isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
 			result.append(printIdent(ident) + asyncMapName + " = true;\n");
 			result.append(printIdent(ident) + headerName
 					+ " = access.getInDoc().getHeader();\n");

@@ -127,10 +127,9 @@ public class TestCoordinateProperty {
 
         try {
             c.setLatitude(-900);
-            assertTrue(false);
+            fail();
         } catch (Exception e) {
             logger.info("Error",e);
-            assertTrue(true);
         }
 
     }

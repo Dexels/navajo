@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.resource;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +13,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
@@ -42,6 +45,7 @@ public class ResourceChecker {
 	private boolean initialized = false;
 	private CompiledScriptInterface myCompiledScript = null;
 	private String webservice;
+	private BundleCreator bundleCreator;
 	
 	
 	private static final Logger logger = LoggerFactory
@@ -101,14 +105,6 @@ public class ResourceChecker {
 				}
 			}
 		}
-		// Also add my CPU as a resource.
-		try {
-			managedResources.put(new AdapterFieldDependency(-1, "com.dexels.navajo.server.Dispatcher", "dispatcher", "dispatcher"), 
-				com.dexels.navajo.server.Dispatcher.class.getMethod("getResourceManager", String.class));
-		} catch (Throwable e) {  
-			logger.error("Error: ", e);
-		}
-		
 		initialized = true;
 	}
 	
@@ -181,6 +177,10 @@ public class ResourceChecker {
 			AdapterFieldDependency afd = e.getKey();
 			Method m = e.getValue();
 			try {
+				boolean isStatic = Modifier.isStatic(m.getModifiers());
+				if(!isStatic) {
+					throw new NavajoException("Method: "+m.getName()+" of class "+afd.getJavaClass()+" adapterfielddep: "+afd.getId()+" is not static and it should be.");
+				}
 				Object o = m.invoke(null, afd.getType());
 				if ( o != null ) {
 					ResourceManager rm = (ResourceManager) o;
@@ -202,6 +202,7 @@ public class ResourceChecker {
 						}
 					}
 				}
+				// TODO remove catch, propagate errors
 			} catch (Exception e1) { 
 				logger.error("Could not check avail of: {}, msg",afd.getType(),e1); 
 			}
@@ -226,4 +227,12 @@ public class ResourceChecker {
 
 	}
 	
+
+	public void setBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = bundleCreator;
+	}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
 }

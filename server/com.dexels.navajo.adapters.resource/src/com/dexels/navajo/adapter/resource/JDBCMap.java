@@ -913,7 +913,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 			}
 			if (tempFile != null) {
 				try {
-					Files.delete(tempFile.toPath());
+					Files.deleteIfExists(tempFile.toPath());
 				} catch (Exception ioe2) {
 					logger.error("Error writing output binary", ioe2);
 				}
