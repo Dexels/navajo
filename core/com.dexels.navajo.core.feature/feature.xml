@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.core.feature"
       label="Navajo Core Feature"
-      version="1.0.12.qualifier"
+      version="1.0"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -16,8 +16,6 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
-
-com.dexels.config.runtime
 
    <plugin
          id="com.dexels.config.runtime"
