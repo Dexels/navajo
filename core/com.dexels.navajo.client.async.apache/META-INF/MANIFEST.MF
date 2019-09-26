@@ -24,8 +24,17 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.apache.http.impl.nio.client;version="4.1.0",
  org.apache.http.message;version="4.4.3",
  org.apache.http.nio.client;version="4.1.0",
+ org.eclipse.jetty.client;version="9.4.17",
+ org.eclipse.jetty.client.api;version="9.4.17",
+ org.eclipse.jetty.client.http;version="9.4.17",
+ org.eclipse.jetty.client.util;version="9.4.17",
+ org.eclipse.jetty.http;version="9.4.17",
+ org.eclipse.jetty.io;version="9.4.17",
+ org.eclipse.jetty.util;version="9.4.17",
+ org.eclipse.jetty.util.component;version="9.4.17",
+ org.eclipse.jetty.util.ssl;version="9.4.17",
  org.junit;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/resource.navajo.client.async.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

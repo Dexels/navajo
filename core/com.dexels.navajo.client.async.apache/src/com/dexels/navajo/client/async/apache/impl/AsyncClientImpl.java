@@ -7,14 +7,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpProxy;
+import org.eclipse.jetty.client.ProxyConfiguration;
+import org.eclipse.jetty.client.api.Result;
+import org.eclipse.jetty.client.util.BufferingResponseListener;
+import org.eclipse.jetty.client.util.BytesContentProvider;
+import org.eclipse.jetty.http.HttpMethod;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import com.dexels.navajo.script.api.TmlRunnable;
 
 public class AsyncClientImpl implements ManualAsyncClient {
 
-	private CloseableHttpAsyncClient client;
+	private HttpClient httpClient;
 
 	private String name;
 	private String server;
@@ -70,14 +70,10 @@ public class AsyncClientImpl implements ManualAsyncClient {
         AsyncClientFactory.setInstance(AsyncClientImpl.class);
     }
 
-	public AsyncClientImpl() {
-		client = HttpAsyncClients.createDefault();
-		try {
-			client.start();
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-		}
-		
+	public AsyncClientImpl() throws Exception {
+		httpClient = new HttpClient(new SslContextFactory.Client());
+		configureProxy(httpClient);
+		httpClient.start();
 	}
 	
 	
@@ -275,71 +271,72 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		n.write(baos);
 		final byte[] byteArray = baos.toByteArray();
 		
-		HttpPost httppost = new HttpPost(url);
-		configureProxy(httppost);
-		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
-		httppost.setEntity(new ByteArrayEntity(byteArray));
+//		HttpPost httppost = new HttpPost(url);
+//		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
+//		httppost.setEntity(new ByteArrayEntity(byteArray));
 
-//		Future<HttpResponse> response = 
-				
-		client.execute(httppost, new FutureCallback<HttpResponse>() {
-
-			@Override
-			public void cancelled() {
-				logger.info("Request cancelled");
-				if (closeAfterUse) {
-				    close();
-				}
-			}
-
-			@Override
-			public void completed(HttpResponse resp) {
-				try {
-					InputStream content = resp.getEntity().getContent();
-					Navajo response = NavajoFactory.getInstance().createNavajo(content);
+		httpClient.newRequest(url)
+		        .method(HttpMethod.POST)
+		        .content(new BytesContentProvider(byteArray), "text/xml; charset=utf-8")
+		        .onRequestFailure((req, e) -> {
+					logger.error("Request failed: HTTP call to: "+url+" failed: {}", e);
 					if(continuation!=null) {
-						continuation.onResponse(response);
+						try {
+							continuation.onFail(e);
+						} catch (IOException e1) {
+							logger.error("Error: ", e1);
+						}
 					}
-				} catch (UnsupportedOperationException|IOException e) {
-					logger.error("Error: ", e);
-				} finally {
-				    if (closeAfterUse) {
-	                    close();
-	                }
-					setActualCalls(getActualCalls()-1);
-				}
-				
-			}
-
-			@Override
-			public void failed(Exception e) {
-				logger.error("HTTP call to: "+url+" failed: {}", e);
-				if(continuation!=null) {
-					try {
-						continuation.onFail(e);
-					} catch (IOException e1) {
-						logger.error("Error: ", e1);
+					if (closeAfterUse) {
+				        close();
+				    }						
+				})
+		        .onResponseFailure((resp, e) -> {
+					logger.error("Request failed: HTTP call to: "+url+" failed: {}", e);
+					if(continuation!=null) {
+						try {
+							continuation.onFail(e);
+						} catch (IOException e1) {
+							logger.error("Error: ", e1);
+						}
 					}
-				}
-				if (closeAfterUse) {
-                    close();
-                }
+					if (closeAfterUse) {
+				        close();
+				    }						
+				})
+		        .send(new BufferingResponseListener() {
 
-			}
-		});
+					@Override
+					public void onComplete(Result res) {
+						try {
+							Navajo response = NavajoFactory.getInstance().createNavajo(getContentAsInputStream());
+							if(continuation!=null) {
+								continuation.onResponse(response);
+							}
+						} catch (UnsupportedOperationException e) {
+							logger.error("Error: ", e);
+						} finally {
+						    if (closeAfterUse) {
+			                    close();
+			                }
+							setActualCalls(getActualCalls()-1);
+						}						
+					}
+		        	
+		        	
+		        });
+
 	}
 
-	private void configureProxy(HttpPost request) {
+	private void configureProxy(HttpClient httpClient) {
 		String host = System.getenv("httpProxyHost");
 		String port = System.getenv("httpProxyPort");
 		if(host==null || port == null) {
 			return;
 		}
-		HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
-        RequestConfig config = RequestConfig.custom()
-                .setProxy(proxy)
-                .build();		
-        request.setConfig(config);
+		ProxyConfiguration proxyConfig = httpClient.getProxyConfiguration();
+		HttpProxy proxy = new HttpProxy(host,Integer.parseInt(port) );
+		proxyConfig.getProxies().add(proxy);
 	}
 
 	/*
@@ -418,10 +415,11 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	@Override
 	public void close() {
 		try {
-			client.close();
-		} catch (IOException e) {
-			logger.error("Error: ", e);
+			httpClient.stop();
+		} catch (Exception e) {
+			logger.error("Error shutting down httpclient: ", e);
 		}
+//		logger.info("Closing jetty, NOOP");
 	}
 
 	@Override

@@ -20,15 +20,13 @@ public class TestAsyncClient {
 			.getLogger(TestAsyncClient.class);
 
 	@Test
-	public void test() throws IOException {
-		// TODO test setting client cert
-
+	public void test() throws Exception {
 		final ManualAsyncClient ac = new AsyncClientImpl();
 		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
 	}
 
 	@Test
-	public void testAsync() throws IOException, InterruptedException {
+	public void testAsync() throws Exception {
 
 		final ManualAsyncClient ac = new AsyncClientImpl();
 
