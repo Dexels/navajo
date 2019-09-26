@@ -292,7 +292,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 				    }						
 				})
 		        .onResponseFailure((resp, e) -> {
-					logger.error("Request failed: HTTP call to: "+url+" failed: {}", e);
+					logger.error("Response failed: HTTP call to: "+url+" failed: {}", e);
 					if(continuation!=null) {
 						try {
 							continuation.onFail(e);

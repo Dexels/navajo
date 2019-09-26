@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Async Client
-Bundle-SymbolicName: com.dexels.navajo.client.async.apache
+Bundle-SymbolicName: com.dexels.navajo.client.async.jetty
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.19.qualifier
 Bundle-Vendor: Dexels
@@ -13,17 +13,6 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.version,
  javax.net.ssl,
  junit.framework;resolution:=optional,
- org.apache.http;version="4.4.3",
- org.apache.http.client;version="4.4.1",
- org.apache.http.client.config;version="4.4.1",
- org.apache.http.client.entity;version="4.4.1",
- org.apache.http.client.methods;version="4.4.1",
- org.apache.http.concurrent;version="4.4.3",
- org.apache.http.entity;version="4.4.3",
- org.apache.http.impl.client;version="4.4.1",
- org.apache.http.impl.nio.client;version="4.1.0",
- org.apache.http.message;version="4.4.3",
- org.apache.http.nio.client;version="4.1.0",
  org.eclipse.jetty.client;version="9.4.17",
  org.eclipse.jetty.client.api;version="9.4.17",
  org.eclipse.jetty.client.http;version="9.4.17",
