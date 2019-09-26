@@ -268,6 +268,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (messageMap == null) {
             messageMap = new TreeMap<>();
         }
+        
+        int counterIndex = 0;
+        int counterIgnoreMode = 0; //how many times got into ignore mode
+        boolean isIgnore = false;
+        
 
         m.setParent(this);
 
@@ -279,6 +284,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return foundMsg;
         }
 
+        
+        
         if (getMessage(name) != null && (overwrite || Message.MSG_MODE_IGNORE.equals(getMode()))) {
             removeChildMessage(foundMsg);
         }
@@ -287,9 +294,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
          */
 
         if (getType().equals(MSG_TYPE_ARRAY)) {
-            if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
-                m.setIndex(messageList.size());
+        	if(Message.MSG_MODE_IGNORE.equals(m.getMode())) {
+        		isIgnore = true;
+        		counterIgnoreMode++; 
+        	}
+            
+        	if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
+            	m.setIndex(counterIndex);
+            	
             }
+        	
+        	
             ((BaseMessageImpl) m).setNameInitially(getName());
         } else {
             messageMap.put(name, m);
@@ -299,8 +314,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (getType().equals(MSG_TYPE_ARRAY) && Message.MSG_MODE_IGNORE.equals(getMode())) {
             messageList.clear();
         }
-        messageList.add(m);
-
+        
+        
+       
+       //isIgnore boolean will be true only if the element enters the ignore mode check, and it wont be added to the messageList
+       if (isIgnore == false) {
+        	messageList.add(m);
+        }
+        //updates the index of the messages in an array. If has ignore modes will sub the counter from the initial index value
+        counterIndex = messageList.size() - counterIgnoreMode; 
+        
+        
         return m;
     }
 
