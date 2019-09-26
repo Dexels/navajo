@@ -1,5 +1,7 @@
 package com.dexels.navajo.util.legacy;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -251,5 +253,19 @@ public class GenerateXSD {
 		
 	}
 	
+	public static void main(String [] args) throws Exception {
+		
+		//String baseXSD = "/home/arjen/projecten/Navajo/schemas/basenavascript.xsd"; // args[0];
+//		MapMetaData mmd = MapMetaData.getInstance();
+		
+		GenerateXSD xsd = new GenerateXSD();
+		String result = xsd.generateXSD();
+		
+		BufferedWriter fw = new BufferedWriter(  new FileWriter("@.xsd") );
+		fw.write(result);
+		fw.close();
+		
+		//xsd.createAdapterXSD("sqlquery", new CaseSensitiveXMLElement());
 
+	}
 }
