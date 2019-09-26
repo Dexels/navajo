@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.dexels.navajo.twitter.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.twitter.feature" version="1.0.0.qualifier">
+   <feature id="com.dexels.navajo.twitter.feature">
       <category name="Navajo Optional Packages"/>
    </feature>
    <feature id="com.dexels.navajo.server.feature">
       <category name="Navajo Core"/>
    </feature>
-   <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
+   <feature id="com.dexels.navajo.dev.feature">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.resource.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.resource.feature" version="1.0.2.qualifier">
+   <feature id="com.dexels.navajo.resource.feature">
       <category name="Navajo Core"/>
    </feature>
-   <feature url="features/com.dexels.navajo.scala.feature_0.9.0.qualifier.jar" id="com.dexels.navajo.scala.feature" version="0.9.0.qualifier">
+   <feature id="com.dexels.navajo.scala.feature">
       <category name="Navajo Optional Packages"/>
    </feature>
    <feature id="com.dexels.navajo.core.feature">
       <category name="Navajo Core"/>
    </feature>
-   <feature url="features/com.dexels.navajo.reactive.feature_1.0.12.qualifier.jar" id="com.dexels.navajo.reactive.feature" version="1.0.12.qualifier">
+   <feature id="com.dexels.navajo.reactive.feature">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.feature_2.0.1.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="2.0.1.qualifier">
+   <feature id="com.dexels.navajo.tipi.feature">
       <category name="Tipi"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.swing.feature_1.2.1.qualifier.jar" id="com.dexels.navajo.tipi.swing.feature" version="1.2.1.qualifier">
+   <feature id="com.dexels.navajo.tipi.swing.feature">
       <category name="Tipi"/>
    </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
