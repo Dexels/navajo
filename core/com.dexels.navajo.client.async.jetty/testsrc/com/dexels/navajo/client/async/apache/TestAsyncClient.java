@@ -2,6 +2,7 @@ package com.dexels.navajo.client.async.apache;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class TestAsyncClient {
 	public void test() throws Exception {
 		final ManualAsyncClient ac = new AsyncClientImpl();
 		ac.setClientCertificate("SunX509", "JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
+		// TODO make actual test
 	}
 
 	@Test
