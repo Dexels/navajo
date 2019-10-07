@@ -269,9 +269,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             messageMap = new TreeMap<>();
         }
         
+        
         int counterIndex = 0;
         int counterIgnoreMode = 0; //how many times got into ignore mode
         boolean isIgnore = false;
+        
         
 
         m.setParent(this);
@@ -294,17 +296,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
          */
 
         if (getType().equals(MSG_TYPE_ARRAY)) {
-        	if(Message.MSG_MODE_IGNORE.equals(m.getMode())) {
-        		isIgnore = true;
-        		counterIgnoreMode++; 
-        	}
-            
-        	if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
-            	m.setIndex(counterIndex);
-            	
+            if(Message.MSG_MODE_IGNORE.equals(m.getMode())) {
+                isIgnore = true;
+                counterIgnoreMode++; 
             }
-        	
-        	
+            
+            if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
+                if (messageList.size() > 0) {
+                    counterIndex = messageList.size() - counterIgnoreMode; 
+                }
+                m.setIndex(counterIndex);
+            }
+            
+            
             ((BaseMessageImpl) m).setNameInitially(getName());
         } else {
             messageMap.put(name, m);
@@ -319,13 +323,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
        
        //isIgnore boolean will be true only if the element enters the ignore mode check, and it wont be added to the messageList
        if (isIgnore == false) {
-        	messageList.add(m);
+            messageList.add(m);
         }
-        //updates the index of the messages in an array. If has ignore modes will sub the counter from the initial index value
-        counterIndex = messageList.size() - counterIgnoreMode; 
+       
+       //updates the index of the messages in an array. If has ignore modes will sub the counter from the initial index value
         
         
-        return m;
+        
+       return m;
     }
 
     @Override
