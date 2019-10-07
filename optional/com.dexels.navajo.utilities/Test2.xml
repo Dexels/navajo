@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navascript debug="true" author="Robin" id="external/common/slc/tournamentmodule/test1.xml" notes="test script 1" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript new.xsd">
+
+
+<map.navajomap>
+
+</map.navajomap>
+    <message name="Array" type="array">
+
+       <message name="Marte">
+
+           <property name="Waarde" value="marte"/>
+
+       </message>
+
+       <message name="Carlo">
+
+           <property name="Waarde" value="carlo"/>
+
+       </message>        
+
+       <message name="Martin" >
+
+           <property name="Waarde" value="martin"/>
+
+       </message>
+
+   </message>
+   
+   <param name="CombinedValues">
+       <expression value="''"/>
+   </param>
+   
+   <map.joinmessage>
+       <joinmessage.join message1="'/Array'" type="'outer'"/>
+       <message name="Output1" mode="ignore">
+           <map ref="resultMessage">
+               <param name="CombinedValues">
+                   <expression value="[/@CombinedValues] + ', ' + $property( 'Waarde' )"/>
+               </param>
+               <property name="ShortValue">
+                    <expression value="StringFunction( 'substring', $property( 'Waarde' ), 0, 3 )"/>
+               </property>
+           </map>
+       </message>
+       
+   </map.joinmessage>
+
+    <message name="Result">
+        <property name="CombinedValues">
+            <expression value="[/@CombinedValues]"/>
+        </property>
+    </message>
+
+</navascript>
