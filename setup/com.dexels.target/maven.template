@@ -10,7 +10,7 @@
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/3rdparty_DEXELSBASEVERSION"/>
-		<unit id="dexels-navajo-target.feature.group" version="DEXELSBASEVERSION"/>
+		<unit id="dexels-navajo-target.feature.group"/>
 	</location>
 </locations>
 </target>
