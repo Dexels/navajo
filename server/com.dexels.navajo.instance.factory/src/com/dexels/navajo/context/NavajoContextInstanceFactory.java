@@ -62,54 +62,121 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	}
 
+//	private void startInstanceFactory(File rootPath) throws FileNotFoundException {
+//	    if (repositoryInstance.getDeployment() == null) {
+//	        logger.warn("=================== NO DEPLOYMENT DEFINED! ===================");
+//	    }
+//		File settings = new File(rootPath, "settings");
+//		File config = new File(rootPath, "config");
+//		if(!rootPath.exists()) {
+//			throw new FileNotFoundException("No rootFolder found: "+rootPath.getAbsolutePath());
+//		}
+//		if(!config.exists()) {
+//			throw new FileNotFoundException("No config folder not found: "+config.getAbsolutePath());
+//		}
+//		if(!settings.exists()) {
+//			throw new FileNotFoundException("No settings folder not found: "+settings.getAbsolutePath());
+//		}
+//		File globalResourceFile = new File(config, "resources.xml");
+//		File[] fd = settings.listFiles();
+//		File globalPropertyFile = new File(settings, "application.properties");
+//		Map<String, Object> globalProperties = readProperties(globalPropertyFile);
+//		registerGlobalConfiguration(globalProperties);
+//		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
+//		Map<String, Message> globalResources = readResources(globalResourceFile, aliases);
+//		for (Message dataSource : globalResources.values()) {
+//			try {
+//				addDatasource(null, dataSource, aliases);
+//			} catch (IOException e) {
+//				logger.error("Error: ", e);
+//			}
+//		}
+//		logger.info("Global properties: #" + globalProperties.size());
+//		for (File file : fd) {
+//			if (file.isDirectory()) {
+//				logger.debug("dir found: " + file.getAbsolutePath());
+//				String name = file.getName();
+//				try {
+//					appendInstance(name, file,
+//							Collections.unmodifiableMap(globalProperties),
+//							Collections.unmodifiableMap(globalResources));
+//				} catch (IOException e) {
+//					logger.error("Error appending instance: {}", name, e);
+//				}
+//			}
+//		}
+//		addWatchedFolder(config, Optional.of(".*\\.cfg"), "config");
+//
+//		File adapters = new File(rootPath, "adapters");
+//
+//		addWatchedFolder(adapters, Optional.<String>empty(), "adapters");
+//	}
+	//NavajoContextInstanceFactory
 	private void startInstanceFactory(File rootPath) throws FileNotFoundException {
+	    File globalPropertyFile;
 	    if (repositoryInstance.getDeployment() == null) {
 	        logger.warn("=================== NO DEPLOYMENT DEFINED! ===================");
 	    }
-		File settings = new File(rootPath, "settings");
-		File config = new File(rootPath, "config");
-		if(!rootPath.exists()) {
-			throw new FileNotFoundException("No rootFolder found: "+rootPath.getAbsolutePath());
-		}
-		if(!config.exists()) {
-			throw new FileNotFoundException("No config folder not found: "+config.getAbsolutePath());
-		}
-		if(!settings.exists()) {
-			throw new FileNotFoundException("No settings folder not found: "+settings.getAbsolutePath());
-		}
-		File globalResourceFile = new File(config, "resources.xml");
-		File[] fd = settings.listFiles();
-		File globalPropertyFile = new File(settings, "application.properties");
-		Map<String, Object> globalProperties = readProperties(globalPropertyFile);
-		registerGlobalConfiguration(globalProperties);
-		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String, Message> globalResources = readResources(globalResourceFile, aliases);
-		for (Message dataSource : globalResources.values()) {
-			try {
-				addDatasource(null, dataSource, aliases);
-			} catch (IOException e) {
-				logger.error("Error: ", e);
-			}
-		}
-		logger.info("Global properties: #" + globalProperties.size());
-		for (File file : fd) {
-			if (file.isDirectory()) {
-				logger.debug("dir found: " + file.getAbsolutePath());
-				String name = file.getName();
-				try {
-					appendInstance(name, file,
-							Collections.unmodifiableMap(globalProperties),
-							Collections.unmodifiableMap(globalResources));
-				} catch (IOException e) {
-					logger.error("Error appending instance: {}", name, e);
-				}
-			}
-		}
-		addWatchedFolder(config, Optional.of(".*\\.cfg"), "config");
+	    File settings = new File(rootPath, "settings");
+	    File config = new File(rootPath, "config");
+	    if(!rootPath.exists()) {
+	        throw new FileNotFoundException("No rootFolder found: "+rootPath.getAbsolutePath());
+	    }
+	    if(!config.exists()) {
+	        throw new FileNotFoundException("No config folder not found: "+config.getAbsolutePath());
+	    }
+	    if(!settings.exists()) {
+	        //throw new FileNotFoundException("No settings folder not found: "+settings.getAbsolutePath());
+	        //globalPropertyFile = new File(config, "application.properties");
+	        globalPropertyFile = createAppProperties(config);
+	    }else {
+	        //globalPropertyFile = new File(settings, "application.properties");
+	        globalPropertyFile = createAppProperties(settings);
+	    }
+	    
+	    File globalResourceFile = new File(config, "resources.xml");
+	    Map<String, Object> globalProperties = readProperties(globalPropertyFile);
+	    registerGlobalConfiguration(globalProperties);
+	    Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
+	    Map<String, Message> globalResources = readResources(globalResourceFile, aliases);
+	    for (Message dataSource : globalResources.values()) {
+	        try {
+	            addDatasource(null, dataSource, aliases);
+	        } catch (IOException e) {
+	            logger.error("Error: ", e);
+	        }
+	    }
+	    logger.info("Global properties: #" + globalProperties.size());
+	    
+	     
+	    
+	    if(settings.exists()) {
+	        File[] fd = settings.listFiles();  
+	    
+	        for (File file : fd) {
+	            if (file.isDirectory()) {
+	                logger.debug("dir found: " + file.getAbsolutePath());
+	                String name = file.getName();
+	                try {
+	                    appendInstance(name, file,
+	                            Collections.unmodifiableMap(globalProperties),
+	                            Collections.unmodifiableMap(globalResources));
+	                } catch (IOException e) {
+	                    logger.error("Error appending instance: {}", name, e);
+	                }
+	            }
+	        }
+	    }
+	    addWatchedFolder(config, Optional.of(".*\\.cfg"), "config");
 
-		File adapters = new File(rootPath, "adapters");
+	    File adapters = new File(rootPath, "adapters");
 
-		addWatchedFolder(adapters, Optional.<String>empty(), "adapters");
+	    addWatchedFolder(adapters, Optional.<String>empty(), "adapters");
+	}
+
+	private File createAppProperties(File parent) {
+	    File gpf = new File(parent, "application.properties");
+	    return gpf;
 	}
 
 	private void addWatchedFolder(File folder, Optional<String> fileFilter,

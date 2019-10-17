@@ -113,12 +113,12 @@ public class EntityDispatcher {
                 }
                 
                 tenant = determineInstanceFromRequest(runner.getHttpRequest());
-                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
-                    // No tenant only supported for Oauth login
-                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
-                    throw new EntityException(EntityException.UNAUTHORIZED);
-                    
-                }
+//                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
+//                    // No tenant only supported for Oauth login
+//                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+//                    throw new EntityException(EntityException.UNAUTHORIZED);
+//                    
+//                }
             }
 
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
