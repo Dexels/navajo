@@ -9,6 +9,7 @@ var titleloader;
 var pretty_max_source_length = 80000;
 var pretty_max_response_length = 80000;
 
+var rsp = "INIT";
 
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
@@ -28,6 +29,7 @@ function createEditor() {
 
 
 function checkUseAAA() {
+	
 	$.ajax({
 		dataType: "json",
         url: "testerapi?query=useaaa",
@@ -37,11 +39,20 @@ function checkUseAAA() {
 	        	console.log("use aaaaaaaa   ");
 	        	console.log("use aaa:"+response.useAAA);
 	        	console.log("response : "+response);
+	        	console.log("response type : "+response.type);
 	        	if(response.type === "NONE") {
 		        	hideLoginTable();
+		        	rsp = "NONE";
+	        	}
+	        	if(response.type === "PASSWORD"){
+	        		rsp = "PASSWORD";
 	        	}
 	    }
 	})
+	
+	
+	console.log("response type END : "+rsp);
+	return rsp;
 	};
 function updateTenants() {
 	$.ajax({
@@ -282,24 +293,23 @@ function hideLoginTable() {
 }
 
 function runScript(script) {
-	console.log("(1)vg"); //vg
+	var rsp = checkUseAAA();
     $('#scriptCustomInputView').hide();
     if (script.indexOf('_') !== -1) {
     	var tenant = script.substring(script.indexOf('_'));
     	script = script.substring(0, script.indexOf('_'));
     	window.alert('Stripping '+tenant+' part of script! Calling ' + script)
-    	console.log("inside 1st if"); //vg
+    	
     }
-    console.log("(2)vg"); //vg
+    
     $('#loadedScript').text(script);
     sessionStorage.script = script;
     $('html, body').animate({
         scrollTop : 0
     }, 50);
-    console.log("(3)vg"); //vg
+    
     console.log("what is instanceGRE: "+loginTableVisible())
     if (loginTableVisible()) {
-    	console.log("(3000)vg"); //vg
         showLoginTable();
 
         $('.LoginButton').attr('value', 'Run script');
@@ -307,9 +317,7 @@ function runScript(script) {
         setTimeout(function(){$('#logintable').trigger('stopRumble');}, 750);
         return;
     }
-    console.log("(4)vg"); //vg
     var instance = $( "#handlers option:selected" ).text();
-    console.log("(5)vg"); //vg
     try {
         hourglassOn();
         $('.overlay').show();
@@ -323,7 +331,7 @@ function runScript(script) {
         var birtMode = (script == "BIRT")
         var navajoinput = prepareInputNavajo(script, birtMode);
         var authHeader = "Basic " + btoa(sessionStorage.user + ":" + sessionStorage.password)
-        console.log("(1)with no tenants log"); //vg
+        
         $.ajax({
         	beforeSend: function(req) {
         		startTitleLoader();
@@ -349,22 +357,18 @@ function runScript(script) {
             	  }
             },
             error: function(xhr, ajaxOptions, thrownError) {
-              console.log("in error function ajax options "); //vg
               $('#HTMLview')[0].innerHTML = "Error on running script: <br/><br/>" + xhr.responseText;
               $('#scriptMainView').show();
               $('.overlay').hide();
               hourglassOff();
             }
         });
-        console.log("(2)with no tenants log"); //vg
     } catch(err) {
-    	console.log("catch err"); //vg
         $('#HTMLview')[0].innerHTML = "Error on running script: " + err.message;
         $('#scriptMainView').show();
         $('.overlay').hide();
         hourglassOff();
     }
-    console.log("(3)with no tenants log"); //vg
 
     $.get("testerapi?query=getfilecontent&file=" + script, function(data) {
     	$('#scriptsourcecontent').attr('class', 'prettyprint lang-xml linenums');
