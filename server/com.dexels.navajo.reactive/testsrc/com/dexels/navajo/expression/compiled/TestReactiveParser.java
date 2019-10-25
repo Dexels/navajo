@@ -3,6 +3,7 @@ package com.dexels.navajo.expression.compiled;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -16,6 +17,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.ReactiveScript;
+import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
+import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
+import com.dexels.navajo.parser.compiled.CompiledParser;
+import com.dexels.navajo.parser.compiled.Node;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.reactive.ClasspathReactiveScriptEnvironment;
 import com.dexels.navajo.reactive.CoreReactiveFinder;
@@ -36,6 +41,9 @@ public class TestReactiveParser {
 		CoreReactiveFinder finder = new CoreReactiveFinder();
 		Reactive.setFinderInstance(finder);
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
+		
+//		Reactive.finderInstance().addReactiveSourceFactory(new MongoReactiveSourceFactory(), "topic");
+
 	}
 
 	@Test
@@ -94,6 +102,15 @@ public class TestReactiveParser {
 		int i = (Integer) n.getProperty("/Test/sum").getTypedValue();
 		Assert.assertEquals(10, i);
 	}
+	
+	@Test
+	public void readNamedJoinScript() throws ParseException, IOException {
+		Navajo n = ReactiveStandalone.runBlockingEmptyFromClassPath("com/dexels/navajo/expression/compiled/joinnamed.rr");
+		n.write(System.err);
+		int i = (Integer) n.getProperty("/Test/sum").getTypedValue();
+		Assert.assertEquals(10, i);
+	}
+
 
 	@Test
 	public void readJoinSimpleScript() throws ParseException, IOException {
@@ -222,4 +239,43 @@ public class TestReactiveParser {
 		System.err.println(resultString);
 		Assert.assertTrue(n.length>40);
 	}
+	
+	@Test
+	public void testMoreStreamsBasic() throws ParseException, IOException {
+		CompiledParser cp = new CompiledParser(getClass().getResourceAsStream("morestreams.rr"));
+		cp.ReactiveScript();
+		ASTReactiveScriptNode n = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
+		for (int i = 0; i < n.jjtGetNumChildren(); i++) {
+			Node node = n.jjtGetChild(i);
+			System.err.println("Node type: "+node);
+		}
+		System.err.println("Name: "+n.jjtGetNumChildren());
+	}
+	
+
+	@Test
+	public void testPipeKeyValue() throws ParseException {
+		String source = "activity = |>topic('sportlinkkernel-ACTIVITY')" + 
+		"    ->filter([subtype]!='SUBFACILITY_AVAILABILITY')" + 
+		"    ->without('lastupdate','updateby')" + 
+		"    ->with('publicactivityid',PublicActivityId('A',123,123,123))" + 
+		"    ->materialize()" + 
+		"    ->join($activityAttributes,merge(),true)" + 
+		"    ->join($calendarDays,merge(),false)";
+		CompiledParser cp = new CompiledParser(new StringReader(source));
+		cp.ReactiveScript();
+
+//		ASTKeyValueNode n = (ASTKeyValueNode) cp.getJJTree().rootNode();
+		System.err.println("n: "+ cp.getJJTree().rootNode().jjtGetChild(0));
+	}
+
+	@Test
+	public void testFunctionWithPipeParams() throws ParseException {
+		CompiledParser cp = new CompiledParser(new StringReader("somefunction(klip=|>kep()->kap())"));
+		cp.Expression();
+		Node n = cp.getJJTree().rootNode();
+		System.err.println("Name: "+n);
+		System.err.println("n: "+n.jjtGetChild(0));
+	}
+
 }

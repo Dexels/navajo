@@ -145,7 +145,7 @@ public class ReactiveStandalone {
 	public static CompiledReactiveScript compileReactiveScript(InputStream inExpression) throws ParseException, IOException {
 		List<String> problems = new ArrayList<>();
 		ASTReactiveScriptNode rootNode = parseExpression(inExpression);
-		List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
+		List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier(),name->Optional.empty()).apply().value;
 		logger.info("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
 		logger.info("Sourcetype: "+src);
 		List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
@@ -155,6 +155,9 @@ public class ReactiveStandalone {
 	}
 
 	public static ASTReactiveScriptNode parseExpression(InputStream inExpression) throws ParseException, IOException {
+		if(inExpression==null) {
+			throw new NullPointerException("No script input provided");
+		}
 		try(Reader in = new InputStreamReader(inExpression)) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactiveScript();

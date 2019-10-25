@@ -1,4 +1,4 @@
-single(count=15,debug=true)
+|>single(count=15,debug=true)
 	->set(id=[@index])
 	->reduce(saveall(sum=0),set(sum=[@sum]+[id]))
 	->tml(messageName='Bla', isArray=false)

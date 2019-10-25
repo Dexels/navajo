@@ -1,6 +1,6 @@
-single()
+|>single()
 	->set(Aap=1)
-	->join( ->single(count=30)
+	->join( |>single(count=30)
 			->set(id=[@index])
 			->reduceToSubList(name='SubMessage')
 		)

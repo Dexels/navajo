@@ -1,4 +1,4 @@
-single()
+|>single()
 	->set(SearchName='')
 	->tmlstream(messageName='MessageName', isArray=false)
 	->call(service='some/Service',debug=false)

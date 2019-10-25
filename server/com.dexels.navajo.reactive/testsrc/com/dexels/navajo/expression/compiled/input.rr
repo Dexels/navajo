@@ -1,4 +1,4 @@
-tmlinput()
+|>tmlinput()
 	->streamtoimmutable()
 	->set(multipliedbytwo=[Integer]*2)
 	->log()

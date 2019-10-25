@@ -1,6 +1,7 @@
-|>single()
-	->join( |>single(count=5)
+secondary= |>single(count=5)
 			->set(id=[@index])
 			->reduce(set(sum=0),set(sum=[@sum]+[id]))
-		)
+			
+|>single()
+	->join($secondary)
 	->tml(messageName='Test',isArray=false)
