@@ -31,11 +31,11 @@ class ASTTransformerNode extends SimpleNode {
 	}
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		List<ContextExpression> parameters = new ArrayList<>();
 		for (int i = 0; i < jjtGetNumChildren(); i++) {
 			Node node = jjtGetChild(i);
-			parameters.add(node.interpretToLambda(problems, originalExpression,functionClassifier));
+			parameters.add(node.interpretToLambda(problems, originalExpression,functionClassifier,mapResolver));
 		}
 		return new ContextExpression() {
 		

@@ -21,10 +21,10 @@ final class ASTMulNode extends SimpleNode {
 
 	@Override
 	public ContextExpression interpretToLambda(List<String> problems, String expression,
-			Function<String, FunctionClassification> functionClassifier) {
+			Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		// TODO We can do *some* type restriction, just not much.
 		return lazyBiFunction(problems, expression, (a, b) -> interpret(a, b), (a, b) -> true,
-				(a, b) -> Optional.empty(), functionClassifier);
+				(a, b) -> Optional.empty(), functionClassifier,mapResolver);
 	}
 
 	private Operand interpret(Operand ao, Operand bo) {

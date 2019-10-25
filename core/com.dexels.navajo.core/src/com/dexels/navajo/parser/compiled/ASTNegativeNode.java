@@ -36,8 +36,8 @@ final class ASTNegativeNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		return lazyFunction(problems,expression, a->interpret(a), Optional.empty(),functionClassifier,mapResolver);
 	}
 
 }

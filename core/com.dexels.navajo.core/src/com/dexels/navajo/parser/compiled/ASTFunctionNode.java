@@ -63,7 +63,7 @@ final class ASTFunctionNode extends SimpleNode {
 	}
 	
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 
 
 		List<ContextExpression> l = new LinkedList<>();
@@ -72,7 +72,7 @@ final class ASTFunctionNode extends SimpleNode {
 
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);
-			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier);
+			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier,mapResolver);
 			if(cn instanceof NamedExpression) {
 				NamedExpression ne = (NamedExpression)cn;
 				named.put(ne.name, ne.expression);

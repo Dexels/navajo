@@ -23,9 +23,9 @@ final class ASTAndNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
-		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
-		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		ContextExpression expA = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier,mapResolver);
+		ContextExpression expB = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		Optional<String> expressionA = expA.returnType();
 		checkOrAdd("In AND expression the first expression is not a boolean but a "+expressionA.orElse("<unknown>"), problems, expB.returnType(), Property.BOOLEAN_PROPERTY);
 		Optional<String> expressionB = expB.returnType();

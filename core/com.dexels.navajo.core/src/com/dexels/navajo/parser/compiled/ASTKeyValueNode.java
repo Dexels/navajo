@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -10,7 +11,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.parser.NamedExpression;
 
 
-class ASTKeyValueNode extends SimpleNode {
+public class ASTKeyValueNode extends SimpleNode {
 
     int args = 0;
     String val = "";
@@ -24,12 +25,12 @@ class ASTKeyValueNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 	int num = jjtGetNumChildren();
 	if(num!=1) {
 		problems.add("Incorrect # of params in named parameter");
 	}
-	ContextExpression exp = jjtGetChild(0).interpretToLambda(problems, originalExpression,functionClassifier);
+	ContextExpression exp = jjtGetChild(0).interpretToLambda(problems, originalExpression,functionClassifier,mapResolver);
 	return new NamedExpression(val, exp);
 }
 

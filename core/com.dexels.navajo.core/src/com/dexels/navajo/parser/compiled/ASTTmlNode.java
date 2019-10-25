@@ -48,7 +48,7 @@ final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		return new ContextExpression() {
 	
 			@Override
@@ -62,6 +62,9 @@ final class ASTTmlNode extends SimpleNode {
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<>();
 		        boolean singleMatch = true;
+		        if(val.indexOf("=")!=-1) {
+		        	System.err.println("yay: "+val);
+		        }
 		        String parts[] = val.split("\\|");
 		        String text = parts.length > 1 ? parts[1] : val;
 		        boolean isParam = false;

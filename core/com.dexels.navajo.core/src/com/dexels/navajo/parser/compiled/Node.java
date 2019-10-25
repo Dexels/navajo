@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -44,7 +45,10 @@ interface Node {
 //	 return interpretToLambda(problems, originalExpression, ParseMode.DEFAULT);
 //  } 
   
-  ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier);
+//  default ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+//	  return interpretToLambda(problems, originalExpression, functionClassifier,Optional.empty());
+//  }
+  ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapNodeResolver);
 
   public Token jjtGetFirstToken();
   public void jjtSetFirstToken(Token token);

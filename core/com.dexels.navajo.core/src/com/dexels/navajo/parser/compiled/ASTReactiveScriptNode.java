@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
@@ -36,31 +37,43 @@ public class ASTReactiveScriptNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
-	List<ReactivePipeNode> pipes = new ArrayList<>();
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 	int start = hasHeader ? headers : 0;
 	
 	if(hasHeader) {
 		for (int i = 0; i < headers; i++) {
 			ASTKeyValueNode hdr = (ASTKeyValueNode) jjtGetChild(i);	
-			NamedExpression ne = (NamedExpression) hdr.interpretToLambda(problems, originalExpression, functionClassifier);
+			NamedExpression ne = (NamedExpression) hdr.interpretToLambda(problems, originalExpression, functionClassifier,mapResolver);
 			String key = ne.name;
 			headerMap.put(key, ne.apply());
 		}
 	}
 	int count = jjtGetNumChildren();
+	List<ASTReactivePipe> unnamedPipes = new ArrayList<>();
+	Map<String,ASTReactivePipe> namedPipes = new HashMap<>();
 	for (int i = start; i < count; i++) {
 		Node child = jjtGetChild(i);
-		ASTReactivePipe pipe = null;
+//		ASTReactivePipe pipe = null;
 		if(child instanceof ASTReactivePipe) {
-			pipe = (ASTReactivePipe) child;
-		} else {
-			pipe = new ASTReactivePipe(1);
-			pipe.jjtAddChild(child, 0);
+			unnamedPipes.add((ASTReactivePipe) child);
+		} else if (child instanceof ASTKeyValueNode) {
+			ASTKeyValueNode kvNode = (ASTKeyValueNode)child;
+			String streamName = kvNode.val;
+			ASTReactivePipe namedPipe = (ASTReactivePipe) kvNode.jjtGetChild(0);
+			namedPipes.put(streamName, namedPipe);			
+//		} else {
+//			pipe = new ASTReactivePipe(1);
+//			pipe.jjtAddChild(child, 0);
 		}
-		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
-		pipes.add(node);
+		
+		
+//		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
+//		unnamedPipes.add(node);
 	}
+	List<ReactivePipeNode> pipes = unnamedPipes.stream()
+			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->Optional.ofNullable(namedPipes.get(name))))
+			.collect(Collectors.toList());
+
 	return new ContextExpression() {
 		
 		@Override

@@ -16,8 +16,8 @@ final class ASTModNode extends SimpleNode {
         super(id);
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		return lazyBiFunction(problems,expression, (a,b)->interpret(a, b),emptyOrType(Property.INTEGER_PROPERTY),(a,b)->Optional.of(Property.INTEGER_PROPERTY),functionClassifier,mapResolver);
 	}
 
 	private final Operand interpret(Operand ao, Operand bo){

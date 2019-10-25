@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.navajo.document.Operand;
@@ -21,8 +22,8 @@ final class ASTAddNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		return untypedLazyBiFunction(problems,expression, (a,b)->interpret(a, b,expression),functionClassifier,mapResolver);
 	}
 	
 	private final Operand interpret(Operand ao,Operand bo, String expression) {

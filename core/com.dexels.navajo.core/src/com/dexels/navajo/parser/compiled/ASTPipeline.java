@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class ASTPipeline extends SimpleNode {
 
 @Override
 public ContextExpression interpretToLambda(List<String> problems, String originalExpression,
-		Function<String, FunctionClassification> functionClassifier) {
+		Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 	return null;
 }
 

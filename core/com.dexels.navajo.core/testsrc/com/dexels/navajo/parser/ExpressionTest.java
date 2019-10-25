@@ -136,9 +136,7 @@ public class ExpressionTest {
 
 	@Test
 	public void testUnicode() throws Exception {
-		ExpressionEvaluator ee = NavajoFactory.getInstance()
-				.getExpressionEvaluator();
-
+		ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
 		Operand o = ee.evaluate("'ø'+'æ'", null, null,null);
 		assertEquals("øæ", o.value);
 	}
@@ -330,5 +328,6 @@ public class ExpressionTest {
 		assertEquals(3, s.value("innerint").get());
 	}
 
+	
 }
 

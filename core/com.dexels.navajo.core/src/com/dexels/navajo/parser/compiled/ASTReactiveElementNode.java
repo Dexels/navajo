@@ -24,7 +24,7 @@ class ASTReactiveElementNode extends SimpleNode {
   }
 
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 	return new ContextExpression() {
 
 		@Override

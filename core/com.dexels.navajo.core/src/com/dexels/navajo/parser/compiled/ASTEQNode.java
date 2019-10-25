@@ -20,8 +20,8 @@ final class ASTEQNode extends SimpleNode {
         return Operand.ofBoolean(Utils.equals(a.value, b.value,expression));
     }
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b, expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		return lazyBiFunction(problems,expression,(a,b)->interpret(a, b, expression),equalOrEmptyTypes(),(a,b)->Optional.of(Property.BOOLEAN_PROPERTY),functionClassifier,mapResolver);
 	}
     
 }

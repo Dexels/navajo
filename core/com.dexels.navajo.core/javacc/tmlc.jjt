@@ -58,7 +58,9 @@ TOKEN:
   <MOD: "%"> |
   <NULL: "null"> |
   <PIPE: "->"> |
-  <HEADER: "=>">
+  <HEADER: "=>"> |
+  <PIPESTART: "|>">
+  
 }
 
 TOKEN:
@@ -182,7 +184,7 @@ void PossiblePipe() #void:
 }
 {
 	OrExpression() 
-	| <PIPE>  ReactivePipe()  #ReactivePipe
+	| <PIPESTART>  ReactivePipe()  #ReactivePipe
 } 
 
 ASTPipeline ReactivePipe() #Pipeline:
@@ -390,7 +392,13 @@ void ReactiveScript() #void:
 	(
 		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
 		(
-			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
+        ( PossiblePipe() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		(	PossiblePipe() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) *		
 		) 
 	)  #ReactiveScriptNode
 	<EOF>

@@ -4,6 +4,7 @@ package com.dexels.navajo.parser.compiled;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -30,15 +31,15 @@ public int args = 0;
 
 @SuppressWarnings("unchecked")
 @Override
-public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier) {
+public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 	ASTPipeline actual = (ASTPipeline) jjtGetChild(0);
 
 	int count = actual.jjtGetNumChildren();
-	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE).apply().value;
+	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE,mapResolver).apply().value;
 	List<Object> pipeElements = new ArrayList<>();
 
 	for (int i = 1; i < count; i++) {
-		ContextExpression interpretToLambda = actual.jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier);
+		ContextExpression interpretToLambda = actual.jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier,mapResolver);
 		Object result = interpretToLambda.apply().value;
 		if(result instanceof Function) {
 			Function<StreamScriptContext,Function<DataItem,DataItem>> merger = (Function<StreamScriptContext,Function<DataItem,DataItem>>) result;
