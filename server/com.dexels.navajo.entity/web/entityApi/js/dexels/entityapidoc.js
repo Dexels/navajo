@@ -3,6 +3,9 @@ var modal;
 
 var pretty_max_source_length = 80000;
 
+var rsp = "INIT";
+
+
 
 function setupLoginDialog() {
     // fill important paramenters
@@ -44,14 +47,14 @@ function setupLoginDialog() {
             return true; // close the modal
         }
     });
-
+    //checkUseAAA();
     // set content
     modal.setContent($('#setauth').html());
 
 }
 
+
 $(document).ready(function() {
-	
 	// Inside document.ready, so that it's executed AFTER the page is ready. Navigate to the last clicked entity :)  
 	$(document).ready(function() {		
 	 if(sessionStorage.getItem("clickedOperation")){
@@ -59,6 +62,7 @@ $(document).ready(function() {
 		 window.location.hash = sessionStorage.getItem("clickedOperation");
 	 }
 	});
+	
 	
 	// Locale init
 	sessionStorage.locale = "n/a"
@@ -176,11 +180,39 @@ $(document).ready(function() {
     
     /* Going to perform an entity call */
     $(document).on('click', '.callentitybutton', function() {
+    	
+    	$.ajax({
+    		dataType: "json",
+            url: "/testerapi?query=useaaa",
+    	    type : "GET",
+    	    async : false,
+    	    success : function(response) {
+    	        	console.log("use aaaaaaaa   ");
+    	        	console.log("use aaa:"+response.useAAA);
+    	        	console.log("response : "+response);
+    	        	console.log("response type : "+response.type);
+    	        	if(response.type === "NONE") {
+    	        		console.log("is none"); // vg
+    		        	rsp = "NONE";
+    	        	}
+    	        	if(response.type === "PASSWORD"){
+    	        		console.log("is password"); // vg
+    	        		rsp = "PASSWORD";
+    	        	}
+    	    }
+    	});
+    	
+    	if (rsp == "NONE"){
+    		console.log("ITS HERE for none");
+    		sessionStorage.authType = 'basic';
+    	}
         var myRequest =  $(this).closest('.requestbody');
         var myOp =  $(this).closest('.operation');
-        if (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token") ) {
-            modal.open();
-            return;
+        if(rsp != "NONE"){
+	        if ( (sessionStorage.getItem("token") === null || !sessionStorage.getItem("token")) ) {
+	            modal.open();
+	            return;
+	        }
         }
         var method = $(this).attr('method');
         myOp.find('.entityresponsebody').children().remove();
@@ -356,6 +388,7 @@ $(document).ready(function() {
     
     
     $(document).on('click', '.tryentitybutton', function() {
+    	
         var parent = $(this).closest('.operation');
         if ($(this).hasClass('cancel')) {
             $(this).text("Try it out");

@@ -717,9 +717,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 throw new FatalException("No script defined");
             }
             
-            if (instance != null && !tenantConfig.getTenants().contains(instance)) {
-                throw new FatalException("Unsupported tenant: " + instance);
-            }
+//            if (instance != null && !tenantConfig.getTenants().contains(instance)) {
+//                throw new FatalException("Unsupported tenant: " + instance);
+//            }
 
 
             if (rpcName.equals("navajo_ping")) {

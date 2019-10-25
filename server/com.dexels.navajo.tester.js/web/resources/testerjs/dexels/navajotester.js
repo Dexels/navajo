@@ -9,6 +9,7 @@ var titleloader;
 var pretty_max_source_length = 80000;
 var pretty_max_response_length = 80000;
 
+var rsp = "INIT";
 
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
@@ -28,6 +29,7 @@ function createEditor() {
 
 
 function checkUseAAA() {
+	
 	$.ajax({
 		dataType: "json",
         url: "testerapi?query=useaaa",
@@ -36,11 +38,18 @@ function checkUseAAA() {
 	    success : function(response) {
 	        	console.log("use aaaaaaaa   ");
 	        	console.log("use aaa:"+response.useAAA);
-	        	if(response.useAAA===false) {
+	        	console.log("response : "+response);
+	        	if(response.type === "NONE") {
 		        	hideLoginTable();
+		        	rsp = "NONE";
+	        	}
+	        	if(response.type === "PASSWORD"){
+	        		rsp = "PASSWORD";
 	        	}
 	    }
 	})
+	
+	return rsp;
 	};
 function updateTenants() {
 	$.ajax({
@@ -50,6 +59,8 @@ function updateTenants() {
 	    async : true,
 	    success : function(response) {
 	    	var cnt = 0;
+	    	console.log("response length: "+response.length); //should I do as in update applications?
+	    	
 	        $.each(response, function(key, value) {
 	            console.log(">>>>> value::: "+response+" index: "+cnt);
 	            if(cnt==0) {
@@ -66,11 +77,20 @@ function updateTenants() {
 	               }
 	           }
 	           cnt++;
+	           console.log("count 1: "+cnt);
 	        });
+
+	        console.log("count 2: "+cnt);
+	        if(cnt == 0){
+	        	$('#handlers').attr('disabled',true); //vg
+	        }
+	     
 	        if (sessionStorage.instance) {
 	        	 $('#handlers').val(sessionStorage.instance);
 	        }
 	        $("#handlers").trigger("chosen:updated");
+	        
+	        
 	    }
 	});
 }
@@ -241,7 +261,19 @@ function processLoginForm(){
 }
 
 function loginTableVisible() {
+	
     var instance =  $( "#handlers option:selected" ).text();
+    var length = $('#handlers > option').length;
+    //var disabled = $('#handlers').attr('disabled');
+    
+    var isDisabled = $('#handlers').prop('disabled');
+    
+    console.log("DISABLED: "+isDisabled);
+    
+    if(isDisabled){
+    	return false;
+    }
+    console.log("what is instance: "+instance);
     return (instance === "" || !sessionStorage.user)
 }
 
@@ -258,18 +290,22 @@ function hideLoginTable() {
 }
 
 function runScript(script) {
+	var rsp = checkUseAAA();
     $('#scriptCustomInputView').hide();
     if (script.indexOf('_') !== -1) {
     	var tenant = script.substring(script.indexOf('_'));
     	script = script.substring(0, script.indexOf('_'));
     	window.alert('Stripping '+tenant+' part of script! Calling ' + script)
+    	
     }
+    
     $('#loadedScript').text(script);
     sessionStorage.script = script;
     $('html, body').animate({
         scrollTop : 0
     }, 50);
-
+    
+    console.log("what is instanceGRE: "+loginTableVisible())
     if (loginTableVisible()) {
         showLoginTable();
 
@@ -278,7 +314,6 @@ function runScript(script) {
         setTimeout(function(){$('#logintable').trigger('stopRumble');}, 750);
         return;
     }
-
     var instance = $( "#handlers option:selected" ).text();
     try {
         hourglassOn();
