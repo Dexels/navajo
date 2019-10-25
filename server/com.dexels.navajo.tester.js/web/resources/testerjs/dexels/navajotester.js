@@ -39,7 +39,6 @@ function checkUseAAA() {
 	        	console.log("use aaaaaaaa   ");
 	        	console.log("use aaa:"+response.useAAA);
 	        	console.log("response : "+response);
-	        	console.log("response type : "+response.type);
 	        	if(response.type === "NONE") {
 		        	hideLoginTable();
 		        	rsp = "NONE";
@@ -50,8 +49,6 @@ function checkUseAAA() {
 	    }
 	})
 	
-	
-	console.log("response type END : "+rsp);
 	return rsp;
 	};
 function updateTenants() {

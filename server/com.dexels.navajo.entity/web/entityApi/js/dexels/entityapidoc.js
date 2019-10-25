@@ -52,33 +52,7 @@ function setupLoginDialog() {
     modal.setContent($('#setauth').html());
 
 }
-function checkUseAAA() {
-	
-	$.ajax({
-		dataType: "json",
-        url: "/testerapi?query=useaaa",
-	    type : "GET",
-	    async : true,
-	    success : function(response) {
-	        	console.log("use aaaaaaaa   ");
-	        	console.log("use aaa:"+response.useAAA);
-	        	console.log("response : "+response);
-	        	console.log("response type : "+response.type);
-	        	if(response.type === "NONE") {
-	        		console.log("is none"); // vg
-		        	//hideLoginTable();
-		        	rsp = "NONE";
-		        	//return rsp;
-	        	}
-	        	if(response.type === "PASSWORD"){
-	        		console.log("is password"); // vg
-	        		rsp = "PASSWORD";
-	        		//return rsp;
-	        	}
-	    }
-	});
-	
-}
+
 
 $(document).ready(function() {
 	// Inside document.ready, so that it's executed AFTER the page is ready. Navigate to the last clicked entity :)  
