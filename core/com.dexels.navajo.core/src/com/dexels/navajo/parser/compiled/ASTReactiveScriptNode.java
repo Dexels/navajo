@@ -51,6 +51,7 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 	int count = jjtGetNumChildren();
 	List<ASTReactivePipe> unnamedPipes = new ArrayList<>();
 	Map<String,ASTReactivePipe> namedPipes = new HashMap<>();
+	Map<String,ASTReactivePipeSegment> namedPipeSegments = new HashMap<>();
 	for (int i = start; i < count; i++) {
 		Node child = jjtGetChild(i);
 //		ASTReactivePipe pipe = null;
@@ -59,8 +60,16 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		} else if (child instanceof ASTKeyValueNode) {
 			ASTKeyValueNode kvNode = (ASTKeyValueNode)child;
 			String streamName = kvNode.val;
-			ASTReactivePipe namedPipe = (ASTReactivePipe) kvNode.jjtGetChild(0);
-			namedPipes.put(streamName, namedPipe);			
+			Node value = kvNode.jjtGetChild(0);
+			if(value instanceof ASTReactivePipe) {
+				ASTReactivePipe namedPipe = (ASTReactivePipe) value;
+				namedPipes.put(streamName, namedPipe);			
+			} else if (value instanceof ASTReactivePipeSegment) {
+				ASTReactivePipeSegment namedPipe = (ASTReactivePipeSegment) value;
+				namedPipeSegments.put(streamName, namedPipe);			
+			} else {
+				throw new IllegalArgumentException("Unexpected type: "+value);
+			}
 //		} else {
 //			pipe = new ASTReactivePipe(1);
 //			pipe.jjtAddChild(child, 0);
@@ -71,7 +80,18 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 //		unnamedPipes.add(node);
 	}
 	List<ReactivePipeNode> pipes = unnamedPipes.stream()
-			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->Optional.ofNullable(namedPipes.get(name))))
+			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->{
+				Node namedPipe = namedPipes.get(name);
+				if(namedPipe!=null) {
+					return Optional.of(namedPipe);
+				} else {
+					Node namedPipeSegment = namedPipeSegments.get(name);
+					if(namedPipeSegment!=null) {
+						return Optional.of(namedPipeSegment);
+					}
+				}
+				return Optional.empty();
+			}))
 			.collect(Collectors.toList());
 
 	return new ContextExpression() {

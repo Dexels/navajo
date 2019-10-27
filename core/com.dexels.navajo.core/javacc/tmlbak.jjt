@@ -175,24 +175,9 @@ void Expression() #void:
 {
 }
 {
-  /*AdditiveExpression()*/
-  PossiblePipe()
-}
-
-void PossiblePipe() #void:
-{
-}
-{
 	OrExpression() 
-	| <PIPESTART>  ReactivePipe()  #ReactivePipe
-	| <PIPE>  ReactivePipe()  #ReactivePipeSegment
-} 
-
-ASTPipeline ReactivePipe() #Pipeline:
-{
-}
-{
-	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+	| <PIPESTART> OrExpression() (<PIPE> OrExpression())*  #ReactivePipe
+	| <PIPE> OrExpression() (<PIPE> OrExpression())*  #ReactivePipe
 }
 
 void OrExpression() #void:
@@ -293,11 +278,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( PossiblePipe() {jjtThis.args++;}
+        ( Expression() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	PossiblePipe() {jjtThis.args++;} 
+     		(	OrExpression() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]
@@ -393,10 +378,10 @@ void ReactiveScript() #void:
 	(
 		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
 		(
-        ( PossiblePipe() {jjtThis.args++;}
+        ( Expression() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
-     		(	PossiblePipe() {jjtThis.args++;} 
+     		(	Expression() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) *		

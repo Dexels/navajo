@@ -6,44 +6,46 @@ public interface CompiledParserTreeConstants
   public int JJTVOID = 0;
   public int JJTLISTNODE = 1;
   public int JJTREACTIVEPIPE = 2;
-  public int JJTPIPELINE = 3;
-  public int JJTORNODE = 4;
-  public int JJTANDNODE = 5;
-  public int JJTEQNODE = 6;
-  public int JJTNENODE = 7;
-  public int JJTLTNODE = 8;
-  public int JJTGTNODE = 9;
-  public int JJTLENODE = 10;
-  public int JJTGENODE = 11;
-  public int JJTADDNODE = 12;
-  public int JJTSUBTRACTNODE = 13;
-  public int JJTMULNODE = 14;
-  public int JJTDIVNODE = 15;
-  public int JJTMODNODE = 16;
-  public int JJTNEGATIVENODE = 17;
-  public int JJTNOTNODE = 18;
-  public int JJTNULLNODE = 19;
-  public int JJTTODAYNODE = 20;
-  public int JJTTRUENODE = 21;
-  public int JJTFALSENODE = 22;
-  public int JJTDATEPATTERNNODE = 23;
-  public int JJTFORALLNODE = 24;
-  public int JJTFUNCTIONNODE = 25;
-  public int JJTFLOATCONSTANTNODE = 26;
-  public int JJTINTEGERCONSTANTNODE = 27;
-  public int JJTSTRINGCONSTANTNODE = 28;
-  public int JJTEXPRESSIONLITERALNODE = 29;
-  public int JJTTMLNODE = 30;
-  public int JJTTIPINODE = 31;
-  public int JJTMAPPABLENODE = 32;
-  public int JJTKEYVALUENODE = 33;
-  public int JJTREACTIVESCRIPTNODE = 34;
+  public int JJTREACTIVEPIPESEGMENT = 3;
+  public int JJTPIPELINE = 4;
+  public int JJTORNODE = 5;
+  public int JJTANDNODE = 6;
+  public int JJTEQNODE = 7;
+  public int JJTNENODE = 8;
+  public int JJTLTNODE = 9;
+  public int JJTGTNODE = 10;
+  public int JJTLENODE = 11;
+  public int JJTGENODE = 12;
+  public int JJTADDNODE = 13;
+  public int JJTSUBTRACTNODE = 14;
+  public int JJTMULNODE = 15;
+  public int JJTDIVNODE = 16;
+  public int JJTMODNODE = 17;
+  public int JJTNEGATIVENODE = 18;
+  public int JJTNOTNODE = 19;
+  public int JJTNULLNODE = 20;
+  public int JJTTODAYNODE = 21;
+  public int JJTTRUENODE = 22;
+  public int JJTFALSENODE = 23;
+  public int JJTDATEPATTERNNODE = 24;
+  public int JJTFORALLNODE = 25;
+  public int JJTFUNCTIONNODE = 26;
+  public int JJTFLOATCONSTANTNODE = 27;
+  public int JJTINTEGERCONSTANTNODE = 28;
+  public int JJTSTRINGCONSTANTNODE = 29;
+  public int JJTEXPRESSIONLITERALNODE = 30;
+  public int JJTTMLNODE = 31;
+  public int JJTTIPINODE = 32;
+  public int JJTMAPPABLENODE = 33;
+  public int JJTKEYVALUENODE = 34;
+  public int JJTREACTIVESCRIPTNODE = 35;
 
 
   public String[] jjtNodeName = {
     "void",
     "ListNode",
     "ReactivePipe",
+    "ReactivePipeSegment",
     "Pipeline",
     "OrNode",
     "AndNode",
@@ -78,4 +80,4 @@ public interface CompiledParserTreeConstants
     "ReactiveScriptNode",
   };
 }
-/* JavaCC - OriginalChecksum=079f78d172cacaf5add30bdf50210dde (do not edit this line) */
+/* JavaCC - OriginalChecksum=da25fd8a9ecbf2e5c2711cc08b4ac41d (do not edit this line) */

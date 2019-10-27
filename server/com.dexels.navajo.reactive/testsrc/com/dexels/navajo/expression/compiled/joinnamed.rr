@@ -1,7 +1,9 @@
 secondary= |>single(count=5)
 			->set(id=[@index])
 			->reduce(set(sum=0),set(sum=[@sum]+[id]))
-			
+
+jointransformer= ->set('newfield',[@sum])
+
 |>single()
-	->join($secondary)
+	->join($secondary,$jointransformer)
 	->tml(messageName='Test',isArray=false)

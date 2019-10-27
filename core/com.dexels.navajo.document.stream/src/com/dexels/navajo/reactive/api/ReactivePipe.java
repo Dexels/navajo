@@ -24,7 +24,6 @@ public class ReactivePipe implements ReactiveSource {
 	public ReactivePipe(ReactiveSource source, List<Object> transformers) {
 		this.source = source;
 		this.transformers = transformers;
-//		typecheck();
 	}
 	
 	public void typecheck() {
