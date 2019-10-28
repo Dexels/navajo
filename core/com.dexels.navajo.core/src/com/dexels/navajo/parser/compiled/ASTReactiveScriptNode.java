@@ -49,26 +49,19 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 		}
 	}
 	int count = jjtGetNumChildren();
-	List<ASTReactivePipe> unnamedPipes = new ArrayList<>();
-	Map<String,ASTReactivePipe> namedPipes = new HashMap<>();
+	List<Node> unnamedPipes = new ArrayList<>();
+	Map<String,Node> namedPipes = new HashMap<>();
 	for (int i = start; i < count; i++) {
 		Node child = jjtGetChild(i);
 //		ASTReactivePipe pipe = null;
-		if(child instanceof ASTReactivePipe) {
-			unnamedPipes.add((ASTReactivePipe) child);
+		if(child instanceof ASTPipeDefinition) {
+			unnamedPipes.add((ASTPipeDefinition) child);
 		} else if (child instanceof ASTKeyValueNode) {
 			ASTKeyValueNode kvNode = (ASTKeyValueNode)child;
 			String streamName = kvNode.val;
-			ASTReactivePipe namedPipe = (ASTReactivePipe) kvNode.jjtGetChild(0);
+			Node namedPipe = kvNode.jjtGetChild(0);
 			namedPipes.put(streamName, namedPipe);			
-//		} else {
-//			pipe = new ASTReactivePipe(1);
-//			pipe.jjtAddChild(child, 0);
 		}
-		
-		
-//		ReactivePipeNode node = (ReactivePipeNode) pipe.interpretToLambda(problems,originalExpression,functionClassifier);
-//		unnamedPipes.add(node);
 	}
 	List<ReactivePipeNode> pipes = unnamedPipes.stream()
 			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->Optional.ofNullable(namedPipes.get(name))))

@@ -5,8 +5,8 @@ public interface CompiledParserTreeConstants
 {
   public int JJTVOID = 0;
   public int JJTLISTNODE = 1;
-  public int JJTREACTIVEPIPE = 2;
-  public int JJTPIPELINE = 3;
+  public int JJTPIPEDEFINITION = 2;
+  public int JJTREACTIVESCRIPTNODE = 3;
   public int JJTORNODE = 4;
   public int JJTANDNODE = 5;
   public int JJTEQNODE = 6;
@@ -37,14 +37,13 @@ public interface CompiledParserTreeConstants
   public int JJTTIPINODE = 31;
   public int JJTMAPPABLENODE = 32;
   public int JJTKEYVALUENODE = 33;
-  public int JJTREACTIVESCRIPTNODE = 34;
 
 
   public String[] jjtNodeName = {
     "void",
     "ListNode",
-    "ReactivePipe",
-    "Pipeline",
+    "PipeDefinition",
+    "ReactiveScriptNode",
     "OrNode",
     "AndNode",
     "EQNode",
@@ -75,7 +74,6 @@ public interface CompiledParserTreeConstants
     "TipiNode",
     "MappableNode",
     "KeyValueNode",
-    "ReactiveScriptNode",
   };
 }
-/* JavaCC - OriginalChecksum=079f78d172cacaf5add30bdf50210dde (do not edit this line) */
+/* JavaCC - OriginalChecksum=315cebd249266a005dfab8feeb101490 (do not edit this line) */

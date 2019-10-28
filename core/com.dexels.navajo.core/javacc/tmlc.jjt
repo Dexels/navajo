@@ -175,24 +175,37 @@ void Expression() #void:
 {
 }
 {
-  /*AdditiveExpression()*/
-  PossiblePipe()
+  OrExpression()
+  | PipeDefinition()
 }
 
-void PossiblePipe() #void:
+ASTPipeDefinition PipeDefinition() #PipeDefinition:
 {
 }
 {
-	OrExpression() 
-	| <PIPESTART>  ReactivePipe()  #ReactivePipe
+	<PIPE> {jjtThis.partial = true;} OrExpression()  {jjtThis.args++;}(<PIPE> OrExpression() {jjtThis.args++;})* {return jjtThis; }
+	| <PIPESTART> {jjtThis.partial = false;} OrExpression() {jjtThis.args++;} (<PIPE> OrExpression() {jjtThis.args++;})* {return jjtThis; }
 } 
 
-ASTPipeline ReactivePipe() #Pipeline:
+void ReactiveScript() #void:
 {
 }
 {
-	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+	(
+		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
+		(
+        ( PipeDefinition() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		(	PipeDefinition() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) *		
+		) 
+	)  #ReactiveScriptNode
+	<EOF>
 }
+
 
 void OrExpression() #void:
 {}
@@ -292,11 +305,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( PossiblePipe() {jjtThis.args++;}
+        ( Expression() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	PossiblePipe() {jjtThis.args++;} 
+     		(	Expression() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]
@@ -385,23 +398,5 @@ void KeyValue() #void:
   ) #KeyValueNode
 }
 
-void ReactiveScript() #void:
-{
-}
-{
-	(
-		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
-		(
-        ( PossiblePipe() {jjtThis.args++;}
-      	| KeyValue() {jjtThis.args++;} )
-     	(
-     		(	PossiblePipe() {jjtThis.args++;} 
-     		    | KeyValue() {jjtThis.args++;}
-     		)
-     	) *		
-		) 
-	)  #ReactiveScriptNode
-	<EOF>
-}
 
 
