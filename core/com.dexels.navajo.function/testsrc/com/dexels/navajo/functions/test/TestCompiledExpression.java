@@ -114,14 +114,30 @@ public class TestCompiledExpression {
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
 	}
 	
+	@Test
+	public void testFunctionEvaluation() {
+		List<String> problems = new ArrayList<>();
+		ExpressionCache ce = ExpressionCache.getInstance();
+		String embeddedExpression = "StringFunction('matches','aaa', '.*[-]+7[0-9][A-z]*$' ))";
+		ContextExpression cemb = ce.parse(problems,embeddedExpression,name->FunctionClassification.DEFAULT);
+		System.err.println("Problems: "+problems);
+		Assert.assertEquals(0, problems.size());
+		Operand result =  cemb.apply(input,Optional.empty(),Optional.empty());
+		System.err.println("Result: "+result.type+" value: "+result.value);
+		
+	}
+	
 
 	@Test
 	public void testForall() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
 		ExpressionCache ce = ExpressionCache.getInstance();
-		String ext ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
+		String extBackup ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
+
+		String ext ="FORALL( '/Msg', `!StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
 //		String expression = "FORALL( '/Charges' , `! ?[Delete] OR ! [Delete]  OR [/__globals__/ApplicationInstance] != 'SOMETENANT' OR [SomeProperty] == 'SOMESTRING' `)";
 //		ce.parse(problems, expression, mode, allowLiteralResolve)
+
 		ContextExpression cx = ce.parse(problems,ext,name->FunctionClassification.DEFAULT);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(0, problems.size());
