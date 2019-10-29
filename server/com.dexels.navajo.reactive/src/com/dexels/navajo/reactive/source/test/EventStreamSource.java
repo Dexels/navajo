@@ -55,5 +55,11 @@ public class EventStreamSource implements ReactiveSource {
 	public Type sourceType() {
 		return Type.EVENTSTREAM;
 	}
+	
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 
 }

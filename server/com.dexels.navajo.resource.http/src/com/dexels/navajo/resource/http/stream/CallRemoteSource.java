@@ -69,5 +69,9 @@ public class CallRemoteSource implements ReactiveSource {
 	public Type sourceType() {
 		return metadata.sourceType();
 	}
+	@Override
+	public ReactiveParameters parameters() {
+		return params;
+	}
 
 }

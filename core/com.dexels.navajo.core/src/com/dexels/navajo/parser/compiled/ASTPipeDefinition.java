@@ -32,30 +32,37 @@ class ASTPipeDefinition extends SimpleNode {
   }
   
   @SuppressWarnings("unchecked")
+private List<Object> transformerElements(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+	  	int count = jjtGetNumChildren();
+	  	List<Object> pipeElements = new ArrayList<>();
+	  	for (int i = (partial?0:1); i < count; i++) {
+	  		ContextExpression interpretToLambda = jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier,mapResolver);
+	  		Object result = interpretToLambda.apply().value;
+	  		if(result instanceof Function) {
+	  			Function<StreamScriptContext,Function<DataItem,DataItem>> merger = (Function<StreamScriptContext,Function<DataItem,DataItem>>) result;
+	  			pipeElements.add(merger);
+
+	  		} else if(result instanceof ReactiveTransformer) {
+	  			ReactiveTransformer transformer = (ReactiveTransformer) result;
+	  			pipeElements.add(transformer);
+	  		} else {
+	  			logger.warn("huh? {}",result);
+	  			// something weird
+	  		}
+	  	}	 
+	  	return pipeElements;
+  }
+  
   @Override
   public ContextExpression interpretToLambda(List<String> problems, String originalExpression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
-  	Node actual = this; // jjtGetChild(0);
+	 if(partial) {
+		  	return new ReactivePipeNode(Optional.empty(), transformerElements(problems, originalExpression, functionClassifier, mapResolver));
+	 } else {
+		  	ReactiveSource sourceNode = (ReactiveSource) jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE,mapResolver).apply().value;
+		  	return new ReactivePipeNode(Optional.of(sourceNode), transformerElements(problems, originalExpression, functionClassifier, mapResolver));
+	 }
+  	
 
-  	int count = actual.jjtGetNumChildren();
-  	ReactiveSource sourceNode = (ReactiveSource) actual.jjtGetChild(0).interpretToLambda(problems, "",fn->FunctionClassification.REACTIVE_SOURCE,mapResolver).apply().value;
-  	List<Object> pipeElements = new ArrayList<>();
-
-  	for (int i = 1; i < count; i++) {
-  		ContextExpression interpretToLambda = actual.jjtGetChild(i).interpretToLambda(problems, originalExpression,functionClassifier,mapResolver);
-  		Object result = interpretToLambda.apply().value;
-  		if(result instanceof Function) {
-  			Function<StreamScriptContext,Function<DataItem,DataItem>> merger = (Function<StreamScriptContext,Function<DataItem,DataItem>>) result;
-  			pipeElements.add(merger);
-
-  		} else if(result instanceof ReactiveTransformer) {
-  			ReactiveTransformer transformer = (ReactiveTransformer) result;
-  			pipeElements.add(transformer);
-  		} else {
-  			logger.warn("huh? {}",result);
-  			// something weird
-  		}
-  	}
-  	return new ReactivePipeNode(sourceNode, pipeElements);
   }
 }
 /* JavaCC - OriginalChecksum=e2f99ca4133af324ac89708758019188 (do not edit this line) */

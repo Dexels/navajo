@@ -88,4 +88,10 @@ public class SubscriberReactiveSource implements ReactiveSource {
 	public Type sourceType() {
 		return Type.DATA;
 	}
+
+	public ReactiveParameters parameters() {
+		return params;
+	}
+
 }
+

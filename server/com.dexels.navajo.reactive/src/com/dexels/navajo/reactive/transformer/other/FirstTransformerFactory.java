@@ -25,7 +25,7 @@ public class FirstTransformerFactory implements ReactiveTransformerFactory, Tran
 	@Override
 	public ReactiveTransformer build(List<ReactiveParseProblem> problems,
 			ReactiveParameters parameters) {
-		return new FirstTransformer(this);
+		return new FirstTransformer(this,parameters);
 	}
 	@Override
 	public Set<Type> inType() {

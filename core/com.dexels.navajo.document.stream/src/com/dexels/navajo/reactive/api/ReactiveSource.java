@@ -16,5 +16,5 @@ public interface ReactiveSource {
 	public boolean streamInput();
 	public final Function<String, ReactiveMerger> emptyReducerSupplier = (e->null);
 	public Type sourceType();
-	
+	public ReactiveParameters parameters();
 }

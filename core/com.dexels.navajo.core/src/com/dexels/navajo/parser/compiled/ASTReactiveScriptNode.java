@@ -60,11 +60,19 @@ public ContextExpression interpretToLambda(List<String> problems, String origina
 			ASTKeyValueNode kvNode = (ASTKeyValueNode)child;
 			String streamName = kvNode.val;
 			Node namedPipe = kvNode.jjtGetChild(0);
+			// assert value types perhaps? TODO
 			namedPipes.put(streamName, namedPipe);			
 		}
 	}
 	List<ReactivePipeNode> pipes = unnamedPipes.stream()
-			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->Optional.ofNullable(namedPipes.get(name))))
+			.map(p->(ReactivePipeNode)p.interpretToLambda(problems, originalExpression, functionClassifier,name->{
+				Optional<Node> initial = Optional.ofNullable(namedPipes.get(name));
+				if(initial.isPresent()) {
+					return initial;
+				} else {
+					return mapResolver.apply(name);
+				}
+			} ))
 			.collect(Collectors.toList());
 
 	return new ContextExpression() {

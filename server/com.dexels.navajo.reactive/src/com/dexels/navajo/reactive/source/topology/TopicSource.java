@@ -1,4 +1,4 @@
-package com.dexels.navajo.reactive.source.ndjson;
+package com.dexels.navajo.reactive.source.topology;
 
 import java.util.Optional;
 
@@ -12,19 +12,19 @@ import com.dexels.navajo.reactive.api.SourceMetadata;
 
 import io.reactivex.Flowable;
 
-public class NDJsonSource implements ReactiveSource {
+public class TopicSource implements ReactiveSource {
 
-	private final ReactiveParameters params;
 	private final SourceMetadata metadata;
-	
-	public NDJsonSource(SourceMetadata metadata, ReactiveParameters params) {
-		this.metadata = metadata;
-		this.params = params;
-	}
+	private final ReactiveParameters parameters;
 
+	public TopicSource(SourceMetadata metadata, ReactiveParameters params) {
+		this.metadata = metadata;
+		this.parameters = params;
+	}
 	@Override
-	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
-		return Flowable.empty();
+	public Flowable<DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current,
+			ImmutableMessage paramMessage) {
+		return Flowable.error(new Exception("Topology sources shouldn't be executed"));
 	}
 
 	@Override
@@ -34,13 +34,11 @@ public class NDJsonSource implements ReactiveSource {
 
 	@Override
 	public Type sourceType() {
-		return null;
-	}
-	
-	@Override
-	public ReactiveParameters parameters() {
-		return params;
+		return Type.MESSAGE;
 	}
 
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
 
 }

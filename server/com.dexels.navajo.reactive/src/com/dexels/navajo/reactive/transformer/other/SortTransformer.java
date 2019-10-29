@@ -29,8 +29,8 @@ public class SortTransformer implements ReactiveTransformer {
 
 	@Override
 	public FlowableTransformer<DataItem, DataItem> execute(StreamScriptContext context, Optional<ImmutableMessage> current, ImmutableMessage param) {
-//		int count = parms.unnamedParameters().stream().findFirst().orElse(Operand.ofInteger(0)).integerValue(); //parms.paramInteger("count");
 		return e->e.sorted((o1,o2)->{
+//			TODO fix
 			ReactiveResolvedParameters parms = parameters.resolve(context, current, param, metadata);
 			List<Operand> resolved = parms.unnamedParameters().stream().collect(Collectors.toList()); //  .findFirst().orElse(Operand.ofInteger(0)).integerValue(); //parms.paramInteger("count");
 
@@ -49,6 +49,11 @@ public class SortTransformer implements ReactiveTransformer {
 	@Override
 	public TransformerMetadata metadata() {
 		return metadata;
+	}
+
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
 	}
 
 }

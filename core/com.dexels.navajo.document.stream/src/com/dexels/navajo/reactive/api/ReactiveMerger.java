@@ -75,6 +75,11 @@ public interface ReactiveMerger extends ParameterValidator {
 					return item.map(e->mapper.apply(e));
 				};
 			}
+
+			@Override
+			public ReactiveParameters parameters() {
+				return params;
+			}
 		};
 	}
 }

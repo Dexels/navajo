@@ -75,7 +75,8 @@ public class SQLReactiveSource implements ReactiveSource {
 	public Type sourceType() {
 		return Type.MESSAGE;
 	}
-
-
-
+	
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
 }

@@ -32,6 +32,10 @@ import com.dexels.navajo.reactive.source.input.TmlInputSourceFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
+import com.dexels.navajo.reactive.source.topology.GroupTransformerFactory;
+import com.dexels.navajo.reactive.source.topology.SinkTransformerFactory;
+import com.dexels.navajo.reactive.source.topology.TopicSource;
+import com.dexels.navajo.reactive.source.topology.TopicSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
@@ -75,6 +79,9 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
 		addReactiveSourceFactory(new InputSourceFactory(),"input");
 		addReactiveSourceFactory(new TmlInputSourceFactory(),"tmlinput");
+
+		addReactiveSourceFactory(new TopicSourceFactory(),"topic");
+
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
@@ -91,6 +98,10 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"tmlstream");
 		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
 		addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
+
+		addReactiveTransformerFactory(new GroupTransformerFactory(),"group");
+		addReactiveTransformerFactory(new SinkTransformerFactory(),"sink");
+		
 //		FunctionFactoryFactory.getInstance().addFunctionResolver(fr);
 		try {
 			new navajofunctions.Version().start((BundleContext)null);

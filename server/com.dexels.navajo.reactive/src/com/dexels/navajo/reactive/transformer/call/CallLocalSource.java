@@ -78,4 +78,9 @@ public class CallLocalSource implements ReactiveSource {
 		return Type.EVENT;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return params;
+	}
+
 }
