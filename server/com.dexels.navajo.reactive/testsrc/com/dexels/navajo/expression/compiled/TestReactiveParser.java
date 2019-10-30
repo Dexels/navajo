@@ -288,65 +288,6 @@ public class TestReactiveParser {
 //		}
 //		System.err.println("Name: "+n.jjtGetNumChildren());
 	}
-	
-	@Test
-	public void testMoreStreamsWithPartials() throws ParseException, IOException {
-
-		CompiledReactiveScript crs = ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("morestreamswithpartials.rr"));
-		Assert.assertEquals(1, crs.pipes.size());
-		for (ReactivePipe pipe : crs.pipes) {
-			System.err.println("source name: "+pipe.source.getClass().getName());
-			pipe.transformers.forEach(e->{
-				System.err.println("Transformer: "+e);
-				if(e instanceof ReactiveTransformer) {
-					ReactiveTransformer rt = (ReactiveTransformer)e;
-					System.err.println("type: "+rt.metadata().name()+"\n named params:");
-					rt.parameters().named.entrySet().forEach(entry->{
-						System.err.println("param: "+entry.getKey()+" value: "+entry.getValue()+" type: "+entry.getValue().returnType());
-					});
-					System.err.println("|< end of named. unnamed:");
-					rt.parameters().unnamed.forEach(elt->{
-						System.err.println("E: "+elt+" type: "+elt.returnType());
-					});
-				}
-			});
-			System.err.println("pipe: "+pipe);
-		}
-	}
-	
-
-	@Test
-	public void testSimpleTopic() throws ParseException, IOException {
-
-		CompiledReactiveScript crs = ReactiveStandalone.compileReactiveScript(getClass().getResourceAsStream("simpletopic.rr"));
-		Assert.assertEquals(1, crs.pipes.size());
-		for (ReactivePipe pipe : crs.pipes) {
-			System.err.println("source name: "+pipe.source.getClass().getName());
-			pipe.transformers.forEach(e->{
-				System.err.println("Transformer: "+e);
-				if(e instanceof ReactiveTransformer) {
-					ReactiveTransformer rt = (ReactiveTransformer)e;
-					System.err.println("type: "+rt.metadata().name());
-					if(!rt.parameters().named.isEmpty()) {
-						System.err.println("named params:");
-						rt.parameters().named.entrySet().forEach(entry->{
-							System.err.println("param: "+entry.getKey()+" value: "+entry.getValue()+" type: "+entry.getValue().returnType());
-						});
-						System.err.println("|< end of named");
-						
-					}
-					if(!rt.parameters().unnamed.isEmpty()) {
-						rt.parameters().unnamed.forEach(elt->{
-							System.err.println("E: "+elt+" type: "+elt.returnType());
-						});
-					}
-				}
-			});
-			System.err.println("pipe: "+pipe);
-		}
-	}
-	
-	
 
 	@Test
 	public void testPipeKeyValue() throws ParseException {
