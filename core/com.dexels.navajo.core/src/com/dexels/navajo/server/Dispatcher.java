@@ -853,15 +853,29 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                  * Add some MDC parameters to context
                  */
 
-                MDC.put("accessId", access.accessID);
-                MDC.put("rpcName", access.getRpcName());
-                MDC.put("rpcUser", access.getRpcUser());
+                // Be very defensive not to add null values to the MDC, as they will fail at unexpected moments
+                if(access.accessID!=null) {
+                    MDC.put("accessId", access.accessID);
+                	
+                }
+                if(access.getRpcName()!=null) {
+                    MDC.put("rpcName", access.getRpcName());
+                }
+                if(access.getRpcUser()!=null) {
+                    MDC.put("rpcUser", access.getRpcUser());
+                }
                 if (access.getTenant() != null) {
                     MDC.put("tenant", access.getTenant());
                 }
-                MDC.put("rootPath", getNavajoConfig().getRootPath());
-                MDC.put("instanceName", getNavajoConfig().getInstanceName());
-                MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
+                if(getNavajoConfig().getRootPath()!=null) {
+                    MDC.put("rootPath", getNavajoConfig().getRootPath());
+                }
+                if(getNavajoConfig().getInstanceName()!=null) {
+                    MDC.put("instanceName", getNavajoConfig().getInstanceName());
+                }
+                if(getNavajoConfig().getInstanceGroup()!=null) {
+                    MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
+                }
 
                 /**
                  * Phase VIa: Check if scheduled webservice
