@@ -8,4 +8,16 @@
 		<methods>
 		</methods>
 	</map>
+	<map>
+		<tagname>fscrawler</tagname>
+		<object>com.dexels.navajo.elasticsearch.adapters.FscrawlerAdapter</object>
+		<values>
+			<value name="binary" type="binary" required="false" direction="in" />
+			<value name="id" type="string" required="true" direction="in" />
+			<value name="name" type="string" required="true" direction="in" />
+		</values>
+		<methods>
+		</methods>
+	</map>
+
 </adapterdef>
