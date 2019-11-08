@@ -1,6 +1,7 @@
 package com.dexels.navajo.expression.compiled.topology;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class TestReactiveTopology {
 		Assert.assertEquals(1, crs.pipes.size());
 		for (ReactivePipe pipe : crs.pipes) {
 			System.err.println("source name: "+pipe.source.getClass().getName());
+			AtomicInteger i = new AtomicInteger();
 			pipe.transformers.forEach(e->{
 				System.err.println("Transformer: "+e);
 				if(e instanceof ReactiveTransformer) {
@@ -48,9 +50,13 @@ public class TestReactiveTopology {
 					rt.parameters().unnamed.forEach(elt->{
 						System.err.println("E: "+elt+" type: "+elt.returnType());
 					});
+				} else {
+					System.err.println("Non transformer: "+e);
 				}
+				i.incrementAndGet();
 			});
 			System.err.println("pipe: "+pipe);
+			System.err.println(">>> "+i.get());
 		}
 	}
 	

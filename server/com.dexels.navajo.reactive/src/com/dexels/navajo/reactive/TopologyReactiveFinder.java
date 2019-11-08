@@ -2,6 +2,7 @@ package com.dexels.navajo.reactive;
 
 import com.dexels.navajo.reactive.source.topology.FilterTransformerFactory;
 import com.dexels.navajo.reactive.source.topology.GroupTransformerFactory;
+import com.dexels.navajo.reactive.source.topology.ScanToListTransformerFactory;
 import com.dexels.navajo.reactive.source.topology.SinkTransformerFactory;
 import com.dexels.navajo.reactive.source.topology.TopicSourceFactory;
 
@@ -12,6 +13,7 @@ public class TopologyReactiveFinder extends CoreReactiveFinder {
 		addReactiveTransformerFactory(new GroupTransformerFactory(),"group");
 		addReactiveTransformerFactory(new SinkTransformerFactory(),"sink");
 		addReactiveTransformerFactory(new FilterTransformerFactory(),"filter");
+		addReactiveTransformerFactory(new ScanToListTransformerFactory(),"scanToList");
 	}
 
 }
