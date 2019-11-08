@@ -328,6 +328,40 @@ public class ExpressionTest {
 		assertEquals(3, s.value("innerint").get());
 	}
 
+	@Test
+	public void testEmptyTML() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[]", null, Optional.of(outer), Optional.empty());
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
 	
+	@Test
+	public void testEmptyTMLJustSlash() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[/]", null, Optional.of(outer), Optional.empty());
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
+
+	@Test
+	public void testEmptyTMLParam() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[@]", null, Optional.empty(), Optional.of(outer));
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
+	
+	@Test
+	public void testEmptySlashTMLParam() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[/@]", null, Optional.empty(), Optional.of(outer));
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
 }
 

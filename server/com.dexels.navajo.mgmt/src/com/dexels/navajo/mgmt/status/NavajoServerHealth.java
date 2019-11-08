@@ -1,6 +1,10 @@
 package com.dexels.navajo.mgmt.status;
 
+import java.util.Map;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.entity.EntityManager;
@@ -21,9 +25,27 @@ public class NavajoServerHealth implements ServerHealthCheck {
     private TmlScheduler tmlScheduler;
     private EntityManager entityManager;
 
+    private static final int DEFAULT_MAX_QUEUED_REQUEST = 40;
+    private int maxQueuedRequests = DEFAULT_MAX_QUEUED_REQUEST;
+    
+	private static final Logger logger = LoggerFactory.getLogger(NavajoServerHealth.class);
+
+    public void activate(Map<String,Object> settings) {
+    	Object max =  settings.get("maxQueue");
+    	if(max!=null) {
+    		if(max instanceof String) {
+    			this.maxQueuedRequests = Integer.parseInt((String) max);
+    		} else if(max instanceof Integer) {
+    			this.maxQueuedRequests = (int) max;
+    		} else {
+    			logger.warn("Unexpected maxQueue setting: {}",max);
+    		}
+     	}
+    }
+    
     @Override
     public boolean isOk() {
-        boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
+        boolean threadsFull = tmlScheduler != null && (tmlScheduler.getDefaultQueue().getQueueSize() > maxQueuedRequests);
         return navajoConfig != null && dispatcherInterface != null && javaCompiler != null && workflowManagerInterface != null 
                 && !getTribeManagerProblem().isPresent() && tmlScheduler != null && entityManager != null && entityManager.isFinishedCompiling() 
                 && !threadsFull;
@@ -62,9 +84,12 @@ public class NavajoServerHealth implements ServerHealthCheck {
         if (!entityManager.isFinishedCompiling()) {
             return "EntityManager compiling";
         }
-        boolean threadsFull = (tmlScheduler.getDefaultQueue().getQueueSize() > 40);
+        int queueSize = tmlScheduler.getDefaultQueue().getQueueSize();
+		boolean threadsFull = (queueSize > maxQueuedRequests);
         if (threadsFull) {
-            return "Queue size";
+            String message = "Queue size: "+queueSize+" is greater than the defined max of: "+maxQueuedRequests;
+            logger.warn(message);
+			return message;
         }
         return "";
     }

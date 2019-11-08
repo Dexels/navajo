@@ -53,9 +53,9 @@ import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFac
 
 public class CoreReactiveFinder implements ReactiveFinder {
 
-	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
-	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
-	private final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
+	protected final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
+	protected final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
+	protected final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
 
 	public CoreReactiveFinder() {
 		reactiveReducer.put("set", new SetSingle());
@@ -80,7 +80,6 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveSourceFactory(new InputSourceFactory(),"input");
 		addReactiveSourceFactory(new TmlInputSourceFactory(),"tmlinput");
 
-		addReactiveSourceFactory(new TopicSourceFactory(),"topic");
 
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
@@ -99,10 +98,6 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
 		addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
 
-		addReactiveTransformerFactory(new GroupTransformerFactory(),"group");
-		addReactiveTransformerFactory(new SinkTransformerFactory(),"sink");
-		
-//		FunctionFactoryFactory.getInstance().addFunctionResolver(fr);
 		try {
 			new navajofunctions.Version().start((BundleContext)null);
 		} catch (Exception e) {

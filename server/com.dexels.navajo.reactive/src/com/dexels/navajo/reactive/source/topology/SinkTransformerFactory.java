@@ -1,6 +1,8 @@
 package com.dexels.navajo.reactive.source.topology;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class SinkTransformerFactory implements ReactiveTransformerFactory {
 		return Collections.unmodifiableSet(types);
 	}
 
-	// TODO perhaps introduce type 'NONE'?
+	// TODO perhaps introduce type 'NONE'? or 'TERMINAL'?
 	@Override
 	public Type outType() {
 		return Type.MESSAGE;
@@ -35,20 +37,19 @@ public class SinkTransformerFactory implements ReactiveTransformerFactory {
 
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		// TODO Auto-generated method stub
-		return null;
+		return Optional.of(Arrays.asList("name"));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return Optional.of(Arrays.asList("name"));
+}
 
 	@Override
 	public Optional<Map<String, String>> parameterTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String,String> types = new HashMap<String, String>();
+		types.put("name", "string");
+		return Optional.of(Collections.unmodifiableMap(types));
 	}
 
 	@Override
