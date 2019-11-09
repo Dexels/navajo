@@ -62,4 +62,10 @@ public class InputSource implements ReactiveSource {
 		return Type.MESSAGE;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return params;
+	}
+
+
 }

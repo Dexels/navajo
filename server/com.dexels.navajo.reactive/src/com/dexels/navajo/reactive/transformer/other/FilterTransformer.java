@@ -41,6 +41,11 @@ public class FilterTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 
 
 }

@@ -146,8 +146,8 @@ public class ReactiveStandalone {
 		List<String> problems = new ArrayList<>();
 		ASTReactiveScriptNode rootNode = parseExpression(inExpression);
 		List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier(),name->Optional.empty()).apply().value;
-		logger.info("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
-		logger.info("Sourcetype: "+src);
+		System.err.println("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
+		System.err.println("Sourcetype: "+src);
 		List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
 		CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods());
 		compiledReactiveScript.typecheck();

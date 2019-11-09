@@ -3,13 +3,16 @@ package com.dexels.navajo.client.async.apache.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.ProxyConfiguration;
+import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.api.Result;
 import org.eclipse.jetty.client.util.BufferingResponseListener;
 import org.eclipse.jetty.client.util.BytesContentProvider;
@@ -72,6 +75,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
 	public AsyncClientImpl() throws Exception {
 		httpClient = new HttpClient(new SslContextFactory.Client());
+		httpClient.setMaxConnectionsPerDestination(100);
 		configureProxy(httpClient);
 		httpClient.start();
 	}
@@ -264,20 +268,45 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		callService(currentAccess.getRequestUrl(), input, nrh, null);
 	}
 
-	private void callService(final String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) {
+	private void callService(final String url, Navajo n, final NavajoResponseHandler continuation, Integer timeout) throws IOException {
 
 		logger.info("Calling service: {} at {} ", n.getHeader().getRPCName(), url);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		n.write(baos);
+		
+		//DeflaterOutputStream gos = new DeflaterOutputStream(baos); //added throws IOException
+		
+		//n.write(gos);
+		//gos.close();
+		
 		final byte[] byteArray = baos.toByteArray();
+		
 		
 //		HttpPost httppost = new HttpPost(url);
 //		httppost.addHeader("Content-Type", "text/xml; charset=utf-8");
 //		httppost.setEntity(new ByteArrayEntity(byteArray));
-
+		n.write(System.err);
 		httpClient.newRequest(url)
+				.onRequestBegin(e->{
+					System.err.println("Begin");
+				})
+				.onRequestQueued(e->{
+					System.err.println("queued");
+				})
+				.onRequestCommit(e->{
+					System.err.println("commit");
+				})
 		        .method(HttpMethod.POST)
+		        .header("Accept-Encoding", null)
+		        .timeout(40, TimeUnit.SECONDS)
+		        .idleTimeout(20, TimeUnit.SECONDS)
+		        //.header("Accept-Encoding", "jzlib")
+		        //.header("Content-Encoding", "jzlib")
 		        .content(new BytesContentProvider(byteArray), "text/xml; charset=utf-8")
+		        .onRequestHeaders(request->{
+		        	System.err.println("REQUEST HEADERS!!!");
+		        	System.err.println(request.getHeaders());
+		        })
 		        .onRequestFailure((req, e) -> {
 					logger.error("Request failed: HTTP call to: "+url+" failed: {}", e);
 					if(continuation!=null) {
@@ -306,16 +335,37 @@ public class AsyncClientImpl implements ManualAsyncClient {
 				})
 		        .send(new BufferingResponseListener() {
 
+		        	
+		        	
+					@Override
+					public void onContent(Response arg0, ByteBuffer arg1) {
+						System.err.println("CONTENT!!");
+						super.onContent(arg0, arg1);
+					}
+
+					@Override
+					public void onHeaders(Response arg0) {
+						System.err.println("HEADERS!!");
+						System.err.println(arg0.getHeaders());
+						super.onHeaders(arg0);
+					}
+
 					@Override
 					public void onComplete(Result res) {
+						System.err.println("on complete!!!");
+						System.err.println("Result is: "+res);
 						try {
+							
+//							InflaterInputStream gzis = new InflaterInputStream(getContentAsInputStream());
+//							Navajo response = NavajoFactory.getInstance().createNavajo(gzis);
+							
 							Navajo response = NavajoFactory.getInstance().createNavajo(getContentAsInputStream());
 							if(continuation!=null) {
 								continuation.onResponse(response);
 							}
 						} catch (UnsupportedOperationException e) {
 							logger.error("Error: ", e);
-						} finally {
+						}   finally {
 						    if (closeAfterUse) {
 			                    close();
 			                }

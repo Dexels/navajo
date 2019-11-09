@@ -59,5 +59,11 @@ public class InputStreamSource implements ReactiveSource {
 	public Type sourceType() {
 		return Type.MESSAGE;
 	}
+	
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 
 }

@@ -6,7 +6,7 @@ public class Reactive {
 	private static ReactiveFinder finderInstance;
 
 	public static enum ReactiveItemType {
-		REACTIVE_HEADER,REACTIVE_SOURCE,REACTIVE_TRANSFORMER,REACTIVE_MAPPER, REACTIVE_PIPE, REACTIVE_SCRIPT
+		REACTIVE_HEADER,REACTIVE_SOURCE,REACTIVE_TRANSFORMER,REACTIVE_MAPPER, REACTIVE_PIPE, REACTIVE_PARTIAL_PIPE, REACTIVE_SCRIPT
 	}
 	
 	public static void setFinderInstance(ReactiveFinder f) {

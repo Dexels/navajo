@@ -1,4 +1,4 @@
 |>single(count=12)
- ->set(id=[@index])
- ->filter([id]%3==0,[id]%2==0)
- ->tml(messageName='Blem',isArray=true)
+->set(id=[@index])
+->filter([id]%3==0,[id]%2==0)
+->tml(messageName='Blem',isArray=true)

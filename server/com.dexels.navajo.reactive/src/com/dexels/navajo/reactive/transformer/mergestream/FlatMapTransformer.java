@@ -48,6 +48,12 @@ public class FlatMapTransformer implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
+	
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 
 
 }

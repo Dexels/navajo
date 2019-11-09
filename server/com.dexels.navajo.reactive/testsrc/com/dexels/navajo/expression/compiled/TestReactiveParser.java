@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.stream.ReactiveScript;
 import com.dexels.navajo.parser.compiled.ASTKeyValueNode;
+import com.dexels.navajo.parser.compiled.ASTPipeDefinition;
 import com.dexels.navajo.parser.compiled.ASTReactiveScriptNode;
 import com.dexels.navajo.parser.compiled.CompiledParser;
 import com.dexels.navajo.parser.compiled.Node;
@@ -29,6 +31,7 @@ import com.dexels.navajo.reactive.ReactiveStandalone;
 import com.dexels.navajo.reactive.api.CompiledReactiveScript;
 import com.dexels.navajo.reactive.api.Reactive;
 import com.dexels.navajo.reactive.api.ReactivePipe;
+import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.fasterxml.aalto.AsyncByteArrayFeeder;
 
 public class TestReactiveParser {
@@ -47,6 +50,18 @@ public class TestReactiveParser {
 	}
 
 	@Test
+	public void testSimple() throws ParseException {
+		CompiledParser cp = new CompiledParser(new StringReader("|>some('aa','oo')->pipe(1)"));
+		ASTPipeDefinition def = cp.PipeDefinition();
+		Assert.assertFalse(def.partial);
+		int children = def.jjtGetNumChildren();
+		System.err.println("child count: "+children);
+		for (int i = 0; i < children; i++) {
+			System.err.println("Item: "+def.jjtGetChild(i));
+		}
+		System.err.println("def: "+def);
+	}
+	@Test
 	public void testFilter() throws ParseException, IOException {
 		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
 		Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filter");
@@ -55,6 +70,27 @@ public class TestReactiveParser {
 		n.write(System.err);
 		Assert.assertEquals(2, size);
 	}
+	
+	@Test
+	public void testFilterNamedPartial() throws ParseException, IOException {
+		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+		Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filternamed");
+		int size = n.getMessage("Blem").getArraySize();
+		logger.info("size: {}",size);
+		n.write(System.err);
+		Assert.assertEquals(5, size);
+	}
+	
+	@Test @Ignore
+	public void testFilterNamedPartialExtended() throws ParseException, IOException {
+		ReactiveScriptEnvironment rse = new ClasspathReactiveScriptEnvironment(TestReactiveParser.class);
+		Navajo n =  ReactiveStandalone.runBlockingEmpty(rse,"filternamedextended");
+		int size = n.getMessage("Blem").getArraySize();
+		logger.info("size: {}",size);
+		n.write(System.err);
+		Assert.assertEquals(5, size);
+	}
+	
 	
 	@Test
 	public void testPipe() throws ParseException, IOException {
@@ -245,13 +281,13 @@ public class TestReactiveParser {
 		CompiledParser cp = new CompiledParser(getClass().getResourceAsStream("morestreams.rr"));
 		cp.ReactiveScript();
 		ASTReactiveScriptNode n = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
-		for (int i = 0; i < n.jjtGetNumChildren(); i++) {
-			Node node = n.jjtGetChild(i);
-			System.err.println("Node type: "+node);
-		}
-		System.err.println("Name: "+n.jjtGetNumChildren());
+		n.dump("");
+//		for (int i = 0; i < n.jjtGetNumChildren(); i++) {
+//			Node node = n.jjtGetChild(i);
+//			System.err.println("Node type: "+node);
+//		}
+//		System.err.println("Name: "+n.jjtGetNumChildren());
 	}
-	
 
 	@Test
 	public void testPipeKeyValue() throws ParseException {

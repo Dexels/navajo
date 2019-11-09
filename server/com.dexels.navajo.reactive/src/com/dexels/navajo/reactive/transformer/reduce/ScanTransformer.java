@@ -20,10 +20,12 @@ public class ScanTransformer implements ReactiveTransformer {
 	private final TransformerMetadata metadata;
 	private Function<StreamScriptContext,Function<DataItem,DataItem>> seedFunction;
 	private Function<StreamScriptContext,Function<DataItem,DataItem>> reduceFunction;
+	private final ReactiveParameters parameters;
 
 	@SuppressWarnings("unchecked")
 	public ScanTransformer(TransformerMetadata metadata,ReactiveParameters parameters) {
 		this.metadata = metadata;
+		this.parameters = parameters;
 		ContextExpression seed = parameters.unnamed.get(0);
 		ContextExpression reducer = parameters.unnamed.get(1);
 		seedFunction = (Function<StreamScriptContext,Function<DataItem,DataItem>>) seed.apply(null, Optional.empty(),  Optional.empty()).value;
@@ -54,5 +56,9 @@ public class ScanTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
 
 }

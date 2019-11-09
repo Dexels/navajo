@@ -16,12 +16,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ParallelMessageStream implements ReactiveTransformer {
 
-//	private final ReactiveParameters parameters;
+	private final ReactiveParameters parameters;
 	private final TransformerMetadata metadata;
 	private final Function<StreamScriptContext, Function<DataItem, DataItem>> joiner;
 	
 	public ParallelMessageStream(TransformerMetadata metadata, ReactiveParameters parameters, Function<StreamScriptContext, Function<DataItem, DataItem>> joinermapper) {
-//		this.parameters = parameters;
+		this.parameters = parameters;
 		this.metadata = metadata;
 		this.joiner = joinermapper;
 	}
@@ -43,4 +43,10 @@ public class ParallelMessageStream implements ReactiveTransformer {
 	public TransformerMetadata metadata() {
 		return metadata;
 	}
+	
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 }

@@ -40,4 +40,9 @@ public class StreamMessageTransformer implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 }

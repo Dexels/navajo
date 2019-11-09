@@ -19,8 +19,12 @@ import com.dexels.navajo.script.api.MappableTreeNode;
 public class ReactivePipeNode implements ContextExpression {
 	private final Operand actual;
 
-	public ReactivePipeNode(ReactiveSource source, List<Object> transformers) {
-		this.actual = new Operand(new ReactivePipe(source, transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString());
+	public ReactivePipeNode(Optional<ReactiveSource> source, List<Object> transformers) {
+		this.actual = source.isPresent() ? 
+			new Operand(new ReactivePipe(source.get(), transformers),Reactive.ReactiveItemType.REACTIVE_PIPE.toString()) 
+				:
+				new Operand(transformers,Reactive.ReactiveItemType.REACTIVE_PARTIAL_PIPE.toString());
+		
 	}
 
 	@Override

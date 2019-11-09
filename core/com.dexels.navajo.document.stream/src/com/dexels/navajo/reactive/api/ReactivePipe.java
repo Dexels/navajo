@@ -108,4 +108,9 @@ public class ReactivePipe implements ReactiveSource {
 	public Type sourceType() {
 		return source.sourceType();
 	}
+
+	@Override
+	public ReactiveParameters parameters() {
+	   return source.parameters();
+	}
 }

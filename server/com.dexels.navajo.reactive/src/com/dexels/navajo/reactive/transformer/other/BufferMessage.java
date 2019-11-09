@@ -56,4 +56,10 @@ public class BufferMessage implements ReactiveTransformer {
 		return metadata;
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

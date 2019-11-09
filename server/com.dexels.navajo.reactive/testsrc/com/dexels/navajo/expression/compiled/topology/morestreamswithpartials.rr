@@ -1,0 +1,51 @@
+
+
+activityAttributes = |>topic('sportlinkkernel-ACTIVITYATTRIBUTE')
+    ->delete('lastupdate,updateby')
+    ->$attributeGroup
+    
+attributeGroup = ->group('activityid')
+    ->reduce(set(),set([attribname],[attribvalue]))
+
+calendarDays = |>topic('sportlinkkernel-CALENDARDAY')
+    ->filter([activityid] > 20)
+    ->delete('lastupdate','updateby')
+    ->group('activityid')
+    ->scanToList('CalendarDay')
+
+|>topic('sportlinkkernel-ACTIVITY')
+    ->filter([subtype]!='SUBFACILITY_AVAILABILITY')
+    ->delete('lastupdate','updateby')
+    ->set('publicactivityid',ToUpper('publicid'))
+    ->join($activityAttributes)
+    ->set([],[@])
+    ->join($calendarDays,toSubMessage('CalendarDay'),false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
