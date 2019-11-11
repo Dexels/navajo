@@ -2,6 +2,7 @@ package com.dexels.navajo.elasticsearch;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +63,7 @@ public class TestConnection {
 		Message m = tmlDoc.getMessage("Transaction");
 		ObjectMapper objectMapper = new ObjectMapper();
 		ElasticSearchComponent e = new ElasticSearchComponent();
+		e.activate(Collections.emptyMap());
 		ArrayNode nn = (ArrayNode) e.messageToJSON(m);
 		objectMapper.writer().withDefaultPrettyPrinter().writeValue(System.err, nn);
 		Assert.assertEquals(m.getArraySize(), nn.size());
