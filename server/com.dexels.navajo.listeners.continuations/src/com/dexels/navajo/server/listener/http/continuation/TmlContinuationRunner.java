@@ -33,19 +33,16 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super(request,lc);
 		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
 		continuation.setTimeout(timeout);
-//		continuation.addContinuationListener(new ContinuationListener() {
-//			
-//			@Override
-//			public void onTimeout(Continuation arg0) {
-//				System.err.println("timeout!");
-//			}
-//			
-//			@Override
-//			public void onComplete(Continuation arg0) {
-//				System.err.println("complete!");
-//				
-//			}
-//		});
+		continuation.addContinuationListener(new ContinuationListener() {
+			
+			@Override
+			public void onTimeout(Continuation continuation) {
+				abort("timeout after: "+timeout);
+			}
+			
+			@Override
+			public void onComplete(Continuation arg0) {}
+		});
 		if (continuation.isExpired()) {
             logger.warn("Expired continuation!");
             abort("Internal server error");
