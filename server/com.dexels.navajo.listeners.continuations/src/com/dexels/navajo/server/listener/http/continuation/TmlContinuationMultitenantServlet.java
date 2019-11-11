@@ -35,6 +35,8 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	private HttpServlet reactiveHttpServlet;
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
+
+	private long requestTimeout;
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.reactiveScriptEnvironment = env;
@@ -74,6 +76,9 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	public void activate() {
 		logger.info("Continuation servlet component activated");
+		this.requestTimeout = TmlRunnableBuilder.getRequestTimeout(10000000L);
+		logger.info("Using timeout in continuation: {}",this.requestTimeout);
+		
 	}
 
 	public void deactivate() {
@@ -93,7 +98,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
+			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance,requestTimeout);
 			
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
