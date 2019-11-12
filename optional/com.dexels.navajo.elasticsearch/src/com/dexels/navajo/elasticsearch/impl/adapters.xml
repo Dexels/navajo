@@ -19,5 +19,28 @@
 		<methods>
 		</methods>
 	</map>
+	<map>
+		<tagname>elasticsearchquery</tagname>
+		<object>com.dexels.navajo.elasticsearch.adapters.ElasticSearchQueryAdapter</object>
+		<values>
+			<value name="keyword" type="string" required="true" direction="in" />
+			<value name="esrarray" map="esrrow []" required="false" direction="out" />
+		</values>
+		<methods>
+		</methods>
+	</map>
+
+	<map abstract="true">
+		<tagname>esrrow</tagname>
+		<object>com.dexels.navajo.elasticsearch.impl.ElasticSearchResult</object>
+		<abstract>false</abstract>
+		<values>
+			<value name="id" type="string" direction="out" />
+			<value name="score" type="string" direction="out" />
+			<value name="fileName" type="string" direction="out" />
+		</values>
+		<methods>
+		</methods>
+	</map>
 
 </adapterdef>
