@@ -751,9 +751,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                     if (navajoConfig == null) {
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
-                    if (instance == null) {
-                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
-                    }
+//                    if (instance == null) {
+//                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
+//                    }
                     // Determine authenticator
                     final AuthenticationMethod authenticator;
                     if (clientInfo == null) {
@@ -773,14 +773,14 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                             + ", message=" + ex.getMessage(), Level.WARNING);
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
-                } catch (SystemException se) {
+                } /*catch (SystemException se) { //
                     logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
-                } catch (Throwable t) {
+                }*/ catch (Throwable t) {
                     logger.error("Unexpected exception on authenticateUser  {} for {}: ", rpcUser, rpcName, t);
                     outMessage = generateErrorMessage(access, t.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
