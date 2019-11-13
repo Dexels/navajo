@@ -12,6 +12,7 @@ Navajo-Name: Entity
 Import-Package: com.dexels.immutable.api,
  com.dexels.immutable.api.customtypes;version="2.1.0",
  com.dexels.navajo.adapter,
+ com.dexels.navajo.api.util,
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
  com.dexels.navajo.compiler,

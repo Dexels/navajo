@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.dexels.navajo.api.util.NavajoRequestConfig;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.continuations.EntityContinuationRunner;
 import com.dexels.navajo.entity.continuations.EntityDispatcher;
@@ -25,9 +25,13 @@ public class EntityListener extends HttpServlet {
     private TmlScheduler tmlScheduler;
     private EntityDispatcher entityDispatcher;
     private DispatcherInterface dispatcherInterface;
+	private long requestTimeout;
 
     public void activate() {
         logger.info("Entity servlet component activated");
+		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(5*60*1000L);
+		logger.info("Using timeout in continuation: {}",this.requestTimeout);
+
     }
 
     public void deactivate() {
@@ -42,7 +46,7 @@ public class EntityListener extends HttpServlet {
         if ("GET".equals(request.getMethod()) && request.getParameter("getDefinition") != null) {
             performHeadRequest(request, response);
         } else {
-            EntityContinuationRunner runner = new EntityContinuationRunner(request, response);
+            EntityContinuationRunner runner = new EntityContinuationRunner(request, response,requestTimeout);
             runner.setEntityDispatcher(entityDispatcher);
             runner.setDispatcher(dispatcherInterface);
             tmlScheduler.submit(runner, false);

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.api.util.NavajoRequestConfig;
 import com.dexels.navajo.article.APIErrorCode;
 import com.dexels.navajo.article.APIException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -35,8 +36,12 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
     private ClientStore clientStore;
     private TmlScheduler tmlScheduler;
 
+	private long requestTimeout;
+
     public void activate() {
         logger.info("Activating OAuthArticleServlet");
+		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(5*60*1000L);
+		logger.info("Using timeout in continuation: {}",this.requestTimeout);
     } 
     public void deactivate() {
         logger.info("DeActivating OAuthArticleServlet");
@@ -94,7 +99,7 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
             runtime.setAccess(a);
             
             runtime.setUsername(username);
-            ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext());
+            ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext(), requestTimeout);
             tmlScheduler.submit(articleRunnable, false);
         } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);

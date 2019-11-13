@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.dexels.navajo.api.util.NavajoRequestConfig;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
@@ -76,7 +77,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	public void activate() {
 		logger.info("Continuation servlet component activated");
-		this.requestTimeout = TmlRunnableBuilder.getRequestTimeout(10000000L);
+		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(10000000L);
 		logger.info("Using timeout in continuation: {}",this.requestTimeout);
 		
 	}

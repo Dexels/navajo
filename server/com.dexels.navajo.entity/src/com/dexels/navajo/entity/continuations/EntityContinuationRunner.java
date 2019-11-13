@@ -62,11 +62,11 @@ public class EntityContinuationRunner implements TmlRunnable {
     private String contentEncoding;
     private String acceptEncoding;
 
-    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response) {
+    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response, long timeout) {
         this.request = request;
         this.response = response;
         continuation = ContinuationSupport.getContinuation(request);
-        continuation.setTimeout(5*60*1000L); // 5 minutes
+        continuation.setTimeout(timeout); // 5 minutes
         continuation.suspend(response);
         
         if (continuation.isExpired()) {
