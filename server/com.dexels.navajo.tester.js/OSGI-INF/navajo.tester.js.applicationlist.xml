@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="navajo.tester.js.applicationlist">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="optional" name="navajo.tester.js.applicationlist">
    <implementation class="com.dexels.navajo.tester.js.NavajoTesterApplicationList"/>
    <service>
       <provide interface="com.dexels.navajo.tester.js.NavajoTesterApplicationList"/>
