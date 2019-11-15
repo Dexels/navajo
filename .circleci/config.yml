@@ -54,13 +54,15 @@ jobs:
 
             - run: |
                   echo "skipping upload"
-                  ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
-                  scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
+                  #ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
+                  #scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
             # Now update enterprise:
             - run: |
                   mkdir ~/enterprisecheckout
                   cd  ~/enterprisecheckout
                   git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
+                  ls -l
+                  cd master
                   ls -l
                   cd enterprise/enterprise/com.dexels.enterprise.target
                   ./updateversion.sh
