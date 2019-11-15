@@ -70,8 +70,12 @@ jobs:
                   git config user.name "butler@dexels.com"
                   git add .
                   if [ -n $(git status -u no --porcelain) ]; then
+                    echo "commiting changes: $(git status -u no --porcelain)"
                     git commit -m "Update via CircleCI"
                     git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
+                    echo "push complete"
+                  else 
+                    echo "no changes found"
                   fi
             - run: |
                   echo "skipping downstream"
