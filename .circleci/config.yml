@@ -21,7 +21,7 @@ jobs:
                       - ~/.m2
                   key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
-            # run tests
+            # run tests (skipped for now)
             - run: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
             - run: |
                   cd ~
