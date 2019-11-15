@@ -50,12 +50,26 @@ jobs:
       - store_test_results:
           path: ~/test-results
       - store_artifacts:
-          path: ~/test-results/junit       
-
+          path: ~/test-results/junit
 
       - run: |
           ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
           scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
+      # Now update enterprise:
+      - run: |
+          mkdir ~/enterprisecheckout
+          cd  ~/enterprisecheckout
+          git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
+          cd enterprise/enterprise/com.dexels.enterprise.target
+          ./updateversion.sh
+          # Push changes
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "<email>"
+          git config user.name "<user-name>"
+          git add .
+          git commit -m "Update via CircleCI"
+          # Push quietly to prevent showing the token in log
+          git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
       - run: |
           curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
           curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
