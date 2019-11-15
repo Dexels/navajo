@@ -60,9 +60,7 @@ jobs:
             - run: |
                   mkdir ~/enterprisecheckout
                   cd  ~/enterprisecheckout
-                  git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
-                  ls -l
-                  cd master
+                  git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git
                   ls -l
                   cd enterprise/enterprise/com.dexels.enterprise.target
                   ./updateversion.sh
