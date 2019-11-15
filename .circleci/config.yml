@@ -58,3 +58,4 @@ jobs:
           scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
       - run: |
           curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
+          curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
