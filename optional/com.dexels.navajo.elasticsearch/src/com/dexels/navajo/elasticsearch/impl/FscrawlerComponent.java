@@ -107,8 +107,8 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 				}
 			}
 	}
-	}
-
+	}	
+	
 	
 	
 }
