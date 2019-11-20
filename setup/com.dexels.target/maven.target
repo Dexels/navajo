@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform" sequenceNumber="3198">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform" sequenceNumber="3202">
 <locations>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
@@ -9,8 +9,8 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.398"/>
-		<unit id="dexels-navajo-target.feature.group" version="3.3.398"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.402"/>
+		<unit id="dexels-navajo-target.feature.group"/>
 	</location>
 </locations>
 </target>
