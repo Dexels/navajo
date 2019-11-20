@@ -1,5 +1,6 @@
 package com.dexels.navajo.elasticsearch.adapters;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,10 +29,11 @@ public class FscrawlerAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		//it will called after the end of the navascript tag
 		try {
+			
 			if(binaryFile == null) {
-				File f = new File("/Users/vgemistos/eclipse-workspace/com.dexels.elasticsearch/src/com/dexels/elasticsearch/test_java_file.txt");
-				binaryFile = new Binary(f);
+				throw new MappableException("binary file is missing...");
 			}
+			
 			FscrawlerFactory.getInstance().upload(binaryFile, id, name);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
