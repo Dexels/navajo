@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: 3.3.405" sequenceNumber="3205">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: 3.3.407" sequenceNumber="3207">
 <locations>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
@@ -9,7 +9,7 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.405"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.407"/>
 		<unit id="bcpg" version="1.64.0"/>
 		<unit id="bcpkix" version="1.64.0"/>
 		<unit id="bcprov" version="1.64.0"/>
@@ -23,8 +23,8 @@
 		<unit id="com.dexels.immutable.impl" version="1.4.9"/>
 		<unit id="com.dexels.index.api" version="1.0.0.201608241244"/>
 		<unit id="com.dexels.kafka.impl.rx2" version="6.1.6"/>
-		<unit id="com.dexels.kafka.streams" version="1.0.27"/>
-		<unit id="com.dexels.kafka.streams.api" version="2.1.9"/>
+		<unit id="com.dexels.kafka.streams" version="1.1.0"/>
+		<unit id="com.dexels.kafka.streams.api" version="3.0.0"/>
 		<unit id="com.dexels.kafka.streams.sink.mongo" version="1.1.0"/>
 		<unit id="com.dexels.kafka.webapi" version="1.0.8"/>
 		<unit id="com.dexels.keystoreprovider" version="1.0.0.201711171136"/>
