@@ -2,7 +2,7 @@ Bundle-Name: Navajo Twitter Adapter
 Bundle-SymbolicName: com.dexels.navajo.twitter
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.5.qualifier
+Bundle-Version: 1.2.6
 Bundle-Activator: navajotwitter.Version
 Navajo-Name: Twitter
 Navajo-Extension: com/dexels/twitter/adapter.xml
