@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class TestConnection {
 			tmlDoc = NavajoFactory.getInstance().createNavajo(resourceAsStream);
 		}
 	}
-	@Test
+	@Test @Ignore
 	public void testInsert() throws IOException {
 		ElasticSearchComponent esc = new ElasticSearchComponent();
 		Map<String,Object> settings = new HashMap<>();
@@ -58,7 +59,7 @@ public class TestConnection {
 		}
 	}
 
-	@Test
+	@Test @Ignore
 	public void testMessageToJSON() throws IOException {
 		Message m = tmlDoc.getMessage("Transaction");
 		ObjectMapper objectMapper = new ObjectMapper();
