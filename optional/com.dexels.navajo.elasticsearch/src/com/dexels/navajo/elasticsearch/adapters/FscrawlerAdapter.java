@@ -35,6 +35,7 @@ public class FscrawlerAdapter implements Mappable {
 			}
 			
 			FscrawlerFactory.getInstance().upload(binaryFile, id, name);
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new MappableException("error uploading, id: " + id,e);
