@@ -338,7 +338,7 @@ function runScript(script) {
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","Authorization": authHeader, "X-Navajo-Service": script},
+            headers: {"X-Navajo-Tester": "true","Authorization": authHeader, "X-Navajo-Service": script, "X-Navajo-Username" : sessionStorage.user},
             success: function(result) {
             	  if(result instanceof Node) {
                       replaceXml(script, result);
