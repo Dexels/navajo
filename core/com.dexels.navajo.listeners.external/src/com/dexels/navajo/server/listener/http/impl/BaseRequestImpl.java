@@ -3,14 +3,14 @@ package com.dexels.navajo.server.listener.http.impl;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -18,12 +18,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.CountingOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -32,8 +32,10 @@ import com.dexels.navajo.script.api.ClientInfo;
 
 
 public class BaseRequestImpl implements AsyncRequest {
-    private final static Logger logger = LoggerFactory.getLogger(BaseRequestImpl.class);
-    private final static Logger statLogger = LoggerFactory.getLogger("stats");
+    private static final int DEFAULT_RESPONSE_LOG_THRESHOLD = 500000;
+	private static final Logger logger = LoggerFactory.getLogger(BaseRequestImpl.class);
+    private static final Logger statLogger = LoggerFactory.getLogger("stats");
+    private static final Logger oversizeLogger = LoggerFactory.getLogger("largeResponse");
     
 	protected final HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -49,11 +51,13 @@ public class BaseRequestImpl implements AsyncRequest {
 	private String fileName;
 	private String contentType;
 	
+	private final int responseSizeThreshold = Optional.ofNullable(System.getenv("RESPONSE_LOG_THRESHOLD"))
+				.map(Integer::parseInt)
+				.orElse(DEFAULT_RESPONSE_LOG_THRESHOLD);
 
 	public BaseRequestImpl(HttpServletRequest request,
 			HttpServletResponse response, String acceptEncoding,
-			String contentEncoding, Object cert, String instance) throws UnsupportedEncodingException, IOException {
-		// this.event = event;
+			String contentEncoding, Object cert, String instance) throws IOException {
 		this.response = response;
 		this.request = request;
 		this.contentEncoding = contentEncoding;
@@ -61,14 +65,6 @@ public class BaseRequestImpl implements AsyncRequest {
 		this.cert = cert;
 		this.connectedAt = System.currentTimeMillis();
 		
-//		StringBuilder stringBuilder = new StringBuilder(10000);
-//		 Scanner scanner = new Scanner(request.getInputStream());
-//		    while (scanner.hasNextLine()) {
-//		        stringBuilder.append(scanner.nextLine());
-//		    }
-//
-//		    String body = stringBuilder.toString();
-		    
 		setUrl(createUrl(this.request));
 		this.inDoc = parseInputNavajo(request.getInputStream());
 		this.instance = instance;
@@ -78,7 +74,6 @@ public class BaseRequestImpl implements AsyncRequest {
 	}
 
 	public BaseRequestImpl(Navajo in, HttpServletRequest request, HttpServletResponse response, String instance)  {
-		// this.event = event;
 		this.contentEncoding = null;
 		this.acceptEncoding = null;
 		this.request = request;
@@ -123,33 +118,31 @@ public class BaseRequestImpl implements AsyncRequest {
 		String queryString = req.getQueryString(); // d=789
 
 		// Reconstruct original requesting URL
-		String url = scheme + "://" + serverName + ":" + serverPort
+		String newUrl = scheme + "://" + serverName + ":" + serverPort
 				+ contextPath + servletPath;
 		if (pathInfo != null) {
-			url += pathInfo;
+			newUrl += pathInfo;
 		}
 		if (queryString != null) {
-			url += "?" + queryString;
+			newUrl += "?" + queryString;
 		}
-		return url;
+		return newUrl;
 	}
 
-	protected final Navajo parseInputNavajo(InputStream is) throws IOException,
-			UnsupportedEncodingException {
+	protected final Navajo parseInputNavajo(InputStream is) throws IOException {
 		BufferedReader r;
-		//InputStream is = getRequestInputStream();
 		Navajo in = null;
-		logger.debug("Parsing using encoding: "+contentEncoding);
+		logger.debug("Parsing using encoding: {}", contentEncoding);
 		if (contentEncoding != null
 				&& contentEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
-					new InflaterInputStream(is), "UTF-8"));
+					new InflaterInputStream(is),StandardCharsets.UTF_8));
 		} else if (contentEncoding != null
 				&& contentEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
-					new java.util.zip.GZIPInputStream(is), "UTF-8"));
+					new java.util.zip.GZIPInputStream(is),StandardCharsets.UTF_8));
 		} else {
-			r = new BufferedReader(new java.io.InputStreamReader(is, "UTF-8"));
+			r = new BufferedReader(new java.io.InputStreamReader(is, StandardCharsets.UTF_8));
 		}
 		in = NavajoFactory.getInstance().createNavajo(r);
 
@@ -225,10 +218,16 @@ public class BaseRequestImpl implements AsyncRequest {
 		}
 
 	}
+
+	private void logResponseSize(int size) {
+		if(size > responseSizeThreshold) {
+			String service = this.request.getHeader("X-Navajo-Service");
+			String username = this.request.getHeader("X-Navajo-Username");
+			oversizeLogger.info("Response size for service: {} tenant: {} user: {} = {}",service,this.instance,username, size);
+		}
+	}
 	@Override
-	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
-			FileNotFoundException, UnsupportedEncodingException,
-			NavajoException {
+	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException {
 
 		long finishedScriptAt = System.currentTimeMillis();
 		// postTime =
@@ -250,8 +249,10 @@ public class BaseRequestImpl implements AsyncRequest {
 
 				}
 				OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
-				b.write(out);
-				out.close();
+				CountingOutputStream cos = new CountingOutputStream(out);
+				b.write(cos);
+				cos.close();
+				logResponseSize(cos.getCount());
 				return;
 			} else {
 				response.setContentType("text/plain; charset=UTF-8");
@@ -263,7 +264,6 @@ public class BaseRequestImpl implements AsyncRequest {
 		}
 		OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream());
 		response.setContentType("text/xml; charset=UTF-8");
-//		response.setHeader("Connection", "close"); 
 
 		if(outDoc==null) {
 			logger.warn("Null outDoc. This is going to hurt");
@@ -279,10 +279,11 @@ public class BaseRequestImpl implements AsyncRequest {
 		outDoc.getHeader().setHeaderAttribute("serverTime", "" + serverTime);
 		outDoc.getHeader().setHeaderAttribute("threadName","" + Thread.currentThread().getName());
 
-		outDoc.write(out);
-		
-		out.close();
-		
+		CountingOutputStream cos = new CountingOutputStream(out);
+		outDoc.write(cos);
+		cos.close();
+		logResponseSize(cos.getCount());
+
 		if (inDoc != null
 				&& inDoc.getHeader() != null
 				&& outDoc.getHeader() != null) {
@@ -322,7 +323,6 @@ public class BaseRequestImpl implements AsyncRequest {
 	
 	@Override
 	public void fail(Exception e) {
-//		logger.error("Error: ", e);
 		try {
 			response.sendError(500, e.getMessage());
 		} catch (IOException e1) {
@@ -332,7 +332,6 @@ public class BaseRequestImpl implements AsyncRequest {
 
 	@Override
 	public void endTransaction() throws IOException {
-//		response.getOutputStream().close();
 		
 	}
 
