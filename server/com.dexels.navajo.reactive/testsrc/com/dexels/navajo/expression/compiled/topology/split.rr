@@ -1,0 +1,4 @@
+|>topic('sportlinkkernel-ORGANIZATION')
+	->split('@CLUBORG',[typeoforganization] == 'CLUB',key=[organizationid])
+	->split('@OTHERORGANIZATION')
+    ->sink('FILTERED')\
