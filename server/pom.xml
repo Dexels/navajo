@@ -33,6 +33,7 @@
 		<module>com.dexels.navajo.resource.sftp</module>
 		<module>com.dexels.navajo.resource.feature</module>
 		<module>com.dexels.navajo.streams.feature</module>
+		<module>com.dexels.navajo.kafkastreams.feature</module>
 		<module>com.dexels.navajo.mgmt</module>
 		<module>com.dexels.navajo.tester.js</module>
 		<module>com.dexels.navajo.authentication.api</module>
