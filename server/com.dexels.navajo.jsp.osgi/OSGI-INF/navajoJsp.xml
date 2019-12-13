@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.tester.jsp">
-   <implementation class="com.dexels.navajo.osgi.JspComponent"/>
-   <reference bind="setWebContainer" cardinality="1..1" interface="org.ops4j.pax.web.service.WebContainer" name="WebContainer" policy="static" unbind="clearWebContainer"/>
-   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfig" policy="dynamic" unbind="clearNavajoConfig"/>
-   <reference bind="setClientContext" cardinality="1..1" interface="com.dexels.navajo.client.context.ClientContext" name="ClientContext" policy="dynamic" unbind="clearClientContext"/>
-</scr:component>

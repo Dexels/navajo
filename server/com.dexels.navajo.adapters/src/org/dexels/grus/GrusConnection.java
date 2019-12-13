@@ -63,7 +63,6 @@ public class GrusConnection {
 		created = System.currentTimeMillis();
 		registeredConnections.put(id, this);
 		connectionMapping.put(myConnection, this);
-		logger.info("Created new GrusConnection {}/{}@{}, for Connection: {} with maxage {}", id, username, location, myConnection, this.maxAge );
 	}
 	
 	public Connection getConnection() {

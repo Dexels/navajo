@@ -11,7 +11,6 @@
 	<modules>
 		<module>build/superpom</module>
 		<module>build/regular</module>
-		<module>build/sportlink</module>
 	</modules>
     <parent>
             <groupId>com.dexels.navajo</groupId>
