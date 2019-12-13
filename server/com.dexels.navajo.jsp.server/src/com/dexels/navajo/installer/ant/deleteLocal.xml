@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project default="createDefaultInstall" >
+	<target name="createDefaultInstall">
+		<echo message="Deleting local stuff: ${basedir} "/>
+		<delete>
+			<fileset dir=".">
+				<include name="adapters/**"/>
+				<include name="config/**"/>
+				<include name="scripts/**"/>
+			</fileset>
+		</delete>
+	</target>
+</project>

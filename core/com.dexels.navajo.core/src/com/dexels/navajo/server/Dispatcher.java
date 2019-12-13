@@ -193,10 +193,6 @@ public void generateServerReadyEvent() {
 	  
 	  // Startup tribal status collector.
 	  TribeManagerFactory.startStatusCollector();
-	  
-	  // Startup Jabber
-	  JabberWorkerFactory.getJabberWorkerInstance();
-
   }
   
 //  @Override
