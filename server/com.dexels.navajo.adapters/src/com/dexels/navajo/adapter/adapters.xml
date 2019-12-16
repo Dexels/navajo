@@ -410,6 +410,7 @@
             <value name="messagesPerRequest" type="integer" required="false"  direction="in" />
             <value name="textContent" type="string" required="false" direction="in" />
             <value name="jsonResponse" type="boolean" required="false" direction="in" />
+            <value name="debug" type="boolean" required="false" direction="in" />
             
 		</values>
 		<methods>

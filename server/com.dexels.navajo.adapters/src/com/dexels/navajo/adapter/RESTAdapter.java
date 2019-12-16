@@ -21,6 +21,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
@@ -32,6 +33,8 @@ public class RESTAdapter extends NavajoMap {
     private static final int DEFAULT_READ_TIMEOUT = 60 * 1000; // 1 min
     
     private JSONTML json;
+    
+    public boolean debug = false; //g
     
     public boolean removeTopMessage = false;
     public String url;
@@ -73,6 +76,11 @@ public class RESTAdapter extends NavajoMap {
         this.url = url.trim();
     }
     
+    //as in sqlmap
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+	//
     
     public void setTextContent(String s) {
         textContent = s;
@@ -300,6 +308,9 @@ public class RESTAdapter extends NavajoMap {
     }
 
     private void setupHttpMap(HTTPMap http, Binary content) throws UserException {
+    	
+    	ArrayList<String> headers_tr = new ArrayList<String>(); //vg
+    	
         try {
             http.load(access);
         } catch (MappableException e) {
@@ -320,6 +331,7 @@ public class RESTAdapter extends NavajoMap {
         for (Entry<String,String> e : headers.entrySet()) {
             http.setHeaderKey(e.getKey());
             http.setHeaderValue(e.getValue());
+            headers_tr.add(e.getValue()); //vg
         }
 
         http.setUrl(fullUrl.toString());
@@ -344,6 +356,22 @@ public class RESTAdapter extends NavajoMap {
         http.setReadTimeOut(readTimeOut);
         http.setConnectTimeOut(connectTimeOut);
         
+        
+        //===// g
+        if (debug) {
+        	//output all headers, request body and the curl command.
+        	System.out.println(">>>>Method: " + http.getMethod());
+        	//System.out.println(">>>>Headers: " + http.getHeaders); //something like that, implement getHeaders() function in httpmap if that's possible
+        	System.out.println(">>>>Request body: " + content);
+        	System.out.println(">>>>Headers: " + headers.toString()); //if wrong use for underneath
+        	
+        	//accessing all headers
+        	/*for(String str:headers_tr) { 
+        		System.out.println(">>>>Request body: " + content);
+        	}*/
+        	
+        }
+        //===//g
     }
 
     @Override
