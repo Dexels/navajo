@@ -74,7 +74,7 @@ import com.dexels.navajo.version.Version;
 @SuppressWarnings({"rawtypes", "unchecked", "unused", "deprecation"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
-	protected static final int INFINITE = 100000; // changed to 100.000 in order to add documents to ElasticSearch via Fscrawler
+	protected static final int INFINITE = 10000; // changed to 100.000 in order to add documents to ElasticSearch via Fscrawler
 	protected final String USERPWDDELIMITER = "/";
 //	protected final String USERPWDDELIMITER = "/";
     protected final String DEFAULTSRCNAME = "default";
