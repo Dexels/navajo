@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.dexels.navajo.api.util.NavajoRequestConfig;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
@@ -35,6 +36,8 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	private HttpServlet reactiveHttpServlet;
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
+
+	private long requestTimeout;
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.reactiveScriptEnvironment = env;
@@ -74,6 +77,9 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	public void activate() {
 		logger.info("Continuation servlet component activated");
+		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(10000000L);
+		logger.info("Using timeout in continuation: {}",this.requestTimeout);
+		
 	}
 
 	public void deactivate() {
@@ -93,7 +99,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
+			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance,requestTimeout);
 			
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);

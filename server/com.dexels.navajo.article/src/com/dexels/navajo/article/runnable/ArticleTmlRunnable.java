@@ -54,14 +54,14 @@ public class ArticleTmlRunnable implements TmlRunnable{
     private long scheduledAt;
 
     
-    public ArticleTmlRunnable(HttpServletRequest req, HttpServletResponse resp, Client client, ArticleRuntime runtime, ArticleContext context) {
+    public ArticleTmlRunnable(HttpServletRequest req, HttpServletResponse resp, Client client, ArticleRuntime runtime, ArticleContext context, long requestTimeout) {
         this.httpRequest = req;
         this.httpResponse = resp;
         this.runtime = runtime;
         this.context = context;
 
         continuation = ContinuationSupport.getContinuation(httpRequest);
-        continuation.setTimeout(5*60*1000L); // 5 minutes
+        continuation.setTimeout(requestTimeout); // 5 minutes
         continuation.suspend(httpResponse);
         
         requestNavajo = NavajoFactory.getInstance().createNavajo();

@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationListener;
 import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,20 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	private final Continuation continuation;
 	private static boolean clearThreadLocal;
 
-	public TmlContinuationRunner(AsyncRequest request, LocalClient lc) {
+	public TmlContinuationRunner(AsyncRequest request, LocalClient lc, long timeout) {
 		super(request,lc);
 		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
-		continuation.setTimeout(10000000);
-		
+		continuation.setTimeout(timeout);
+		continuation.addContinuationListener(new ContinuationListener() {
+			
+			@Override
+			public void onTimeout(Continuation continuation) {
+				abort("timeout after: "+timeout);
+			}
+			
+			@Override
+			public void onComplete(Continuation arg0) {}
+		});
 		if (continuation.isExpired()) {
             logger.warn("Expired continuation!");
             abort("Internal server error");

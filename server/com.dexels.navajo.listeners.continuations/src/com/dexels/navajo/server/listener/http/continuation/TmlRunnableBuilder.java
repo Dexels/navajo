@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.listener.http.continuation;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ public class TmlRunnableBuilder {
 	}
 	// Made static to indicate independence of fields
 	public static TmlRunnable prepareRunnable(
-			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient, String instance)
+			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient, String instance,long timeout)
 			throws IOException {
 		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
 		if (tmlRunner != null) {
@@ -28,7 +29,7 @@ public class TmlRunnableBuilder {
 		}
 
 		AsyncRequest request = constructRequest(req, resp, instance);
-		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient);
+		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient,timeout);
 		req.setAttribute("tmlRunner", instantiateRunnable);
 	    instantiateRunnable.setAttribute("tester", req.getHeader("X-Navajo-Tester") != null);
 		instantiateRunnable.suspendContinuation(resp);
@@ -53,4 +54,5 @@ public class TmlRunnableBuilder {
 
 		return request;
 	}
+
 }

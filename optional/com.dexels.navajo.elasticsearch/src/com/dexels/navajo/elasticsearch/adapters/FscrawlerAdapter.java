@@ -26,7 +26,7 @@ public class FscrawlerAdapter implements Mappable {
 
 	@Override
 	public void store() throws MappableException, UserException {
-		//end fo the tag
+		//it will called after the end of the navascript tag
 		try {
 			if(binaryFile == null) {
 				File f = new File("/Users/vgemistos/eclipse-workspace/com.dexels.elasticsearch/src/com/dexels/elasticsearch/test_java_file.txt");
