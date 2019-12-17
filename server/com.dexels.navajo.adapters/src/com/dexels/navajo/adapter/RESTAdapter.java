@@ -369,7 +369,6 @@ public class RESTAdapter extends NavajoMap {
         	/*for(String str:headers_tr) { 
         		System.out.println(">>>>Request body: " + content);
         	}*/
-        	
         }
         //===//g
     }
