@@ -12,6 +12,7 @@
 		<module>../../com.dexels.navajo.utilities</module>
 		<module>../../com.dexels.navajo.elasticsearch</module>
 		<module>../../com.dexels.navajo.function.pdf</module>
+		<module>../../com.dexels.navajo.function.kml</module>
 		<module>../../com.dexels.navajo.fileuploadservlet</module>
 		<module>../</module>
 
