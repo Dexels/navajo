@@ -342,11 +342,17 @@ public class RESTAdapter extends NavajoMap {
         
         headers_tr.put("Accept", "application/json"); 
 
-        if (method.equals("POST") || method.equals("PUT")) { //here it sets the content if the method is only POST or PUT, should I change that?
-            http.setContent(content);
-            http.setContentType("application/json");
-            http.setContentLength(content.getLength());
-        }
+//        if (method.equals("POST") || method.equals("PUT")) { //here it sets the content if the method is only POST or PUT, should I change that?
+//            http.setContent(content);
+//            http.setContentType("application/json");
+//            http.setContentLength(content.getLength());
+//        }
+        
+        http.setContent(content);
+        http.setContentType("application/json");
+        http.setContentLength(content.getLength());
+        
+        
         http.trustAll();
         if (username != null && password != null) {
             // Use HTTP Basic auth - should only be used over HTTPS!
@@ -366,7 +372,7 @@ public class RESTAdapter extends NavajoMap {
         	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
         	System.out.println(">>>>Method: " + http.getMethod());
         	//System.out.println(">>>>Headers: " + http.getHeaders); //something like that, implement getHeaders() function in httpmap if that's possible
-        	System.out.println(">>>>Request body: " + content);
+        	System.out.println(">>>>Request body: " + http.getContent());
         	System.out.println(">>>>Headers: ");
         	
         	
@@ -382,15 +388,13 @@ public class RESTAdapter extends NavajoMap {
                 c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
             }
         	
-        	c_url += "-d \'" + content + "\' ";
+        	c_url += "-d \'" + http.getContent() + "\' ";
         	
         	c_url += "\'" + http.getUrl() + "\' ";
         	
-        	System.out.println(">>>>Curl: " + c_url);
+        	System.out.println(">>>>cURL command: " + c_url);
         	System.out.println("==========================================================================");
         	
-        	//trial block to see what the content of the http request:
-        	System.out.println("http request body: " + http.getContent());
         }
         //===//g
     }
