@@ -309,7 +309,7 @@ public class RESTAdapter extends NavajoMap {
 
     private void setupHttpMap(HTTPMap http, Binary content) throws UserException {
     	
-    	ArrayList<String> headers_tr = new ArrayList<String>(); //vg
+    	HashMap<String,String> headers_tr = new HashMap<String,String>(); //vg
     	
         try {
             http.load(access);
@@ -331,15 +331,18 @@ public class RESTAdapter extends NavajoMap {
         for (Entry<String,String> e : headers.entrySet()) {
             http.setHeaderKey(e.getKey());
             http.setHeaderValue(e.getValue());
-            headers_tr.add(e.getValue()); //vg
+            //headers_tr.add(e.getValue()); //vg
+            headers_tr.put(e.getKey(), e.getValue()); 
         }
 
         http.setUrl(fullUrl.toString());
         http.setHeaderKey("Accept");
         http.setHeaderValue("application/json");
         http.setMethod(method);
+        
+        headers_tr.put("Accept", "application/json"); 
 
-        if (method.equals("POST") || method.equals("PUT")) {
+        if (method.equals("POST") || method.equals("PUT")) { //here it sets the content if the method is only POST or PUT, should I change that?
             http.setContent(content);
             http.setContentType("application/json");
             http.setContentLength(content.getLength());
@@ -360,15 +363,34 @@ public class RESTAdapter extends NavajoMap {
         //===// g
         if (debug) {
         	//output all headers, request body and the curl command.
+        	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
         	System.out.println(">>>>Method: " + http.getMethod());
         	//System.out.println(">>>>Headers: " + http.getHeaders); //something like that, implement getHeaders() function in httpmap if that's possible
         	System.out.println(">>>>Request body: " + content);
-        	System.out.println(">>>>Headers: " + headers.toString()); //if wrong use for underneath
+        	System.out.println(">>>>Headers: ");
+        	
+        	
+        	//curl builder
+        	String c_url = "curl -X";
+        	c_url += http.getMethod();
+        	c_url += " -H \'Content-type:application/json\' ";
+        	
         	
         	//accessing all headers
-        	/*for(String str:headers_tr) { 
-        		System.out.println(">>>>Request body: " + content);
-        	}*/
+        	for (Entry<String,String> e : headers_tr.entrySet()) {
+        		System.out.println(e.getKey() + " : " + e.getValue());
+                c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
+            }
+        	
+        	c_url += "-d \'" + content + "\' ";
+        	
+        	c_url += "\'" + http.getUrl() + "\' ";
+        	
+        	System.out.println(">>>>Curl: " + c_url);
+        	System.out.println("==========================================================================");
+        	
+        	//trial block to see what the content of the http request:
+        	System.out.println("http request body: " + http.getContent());
         }
         //===//g
     }
