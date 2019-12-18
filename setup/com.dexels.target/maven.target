@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: 3.3.482" sequenceNumber="3282">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: 3.3.484" sequenceNumber="3284">
 <locations>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
@@ -9,7 +9,7 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.482"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.484"/>
 		<unit id="bcpg" version="1.64.0"/>
 		<unit id="bcpkix" version="1.64.0"/>
 		<unit id="bcprov" version="1.64.0"/>
@@ -22,7 +22,7 @@
 		<unit id="com.dexels.immutable.api" version="3.3.2"/>
 		<unit id="com.dexels.immutable.impl" version="1.4.9"/>
 		<unit id="com.dexels.index.api" version="1.0.0.201608241244"/>
-		<unit id="com.dexels.kafka.impl.rx2" version="6.1.10"/>
+		<unit id="com.dexels.kafka.impl.rx2" version="6.1.11"/>
 		<unit id="com.dexels.kafka.streams" version="2.1.4"/>
 		<unit id="com.dexels.kafka.streams.api" version="3.0.2"/>
 		<unit id="com.dexels.kafka.streams.sink.mongo" version="1.1.1"/>
@@ -73,7 +73,6 @@
 		<unit id="com.sun.activation.javax.activation" version="1.2.0"/>
 		<unit id="com.sun.mail.javax.mail" version="1.6.1"/>
 		<unit id="com.vaadin" version="6.8.14"/>
-		<unit id="dexels-navajo-target.feature.group" version="3.3.482"/>
 		<unit id="io.reactivex.rxjava2.rxjava" version="2.2.11"/>
 		<unit id="io.swagger.annotations" version="1.5.20"/>
 		<unit id="javax.annotation-api" version="1.3.2"/>
