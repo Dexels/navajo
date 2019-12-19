@@ -222,6 +222,7 @@ public class RESTAdapter extends NavajoMap {
        
         Writer w = new StringWriter();
         Binary bContent = new Binary();
+        
         if (textContent == null) {
             // Remove globals and parms message
             if (od.getMessage("__globals__") != null)  od.removeMessage("__globals__");
@@ -242,6 +243,7 @@ public class RESTAdapter extends NavajoMap {
         } else {
             try {
                 bContent.getOutputStream().write(textContent.toString().getBytes(StandardCharsets.UTF_8));
+                
             } catch (IOException e) {
                 logger.error("IOException on writing textcontent! Not performing REST call!");
                 throw new UserException(e.getMessage(), e);
@@ -368,11 +370,14 @@ public class RESTAdapter extends NavajoMap {
         
         //===// g
         if (debug) {
+        	byte[] em = http.getContent().getData();
+        	String s_content = new String(em);
+        	
         	//output all headers, request body and the curl command.
         	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
         	System.out.println(">>>>Method: " + http.getMethod());
-        	//System.out.println(">>>>Headers: " + http.getHeaders); //something like that, implement getHeaders() function in httpmap if that's possible
-        	System.out.println(">>>>Request body: " + http.getContent());
+        	//System.out.println(">>>>Request body: " + http.getContent()); //http.content is binary
+        	System.out.println(">>>>Request body: " + s_content); 
         	System.out.println(">>>>Headers: ");
         	
         	
@@ -388,12 +393,20 @@ public class RESTAdapter extends NavajoMap {
                 c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
             }
         	
-        	c_url += "-d \'" + http.getContent() + "\' ";
+        	//c_url += "-d \'" + http.getContent() + "\' "; //http content is a binary
+        	
+        	String no_enter_content = s_content.replace("\n", "").replace("\r", "");
+        	
+        	c_url += "-d \'" + no_enter_content + "\' "; //http content is a binary
         	
         	c_url += "\'" + http.getUrl() + "\' ";
         	
         	System.out.println(">>>>cURL command: " + c_url);
         	System.out.println("==========================================================================");
+        	
+      
+        	
+        	//System.out.println("DOKIMASTIKO!!!! : " + s);
         	
         }
         //===//g
