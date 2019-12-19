@@ -891,7 +891,6 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).val());
-        //$element.attr('value',  'imarton!');
     }
 });
 
