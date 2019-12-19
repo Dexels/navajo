@@ -333,7 +333,7 @@ public class RESTAdapter extends NavajoMap {
         for (Entry<String,String> e : headers.entrySet()) {
             http.setHeaderKey(e.getKey());
             http.setHeaderValue(e.getValue());
-            //headers_tr.add(e.getValue()); //vg
+    
             headers_tr.put(e.getKey(), e.getValue()); 
         }
 
@@ -367,8 +367,6 @@ public class RESTAdapter extends NavajoMap {
         http.setReadTimeOut(readTimeOut);
         http.setConnectTimeOut(connectTimeOut);
         
-        
-        //===// g
         if (debug) {
         	byte[] em = http.getContent().getData();
         	String s_content = new String(em);
@@ -376,7 +374,6 @@ public class RESTAdapter extends NavajoMap {
         	//output all headers, request body and the curl command.
         	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
         	System.out.println(">>>>Method: " + http.getMethod());
-        	//System.out.println(">>>>Request body: " + http.getContent()); //http.content is binary
         	System.out.println(">>>>Request body: " + s_content); 
         	System.out.println(">>>>Headers: ");
         	
@@ -392,24 +389,16 @@ public class RESTAdapter extends NavajoMap {
         		System.out.println(e.getKey() + " : " + e.getValue());
                 c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
             }
-        	
-        	//c_url += "-d \'" + http.getContent() + "\' "; //http content is a binary
-        	
         	String no_enter_content = s_content.replace("\n", "").replace("\r", "");
         	
         	c_url += "-d \'" + no_enter_content + "\' "; //http content is a binary
-        	
         	c_url += "\'" + http.getUrl() + "\' ";
         	
         	System.out.println(">>>>cURL command: " + c_url);
         	System.out.println("==========================================================================");
         	
-      
-        	
-        	//System.out.println("DOKIMASTIKO!!!! : " + s);
         	
         }
-        //===//g
     }
 
     @Override
