@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-<target name="Navajo Maven Target Platform: 3.3.414" sequenceNumber="3214">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: 3.3.505" sequenceNumber="3305">
 <locations>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
@@ -11,7 +9,7 @@
 		<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.414"/>
+		<repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.505"/>
 		<unit id="bcpg" version="1.64.0"/>
 		<unit id="bcpkix" version="1.64.0"/>
 		<unit id="bcprov" version="1.64.0"/>
@@ -24,11 +22,11 @@
 		<unit id="com.dexels.immutable.api" version="3.3.2"/>
 		<unit id="com.dexels.immutable.impl" version="1.4.9"/>
 		<unit id="com.dexels.index.api" version="1.0.0.201608241244"/>
-		<unit id="com.dexels.kafka.impl.rx2" version="6.1.7"/>
-		<unit id="com.dexels.kafka.streams" version="1.1.0"/>
-		<unit id="com.dexels.kafka.streams.api" version="3.0.0"/>
+		<unit id="com.dexels.kafka.impl.rx2" version="6.1.13"/>
+		<unit id="com.dexels.kafka.streams" version="2.1.7"/>
+		<unit id="com.dexels.kafka.streams.api" version="3.0.2"/>
 		<unit id="com.dexels.kafka.streams.sink.mongo" version="1.1.1"/>
-		<unit id="com.dexels.kafka.webapi" version="1.0.8"/>
+		<unit id="com.dexels.kafka.webapi" version="1.0.10"/>
 		<unit id="com.dexels.keystoreprovider" version="1.0.0.201711171136"/>
 		<unit id="com.dexels.log4j.server" version="1.0.12.201602171050"/>
 		<unit id="com.dexels.logback.redis" version="2.2.3"/>
@@ -40,14 +38,15 @@
 		<unit id="com.dexels.oauth.web" version="3.3.22"/>
 		<unit id="com.dexels.osgi.bundlesync" version="1.0.28"/>
 		<unit id="com.dexels.pubsub.rx2.api" version="4.6.5"/>
-		<unit id="com.dexels.replication.api" version="12.3.4"/>
-		<unit id="com.dexels.replication.impl" version="8.0.2"/>
-		<unit id="com.dexels.replication.impl.json" version="5.2.2"/>
-		<unit id="com.dexels.replication.impl.protobuf" version="4.2.4"/>
+		<unit id="com.dexels.replication.api" version="12.3.5"/>
+		<unit id="com.dexels.replication.impl" version="8.0.3"/>
+		<unit id="com.dexels.replication.impl.json" version="5.2.8"/>
+		<unit id="com.dexels.replication.impl.protobuf" version="5.0.4"/>
 		<unit id="com.dexels.repository.api" version="10.0.3"/>
 		<unit id="com.dexels.repository.file" version="1.0.38"/>
 		<unit id="com.dexels.repository.git" version="4.0.45"/>
 		<unit id="com.dexels.repository.git.api" version="1.2.10"/>
+		<unit id="com.dexels.resourcebundle" version="2.0.2.201610130917"/>
 		<unit id="com.dexels.resourcebundle" version="2.0.3"/>
 		<unit id="com.dexels.server.mgmt.api" version="1.0.0.201606031246"/>
 		<unit id="com.dexels.server.mgmt.impl" version="1.0.11"/>
@@ -123,8 +122,8 @@
 		<unit id="org.apache.felix.webconsole.plugins.packageadmin" version="1.0.4"/>
 		<unit id="org.apache.felix.webconsole.plugins.scriptconsole" version="1.0.2"/>
 		<unit id="org.apache.httpcomponents.httpasyncclient" version="4.1.4"/>
-		<unit id="org.apache.httpcomponents.httpclient" version="4.4.1"/>
-		<unit id="org.apache.httpcomponents.httpcore" version="4.4.4"/>
+		<unit id="org.apache.httpcomponents.httpclient" version="4.5.10"/>
+		<unit id="org.apache.httpcomponents.httpcore" version="4.4.12"/>
 		<unit id="org.apache.pdfbox" version="1.7.1"/>
 		<unit id="org.apache.pdfbox.fontbox" version="1.7.1"/>
 		<unit id="org.apache.pdfbox.jempbox" version="1.7.1"/>
@@ -145,25 +144,25 @@
 		<unit id="org.apache.xbean.bundleutils" version="4.13.0"/>
 		<unit id="org.apache.xbean.finder" version="4.13.0"/>
 		<unit id="org.codehaus.mojo.animal-sniffer-annotations" version="1.14.0"/>
-		<unit id="org.eclipse.jetty.client" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.continuation" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.http" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.io" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.proxy" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.reactive.client" version="1.0.3"/>
-		<unit id="org.eclipse.jetty.security" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.server" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.servlet" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.servlets" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.util" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.api" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.client" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.common" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.javax.websocket" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.javax.websocket.server" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.server" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.websocket.servlet" version="9.4.20.v20190813"/>
-		<unit id="org.eclipse.jetty.xml" version="9.4.20.v20190813"/>
+		<unit id="org.eclipse.jetty.client" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.continuation" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.http" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.io" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.proxy" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.reactive.client" version="1.1.0"/>
+		<unit id="org.eclipse.jetty.security" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.server" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.servlet" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.servlets" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.util" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.api" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.client" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.common" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.javax.websocket" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.javax.websocket.server" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.server" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.websocket.servlet" version="9.4.22.v20191022"/>
+		<unit id="org.eclipse.jetty.xml" version="9.4.22.v20191022"/>
 		<unit id="org.eclipse.jgit" version="5.4.0.201906121030-r"/>
 		<unit id="org.eclipse.jgit.archive" version="5.4.0.201906121030-r"/>
 		<unit id="org.eclipse.jgit.http.apache" version="5.4.0.201906121030-r"/>
@@ -186,11 +185,11 @@
 		<unit id="org.ops4j.pax.logging.pax-logging-api" version="1.11.2"/>
 		<unit id="org.ops4j.pax.logging.pax-logging-service" version="1.11.2"/>
 		<unit id="org.ops4j.pax.url.mvn" version="2.5.4"/>
-		<unit id="org.ops4j.pax.web.pax-web-api" version="7.3.4"/>
-		<unit id="org.ops4j.pax.web.pax-web-extender-whiteboard" version="7.3.4"/>
-		<unit id="org.ops4j.pax.web.pax-web-jetty" version="7.3.4"/>
-		<unit id="org.ops4j.pax.web.pax-web-runtime" version="7.3.4"/>
-		<unit id="org.ops4j.pax.web.pax-web-spi" version="7.3.4"/>
+		<unit id="org.ops4j.pax.web.pax-web-api" version="7.3.5"/>
+		<unit id="org.ops4j.pax.web.pax-web-extender-whiteboard" version="7.3.5"/>
+		<unit id="org.ops4j.pax.web.pax-web-jetty" version="7.3.5"/>
+		<unit id="org.ops4j.pax.web.pax-web-runtime" version="7.3.5"/>
+		<unit id="org.ops4j.pax.web.pax-web-spi" version="7.3.5"/>
 		<unit id="org.osgi.service.jdbc" version="1.0.0.201505202023"/>
 		<unit id="org.osgi.util.function" version="1.1.0.201802012106"/>
 		<unit id="org.osgi.util.promise" version="1.1.1.201810101357"/>
@@ -205,7 +204,6 @@
 		<unit id="slf4j.api" version="1.7.28"/>
 		<unit id="slf4j.simple" version="1.7.28"/>
 		<unit id="stax2-api" version="4.2.0"/>
-		<unit id="dexels-navajo-target.feature.group" version="3.3.414"/>
 	</location>
 </locations>
 </target>

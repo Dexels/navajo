@@ -19,6 +19,7 @@ Import-Package: com.dexels.navajo.client,
  com.jcraft.jzlib;version="1.1.1",
  javax.servlet;version="[3.0.0,4.0.0)",
  javax.servlet.http;version="[3.0.0,4.0.0)",
+ org.apache.commons.io.output;version="2.6.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/nqlServlet.xml,OSGI-INF/navajo.laszlo.request.xml,OSGI-INF/navajo.laszlo.response.xml,
  OSGI-INF/navajo.laszlo.servlet.xml
