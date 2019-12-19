@@ -23,7 +23,6 @@
 		<module>com.dexels.navajo.client.async.jetty</module>
 		<module>com.dexels.navajo.function</module>
 		<module>com.dexels.navajo.api</module>
-		<module>com.dexels.navajo.log</module>
 		<module>com.dexels.navajo.listeners.external</module>
 		<module>com.dexels.navajo.core.feature</module>
 	</modules>

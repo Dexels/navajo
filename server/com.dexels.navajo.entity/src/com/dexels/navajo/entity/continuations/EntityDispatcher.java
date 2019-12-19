@@ -319,6 +319,13 @@ public class EntityDispatcher {
             }
 
         } finally {
+        	// TODO: maybe put this in some earlier/other stage??
+        	// This part is necessary to use the entities from a webserver (ClubWeb) and not run into CORS misery
+        	if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+	            runner.getHttpResponse().setHeader("Access-Control-Allow-Headers", "*");
+	            runner.getHttpResponse().setHeader("Access-Control-Allow-Origin", "*");
+        	}
+
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);

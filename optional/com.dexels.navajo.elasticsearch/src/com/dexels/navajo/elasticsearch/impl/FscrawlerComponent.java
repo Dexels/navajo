@@ -56,6 +56,7 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		FscrawlerFactory.setInstance(null);
 		if(httpclient!=null) {
 			try {
+				System.out.println(">>>>>Connection Closed (in deactivate)");
 				httpclient.close();
 			} catch (IOException e) {
 				logger.error("Error: ", e);
@@ -66,6 +67,7 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 	public void upload(Binary data, String id, String name) throws IOException {
 		//String url = "http://127.0.0.1:8080/fscrawler/_upload";
 		 	
+		logger.info("IN UPLOAD: " + name);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyResource(baos, data.getDataAsStream());
 		
@@ -87,6 +89,9 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		
 		System.out.println(response.getStatusLine());
 		
+		System.out.println(">>>>>Connection Closed (under status line)");
+		httpclient.close();
+		
 	}
 	
 	private static void copyResource(OutputStream out, InputStream in) throws IOException {
@@ -107,8 +112,8 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 				}
 			}
 	}
-	}
-
+	}	
+	
 	
 	
 }

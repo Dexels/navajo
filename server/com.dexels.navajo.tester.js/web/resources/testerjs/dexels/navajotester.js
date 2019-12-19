@@ -82,7 +82,7 @@ function updateTenants() {
 
 	        console.log("count 2: "+cnt);
 	        if(cnt == 0){
-	        	$('#handlers').attr('disabled',true); //vg
+	        	$('#handlers').attr('disabled',true); 
 	        }
 	     
 	        if (sessionStorage.instance) {
@@ -455,7 +455,7 @@ function prepareInputNavajo(script, birtMode) {
     } else {
     	 $header.attr('application', sessionStorage.app)
     }
-
+    console.log("Prepare Input Navajo"+serializer.serializeToString(xml)); //vg
     return serializer.serializeToString(xml);
 }
 
@@ -891,6 +891,31 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).val());
+    }
+});
+
+//  Binary upload file
+var fr;
+$(document).on('input propertychange', '.tmlinputbinary', function(evt) {
+    // If it's the propertychange event, make sure it's the value that changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+
+    var xpath = $(this).attr('id');
+    var element = $(xml).xpath(xpath)[0];
+
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        //$element.attr('value',  btoa($(this).val()));
+        var file = this.files[0];
+        fr = new FileReader();
+        fr.onload = function(){
+            console.log(fr.result);
+            $element.text(btoa(fr.result));
+            console.log(">>>>>>>>>>" + btoa(fr.result));
+	    };
+        fr.readAsText(file);
+        //fr.readAsDataURL(file);
     }
 });
 
