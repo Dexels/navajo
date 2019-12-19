@@ -21,7 +21,6 @@
 		<module>com.dexels.navajo.adapters.eventemitter</module>
 		<module>com.dexels.navajo.adapters.binarystore</module>
 		<module>com.dexels.navajo.resource</module>
-		<module>com.dexels.navajo.resource.manager</module>
 		<module>com.dexels.navajo.resource.jdbc.oracle</module>
 		<module>com.dexels.navajo.resource.jdbc.postgresql</module>
 		<module>com.dexels.navajo.resource.jdbc.mysql</module>
