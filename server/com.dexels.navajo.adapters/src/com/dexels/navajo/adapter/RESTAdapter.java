@@ -22,12 +22,13 @@ import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 
-public class RESTAdapter extends NavajoMap {
+public class RESTAdapter extends NavajoMap implements Debugable {
     private static final Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
     private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
     private static final int DEFAULT_READ_TIMEOUT = 60 * 1000; // 1 min
@@ -76,11 +77,9 @@ public class RESTAdapter extends NavajoMap {
         this.url = url.trim();
     }
     
-    //as in sqlmap
 	public void setDebug(boolean b) {
 		this.debug = b;
 	}
-	//
     
     public void setTextContent(String s) {
         textContent = s;
@@ -401,6 +400,10 @@ public class RESTAdapter extends NavajoMap {
         }
     }
 
+	@Override
+	public boolean getDebug() {
+		return debug;
+	}
     @Override
     public String getUrl() {
         return url;
@@ -434,4 +437,5 @@ public class RESTAdapter extends NavajoMap {
     public String getRawResult() {
         return rawResult;
     }
+
 }
