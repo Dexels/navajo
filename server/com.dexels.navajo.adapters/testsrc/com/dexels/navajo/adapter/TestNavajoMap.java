@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -23,13 +24,13 @@ public class TestNavajoMap {
     private static final Logger logger = LoggerFactory.getLogger(TestNavajoMap.class);
 
     private NavajoMap map;
-    private Navajo n;
+    private Navajo outDoc;
 
     @Before
     public void setup() {
         map = new NavajoMap();
-        n = NavajoFactory.getInstance().createNavajo();
-        map.setOutDoc(n);
+        outDoc = NavajoFactory.getInstance().createNavajo();
+        map.setOutDoc(outDoc);
     }
 
     @After
@@ -52,7 +53,7 @@ public class TestNavajoMap {
             assertTrue(false);
         }
     }
-    
+
     @Test
     public void testCheckSubArrayWithChildren() throws UserException {
         String testCase = "/parentMessage/ArrayMessage@0/arrayMessageChild/newProperty";
@@ -84,7 +85,7 @@ public class TestNavajoMap {
             assertTrue(false);
         }
     }
-    
+
     @Test
     public void testTopLevelArrayWithMultipleChildrenMessages() throws UserException {
         String testCase = "/ArrayMessage@0/arrayMessageChild/newProperty";
@@ -152,8 +153,8 @@ public class TestNavajoMap {
 
         // Create a message on the in doc with a test value.
         Navajo inDoc = NavajoFactory.getInstance().createNavajo();
-        Message m = NavajoFactory.getInstance().createMessage(n, "SimpleMessage");
-        Property p = NavajoFactory.getInstance().createProperty(n, "newProperty", INTEGER_PROPERTY, TEST_INTEGER, 0, "", "out");
+        Message m = NavajoFactory.getInstance().createMessage(outDoc, "SimpleMessage");
+        Property p = NavajoFactory.getInstance().createProperty(outDoc, "newProperty", INTEGER_PROPERTY, TEST_INTEGER, 0, "", "out");
         m.setType(Message.MSG_TYPE_SIMPLE);
         m.addProperty(p);
         inDoc.addMessage(m);
@@ -161,7 +162,7 @@ public class TestNavajoMap {
         // Initialize the navajomap.
         Access access = new Access();
         access.setInDoc(inDoc);
-        access.setOutputDoc(n);
+        access.setOutputDoc(outDoc);
         try {
             map.load(access);
         } catch (Exception e) {
@@ -184,4 +185,17 @@ public class TestNavajoMap {
             assertTrue(false);
         }
     }
+
+    @Test
+    public void testSendThrough() {
+
+        assertFalse(map.getSendThrough());
+
+        map.setSendThrough(true);
+        assertTrue(map.getSendThrough());
+
+        map.setSendThrough(false);
+        assertFalse(map.getSendThrough());
+    }
+
 }
