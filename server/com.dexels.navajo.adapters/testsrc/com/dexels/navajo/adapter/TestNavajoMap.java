@@ -1,6 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -17,6 +19,7 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
 
 import static com.dexels.navajo.document.Property.INTEGER_PROPERTY;;
 
@@ -28,6 +31,7 @@ public class TestNavajoMap {
 
     @Before
     public void setup() {
+
         map = new NavajoMap();
         outDoc = NavajoFactory.getInstance().createNavajo();
         map.setOutDoc(outDoc);
@@ -35,11 +39,14 @@ public class TestNavajoMap {
 
     @After
     public void destroy() {
+
         map = null;
+        outDoc = null;
     }
 
     @Test
     public void testCheckSubArray() throws UserException {
+
         String testCase = "/parentMessage/ArrayMessage@0/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -56,6 +63,7 @@ public class TestNavajoMap {
 
     @Test
     public void testCheckSubArrayWithChildren() throws UserException {
+
         String testCase = "/parentMessage/ArrayMessage@0/arrayMessageChild/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -72,6 +80,7 @@ public class TestNavajoMap {
 
     @Test
     public void testTopLevelArray() throws UserException {
+
         String testCase = "/ArrayMessage@0/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -88,6 +97,7 @@ public class TestNavajoMap {
 
     @Test
     public void testTopLevelArrayWithMultipleChildrenMessages() throws UserException {
+
         String testCase = "/ArrayMessage@0/arrayMessageChild/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -103,6 +113,7 @@ public class TestNavajoMap {
 
     @Test
     public void testNestedLevelArrays() throws UserException {
+
         String testCase = "/ArrayMessageParrent@0/ArrayMessageChild@0/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -118,6 +129,7 @@ public class TestNavajoMap {
 
     @Test
     public void testSimplePropertyMessage() throws UserException {
+
         String testCase = "/SimpleMessage/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -132,6 +144,7 @@ public class TestNavajoMap {
 
     @Test
     public void testSimplePropertyNestedMessage() throws UserException {
+
         String testCase = "/SimpleMessageParent/SimpleMessageChild/newProperty";
         map.setPropertyName(testCase);
         map.setPropertyType(INTEGER_PROPERTY);
@@ -147,6 +160,7 @@ public class TestNavajoMap {
 
     @Test
     public void testCopyInputMessage() throws UserException {
+
         DispatcherFactory.createDispatcher(new Dispatcher());
         final String TEST_INTEGER = "6";
         final String ALTERNATE_TEST_INTEGER = "3";
@@ -187,15 +201,89 @@ public class TestNavajoMap {
     }
 
     @Test
-    public void testSendThrough() {
+    public void testSendThroughNotSet() throws MappableException, UserException {
+
+        DispatcherFactory.createDispatcher(new Dispatcher());
+        Navajo inDoc = NavajoFactory.getInstance().createNavajo();
+
+        Property property = NavajoFactory.getInstance().createProperty(inDoc, "Meaning",
+                INTEGER_PROPERTY, "42", 0, "", "out");
+        Message message = NavajoFactory.getInstance().createMessage(inDoc, "SendThrough");
+        message.addProperty(property);
+        inDoc.addMessage(message);
+
+        Message global = NavajoFactory.getInstance().createMessage(inDoc, "Global");
+        global.setScope(Message.MSG_SCOPE_GLOBAL);
+        inDoc.addMessage(global);
+
+        Access access = new Access();
+        access.setInDoc(inDoc);
+        access.setOutputDoc(outDoc);
+
+        map.load(access);
+        map.prepareOutDoc();
 
         assertFalse(map.getSendThrough());
+        assertNull(map.outDoc.getMessage("SendThrough"));
+        assertEquals(Message.MSG_SCOPE_GLOBAL, map.outDoc.getMessage("Global").getScope());
+    }
 
-        map.setSendThrough(true);
-        assertTrue(map.getSendThrough());
+    @Test
+    public void testSendThroughSetFalse() throws MappableException, UserException {
 
+        DispatcherFactory.createDispatcher(new Dispatcher());
+        Navajo inDoc = NavajoFactory.getInstance().createNavajo();
+
+        Property property = NavajoFactory.getInstance().createProperty(inDoc, "Meaning",
+                INTEGER_PROPERTY, "42", 0, "", "out");
+        Message message = NavajoFactory.getInstance().createMessage(inDoc, "SendThrough");
+        message.addProperty(property);
+        inDoc.addMessage(message);
+
+        Message global = NavajoFactory.getInstance().createMessage(inDoc, "Global");
+        global.setScope(Message.MSG_SCOPE_GLOBAL);
+        inDoc.addMessage(global);
+
+        Access access = new Access();
+        access.setInDoc(inDoc);
+        access.setOutputDoc(outDoc);
+
+        map.load(access);
         map.setSendThrough(false);
+        map.prepareOutDoc();
+
         assertFalse(map.getSendThrough());
+        assertNull(map.outDoc.getMessage("SendThrough"));
+        assertEquals(Message.MSG_SCOPE_GLOBAL, map.outDoc.getMessage("Global").getScope());
+    }
+
+    @Test
+    public void testSendThroughSetTrue() throws MappableException, UserException {
+
+        DispatcherFactory.createDispatcher(new Dispatcher());
+        Navajo inDoc = NavajoFactory.getInstance().createNavajo();
+
+        Property property = NavajoFactory.getInstance().createProperty(inDoc, "Meaning",
+                INTEGER_PROPERTY, "42", 0, "", "out");
+        Message message = NavajoFactory.getInstance().createMessage(inDoc, "SendThrough");
+        message.addProperty(property);
+        inDoc.addMessage(message);
+
+        Message local = NavajoFactory.getInstance().createMessage(inDoc, "Local");
+        local.setScope(Message.MSG_SCOPE_LOCAL);
+        inDoc.addMessage(local);
+
+        Access access = new Access();
+        access.setInDoc(inDoc);
+        access.setOutputDoc(outDoc);
+
+        map.load(access);
+        map.setSendThrough(true);
+        map.prepareOutDoc();
+
+        assertTrue(map.getSendThrough());
+        assertEquals("42", map.outDoc.getMessage("SendThrough").getProperty("Meaning").getValue());
+        assertNull(map.outDoc.getMessage("Local"));
     }
 
 }
