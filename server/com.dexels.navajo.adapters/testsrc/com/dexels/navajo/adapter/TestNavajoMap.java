@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -25,9 +23,8 @@ import static com.dexels.navajo.document.Property.INTEGER_PROPERTY;;
 
 public class TestNavajoMap {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestNavajoMap.class);
-
     private NavajoMap map;
+
     private Navajo outDoc;
 
     @Before
@@ -180,6 +177,10 @@ public class TestNavajoMap {
         global.setScope(Message.MSG_SCOPE_GLOBAL);
         inDoc.addMessage(global);
 
+        Message local = NavajoFactory.getInstance().createMessage(inDoc, "Local");
+        local.setScope(Message.MSG_SCOPE_LOCAL);
+        inDoc.addMessage(local);
+
         // Initialize the navajomap.
         DispatcherFactory.createDispatcher(new Dispatcher());
         Access access = new Access();
@@ -192,6 +193,7 @@ public class TestNavajoMap {
         assertFalse(map.getSendThrough());
         assertNull(map.outDoc.getMessage("SendThrough"));
         assertEquals(Message.MSG_SCOPE_GLOBAL, map.outDoc.getMessage("Global").getScope());
+        assertNull(map.outDoc.getMessage("Local"));
     }
 
     @Test
@@ -209,6 +211,10 @@ public class TestNavajoMap {
         global.setScope(Message.MSG_SCOPE_GLOBAL);
         inDoc.addMessage(global);
 
+        Message local = NavajoFactory.getInstance().createMessage(inDoc, "Local");
+        local.setScope(Message.MSG_SCOPE_LOCAL);
+        inDoc.addMessage(local);
+
         // Initialize the navajomap.
         DispatcherFactory.createDispatcher(new Dispatcher());
         Access access = new Access();
@@ -222,6 +228,7 @@ public class TestNavajoMap {
         assertFalse(map.getSendThrough());
         assertNull(map.outDoc.getMessage("SendThrough"));
         assertEquals(Message.MSG_SCOPE_GLOBAL, map.outDoc.getMessage("Global").getScope());
+        assertNull(map.outDoc.getMessage("Local"));
     }
 
     @Test
@@ -234,6 +241,10 @@ public class TestNavajoMap {
         Message message = NavajoFactory.getInstance().createMessage(inDoc, "SendThrough");
         message.addProperty(property);
         inDoc.addMessage(message);
+
+        Message global = NavajoFactory.getInstance().createMessage(inDoc, "Global");
+        global.setScope(Message.MSG_SCOPE_GLOBAL);
+        inDoc.addMessage(global);
 
         Message local = NavajoFactory.getInstance().createMessage(inDoc, "Local");
         local.setScope(Message.MSG_SCOPE_LOCAL);
@@ -251,6 +262,7 @@ public class TestNavajoMap {
 
         assertTrue(map.getSendThrough());
         assertEquals("42", map.outDoc.getMessage("SendThrough").getProperty("Meaning").getValue());
+        assertEquals(Message.MSG_SCOPE_GLOBAL, map.outDoc.getMessage("Global").getScope());
         assertNull(map.outDoc.getMessage("Local"));
     }
 
