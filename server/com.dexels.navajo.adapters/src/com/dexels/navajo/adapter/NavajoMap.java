@@ -72,6 +72,10 @@ import com.dexels.navajo.util.AuditLog;
 
 public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+
+    private static final long MAX_WAITTIME = 600000; // 10 min
+
     public String doSend;
     public Binary navajo;
     public String username = null;
@@ -184,8 +188,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     private List<String> deletedProperties = new ArrayList<>();
     private List<String> deletedMessages = new ArrayList<>();
-    private static final Logger logger = LoggerFactory.getLogger(NavajoMap.class);
-    private static final long MAX_WAITTIME = 600000; // 10 min
 
     public NavajoMap() {
 
@@ -1308,17 +1310,19 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
      * When sendThrough is true, copies the entire current input message to the outgoing message
      * used when invoking the {@link #setDoSend(String) setDoSend} method.
      *
-     * @param sendThrough When true copy input messages, otherwise do nothing.
+     * @param sendThrough When true copy input messages, otherwise do nothing. Clearing it after
+     *                    being set does nothing (i.e., it remains set).
      */
     public void setSendThrough(boolean sendThrough) {
-
-        this.sendThrough = sendThrough;
 
         if (sendThrough) {
             for (Message message : inMessage.getAllMessages()) {
                 Message copy = inMessage.copyMessage(message, outDoc);
                 outDoc.addMessage(copy);
             }
+            this.sendThrough = true;
+        } else if (this.sendThrough) {
+            logger.error("Clearing the sendThrough field after setting it is not supported.");
         }
     }
 
