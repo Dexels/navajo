@@ -59,7 +59,7 @@ echo "Going to release $BUNDLENAME $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to c
 echo "SETREPO: ${SETREPO}"
 prettysleep 5
 
-mvn install -Denvironment=release $SETREPO
+mvn install -DskipTests -Denvironment=release $SETREPO
 if [ $? -ne 0 ]
 then
 	echo "Building failed - stopping release!"

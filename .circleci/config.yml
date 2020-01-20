@@ -1,77 +1,81 @@
 version: 2
 jobs:
-      build:
-            docker:
-                  - image: circleci/openjdk:11-jdk
-            working_directory: ~/repo
-            environment:
-                  JVM_OPTS: -Xmx1000m
-                  TERM: dumb
-            steps:
-                  - checkout
-                  - restore_cache:
-                          keys:
-                                - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
-                  - run: |
-                          cd setup/com.dexels.target
-                          mvn -s ../../.circleci/conf/settings.xml -B install 
-                          cd ../..
-                  - save_cache:
-                          paths:
-                                - ~/.m2
-                          key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
+  build:
+    branches:
+      only:
+        - master
+    docker:
+      - image: circleci/openjdk:11-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1000m
+      TERM: dumb
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
+      - run: |
+          cd setup/com.dexels.target
+          mvn -s ../../.circleci/conf/settings.xml -B install 
+          cd ../..
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
-                  # run tests (skipped for now)
-                  - run: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
-                  - run: |
-                          cd ~
-                          du -hs .m2
-                          zip -r navajo_maven.zip .m2
-                  - store_artifacts:
-                          path: ~/navajo_maven.zip
-                          destination: navajo_maven.zip
-                  - store_artifacts:
-                          path: ~/repo/setup/com.dexels.p2/target/com.dexels.p2-1.0.0-SNAPSHOT.zip
-                          destination: navajo_p2.zip
-                  - store_artifacts:
-                          path: ~/repo/setup/com.dexels.vaadin.p2/target/com.dexels.vaadin.p2-1.0.0-SNAPSHOT.zip
-                          destination: vaadin_p2.zip
-                  - store_artifacts:
-                          path: ~/repo/setup/com.dexels.streams.p2/target/com.dexels.streams.p2-1.0.0-SNAPSHOT.zip
-                          destination: streams_p2.zip
-                  #test store
-                  - run:
-                          name: Save test results
-                          command: |
-                                mkdir -p ~/test-results/junit/
-                                find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-                          when: always
-                  - store_test_results:
-                          path: ~/test-results
-                  - store_artifacts:
-                          path: ~/test-results/junit
+      # run tests (skipped for now)
+      - run: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
+      - run: |
+          cd ~
+          du -hs .m2
+          zip -r navajo_maven.zip .m2
+      - store_artifacts:
+          path: ~/navajo_maven.zip
+          destination: navajo_maven.zip
+      - store_artifacts:
+          path: ~/repo/setup/com.dexels.p2/target/com.dexels.p2-1.0.0-SNAPSHOT.zip
+          destination: navajo_p2.zip
+      - store_artifacts:
+          path: ~/repo/setup/com.dexels.vaadin.p2/target/com.dexels.vaadin.p2-1.0.0-SNAPSHOT.zip
+          destination: vaadin_p2.zip
+      - store_artifacts:
+          path: ~/repo/setup/com.dexels.streams.p2/target/com.dexels.streams.p2-1.0.0-SNAPSHOT.zip
+          destination: streams_p2.zip
+      #test store
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
 
-                  - run: |
-                          ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
-                          scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
-                  # Now update enterprise:
-                  - run: |
-                          mkdir ~/enterprisecheckout
-                          cd  ~/enterprisecheckout
-                          git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git
-                          ls -l
-                          cd enterprise/enterprise/com.dexels.enterprise.target
-                          ./updateversion.sh
-                          # Push changes
-                          git config credential.helper 'cache --timeout=120'
-                          git config user.email "Dexels Butler"
-                          git config user.name "butler@dexels.com"
-                          git add .
-                          echo "commiting changes"
-                          git commit --allow-empty -m "Update via CircleCI"
-                          git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
-                          echo "push complete"
-                  - run: |
-                          echo "skipping downstream"
-                          #curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
-                          curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
+      - run: |
+          ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
+          scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
+      # Now update enterprise:
+      - run: |
+          mkdir ~/enterprisecheckout
+          cd  ~/enterprisecheckout
+          git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git
+          ls -l
+          cd enterprise/enterprise/com.dexels.enterprise.target
+          ./updateversion.sh
+          # Push changes
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "Dexels Butler"
+          git config user.name "butler@dexels.com"
+          git add .
+          echo "commiting changes"
+          git commit --allow-empty -m "Update via CircleCI"
+          git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
+          echo "push complete"
+      - run: |
+          echo "skipping downstream"
+          #curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
+          curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
+

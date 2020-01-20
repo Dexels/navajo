@@ -198,6 +198,12 @@
 		<input>string,string</input>
 		<result>string</result>
 	</function>
+	<function name="Env" class="com.dexels.navajo.functions.Env">
+		<description>Returns the value of an environment variable (if set).
+		</description>
+		<input>string</input>
+		<result>string</result>
+	</function>
 	<function name="EqualsIgnoreCase" class="com.dexels.navajo.functions.EqualsIgnoreCase">
 		<description />
 		<input />
