@@ -112,15 +112,12 @@ public class SwingExceptionDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 if (open) {
-                    viewButton.setText("Details");
                     topPanel.remove(exceptionTextAreaSP);
                     SwingExceptionDialog.this.exceptionTextArea.setVisible(false);
                     SwingExceptionDialog.this.pack();
                     open = false;
 
                 } else {
-
-                    viewButton.setText("Verberg details ");
 
                     topPanel.add(exceptionTextAreaSP, BorderLayout.SOUTH);
 
