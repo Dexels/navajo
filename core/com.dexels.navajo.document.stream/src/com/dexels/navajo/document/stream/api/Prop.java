@@ -28,18 +28,18 @@ public class Prop {
 	private final String subtype;
 	private final Optional<String> cardinality;
 	private final Binary binary;
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(Prop.class);
 
-	
+
 	public enum Direction {
 		IN,OUT
 	}
-	
+
 	Prop(String name, String value, String type, List<Select> selections, Optional<String> cardinality) {
 		this(name,value,type,selections,Optional.empty(),"",-1,"",cardinality,null);
 	}
-	
+
 	public Prop copy() {
 		return new Prop(name, value, type,selections,direction,description,length,subtype,cardinality,binary);
 	}
@@ -66,7 +66,7 @@ public class Prop {
 		return new Prop(name,null,null);
 	}
 
-	
+
 	public static Prop create(Map<String,String> attributes, List<Select> selections) {
 		String lngth = attributes.get("length");
 		String cardinality = attributes.get("cardinality");
@@ -78,7 +78,7 @@ public class Prop {
 		int len =  (int) currentBinary.getLength(); // lngth==null || "".equals(lngth)?-1:Integer.parseInt(lngth);
 		return create(attributes.get("name"),(String)null,attributes.get("type"),Collections.emptyList(),parseDirection(attributes.get("direction")),attributes.get("description"),len,attributes.get("subtype"),Optional.empty(),currentBinary);
 	}
-	
+
 	private static Optional<Direction> parseDirection(String direction) {
 		if(direction==null) {
 			return Optional.empty();
@@ -89,21 +89,21 @@ public class Prop {
 	public static Prop create(String name, String value) {
 		return new Prop(name,value,null);
 	}
-	
+
 	public static Prop create(String name, String value, String type) {
 		return new Prop(name,value,type);
 	}
-	
+
 	public static Prop create(String name, String value, String type,List<Select> selections, Optional<String> cardinality) {
 		return new Prop(name,value,type,selections,Optional.empty(),"",-1,"",cardinality,null);
 	}
-	
+
 	public static Prop create(String name, String value, String type,List<Select> selections, Optional<Prop.Direction> direction, String description, int length, String subtype, Optional<String> cardinality, Binary binary ) {
 		return new Prop(name,value,type,selections,direction,description,length,subtype,cardinality,binary);
 	}
-	
 
-	
+
+
 	public Prop withSelections(List<Select> currentSelections) {
 		return new Prop(name, value, type,currentSelections,cardinality);
 	}
@@ -111,7 +111,7 @@ public class Prop {
 	public Prop withValue(String val) {
 		return new Prop(name, val, type,selections,direction,description,length,subtype,cardinality,null);
 	}
-	
+
 	public Prop withBinaryFromFile(String path) {
 		File fpath = new File(path);
 		if(fpath.exists()) {
@@ -130,7 +130,7 @@ public class Prop {
 	public Prop withName(String newName) {
 		return new Prop(newName, value, type,selections,direction,description,length,subtype,cardinality,binary);
 	}
-	
+
 	public Prop emptyWithType(String type) {
 		return new Prop(name,null,type);
 	}
@@ -146,7 +146,7 @@ public class Prop {
 	public int length() {
 		return this.length;
 	}
-	
+
 	public String toString() {
 		return name+":"+value;
 	}
@@ -171,7 +171,7 @@ public class Prop {
 	public Object value() {
 		return value;
 	}
-	
+
 	public String valueAsString() {
 		if(value==null) {
 			return null;
@@ -204,9 +204,9 @@ public class Prop {
 		 if(description!=null && !"".equals(description)) {
 			 sw.write(" description=\""+description+"\"");
 		 }
-		 if(cardinality!=null && cardinality.isPresent() && !"".equals(cardinality)) {
+		 if(cardinality!=null && cardinality.isPresent() && !"".equals(cardinality.get())) {
 			 sw.write(" cardinality=\""+cardinality.get()+"\"");
-		 }		 
+		 }
 		 if(length>0) {
 			 sw.write(" length=\""+length+"\"");
 		 }
@@ -236,7 +236,7 @@ public class Prop {
 		 }
 		sw.write("<option name=\""+ StringEscapeUtils.escapeXml(select.name())+"\" value=\""+ StringEscapeUtils.escapeXml(select.value())+"\" selected=\""+(select.selected()?"1":"0")+"\"/>\n");
 	}
-	
+
 	private boolean isBinary() {
 		return binary!=null;
 	}
@@ -269,7 +269,7 @@ public class Prop {
 
 	public void addSelect(Select s) {
 		selections.add(s);
-		
+
 	}
 
 	public Optional<String> cardinality() {
