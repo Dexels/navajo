@@ -46,21 +46,12 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 		return new File(rootPath,"config").getAbsolutePath();
 	}
 
-	@Override
-	public String getClassPath() {
-		return null;
-	}
 
 	@Override
 	public String getAdapterPath() {
 		return new File(rootPath,"adapters").getAbsolutePath();
 	}
 
-	@Override
-	@Deprecated
-	public File getJarFolder() {
-		return null;
-	}
 
 	@Override
 	public String getScriptPath() {

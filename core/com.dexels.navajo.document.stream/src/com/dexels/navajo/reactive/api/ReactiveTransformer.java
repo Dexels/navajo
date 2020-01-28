@@ -12,6 +12,7 @@ public interface ReactiveTransformer {
 
 	public FlowableTransformer<DataItem,DataItem> execute(StreamScriptContext context,Optional<ImmutableMessage> current, ImmutableMessage param);
 	public TransformerMetadata metadata();
+	public ReactiveParameters parameters();
 	default public Optional<String> mimeType() {
 		return Optional.empty();
 	}

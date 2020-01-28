@@ -75,7 +75,7 @@ public class ExpressionTest {
 		types.put("SomeString", "string");
 		values.put("SomeInteger", 3);
 		types.put("SomeInteger", "integer");
-		immutableMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(), null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		immutableMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(), null, 0, Operation.NONE, Collections.emptyList(), types, values, Collections.emptyMap(), Collections.emptyMap(),Optional.empty(),Optional.empty()).message();
 		
 		Map<String,Object> valueparams = new HashMap<>();
 		Map<String,String> typeparams = new HashMap<>();
@@ -83,7 +83,7 @@ public class ExpressionTest {
 		typeparams.put("SomeString", "string");
 		valueparams.put("SomeInteger", 4);
 		typeparams.put("SomeInteger", "integer");
-		paramMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(),null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty()).message();
+		paramMessage = ReplicationFactory.createReplicationMessage(Optional.empty(),Optional.empty(),Optional.empty(),null, 0, Operation.NONE, Collections.emptyList(), typeparams, valueparams, Collections.emptyMap(), Collections.emptyMap(),Optional.empty(),Optional.empty()).message();
 
 
 	}
@@ -136,9 +136,7 @@ public class ExpressionTest {
 
 	@Test
 	public void testUnicode() throws Exception {
-		ExpressionEvaluator ee = NavajoFactory.getInstance()
-				.getExpressionEvaluator();
-
+		ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
 		Operand o = ee.evaluate("'ø'+'æ'", null, null,null);
 		assertEquals("øæ", o.value);
 	}
@@ -330,5 +328,40 @@ public class ExpressionTest {
 		assertEquals(3, s.value("innerint").get());
 	}
 
+	@Test
+	public void testEmptyTML() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[]", null, Optional.of(outer), Optional.empty());
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
+	
+	@Test
+	public void testEmptyTMLJustSlash() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[/]", null, Optional.of(outer), Optional.empty());
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
+
+	@Test
+	public void testEmptyTMLParam() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[@]", null, Optional.empty(), Optional.of(outer));
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
+	
+	@Test
+	public void testEmptySlashTMLParam() throws Exception {
+		Expression.compileExpressions = true;
+		ImmutableMessage outer = ImmutableFactory.empty().with("outerint", 1, "integer");
+		Operand o = Expression.evaluateImmutable("[/@]", null, Optional.empty(), Optional.of(outer));
+		ImmutableMessage s = o.immutableMessageValue();
+		assertEquals(outer, s);
+	}
 }
 

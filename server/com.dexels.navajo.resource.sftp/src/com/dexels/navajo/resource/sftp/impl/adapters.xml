@@ -20,6 +20,7 @@
             <value name="server" type="string" required="true" direction="in" />
             <value name="username" type="string" required="true" direction="in" />
             <value name="password" type="string" required="true" direction="in" />
+            <value name="port" type="integer" required="false" direction="in" />
         </values>
         <methods>
             <method name="upload">

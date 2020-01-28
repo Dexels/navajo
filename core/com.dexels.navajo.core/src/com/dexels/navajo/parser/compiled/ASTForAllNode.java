@@ -39,7 +39,7 @@ final class ASTForAllNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		return new ContextExpression() {
 			
 			@Override
@@ -51,8 +51,8 @@ final class ASTForAllNode extends SimpleNode {
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 				List<String> problems = new ArrayList<>();
-				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
-				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
+				ContextExpression a = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier,mapResolver);
+				ContextExpression b = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 
 				
 				if(!problems.isEmpty()) {

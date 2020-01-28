@@ -892,7 +892,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		} else {
 	        if (dataFile != null && dataFile.exists() ) {
 	        	try {
-					Files.delete(dataFile.toPath());
+					Files.deleteIfExists(dataFile.toPath());
 				} catch (IOException e) {
 					logger.error("Error: ", e);
 				}

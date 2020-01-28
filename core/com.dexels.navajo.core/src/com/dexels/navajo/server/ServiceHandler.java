@@ -31,7 +31,6 @@ import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 
@@ -44,9 +43,8 @@ public abstract class ServiceHandler implements Constructor {
      * @throws NavajoException
      * @throws UserException
      * @throws SystemException
-    * @throws NavajoDoneException 
      */
-    public abstract Navajo doService( Access a ) throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException;
+    public abstract Navajo doService( Access a ) throws NavajoException, UserException, SystemException, AuthorizationException;
 
     /**
      *

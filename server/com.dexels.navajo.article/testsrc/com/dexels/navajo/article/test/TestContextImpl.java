@@ -1,12 +1,10 @@
 package com.dexels.navajo.article.test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Date;
 
 import com.dexels.navajo.article.command.impl.ElementCommand;
 import com.dexels.navajo.article.command.impl.ServiceCommand;
@@ -42,12 +40,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			public String getScriptPath() {
 				return null;
 			}
-			
-			@Override
-			public Date getScriptModificationDate(String scriptPath, String tenant,String extension) {
-				return null;
-			}
-			
+
 			@Override
 			public InputStream getScript(String name) throws IOException {
 				return null;
@@ -79,13 +72,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 					String scriptName, String extension) throws IOException {
 				return null;
 			}
-			
-			@Override
-			@Deprecated
-			public File getJarFolder() {
-				return null;
-			}
-			
+
 			@Override
 			public File getContextRoot() {
 				return null;
@@ -105,29 +92,13 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			public String getCompiledScriptPath() {
 				return null;
 			}
-			
-			@Override
-			@Deprecated
-			public String getClassPath() {
-				return null;
-			}
+
 			
 			@Override
 			public String getAdapterPath() {
 				return null;
 			}
 
-			@Override
-			public File getApplicableScriptFile(String rpcName, String tenant,String extension)
-					throws FileNotFoundException {
-				return null;
-			}
-
-			@Override
-			public File getApplicableBundleForScript(String rpcName,
-					String tenant, String extension)  {
-				return null;
-			}
 
 			@Override
 			public boolean hasTenantScriptFile(String rpcName, String tenant,String scriptPath) {

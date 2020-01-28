@@ -4,28 +4,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dexels.navajo.document.NavajoException;
+
 public class Coordinate extends NavajoType implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 3899354902954075174L;
-    public static final String VERSION = "$Id$";
 
+    public static final Coordinate nowhere = new Coordinate(Double.NaN,Double.NaN);
     private Double latitude = null;
     private Double longitude = null;
 
-    public Coordinate(double longitude, double latitude) throws Exception {
+    public Coordinate(double longitude, double latitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         verifyCoordinates();
     }
 
-    public Coordinate(String arrStr) throws Exception {
+    public Coordinate(String arrStr) {
         // check if format is correct.
         if (!(arrStr.matches(
                 "\\[[+-]{0,1}\\d+\\.{0,1}\\d*, [+-]{0,1}\\d+\\.{0,1}\\d*\\]|\\[[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*\\]|[+-]{0,1}\\d+\\.{0,1}\\d*,[+-]{0,1}\\d+\\.{0,1}\\d*|[+-]{0,1}\\d+\\.{0,1}\\d* [+-]{0,1}\\d+\\.{0,1}\\d*"))) { // -18
-            throw new Exception("Not valid format given :: " + arrStr + ". Please use '[x,y]', 'x,y' or 'x y'");
+            throw new NavajoException("Not valid format given :: " + arrStr + ". Please use '[x,y]', 'x,y' or 'x y'");
         } else {
             String mydata = arrStr.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(", ", ",");
             String[] vals = mydata.split(",| ");
@@ -37,16 +39,16 @@ public class Coordinate extends NavajoType implements Serializable {
 
     }
 
-    private void verifyCoordinates() throws Exception {
+    private void verifyCoordinates() {
         if (this.latitude != null && (this.latitude > 90 || this.latitude < -90)) {
-            throw new Exception("Latitude must be in [-90,90]");
+            throw new NavajoException("Latitude must be in [-90,90]");
         }
         if (this.longitude != null && (this.longitude > 180 || this.longitude < -180)) {
-            throw new Exception("Longitute must be in [-180,180]");
+            throw new NavajoException("Longitute must be in [-180,180]");
         }
     }
 
-    public Coordinate(Object longitude, Object latitude) throws Exception {
+    public Coordinate(Object longitude, Object latitude) {
         setLatitude(latitude);
         setLongitude(longitude);
     }
@@ -59,7 +61,7 @@ public class Coordinate extends NavajoType implements Serializable {
         return this.longitude;
     }
 
-    public void setLatitude(Object latitude) throws Exception {
+    public void setLatitude(Object latitude) {
         if (latitude instanceof String) {
             this.latitude = Double.parseDouble((String) latitude);
         } else if (latitude instanceof Double) {
@@ -73,7 +75,7 @@ public class Coordinate extends NavajoType implements Serializable {
 
     }
 
-    public void setLongitude(Object longitude) throws Exception {
+    public void setLongitude(Object longitude) {
         if (longitude instanceof String) {
             this.longitude = Double.parseDouble((String) longitude);
         } else if (longitude instanceof Double) {
@@ -100,6 +102,9 @@ public class Coordinate extends NavajoType implements Serializable {
 
     @Override
     public String toString() {
+    	if(this.longitude==Double.NaN || this.latitude==Double.NaN) {
+    		return "[NullCoordinate]";
+    	}
         return "[" + this.longitude + "," + this.latitude + "]";
     }
 

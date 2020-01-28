@@ -52,6 +52,9 @@ public class ReactiveParseItem implements ContextExpression {
 		switch (type) {
 		case REACTIVE_SOURCE:
 			ReactiveSourceFactory sourceFactory = Reactive.finderInstance().getSourceFactory(name);
+			if(sourceFactory==null) {
+				throw new ReactiveParseException("No source found named: "+name);
+			}
 			return new Operand(sourceFactory.build(ReactiveParameters.of(sourceFactory, namedParams, unnamedParams)),Reactive.ReactiveItemType.REACTIVE_MAPPER.toString());
 		case REACTIVE_HEADER:
 			break;
@@ -69,7 +72,7 @@ public class ReactiveParseItem implements ContextExpression {
 			break;
 
 		}
-
+		// TODO rather throw something
 		return null;
 	}
 

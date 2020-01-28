@@ -43,7 +43,8 @@ public class TestTypeCheckCompiledExpressionEvaluator {
 		// test unknowable type
 		ExpressionCache ce = ExpressionCache.getInstance();
 		List<String> problems = new ArrayList<>();
-		ContextExpression cx = ce.parse(problems,"1 AND 'monkey'",fn->FunctionClassification.DEFAULT,false);
+		// the [] expression has been added to prevent the expression to be pre-evaluated (as all other params are literals
+		ContextExpression cx = ce.parse(problems,"1 AND 'monkey' AND [whoop]",fn->FunctionClassification.DEFAULT);
 		System.err.println("Problems: "+problems);
 		Assert.assertEquals(2,problems.size());
 		Assert.assertEquals(Property.BOOLEAN_PROPERTY, cx.returnType().get());

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform" sequenceNumber="2802">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Navajo Maven Target Platform: DEXELSBASEVERSION" sequenceNumber="SEQUENCE">
 <locations>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/equinox4.9/"/>
@@ -10,7 +10,7 @@
 	</location>
 	<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://p2.dexels.com/eclipse/3rdparty_DEXELSBASEVERSION"/>
-		<unit id="dexels-navajo-target.feature.group" version="DEXELSBASEVERSION"/>
+		<unit id="dexels-navajo-target.feature.group"/>
 	</location>
 </locations>
 </target>

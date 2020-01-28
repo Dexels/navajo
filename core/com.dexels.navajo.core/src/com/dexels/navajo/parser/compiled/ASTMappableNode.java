@@ -38,9 +38,28 @@ final class ASTMappableNode extends SimpleNode {
         super(id);
     }
     
+	private static Object maybeGetMapAttribute(String text, MappableTreeNode mapNode, Object[] parameterArray) throws Exception {
+		Object oValue = null;
+		try {
+			oValue = MappingUtils.getAttributeValue(mapNode, text, parameterArray);
+		} catch (Exception e2) {
+			logger.error("Error: ", e2);
+			// Maybe domainobjectmapper?
+			if ( mapNode.myObject instanceof DomainObjectMapper ) {
+				oValue = ((DomainObjectMapper) mapNode.myObject).getDomainObjectAttribute(text, parameterArray);
+			} else {
+				throw new TMLExpressionException("Can not resolve attribute value",e2);
+			}
+		}
+		return oValue;
+	}
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		Optional<Node> resolved = mapResolver.apply(val);
+		if(resolved.isPresent()) {
+			return resolved.get().interpretToLambda(problems, expression, functionClassifier, mapResolver);
+		}
 		return new ContextExpression() {
 			
 			@Override
@@ -52,9 +71,20 @@ final class ASTMappableNode extends SimpleNode {
 			public Operand apply(Navajo doc, Message parentMsg, Message parentParamMsg, Selection parentSel,
 					 MappableTreeNode mapNode, TipiLink tipiLink, Access access, Optional<ImmutableMessage> immutableMessage, Optional<ImmutableMessage> paramMessage) {
 		        if (mapNode == null) {
-		            throw new TMLExpressionException("No known mapobject");
+		            throw new TMLExpressionException("No known mapobject resolver");
 		        }
 
+//		        MappableTreeNode mapNode = mapNodeResolver.apply(val);
+//				if(mapNode==null) {
+//		            throw new TMLExpressionException("No known mapobject");
+//		        	
+//		        }
+//		        if(mapNode==null) {
+//		        	Node resolvedItem = mapResolver.get().apply(val);
+//		        	System.err.println(">> "+resolvedItem.getClass());
+//		        	resolvedItem.interpretToLambda(problems, expression, functionClassifier, mapResolver);
+//		        	
+//		        }
 		        List objects = null;
 
 		        // Parameter array may contain parameters that are used when calling the get method.
@@ -65,7 +95,7 @@ final class ASTMappableNode extends SimpleNode {
 		        }
 		        for (int i = 0; i < args; i++) {
 		        		List<String> problems = new ArrayList<>();
-		            Operand a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
+		            Operand a = jjtGetChild(i).interpretToLambda(problems, expression,functionClassifier,mapResolver).apply(doc, parentMsg, parentParamMsg, parentSel, mapNode, tipiLink, access,immutableMessage,paramMessage);
 		            if(!problems.isEmpty()) {
 		            		throw new TMLExpressionException(problems,expression);
 		            }
@@ -81,7 +111,7 @@ final class ASTMappableNode extends SimpleNode {
 		        }
 
 		        try {
-		        	Object oValue = maybeGetMapAttribute(mapNode, parameterArray);
+		        	Object oValue = maybeGetMapAttribute(val,mapNode, parameterArray);
 		            if (oValue == null)
 		                return Operand.NULL;
 		            else if (oValue instanceof Float) {
@@ -96,21 +126,6 @@ final class ASTMappableNode extends SimpleNode {
 		        }
 			}
 
-			private Object maybeGetMapAttribute(MappableTreeNode mapNode, Object[] parameterArray) throws Exception {
-				Object oValue = null;
-				try {
-					oValue = MappingUtils.getAttributeValue(mapNode, val, parameterArray);
-				} catch (Exception e2) {
-					logger.error("Error: ", e2);
-					// Maybe domainobjectmapper?
-					if ( mapNode.myObject instanceof DomainObjectMapper ) {
-						oValue = ((DomainObjectMapper) mapNode.myObject).getDomainObjectAttribute(val, parameterArray);
-					} else {
-						throw new TMLExpressionException("Can not resolve attribute value",e2);
-					}
-				}
-				return oValue;
-			}
 
 			@Override
 			public Optional<String> returnType() {

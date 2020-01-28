@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.dexels.navajo.api.util.NavajoRequestConfig;
 import com.dexels.navajo.document.stream.api.ReactiveScriptRunner;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
@@ -20,7 +21,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	private static final long serialVersionUID = -8645365233991777113L;
 
-	private final static Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(TmlContinuationMultitenantServlet.class);
 
 	public static final String COMPRESS_GZIP = "gzip";
@@ -30,12 +31,13 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	private LocalClient localClient;
 	private TmlScheduler tmlScheduler;
 
-	// private boolean jmxRegistered = false;
 
 
 	private HttpServlet reactiveHttpServlet;
 
 	private ReactiveScriptRunner reactiveScriptEnvironment;
+
+	private long requestTimeout;
 	
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.reactiveScriptEnvironment = env;
@@ -75,6 +77,9 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	public void activate() {
 		logger.info("Continuation servlet component activated");
+		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(10000000L);
+		logger.info("Using timeout in continuation: {}",this.requestTimeout);
+		
 	}
 
 	public void deactivate() {
@@ -94,7 +99,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
+			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance,requestTimeout);
 			
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
@@ -112,10 +117,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		if(this.reactiveScriptEnvironment!=null && this.reactiveHttpServlet!=null && serviceHeader!=null) {
 			return this.reactiveScriptEnvironment.acceptsScript(serviceHeader);
 		}
-//		String header = req.getHeader("X-Navajo-Reactive");
-//		boolean useReactive = header!=null && this.reactiveHttpServlet!=null && "true".equals(header);
 		return false;
-//		return useReactive && serviceHeader != null;
 	}
 
 	private String determineTenantFromRequest(final HttpServletRequest req) {
@@ -152,8 +154,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		final LocalClient lc = tempClient;
 		if (lc == null) {
 			logger.error("No localclient found");
-//				resp.sendError(500,
-//						"No local client registered in servlet context");
 			throw new ServletException("No local client registered in servlet context");
 		}
 		return lc;

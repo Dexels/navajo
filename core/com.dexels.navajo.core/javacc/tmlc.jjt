@@ -58,7 +58,9 @@ TOKEN:
   <MOD: "%"> |
   <NULL: "null"> |
   <PIPE: "->"> |
-  <HEADER: "=>">
+  <HEADER: "=>"> |
+  <PIPESTART: "|>">
+  
 }
 
 TOKEN:
@@ -141,7 +143,7 @@ TOKEN:
     "\ufb40"-"\ufb41", "\ufb43"-"\ufb44", "\ufb46"-"\ufbb1", "\ufbd3"-"\ufd3d", "\ufd50"-"\ufd8f",
     "\ufd92"-"\ufdc7", "\ufdf0"-"\ufdfb", "\ufe70"-"\ufe74", "\ufe76"-"\ufefc", "\uff21"-"\uff3a",
     "\uff41"-"\uff5a", "\uff66"-"\uffbe", "\uffc2"-"\uffc7", "\uffca"-"\uffcf", "\uffd2"-"\uffd7",
-    "\uffda"-"\uffdc", "\u20ac"-"\u20ad"
+    "\uffda"-"\uffdc", "\u20a0"-"\u20af"
   ] > |
     < #DIGIT: [
     "\u0030"-"\u0039", "\u0660"-"\u0669", "\u06f0"-"\u06f9", "\u0966"-"\u096f", "\u09e6"-"\u09ef",
@@ -173,24 +175,37 @@ void Expression() #void:
 {
 }
 {
-  /*AdditiveExpression()*/
-  PossiblePipe()
+  OrExpression()
+  | PipeDefinition()
 }
 
-void PossiblePipe() #void:
+ASTPipeDefinition PipeDefinition() #PipeDefinition:
 {
 }
 {
-	OrExpression() 
-	| <PIPE>  ReactivePipe()  #ReactivePipe
+	<PIPE> {jjtThis.partial = true;} OrExpression()  {jjtThis.args++;}(<PIPE> OrExpression() {jjtThis.args++;})* {return jjtThis; }
+	| <PIPESTART> {jjtThis.partial = false;} OrExpression() {jjtThis.args++;} (<PIPE> OrExpression() {jjtThis.args++;})* {return jjtThis; }
 } 
 
-ASTPipeline ReactivePipe() #Pipeline:
+void ReactiveScript() #void:
 {
 }
 {
-	OrExpression() (<PIPE> OrExpression())* {return jjtThis; }
+	(
+		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
+		(
+        ( PipeDefinition() {jjtThis.args++;}
+      	| KeyValue() {jjtThis.args++;} )
+     	(
+     		(	PipeDefinition() {jjtThis.args++;} 
+     		    | KeyValue() {jjtThis.args++;}
+     		)
+     	) *		
+		) 
+	)  #ReactiveScriptNode
+	<EOF>
 }
+
 
 void OrExpression() #void:
 {}
@@ -290,11 +305,11 @@ void FunctionLiteral() #void:
   (t = <NORMAL_IDENTIFIER>
     {jjtThis.functionName = t.image;    	}
      "(" [
-        ( PossiblePipe() {jjtThis.args++;}
+        ( Expression() {jjtThis.args++;}
       	| KeyValue() {jjtThis.args++;} )
      	(
      		"," 
-     		(	PossiblePipe() {jjtThis.args++;} 
+     		(	Expression() {jjtThis.args++;} 
      		    | KeyValue() {jjtThis.args++;}
      		)
      	) * ]
@@ -383,17 +398,5 @@ void KeyValue() #void:
   ) #KeyValueNode
 }
 
-void ReactiveScript() #void:
-{
-}
-{
-	(
-		(<HEADER> {jjtThis.hasHeader = true;} "(" [ KeyValue() {jjtThis.headers++;} ("," KeyValue() {jjtThis.headers++;}) * ] ")")?
-		(
-			ReactivePipe() {jjtThis.args++;}  (ReactivePipe() {jjtThis.args++;})*
-		) 
-	)  #ReactiveScriptNode
-	<EOF>
-}
 
 

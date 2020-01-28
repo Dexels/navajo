@@ -23,7 +23,7 @@ public class Store implements ReactiveMerger {
 
 	@Override
 	public Function<StreamScriptContext,Function<DataItem,DataItem>> execute(ReactiveParameters params) {
-		return context->(item)->{
+		return context->item->{
 			// will use the second message as input, if not present, will use the source message
 			ImmutableMessage s = item.message();
 			ImmutableMessage state = item.stateMessage();

@@ -2,14 +2,17 @@ Bundle-Name: Navajo Entity model implementation
 Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Description: Entity
 Bundle-ManifestVersion: 2
-Bundle-Version: 7.0.87.qualifier
+Bundle-Version: 7.0.89.qualifier
 Bundle-Activator: navajoentity.Version
 Bundle-ClassPath: .
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
 Navajo-Name: Entity
-Import-Package: com.dexels.navajo.adapter,
+Import-Package: com.dexels.immutable.api,
+ com.dexels.immutable.api.customtypes;version="2.1.0",
+ com.dexels.navajo.adapter,
+ com.dexels.navajo.api.util,
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
  com.dexels.navajo.compiler,

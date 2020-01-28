@@ -54,7 +54,6 @@ function parseTmlToHtml( scriptname, navajoelement, methodselement) {
    	    methodselement.show();
     }
     $methods.appendTo(methodselement);
-
 }
 
 function parseTmlArrayMessage(arraymessage) {
@@ -229,7 +228,6 @@ function processProperty(property) {
                 var filename = property.attr('name');
                 var mime;
                 var extension;
-
                 var splitted = subtype.split(",");
                 splitted.forEach( function process( item, index ) {
                     var subsplit = item.split("=");
@@ -248,6 +246,15 @@ function processProperty(property) {
                 propertyString += '" extension="'+extension+'" mimetype="'+mime+'" filename="'+filename+'"> Download </div>';
             }
 
+        }
+        //gia to file upload
+        if (propdirection === "in"){
+            propertyString += '<input type="file" '; 
+            propertyString += 'tmltype="'+proptype+'" ';
+            propertyString += 'value="'+escapeHTML(propvalue)+'" ';
+            propertyString += ' class="tmlinput' + htmltype + '" ';
+            propertyString += ' id="' + getElementXPath(property[0]) + '"';
+            propertyString += '>';
         }
     } else if (htmltype === 'textarea') {
         propertyString += '<textarea rows="5" style="width:70%" tmltype="'+proptype+'" ';
@@ -293,7 +300,7 @@ function processProperty(property) {
 
         propertyString += '<input type="'+htmltype+'" ';
         if (typeof propvalue !== 'undefined') {
-        	propertyString += 'value="'+escapeHTML(propvalue)+'" ';
+            propertyString += 'value="'+escapeHTML(propvalue)+'" ';
         }
         propertyString += 'tmltype="'+proptype+'" ';
 

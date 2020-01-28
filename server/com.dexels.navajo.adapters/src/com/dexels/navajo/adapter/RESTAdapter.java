@@ -21,17 +21,21 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 
-public class RESTAdapter extends NavajoMap {
+public class RESTAdapter extends NavajoMap implements Debugable {
     private static final Logger logger = LoggerFactory.getLogger(RESTAdapter.class);
     private static final int DEFAULT_CONNECT_TIMEOUT = 5000;
     private static final int DEFAULT_READ_TIMEOUT = 60 * 1000; // 1 min
     
     private JSONTML json;
+    
+    public boolean debug = false; //g
     
     public boolean removeTopMessage = false;
     public String url;
@@ -73,6 +77,9 @@ public class RESTAdapter extends NavajoMap {
         this.url = url.trim();
     }
     
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
     
     public void setTextContent(String s) {
         textContent = s;
@@ -214,6 +221,7 @@ public class RESTAdapter extends NavajoMap {
        
         Writer w = new StringWriter();
         Binary bContent = new Binary();
+        
         if (textContent == null) {
             // Remove globals and parms message
             if (od.getMessage("__globals__") != null)  od.removeMessage("__globals__");
@@ -234,6 +242,7 @@ public class RESTAdapter extends NavajoMap {
         } else {
             try {
                 bContent.getOutputStream().write(textContent.toString().getBytes(StandardCharsets.UTF_8));
+                
             } catch (IOException e) {
                 logger.error("IOException on writing textcontent! Not performing REST call!");
                 throw new UserException(e.getMessage(), e);
@@ -300,6 +309,9 @@ public class RESTAdapter extends NavajoMap {
     }
 
     private void setupHttpMap(HTTPMap http, Binary content) throws UserException {
+    	
+    	HashMap<String,String> headers_tr = new HashMap<String,String>(); //vg
+    	
         try {
             http.load(access);
         } catch (MappableException e) {
@@ -320,18 +332,28 @@ public class RESTAdapter extends NavajoMap {
         for (Entry<String,String> e : headers.entrySet()) {
             http.setHeaderKey(e.getKey());
             http.setHeaderValue(e.getValue());
+    
+            headers_tr.put(e.getKey(), e.getValue()); 
         }
 
         http.setUrl(fullUrl.toString());
         http.setHeaderKey("Accept");
         http.setHeaderValue("application/json");
         http.setMethod(method);
+        
+        headers_tr.put("Accept", "application/json"); 
 
-        if (method.equals("POST") || method.equals("PUT")) {
-            http.setContent(content);
-            http.setContentType("application/json");
-            http.setContentLength(content.getLength());
-        }
+//        if (method.equals("POST") || method.equals("PUT")) { //here it sets the content if the method is only POST or PUT, should I change that?
+//            http.setContent(content);
+//            http.setContentType("application/json");
+//            http.setContentLength(content.getLength());
+//        }
+        
+        http.setContent(content);
+        http.setContentType("application/json");
+        http.setContentLength(content.getLength());
+        
+        
         http.trustAll();
         if (username != null && password != null) {
             // Use HTTP Basic auth - should only be used over HTTPS!
@@ -344,8 +366,44 @@ public class RESTAdapter extends NavajoMap {
         http.setReadTimeOut(readTimeOut);
         http.setConnectTimeOut(connectTimeOut);
         
+        if (debug) {
+        	byte[] em = http.getContent().getData();
+        	String s_content = new String(em);
+        	
+        	//output all headers, request body and the curl command.
+        	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
+        	System.out.println(">>>>Method: " + http.getMethod());
+        	System.out.println(">>>>Request body: " + s_content); 
+        	System.out.println(">>>>Headers: ");
+        	
+        	
+        	//curl builder
+        	String c_url = "curl -X";
+        	c_url += http.getMethod();
+        	c_url += " -H \'Content-type:application/json\' ";
+        	
+        	
+        	//accessing all headers
+        	for (Entry<String,String> e : headers_tr.entrySet()) {
+        		System.out.println(e.getKey() + " : " + e.getValue());
+                c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
+            }
+        	String no_enter_content = s_content.replace("\n", "").replace("\r", "");
+        	
+        	c_url += "-d \'" + no_enter_content + "\' "; //http content is a binary
+        	c_url += "\'" + http.getUrl() + "\' ";
+        	
+        	System.out.println(">>>>cURL command: " + c_url);
+        	System.out.println("==========================================================================");
+        	
+        	
+        }
     }
 
+	@Override
+	public boolean getDebug() {
+		return debug;
+	}
     @Override
     public String getUrl() {
         return url;
@@ -379,4 +437,5 @@ public class RESTAdapter extends NavajoMap {
     public String getRawResult() {
         return rawResult;
     }
+
 }

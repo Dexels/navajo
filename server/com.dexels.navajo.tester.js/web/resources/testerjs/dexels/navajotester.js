@@ -9,6 +9,7 @@ var titleloader;
 var pretty_max_source_length = 80000;
 var pretty_max_response_length = 80000;
 
+var rsp = "INIT";
 
 var hooverdiv = '<div class="customRunOptionContainer">';
 hooverdiv += '  <div class="customRunOption scriptcompile">Compile</div> |';
@@ -26,6 +27,30 @@ function createEditor() {
     editor.setHighlightActiveLine(true);
 }
 
+
+function checkUseAAA() {
+	
+	$.ajax({
+		dataType: "json",
+        url: "testerapi?query=useaaa",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	        	console.log("use aaaaaaaa   ");
+	        	console.log("use aaa:"+response.useAAA);
+	        	console.log("response : "+response);
+	        	if(response.type === "NONE") {
+		        	hideLoginTable();
+		        	rsp = "NONE";
+	        	}
+	        	if(response.type === "PASSWORD"){
+	        		rsp = "PASSWORD";
+	        	}
+	    }
+	})
+	
+	return rsp;
+	};
 function updateTenants() {
 	$.ajax({
 		dataType: "json",
@@ -33,9 +58,17 @@ function updateTenants() {
 	    type : "GET",
 	    async : true,
 	    success : function(response) {
+	    	var cnt = 0;
+	    	console.log("response length: "+response.length); //should I do as in update applications?
+	    	
 	        $.each(response, function(key, value) {
-	           $('#handlers').append($('<option>').text(value));
-
+	            console.log(">>>>> value::: "+response+" index: "+cnt);
+	            if(cnt==0) {
+	 	           $('#handlers').append($('<option selected=true>').text(value));
+	            } else {
+	 	           $('#handlers').append($('<option>').text(value));
+	            }
+	           
 	           // If we don't have a instance in our session storage, check if a part of
 	           // the url matches this instance
 	           if (!sessionStorage.instance) {
@@ -43,15 +76,55 @@ function updateTenants() {
 	                    sessionStorage.instance = value;
 	               }
 	           }
+	           cnt++;
+	           console.log("count 1: "+cnt);
 	        });
+
+	        console.log("count 2: "+cnt);
+	        if(cnt == 0){
+	        	$('#handlers').attr('disabled',true); 
+	        }
+	     
 	        if (sessionStorage.instance) {
 	        	 $('#handlers').val(sessionStorage.instance);
 	        }
 	        $("#handlers").trigger("chosen:updated");
+	        
+	        
 	    }
 	});
-
 }
+
+function updateApplications() {
+	$.ajax({
+		dataType: "json",
+        url: "testerapi?query=getapplications",
+	    type : "GET",
+	    async : true,
+	    success : function(response) {
+	    	console.log("aap: "+response.length);
+	    	if(response.length == 1) {
+	    		$('#applications').attr('disabled',true);
+	    	} else {
+	    		$('#applications').attr('disabled',false);
+		        $.each(response, function(key, value) {
+		        	console.log(key)
+		        	console.log(value)
+			        $('#applications').append($('<option></options>').text(value.description).attr('value',value.id));
+		        	
+			           // If we don't have a instance in our session storage, check if a part of
+			           // the url matches this instance
+			        });
+			        if (sessionStorage.instance) {
+			        	 $('#applications').val(sessionStorage.app);
+			        }
+	    		
+	    	}
+	        $("#applications").trigger("chosen:updated");
+	    }
+	});
+}
+
 
 function updateFavorites() {
 	$("#favorites").html("");
@@ -188,7 +261,19 @@ function processLoginForm(){
 }
 
 function loginTableVisible() {
+	
     var instance =  $( "#handlers option:selected" ).text();
+    var length = $('#handlers > option').length;
+    //var disabled = $('#handlers').attr('disabled');
+    
+    var isDisabled = $('#handlers').prop('disabled');
+    
+    console.log("DISABLED: "+isDisabled);
+    
+    if(isDisabled){
+    	return false;
+    }
+    console.log("what is instance: "+instance);
     return (instance === "" || !sessionStorage.user)
 }
 
@@ -205,18 +290,22 @@ function hideLoginTable() {
 }
 
 function runScript(script) {
+	var rsp = checkUseAAA();
     $('#scriptCustomInputView').hide();
     if (script.indexOf('_') !== -1) {
     	var tenant = script.substring(script.indexOf('_'));
     	script = script.substring(0, script.indexOf('_'));
     	window.alert('Stripping '+tenant+' part of script! Calling ' + script)
+    	
     }
+    
     $('#loadedScript').text(script);
     sessionStorage.script = script;
     $('html, body').animate({
         scrollTop : 0
     }, 50);
-
+    
+    console.log("what is instanceGRE: "+loginTableVisible())
     if (loginTableVisible()) {
         showLoginTable();
 
@@ -225,7 +314,6 @@ function runScript(script) {
         setTimeout(function(){$('#logintable').trigger('stopRumble');}, 750);
         return;
     }
-
     var instance = $( "#handlers option:selected" ).text();
     try {
         hourglassOn();
@@ -250,7 +338,7 @@ function runScript(script) {
         	type: "POST",
             url: "/navajo/" + instance,
             data: navajoinput,
-            headers: {"X-Navajo-Tester": "true","Authorization": authHeader, "X-Navajo-Service": script},
+            headers: {"X-Navajo-Tester": "true","Authorization": authHeader, "X-Navajo-Service": script, "X-Navajo-Username" : sessionStorage.user},
             success: function(result) {
             	  if(result instanceof Node) {
                       replaceXml(script, result);
@@ -361,13 +449,13 @@ function prepareInputNavajo(script, birtMode) {
     
 
     var $header = $xml.find('tml header ');
-
+    console.log('using application: '+sessionStorage.app);
     if (sessionStorage.app === 'legacy') {
     	 $header.attr('application', null)
     } else {
     	 $header.attr('application', sessionStorage.app)
     }
-
+    console.log("Prepare Input Navajo"+serializer.serializeToString(xml)); //vg
     return serializer.serializeToString(xml);
 }
 
@@ -803,6 +891,31 @@ $(document).on('input propertychange', '.tmlinputtext', function(evt) {
     if (typeof element != 'undefined') {
         var $element = $(element);
         $element.attr('value',  $(this).val());
+    }
+});
+
+//  Binary upload file
+var fr;
+$(document).on('input propertychange', '.tmlinputbinary', function(evt) {
+    // If it's the propertychange event, make sure it's the value that changed.
+    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+        return;
+
+    var xpath = $(this).attr('id');
+    var element = $(xml).xpath(xpath)[0];
+
+    if (typeof element != 'undefined') {
+        var $element = $(element);
+        //$element.attr('value',  btoa($(this).val()));
+        var file = this.files[0];
+        fr = new FileReader();
+        fr.onload = function(){
+            console.log(fr.result);
+            $element.text(btoa(fr.result));
+            console.log(">>>>>>>>>>" + btoa(fr.result));
+	    };
+        fr.readAsText(file);
+        //fr.readAsDataURL(file);
     }
 });
 

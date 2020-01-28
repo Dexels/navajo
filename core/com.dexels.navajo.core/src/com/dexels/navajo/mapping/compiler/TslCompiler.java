@@ -2654,8 +2654,6 @@ public class TslCompiler {
 			variableClipboard.add("String " + asyncStatusName + ";\n");
 			variableClipboard.add("String " + interruptTypeName + ";\n");
 
-			result.append(printIdent(ident)
-					+ "if (!DispatcherFactory.getInstance().getNavajoConfig().isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
 			result.append(printIdent(ident) + asyncMapName + " = true;\n");
 			result.append(printIdent(ident) + headerName
 					+ " = access.getInDoc().getHeader();\n");
@@ -3010,15 +3008,17 @@ public class TslCompiler {
 			result.append(fieldNode(ident, (Element) n, className, objectName,
 					deps, tenant));
 		} else if ((n.getNodeName().equals("param") && !((Element) n)
-				.getAttribute("type").equals("array"))
+				.getAttribute("type").equals("array") && !((Element) n)
+				.getAttribute("type").equals("array_element"))
 				|| n.getNodeName().equals("property")) {
 			result.append(propertyNode(ident, (Element) n, true, className,
 					objectName));
 		}
 
 		else if (n.getNodeName().equals("message")
-				|| (n.getNodeName().equals("param") && ((Element) n)
-						.getAttribute("type").equals("array"))) {
+				|| (n.getNodeName().equals("param") && (((Element) n)
+						.getAttribute("type").equals("array") || ((Element) n)
+						.getAttribute("type").equals("array_element")))) {
 			String methodName = "execute_sub" + (methodCounter++);
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");

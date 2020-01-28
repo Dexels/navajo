@@ -1,7 +1,7 @@
-single(count=5,debug=true)
+|>single(count=5,debug=true)
 	->set(aap='noot',mies='wim')
 	->tml(messageName='FirstMessage', isArray=true)
-single(count=2,debug=true)
+|>single(count=2,debug=true)
 	->set(teun='vuur')
 	->tml(messageName='SecondMessage', isArray=true)
 	

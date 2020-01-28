@@ -23,7 +23,7 @@ import io.reactivex.Single;
 
 public class JettyClient {
 
-	private final HttpClient httpClient = new HttpClient(new SslContextFactory());
+	private final HttpClient httpClient = new HttpClient(new SslContextFactory.Client());
 	private AtomicLong sent = new AtomicLong();
 	private AtomicLong received = new AtomicLong();
 

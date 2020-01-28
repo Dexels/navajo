@@ -19,8 +19,8 @@ package com.dexels.navajo.script.api;
  */
 public abstract class Dependency {
 
-    protected long timestamp;
-    protected String id;
+    private final long timestamp;
+    private final String id;
     
     /**
      * Create a new dependent object.
@@ -51,9 +51,5 @@ public abstract class Dependency {
     
     public String getType() {
         return this.getClass().getSimpleName();
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

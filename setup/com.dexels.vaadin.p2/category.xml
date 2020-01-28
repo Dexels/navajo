@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="com.dexels.navajo.core.feature">
+      <category name="Navajo Core"/>
+   </feature>
+   <feature id="com.dexels.navajo.tipi.css.feature">
+      <category name="Tipi"/>
+   </feature>
+   <feature id="com.dexels.navajo.tipi.feature">
+      <category name="Tipi"/>
+   </feature>
+   <feature id="com.dexels.navajo.tipi.mail.feature">
+      <category name="Tipi"/>
+   </feature>
+   <feature id="com.dexels.navajo.tipi.vaadin.feature">
+      <category name="Tipi"/>
+   </feature>
+   <category-def name="Navajo Core" label="NavajoCore"/>
+   <category-def name="Navajo SDK" label="Navajo SDK"/>
+   <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
+   <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
+   <category-def name="Tipi" label="Tipi"/>
+   <category-def name="TipiOptional" label="Tipi optional packages"/>
+   <category-def name="Tipi SDK" label="Tipi SDK"/>
+</site>

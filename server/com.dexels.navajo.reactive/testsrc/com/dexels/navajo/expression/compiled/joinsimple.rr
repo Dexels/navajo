@@ -1,6 +1,6 @@
-single()
+|>single()
 	->set(outername='outer')
-	->join( ->single()
+	->join( |>single()
 			->set(innername='inner')
 			, set(outer=[@outername],inner=[innername])
 		)

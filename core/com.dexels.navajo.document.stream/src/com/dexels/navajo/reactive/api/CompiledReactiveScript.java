@@ -28,6 +28,9 @@ public class CompiledReactiveScript implements ReactiveScript{
 		if(dataTypes.size()>1) {
 			throw new RuntimeException("Can't combine different final types to different pipes in one script. TODO maybe think of some type inference");
 		}
+		if(pipes.size()==0) {
+			throw new RuntimeException("No actual pipes found in a compiled reactive script");
+		}
 		this.type = dataTypes.stream().findFirst().orElseThrow(()->new RuntimeException("Huh?"));
 		this.streamInput = pipes.stream().anyMatch(e->e.streamInput());
 	}

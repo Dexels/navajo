@@ -63,21 +63,21 @@ final class ASTFunctionNode extends SimpleNode {
 	}
 	
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems,String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 
 
-		List<ContextExpression> l = new LinkedList<>();
+		List<ContextExpression> unnamed = new LinkedList<>();
 		// TODO make lazy?
 		Map<String,ContextExpression> named = new HashMap<>();
 
 		for (int i = 0; i <jjtGetNumChildren(); i++) {
 			Node sn = jjtGetChild(i);
-			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier);
+			ContextExpression cn = sn.interpretToLambda(problems, expression,functionClassifier,mapResolver);
 			if(cn instanceof NamedExpression) {
 				NamedExpression ne = (NamedExpression)cn;
 				named.put(ne.name, ne.expression);
 			} else {
-				l.add(cn);
+				unnamed.add(cn);
 			}
 		}
 		
@@ -88,16 +88,16 @@ final class ASTFunctionNode extends SimpleNode {
 				
 				break;
 			case REACTIVE_SOURCE:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, l, expression,this);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_SOURCE, named, unnamed, expression,this);
 			case REACTIVE_TRANSFORMER:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, l, expression,this);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_TRANSFORMER, named, unnamed, expression,this);
 	
 			case REACTIVE_REDUCER:
-				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, l, expression,this);
+				return new ReactiveParseItem(functionName, Reactive.ReactiveItemType.REACTIVE_MAPPER, named, unnamed, expression,this);
 			case DEFAULT:
 				default:
 		}
-		return resolveNormalFunction(l, named, problems, expression);
+		return resolveNormalFunction(unnamed, named, problems, expression);
 
 	}
 	

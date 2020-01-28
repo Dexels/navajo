@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -138,7 +139,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		}
 		List<String> problems = new ArrayList<>();
 		ASTReactiveScriptNode scriptNode = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
-		ContextExpression src = (ContextExpression) scriptNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier());
+		ContextExpression src = (ContextExpression) scriptNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier(),name->Optional.empty());
 
 		List<ReactivePipeNode> pipes = (List<ReactivePipeNode>) src.apply().value;
 		final boolean streamInput = pipes.stream().anyMatch(e->e.isStreamInput());

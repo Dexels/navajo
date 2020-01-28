@@ -3,6 +3,7 @@
 package com.dexels.navajo.parser.compiled;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.navajo.expression.api.ContextExpression;
@@ -19,7 +20,7 @@ final class ASTExpressionLiteralNode extends SimpleNode {
 
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		// TODO is this ok?!
         String value = val.substring(1, val.length() - 1);
         return ExpressionCache.getInstance().parse(problems,value,functionClassifier);

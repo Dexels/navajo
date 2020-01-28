@@ -33,7 +33,6 @@ import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.script.api.AsyncRequest;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -63,11 +62,11 @@ public class EntityContinuationRunner implements TmlRunnable {
     private String contentEncoding;
     private String acceptEncoding;
 
-    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response) {
+    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response, long timeout) {
         this.request = request;
         this.response = response;
         continuation = ContinuationSupport.getContinuation(request);
-        continuation.setTimeout(5*60*1000L); // 5 minutes
+        continuation.setTimeout(timeout); // 5 minutes
         continuation.suspend(response);
         
         if (continuation.isExpired()) {
@@ -116,8 +115,6 @@ public class EntityContinuationRunner implements TmlRunnable {
         try {
             this.startedAt = System.currentTimeMillis();
             execute();
-        } catch (NavajoDoneException e) {
-            logger.info("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
         } catch (Exception e) {
             fail(e);
         }

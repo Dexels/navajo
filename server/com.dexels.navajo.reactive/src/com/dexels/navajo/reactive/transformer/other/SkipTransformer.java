@@ -35,5 +35,11 @@ public class SkipTransformer implements ReactiveTransformer {
 		int count = parms.paramInteger("count");
 		return e->e.skip(count);
 	}
+	
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
 
 }

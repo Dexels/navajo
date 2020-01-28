@@ -28,9 +28,14 @@ import com.dexels.navajo.reactive.mappers.StoreSingle;
 import com.dexels.navajo.reactive.mappers.ToSubMessage;
 import com.dexels.navajo.reactive.mappers.ToSubMessageList;
 import com.dexels.navajo.reactive.source.input.InputSourceFactory;
+import com.dexels.navajo.reactive.source.input.TmlInputSourceFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
+import com.dexels.navajo.reactive.source.topology.GroupTransformerFactory;
+import com.dexels.navajo.reactive.source.topology.SinkTransformerFactory;
+import com.dexels.navajo.reactive.source.topology.TopicSource;
+import com.dexels.navajo.reactive.source.topology.TopicSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
@@ -48,9 +53,9 @@ import com.dexels.navajo.reactive.transformer.stream.StreamMessageTransformerFac
 
 public class CoreReactiveFinder implements ReactiveFinder {
 
-	private final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
-	private final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
-	private final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
+	protected final Map<String,ReactiveSourceFactory> factories = new HashMap<>();
+	protected final Map<String, ReactiveTransformerFactory> reactiveOperatorFactory = new HashMap<>();
+	protected final Map<String,ReactiveMerger> reactiveReducer = new HashMap<>();
 
 	public CoreReactiveFinder() {
 		reactiveReducer.put("set", new SetSingle());
@@ -73,6 +78,9 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
 		addReactiveSourceFactory(new InputSourceFactory(),"input");
+		addReactiveSourceFactory(new TmlInputSourceFactory(),"tmlinput");
+
+
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
@@ -89,7 +97,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new EventStreamMessageTransformerFactory(),"tmlstream");
 		addReactiveTransformerFactory(new InMessageTransformerFactory(),"inmessage");
 		addReactiveTransformerFactory(new CSVTransformerFactory(),"csv");
-//		FunctionFactoryFactory.getInstance().addFunctionResolver(fr);
+
 		try {
 			new navajofunctions.Version().start((BundleContext)null);
 		} catch (Exception e) {
@@ -116,6 +124,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 
 	@Override
 	public final ReactiveSourceFactory getSourceFactory(String name) {
+		System.err.println("Looking for source factory: "+name);
 		return factories.get(name);
 	}
 

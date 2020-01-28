@@ -1,2 +1,2 @@
-single(count=5,debug=true,delay=100)
+|>single(count=5,debug=true,delay=100)
 	->tml(messageName='Item', isArray=true)

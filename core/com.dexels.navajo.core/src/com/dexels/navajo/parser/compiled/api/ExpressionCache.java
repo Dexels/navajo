@@ -24,6 +24,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.api.TipiLink;
 import com.dexels.navajo.parser.compiled.CompiledParser;
+import com.dexels.navajo.parser.compiled.Node;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -84,7 +85,7 @@ public class ExpressionCache {
 			return cachedValue.get();
 		}
 		List<String> problems = new ArrayList<>();
-		ContextExpression parse = parse(problems,expression,functionName->FunctionClassification.DEFAULT);
+		ContextExpression parse = parse(problems,expression,functionName->FunctionClassification.DEFAULT,name->Optional.empty());
 		if(!problems.isEmpty()) {
 			problems.forEach(problem->
 				logger.warn("Compile-time type error when compiling expression: {} -> {}",expression,problem)
@@ -94,10 +95,14 @@ public class ExpressionCache {
 		
 	}
 	
+//	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier) {
+//		return parse(problems, expression,functionClassifier,true);
+//	}
 	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier) {
-		return parse(problems, expression,functionClassifier,true);
+		return parse(problems, expression,functionClassifier,name->Optional.empty());
 	}
-	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier, boolean allowLiteralResolve) {
+	
+	public ContextExpression parse(List<String> problems, String expression,Function<String,FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		Optional<ContextExpression> cachedParsedExpression = exprCache.getUnchecked(expression);
 		if(cachedParsedExpression.isPresent()) {
 			hitCount.incrementAndGet();
@@ -108,9 +113,9 @@ public class ExpressionCache {
 			StringReader sr = new StringReader(expression);
 			cp = new CompiledParser(sr);
 			cp.Expression();
-	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier);
+	        ContextExpression parsed = cp.getJJTree().rootNode().interpretToLambda(problems,expression,functionClassifier,mapResolver);
 	        parsedCount.incrementAndGet();
-	        if(parsed.isLiteral() && allowLiteralResolve) {
+	        if(parsed.isLiteral()) {
 	        		Operand result = parsed.apply();
 	        		exprCache.put(expression, Optional.ofNullable(parsed));
 	        		if(result!=null) {

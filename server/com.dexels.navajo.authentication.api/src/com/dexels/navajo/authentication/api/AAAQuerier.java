@@ -27,6 +27,7 @@ public interface AAAQuerier {
     
     public AuthenticationResult authenticateUsernamePassword(Access access);
     
+    public AuthenticationType type();
     
     /**
      * Perform the full authentication and authorization stack

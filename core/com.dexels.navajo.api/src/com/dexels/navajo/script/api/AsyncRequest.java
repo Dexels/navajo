@@ -1,19 +1,16 @@
 package com.dexels.navajo.script.api;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletRequest;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 public interface AsyncRequest {
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
-	public static final String COMPRESS_NONE = "";
+//	public static final String COMPRESS_NONE = "";
 
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId);

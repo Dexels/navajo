@@ -143,19 +143,25 @@ public class ReactiveStandalone {
 	
 	@SuppressWarnings("unchecked")
 	public static CompiledReactiveScript compileReactiveScript(InputStream inExpression) throws ParseException, IOException {
+		List<String> problems = new ArrayList<>();
+		ASTReactiveScriptNode rootNode = parseExpression(inExpression);
+		List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier(),name->Optional.empty()).apply().value;
+		System.err.println("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
+		System.err.println("Sourcetype: "+src);
+		List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
+		CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods());
+		compiledReactiveScript.typecheck();
+		return compiledReactiveScript;
+	}
+
+	public static ASTReactiveScriptNode parseExpression(InputStream inExpression) throws ParseException, IOException {
+		if(inExpression==null) {
+			throw new NullPointerException("No script input provided");
+		}
 		try(Reader in = new InputStreamReader(inExpression)) {
 			CompiledParser cp = new CompiledParser(in);
 			cp.ReactiveScript();
-			List<String> problems = new ArrayList<>();
-			ASTReactiveScriptNode rootNode = (ASTReactiveScriptNode) cp.getJJTree().rootNode();
-//			List<ReactivePipeNode> pipes
-			List<ReactivePipeNode> src = (List<ReactivePipeNode>) rootNode.interpretToLambda(problems,"",Reactive.finderInstance().functionClassifier()).apply().value;
-			logger.info("Class: "+rootNode.getClass()+" -> "+rootNode.methods());
-			logger.info("Sourcetype: "+src);
-			List<ReactivePipe> pp = src.stream().map(e->((ReactivePipe)e.apply().value)).collect(Collectors.toList());
-			CompiledReactiveScript compiledReactiveScript = new CompiledReactiveScript(pp, rootNode.methods());
-			compiledReactiveScript.typecheck();
-			return compiledReactiveScript;
+			return (ASTReactiveScriptNode) cp.getJJTree().rootNode();
 		}
 	}
 

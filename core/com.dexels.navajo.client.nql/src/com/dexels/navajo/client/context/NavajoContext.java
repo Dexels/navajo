@@ -8,8 +8,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.context.internal.MessageAccessMap;
-import com.dexels.navajo.client.context.internal.PropertyAccessMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -318,15 +316,6 @@ public abstract class NavajoContext implements ClientContext {
 		return null;
 	}
 	
-	
-	public Map<String,Property> getPropertyElement() {
-		return new PropertyAccessMap(this);
-	}
-
-	public Map<String,Message> getMessageElement() {
-		return new MessageAccessMap(this);
-	}
-
 	public void resolvePost(String name, String value) {
 		if(name.indexOf(':')==-1) {
 			return;

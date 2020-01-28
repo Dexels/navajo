@@ -1,0 +1,7 @@
+activity = |> topic('sportlinkkernel-ACTIVITY')
+    ->filter([subtype]!='SUBFACILITY_AVAILABILITY')
+    ->without('lastupdate','updateby')
+    ->with('publicactivityid',PublicActivityId('A',123,123,123))
+    ->materialize()
+    ->join($activityAttributes,merge(),true)
+    ->join($calendarDays,merge(),false)

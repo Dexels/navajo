@@ -48,7 +48,7 @@ final class ASTTmlNode extends SimpleNode {
     }
 
     @Override
-	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
+	public final ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
 		return new ContextExpression() {
 	
 			@Override
@@ -62,6 +62,9 @@ final class ASTTmlNode extends SimpleNode {
 				List<Property> match = null;
 				List<Object> resultList = new ArrayList<>();
 		        boolean singleMatch = true;
+		        if(val.equals("[") || val.equals("[/")) {
+		        	return immutableMessage.map(msg->Operand.ofImmutable(msg)).orElse(parentMsg!=null?Operand.ofMessage(parentMsg) : Operand.NULL);
+		        }
 		        String parts[] = val.split("\\|");
 		        String text = parts.length > 1 ? parts[1] : val;
 		        boolean isParam = false;
@@ -94,10 +97,12 @@ final class ASTTmlNode extends SimpleNode {
 		        		text = text.substring(1);
 		        }
 		        
-		        if (text.startsWith("/@")) { // Absolute param property.
+		        if (text.startsWith("/@") ) { // Absolute param property, exclude the '[/@]' expression
+	        		isParam = true;
+		        	if(!text.equals("/@")) {
 		        		parentParamMsg = doc.getMessage("__parms__");
-		        		isParam = true;
 		        		text = text.substring(2);
+		        	}
 		        }
 		        if (text.contains("__globals__")) { // Absolute globals property.
 		            parentMsg = doc.getMessage("__globals__");
@@ -341,6 +346,9 @@ final class ASTTmlNode extends SimpleNode {
 			}
 
 			private Operand parseImmutablePath(String text, ImmutableMessage rm) {
+				if("".equals(text) || "/@".equals(text)) {
+					return Operand.ofImmutable(rm);
+				}
 				if(text.endsWith("/")) {
 					String trunc = text.substring(0,text.length()-1);
 					List<String> parts = Arrays.asList(trunc.split("/"));
@@ -351,7 +359,7 @@ final class ASTTmlNode extends SimpleNode {
 			}
 
 			private Operand parseImmutableMessagePath(List<String> path, ImmutableMessage rm) {
-				if(!path.isEmpty()) {
+				if(path.isEmpty()) {
 					return Operand.ofImmutable(rm);
 				}
 				String first = path.get(0);

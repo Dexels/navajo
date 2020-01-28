@@ -12,6 +12,9 @@ public class AdapterFieldDependency extends Dependency {
 	
 	public AdapterFieldDependency(long timestamp, String adapterClass, String type, String id) {
 		super(timestamp, id);
+		if(type==null) {
+			throw new NullPointerException("AdapterFieldDependency type should not be null!");
+		}
 		this.type = type;
 		this.adapterClass = adapterClass;
 		

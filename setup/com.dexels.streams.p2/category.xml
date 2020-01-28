@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="com.dexels.navajo.streams.feature">
+      <category name="Navajo Streams"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.kafkastreams.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.kafkastreams.feature" version="1.0.0.qualifier">
+      <category name="Navajo Streams"/>
+   </feature>
+   <category-def name="Navajo Streams" label="NavajoStreams"/>
+</site>

@@ -65,4 +65,10 @@ public class CSVTransformer implements ReactiveTransformer {
 		return Optional.of("text/csv");
 	}
 
+	@Override
+	public ReactiveParameters parameters() {
+		return parameters;
+	}
+
+
 }

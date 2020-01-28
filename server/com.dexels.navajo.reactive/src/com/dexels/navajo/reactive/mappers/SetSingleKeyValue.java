@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.dexels.immutable.api.ImmutableMessage;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
@@ -21,7 +22,7 @@ public class SetSingleKeyValue implements ReactiveMerger {
 
 	@Override
 	public Function<StreamScriptContext, Function<DataItem, DataItem>> execute(ReactiveParameters params) {
-		return context->(item)->{
+		return context->item->{
 			
 			ImmutableMessage s = item.message();
 			ReactiveResolvedParameters parms = params.resolve(context, Optional.of(s),item.stateMessage(), this);
@@ -29,9 +30,9 @@ public class SetSingleKeyValue implements ReactiveMerger {
 			if(!condition) {
 				return item;
 			}
-//			Operand resolvedValue = parms.resolveAllParams().get("value");
 			String toValue = parms.paramString("to");
-			return DataItem.of(item.message().with(toValue, parms.namedParameters().get("value"), parms.namedParamType("value")));
+			Operand value = parms.namedParameters().get("value");
+			return DataItem.of(item.message().with(toValue, value.value, value.type));
 		};
 	
 	}
@@ -39,12 +40,12 @@ public class SetSingleKeyValue implements ReactiveMerger {
 	
 	@Override
 	public Optional<List<String>> allowedParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value","condition"}));
+		return Optional.of(Arrays.asList("to","value","condition"));
 	}
 
 	@Override
 	public Optional<List<String>> requiredParameters() {
-		return Optional.of(Arrays.asList(new String[]{"to","value"}));
+		return Optional.of(Arrays.asList("to","value"));
 	}
 
 	@Override

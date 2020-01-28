@@ -9,13 +9,5 @@ public interface TransformerMetadata extends ParameterValidator {
 
 	public Set<Type> inType();
 	public DataItem.Type outType();
-//	public Type inferredType();
-
-//	default public Type inferredType() {
-//		return Type.ANY;
-//	}
 	public String name();
-	
-	
-
 }

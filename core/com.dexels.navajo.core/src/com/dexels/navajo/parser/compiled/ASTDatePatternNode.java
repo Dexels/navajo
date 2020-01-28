@@ -24,18 +24,18 @@ final class ASTDatePatternNode extends SimpleNode {
     }
 
 	@Override
-	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier) {
-		ContextExpression y = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier);
+	public ContextExpression interpretToLambda(List<String> problems, String expression, Function<String, FunctionClassification> functionClassifier, Function<String,Optional<Node>> mapResolver) {
+		ContextExpression y = jjtGetChild(0).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Year (item 0) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression m = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression m = jjtGetChild(1).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Month (item 1) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression d = jjtGetChild(2).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression d = jjtGetChild(2).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Day (item 2) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression h = jjtGetChild(3).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression h = jjtGetChild(3).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Hour (item 3) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression min = jjtGetChild(4).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression min = jjtGetChild(4).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Minute (item 4) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
-		ContextExpression s = jjtGetChild(5).interpretToLambda(problems,expression,functionClassifier);
+		ContextExpression s = jjtGetChild(5).interpretToLambda(problems,expression,functionClassifier,mapResolver);
 		checkOrAdd("Second (item 5) field should be an integer",problems,y.returnType(),Property.INTEGER_PROPERTY);
 		final boolean isLiteral = y.isLiteral() && m.isLiteral() && d.isLiteral() && h.isLiteral() && min.isLiteral() && s.isLiteral();
 		

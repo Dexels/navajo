@@ -113,12 +113,12 @@ public class EntityDispatcher {
                 }
                 
                 tenant = determineInstanceFromRequest(runner.getHttpRequest());
-                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
-                    // No tenant only supported for Oauth login
-                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
-                    throw new EntityException(EntityException.UNAUTHORIZED);
-                    
-                }
+//                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
+//                    // No tenant only supported for Oauth login
+//                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
+//                    throw new EntityException(EntityException.UNAUTHORIZED);
+//                    
+//                }
             }
 
             String ip = runner.getHttpRequest().getHeader("X-Forwarded-For");
@@ -319,6 +319,13 @@ public class EntityDispatcher {
             }
 
         } finally {
+        	// TODO: maybe put this in some earlier/other stage??
+        	// This part is necessary to use the entities from a webserver (ClubWeb) and not run into CORS misery
+        	if ("true".equals(System.getenv("DEVELOP_MODE"))) {
+	            runner.getHttpResponse().setHeader("Access-Control-Allow-Headers", "*");
+	            runner.getHttpResponse().setHeader("Access-Control-Allow-Origin", "*");
+        	}
+
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);

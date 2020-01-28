@@ -51,6 +51,7 @@ import org.slf4j.MDC;
 
 import com.dexels.navajo.authentication.api.AuthenticationMethod;
 import com.dexels.navajo.authentication.api.AuthenticationMethodBuilder;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -69,9 +70,6 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.Mappable;
-import com.dexels.navajo.script.api.MappableException;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.UserException;
@@ -87,7 +85,6 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
-import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.tenant.TenantConfig;
 import com.dexels.navajo.util.AuditLog;
 
@@ -102,7 +99,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     /**
      * Fields accessable by webservices
      */
-    public static final String NAVAJO_TOPIC = "navajo/request";
+    private static final String NAVAJO_TOPIC = "navajo/request";
     
     private final Map<String, GlobalManager> globalManagers = new HashMap<>();
 
@@ -720,9 +717,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 throw new FatalException("No script defined");
             }
             
-            if (instance != null && !tenantConfig.getTenants().contains(instance)) {
-                throw new FatalException("Unsupported tenant: " + instance);
-            }
+//            if (instance != null && !tenantConfig.getTenants().contains(instance)) {
+//                throw new FatalException("Unsupported tenant: " + instance);
+//            }
 
 
             if (rpcName.equals("navajo_ping")) {
@@ -754,9 +751,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                     if (navajoConfig == null) {
                         throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
                     }
-                    if (instance == null) {
-                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
-                    }
+//                    if (instance == null) {
+//                        throw new SystemException(-1, "No tenant set -cannot authenticate!");
+//                    }
                     // Determine authenticator
                     final AuthenticationMethod authenticator;
                     if (clientInfo == null) {
@@ -776,14 +773,14 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                             + ", message=" + ex.getMessage(), Level.WARNING);
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
-                } catch (SystemException se) {
+                } /*catch (SystemException se) { //
                     logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
                     outMessage = generateErrorMessage(access, se.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(),
                             Level.WARNING);
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
                     return outMessage;
-                } catch (Throwable t) {
+                }*/ catch (Throwable t) {
                     logger.error("Unexpected exception on authenticateUser  {} for {}: ", rpcUser, rpcName, t);
                     outMessage = generateErrorMessage(access, t.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
                     access.setExitCode(Access.EXIT_AUTH_EXECPTION);
@@ -856,15 +853,29 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                  * Add some MDC parameters to context
                  */
 
-                MDC.put("accessId", access.accessID);
-                MDC.put("rpcName", access.getRpcName());
-                MDC.put("rpcUser", access.getRpcUser());
+                // Be very defensive not to add null values to the MDC, as they will fail at unexpected moments
+                if(access.accessID!=null) {
+                    MDC.put("accessId", access.accessID);
+                	
+                }
+                if(access.getRpcName()!=null) {
+                    MDC.put("rpcName", access.getRpcName());
+                }
+                if(access.getRpcUser()!=null) {
+                    MDC.put("rpcUser", access.getRpcUser());
+                }
                 if (access.getTenant() != null) {
                     MDC.put("tenant", access.getTenant());
                 }
-                MDC.put("rootPath", getNavajoConfig().getRootPath());
-                MDC.put("instanceName", getNavajoConfig().getInstanceName());
-                MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
+                if(getNavajoConfig().getRootPath()!=null) {
+                    MDC.put("rootPath", getNavajoConfig().getRootPath());
+                }
+                if(getNavajoConfig().getInstanceName()!=null) {
+                    MDC.put("instanceName", getNavajoConfig().getInstanceName());
+                }
+                if(getNavajoConfig().getInstanceGroup()!=null) {
+                    MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
+                }
 
                 /**
                  * Phase VIa: Check if scheduled webservice
@@ -925,10 +936,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 }
 
             }
-        } catch (NavajoDoneException e) {
-            preventFinalize = true;
-            throw e;
-
         } catch (AuthorizationException aee) {
             outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
             AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
@@ -1312,6 +1319,8 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     private TenantConfig tenantConfig;
 
+	private BundleCreator bundleCreator;
+
 
     @Override
     public int getHealth(String resourceId) {
@@ -1388,4 +1397,11 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         this.tenantConfig = null;
     }
 
+	public void setBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = bundleCreator;
+	}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
+	}
 }

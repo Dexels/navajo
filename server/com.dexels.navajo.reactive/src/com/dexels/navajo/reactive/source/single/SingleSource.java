@@ -74,4 +74,9 @@ public class SingleSource implements ReactiveSource {
 	public Type sourceType() {
 		return metadata.sourceType();
 	}	
+
+	public ReactiveParameters parameters() {
+		return params;
+	}
+
 }

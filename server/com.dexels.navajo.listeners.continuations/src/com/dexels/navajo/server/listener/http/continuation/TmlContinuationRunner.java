@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationListener;
 import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.global.GlobalManager;
 import com.dexels.navajo.server.global.GlobalManagerRepository;
@@ -29,11 +29,20 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	private final Continuation continuation;
 	private static boolean clearThreadLocal;
 
-	public TmlContinuationRunner(AsyncRequest request, LocalClient lc) {
+	public TmlContinuationRunner(AsyncRequest request, LocalClient lc, long timeout) {
 		super(request,lc);
 		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
-		continuation.setTimeout(10000000);
-		
+		continuation.setTimeout(timeout);
+		continuation.addContinuationListener(new ContinuationListener() {
+			
+			@Override
+			public void onTimeout(Continuation continuation) {
+				abort("timeout after: "+timeout);
+			}
+			
+			@Override
+			public void onComplete(Continuation arg0) {}
+		});
 		if (continuation.isExpired()) {
             logger.warn("Expired continuation!");
             abort("Internal server error");
@@ -50,7 +59,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		try {
 			logger.warn("Aborting: {}. Generating outdoc and resuming", reason);
 			setResponseNavajo(getLocalClient().generateAbortMessage(reason));
-//			resumeContinuation();
 			
 		} catch (FatalException e) {
 			logger.error("Error: ", e);
@@ -109,11 +117,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				      String queueId = getRequestQueue().getId();
 					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
 					  setResponseNavajo(getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo));
-				  } catch (NavajoDoneException e) {
-					  // temp catch, to be able to pre
-					  continuationFound = true;
-					  //.println("Navajo done in service runner. Thread disconnected...");
-					  throw(e);
 				  }
 				  finally {
 					  if(!continuationFound) {
@@ -123,9 +126,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 					  }
 				  }
 //			  }
-		  }
-		  catch (NavajoDoneException e) {
-			  throw(e);
 		  }
 		  catch (Throwable e) {
 			  //e.printStackTrace(System.err);
@@ -181,8 +181,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				logger.debug("Not using instance based GlobalManager: No instance found in request");
 			}
 			execute();
-		} catch(NavajoDoneException e) {
-			logger.debug("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
 			logger.error("Continuation problem: ",e);
 			getRequest().fail(e);
