@@ -34,5 +34,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
 Service-Component: OSGI-INF/*
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.elasticsearch
-Export-Package: com.dexels.navajo.elasticsearch.adapters,
- com.dexels.navajo.elasticsearch.impl
+Export-Package: com.dexels.navajo.elasticsearch,
+ com.dexels.navajo.elasticsearch.adapter.impl,
+ com.dexels.navajo.elasticsearch.adapters,
+ com.dexels.navajo.elasticsearch.impl,
+ elasticsearchadapter

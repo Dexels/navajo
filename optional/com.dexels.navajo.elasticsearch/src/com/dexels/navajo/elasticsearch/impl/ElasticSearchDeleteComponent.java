@@ -3,32 +3,63 @@ package com.dexels.navajo.elasticsearch.impl;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.elasticsearch.ElasticSearchDeleteFactory;
 import com.dexels.navajo.elasticsearch.ElasticSearchDeleteService;
-import com.dexels.navajo.elasticsearch.ElasticSearchQueryFactory;
 
 public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService {
-	
-	
-	
-	
-	
+	private final static Logger logger = LoggerFactory.getLogger(ElasticSearchDeleteComponent.class);
+	private String main_url = "http://es-tucht-test.test.svc.cluster.local:9200/job_10/_doc/";
+	private CloseableHttpClient httpclient;
 	
 	public void activate(Map<String,Object> settings) {
-		
+		logger.info("Activating...");
+		httpclient = HttpClients.createDefault();
+		ElasticSearchDeleteFactory.setInstance(this);
 	}
 	
 	public void deactivate() {
-
+		logger.info("Deactivating...");
+		ElasticSearchDeleteFactory.setInstance(null);
 	}
-	
-	
 
 	@Override
-	public String delete_id(String id) throws IOException {
+	public void delete(String id) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+        String full_url = main_url + id;
+
+        System.out.println("FULL URL : " + full_url);
+
+        CloseableHttpClient httpclient;
+
+
+        httpclient = HttpClients.createDefault();
+
+        HttpDelete request = new HttpDelete(full_url);
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpResponse response = client.execute(request);
+
+
+        System.out.println("Response: =======================" );
+        System.out.println(response.getStatusLine());
+        System.out.println(response);
+        System.out.println("=================================" );
+
+        System.out.println(">>>>>Connection Closed (under status line)");
+
+        httpclient.close();
+
+        //String result_response = response.toString();
+		
 	}
 
 }

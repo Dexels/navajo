@@ -81,6 +81,12 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 	    HttpPost request = new HttpPost(url);
 	    	request.setEntity(entity);
+	    	
+	    //trial code will be deleted in today 28 Jan 2020
+	    System.out.println("Entity: " + entity.toString());
+	    System.out.println("//========================================//");
+	    System.out.println("Request: " + request.toString());
+	    //=======================//
 
 	    HttpClient client = HttpClientBuilder.create().build();
 	    HttpResponse response = client.execute(request);

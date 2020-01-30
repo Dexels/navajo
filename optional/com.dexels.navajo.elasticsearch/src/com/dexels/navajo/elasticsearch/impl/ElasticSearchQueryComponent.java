@@ -67,7 +67,7 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		
 		System.out.println("the keyword is: " + keyword);
 		
-		String es_url = this.url + URLEncoder.encode(keyword, "UTF-8");;
+		String es_url = this.url + URLEncoder.encode(keyword, "UTF-8");
 		
 			
 		HttpGet request = new HttpGet(es_url);
