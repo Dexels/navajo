@@ -42,5 +42,14 @@
 		<methods>
 		</methods>
 	</map>
+	<map>
+		<tagname>esdelete</tagname>
+		<object>com.dexels.navajo.elasticsearch.adapters.ElasticSearchDeleteAdapter</object>
+		<values>
+			<value name="id" type="string" required="true" direction="in" />
+		</values>
+		<methods>
+		</methods>
+	</map>
 
 </adapterdef>
