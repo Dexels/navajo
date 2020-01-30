@@ -38,25 +38,19 @@ public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService 
 
         System.out.println("FULL URL : " + full_url);
 
-        CloseableHttpClient httpclient;
-
-
-        httpclient = HttpClients.createDefault();
-
         HttpDelete request = new HttpDelete(full_url);
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpResponse response = client.execute(request);
 
 
-        System.out.println("Response: =======================" );
-        System.out.println(response.getStatusLine());
-        System.out.println(response);
-        System.out.println("=================================" );
+        
+        System.out.println(">>>>> Response status: " + response.getStatusLine());
 
-        System.out.println(">>>>>Connection Closed (under status line)");
+        
 
         httpclient.close();
+        System.out.println(">>>>>Connection Closed");
 
         //String result_response = response.toString();
 		
