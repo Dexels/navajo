@@ -367,14 +367,15 @@ public class RESTAdapter extends NavajoMap implements Debugable {
         http.setConnectTimeOut(connectTimeOut);
         
         if (debug) {
+            StringWriter buffer = new StringWriter();
         	byte[] em = http.getContent().getData();
         	String s_content = new String(em);
         	
         	//output all headers, request body and the curl command.
-        	System.out.println("=======================DEBUG MODE HTTP REQUEST===========================");
-        	System.out.println(">>>>Method: " + http.getMethod());
-        	System.out.println(">>>>Request body: " + s_content); 
-        	System.out.println(">>>>Headers: ");
+        	buffer.append("=======================DEBUG MODE HTTP REQUEST===========================").append("\n");
+        	buffer.append(">>>>Method: " + http.getMethod()).append("\n");
+        	buffer.append(">>>>Request body: " + s_content).append("\n"); 
+        	buffer.append(">>>>Headers: ").append("\n");
         	
         	
         	//curl builder
@@ -385,7 +386,7 @@ public class RESTAdapter extends NavajoMap implements Debugable {
         	
         	//accessing all headers
         	for (Entry<String,String> e : headers_tr.entrySet()) {
-        		System.out.println(e.getKey() + " : " + e.getValue());
+        		buffer.append(e.getKey() + " : " + e.getValue()).append("\n");
                 c_url += "-H \'" + e.getKey() + ": " + e.getValue() + "\' ";
             }
         	String no_enter_content = s_content.replace("\n", "").replace("\r", "");
@@ -393,9 +394,10 @@ public class RESTAdapter extends NavajoMap implements Debugable {
         	c_url += "-d \'" + no_enter_content + "\' "; //http content is a binary
         	c_url += "\'" + http.getUrl() + "\' ";
         	
-        	System.out.println(">>>>cURL command: " + c_url);
-        	System.out.println("==========================================================================");
+        	buffer.append(">>>>cURL command: " + c_url).append("\n");
+        	buffer.append("==========================================================================").append("\n");
         	
+            logger.info( buffer.toString() );
         	
         }
     }
