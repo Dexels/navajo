@@ -77,8 +77,7 @@ public class GetSelectedValues extends FunctionInterface {
 				}
 			}
 		}
-		
-		if (o instanceof String) {
+		else if (o instanceof String) {
 			values.add(o);
 		} else {
 			if (!(o instanceof List)) {
