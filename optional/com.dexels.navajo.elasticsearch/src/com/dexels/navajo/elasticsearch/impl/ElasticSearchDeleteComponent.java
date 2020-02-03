@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -32,7 +33,7 @@ public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService 
 	}
 
 	@Override
-	public void delete(String id) throws IOException {
+	public ElasticSearchDeleteResult delete(String id) throws IOException {
 		// TODO Auto-generated method stub
         String full_url = main_url + id;
 
@@ -46,13 +47,18 @@ public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService 
 
         
         System.out.println(">>>>> Response status: " + response.getStatusLine());
-
         
+        System.out.println(">>>>??????>>>>> " + response.getStatusLine().getStatusCode());        
 
         httpclient.close();
         System.out.println(">>>>>Connection Closed");
-
-        //String result_response = response.toString();
+        
+		
+		ElasticSearchDeleteResult result = new ElasticSearchDeleteResult(id, response.getStatusLine().toString());
+		
+		
+		
+		return result; //vale edw to response an einai success i oxi
 		
 	}
 
