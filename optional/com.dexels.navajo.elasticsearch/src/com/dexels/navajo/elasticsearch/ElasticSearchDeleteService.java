@@ -2,6 +2,8 @@ package com.dexels.navajo.elasticsearch;
 
 import java.io.IOException;
 
+import com.dexels.navajo.elasticsearch.impl.ElasticSearchDeleteResult;
+
 public interface ElasticSearchDeleteService {
-	public void delete(String id) throws IOException;
+	public ElasticSearchDeleteResult delete(String id) throws IOException;
 }

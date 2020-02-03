@@ -47,6 +47,18 @@
 		<object>com.dexels.navajo.elasticsearch.adapters.ElasticSearchDeleteAdapter</object>
 		<values>
 			<value name="id" type="string" required="true" direction="in" />
+			<value name="esresult" map="esdeleteresult" required="false" direction="out" />
+		</values>
+		<methods>
+		</methods>
+	</map>
+	<map abstract="true">
+		<tagname>esdeleteresult</tagname>
+		<object>com.dexels.navajo.elasticsearch.impl.ElasticSearchDeleteResult</object>
+		<abstract>false</abstract>
+		<values>
+			<value name="id" type="string" direction="out" />
+			<value name="resultMessage" type="string" direction="out" />
 		</values>
 		<methods>
 		</methods>

@@ -31,7 +31,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.junit;resolution:=optional,
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="[1.6.0,1.8.0)"
-Service-Component: OSGI-INF/*
+Service-Component: OSGI-INF/*,
+ OSGI-INF/navajo.resource.elasticsearchdelete.xml
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.elasticsearch
 Export-Package: com.dexels.navajo.elasticsearch,
