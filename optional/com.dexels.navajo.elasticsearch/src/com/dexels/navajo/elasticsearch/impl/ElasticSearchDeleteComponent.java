@@ -20,6 +20,7 @@ public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService 
 	private final static Logger logger = LoggerFactory.getLogger(ElasticSearchDeleteComponent.class);
 	private String main_url = "http://es-tucht-test.test.svc.cluster.local:9200/job_10/_doc/";
 	private CloseableHttpClient httpclient;
+	private ElasticSearchDeleteResult result;
 	
 	public void activate(Map<String,Object> settings) {
 		logger.info("Activating...");
@@ -47,18 +48,20 @@ public class ElasticSearchDeleteComponent implements ElasticSearchDeleteService 
 
         
         System.out.println(">>>>> Response status: " + response.getStatusLine());
-        
-        System.out.println(">>>>??????>>>>> " + response.getStatusLine().getStatusCode());        
+              
 
         httpclient.close();
         System.out.println(">>>>>Connection Closed");
         
+        
 		
-		ElasticSearchDeleteResult result = new ElasticSearchDeleteResult(id, response.getStatusLine().toString());
+		result = new ElasticSearchDeleteResult(id, response.getStatusLine().toString().replace("HTTP/1.1 ", ""));
 		
 		
 		
-		return result; //vale edw to response an einai success i oxi
+		
+		
+		return result; 
 		
 	}
 
