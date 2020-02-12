@@ -30,8 +30,6 @@ Import-Package: com.dexels.navajo.adapter,
  navajoextension,
  org.dexels.grus;version="1.0.0",
  org.dexels.utils;version="2.2.0",
- org.junit;version="4.8.2";resolution:=optional,
- org.junit.runner;version="4.8.2";resolution:=optional,
  org.osgi.framework;version="1.5.0";resolution:=optional,
  org.slf4j
 Bundle-ClassPath: .
