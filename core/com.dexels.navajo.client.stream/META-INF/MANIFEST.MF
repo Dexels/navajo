@@ -32,7 +32,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.eclipse.jetty.util;version="9.4.9",
  org.eclipse.jetty.util.component;version="9.4.9",
  org.eclipse.jetty.util.ssl;version="9.4.9",
- org.junit;version="4.10.0";resolution:=optional,
+ org.hamcrest;resolution:=optional,
+ org.junit;resolution:=optional,
  org.reactivestreams;version="1.0.0.release",
  org.slf4j;version="1.7.0"
 Bundle-ClassPath: .

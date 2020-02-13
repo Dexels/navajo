@@ -77,8 +77,8 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.apache.commons.mail;version="1.4.0",
  org.apache.commons.mail.util;version="1.4.0",
  org.dexels.utils;version="2.2.0",
- org.junit;version="4.8.2";resolution:=optional,
- org.junit.runner;version="4.8.2";resolution:=optional,
+ org.junit;resolution:=optional,
+ org.junit.runner;resolution:=optional,
  org.osgi.framework;version="1.5.0";resolution:=optional,
  org.slf4j
 Bundle-ClassPath: .
