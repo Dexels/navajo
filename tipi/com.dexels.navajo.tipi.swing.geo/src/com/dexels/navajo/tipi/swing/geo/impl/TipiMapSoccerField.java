@@ -42,6 +42,17 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     private static final String FIELD_TYPE_ARTIFICIAL_GRASS_ICON = "icons/club-facility/fieldtype_artificialgrass_large.png";
     private static final String FIELD_TYPE_WETERA_ICON = "icons/club-facility/fieldtype_wetra_large.png";
     
+    private static final double FIELD_ONE_EIGHTH 		= 0.125;
+    private static final double FIELD_SIZE_ONE_EIGHTH 	= 30D;
+    
+    private static final double FIELD_QUARTER 			= 0.25;
+    private static final double FIELD_SIZE_QUARTER 		= 42D;
+    
+    private static final double FIELD_HALF 				= 0.5;
+    private static final double FIELD_SIZE_HALF 		= 60D;
+    
+    private static final double FIELD_SIZE_WHOLE 		= 105D;
+    
     private static final int FIELD_TRANSPARANCY = 230;
     
     private TipiContext context;
@@ -54,7 +65,8 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     
     private String fieldUse;
     private String fieldType;
-    private Boolean isHalfField;
+    
+    private double fieldSize;
 
 
     private Image fieldUseImage = null;
@@ -88,8 +100,9 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
         pos = new GeoPosition(latF, lonF);
 
         this.label = (String) field.getProperty("Name").getTypedValue();
-        this.isHalfField = (Boolean) field.getProperty("IsHalfField").getTypedValue();
       
+        this.fieldSize = Double.parseDouble( field.getProperty("FieldSize").getSelected().getValue() );
+        
         this.fieldUse = field.getProperty("FieldUse").getSelected().getValue();
         this.fieldType = field.getProperty("FieldType").getSelected().getValue();
         
@@ -264,10 +277,16 @@ public class TipiMapSoccerField implements Painter<JXMapViewer> {
     }
 
     private double getFieldHeight() {
-        if (isHalfField) {
-            return 59D;
-        }
-        return 105D;
+    	if( fieldSize == FIELD_ONE_EIGHTH ) {
+    		return FIELD_SIZE_ONE_EIGHTH;
+    	}
+    	if( fieldSize == FIELD_QUARTER ) {
+    		return FIELD_SIZE_QUARTER;
+    	}
+    	if( fieldSize == FIELD_HALF ) {
+    		return FIELD_SIZE_HALF;
+    	}    	
+    	return FIELD_SIZE_WHOLE;
     }
 
     private Color getFieldColor() {
