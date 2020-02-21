@@ -378,9 +378,8 @@ public class ServiceEntityOperation implements EntityOperation {
 
         myKey = myEntity.getKey(props, entityVersion);
 		if (myKey == null) {
-			// Check for _id property. If _id is present it is good as a key.
 			// It's also possible our entity has no keys defined. In that case accept input
-            if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys(entityVersion).size() > 0
+            if (myEntity.getRequiredKeys(entityVersion).size() > 0
                     && myEntity.getAutoKey(entityVersion) == null) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
