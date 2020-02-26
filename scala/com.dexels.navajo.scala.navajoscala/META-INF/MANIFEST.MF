@@ -37,3 +37,4 @@ Import-Package: com.dexels.immutable.api,
  scala.reflect,
  scala.runtime
 Service-Component: OSGI-INF/script.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

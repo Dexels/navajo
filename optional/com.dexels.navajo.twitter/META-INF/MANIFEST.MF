@@ -42,3 +42,4 @@ Bundle-ClassPath: lib/commons-codec-1.3.jar,
  lib/signpost-core-1.2.1.1.jar,
  .,
  lib/jtwitter-2.8.7.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

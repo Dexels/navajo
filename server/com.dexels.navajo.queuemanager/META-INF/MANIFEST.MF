@@ -27,3 +27,4 @@ Service-Component: OSGI-INF/navajo.server.threadpool.priority.xml,
  OSGI-INF/navajo.server.queuemanager.xml,
  OSGI-INF/navajo.server.queuemanager.null.xml,
  OSGI-INF/navajo.server.threadpool.health.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.osgi.console
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.dexels.navajo.osgi.console.Activator
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.expression.api,
  com.dexels.navajo.functions.util,
  com.dexels.navajo.parser,

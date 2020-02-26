@@ -100,3 +100,4 @@ Export-Package: com.dexels.navajo.echoclient.components,
  nextapp.echo2.webrender.service,
  nextapp.echo2.webrender.util,
  tucana.echo2.app
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

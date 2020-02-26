@@ -57,10 +57,26 @@ public class EntityDispatcher {
     private EntityMapper myMapper;
     private NavajoIOConfig navajoIOConfig;
     
+    private Map<String,String> additionalHttpHeaders = new HashMap<>();
+    
 	public void setConfig(NavajoIOConfig navajoIOConfig) {
 		this.navajoIOConfig = navajoIOConfig;
 	}
 
+	public void activate(Map<String, Object> properties) {
+		for ( String h : properties.keySet() ) {
+			if ( h.startsWith("header.")) {
+				String header = h.split("\\.")[1];
+				String key = (String) properties.get(h);
+				additionalHttpHeaders.put(header, key);
+			}
+		}
+	}
+	
+	public void deactivate() {
+		
+	}
+	
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
@@ -321,11 +337,13 @@ public class EntityDispatcher {
         } finally {
         	// TODO: maybe put this in some earlier/other stage??
         	// This part is necessary to use the entities from a webserver (ClubWeb) and not run into CORS misery
-        	if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-	            runner.getHttpResponse().setHeader("Access-Control-Allow-Headers", "*");
-	            runner.getHttpResponse().setHeader("Access-Control-Allow-Origin", "*");
+        	
+        	if ( additionalHttpHeaders.size() > 0 ) {
+        		for ( String key : additionalHttpHeaders.keySet() ) {
+        			runner.getHttpResponse().setHeader(key, additionalHttpHeaders.get(key));
+        		}
         	}
-
+        	
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);

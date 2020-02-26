@@ -82,3 +82,4 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.osgi.framework;version="1.5.0";resolution:=optional,
  org.slf4j
 Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
