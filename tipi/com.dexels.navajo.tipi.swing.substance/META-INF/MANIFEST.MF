@@ -100,3 +100,4 @@ Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  org.pushingpixels.trident.swing,
  org.pushingpixels.trident.swt,
  resource
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

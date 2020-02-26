@@ -4,7 +4,7 @@ Bundle-Name: Mail resource connector
 Bundle-SymbolicName: com.dexels.navajo.resource.mail
 Bundle-Version: 1.0.8.qualifier
 Bundle-Vendor: DEXELS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/mailResourceComponent.xml,
  OSGI-INF/mail.resource.factory.xml
 Export-Package: com.dexels.navajo.resource.mail

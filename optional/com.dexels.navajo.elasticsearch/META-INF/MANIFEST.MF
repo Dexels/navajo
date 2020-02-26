@@ -5,8 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.elasticsearch
 Bundle-Version: 1.0.12.qualifier
 Bundle-Activator: elasticsearchadapter.Version
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
- JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.index.api;version="1.0.0",
  com.dexels.navajo.document;version="2.2.1",
