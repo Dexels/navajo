@@ -101,7 +101,7 @@ jobs:
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # Build; tests are skipped for now
-      - run: mvn -B package -DskipTests=true -Denvironment=release
+      - run: mvn  -B  package  -Denvironment=release
 
 workflows:
   version: 2
