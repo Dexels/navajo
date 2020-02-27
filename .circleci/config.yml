@@ -1,9 +1,6 @@
-version: 2
+version: 2.1
 jobs:
-  build:
-    branches:
-      only:
-        - master
+  build_test_n_deploy:
     docker:
       - image: circleci/openjdk:11-jdk
     working_directory: ~/repo
@@ -11,20 +8,21 @@ jobs:
       JVM_OPTS: -Xmx1000m
       TERM: dumb
     steps:
+      # Setup
       - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
       - run: |
           cd setup/com.dexels.target
-          mvn -s ../../.circleci/conf/settings.xml -B install 
+          mvn -s ../../.circleci/conf/settings.xml -B install
           cd ../..
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
-      # run tests (skipped for now)
+      # Build; tests are skipped for now
       - run: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
       - run: |
           cd ~
@@ -42,7 +40,8 @@ jobs:
       - store_artifacts:
           path: ~/repo/setup/com.dexels.streams.p2/target/com.dexels.streams.p2-1.0.0-SNAPSHOT.zip
           destination: streams_p2.zip
-      #test store
+
+      # Store test result and platform artifacts
       - run:
           name: Save test results
           command: |
@@ -53,11 +52,11 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-
       - run: |
           ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
           scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
-      # Now update enterprise:
+
+      # Update enterprise
       - run: |
           mkdir ~/enterprisecheckout
           cd  ~/enterprisecheckout
@@ -78,4 +77,44 @@ jobs:
           echo "skipping downstream"
           #curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
           curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
+
+  build_n_test:
+    docker:
+      - image: circleci/openjdk:11-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1000m
+      TERM: dumb
+    steps:
+      # Setup
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
+      - run: |
+          cd setup/com.dexels.target
+          mvn -s ../../.circleci/conf/settings.xml -B install
+          cd ../..
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
+
+      # Build; tests are skipped for now
+      - run: mvn -B package -DskipTests=true -Denvironment=release
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build_test_n_deploy:
+          filters:
+            branches:
+              only:
+                - master
+      - build_n_test:
+          filters:
+            branches:
+              ignore:
+                - master
 
