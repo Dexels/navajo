@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.async.apache.impl;
+package com.dexels.navajo.client.async.jetty.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
