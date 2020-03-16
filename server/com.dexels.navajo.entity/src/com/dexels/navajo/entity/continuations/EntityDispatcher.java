@@ -311,7 +311,7 @@ public class EntityDispatcher {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
                     	// Set Caching parameter
-                        if (entity != null && entity.getMyCaching().size() > 0) {
+                        if (entity.getMyCaching().size() > 0) {
                             setCachingHeader(result, entity, runner);
                         }
                         skipLogging = true;
