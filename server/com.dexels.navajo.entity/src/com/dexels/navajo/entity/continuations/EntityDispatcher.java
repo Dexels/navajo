@@ -305,16 +305,15 @@ public class EntityDispatcher {
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse(), locale);
             
-            // Set Caching parameter
-            if (entity != null && entity.getMyCaching().size() > 0) {
-                setCachingHeader(result, entity, runner);
-            }
-
             if (access != null) {
                 boolean skipLogging = false;
                 if (ex instanceof EntityException) {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
+                    	// Set Caching parameter
+                        if (entity != null && entity.getMyCaching().size() > 0) {
+                            setCachingHeader(result, entity, runner);
+                        }
                         skipLogging = true;
                     } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND && entityFound) {
                         skipLogging = true;
