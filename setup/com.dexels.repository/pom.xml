@@ -12,10 +12,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <navajo.version>5.0.0</navajo.version>
         <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <navajo.version>5.0.0</navajo.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tycho-groupid>org.eclipse.tycho</tycho-groupid>
         <tycho-version>1.4.0</tycho-version>
@@ -112,10 +112,6 @@
                 <groupId>${tycho-groupid}</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
                 <version>${tycho-version}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
 
             <plugin>
