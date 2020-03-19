@@ -1,10 +1,10 @@
 package tests.css;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,38 +20,38 @@ import tipicss.TipiCssExtension;
 
 public class CoreTipi extends AbstractTipiTest {
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(CoreTipi.class);
-	
 
-	@Before
-	public void setUp() throws Exception {
-		List<TipiExtension> elist = new ArrayList<TipiExtension>();
-		TipiExtension ed = new TipiCoreExtension();
-		ed.loadDescriptor();
-		elist.add(ed);
+    private final static Logger logger = LoggerFactory
+            .getLogger(CoreTipi.class);
 
-		TipiCssExtension tipiCss = new TipiCssExtension();
-		tipiCss.loadDescriptor();
-		elist.add(tipiCss);
 
-		setContext("init", new File("testsrc/tests/css"),elist);
-//		getContext().addOptionalInclude(tipiCss);
-//		getContext().processRequiredIncludes(tipiCss);
-		logger.info("Setup complete");
-	}
+    @Before
+    public void setUp() throws Exception {
+        List<TipiExtension> elist = new ArrayList<TipiExtension>();
+        TipiExtension ed = new TipiCoreExtension();
+        ed.loadDescriptor();
+        elist.add(ed);
 
-	@Test
-	public void testTipi() {
-		 try {
-		 Thread.sleep(1000);
-		 } catch (InterruptedException e) {
-		 }
-		getContext().shutdown();
-		String xx = getContext().getInfoBuffer();
-		Assert.assertEquals("event1\nevent2\n0.99\n", xx);
-		logger.info("Test ok: "+xx);
-	}
+        TipiCssExtension tipiCss = new TipiCssExtension();
+        tipiCss.loadDescriptor();
+        elist.add(tipiCss);
+
+        setContext("init", new File("testsrc/tests/css"),elist);
+//        getContext().addOptionalInclude(tipiCss);
+//        getContext().processRequiredIncludes(tipiCss);
+        logger.info("Setup complete");
+    }
+
+    @Test
+    public void testTipi() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {}
+        getContext().shutdown();
+
+        String xx = getContext().getInfoBuffer();
+        assertEquals("event1\nevent2\n0.99\n", xx);
+        logger.info("Test ok: "+xx);
+    }
 
 }
