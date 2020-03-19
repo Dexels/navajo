@@ -30,7 +30,7 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 public class TipiMessageTable extends MessageTable {
 
 	private static final long serialVersionUID = 8878916392303033449L;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiMessageTable.class);
 	final TipiContext myContext;
@@ -41,7 +41,6 @@ public class TipiMessageTable extends MessageTable {
 		myContext = tc;
 		// myDndManager = new TipiDndManager(this,component);
 		addMouseListener(new MouseAdapter() {
-			@SuppressWarnings("deprecation")
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
@@ -117,12 +116,12 @@ public class TipiMessageTable extends MessageTable {
 		}
 	}
 
-  
+
 
     @Override
     protected boolean processKeyBinding(KeyStroke stroke, KeyEvent event, int condition, boolean pressed) {
         if (stroke.getKeyCode() == 32 && stroke.getModifiers() == 130) {
-            // space + control: toggleAndAnchor event. This event toggles the current selection. However 
+            // space + control: toggleAndAnchor event. This event toggles the current selection. However
             // this results in there being no more selected message in the TipiTable, while we are still
             // possibly editing! This is undesired behavior, thus ignore this key event.
             if (this.isEditing()) {
@@ -135,7 +134,7 @@ public class TipiMessageTable extends MessageTable {
 	// public TipiDndManager getDndManager() {
 	// return myDndManager;
 	// }
-	
-	
+
+
 
 }
