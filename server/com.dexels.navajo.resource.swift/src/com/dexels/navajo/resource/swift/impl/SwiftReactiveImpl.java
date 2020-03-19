@@ -1,7 +1,5 @@
 package com.dexels.navajo.resource.swift.impl;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,13 +28,12 @@ public class SwiftReactiveImpl implements BinaryStore {
 	private String accessToken;
 	private String tenantId;
 	private String container;
-	private URL endpointURL;
 	private String endpoint;
 
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(SwiftReactiveImpl.class);
 
-	
+
 	@Override
 	public Binary resolve(BinaryDigest digest) {
 		String path = "/v1/"+tenantId+"/"+container+"/"+digestToPath(digest);
@@ -45,7 +42,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 				.toObservable()
 				.lift(StreamDocument.createBinary())
 				.blockingFirst();
-				
+
 	}
 
 	private void ensureContainerExists() {
@@ -58,7 +55,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		}
 //		createContainer();
 	}
-	
+
 	public void createContainer() {
 		String path = "/v1/"+tenantId+"/"+container;
 		byte[] res =client.callWithBodyToStream(endpoint+path,e->e.method(HttpMethod.PUT),Flowable.just(new byte[]{}),"text/plain")
@@ -96,10 +93,10 @@ public class SwiftReactiveImpl implements BinaryStore {
 		String container = (String) settings.get("container");
 		configure(endpoint, username, apiKey, container);
 	}
-	
+
 	public void configure(String endpoint, String username, String apiKey, String container) throws Exception {
 		ObjectNode authNode = authenticate(endpoint, username, apiKey);
-        
+
 		Optional<String> swiftEndpoint = findObjectStoreURL(authNode,false);
 		this.container = container;
 		this.tenantId = findTenantId(authNode).get();
@@ -133,7 +130,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 
 		return client.callWithBody(endpoint+path, e->e.method(method).header("X-Auth-Token", accessToken), body, "application/octet-stream")
 				.map(reply->reply.responseHeaders())
-				
+
 				;
 
 		//				.toObservable();
@@ -149,7 +146,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		String path = digest.hex();
 		return path.substring(0, 2) + "/" + path;
 	}
-	
+
 	private static String getAuthToken(ObjectNode authNode) {
 		return authNode.get("access").get("token").get("id").asText();
 	}
@@ -165,7 +162,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		}
 		return Optional.empty();
 	}
-	
+
 	private static Optional<String> findTenantId(ObjectNode authNode) {
 		ArrayNode services = (ArrayNode) authNode.get("access").get("serviceCatalog");
 		for (JsonNode jsonNode : services) {
@@ -180,7 +177,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 	private ObjectNode authenticate(String endpoint, String username, String apiKey)
 			throws JsonProcessingException {
 
-		
+
 		ObjectNode node = mapper.createObjectNode();
 		ObjectNode auth = mapper.createObjectNode();
 		ObjectNode passwordCredentials = mapper.createObjectNode();
@@ -189,7 +186,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 		auth.set("RAX-KSKEY:apiKeyCredentials", passwordCredentials);
 		node.set("auth", auth);
 
-        ObjectNode authNode = client 
+        ObjectNode authNode = client
         		.callWithBodyToStream(endpoint+"/v2.0/tokens", e->e.header("Content-Type", "application/json").method(HttpMethod.POST), Flowable.just(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node).getBytes()), "application/json")
         		.map(a->new String(a))
         		.reduce(new StringBuffer(),(sb,s)->sb.append(s))
@@ -223,7 +220,7 @@ public class SwiftReactiveImpl implements BinaryStore {
 //		}
 		return client;
 	}
-	
+
 	private static ObjectNode extractKey(String response) {
 		ObjectNode node;
 		try {
@@ -231,12 +228,9 @@ public class SwiftReactiveImpl implements BinaryStore {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
 		}
+
 		return node;
-		
 	}
 
 //    private static SSLEngine defaultSSLEngineForClient(String host, int port) {
