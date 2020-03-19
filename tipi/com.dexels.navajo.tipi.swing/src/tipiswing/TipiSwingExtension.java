@@ -27,14 +27,14 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 
 	private static TipiSwingExtension instance = null;
 
-	private static final Logger logger = LoggerFactory.getLogger(TipiSwingExtension.class); 
+	private static final Logger logger = LoggerFactory.getLogger(TipiSwingExtension.class);
 
-	
+
 	public TipiSwingExtension() throws XMLParseException {
 		instance = this;
 	}
 
-	
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -55,9 +55,9 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 //				 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
 //				 functionRegs.add(sr);
 //			}
-//			
+//
 //		}
-				
+
 	}
 
 	@Override
@@ -65,11 +65,11 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		super.stop(context);
 		deregisterTipiExtension(context);
 	}
-	
+
 	public static TipiSwingExtension getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
@@ -80,7 +80,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	public LookAndFeelWrapper getLookAndFeel(String tipiLaf) {
 		try {
 			ServiceReference[] srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class.getName(), "(className="+tipiLaf+")");
-			
+
 			if(srl == null || srl.length==0) {
 				return null;
 			}
@@ -92,7 +92,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setLookAndFeel(String tipiLaf) {
 		if(getBundleContext()==null) {
 			// not OSGi, go vintage:
@@ -116,7 +116,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		}
 		try {
 			ServiceReference[] srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class.getName(), "(className="+tipiLaf+")");
-			
+
 			if(srl == null || srl.length==0) {
 				logger.warn("No service found for LNF: "+tipiLaf);
 				return;
@@ -124,7 +124,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 			ServiceReference laf = srl[0];
 
 			LookAndFeelWrapper lwd = (LookAndFeelWrapper)getBundleContext().getService(laf);
-			
+
 			lwd.loadLookAndFeel();
 		} catch (InvalidSyntaxException e) {
 			logger.error("Odd OSGi error:",e);

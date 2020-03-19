@@ -1,3 +1,4 @@
+Automatic-Module-Name: com.dexels.navajo.tipi.swing.mig
 Bundle-Name: Navajo Swing Tipi MigLayout
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.mig
 Bundle-ManifestVersion: 2
