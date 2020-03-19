@@ -10,7 +10,6 @@ import java.util.Set;
 
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -49,7 +48,7 @@ public class HttpPushStreamTransformerFactory implements ReactiveTransformerFact
 	public Optional<Map<String, String>> parameterTypes() {
 		return Optional.of(Collections.emptyMap());
 	}
-	
+
 
 	@Override
 	public String name() {

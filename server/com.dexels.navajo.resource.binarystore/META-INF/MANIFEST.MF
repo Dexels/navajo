@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: com.dexels.navajo.resource.binarystore
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Binarystorage API
 Bundle-SymbolicName: com.dexels.navajo.resource.binarystore
