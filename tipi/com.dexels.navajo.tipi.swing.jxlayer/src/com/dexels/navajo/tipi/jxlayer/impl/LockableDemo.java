@@ -77,15 +77,15 @@ import com.jhlabs.image.EmbossFilter;
 
 /**
  * A demo to show the abilities of the {@link LockableUI}.
- * 
- * @see BusyPainterUI  
+ *
+ * @see BusyPainterUI
  */
 public class LockableDemo extends JFrame {
 	private static final long serialVersionUID = -5387265566029372599L;
 	private JXLayer<JComponent> layer;
-    private LockableUI blurUI = 
+    private LockableUI blurUI =
             new LockableUI(new BufferedImageOpEffect(new BlurFilter()));
-    private EnhancedLockableUI embossUI = 
+    private EnhancedLockableUI embossUI =
             new EnhancedLockableUI(new BufferedImageOpEffect(new EmbossFilter()));
     private LockableUI busyPainterUI = new BusyPainterUI();
 
@@ -133,7 +133,6 @@ public class LockableDemo extends JFrame {
         });
     }
 
-    @SuppressWarnings("deprecation")
 	private JMenuBar createMenuBar() {
         JMenu menu = new JMenu("Menu");
 
@@ -173,7 +172,7 @@ public class LockableDemo extends JFrame {
         blurItem.addItemListener(menuListener);
         embossItem.addItemListener(menuListener);
         busyPainterItem.addItemListener(menuListener);
-        
+
         embossUI.getUnlockButton().addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -232,10 +231,10 @@ public class LockableDemo extends JFrame {
         return box;
     }
 
-    
+
     /**
      * Subclass of the {@link LockableUI} which shows a button
-     * that allows to unlock the {@link JXLayer} when it is locked  
+     * that allows to unlock the {@link JXLayer} when it is locked
      */
     public static class EnhancedLockableUI extends LockableUI {
         private JButton unlockButton = new JButton("Unlock");
@@ -280,13 +279,13 @@ public class LockableDemo extends JFrame {
             unlockButton.setVisible(isLocked);
         }
     }
-    
+
     /**
      * Subclass of the {@link LockableUI} which uses the {@link BusyPainterUI}
-     * from the SwingX project to implement the "busy effect" 
-     * when {@link JXLayer} is locked.  
+     * from the SwingX project to implement the "busy effect"
+     * when {@link JXLayer} is locked.
      */
-    public static class BusyPainterUI extends LockableUI 
+    public static class BusyPainterUI extends LockableUI
             implements ActionListener {
         private BusyPainter<JComponent> busyPainter;
         private Timer timer;
@@ -329,7 +328,7 @@ public class LockableDemo extends JFrame {
         }
 
         // Change the frame for the busyPainter
-        // and mark BusyPainterUI as dirty 
+        // and mark BusyPainterUI as dirty
         @Override
 		public void actionPerformed(ActionEvent e) {
             frameNumber = (frameNumber + 1) % 8;
@@ -340,4 +339,3 @@ public class LockableDemo extends JFrame {
     }
 }
 
-  
