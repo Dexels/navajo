@@ -5,6 +5,7 @@ distribution/
 dist/
 server/com.dexels.navajo.integration/navajo/logs/
 target/
+testbin/
 testclasses/
 work/
 .DS_Store
