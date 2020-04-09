@@ -22,6 +22,8 @@ public class CopyMessage implements Mappable {
   public String copyMessageFrom = null; // If copyMessageFrom is empty, either the currently processed incoming (useOutputDoc = false)
   									  // or currently processed outgoing (useOutputDoc = true) will be copied.
   public String copyMessageTo = null;
+  
+  public String suppressProperties = null;
  
   @Override
 public void load(Access access) throws MappableException, UserException {
@@ -54,7 +56,9 @@ public void load(Access access) throws MappableException, UserException {
 	  Iterator<Property> allProperties = from.getAllProperties().iterator();
 	  while ( allProperties.hasNext() ) {
 		  Property p = allProperties.next();
-		  to.addProperty(p.copy(outputDoc));
+		  if(shouldAppendProperty(p)) {
+			  to.addProperty(p.copy(outputDoc));
+		  }
 	  }
 	  // Copy messages.
 	  Iterator<Message> allMessages = from.getAllMessages().iterator();
@@ -114,6 +118,21 @@ public void store() throws MappableException, UserException {
     copy(from, to);
    
   }
+  
+	private final boolean shouldAppendProperty(Property prop) {
+		
+		if ( suppressProperties == null ) {
+			return true;
+		}
+		
+		String [] suppressPropertiesList = suppressProperties.split(";");
+		for (int i = 0; i < suppressPropertiesList.length; i++) {
+			if ( suppressPropertiesList[i].equals(prop.getName())) {
+				return false;
+			}
+		}
+		return true;
+	}  
 
     @Override
 public void kill() {
@@ -136,6 +155,10 @@ public void kill() {
     this.copyMessageTo = name;
   }
 
+  public void setSuppressProperties(String suppressProperties) {
+      this.suppressProperties = suppressProperties;
+  }  
+  
 public boolean getUseOutputDoc() {
 	return useOutputDoc;
 }
@@ -150,6 +173,10 @@ public String getCopyMessageFrom() {
 
 public String getCopyMessageTo() {
 	return copyMessageTo;
+}
+
+public String getSuppressProperties() {
+	return suppressProperties;
 }
 
 }
