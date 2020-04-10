@@ -10,6 +10,7 @@
     <booleanAttribute key="default" value="true"/>
     <booleanAttribute key="default_auto_start" value="true"/>
     <intAttribute key="default_start_level" value="5"/>
+    <setAttribute key="deselected_workspace_bundles"/>
     <booleanAttribute key="includeOptional" value="false"/>
     <stringAttribute key="karaf_boot_features" value=""/>
     <booleanAttribute key="karaf_features_management" value="true"/>
@@ -18,15 +19,47 @@
     <booleanAttribute key="karaf_start_local_console" value="true"/>
     <booleanAttribute key="karaf_start_remote_console" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl en_US -console"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.osgi.service.http.port=9090 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Xmx800M -Djava.awt.headless=true -Dorg.osgi.framework.startlevel.beginning=1 -Dorg.slf4j.simpleLogger.defaultLogLevel=info -Dorg.osgi.framework.system.packages.extra=sun.misc"/>
     <stringAttribute key="pde.version" value="3.3"/>
+    <setAttribute key="selected_target_bundles">
+        <setEntry value="com.fasterxml.aalto-xml@default:default"/>
+        <setEntry value="org.apache.commons.codec@default:default"/>
+        <setEntry value="org.apache.felix.configadmin@default:default"/>
+        <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
+        <setEntry value="org.apache.felix.gogo.shell@default:default"/>
+        <setEntry value="org.apache.felix.metatype@default:default"/>
+        <setEntry value="org.apache.felix.scr*2.0.14.v20180822-1822@1:true"/>
+        <setEntry value="org.apache.felix.scr*2.1.18@1:true"/>
+        <setEntry value="org.apache.felix.webconsole.plugins.ds@default:default"/>
+        <setEntry value="org.apache.felix.webconsole.plugins.event@default:default"/>
+        <setEntry value="org.apache.felix.webconsole.plugins.memoryusage@default:default"/>
+        <setEntry value="org.apache.felix.webconsole.plugins.packageadmin@default:default"/>
+        <setEntry value="org.apache.felix.webconsole.plugins.scriptconsole@default:default"/>
+        <setEntry value="org.apache.felix.webconsole@default:default"/>
+        <setEntry value="org.apache.xbean.bundleutils@default:default"/>
+        <setEntry value="org.apache.xbean.finder@default:default"/>
+        <setEntry value="org.eclipse.osgi@-1:true"/>
+        <setEntry value="org.objectweb.asm.commons@default:default"/>
+        <setEntry value="org.objectweb.asm.tree@default:default"/>
+        <setEntry value="org.objectweb.asm@default:default"/>
+        <setEntry value="org.ops4j.pax.web.pax-web-api@default:default"/>
+        <setEntry value="org.ops4j.pax.web.pax-web-extender-whiteboard@default:default"/>
+        <setEntry value="org.ops4j.pax.web.pax-web-spi@default:default"/>
+        <setEntry value="slf4j.api@default:default"/>
+        <setEntry value="slf4j.simple@default:false"/>
+        <setEntry value="stax2-api@default:default"/>
+    </setAttribute>
+    <setAttribute key="selected_workspace_bundles">
+        <setEntry value="com.dexels.navajo.document.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.document@default:default"/>
+        <setEntry value="com.dexels.navajo.listeners.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.version@default:default"/>
+    </setAttribute>
     <booleanAttribute key="show_selected_only" value="true"/>
-    <stringAttribute key="target_bundles" value="com.fasterxml.aalto-xml@default:default,org.apache.commons.codec@default:default,org.apache.felix.configadmin@default:default,org.apache.felix.gogo.runtime*0.10.0.v201209301036@default:default,org.apache.felix.gogo.runtime*1.0.6@default:default,org.apache.felix.gogo.shell@default:default,org.apache.felix.metatype@default:default,org.apache.felix.scr@default:default,org.apache.felix.webconsole.plugins.ds@default:default,org.apache.felix.webconsole.plugins.event@default:default,org.apache.felix.webconsole.plugins.memoryusage@default:default,org.apache.felix.webconsole.plugins.packageadmin@default:default,org.apache.felix.webconsole.plugins.scriptconsole@default:default,org.apache.felix.webconsole@default:default,org.apache.xbean.bundleutils@default:default,org.apache.xbean.finder@default:default,org.eclipse.osgi@-1:true,org.objectweb.asm.commons@default:default,org.objectweb.asm.tree@default:default,org.objectweb.asm@default:default,org.ops4j.pax.web.pax-web-api@default:default,org.ops4j.pax.web.pax-web-extender-whiteboard@default:default,org.ops4j.pax.web.pax-web-spi@default:default,slf4j.api@default:default,slf4j.simple@default:false,stax2-api@default:default"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>
-    <stringAttribute key="workspace_bundles" value="com.dexels.navajo.document.stream@default:default,com.dexels.navajo.document@default:default,com.dexels.navajo.listeners.stream@default:default,com.dexels.navajo.version@default:default"/>
 </launchConfiguration>

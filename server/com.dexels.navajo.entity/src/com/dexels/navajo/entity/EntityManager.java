@@ -157,7 +157,7 @@ public class EntityManager {
 
     private void buildAndLoadScripts() throws Exception {
         if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-            logger.warn("Lazy compliation of entities!");
+            logger.warn("Lazy compilation of entities!");
             this.lazy = true;
             return;
         }

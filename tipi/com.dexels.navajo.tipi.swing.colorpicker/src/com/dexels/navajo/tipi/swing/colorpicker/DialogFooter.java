@@ -6,20 +6,27 @@
  * Copyright (c) 2011 by Jeremy Wood.
  * All rights reserved.
  *
- * The copyright of this software is owned by Jeremy Wood. 
- * You may not use, copy or modify this software, except in  
- * accordance with the license agreement you entered into with  
+ * The copyright of this software is owned by Jeremy Wood.
+ * You may not use, copy or modify this software, except in
+ * accordance with the license agreement you entered into with
  * Jeremy Wood. For details see accompanying license terms.
- * 
+ *
  * This software is probably, but not necessarily, discussed here:
  * https://javagraphics.java.net/
- * 
+ *
  * That site should also contain the most recent official version
  * of this software.  (See the SVN repository for more details.)
  */
 package com.dexels.navajo.tipi.swing.colorpicker;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
@@ -30,7 +37,17 @@ import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
@@ -97,14 +114,14 @@ import com.dexels.navajo.tipi.swing.colorpicker.util.JVM;
  * using the alt key usually activates the mnemonics in most Java look-and-feels, so just
  * because they aren't universally active doesn't mean you're hurting accessibility needs.)</LI></ul>
  */
-public class DialogFooter extends JPanel {	
+public class DialogFooter extends JPanel {
 	private static final long serialVersionUID = 1L;
-	
-	public static enum EscapeKeyBehavior {
+
+	public enum EscapeKeyBehavior {
 		/** This (the default behavior) does nothing when the escape key is pressed. */
-		DOES_NOTHING, 
-		
-		/** This triggers the cancel button when the escape key is pressed.  If no 
+		DOES_NOTHING,
+
+		/** This triggers the cancel button when the escape key is pressed.  If no
 		 * cancel button is present: this does nothing.
 		 * (Also on Macs command+period acts the same as the escape key.)
 		 * <p>This should only be used if the cancel button does not lead to data
@@ -112,8 +129,8 @@ public class DialogFooter extends JPanel {
 		 * the text in a dialog.
 		 */
 		TRIGGERS_CANCEL,
-		
-		/** This triggers the default button when the escape key is pressed.  If no 
+
+		/** This triggers the default button when the escape key is pressed.  If no
 		 * default button is defined: this does nothing.
 		 * (Also on Macs command+period acts the same as the escape key.)
 		 * <p>This should only be used if the default button does not lead to data
@@ -121,7 +138,7 @@ public class DialogFooter extends JPanel {
 		 * the text in a dialog.
 		 */
 		TRIGGERS_DEFAULT,
-		/** This triggers the non-default button when the escape key is pressed.  If no 
+		/** This triggers the non-default button when the escape key is pressed.  If no
 		 * non-default button is defined: this does nothing.
 		 * (Also on Macs command+period acts the same as the escape key.)
 		 * <p>This should only be used if the non-default button does not lead to data
@@ -130,19 +147,18 @@ public class DialogFooter extends JPanel {
 		 */
 		TRIGGERS_NONDEFAULT
 	}
-	
+
 	private static KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-	@SuppressWarnings("deprecation")
 	private static KeyStroke commandPeriodKey = KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
 
 	/** The localized strings used in dialogs. */
 	public static ResourceBundle strings = ResourceBundle.getBundle("resources/DialogFooter");
-	
+
 	/** This is the client property of buttons created in static methods by this class. */
 	public static String PROPERTY_OPTION = "DialogFooter.propertyOption";
-	
+
 	private static int uniqueCtr = 0;
-	
+
 	/** Used to indicate the user selected "Cancel" in a dialog.
 	 * <BR>Also this can be used as a dialog type, to indicate that "Cancel" should
 	 * be the only option presented to the user.
@@ -150,7 +166,7 @@ public class DialogFooter extends JPanel {
 	 * different, so you cannot substitute JOptionPane.CANCEL_OPTION for DialogFooter.CANCEL_OPTION.
 	 */
 	public static final int CANCEL_OPTION = uniqueCtr++;
-	
+
 	/** Used to indicate the user selected "OK" in a dialog.
 	 * <BR>Also this can be used as a dialog type, to indicate that "OK" should
 	 * be the only option presented to the user.
@@ -158,7 +174,7 @@ public class DialogFooter extends JPanel {
 	 * different, so you cannot substitute JOptionPane.OK_OPTION for DialogFooter.OK_OPTION.
 	 */
 	public static final int OK_OPTION = uniqueCtr++;
-	
+
 	/** Used to indicate the user selected "No" in a dialog.
 	 * <BR>Also this can be used as a dialog type, to indicate that "No" should
 	 * be the only option presented to the user.
@@ -166,7 +182,7 @@ public class DialogFooter extends JPanel {
 	 * different, so you cannot substitute JOptionPane.NO_OPTION for DialogFooter.NO_OPTION.
 	 */
 	public static final int NO_OPTION = uniqueCtr++;
-	
+
 	/** Used to indicate the user selected "Yes" in a dialog.
 	 * <BR>Also this can be used as a dialog type, to indicate that "Yes" should
 	 * be the only option presented to the user.
@@ -174,7 +190,7 @@ public class DialogFooter extends JPanel {
 	 * different, so you cannot substitute JOptionPane.YES_OPTION for DialogFooter.YES_OPTION.
 	 */
 	public static final int YES_OPTION = uniqueCtr++;
-	
+
 	/** Used to indicate a dialog should present a "Yes" and "No" option.
 	 * <P>Note the usage is similar to JOptionPane's, but the numerical value is
 	 * different, so you cannot substitute JOptionPane.YES_NO_OPTION for DialogFooter.YES_NO_OPTION.
@@ -201,7 +217,7 @@ public class DialogFooter extends JPanel {
 	 * This will be used for QOptionPaneCommon.FILE_EXTERNAL_CHANGES.
 	 */
 	public static final int DONT_SAVE_SAVE_OPTION = uniqueCtr++;
-	
+
 	/** Used to indicate the user selected "Save" in a dialog.
 	 * <BR>Also this can be used as a dialog type, to indicate that "Save"
 	 * should be the only option presented to the user.
@@ -225,7 +241,8 @@ public class DialogFooter extends JPanel {
 
     private static AncestorListener escapeTriggerListener = new AncestorListener() {
 
-		public void ancestorAdded(AncestorEvent event) {
+		@Override
+        public void ancestorAdded(AncestorEvent event) {
 			JButton button = (JButton)event.getComponent();
 			Window w = SwingUtilities.getWindowAncestor(button);
 			if(w instanceof RootPaneContainer) {
@@ -234,15 +251,15 @@ public class DialogFooter extends JPanel {
 				setRootPaneContainer(button, null);
 			}
 		}
-		
+
 		private void setRootPaneContainer(JButton button,RootPaneContainer c) {
 			RootPaneContainer lastContainer = (RootPaneContainer)button.getClientProperty("bric.footer.rpc");
 			if(lastContainer==c) return;
-			
+
 			if(lastContainer!=null) {
 				lastContainer.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).remove(escapeKey);
 				lastContainer.getRootPane().getActionMap().remove(escapeKey);
-				
+
 				if(JVM.isMac)
 					lastContainer.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).remove(commandPeriodKey);
 
@@ -251,26 +268,28 @@ public class DialogFooter extends JPanel {
 			if(c!=null) {
 				c.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(escapeKey, escapeKey);
 				c.getRootPane().getActionMap().put(escapeKey, new ClickAction(button));
-				
+
 				if(JVM.isMac)
 					c.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(commandPeriodKey, escapeKey);
 			}
 			button.putClientProperty("bric.footer.rpc", c);
 		}
 
-		public void ancestorMoved(AncestorEvent event) {
+		@Override
+        public void ancestorMoved(AncestorEvent event) {
 			ancestorAdded(event);
 		}
 
-		public void ancestorRemoved(AncestorEvent event) {
+		@Override
+        public void ancestorRemoved(AncestorEvent event) {
 			ancestorAdded(event);
-			
+
 		}
-    	
+
     };
-	
+
     /** Creates a new "Cancel" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -284,19 +303,19 @@ public class DialogFooter extends JPanel {
     		makeEscapeKeyActivate(button);
     	return button;
     }
-    
+
     /** This guarantees that when the escape key is pressed
      * (if its parent window has the keyboard focus) this button
      * is clicked.
      * <p>It is assumed that no two buttons will try to consume
      * escape keys in the same window.
-     * 
+     *
      * @param button the button to trigger when the escape key is pressed.
      */
     public static void makeEscapeKeyActivate(AbstractButton button) {
 		button.addAncestorListener(escapeTriggerListener);
     }
-    
+
     /** Creates a new "OK" button that is not triggered by the escape key.
      */
     public static JButton createOKButton() {
@@ -304,7 +323,7 @@ public class DialogFooter extends JPanel {
     }
 
     /** Creates a new "OK" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -318,15 +337,15 @@ public class DialogFooter extends JPanel {
     		makeEscapeKeyActivate(button);
     	return button;
     }
-    
+
     /** Creates a new "Yes" button that is not triggered by the escape key.
      */
     public static JButton createYesButton() {
     	return createYesButton(false);
     }
-    
+
     /** Creates a new "Yes" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -342,14 +361,14 @@ public class DialogFooter extends JPanel {
     }
 
     /** Creates a new "No" button that is not triggered by the escape key.
-     * 
+     *
      */
     public static JButton createNoButton() {
     	return createNoButton(false);
     }
 
     /** Creates a new "No" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -363,7 +382,7 @@ public class DialogFooter extends JPanel {
     		makeEscapeKeyActivate(button);
     	return button;
     }
-    
+
     /** Creates a new "Save" button that is not triggered by the escape key.
      */
     public static JButton createSaveButton() {
@@ -371,7 +390,7 @@ public class DialogFooter extends JPanel {
     }
 
     /** Creates a new "Save" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -385,7 +404,7 @@ public class DialogFooter extends JPanel {
     		makeEscapeKeyActivate(button);
     	return button;
     }
-    
+
     /** Creates a new "Don't Save" button that is not triggered by the escape key.
      */
     public static JButton createDontSaveButton() {
@@ -393,7 +412,7 @@ public class DialogFooter extends JPanel {
     }
 
     /** Creates a new "Don't Save" button.
-     * 
+     *
      * @param escapeKeyIsTrigger if true then pressing the escape
      * key will trigger this button.  (Also on Macs command-period will act
      * like the escape key.)  This should be <code>false</code> if this button
@@ -410,12 +429,12 @@ public class DialogFooter extends JPanel {
     		makeEscapeKeyActivate(button);
     	return button;
     }
-    
+
 
     /** Creates a <code>DialogFooter</code> and assigns a default button.
      * The default button is the first button listed in the button type.  For example,
      * a YES_NO_CANCEL_OPTION dialog will make the YES_OPTION the default button.
-     * 
+     *
      * @param options one of the OPTIONS fields in this class, such as YES_NO_OPTION or CANCEL_OPTION.
      * @param escapeKeyBehavior one of the EscapeKeyBehavior options in this class.
      * @return a <code>DialogFooter</code>
@@ -423,12 +442,12 @@ public class DialogFooter extends JPanel {
     public static DialogFooter createDialogFooter(int options,EscapeKeyBehavior escapeKeyBehavior) {
     	return createDialogFooter(new JComponent[] {}, options, escapeKeyBehavior);
     }
-    
+
     /** Creates a <code>DialogFooter</code> and assigns a default button.
      * The default button is the first button listed in the button type.  For example,
      * a YES_NO_CANCEL_OPTION dialog will make the YES_OPTION the default button.
      * <P>To use a different default button, use the other <code>createDialogFooter()</code> method.
-     * 
+     *
      * @param leftComponents the components to put on the left side of the footer.
      * <P>The Apple guidelines state that this area is reserved for
      * "button[s] that affect the contents of the dialog itself, such as Reset [or Help]".
@@ -462,7 +481,7 @@ public class DialogFooter extends JPanel {
     	}
     	throw new IllegalArgumentException("unrecognized option type ("+options+")");
     }
-    
+
 
     /** Creates a <code>DialogFooter</code>.
      * @param leftComponents the components to put on the left side of the footer.
@@ -482,7 +501,7 @@ public class DialogFooter extends JPanel {
     	JButton okButton = null;
     	JButton saveButton = null;
     	JButton yesButton = null;
-    	
+
     	if(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_NONDEFAULT) {
     		int buttonCount = 1;
     		if(options==OK_CANCEL_OPTION || options==YES_NO_OPTION || options==DONT_SAVE_SAVE_OPTION) {
@@ -497,14 +516,14 @@ public class DialogFooter extends JPanel {
     			throw new IllegalArgumentException("request for escape key to map to "+buttonCount+" buttons.");
     		}
     	}
-    	
-    	if(options==CANCEL_OPTION || 
-    			options==OK_CANCEL_OPTION || 
+
+    	if(options==CANCEL_OPTION ||
+    			options==OK_CANCEL_OPTION ||
     			options==SAVE_DONT_SAVE_CANCEL_OPTION ||
     			options==YES_NO_CANCEL_OPTION) {
     		cancelButton = createCancelButton( escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_CANCEL ||
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_NONDEFAULT && defaultButton!=CANCEL_OPTION) ||
-					(defaultButton==CANCEL_OPTION && 
+					(defaultButton==CANCEL_OPTION &&
 							escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_DEFAULT) );
     	}
     	if(options==DONT_SAVE_OPTION || options==SAVE_DONT_SAVE_CANCEL_OPTION || options==DONT_SAVE_SAVE_OPTION) {
@@ -517,7 +536,7 @@ public class DialogFooter extends JPanel {
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_NONDEFAULT && defaultButton!=NO_OPTION) ||
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_DEFAULT && defaultButton==NO_OPTION ));
     	}
-    	if(options==OK_OPTION || 
+    	if(options==OK_OPTION ||
     			options==OK_CANCEL_OPTION) {
     		okButton = createOKButton(
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_NONDEFAULT && defaultButton!=OK_OPTION) ||
@@ -533,7 +552,7 @@ public class DialogFooter extends JPanel {
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_NONDEFAULT && defaultButton!=YES_OPTION) ||
     				(escapeKeyBehavior==EscapeKeyBehavior.TRIGGERS_DEFAULT && defaultButton==YES_OPTION ));
     	}
-    	
+
     	if(options==CANCEL_OPTION) {
     		dismissControls = new JButton[] { cancelButton };
     	} else if(options==DONT_SAVE_OPTION) {
@@ -560,7 +579,7 @@ public class DialogFooter extends JPanel {
     	} else {
     		throw new IllegalArgumentException("Unrecognized dialog type.");
     	}
-    	
+
 
     	JButton theDefaultButton = null;
     	for(int a = 0; a<dismissControls.length; a++) {
@@ -568,7 +587,7 @@ public class DialogFooter extends JPanel {
     		if(i==defaultButton)
     			theDefaultButton = dismissControls[a];
     	}
-    	
+
     	DialogFooter footer = new DialogFooter(leftComponents,dismissControls,true,theDefaultButton);
     	return footer;
     }
@@ -578,26 +597,27 @@ public class DialogFooter extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		JButton button;
-		
+
 		public ClickAction(JButton button) {
 			this.button = button;
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			button.doClick();
 		}
 	}
-	
+
 	/** This client property is used to impose a meta-shortcut to click a button.
 	 * This should map to a Character.
 	 */
 	public static final String PROPERTY_META_SHORTCUT = "Dialog.meta.shortcut";
-	
+
 	/** This client property is used to indicate a button is "unsafe".  Apple
 	 * guidelines state that "unsafe" buttons (such as "discard changes") should
 	 * be several pixels away from "safe" buttons.
 	 */
 	public static final String PROPERTY_UNSAFE = "Dialog.Unsafe.Action";
-	
+
 	/** This indicates whether the dismiss controls should be displayed in reverse
 	 * order.  When you construct a DialogFooter, the dismiss controls should be listed
 	 * in order of priority (with the most preferred listed first, the least preferred last).
@@ -610,7 +630,7 @@ public class DialogFooter extends JPanel {
 	 * as the first button in the set."
 	 */
 	public static boolean reverseButtonOrder = JVM.isMac;
-	
+
 	protected JComponent[] leftControls;
 	protected JComponent[] dismissControls;
 	protected JComponent lastSelectedComponent;
@@ -618,9 +638,10 @@ public class DialogFooter extends JPanel {
 	protected JButton defaultButton = null;
 	int buttonWidthPadding, buttonHeightPadding, buttonGap, unsafeButtonGap;
 	boolean fillWidth = false;
-	
+
 	private final ActionListener innerActionListener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			lastSelectedComponent = (JComponent)e.getSource();
 			fireActionListeners(e);
 
@@ -628,7 +649,7 @@ public class DialogFooter extends JPanel {
 				closeDialogAndDisposeAction.actionPerformed(e);
 		}
 	};
-	
+
 	/** Clones an array of JComponents */
 	private static JComponent[] copy(JComponent[] c) {
 		JComponent[] newArray = new JComponent[c.length];
@@ -640,18 +661,18 @@ public class DialogFooter extends JPanel {
 
 	/** This addresses code that must involve the parent RootPane and Window. */
 	private final HierarchyListener hierarchyListener = new HierarchyListener() {
-		public void hierarchyChanged(HierarchyEvent e)
+		@Override
+        public void hierarchyChanged(HierarchyEvent e)
 		{
 			processRootPane();
 			processWindow();
 		}
-		@SuppressWarnings("deprecation")
 		private void processRootPane() {
 			JRootPane root = SwingUtilities.getRootPane(DialogFooter.this);
 			if(root==null) return;
 			root.setDefaultButton(defaultButton);
 
-			
+
 			for(int a = 0; a<dismissControls.length; a++) {
 				if(dismissControls[a] instanceof JButton) {
 					Character ch = (Character)dismissControls[a].getClientProperty(PROPERTY_META_SHORTCUT);
@@ -662,21 +683,21 @@ public class DialogFooter extends JPanel {
 					}
 				}
 			}
-		} 
+		}
 		private void processWindow() {
 			Window window = SwingUtilities.getWindowAncestor(DialogFooter.this);
 			if(window==null) return;
-			
+
 			window.setFocusTraversalPolicy(new DelegateFocusTraversalPolicy(window.getFocusTraversalPolicy()) {
-				
+
 				@Override
 				public Component getDefaultComponent(Container focusCycleRoot) {
 					/** If the default component would naturally be in the footer *anyway*:
 					 * Make sure the default component is the default button.
-					 * 
+					 *
 					 * However if the default component lies elsewhere (a text field or
 					 * check box in the dialog): that should retain the default focus.
-					 * 
+					 *
 					 */
 					Component defaultComponent = super.getDefaultComponent(focusCycleRoot);
 					if(DialogFooter.this.isAncestorOf(defaultComponent)) {
@@ -689,9 +710,9 @@ public class DialogFooter extends JPanel {
 			} );
 		}
 	};
-	
+
 	/** Create a new <code>DialogFooter</code>.
-	 * 
+	 *
 	 * @param leftControls the controls on the left side of this dialog, such as a help component, or a "Reset" button.
 	 * @param dismissControls the controls on the right side of this dialog that should dismiss this dialog.  Also
 	 * called "action" buttons.
@@ -712,7 +733,7 @@ public class DialogFooter extends JPanel {
 		this.leftControls = copy(leftControls);
 		this.dismissControls = copy(dismissControls);
 		this.defaultButton = defaultButton;
-		
+
 		for(int a = 0; a<dismissControls.length; a++) {
 			dismissControls[a].putClientProperty("dialog.footer.index", Integer.valueOf(a));
 			if(dismissControls[a] instanceof JButton) {
@@ -728,16 +749,16 @@ public class DialogFooter extends JPanel {
 				}
 			}
 		}
-		
+
 		addHierarchyListener(hierarchyListener);
-		
+
 		for(int a = 0; a<leftControls.length; a++) {
 			addFocusArrowListener(leftControls[a]);
 		}
 		for(int a = 0; a<dismissControls.length; a++) {
 			addFocusArrowListener(dismissControls[a]);
 		}
-		
+
 		if(JVM.isMac) {
 			setButtonGap(12);
 		} else if(JVM.isVista) {
@@ -746,10 +767,10 @@ public class DialogFooter extends JPanel {
 			setButtonGap(6);
 		}
 		setUnsafeButtonGap(24);
-		
+
 		installGUI();
 	}
-	
+
 	public void setInternalButtonPadding(int widthPadding,int heightPadding) {
 		if(buttonWidthPadding==widthPadding && buttonHeightPadding==heightPadding) {
 			return;
@@ -758,32 +779,32 @@ public class DialogFooter extends JPanel {
 		buttonHeightPadding = heightPadding;
 		installGUI();
 	}
-	
+
 	public void setButtonGap(int gap) {
 		if(buttonGap==gap)
 			return;
 		buttonGap = gap;
 		installGUI();
 	}
-	
+
 	public void setFillWidth(boolean b) {
 		if(fillWidth==b)
 			return;
-		
+
 		this.fillWidth = b;
 		installGUI();
 	}
-	
+
 	public void setUnsafeButtonGap(int unsafeGap) {
 		if(unsafeButtonGap==unsafeGap)
 			return;
 		unsafeButtonGap = unsafeGap;
 		installGUI();
 	}
-	
+
 	private void installGUI() {
 		removeAll();
-		
+
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0; c.gridy = 0;
 		c.weightx = 0; c.weighty = 1;
@@ -799,7 +820,7 @@ public class DialogFooter extends JPanel {
 		c.insets = new Insets(0,0,0,0);
 		JPanel fluff = new JPanel();
 		fluff.setOpaque(false);
-		
+
 		if(leftControls.length>0) {
 			add(fluff,c); //fluff to enforce the left and right sides
 			c.gridx++;
@@ -827,7 +848,7 @@ public class DialogFooter extends JPanel {
 				}
 			}
 		}
-		
+
 		c.ipadx = buttonWidthPadding;
 		c.ipady = buttonHeightPadding;
 		c.insets = new Insets(0,0,0,0);
@@ -853,17 +874,17 @@ public class DialogFooter extends JPanel {
 			c.weightx = 0;
 			c.gridx++;
 		}
-		
+
 		for(int a = 0; a<safeButtons.length; a++) {
 			JComponent comp = reverseButtonOrder ?
 					safeButtons[safeButtons.length-1-a] :
 					safeButtons[a];
-					
+
 			add(comp, c);
 			c.gridx++;
 			c.insets.left = buttonGap;
 		}
-				
+
 		normalizeButtons(unsafeButtons);
 		normalizeButtons(safeButtons);
 	}
@@ -879,12 +900,12 @@ public class DialogFooter extends JPanel {
 		//Add our own:
 		jc.addKeyListener(new FocusArrowListener());
 	}
-	
+
 	/** This takes a set of buttons and gives them all the width/height
 	 * of the largest button among them.
 	 * <P>(More specifically, this sets the <code>preferredSize</code>
 	 * of each button to the largest preferred size in the list of buttons.
-	 * 
+	 *
 	 * @param buttons an array of buttons.
 	 */
 	public static void normalizeButtons(JButton[] buttons) {
@@ -917,17 +938,17 @@ public class DialogFooter extends JPanel {
 		if(b==null) b = Boolean.FALSE;
 		return b.booleanValue();
 	}
-	
+
 	/** This sets the unsafe flag for buttons.
 	 */
 	public static void setUnsafe(JComponent c,boolean b) {
 		c.putClientProperty(PROPERTY_UNSAFE, Boolean.valueOf(b));
 	}
-	
+
 	private Vector<ActionListener> listeners;
-	
+
 	/** Adds an <code>ActionListener</code>.
-	 * 
+	 *
 	 * @param l this listener will be notified when a <code>dismissControl</code> is activated.
 	 */
 	public void addActionListener(ActionListener l) {
@@ -936,14 +957,14 @@ public class DialogFooter extends JPanel {
 			return;
 		listeners.add(l);
 	}
-	
+
 	/** Removes an <code>ActionListener</code>.
 	 */
 	public void removeActionListener(ActionListener l) {
 		if(listeners==null) return;
 		listeners.remove(l);
 	}
-	
+
 	private void fireActionListeners(ActionEvent e) {
 		if(listeners==null) return;
 		for(int a = 0; a<listeners.size(); a++) {
@@ -955,7 +976,7 @@ public class DialogFooter extends JPanel {
 			}
 		}
 	}
-	
+
 	/** Returns the component last used to dismiss the dialog.
 	 * <P>Note the components on the left side of this footer
 	 * (such as a "Help" button or a "Reset Preferences" button)
@@ -967,9 +988,9 @@ public class DialogFooter extends JPanel {
 	public JComponent getLastSelectedComponent() {
 		return lastSelectedComponent;
 	}
-	
+
 	/** Finds a certain type of button, if it is available.
-	 * 
+	 *
 	 * @param buttonType of the options in this class (such as YES_OPTION or CANCEL_OPTION)
 	 * @return the button that maps to that option, or null if no such button was found.
 	 */
@@ -989,14 +1010,14 @@ public class DialogFooter extends JPanel {
 	}
 
 	/** Returns true if a certain button type is available in this footer.
-	 * 
+	 *
 	 * @param buttonType of the options in this class (such as YES_OPTION or CANCEL_OPTION)
 	 * @return true if a button corresponding to the option provided exists.
 	 */
 	public boolean containsButton(int buttonType) {
 		return getButton(buttonType)!=null;
 	}
-	
+
 	/** This resets the value of <code>lastSelectedComponent</code> to null.
 	 * <P>If this footer is recycled in different dialogs, then you may
 	 * need to nullify this value for <code>getLastSelectedComponent()</code>
@@ -1005,12 +1026,12 @@ public class DialogFooter extends JPanel {
 	public void reset() {
 		lastSelectedComponent = null;
 	}
-	
+
 	/** Returns a copy of the <code>dismissControls</code> array used to construct this footer. */
 	public JComponent[] getDismissControls() {
 		return copy(dismissControls);
 	}
-	
+
 	public void setAutoClose(boolean b) {
 		autoClose = b;
 	}
@@ -1019,7 +1040,7 @@ public class DialogFooter extends JPanel {
 	public JComponent[] getLeftControls() {
 		return copy(leftControls);
 	}
-	
+
 	/** This action takes the Window associated with the source of this event,
 	 * hides it, and then calls <code>dispose()</code> on it.
 	 * <P>(This will not throw an exception if there is no parent window,
@@ -1028,7 +1049,8 @@ public class DialogFooter extends JPanel {
 	public static Action closeDialogAndDisposeAction = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			Component src = (Component)e.getSource();
 			Container parent = src.getParent();
 			while(parent!=null) {

@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: com.dexels.navajo.resource.jdbc.mysql
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver for MySql database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.mysql
@@ -14,3 +15,4 @@ Require-Bundle: com.mysql.jdbc;bundle-version="[5.1.18,6.0.0)"
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.resource.jdbc.mysql
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

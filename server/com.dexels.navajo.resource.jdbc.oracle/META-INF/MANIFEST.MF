@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: com.dexels.navajo.resource.jdbc.oracle
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver for Oracle database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.oracle

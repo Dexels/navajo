@@ -1,27 +1,125 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.EquinoxLauncher">
-<booleanAttribute key="append.args" value="true"/>
-<booleanAttribute key="automaticAdd" value="true"/>
-<booleanAttribute key="automaticValidate" value="true"/>
-<stringAttribute key="bootstrap" value=""/>
-<stringAttribute key="checked" value="[NONE]"/>
-<booleanAttribute key="clearConfig" value="true"/>
-<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/OSGiConnectionBroker"/>
-<booleanAttribute key="default" value="true"/>
-<booleanAttribute key="default_auto_start" value="true"/>
-<intAttribute key="default_start_level" value="4"/>
-<stringAttribute key="deselected_workspace_plugins" value="com.dexels.navajo.birt.push,com.dexels.navajo.client.async,com.dexels.navajo.enterprise,com.dexels.navajo.enterprise.adapters,com.dexels.navajo.enterprise.listeners,com.dexels.navajo.function,com.dexels.navajo.kml,com.dexels.navajo.listeners.continuations,com.dexels.navajo.osgi.console,com.dexels.navajo.queuemanager,com.dexels.navajo.rhino,com.dexels.navajo.svg,com.dexels.navajo.swing.editor,com.dexels.navajo.tipi,com.dexels.navajo.tipi.flickr,com.dexels.navajo.tipi.mail,com.dexels.navajo.tipi.rss,com.dexels.navajo.tipi.ruby,com.dexels.navajo.tipi.swing,com.dexels.navajo.tipi.swing.application,com.dexels.navajo.tipi.swing.client,com.dexels.navajo.tipi.swing.cobra,com.dexels.navajo.tipi.swing.deps,com.dexels.navajo.tipi.swing.docking,com.dexels.navajo.tipi.swing.editor,com.dexels.navajo.tipi.swing.geo,com.dexels.navajo.tipi.swing.mig,com.dexels.navajo.tipi.swing.rich,com.dexels.navajo.tipi.swing.rich.client,com.dexels.navajo.tipi.swing.substance,com.dexels.navajo.tipi.swing.swingx,com.dexels.navajo.tipi.vaadin,com.dexels.navajo.twitter,com.dexels.navajo.wsdl"/>
-<booleanAttribute key="includeOptional" value="false"/>
-<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
-<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true"/>
-<stringAttribute key="pde.version" value="3.3"/>
-<booleanAttribute key="show_selected_only" value="false"/>
-<stringAttribute key="target_bundles" value="ch.qos.logback.classic@default:default,ch.qos.logback.core@default:default,com.mysql.jdbc@default:default,org.eclipse.equinox.ds@1:true,org.eclipse.equinox.util@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.h2@default:default"/>
-<booleanAttribute key="tracing" value="false"/>
-<booleanAttribute key="useCustomFeatures" value="false"/>
-<booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.dexels.config.runtime@default:default,com.dexels.navajo.adapters.binarystore@default:default,com.dexels.navajo.adapters.eventemitter@default:default,com.dexels.navajo.adapters.resource@default:default,com.dexels.navajo.adapters.stream@default:default,com.dexels.navajo.adapters@default:default,com.dexels.navajo.api@default:default,com.dexels.navajo.article@default:default,com.dexels.navajo.authentication.api@default:default,com.dexels.navajo.client.async.apache@default:default,com.dexels.navajo.client.impl.apache@default:default,com.dexels.navajo.client.impl.javanet@default:default,com.dexels.navajo.client.nql@default:default,com.dexels.navajo.client@default:default,com.dexels.navajo.compiler.tsl@default:default,com.dexels.navajo.core@default:default,com.dexels.navajo.dev.ant@default:default,com.dexels.navajo.dev.console@default:default,com.dexels.navajo.dev.navadoc@default:default,com.dexels.navajo.document.json@default:default,com.dexels.navajo.document.stream@default:default,com.dexels.navajo.document@default:default,com.dexels.navajo.elasticsearch@default:default,com.dexels.navajo.enterprise.dbreplication.web@default:default,com.dexels.navajo.enterprise.dbreplication@default:default,com.dexels.navajo.enterprise.dev.console@default:default,com.dexels.navajo.enterprise.hazelcast@default:default,com.dexels.navajo.enterprise.listeners.deps@default:default,com.dexels.navajo.enterprise.logstore@default:default,com.dexels.navajo.enterprise.lucene@default:default,com.dexels.navajo.enterprise.mongoreplication@default:default,com.dexels.navajo.enterprise.monitor@default:default,com.dexels.navajo.enterprise.oauth.mongodb@default:default,com.dexels.navajo.enterprise.pubsub@default:default,com.dexels.navajo.enterprise.soap@default:default,com.dexels.navajo.enterprise.tipi.calendar@default:default,com.dexels.navajo.entity@default:default,com.dexels.navajo.example.adapter@default:default,com.dexels.navajo.example.listener@default:default,com.dexels.navajo.fileuploadservlet@default:default,com.dexels.navajo.function.pdf@default:default,com.dexels.navajo.geo@default:default,com.dexels.navajo.instance.factory@default:default,com.dexels.navajo.listeners.external@default:default,com.dexels.navajo.listeners.stream@default:default,com.dexels.navajo.listeners@default:default,com.dexels.navajo.log@default:default,com.dexels.navajo.mgmt@default:default,com.dexels.navajo.mongo.accessstore@default:default,com.dexels.navajo.mongo@default:default,com.dexels.navajo.proxy@default:default,com.dexels.navajo.resource.binarystore@default:default,com.dexels.navajo.resource.http@default:default,com.dexels.navajo.resource.jdbc.h2@default:default,com.dexels.navajo.resource.jdbc.mysql@default:default,com.dexels.navajo.resource.jdbc.oracle@default:default,com.dexels.navajo.resource.jdbc.postgresql@default:default,com.dexels.navajo.resource.mail@default:default,com.dexels.navajo.resource.manager@default:default,com.dexels.navajo.resource.sftp@default:default,com.dexels.navajo.resource.swift@default:default,com.dexels.navajo.resource.test@default:default,com.dexels.navajo.resource@default:default,com.dexels.navajo.rhino.continuations@default:default,com.dexels.navajo.server.logback@default:default,com.dexels.navajo.stream.example@default:default,com.dexels.navajo.test.remote@default:default,com.dexels.navajo.tester.js@default:default,com.dexels.navajo.tipi.css.tkui@default:default,com.dexels.navajo.tipi.css@default:default,com.dexels.navajo.tipi.echo.client@default:default,com.dexels.navajo.tipi.echo@default:default,com.dexels.navajo.tipi.swing.charting@default:default,com.dexels.navajo.tipi.swing.colorpicker@default:default,com.dexels.navajo.tipi.swing.jxlayer@default:default,com.dexels.navajo.tipi.vaadin.touch@default:default,com.dexels.navajo.tipi.websocket@default:default,com.dexels.navajo.utilities@default:default,com.dexels.navajo.version@default:default,com.dexels.navajo.webconsole.branding@default:false,com.sportlink.aaa@default:default,com.sportlink.adapters@default:default,com.sportlink.comp@default:default,com.sportlink.crystal@default:default,com.sportlink.download@default:default,com.sportlink.financial.adapters@default:default,com.sportlink.financial.functions@default:default,com.sportlink.nevobo.dps@default:default,com.sportlink.oauth@default:default,com.sportlink.optimizepool@default:default,com.sportlink.renflex@default:default,com.sportlink.teamorder@default:default,com.sportlink.tensing@default:default,com.sportlink.tipi.facilityoccupation@default:default"/>
+    <booleanAttribute key="append.args" value="true"/>
+    <booleanAttribute key="automaticAdd" value="true"/>
+    <booleanAttribute key="automaticValidate" value="true"/>
+    <stringAttribute key="bootstrap" value=""/>
+    <stringAttribute key="checked" value="[NONE]"/>
+    <booleanAttribute key="clearConfig" value="true"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/OSGiConnectionBroker"/>
+    <booleanAttribute key="default" value="true"/>
+    <booleanAttribute key="default_auto_start" value="true"/>
+    <intAttribute key="default_start_level" value="4"/>
+    <setAttribute key="deselected_workspace_bundles">
+        <setEntry value="com.dexels.navajo.birt.push"/>
+        <setEntry value="com.dexels.navajo.client.async"/>
+        <setEntry value="com.dexels.navajo.function"/>
+        <setEntry value="com.dexels.navajo.kml"/>
+        <setEntry value="com.dexels.navajo.listeners.continuations"/>
+        <setEntry value="com.dexels.navajo.osgi.console"/>
+        <setEntry value="com.dexels.navajo.queuemanager"/>
+        <setEntry value="com.dexels.navajo.swing.editor"/>
+        <setEntry value="com.dexels.navajo.tipi"/>
+        <setEntry value="com.dexels.navajo.tipi.mail"/>
+        <setEntry value="com.dexels.navajo.tipi.rss"/>
+        <setEntry value="com.dexels.navajo.tipi.ruby"/>
+        <setEntry value="com.dexels.navajo.tipi.swing"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.application"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.client"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.cobra"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.deps"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.docking"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.editor"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.geo"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.mig"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.rich"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.rich.client"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.substance"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.swingx"/>
+        <setEntry value="com.dexels.navajo.tipi.vaadin"/>
+        <setEntry value="com.dexels.navajo.twitter"/>
+    </setAttribute>
+    <booleanAttribute key="includeOptional" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true"/>
+    <stringAttribute key="pde.version" value="3.3"/>
+    <setAttribute key="selected_target_bundles">
+        <setEntry value="com.mysql.jdbc@default:default"/>
+        <setEntry value="org.eclipse.equinox.ds@1:true"/>
+        <setEntry value="org.eclipse.equinox.util@default:default"/>
+        <setEntry value="org.eclipse.osgi.services@default:default"/>
+        <setEntry value="org.eclipse.osgi@-1:true"/>
+    </setAttribute>
+    <setAttribute key="selected_workspace_bundles">
+        <setEntry value="com.dexels.config.runtime@default:default"/>
+        <setEntry value="com.dexels.navajo.adapters.binarystore@default:default"/>
+        <setEntry value="com.dexels.navajo.adapters.eventemitter@default:default"/>
+        <setEntry value="com.dexels.navajo.adapters.resource@default:default"/>
+        <setEntry value="com.dexels.navajo.adapters.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.adapters@default:default"/>
+        <setEntry value="com.dexels.navajo.api@default:default"/>
+        <setEntry value="com.dexels.navajo.article@default:default"/>
+        <setEntry value="com.dexels.navajo.authentication.api@default:default"/>
+        <setEntry value="com.dexels.navajo.client.async.jetty@default:default"/>
+        <setEntry value="com.dexels.navajo.client.impl.apache@default:default"/>
+        <setEntry value="com.dexels.navajo.client.impl.javanet@default:default"/>
+        <setEntry value="com.dexels.navajo.client.nql@default:default"/>
+        <setEntry value="com.dexels.navajo.client.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.client@default:default"/>
+        <setEntry value="com.dexels.navajo.compiler.tsl@default:default"/>
+        <setEntry value="com.dexels.navajo.core@default:default"/>
+        <setEntry value="com.dexels.navajo.dev.ant@default:default"/>
+        <setEntry value="com.dexels.navajo.dev.console@default:default"/>
+        <setEntry value="com.dexels.navajo.document.json@default:default"/>
+        <setEntry value="com.dexels.navajo.document.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.document@default:default"/>
+        <setEntry value="com.dexels.navajo.elasticsearch@default:default"/>
+        <setEntry value="com.dexels.navajo.entity@default:default"/>
+        <setEntry value="com.dexels.navajo.example.adapter@default:default"/>
+        <setEntry value="com.dexels.navajo.example.listener@default:default"/>
+        <setEntry value="com.dexels.navajo.fileuploadservlet@default:default"/>
+        <setEntry value="com.dexels.navajo.function.pdf@default:default"/>
+        <setEntry value="com.dexels.navajo.instance.factory@default:default"/>
+        <setEntry value="com.dexels.navajo.listeners.external@default:default"/>
+        <setEntry value="com.dexels.navajo.listeners.stream@default:default"/>
+        <setEntry value="com.dexels.navajo.listeners@default:default"/>
+        <setEntry value="com.dexels.navajo.mgmt@default:default"/>
+        <setEntry value="com.dexels.navajo.proxy@default:default"/>
+        <setEntry value="com.dexels.navajo.reactive.subscriber@default:default"/>
+        <setEntry value="com.dexels.navajo.reactive@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.binarystore@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.http@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.jdbc.mssql@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.jdbc.mysql@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.jdbc.oracle@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.jdbc.postgresql@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.mail@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.sftp@default:default"/>
+        <setEntry value="com.dexels.navajo.resource.swift@default:default"/>
+        <setEntry value="com.dexels.navajo.resource@default:default"/>
+        <setEntry value="com.dexels.navajo.scala.navajoscala@default:default"/>
+        <setEntry value="com.dexels.navajo.scala.scriptcompiler@default:default"/>
+        <setEntry value="com.dexels.navajo.test.remote@default:default"/>
+        <setEntry value="com.dexels.navajo.tester.js@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.css.tkui@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.css@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.echo.client@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.echo@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.charting@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.colorpicker@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.jxlayer@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.swing.pdf@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.vaadin.touch@default:default"/>
+        <setEntry value="com.dexels.navajo.tipi.websocket@default:default"/>
+        <setEntry value="com.dexels.navajo.utilities@default:default"/>
+        <setEntry value="com.dexels.navajo.version@default:default"/>
+        <setEntry value="com.dexels.navajo.webconsole.branding@default:false"/>
+    </setAttribute>
+    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="tracing" value="false"/>
+    <booleanAttribute key="useCustomFeatures" value="false"/>
+    <booleanAttribute key="useDefaultConfigArea" value="true"/>
 </launchConfiguration>

@@ -10,10 +10,8 @@ import java.util.Set;
 
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
-import com.dexels.navajo.reactive.api.ReactiveBuildContext;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.ReactiveTransformerFactory;
@@ -53,7 +51,7 @@ public class CallRemoteTransformerFactory implements ReactiveTransformerFactory 
 		r.put("password", Property.STRING_PROPERTY);
 		return Optional.of(r);
 	}
-	
+
 	@Override
 	public Set<Type> inType() {
 		return new HashSet<>(Arrays.asList(new Type[] {Type.EVENTSTREAM})) ;
@@ -69,5 +67,5 @@ public class CallRemoteTransformerFactory implements ReactiveTransformerFactory 
 		return "call";
 	}
 
-	
+
 }

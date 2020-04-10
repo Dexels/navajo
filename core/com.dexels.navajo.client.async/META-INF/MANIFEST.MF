@@ -17,4 +17,4 @@ Import-Package: com.dexels.navajo.client,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

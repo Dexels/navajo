@@ -20,13 +20,8 @@ import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfigInterface;
-/**
- * @deprecated
- * @author frank
- *
- */
+
 @Deprecated
 public class AdminMap implements Mappable {
 
@@ -168,7 +163,7 @@ public class AdminMap implements Mappable {
 
     /**
      * Some admin functions.
-     * 
+     *
      * @param datasourceName
      * @throws MappableException
      * @throws UserException

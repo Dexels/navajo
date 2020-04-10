@@ -13,19 +13,16 @@ public class SimpleAAAQuerier implements AAAQuerier {
 
 	private class User {
 		public final String username;
-		public final String password;
 		public final int userID;
-	
+
 		User(String username, String password, int userID) {
 			this.username = username;
-			this.password = password;
 			this.userID = userID;
 		}
 	}
-	public SimpleAAAQuerier() {
-		// ----
-	}
+
 	private final Map<String,User> usersByUserName = new HashMap<>();
+
 	private final Map<Integer,User> usersByUserId = new HashMap<>();
 
 	@Override
@@ -61,12 +58,12 @@ public class SimpleAAAQuerier implements AAAQuerier {
     		throw new AuthorizationException(true, false, requestedUser, "Unknown user: "+requestedUser);
     	}
     }
-    
+
     /**
-     * Skips authentication 
+     * Skips authentication
      */
     public void authorize(Access access, Integer userid) throws AuthorizationException {
-    	
+
     }
 
 

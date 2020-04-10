@@ -27,3 +27,4 @@ Import-Package: com.dexels.navajo.adapter.sqlmap,
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.pdf.functions
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -6,3 +6,4 @@ Bundle-Vendor: Dexels
 Import-Package: org.apache.tools.ant,
  org.apache.tools.ant.taskdefs,
  org.apache.tools.ant.types
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

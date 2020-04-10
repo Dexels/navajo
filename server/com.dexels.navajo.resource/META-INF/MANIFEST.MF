@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: com.dexels.navajo.resource
 Bundle-ManifestVersion: 2
 Bundle-Name: OSGi based connection broker
 Bundle-SymbolicName: com.dexels.navajo.resource

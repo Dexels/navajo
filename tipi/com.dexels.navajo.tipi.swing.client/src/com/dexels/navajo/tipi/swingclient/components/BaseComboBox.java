@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ComboBoxModel;
@@ -19,10 +18,10 @@ public abstract class BaseComboBox extends JComboBox {
 
 	private static final long serialVersionUID = 2894805109531627299L;
 	DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseComboBox.class);
-	
+
 	public BaseComboBox() {
 		// this.setPreferredSize(new Dimension(125,
 		// ComponentConstants.PREFERRED_HEIGHT));
