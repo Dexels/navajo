@@ -32,10 +32,6 @@ import com.dexels.navajo.reactive.source.input.TmlInputSourceFactory;
 import com.dexels.navajo.reactive.source.single.SingleSourceFactory;
 import com.dexels.navajo.reactive.source.sql.SQLReactiveSourceFactory;
 import com.dexels.navajo.reactive.source.test.EventStreamSourceFactory;
-import com.dexels.navajo.reactive.source.topology.GroupTransformerFactory;
-import com.dexels.navajo.reactive.source.topology.SinkTransformerFactory;
-import com.dexels.navajo.reactive.source.topology.TopicSource;
-import com.dexels.navajo.reactive.source.topology.TopicSourceFactory;
 import com.dexels.navajo.reactive.transformer.call.CallTransformerFactory;
 import com.dexels.navajo.reactive.transformer.call.PipeTransformerFactory;
 import com.dexels.navajo.reactive.transformer.csv.CSVTransformerFactory;
@@ -73,7 +69,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		reactiveReducer.put("storereverse", new ReverseStoreAsSubMessage());
 		reactiveReducer.put("storeList", new StoreAsSubMessageList());
 		reactiveReducer.put("toSubList", new ToSubMessageList());
-		
+
 		addReactiveSourceFactory(new SingleSourceFactory(), "single");
 		addReactiveSourceFactory(new SQLReactiveSourceFactory(), "sql");
 		addReactiveSourceFactory(new EventStreamSourceFactory(), "eventsource");
@@ -84,7 +80,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 		addReactiveTransformerFactory(new StreamMessageTransformerFactory(), "tml");
 		addReactiveTransformerFactory(new ReduceTransformerFactory(), "reduce");
 		addReactiveTransformerFactory(new ReduceToListTransformerFactory(), "reduceToSubList");
-		
+
 		addReactiveTransformerFactory(new ParseEventStreamFactory(), "streamtoimmutable");
 		addReactiveTransformerFactory(new FilterTransformerFactory(), "filter");
 		addReactiveTransformerFactory(new TakeTransformerFactory(), "take");
@@ -156,7 +152,7 @@ public class CoreReactiveFinder implements ReactiveFinder {
 	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, String name) {
 		reactiveOperatorFactory.put(name, factory);
 	}
-	
+
 	public void addReactiveTransformerFactory(ReactiveTransformerFactory factory, Map<String,Object> settings) {
 		reactiveOperatorFactory.put((String) settings.get("name"), factory);
 	}

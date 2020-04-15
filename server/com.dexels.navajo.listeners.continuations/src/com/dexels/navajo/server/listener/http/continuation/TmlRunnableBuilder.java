@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.listener.http.continuation;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +13,7 @@ import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.http.impl.BaseRequestImpl;
 
 public class TmlRunnableBuilder {
-	
+
 
 	private TmlRunnableBuilder() {
 		// no instances
@@ -36,7 +35,7 @@ public class TmlRunnableBuilder {
 		return instantiateRunnable;
 	}
 
-	
+
 	// Made static to indicate independence of fields
 	private static AsyncRequest constructRequest(final HttpServletRequest req,
 			HttpServletResponse resp, String instance)

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.ManualAsyncClient;
-import com.dexels.navajo.client.async.jetty.impl.AsyncClientImpl;
 import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;

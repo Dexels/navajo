@@ -13,7 +13,6 @@ import com.dexels.navajo.document.stream.api.StreamScriptContext;
 import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.reactive.api.ReactiveParameterException;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
-import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;
 import com.dexels.navajo.reactive.api.TransformerMetadata;
 
@@ -27,11 +26,11 @@ public class ReduceTransformer implements ReactiveTransformer {
 	private Function<StreamScriptContext,Function<DataItem,DataItem>> seedFunction;
 	private Function<StreamScriptContext,Function<DataItem,DataItem>> reduceFunction;
 
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ReduceTransformer.class);
 	private final ReactiveParameters parameters;
 
-	
+
 	@SuppressWarnings("unchecked")
 	public ReduceTransformer(TransformerMetadata metadata,ReactiveParameters parameters) {
 		this.metadata = metadata;

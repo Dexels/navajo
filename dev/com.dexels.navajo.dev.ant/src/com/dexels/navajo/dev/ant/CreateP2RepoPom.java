@@ -2,7 +2,6 @@ package com.dexels.navajo.dev.ant;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class CreateP2RepoPom extends Task {
 			for (String inputFile : input) {
 				p.putAll(parseToMap(inputFile));
 			}
-			
+
 			for (java.util.Map.Entry<Object, Object> e : p.entrySet()) {
 				String name = (String) e.getKey();
 				log("Parsing: "+name);
@@ -101,7 +100,7 @@ public class CreateP2RepoPom extends Task {
 
 		updateVersionTags(featureDefs.getChildByTagName("feature"),id,version);
 		XMLElement artifactList = featureDefs.getChildByTagName("feature").getChildByTagName("artifacts");
-		
+
 		List<String> lines =Arrays.asList(bootrepo.split(",")).stream().sorted().collect(Collectors.toList());
 		for (String line : lines) {
 			super.log("Adding  dependency line: "+line);
@@ -121,7 +120,7 @@ public class CreateP2RepoPom extends Task {
 		}
 
 	}
-	
+
 //	<feature> <!-- Generate a feature including artifacts that are listed below inside the feature element-->
 //  <id>spring.feature</id>
 //  <version>4.3.11</version>
@@ -130,7 +129,7 @@ public class CreateP2RepoPom extends Task {
 //  <description>${project.description}</description>
 //  <copyright>A copyright</copyright>
 //  <license>A licence</license>
-	
+
 	private void updateVersionTags(XMLElement featureTag, String id, String version) {
 		featureTag.getChildByTagName("id").setContent(id);
 		featureTag.getChildByTagName("version").setContent(version);
@@ -160,11 +159,11 @@ public class CreateP2RepoPom extends Task {
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
-	
+
 	public void setTransitive(boolean transitive) {
 		this.transitive = transitive;
 	}
-	
+
 	public void setBundles(String input) {
 		this.input = Arrays.asList(input.split(","));
 	}
