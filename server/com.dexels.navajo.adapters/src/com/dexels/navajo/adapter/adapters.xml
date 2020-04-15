@@ -135,6 +135,7 @@
 			<value name="useDefinitionMessage" type="boolean" required="false" direction="in" />
 			<value name="copyMessageFrom" type="string" required="false" direction="in" />
 			<value name="copyMessageTo" type="string" required="false" direction="in" />
+			<value name="suppressProperties" type="string" required="false" direction="in" />
 		</values>
 	</map>
 	<!-- CSV adapter -->
