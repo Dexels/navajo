@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +32,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	private String language;
 	private String region;
 //	private File installationFolder = null;
-	
+
 	private final Set<LocaleListener> localeListeners = new HashSet<LocaleListener>();
 	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
 	@Override
@@ -65,7 +64,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	}
 
 	// Utilities:
-	
+
 	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer)  {
 		File settings = new File(installationFolder,"settings");
 
@@ -87,18 +86,18 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 					resolvedValues.put(elts[1], entry.getValue());
 				}
 			}
-			
+
 		}
 		logger.debug("RESOLVED TO: "+resolvedValues);
 		resolvedValues.put("tipi.deploy", deploy);
 		resolvedValues.put("tipi.profile", profile);
-		
+
 
 		// TODO Store these somewhere else
 		for (Entry<String,String> entry : resolvedValues.entrySet()) {
 			logger.debug("Setting: "+entry.getKey());
 			extensionContainer.setSystemProperty(entry.getKey(), entry.getValue());
-		}	
+		}
 //		return resolvedValues;
 	}
 
@@ -115,7 +114,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 		}
 
 
-		
+
 		for (String key : prb.keySet()) {
 			bundleValues.put(key, prb.getString(key));
 		}
@@ -127,7 +126,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	protected Map<String, String> parseProperties(List<String> args)
 			throws IOException {
-		
+
 		Map<String, String> result = new HashMap<String, String>();
 		if(args==null) {
 			return result;
@@ -175,12 +174,12 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			result.put(key, prb.getString(key));
 		}
 	}
-	
+
 
 	@Override
 	public void setDefaultConnector(TipiConnector tipiConnector) {
 	}
-	
+
 	@Override
 	public void setLocaleCode(String locale) {
 		this.language = locale;

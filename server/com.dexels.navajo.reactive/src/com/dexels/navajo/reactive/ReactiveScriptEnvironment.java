@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.immutable.factory.ImmutableFactory;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.DataItem.Type;
 import com.dexels.navajo.document.stream.ReactiveParseProblem;
@@ -49,12 +48,12 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 
 	private ReactiveScriptRunner parentRunnerEnvironment;
 	private final File testRoot;
-	
+
 	public ReactiveScriptEnvironment() {
 		this.testRoot = null;
 		ImmutableFactory.setInstance(ImmutableFactory.createParser());
 	}
-	
+
 	@Override
 	public Optional<String> deployment() {
 		return Optional.ofNullable(navajoConfig).map(e->e.getDeployment());
@@ -64,23 +63,23 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		this.testRoot = testRoot;
 	}
 
-	
+
 	public void setNavajoConfig(NavajoConfigInterface navajoConfig) {
 		this.navajoConfig = navajoConfig;
 	}
-	
+
 	public void clearNavajoConfig(NavajoConfigInterface navajoConfig) {
 		this.navajoConfig = null;
 	}
-	
+
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.parentRunnerEnvironment = env;
 	}
-	
+
 	public void clearReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.parentRunnerEnvironment = null;
 	}
-		
+
 	public boolean acceptsScript(String service) {
 		ReactiveScript rs = scripts.get(service);
 		if(rs!=null) {
@@ -89,8 +88,8 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		// add negative cache if necessary?
 		return resolveFile(service).isPresent();
 	}
-	
-	
+
+
 	@Override
 	public ReactiveScript build(String service, boolean debug) throws IOException {
 		// Do this check first, so we can 'override' scripts for testing
@@ -100,7 +99,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 		}
 		if(!acceptsScript(service)) {
 			if(parentRunnerEnvironment==null) {
-				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent."); 
+				throw new NullPointerException("This environment does not accept script: "+service+", and there is no parent.");
 			}
 			return parentRunnerEnvironment.build(service,debug);
 		}
@@ -126,7 +125,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			return Optional.empty();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	ReactiveScript installScript(String serviceName, InputStream in, String relativeScriptPath) throws IOException {
 		// TODO not pretty:
@@ -146,29 +145,29 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 
 		List<ReactivePipe> resolvedPipes = pipes.stream().map(node->(ReactivePipe)node.apply().value).collect(Collectors.toList());
 		Type type = resolvedPipes.stream().findFirst().map(e->e.finalType()).orElse(Type.ANY);
-		
+
 		return new ReactiveScript() {
-			
+
 			@Override
 			public boolean streamInput() {
 				return streamInput;
 			}
-			
+
 			@Override
 			public List<ReactiveParseProblem> problems() {
 				return problems.stream().map(ReactiveParseProblem::of).collect(Collectors.toList());
 			}
-			
+
 			@Override
 			public Flowable<Flowable<DataItem>> execute(StreamScriptContext context) {
 				return Flowable.fromIterable(resolvedPipes).map(pipe->pipe.execute(context, Optional.empty(), ImmutableFactory.empty()));
 			}
-			
+
 			@Override
 			public Type dataType() {
 				return type;
 			}
-			
+
 			@Override
 			public Optional<String> binaryMimeType() {
 				// TODO implement again
@@ -181,7 +180,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 			}
 		};
 	}
-	
+
 	@Override
 	public void handleEvent(Event e) {
 		List<String> changed = RepositoryEventParser.filterChanged(e, REACTIVE_FOLDER);
@@ -193,7 +192,7 @@ public class ReactiveScriptEnvironment  implements EventHandler, ReactiveScriptR
 					logger.info("Flushing changed script: {}",actual);
 					scripts.remove(actual);
 				}
-				
+
 			}
 		}
 	}
