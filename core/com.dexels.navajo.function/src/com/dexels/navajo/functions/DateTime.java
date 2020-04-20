@@ -2,7 +2,6 @@ package com.dexels.navajo.functions;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
 
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -22,10 +21,10 @@ public final class DateTime extends FunctionInterface {
 
     @Override
 	public final String evaluate() throws com.dexels.navajo.expression.api.TMLExpressionException {
-    		
+
     		String pattern;
     		DateTimeFormatter dtf;
-    		
+
     		if(this.getOperands().isEmpty()){
     			// Getting Default Pattern
     			System.out.println("Getting Default Parser");
@@ -36,7 +35,7 @@ public final class DateTime extends FunctionInterface {
     			}else
     				throw new TMLExpressionException(this, "error: can take 0 or 1 arguments ");
     		}
-    		
+
     		try{
     			dtf = DateTimeFormatter.ofPattern(pattern);
     		}catch(Exception e){
@@ -44,7 +43,7 @@ public final class DateTime extends FunctionInterface {
     			System.out.println("Pattern not found. Setting default pattern : dd-MM-yyyy HH:mm:ss");
     			dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     		}
-    		
+
 	    	LocalDateTime now = LocalDateTime.now();
 	    	System.out.println(dtf.format(now));
 	    	return dtf.format(now);

@@ -2,7 +2,6 @@ package com.dexels.navajo.functions;
 
 import java.io.StringWriter;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.expression.api.FunctionInterface;
@@ -28,6 +27,6 @@ public class NavajoRequestToString extends FunctionInterface {
 	public String remarks() {
 		return "Serializes a Navajo request to a string";
 	}
-	
+
 
 }

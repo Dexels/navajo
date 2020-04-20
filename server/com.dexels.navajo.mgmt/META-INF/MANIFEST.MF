@@ -19,3 +19,4 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="1.7.1"
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.mgmt
