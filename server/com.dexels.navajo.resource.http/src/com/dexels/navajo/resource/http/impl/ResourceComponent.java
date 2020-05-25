@@ -96,6 +96,7 @@ public class ResourceComponent implements HttpResource {
 		logger.info("Putting: {} type: {}",assembleURL(tenant,bucket, id),type);
 		return client.callWithBody(assembleURL(tenant,bucket, id), 
 					r->r.header("Authorization", this.authorization)
+						.header("Connection", "Close") // see issue: https://github.com/Dexels/navajo/issues/536
 						.method(HttpMethod.PUT)
 						.idleTimeout(idle_timeout, TimeUnit.SECONDS)
 						.timeout(timeout, TimeUnit.SECONDS)
