@@ -55,6 +55,12 @@ public interface Operation {
 	public void setScopes(Set<String> scopes);
 	public Set<String> getScopes();
 	
+	public void setClubModules(String clubModules);
+	public String getClubModules();
+	
+	public void setUserModules(String userModules);
+	public String getUserModules();
+
 	public void setDescription(String description);
 	public String getDescription();
 	
@@ -68,6 +74,4 @@ public interface Operation {
     
     public String getTenant();
     
-	
-	
 }

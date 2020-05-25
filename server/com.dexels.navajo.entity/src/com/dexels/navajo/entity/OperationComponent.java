@@ -21,12 +21,20 @@ public class OperationComponent implements Operation {
     private boolean debugInput;
     private boolean debugOutput;
     private Set<String> scopes;
+    private String clubModules;
+    private String userModules;
 
     public void activateComponent(Map<String, Object> parameters) throws Exception {
         method = (String) parameters.get("operation.method");
         service = (String) parameters.get("operation.service");
         validationService = (String) parameters.get("operation.validationService");
         entityName = (String) parameters.get("operation.entity");
+        if (parameters.get("operation.clubModules") != null) {
+        	clubModules = (String) parameters.get("operation.clubModules");
+        }
+        if (parameters.get("operation.userModules") != null) {
+        	userModules = (String) parameters.get("operation.userModules");
+        }
         // How to fetch Message from this??
         if (parameters.get("operation.extramessage") != null) {
             extraMessage = (Message) parameters.get("operation.extramessage");
@@ -126,7 +134,30 @@ public class OperationComponent implements Operation {
     public  Set<String> getScopes() {
         return scopes;
     }
-    
+
+	@Override
+    public void setClubModules(String clubModules) {
+        if (clubModules != null) {
+            this.clubModules = clubModules;
+        }
+    }
+	
+	@Override
+	public String getClubModules() {
+	    return clubModules;
+	}
+
+	@Override
+    public void setUserModules(String userModules) {
+        if (userModules != null) {
+        	this.userModules = userModules;
+        }
+    }
+	
+	@Override
+	public String getUserModules() {
+	    return userModules;
+	}
 
     @Override
     public void setDebug(String debugString) {

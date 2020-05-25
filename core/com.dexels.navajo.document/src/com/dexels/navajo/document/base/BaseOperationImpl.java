@@ -26,7 +26,9 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	protected boolean debugInput;
 	protected boolean debugOutput;
 
-    private Set<String> scopes= new HashSet<>();
+    private Set<String> scopes = new HashSet<>();
+    private String clubModules;
+    private String userModules;
 
 	public BaseOperationImpl(Navajo n) {
 		super(n);
@@ -150,7 +152,30 @@ public class BaseOperationImpl extends BaseNode implements Operation {
 	public  Set<String> getScopes() {
 	    return scopes;
 	}
+
+	@Override
+    public void setClubModules(String clubModules) {
+        if (clubModules != null) {
+            this.clubModules = clubModules;
+        }
+    }
 	
+	@Override
+	public String getClubModules() {
+	    return clubModules;
+	}
+
+	@Override
+    public void setUserModules(String userModules) {
+        if (userModules != null) {
+        	this.userModules = userModules;
+        }
+    }
+	
+	@Override
+	public String getUserModules() {
+	    return userModules;
+	}
 
     @Override
     public boolean debugInput() {
@@ -175,7 +200,6 @@ public class BaseOperationImpl extends BaseNode implements Operation {
     @Override
     public void setDescription(String description) {
         this.description = description;
-        
     }
 
     @Override

@@ -454,10 +454,18 @@ public class ServiceEntityOperation implements EntityOperation {
         Property entityMappedPath = NavajoFactory.getInstance().createProperty(input, "MappedPath", "string",
                 mappedPath != null ? mappedPath : myEntity.getName(), 0, "",
                 Property.DIR_OUT);
+        Property entityClubModules = NavajoFactory.getInstance().createProperty(input, "ClubModules", "string",
+                myOperation.getClubModules(), 0, "",
+                Property.DIR_OUT);
+        Property entityUserModules = NavajoFactory.getInstance().createProperty(input, "UserModules", "string",
+                myOperation.getUserModules(), 0, "",
+                Property.DIR_OUT);
         entityInfo.addProperty(entityMessageName);
         entityInfo.addProperty(entityVersion);
         entityInfo.addProperty(entityDefinitionPath);
         entityInfo.addProperty(entityMappedPath);
+        entityInfo.addProperty(entityClubModules);
+        entityInfo.addProperty(entityUserModules);
         input.addMessage(entityInfo);
 
 		// Perform validation method if defined

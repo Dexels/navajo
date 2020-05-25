@@ -294,4 +294,18 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		return oi;
 	}
 
+	@Override
+	public Operation createOperation(Navajo n, String method, String service, String validationService,
+			String entityName, Message extra, String clubModules, String userModules) {
+		BaseOperationImpl oi = new BaseOperationImpl(n);
+		oi.setMethod(method);
+		oi.setService(service);
+		oi.setValidationService(validationService);
+		oi.setEntityName(entityName);
+		oi.setExtraMessage(extra);
+		oi.setClubModules(clubModules);
+		oi.setUserModules(userModules);
+		return oi;
+	}
+
 }

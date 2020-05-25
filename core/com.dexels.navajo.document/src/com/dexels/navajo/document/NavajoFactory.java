@@ -811,4 +811,6 @@ public abstract class NavajoFactory {
 	public abstract Operation createOperation(Navajo n, String method,
 			String service, String validationService, String entityName, Message extra);
 
+	public abstract Operation createOperation(Navajo n, String method,
+			String service, String validationService, String entityName, Message extra, String clubModules, String userModules);
 }
