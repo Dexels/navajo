@@ -30,8 +30,10 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -227,6 +229,16 @@ public class EntityContinuationRunner implements TmlRunnable {
                 Writer w = new OutputStreamWriter(out);
                 NavajoLaszloConverter.writeBirtXml(responseNavajo,w );
                 w.close();
+            } else if (outputFormat.equals("bin")) {
+				// find the first binary property and output that
+				for (Property property : responseNavajo.getRootMessage().getMessage(0).getAllProperties()) {
+					if (Property.BINARY_PROPERTY.equals(property.getType())) {
+						out.write(((Binary) property.getTypedValue()).getData());
+						break;
+					}
+				}
+				out.flush();
+				out.close();
             } else {
                 response.setHeader("content-type", "text/xml");
                 responseNavajo.write(out);
