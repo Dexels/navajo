@@ -230,15 +230,15 @@ public class EntityContinuationRunner implements TmlRunnable {
                 NavajoLaszloConverter.writeBirtXml(responseNavajo,w );
                 w.close();
             } else if (outputFormat.equals("bin")) {
-				// find the first binary property and output that
-				for (Property property : responseNavajo.getRootMessage().getMessage(0).getAllProperties()) {
-					if (Property.BINARY_PROPERTY.equals(property.getType())) {
-						out.write(((Binary) property.getTypedValue()).getData());
-						break;
-					}
-				}
-				out.flush();
-				out.close();
+                // find the first binary property and output that
+                for (Property property : responseNavajo.getRootMessage().getMessage(0).getAllProperties()) {
+                    if (Property.BINARY_PROPERTY.equals(property.getType())) {
+                        out.write(((Binary) property.getTypedValue()).getData());
+                        break;
+                    }
+                }
+                out.flush();
+                out.close();
             } else {
                 response.setHeader("content-type", "text/xml");
                 responseNavajo.write(out);
