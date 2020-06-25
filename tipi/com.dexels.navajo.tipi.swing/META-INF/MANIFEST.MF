@@ -66,6 +66,6 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  tipi,
  tipipackage;version="1.1.42"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 DynamicImport-Package: org.pushingpixels.*,org.jdesktop.swingx.plaf.*
 Require-Bundle: com.dexels.navajo.tipi

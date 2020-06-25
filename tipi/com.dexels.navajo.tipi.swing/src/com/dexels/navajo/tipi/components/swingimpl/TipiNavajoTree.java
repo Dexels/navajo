@@ -26,7 +26,7 @@ import com.dexels.navajo.tipi.components.swingimpl.tree.TipiNavajoTreeModel;
 public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 3882394810767197190L;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiNavajoTree.class);
 	private final Map<String, Boolean> expansionMap = new HashMap<String, Boolean>();
@@ -169,7 +169,8 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 	private void dump(TreeNode tn) {
 		// logger.debug("My node: "+tn.toString());
 		// logger.debug("#of children: "+tn.getChildCount());
-		Enumeration<? extends TreeNode> children = tn.children();
+		@SuppressWarnings("unchecked")
+        Enumeration<? extends TreeNode> children = tn.children();
 		while (children.hasMoreElements()) {
 			TreeNode element = children.nextElement();
 			dump(element);

@@ -8,7 +8,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -35,7 +34,7 @@ public class ToSecureImage extends FunctionInterface{
   private String str;
   Component observer = null;
   Random rnd = new Random();
-  
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(ToSecureImage.class);
 
@@ -49,7 +48,7 @@ public Object evaluate() throws TMLExpressionException {
     try{
 	    Object w = getOperand(1);
 	    Object h = getOperand(2);
-	    
+
 	    if(w != null && h != null){
 	    	width = (Integer)w;
 	    	height = (Integer)h;
@@ -96,14 +95,14 @@ public String usage() {
         double bi_height = f.getStringBounds(s, g.getFontRenderContext()).getHeight()/1.6;
 
         //final_height = 30;
-        
+
         BufferedImage bi = new BufferedImage(2*(int)Math.ceil(bi_width),2*(int)Math.ceil(bi_height), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D)bi.getGraphics();
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //g2.setColor(new Color(rnd.nextInt(255), rnd.nextInt(180), rnd.nextInt(180)));
         g2.setColor(Color.black);
-        
+
         boolean pos = rnd.nextBoolean();
         int sign = pos? 1: -1;
         AffineTransform rotate = AffineTransform.getRotateInstance(sign*rnd.nextDouble()/2d, bi.getWidth()/2, bi.getHeight()/2);
@@ -114,25 +113,25 @@ public String usage() {
         g.drawImage(bi, xpos, ypos, observer);
         double xbounds = f.getStringBounds(s, g.getFontRenderContext()).getWidth() + 4;
         xpos += xbounds;
-       
+
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
       }
-     
+
       // Add some lines over the text
-      
+
       for(int i=0;i<3;i++){
     	  g.setColor(new Color(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat()/1.2f));
     	  g.drawLine(0, rnd.nextInt(500), width, -1* rnd.nextInt(500));
     	  g.drawLine(width, -1*rnd.nextInt(50), 0,  rnd.nextInt(50));
       }
-      
+
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
       BufferedImage finalImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
       Graphics2D fg = (Graphics2D)finalImg.getGraphics();
       fg.drawImage(temp, 0, 0,  null);
-      
-      
+
+
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
       ImageIO.write(finalImg, "png", bout);
       byte[] data = bout.toByteArray();
@@ -152,9 +151,9 @@ public String usage() {
       java.util.Locale.setDefault(new java.util.Locale("nl", "NL"));
       // Tests.
       ToSecureImage tm = new ToSecureImage();
-      
+
       for(int i=0;i<100;i++){
-      
+
 	      tm.reset();
 	      RandomString rs = new RandomString();
 	      rs.reset();
@@ -162,12 +161,12 @@ public String usage() {
 	      String random = (String)rs.evaluate();
 	      System.err.println("String["+i+"]: " + random);
 	      // lala
-	      
+
 	      tm.insertStringOperand(new String(random));
 	      tm.insertIntegerOperand(110);
 	      tm.insertIntegerOperand(30);
 	      Binary b = (Binary) tm.evaluate();
-	
+
       }
 
      }catch(Exception e){

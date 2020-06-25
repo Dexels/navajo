@@ -3,10 +3,8 @@ package com.dexels.navajo.reactive.source.topology;
 import java.util.Optional;
 
 import com.dexels.immutable.api.ImmutableMessage;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.stream.DataItem;
 import com.dexels.navajo.document.stream.api.StreamScriptContext;
-import com.dexels.navajo.expression.api.ContextExpression;
 import com.dexels.navajo.reactive.api.ReactiveParameters;
 import com.dexels.navajo.reactive.api.ReactiveParseException;
 import com.dexels.navajo.reactive.api.ReactiveTransformer;

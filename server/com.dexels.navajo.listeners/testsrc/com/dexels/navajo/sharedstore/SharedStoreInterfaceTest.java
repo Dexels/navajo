@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -27,7 +26,7 @@ class SerializableObject implements Serializable {
 
 	private static final long serialVersionUID = 7806593130574518792L;
 
-	
+
 	private String field;
 
 	public String getField() {
@@ -37,12 +36,12 @@ class SerializableObject implements Serializable {
 	public void setField(String field) {
 		this.field = field;
 	}
-	
+
 	private void writeObject(ObjectOutputStream aStream) throws IOException {
     	aStream.defaultWriteObject();
     	System.err.println("IN WRITEOBJECT(): " + this.hashCode() + ", field " + field);
     }
-	
+
 }
 
 public class SharedStoreInterfaceTest {
@@ -52,11 +51,11 @@ public class SharedStoreInterfaceTest {
 	boolean threadAssertFailed = false;
 	SharedStoreLock myssl;
 	int locks = 0;
-	
-	
+
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(SharedStoreInterfaceTest.class);
-	
+
 	@Before
 	public void setUp() {
 		DispatcherFactory.createDispatcher(new TestDispatcher(new TestNavajoConfig()));
@@ -76,7 +75,7 @@ public class SharedStoreInterfaceTest {
 			f.delete();
 		}
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		File f = new File("/tmp/sharedstore");
@@ -88,17 +87,17 @@ public class SharedStoreInterfaceTest {
 		si.store("myparent", "mystoredobject", new SerializableObject(), false, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject").exists());
 	}
-	
-	
+
+
 	@Test public void testStoreWithLock() throws Exception {
-		
+
 		int MAXTHREADS = 1000;
 		final SerializableObject [] objects = new SerializableObject[MAXTHREADS];
 		for (int i = 0; i < MAXTHREADS; i++) {
 			objects[i] = new SerializableObject();
 			objects[i].setField("field-"+i);
 		}
-		
+
 		// Define threads.
 		locks = 0;
 		Thread [] threads = new Thread[MAXTHREADS];
@@ -116,12 +115,12 @@ public class SharedStoreInterfaceTest {
 				}
 			};
 		}
-		
+
 		// Start threads.
 		for (int i = 0; i < MAXTHREADS; i++) {
 			threads[i].start();
 		}
-		
+
 		// Join threads.
 		for (int i = 0; i < MAXTHREADS; i++) {
 			threads[i].join();
@@ -129,7 +128,7 @@ public class SharedStoreInterfaceTest {
 
 		// Asserts
 		Assert.assertEquals(MAXTHREADS, locks);
-		
+
 		for (int i = 0; i < MAXTHREADS; i++) {
 			SerializableObject o = (SerializableObject) si.get("myparent", "mystoredobject"+i);
 			Assert.assertNotNull(o.getField());
@@ -140,19 +139,19 @@ public class SharedStoreInterfaceTest {
 
 	/**
 	 * TODO: FIGURE OUT HOW TO FORCE OBJECT SERIALIZATION FAILURE!!!!!!
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	
+
 	@Test public void testStoreWithLockFailure() throws Exception {
-		
+
 		int MAXTHREADS = 1000;
 		final SerializableObject [] objects = new SerializableObject[MAXTHREADS];
 		for (int i = 0; i < MAXTHREADS; i++) {
 			objects[i] = new SerializableObject();
 			objects[i].setField("field-"+i);
 		}
-		
+
 		// Define threads.
 		locks = 0;
 		Thread [] threads = new Thread[MAXTHREADS];
@@ -170,12 +169,12 @@ public class SharedStoreInterfaceTest {
 				}
 			};
 		}
-		
+
 		// Start threads.
 		for (int i = 0; i < MAXTHREADS; i++) {
 			threads[i].start();
 		}
-		
+
 		// Join threads.
 		for (int i = 0; i < MAXTHREADS; i++) {
 			threads[i].join();
@@ -183,7 +182,7 @@ public class SharedStoreInterfaceTest {
 
 		// Asserts
 		Assert.assertEquals(MAXTHREADS, locks);
-		
+
 		for (int i = 0; i < MAXTHREADS; i++) {
 			SerializableObject o = (SerializableObject) si.get("myparent", "mystoredobject"+i);
 			Assert.assertNotNull(o.getField());
@@ -191,8 +190,8 @@ public class SharedStoreInterfaceTest {
 		}
 
 	}
-	
-	
+
+
 	@Test public void testRemove() throws Exception{
 		si.store("myparent", "mystoredobject", new SerializableObject(), false, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject").exists());
@@ -200,7 +199,7 @@ public class SharedStoreInterfaceTest {
 		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject").exists());
 	}
 
-	
+
 	@Test public void testRemoveAll() throws Exception {
 		si.store("myparent", "mystoredobject1", new SerializableObject(), false, false);
 		si.store("myparent", "mystoredobject2", new SerializableObject(), false, false);
@@ -214,8 +213,8 @@ public class SharedStoreInterfaceTest {
 		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject3").exists());
 	}
 
-	
-	
+
+
 	@Test public void testStoreText() throws Exception {
 		si.storeText("myparent", "mytextobject", "text", false, false);
 		BufferedReader r = new BufferedReader(new FileReader("/tmp/sharedstore/myparent/mytextobject"));
@@ -224,19 +223,19 @@ public class SharedStoreInterfaceTest {
 		r.close();
 	}
 
-	
+
 	@Test public void testCreateParent() throws Exception {
 		si.createParent("myparent");
 		Assert.assertTrue(new File("/tmp/sharedstore/myparent").exists());
 	}
 
-	
+
 	@Test public void testLockStringStringStringIntBoolean() throws Exception {
 		si.lock("myparent", "mylockfile", "owner1", SharedFileStore.READ_WRITE_LOCK, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
 	}
-	
-	
+
+
 	@Test public void testLockStringStringStringIntBoolean2() throws Exception {
 		SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner1", SharedFileStore.READ_WRITE_LOCK, false);
 		Assert.assertNotNull(ssl);
@@ -244,13 +243,13 @@ public class SharedStoreInterfaceTest {
 		Assert.assertNull(ssl2);
 		Assert.assertTrue(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
 	}
-	
-	
+
+
 	@Test public void testLockStringStringStringIntBooleanWithMultipleThreads() throws Exception {
-		
+
 		locked = false;
 		locks = 0;
-		
+
 		Thread t1 = new Thread() {
 			@Override
 			public void run() {
@@ -262,7 +261,7 @@ public class SharedStoreInterfaceTest {
 				}
 			}
 		};
-		
+
 		Thread t2 = new Thread() {
 			@Override
 			public void run() {
@@ -274,7 +273,7 @@ public class SharedStoreInterfaceTest {
 				}
 			}
 		};
-		
+
 		Thread t3 = new Thread() {
 			@Override
 			public void run() {
@@ -288,18 +287,18 @@ public class SharedStoreInterfaceTest {
 		};
 		t1.start();t2.start();t3.start();
 		t1.join();t2.join();t3.join();
-		
+
 		System.err.println(myssl.toString());
 		Assert.assertEquals(1, locks);
 		Assert.assertTrue(locked);
 	}
-	
-	
+
+
 	@Test public void testLockStringStringStringIntBooleanWithMultipleThreadsAndWaits() throws Exception {
-		
+
 		locked = false;
 		locks = 0;
-		
+
 		Thread t1 = new Thread() {
 			@Override
 			public void run() {
@@ -322,7 +321,7 @@ public class SharedStoreInterfaceTest {
 				}
 			}
 		};
-		
+
 		Thread t2 = new Thread() {
 			@Override
 			public void run() {
@@ -344,7 +343,7 @@ public class SharedStoreInterfaceTest {
 				}
 			}
 		};
-		
+
 		Thread t3 = new Thread() {
 			@Override
 			public void run() {
@@ -368,13 +367,13 @@ public class SharedStoreInterfaceTest {
 		};
 		t1.start();t2.start();t3.start();
 		t1.join(2000);t2.join(2000);t3.join(2000);
-		
+
 		System.err.println(myssl.toString());
 		Assert.assertEquals(3, locks);
 		Assert.assertTrue(locked);
 	}
 
-	
+
 	@Test public void testLockStringStringIntBoolean() {
 		String instance = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		System.err.println("instance = " + instance);
@@ -384,7 +383,7 @@ public class SharedStoreInterfaceTest {
 		Assert.assertTrue(ssl.toString().indexOf(instance) != -1);
 	}
 
-	
+
 	@Test public void testRelease() {
 		SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner", SharedFileStore.READ_WRITE_LOCK, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
@@ -392,20 +391,20 @@ public class SharedStoreInterfaceTest {
 		Assert.assertFalse(new File("/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
 	}
 
-	
+
 	@Test public void testGetLock() throws Exception {
 		si.lock("myparent", "mylockfile", "owner", SharedFileStore.READ_WRITE_LOCK, false);
 		SharedStoreLock ssl =  si.getLock("myparent", "mylockfile", "owner");
 		Assert.assertNotNull(ssl);
-		
+
 		SharedStoreLock ssl2 =  si.getLock("myparent", "mylockfile2", "owner");
 		Assert.assertNull(ssl2);
-		
+
 		SharedStoreLock ssl3 =  si.getLock("myparent", "mylockfile", "owner2");
 		Assert.assertNull(ssl3);
 	}
-	
-	
+
+
 	@Test public void testLastModified() throws Exception {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		long l1 = si.lastModified("myparent", "myobject");
@@ -413,18 +412,18 @@ public class SharedStoreInterfaceTest {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		long l2 = si.lastModified("myparent", "myobject");
 		Assert.assertTrue(l2 > l1);
-		
+
 	}
 
-	
+
 	@Test public void testSetLastModified() throws Exception {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		si.setLastModified("myparent", "myobject", Long.parseLong("1222180873000"));
 		long l1 = si.lastModified("myparent", "myobject");
-		Assert.assertEquals(Long.parseLong("1222180873000"), l1); 
+		Assert.assertEquals(Long.parseLong("1222180873000"), l1);
 	}
-	
-	
+
+
 	@Test public void testSetLastModifiedUnknownObject() throws Exception {
 		boolean exception = false;
 		try {
@@ -435,7 +434,7 @@ public class SharedStoreInterfaceTest {
 		Assert.assertTrue(exception);
 	}
 
-	
+
 	@Test public void testExists() throws Exception {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		Assert.assertTrue(si.exists("myparent", "myobject"));
@@ -443,13 +442,13 @@ public class SharedStoreInterfaceTest {
 		Assert.assertFalse(si.exists("myparent", "myoect"));
 	}
 
-	
+
 	@Test public void testGet() throws Exception {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		Object o = si.get("myparent", "myobject");
 		Assert.assertNotNull(o);
 		Assert.assertTrue(o instanceof SerializableObject);
-		
+
 		// Unknown object.
 		boolean exception = false;
 		Object o2 = null;
@@ -472,7 +471,7 @@ public class SharedStoreInterfaceTest {
 
 	}
 
-	
+
 	@Test public void testGetStream() throws Exception {
 		si.store("myparent", "myobject", new SerializableObject(), false, false);
 		ObjectInputStream ois = new ObjectInputStream(si.getStream("myparent", "myobject"));
@@ -493,11 +492,11 @@ public class SharedStoreInterfaceTest {
 		}
 		Assert.assertTrue(exception);
 		Assert.assertNull(o2);
-		
-		
+
+
 	}
 
-	
+
 	@Test public void testGetOutputStream() throws Exception {
 		OutputStream os = si.getOutputStream("myparent", "myobject", false);
 		SerializableObject o = new SerializableObject();
@@ -508,7 +507,7 @@ public class SharedStoreInterfaceTest {
 		Object o2 = si.get("myparent", "myobject");
 		Assert.assertNotNull(o2);
 		Assert.assertTrue(o2 instanceof SerializableObject);
-		
+
 		// Write plain text.
 		OutputStreamWriter os2 = new OutputStreamWriter( si.getOutputStream("myparent", "mytext", false) );
 		String s = "some text";
@@ -519,7 +518,7 @@ public class SharedStoreInterfaceTest {
 		Assert.assertEquals(s, is.readLine());
 	}
 
-	
+
 	@Test public void testGetObjects() throws Exception {
 		SerializableObject s1 = new SerializableObject();s1.setField("ONE");
 		SerializableObject s2 = new SerializableObject();s2.setField("TWO");

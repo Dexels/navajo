@@ -4,7 +4,7 @@ Bundle-Name: Navajo Management
 Bundle-SymbolicName: com.dexels.navajo.mgmt
 Bundle-Version: 1.0.15.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.entity,
  com.dexels.navajo.mapping,
@@ -19,3 +19,4 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="1.7.1"
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.mgmt

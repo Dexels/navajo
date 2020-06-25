@@ -24,3 +24,4 @@ Import-Package: com.dexels.navajo.client,
 Service-Component: OSGI-INF/nqlServlet.xml,OSGI-INF/navajo.laszlo.request.xml,OSGI-INF/navajo.laszlo.response.xml,
  OSGI-INF/navajo.laszlo.servlet.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.dexels.navajo.listeners.external

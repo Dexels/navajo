@@ -57,10 +57,26 @@ public class EntityDispatcher {
     private EntityMapper myMapper;
     private NavajoIOConfig navajoIOConfig;
     
+    private Map<String,String> additionalHttpHeaders = new HashMap<>();
+    
 	public void setConfig(NavajoIOConfig navajoIOConfig) {
 		this.navajoIOConfig = navajoIOConfig;
 	}
 
+	public void activate(Map<String, Object> properties) {
+		for ( String h : properties.keySet() ) {
+			if ( h.startsWith("header.")) {
+				String header = h.split("\\.")[1];
+				String key = (String) properties.get(h);
+				additionalHttpHeaders.put(header, key);
+			}
+		}
+	}
+	
+	public void deactivate() {
+		
+	}
+	
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
@@ -69,6 +85,7 @@ public class EntityDispatcher {
         if (path.startsWith("/entity")) {
             path = path.substring(7);
         }
+        Entity entity = null;
         Navajo input = null;
         String inputEtag = null;
         boolean entityFound = false;
@@ -160,9 +177,9 @@ public class EntityDispatcher {
                 }
             }
             
-            Entity e = myManager.getEntity(mappedEntity);
+            entity = myManager.getEntity(mappedEntity);
 
-            if (e == null) {
+            if (entity == null) {
                 // Requested entity not found
                 logger.warn("Requested entity not registred! {}", entityName);
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
@@ -173,18 +190,18 @@ public class EntityDispatcher {
             if (version == null) {
                 logger.debug("Request on default entity");
                 version = "0";
-            } else if (!e.getMyVersionKeys().contains(version)) {
-                logger.error("Request on unknown entity {} version {}", e.getName(), version);
+            } else if (!entity.getMyVersionKeys().contains(version)) {
+                logger.error("Request on unknown entity {} version {}", entity.getName(), version);
                 throw new EntityException(EntityException.UNKNOWN_VERSION);
             } else {
-                logger.debug("Requesting entity {} version {}", e.getName(), version);
+                logger.debug("Requesting entity {} version {}", entity.getName(), version);
             }
             
-            Message entityMessage = e.getMessage(version);
+            Message entityMessage = entity.getMessage(version);
 
             // Get the input document
             if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
-                input = EntityHelper.deriveNavajoFromParameterMap(e, runner.getHttpRequest().getParameterMap(), version);
+                input = EntityHelper.deriveNavajoFromParameterMap(entity, runner.getHttpRequest().getParameterMap(), version);
             } else {
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
@@ -202,11 +219,11 @@ public class EntityDispatcher {
             }
 
             if (method.equals(HTTP_METHOD_OPTIONS)) {
-                processGetOptions(e, runner.getHttpResponse());
+                processGetOptions(entity, runner.getHttpResponse());
                 result = NavajoFactory.getInstance().createNavajo();
                 return;
             }
-            Operation entityOperation = myManager.getOperation(e.getName(), method);
+            Operation entityOperation = myManager.getOperation(entity.getName(), method);
             
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
@@ -273,8 +290,8 @@ public class EntityDispatcher {
             }
 
             // Set Caching parameter
-            if (e.getMyCaching().size() > 0) {
-                setCachingHeader(result, e, runner);
+            if (entity.getMyCaching().size() > 0) {
+                setCachingHeader(result, entity, runner);
             }
 
             if (method.equals(HTTP_METHOD_GET) && result.getMessage(entityMessage.getName()) != null) {
@@ -287,12 +304,16 @@ public class EntityDispatcher {
 
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse(), locale);
-
+            
             if (access != null) {
                 boolean skipLogging = false;
                 if (ex instanceof EntityException) {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
+                    	// Set Caching parameter
+                        if (entity.getMyCaching().size() > 0) {
+                            setCachingHeader(result, entity, runner);
+                        }
                         skipLogging = true;
                     } else if (e.getCode() == EntityException.ENTITY_NOT_FOUND && entityFound) {
                         skipLogging = true;
@@ -321,11 +342,13 @@ public class EntityDispatcher {
         } finally {
         	// TODO: maybe put this in some earlier/other stage??
         	// This part is necessary to use the entities from a webserver (ClubWeb) and not run into CORS misery
-        	if ("true".equals(System.getenv("DEVELOP_MODE"))) {
-	            runner.getHttpResponse().setHeader("Access-Control-Allow-Headers", "*");
-	            runner.getHttpResponse().setHeader("Access-Control-Allow-Origin", "*");
+        	
+        	if ( additionalHttpHeaders.size() > 0 ) {
+        		for ( String key : additionalHttpHeaders.keySet() ) {
+        			runner.getHttpResponse().setHeader(key, additionalHttpHeaders.get(key));
+        		}
         	}
-
+        	
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);

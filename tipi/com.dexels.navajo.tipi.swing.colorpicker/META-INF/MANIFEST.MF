@@ -4,5 +4,5 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.dexels.navajo.tipi.swing.colorpicker

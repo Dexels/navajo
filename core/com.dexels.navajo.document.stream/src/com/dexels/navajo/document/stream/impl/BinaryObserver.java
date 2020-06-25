@@ -2,7 +2,6 @@ package com.dexels.navajo.document.stream.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +31,7 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 	protected byte[] inMemory;
 	int count = 0;
 
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(BinaryObserver.class);
 
 	public static FlowableOperator<Binary,String> collect() {
@@ -95,8 +94,8 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 			}
 		};
 	}
-	
-	
+
+
 	private OutputStream createTempFileOutputStream() throws IOException {
 		if(messageDigest==null) {
 	        MessageDigest md = null;
@@ -128,11 +127,11 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 					setDigest(messageDigest.digest());
 					super.close();
 				}
-    			
+
     		};
     	} else {
             dataFile = File.createTempFile("streamedbinary_object", "navajo", NavajoFactory.getInstance().getTempDir());
-            
+
             FileOutputStream fosStream = new FileOutputStream(dataFile);
             return new DigestOutputStream(fosStream, messageDigest) {
 
@@ -141,7 +140,7 @@ public class BinaryObserver implements FlowableOperator<Binary,String>{
 					super.close();
 					setDigest(messageDigest.digest());
 				}
-            	
+
             };
     	}
     }

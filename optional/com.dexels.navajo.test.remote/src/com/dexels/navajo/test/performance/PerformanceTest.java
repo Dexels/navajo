@@ -26,26 +26,23 @@ public class PerformanceTest {
 		this.client.setPassword("password");
 		this.client.setServerUrls(new String[]{"test.ortlink.com/navajo"});
 	}
-	
+
 	@Test
 	public void testSearchClub() throws ClientException {
 		int count = 5;
-		long start = System.currentTimeMillis();
-		for (int i=0; i<count;i++) {
+		for (int i = 0; i < count;i++) {
 			Navajo init = client.doSimpleSend(null, "club/InitSearchClub");
 			init.getProperty("ClubSearch/ClubName").setAnyValue(randomString(3));
 			Navajo process = client.doSimpleSend(init, "club/ProcessSearchClub");
 			process.write(System.out);
 		}
-		long after = System.currentTimeMillis();
 	}
-	
 
-	private String randomString( int len ) 
-	{
+	private String randomString( int len ) {
 	   StringBuilder sb = new StringBuilder( len );
-	   for( int i = 0; i < len; i++ ) 
+	   for( int i = 0; i < len; i++ )
 	      sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
 	   return sb.toString();
 	}
+
 }

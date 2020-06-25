@@ -10,18 +10,17 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiContext;
 
 /**
  * @author frank
- * 
+ *
  */
 public class GetLookup extends FunctionInterface {
 
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(GetLookup.class);
-	
+
 	@Override
 	public String remarks() {
 		return "Gets a certain lookup value in the same way as the parser would have, given a certain component";

@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.7.49.qualifier
+Bundle-Version: 2.7.51.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
@@ -82,3 +82,4 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.osgi.framework;version="1.5.0";resolution:=optional,
  org.slf4j
 Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -51,7 +51,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.base.NavajoExceptionImpl;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.QueryableComponent;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -334,7 +333,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     }
 
     private void loadColumn(int i, XMLElement child, Message columnArrayMessage)
-            throws NavajoException { 
+            throws NavajoException {
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         String visibleExp = (String) child.getAttribute("visible");
@@ -366,9 +365,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         addProperty(columnMessage, "Size", size, Property.INTEGER_PROPERTY);
 
         boolean editable = "true".equals(editableString);
-      
+
         columnSize.put(Integer.valueOf(i), Integer.valueOf(size));
-        
+
         String labelString = label;
         try {
             Operand evalLabel = this.getContext().evaluate(labelString, this, null, null);
@@ -378,7 +377,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         } catch (Exception ex) {
             logger.error("Error evaluating label! {}", labelString, ex);
         }
-        
+
         boolean defaultVisible = false;
         try {
             Operand evalVisible = this.getContext().evaluate(defaultVisibleExp, this, null, null);
@@ -388,7 +387,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         } catch (Exception ex) {
             logger.error("Error evaluating defaultVisibleExp! {}", defaultVisibleExp, ex);
         }
-        
+
         boolean visible = true;
         try {
             Operand evalVisible = this.getContext().evaluate(visibleExp, this, null, null);
@@ -398,7 +397,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         } catch (Exception ex) {
             logger.error("Error evaluating visibleExp! {}", visibleExp, ex);
         }
-        
+
 
         if (defaultVisible) {
             mm.addColumn(name, labelString, editable, size);
@@ -409,8 +408,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         if (typehint != null) {
             mm.setTypeHint(name, typehint);
         }
-        
-       
+
+
         if (aggr != null) {
             addAggregate(i, aggr);
         }
@@ -572,16 +571,16 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                     addToIgnoreList(e.getKey());
                 }
             }
-            
+
         }
-       
+
         mm.createDefaultColumnsFromModel();
     }
 
     /*
      * Overridden, to pervent automatically call perform the onload event.
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad
      * (java.lang.String)
@@ -684,7 +683,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
         super.setComponentValue(name, object);
     }
 
-    
+
     private void addToIgnoreList(String value) {
         ignoreList.add(value);
         mm.setIgnoreList(ignoreList);
@@ -692,7 +691,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 
 
-   
+
     public void setHeaderVisible(boolean b) {
         mm.setHeaderVisible(b);
     }
@@ -852,8 +851,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                             logger.error("Error detected", ex1);
                         }
                     }
-                    
-                    
+
+
                     if ("selectByValue".equals(name)) {
                         Operand name = compMeth.getEvaluatedParameter("propertyName", event);
                         Operand value = compMeth.getEvaluatedParameter("value", event);
@@ -882,14 +881,14 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
                     logger.info("Clearing filters");
                     mm.getTable().clearPropertyFilters();
                 }
-                
+
                 if ("setPropertyFilter".equals(name)) {
                     logger.info("setPropertyFilter");
                     Operand name = compMeth.getEvaluatedParameter("propertyName", event);
                     Operand value = compMeth.getEvaluatedParameter("value", event);
                     Operand propertyType = compMeth.getEvaluatedParameter("propertyType", event);
                     Operand operator = compMeth.getEvaluatedParameter("operator", event);
-                    
+
                     Property property = NavajoFactory.getInstance().createProperty(null, "unknown", "string", value.value.toString(), 0, "", Property.DIR_IN);
                     property.setType(propertyType.value.toString());
                     mm.getTable().addPropertyFilter((String) name.value, property, (String) operator.value);
@@ -1201,7 +1200,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
     public Boolean containsDirtyPropertyComponents() {
         return false;
     }
-    
+
     public List<XMLElement> getColumnList() {
         return columnList;
     }
