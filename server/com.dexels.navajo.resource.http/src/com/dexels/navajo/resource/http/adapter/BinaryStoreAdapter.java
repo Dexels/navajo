@@ -40,8 +40,6 @@ public class BinaryStoreAdapter implements Mappable {
 			.toSingle()
 			.blockingGet();
 
-		result.content.blockingSubscribe();  // discard (potential) content
-
 		logger.info("Stored binary with status: {}", result.status());
 		if (result.status() >= 400) {
 			throw new IOException("Error inserting binary into resource: "+resource+" bucket: "+bucket+" status: "+result.status()+" headers: "+result.responseHeaders());

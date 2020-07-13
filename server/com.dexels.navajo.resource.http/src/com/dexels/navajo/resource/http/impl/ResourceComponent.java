@@ -76,10 +76,7 @@ public class ResourceComponent implements HttpResource {
 		this.authorization = null;
 		this.secret = Optional.empty();
 		this.url = null;
-
 	}
-
-
 
 	public synchronized void setRepositoryInstance(RepositoryInstance instance) {
 		deployment = instance.getDeployment();
@@ -90,55 +87,59 @@ public class ResourceComponent implements HttpResource {
 		deployment = null;
 	}
 
-
 	@Override
 	public Single<ReactiveReply> put(String tenant, String bucket, String id, String type, Publisher<byte[]> data) {
 		logger.info("Putting: {} type: {}",assembleURL(tenant,bucket, id),type);
 		return client.callWithBody(assembleURL(tenant,bucket, id),
-					r->r.header("Authorization", this.authorization)
-//						.header("Connection", "Close") // see issue: https://github.com/Dexels/navajo/issues/536
-						.method(HttpMethod.PUT)
-						.idleTimeout(idle_timeout, TimeUnit.SECONDS)
-						.timeout(timeout, TimeUnit.SECONDS)
-				,Flowable.fromPublisher(data)
-				,type)
-				.timeout(timeout+1, TimeUnit.SECONDS)
+					r -> r.header("Authorization", this.authorization)
+						  .header("Connection", "Close") // see issue: https://github.com/Dexels/navajo/issues/536
+						  .method(HttpMethod.PUT)
+						  .idleTimeout(idle_timeout, TimeUnit.SECONDS)
+						  .timeout(timeout, TimeUnit.SECONDS),
+					Flowable.fromPublisher(data),
+					type)
+				.timeout(timeout + 1, TimeUnit.SECONDS)
 				.firstOrError();
 	}
 
 	@Override
 	public Flowable<byte[]> get(String tenant, String bucket, String id) {
 		String callingUrl = assembleURL(tenant,bucket, id);
-		return client.callWithoutBody(callingUrl, r->r.header("Authorization", this.authorization))
-                .timeout(timeout+1, TimeUnit.SECONDS)
+		return client.callWithoutBody(callingUrl,
+		            r -> r.header("Authorization", this.authorization)
+                          .header("Connection", "Close")) // see issue: https://github.com/Dexels/navajo/issues/536
+                .timeout(timeout + 1, TimeUnit.SECONDS)
     			.toFlowable()
     			.compose(client.responseStream());
 	}
 
 	@Override
 	public Single<ReactiveReply> delete(String tenant, String bucket, String id) {
-		return client.callWithoutBody(assembleURL(tenant,bucket, id), r->r.header("Authorization", this.authorization)
-		        .idleTimeout(idle_timeout, TimeUnit.SECONDS)
-                .timeout(timeout+1, TimeUnit.SECONDS)
-		        .method(HttpMethod.DELETE)
-		       ).timeout(timeout, TimeUnit.SECONDS);
+		return client.callWithoutBody(assembleURL(tenant,bucket, id),
+		            r -> r.header("Authorization", this.authorization)
+                          .header("Connection", "Close") // see issue: https://github.com/Dexels/navajo/issues/536
+                          .idleTimeout(idle_timeout, TimeUnit.SECONDS)
+                          .timeout(timeout + 1, TimeUnit.SECONDS)
+                          .method(HttpMethod.DELETE))
+		        .timeout(timeout, TimeUnit.SECONDS);
 	}
 
 	@Override
 	public Single<ReactiveReply> head(String tenant, String bucket, String id) {
 		return client.callWithoutBody(assembleURL(tenant,bucket, id),
-				r->r.header("Authorization", this.authorization)
-                    .timeout(timeout+1, TimeUnit.SECONDS)
-					.method(HttpMethod.HEAD)
-				).timeout(timeout, TimeUnit.SECONDS);
+				    r -> r.header("Authorization", this.authorization)
+				          .header("Connection", "Close") // see issue: https://github.com/Dexels/navajo/issues/536
+				          .timeout(timeout + 1, TimeUnit.SECONDS)
+				          .method(HttpMethod.HEAD))
+		        .timeout(timeout, TimeUnit.SECONDS);
 	}
-
 
 	private String assembleURL(String tenant, String bucket, String id) {
 		String u = this.url+resolveBucket(tenant, bucket)+"/"+id;
 //		logger.debug("Assembling: "+u);
 		return u;
 	}
+
 	private String assemblePublicURL(String tenant, String bucket, String id) {
         String u = this.publicUrl+resolveBucket(tenant, bucket)+"/"+id;
 //      logger.debug("Assembling: "+u);
@@ -190,6 +191,7 @@ public class ResourceComponent implements HttpResource {
 
 		return totalURL;
 	}
+
 	private String sign(String bucket, String id, long expirationTime) {
 		if(!secret.isPresent()) {
 			throw new IllegalArgumentException("Http component has no secret. Can't make expiring URL's");
