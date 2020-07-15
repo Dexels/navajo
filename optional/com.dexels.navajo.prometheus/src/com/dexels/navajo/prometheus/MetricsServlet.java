@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * The MetricsServlet class exists to provide a simple way of exposing the metrics values.
@@ -28,6 +29,7 @@ public class MetricsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	static final Counter requests = Counter.build().name("requests_total").help("Total Requests").register();
+	
 
     private CollectorRegistry registry;
 
