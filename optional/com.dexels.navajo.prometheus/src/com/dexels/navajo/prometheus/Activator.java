@@ -9,11 +9,13 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolSchedulerMBean;
+
 import io.prometheus.client.Gauge;
 
 //public class Activator implements BundleActivator {
 public class Activator{	
-	
+	private PriorityThreadPoolSchedulerMBean nomralPoolInfoService;
 //	static final Gauge inprogressRequests = Gauge.build()
 //		     .name("inprogress_requests").help("Inprogress requests.").register();
 
@@ -52,6 +54,16 @@ public class Activator{
 	public void deactivate () {
 		
 	}
+	
+    public void setNomralPoolInfo (PriorityThreadPoolSchedulerMBean m) {
+    	System.out.println("vg---set");
+    	this.nomralPoolInfoService = m;
+    }
+
+    public void clearNomralPoolInfo (PriorityThreadPoolSchedulerMBean m) {
+    	System.out.println("vg---clear");
+    	this.nomralPoolInfoService = null;
+    }
 	
 	
 //	public void stop(BundleContext context) throws Exception {

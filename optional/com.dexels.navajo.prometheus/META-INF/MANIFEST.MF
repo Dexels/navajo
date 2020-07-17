@@ -5,7 +5,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
-Import-Package: com.dexels.navajo.version;version="1.1.0",
+Import-Package: com.dexels.navajo.server.listener.http.schedulers.priority,
+ com.dexels.navajo.version;version="1.1.0",
  io.prometheus.client;version="0.8.1",
  io.prometheus.client.exporter;version="0.8.1",
  io.prometheus.client.exporter.common;version="0.8.1",

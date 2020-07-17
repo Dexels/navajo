@@ -1,5 +1,6 @@
 package com.dexels.navajo.prometheus;
 
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolSchedulerMBean;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -30,6 +31,8 @@ public class MetricsServlet extends HttpServlet {
 
 	static final Counter requests = Counter.build().name("requests_total").help("Total Requests").register();
 	
+	
+	
 
     private CollectorRegistry registry;
 
@@ -47,6 +50,7 @@ public class MetricsServlet extends HttpServlet {
     public MetricsServlet(CollectorRegistry registry) {
         this.registry = registry;
     }
+    
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
