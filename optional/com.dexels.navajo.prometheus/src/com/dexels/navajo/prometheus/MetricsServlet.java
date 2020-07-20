@@ -1,14 +1,18 @@
 package com.dexels.navajo.prometheus;
 
-import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolSchedulerMBean;
+//import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolSchedulerMBean;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.common.TextFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -29,8 +33,19 @@ public class MetricsServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	static final Counter requests = Counter.build().name("requests_total").help("Total Requests").register();
+	static final Gauge normalActive = Gauge.build()
+    .name("normalActive").help("Inprogress requests.").register();
 	
+	static final Gauge normalPoolSize = Gauge.build()
+		    .name("normalPoolSize").help("Inprogress requests.").register();
+			
+	static final Gauge normalQueueSize = Gauge.build()
+		    .name("normalQueueSize").help("Inprogress requests.").register();
+	
+	
+	static final Counter requests = Counter.build().name("requests_total").help("Total Requests").register();
+
+	PriorityThreadPoolScheduler m;
 	
 	
 
@@ -39,8 +54,9 @@ public class MetricsServlet extends HttpServlet {
     /**
      * Construct a MetricsServlet for the default registry.
      */
-    public MetricsServlet() {
+    public MetricsServlet(PriorityThreadPoolScheduler m) {
         this(CollectorRegistry.defaultRegistry);
+        this.m = m;
     }
 
     /**
@@ -56,6 +72,11 @@ public class MetricsServlet extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws ServletException, IOException {
         System.out.println("aaa");
+        
+        normalActive.set( (double) m.getNormalActive() );
+        normalPoolSize.set( (double) m.getNormalPoolSize() );
+        normalQueueSize.set( (double) m.getNormalQueueSize() );
+        
         requests.inc();
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(TextFormat.CONTENT_TYPE_004);

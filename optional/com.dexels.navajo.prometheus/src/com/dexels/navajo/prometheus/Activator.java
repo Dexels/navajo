@@ -9,13 +9,13 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolSchedulerMBean;
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
 
 import io.prometheus.client.Gauge;
 
 //public class Activator implements BundleActivator {
 public class Activator{	
-	private PriorityThreadPoolSchedulerMBean nomralPoolInfoService;
+	private PriorityThreadPoolScheduler nomralPoolInfoService;
 //	static final Gauge inprogressRequests = Gauge.build()
 //		     .name("inprogress_requests").help("Inprogress requests.").register();
 
@@ -39,7 +39,7 @@ public class Activator{
 	public void activate() throws Exception {
 		System.out.println("gem---Started...");
 		
-        MetricsServlet ms = new MetricsServlet();
+        MetricsServlet ms = new MetricsServlet(nomralPoolInfoService);
 
         Server server = new Server(1234);
         ServletContextHandler context1 = new ServletContextHandler();
@@ -55,12 +55,12 @@ public class Activator{
 		
 	}
 	
-    public void setNomralPoolInfo (PriorityThreadPoolSchedulerMBean m) {
+    public void setNomralPoolInfo (PriorityThreadPoolScheduler m) {
     	System.out.println("vg---set");
     	this.nomralPoolInfoService = m;
     }
 
-    public void clearNomralPoolInfo (PriorityThreadPoolSchedulerMBean m) {
+    public void clearNomralPoolInfo (PriorityThreadPoolScheduler m) {
     	System.out.println("vg---clear");
     	this.nomralPoolInfoService = null;
     }
