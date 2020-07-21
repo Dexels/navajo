@@ -42,8 +42,6 @@ public class MetricsServlet extends HttpServlet {
 	static final Gauge normalQueueSize = Gauge.build()
 		    .name("normalQueueSize").help("Inprogress requests.").register();
 	
-	
-	static final Counter requests = Counter.build().name("requests_total").help("Total Requests").register();
 
 	PriorityThreadPoolScheduler m;
 	
@@ -77,7 +75,6 @@ public class MetricsServlet extends HttpServlet {
         normalPoolSize.set( (double) m.getNormalPoolSize() );
         normalQueueSize.set( (double) m.getNormalQueueSize() );
         
-        requests.inc();
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(TextFormat.CONTENT_TYPE_004);
 
