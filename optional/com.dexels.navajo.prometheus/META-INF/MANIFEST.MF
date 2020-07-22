@@ -16,8 +16,7 @@ Import-Package: com.dexels.navajo.server.listener.http.schedulers.priority,
  org.eclipse.jetty.servlet;version="9.4.22",
  org.eclipse.jetty.util;version="9.4.22",
  org.eclipse.jetty.util.component;version="9.4.22",
- org.osgi.framework;version="1.5.0",
- sun.misc;version="0.0.0"
+ org.osgi.framework;version="1.5.0"
 Bundle-Activator: navajoprometheus.Version
 Service-Component: OSGI-INF/navajo.prometheus.xml
 Export-Package: com.dexels.navajo.prometheus
