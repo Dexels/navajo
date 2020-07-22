@@ -14,10 +14,9 @@
 	<artifactId>com.dexels.navajo.prometheus</artifactId>
 	<dependencies>
 		<dependency>
-		    <groupId>com.sun</groupId>
-		    <artifactId>tools</artifactId>
-		    <version>1.7.0.13</version>
-		    <scope>system</scope>
+		  <groupId>com.diffplug.osgi</groupId>
+		  <artifactId>com.diffplug.osgi.extension.sun.misc</artifactId>
+		  <version>0.0.0</version>
 		</dependency>
 	</dependencies>
 </project>
