@@ -55,12 +55,12 @@ public class Activator{
 		
 	}
 	
-    public void setNomralPoolInfo (PriorityThreadPoolScheduler m) {
+    public void setNormalPoolInfo (PriorityThreadPoolScheduler m) {
     	System.out.println("vg---set");
     	this.nomralPoolInfoService = m;
     }
 
-    public void clearNomralPoolInfo (PriorityThreadPoolScheduler m) {
+    public void clearNormalPoolInfo (PriorityThreadPoolScheduler m) {
     	System.out.println("vg---clear");
     	this.nomralPoolInfoService = null;
     }
