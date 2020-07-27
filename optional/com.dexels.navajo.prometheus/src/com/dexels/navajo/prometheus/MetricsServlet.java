@@ -47,14 +47,14 @@ public class MetricsServlet extends HttpServlet {
 	static final Gauge normalRequestsSize = Gauge.build()
 		    .name("normalRequests").help("Normal Pool Requests").register();
 	
-	static final Gauge availableCores = Gauge.build()
-		    .name("availableCores").help("Available Cores JVM").register();
+	static final Gauge usedMemory = Gauge.build()
+		    .name("usedMemory").help("Used Memory JVM (MB)").register();
 	
 	static final Gauge freeMemory = Gauge.build()
-		    .name("freeMemory").help("Free Memory JVM").register();
+		    .name("freeMemory").help("Free Memory JVM (MB)").register();
 	
 	static final Gauge totalMemoryUse = Gauge.build()
-		    .name("totalMemoryUse").help("Total Memory in use JVM").register();
+		    .name("totalMemoryUse").help("Total Memory JVM (MB)").register();
 	
 	PriorityThreadPoolScheduler m;
 	
@@ -82,7 +82,7 @@ public class MetricsServlet extends HttpServlet {
     	/* Total number of processors or cores available to the JVM */
     	  System.out.println("Gem--- Available processors (cores): " + 
     	  Runtime.getRuntime().availableProcessors());
-    	  availableCores.set( (double) Runtime.getRuntime().availableProcessors() );
+    	  usedMemory.set( (double) Runtime.getRuntime().availableProcessors() );
 
     	  /* Total amount of free memory available to the JVM */
     	  System.out.println("Gem--- Free memory (bytes): " + 
@@ -101,13 +101,43 @@ public class MetricsServlet extends HttpServlet {
     	  totalMemoryUse.set( (double) Runtime.getRuntime().totalMemory() );
     	  
     } 
+    
+    public void checkMem2() {
+    	int mb = 1024*1024;
+
+		//Getting the runtime reference from system
+		Runtime runtime = Runtime.getRuntime();
+
+		System.out.println("##### Heap utilization statistics [MB] #####");
+
+		//Print used memory
+		System.out.println("Used Memory:"
+			+ (runtime.totalMemory() - runtime.freeMemory()) / mb);
+		long usedM = ((runtime.totalMemory() - runtime.freeMemory()) / mb);
+		
+		usedMemory.set( (double) usedM );
+
+		//Print free memory
+		System.out.println("Free Memory:"
+			+ runtime.freeMemory() / mb);
+		
+		freeMemory.set( (double) (runtime.freeMemory() / mb) );
+
+		//Print total available memory
+		System.out.println("Total Memory:" + runtime.totalMemory() / mb);
+		totalMemoryUse.set( (double) (runtime.totalMemory() / mb) );
+
+		//Print Maximum available memory
+		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
+    }
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws ServletException, IOException {
         System.out.println("aaa");
         
-        checkMem();
+        //checkMem();
+        checkMem2();
         
         normalActive.set( (double) m.getNormalActive() );
         normalPoolSize.set( (double) m.getNormalPoolSize() );
