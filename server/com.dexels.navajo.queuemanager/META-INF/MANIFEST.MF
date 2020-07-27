@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Queue Manager
 Bundle-SymbolicName: com.dexels.navajo.queuemanager
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.9.qualifier
+Bundle-Version: 3.1.10
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
