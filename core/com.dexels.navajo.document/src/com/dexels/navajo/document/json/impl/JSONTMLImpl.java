@@ -404,7 +404,7 @@ public class JSONTMLImpl implements JSONTML {
                     } else if (currentToken.equals(JsonToken.VALUE_NULL)) {
                         value = null;
                     } else if (currentToken.equals(JsonToken.VALUE_NUMBER_INT)) {
-                        value = jp.getValueAsInt();
+                        value = jp.getValueAsLong();
                     } else if (currentToken.equals(JsonToken.VALUE_NUMBER_FLOAT)) {
                         value = jp.getValueAsDouble();
                     } else {
