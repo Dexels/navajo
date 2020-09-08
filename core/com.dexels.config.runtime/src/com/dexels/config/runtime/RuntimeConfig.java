@@ -1,9 +1,19 @@
 package com.dexels.config.runtime;
 
 public enum RuntimeConfig {
-    NO_DBREPLICATION, DEVELOP_MODE, DEBUG_SCRIPTS, TENANT_MASTER, CLUSTER, INSTANCENAME, SIMULATION_MODE, NO_DBTRIGGER,STRICT_TYPECHECK;
+
+    DEBUG_SCRIPTS,
+    CLUSTER,
+    DEVELOP_MODE,
+    INSTANCENAME,
+    NO_DBREPLICATION,
+    NO_DBTRIGGER,
+    SIMULATION_MODE,
+    STRICT_TYPECHECK,
+    TENANT_MASTER;
 
     public String getValue() {
         return System.getenv(this.toString());
     }
+
 }
