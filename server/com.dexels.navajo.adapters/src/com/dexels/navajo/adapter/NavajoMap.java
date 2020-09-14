@@ -65,12 +65,16 @@ import com.dexels.navajo.util.AuditLog;
  * <p>
  * Company: Dexels BV
  * </p>
- * 
+ *
  * @author Arjen Schoneveld
  * @version $Id$
  */
 
 public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+
+    private static final long MAX_WAITTIME = 600000; // 10 min
 
     public String doSend;
     public Binary navajo;
@@ -164,13 +168,13 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     public String method;
 
-    /** 
+    /**
      * If block is set, the web service calls blocks until a result is received.
      * Default value is TRUE.
      */
     public boolean block = true;
-    /** 
-     * Used in combination with block = false to determine the threadpool 
+    /**
+     * Used in combination with block = false to determine the threadpool
      * Default value is TRUE: non-blocking calls are low priority
      * */
     private boolean lowPriority = true;
@@ -184,8 +188,6 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     private List<String> deletedProperties = new ArrayList<>();
     private List<String> deletedMessages = new ArrayList<>();
-    private static final Logger logger = LoggerFactory.getLogger(NavajoMap.class);
-    private static final long MAX_WAITTIME = 600000; // 10 min
 
     public NavajoMap() {
 
@@ -247,7 +249,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Set this to the message path to which the result of the called service needs to be appended. Always used in conjunction with setAppend().
-     * 
+     *
      * @param messageOffset
      * @throws UserException
      */
@@ -284,7 +286,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                         inDoc = NavajoFactory.getInstance().createNavajo();
                     }
                 }
-               
+
             }
         }
         if (!block && serviceFinished && myException != null) {
@@ -379,7 +381,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                             /**
                              * NOTE 21/3/2013 (AS): USING ADDMESSAGE USING OVERWRITE FLAG WILL CAUSE CURRENTMSG TO BE OVERWRITTEN IFF CLONE MSG NAME IS THE
                              * SAME!!! THIS WILL CREATE A "DANGLING" MSG POINTER RENDERING ALL FURTHER MESSAGE ADDITIONS USELESS (THEY WILL NOT APPEAR)
-                             * 
+                             *
                              * THEREFORE: CHECK WHETHER NAME OF CURRENT OUT MESSAGE POINTER EQUALS THAT OF CLONE MESSAGE.
                              */
 
@@ -622,7 +624,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     public void setTenant(String t) {
         this.tenant = t;
     }
-    
+
     public void setLocale(String locale) {
     		this.locale = locale;
     }
@@ -633,7 +635,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Set a Navajo object directly.
-     * 
+     *
      * @param b
      * @throws UserException
      */
@@ -649,7 +651,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Gets the Navajo object. If inDoc is present return inDoc, else return inMessage (request Navajo).
-     * 
+     *
      * @return
      * @throws UserException
      */
@@ -942,9 +944,9 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             throw new UserException(-1, "Message " + fullName + " does not exists in response document");
         return msg;
     }
-    
+
     public final Object getPropertyOrElse(String fullName, Object elseValue) throws UserException {
-        
+
         waitForResult();
 
         Property p = null;
@@ -956,7 +958,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         if (p == null) {
             return elseValue;
         }
-        
+
         if (p.getType().equals(Property.SELECTION_PROPERTY)) {
             if (p.getSelected() != null) {
                 return p.getSelected().getValue();
@@ -965,7 +967,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
         }
         return p.getTypedValue();
-        
+
     }
 
     public final Object getProperty(String fullName) throws UserException {
@@ -1174,7 +1176,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             return;
         }
         if (msgPointer != null && m.startsWith("/")) {
-            // Allow resetting messagepointer when starting with / - See https://github.com/Dexels/navajo/issues/374 
+            // Allow resetting messagepointer when starting with / - See https://github.com/Dexels/navajo/issues/374
             // To refine within the current message start without slash
             logger.debug("Resetting existing message pointer from {}!", messagePointerString);
             msgPointer = null;
@@ -1211,7 +1213,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         if (!msgPointer.isArrayMessage())
             throw new UserException(-1, "getMessages can only be used for array messages");
         try {
-            List<Message> all = msgPointer.getAllMessages(); 
+            List<Message> all = msgPointer.getAllMessages();
 
             if ((all == null))
                 throw new UserException(-1, "Could not find messages: " + messagePointerString + " in response document");
@@ -1229,18 +1231,18 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Sets the order by message to true for serialization if ordering is needed
-     * 
+     *
      * @param m
-     * 
+     *
      */
     private void checkIfOrderingIsNeeded(Message m) {
-        
+
 
         if (!m.getOrderBy().equals("")) {
             setPerformOrderBy(true);
             return;
         }
-                
+
         if (m.getType().equals(Message.MSG_TYPE_ARRAY)) {
             // get definition message, or if absent, first array element
             // check that message with checkIfOrderingIsNeeded(), return
@@ -1270,7 +1272,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Dummy methods to support introspection of studio!!!!!
-     * 
+     *
      * @return
      */
     public String getStringProperty() {
@@ -1305,15 +1307,22 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
     }
 
     /**
-     * Use sendThrough to send an entire current input message using the NavajoMap doSend method.
+     * When sendThrough is true, copies the entire current input message to the outgoing message
+     * used when invoking the {@link #setDoSend(String) setDoSend} method.
      *
-     * @param b
+     * @param sendThrough When true copy input messages, otherwise do nothing. Clearing it after
+     *                    being set does nothing (i.e., it remains set).
      */
-    public void setSendThrough(boolean b) {
-        List<Message> all = inMessage.getAllMessages();
-        for (int i = 0; i < all.size(); i++) {
-            Message m = inMessage.copyMessage(all.get(i), outDoc);
-            outDoc.addMessage(m);
+    public void setSendThrough(boolean sendThrough) {
+
+        if (sendThrough) {
+            for (Message message : inMessage.getAllMessages()) {
+                Message copy = inMessage.copyMessage(message, outDoc);
+                outDoc.addMessage(copy);
+            }
+            this.sendThrough = true;
+        } else if (this.sendThrough) {
+            logger.error("Clearing the sendThrough field after setting it is not supported.");
         }
     }
 
@@ -1351,7 +1360,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * If specified, the NavajoMap will break on a condition error and send this as a response.
-     * 
+     *
      * @param breakOnConditionError
      */
     public void setBreakOnConditionError(boolean b) {
@@ -1417,7 +1426,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
                 authenticationError = true;
             }
             if (aaaError != null) {
-                
+
                 AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING,
                         access.accessID);
                 throw new AuthorizationException(authenticationError, !authenticationError, aaaError.getProperty("User").getValue(),
@@ -1425,7 +1434,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             }
 
             if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-                logger.debug("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR"); 
+                logger.debug("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
                 throw new ConditionErrorException(inDoc);
             } else if (inDoc.getMessage("ConditionErrors") != null) {
                 logger.debug("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");
@@ -1489,7 +1498,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             h.setHeaderAttribute("organization", access.getOrganization());
             if (locale != null && !locale.equals("")) {
     				h.setHeaderAttribute("locale", locale);
-            	} else if (access.getInDoc() != null && 
+            	} else if (access.getInDoc() != null &&
                     access.getInDoc().getHeader().getHeaderAttribute("locale") != null) {
                 h.setHeaderAttribute("locale", access.getInDoc().getHeader().getHeaderAttribute("locale"));
             }
@@ -1508,7 +1517,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
             inDoc = DispatcherFactory.getInstance().handle(outDoc, tenant, skipAuth);
 
             checkSetPerformOrderBy();
-            
+
             serviceFinished = true;
             serviceCalled = true;
 
@@ -1524,7 +1533,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     private void checkSetPerformOrderBy() {
         if (performOrderBy) return; // no need to check it
-        
+
         for (Message m : inDoc.getAllMessages()) {
             checkIfOrderingIsNeeded(m);
             if (performOrderBy) {
@@ -1707,7 +1716,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Helper setter used by setPropertyDirective.
-     * 
+     *
      * @param s
      */
     public void setPropertyId(String s) {
@@ -1716,7 +1725,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * Sets the directive of a property specified by propertyId. Supported directives: suppress, show, in, out.
-     * 
+     *
      * @param directive
      */
     public void setPropertyDirective(String directive) {
@@ -1737,7 +1746,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
 
     /**
      * This is a callback method for the async Navajo Client.
-     * 
+     *
      * @param response
      */
     @Override
@@ -1808,7 +1817,7 @@ public class NavajoMap implements Mappable, HasDependentResources, TmlRunnable, 
         myException = e;
     }
 
-    
+
     public Exception getException() {
         return myException;
     }
