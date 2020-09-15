@@ -62,11 +62,9 @@ public class Base64ImageStringToBinary extends FunctionInterface {
 		String data = getStringOperand(0);
 		Binary b;
 		String partSeparator = ",";
-//		String dataSeperator = ":";
 		
 		if (data.contains(partSeparator)) {
 			String encodedImg = data.split(partSeparator)[1];						
-//			String mimeType = data.split(dataSeperator)[1].split(";")[0];
 					
 			byte[] decodedValue = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));  // Basic Base64 decoding
 			b = new Binary(decodedValue);
