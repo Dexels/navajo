@@ -36,6 +36,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
 
 public class Base64ImageStringToBinary extends FunctionInterface {
 
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Base64ImageStringToBinary.class);
 	
 	@Override
@@ -62,16 +63,20 @@ public class Base64ImageStringToBinary extends FunctionInterface {
 		String data = getStringOperand(0);
 		Binary b;
 		String partSeparator = ",";
-//		String dataSeperator = ":";
 		
 		if (data.contains(partSeparator)) {
 			String encodedImg = data.split(partSeparator)[1];						
-//			String mimeType = data.split(dataSeperator)[1].split(";")[0];
 					
-			byte[] decodedValue = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));  // Basic Base64 decoding
+			byte[] decodedValue = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8)); // Basic Base64 decoding
 			b = new Binary(decodedValue);
 			return b;
-		}	
+		} else if (data != null && !data.contains(partSeparator)) {
+			// Might be just the base64 string without id part
+			byte[] decodedValue = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8)); // Basic Base64 decoding
+			b = new Binary(decodedValue);
+			return b;
+		}
+
 		return null;
 	}
 
