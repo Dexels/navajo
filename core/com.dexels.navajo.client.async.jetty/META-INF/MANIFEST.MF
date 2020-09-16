@@ -4,11 +4,11 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.23.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
-Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.navajo.client,
+Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.runtime.config;resolution:=optional,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
  com.dexels.navajo.version,

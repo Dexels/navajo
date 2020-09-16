@@ -12,13 +12,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.client.stream.jetty.NavajoReactiveJettyClient;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 import io.reactivex.Flowable;
 

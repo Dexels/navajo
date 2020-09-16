@@ -1,4 +1,4 @@
-package com.dexels.config.runtime;
+package com.dexels.navajo.runtime.config;
 
 public enum RuntimeConfig {
 

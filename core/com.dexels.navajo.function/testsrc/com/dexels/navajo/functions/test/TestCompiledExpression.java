@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -21,6 +20,7 @@ import com.dexels.navajo.expression.api.FunctionClassification;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ExpressionCache;
+import com.dexels.navajo.runtime.config.RuntimeConfig;
 
 
 public class TestCompiledExpression {

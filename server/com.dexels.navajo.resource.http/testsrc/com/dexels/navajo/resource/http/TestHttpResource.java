@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.adapter.BinaryStoreAdapter;
 import com.dexels.navajo.resource.http.impl.ResourceComponent;
+import com.dexels.navajo.runtime.config.TestConfig;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;

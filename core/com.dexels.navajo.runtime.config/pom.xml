@@ -13,8 +13,8 @@
         <relativePath>../../setup/com.dexels.repository</relativePath>
     </parent>
 
-	<artifactId>com.dexels.config.runtime</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<artifactId>com.dexels.navajo.runtime.config</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 </project>

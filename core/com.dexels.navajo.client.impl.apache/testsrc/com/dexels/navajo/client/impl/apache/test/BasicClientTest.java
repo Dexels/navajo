@@ -7,12 +7,12 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.impl.apache.ApacheNavajoClientImpl;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 /**
  * Tests to be run an an active cluster of Navajo Instances.

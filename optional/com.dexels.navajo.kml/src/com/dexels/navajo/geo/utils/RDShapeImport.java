@@ -17,11 +17,11 @@ import com.bbn.openmap.layer.shape.ESRIPoly.ESRIFloatPoly;
 import com.bbn.openmap.layer.shape.ESRIPolygonRecord;
 import com.bbn.openmap.layer.shape.ESRIRecord;
 import com.bbn.openmap.layer.shape.ShapeFile;
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 public class RDShapeImport {
 
