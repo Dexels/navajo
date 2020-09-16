@@ -30,6 +30,7 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
@@ -65,6 +66,8 @@ public class Base64Encode extends FunctionInterface {
 			data = Base64.getEncoder().encodeToString(b.getData());
 		} else if ( o instanceof String ) {
 			data = Base64.getEncoder().encodeToString(((String)o).getBytes(StandardCharsets.UTF_8));
+		} else if ( o instanceof Property && ((Property)o).getType() == Property.BINARY_PROPERTY ) {
+			data = ((Property)o).getValue();
 		} else {
 			throw new TMLExpressionException("Can not Base64Encode null data");
 		}
