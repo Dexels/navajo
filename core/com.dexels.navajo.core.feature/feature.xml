@@ -18,13 +18,6 @@
    </license>
 
    <plugin
-         id="com.dexels.config.runtime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.client"
          download-size="0"
          install-size="0"
@@ -194,6 +187,13 @@
 
    <plugin
          id="stax2-api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.runtime.config"
          download-size="0"
          install-size="0"
          version="0.0.0"
