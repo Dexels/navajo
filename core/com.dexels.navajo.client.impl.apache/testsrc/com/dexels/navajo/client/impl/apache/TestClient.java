@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 
 public class TestClient {

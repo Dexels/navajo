@@ -1,0 +1,9 @@
+Automatic-Module-Name: com.dexels.config.runtime
+Bundle-ManifestVersion: 2
+Bundle-Name: Navajo Configuration Runtime
+Bundle-SymbolicName: com.dexels.navajo.runtime.config
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.dexels.navajo.runtime.config;version="1.0.1"
