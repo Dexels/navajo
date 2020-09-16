@@ -2,7 +2,7 @@ Automatic-Module-Name: com.dexels.config.runtime
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Configuration Runtime
 Bundle-SymbolicName: com.dexels.navajo.runtime.config
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
