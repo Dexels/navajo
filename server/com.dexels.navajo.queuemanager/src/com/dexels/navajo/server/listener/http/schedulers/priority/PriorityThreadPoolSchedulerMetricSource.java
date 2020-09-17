@@ -33,10 +33,10 @@ public class PriorityThreadPoolSchedulerMetricSource implements MetricSource {
     public void deactivate() {
 
         logger.info("Prometheus priority threadpool scheduler data source stopped");
-        MetricSource.unregisterGauge(normalActive);
-        MetricSource.unregisterGauge(normalPoolSize);
-        MetricSource.unregisterGauge(normalQueueSize);
-        MetricSource.unregisterGauge(normalRequestsSize);
+        MetricSource.unregisterCollector(normalActive);
+        MetricSource.unregisterCollector(normalPoolSize);
+        MetricSource.unregisterCollector(normalQueueSize);
+        MetricSource.unregisterCollector(normalRequestsSize);
     }
     
     @Override
