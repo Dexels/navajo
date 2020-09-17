@@ -44,7 +44,7 @@ public class Base64Encode extends FunctionInterface {
 	
 	@Override
 	public String remarks() {
-		return "Get a Base64 representation of a given string or binary.";
+		return "Get a Base64 representation of a given string or binary";
 	}
 
 	@Override
