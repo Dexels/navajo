@@ -848,6 +848,8 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
                 access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
                 accessSet.add(access);
+                // username might've changed as the username might've been a placeholder while we're authenticating using a bearer token
+                rpcUser = access.getRpcUser();
 
                 /**
                  * Add some MDC parameters to context
