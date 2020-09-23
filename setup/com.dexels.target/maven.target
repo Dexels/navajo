@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Navajo Target Platform: 3.3.640" sequenceNumber="3440">
+<target name="Navajo Target Platform: 3.3.642" sequenceNumber="3442">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <repository location="http://p2.dexels.com/eclipse/equinox_4.9/"/>
@@ -11,7 +11,7 @@
             <unit id="org.eclipse.equinox.server.p2.feature.group" version="1.5.0.v20180827-1235"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.640"/>
+            <repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.642"/>
             <unit id="bcpg" version="1.64.0"/>
             <unit id="bcpkix" version="1.64.0"/>
             <unit id="bcprov" version="1.64.0"/>
@@ -217,7 +217,7 @@
             <unit id="org.scala-lang.scala-compiler" version="2.12.4.v20171010-220511-VFINAL-c2a5883"/>
             <unit id="org.scala-lang.scala-library" version="2.12.4.v20171010-220511-VFINAL-c2a5883"/>
             <unit id="org.scala-lang.scala-reflect" version="2.12.4.v20171010-220511-VFINAL-c2a5883"/>
-            <unit id="org.yaml.snakeyaml" version="1.24.0"/>
+            <unit id="org.yaml.snakeyaml" version="1.27.0"/>
             <unit id="osgi.promise" version="7.0.1.201810101357"/>
             <unit id="redis.clients.jedis" version="2.9.1"/>
             <unit id="slf4j.api" version="1.7.28"/>
