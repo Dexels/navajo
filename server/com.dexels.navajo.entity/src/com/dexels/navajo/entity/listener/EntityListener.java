@@ -19,7 +19,9 @@ import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityListener extends HttpServlet {
+
     private static final long serialVersionUID = -6681359881499760460L;
+
     private final static Logger logger = LoggerFactory.getLogger(EntityListener.class);
 
     private TmlScheduler tmlScheduler;
@@ -28,10 +30,10 @@ public class EntityListener extends HttpServlet {
 	private long requestTimeout;
 
     public void activate() {
-        logger.info("Entity servlet component activated");
-		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(5*60*1000L);
-		logger.info("Using timeout in continuation: {}",this.requestTimeout);
 
+        logger.info("Entity servlet component activated");
+        requestTimeout = NavajoRequestConfig.getRequestTimeout(5 * 60 * 1000L); // 5 minutes
+        logger.info("Using timeout in continuation: {}", requestTimeout);
     }
 
     public void deactivate() {
@@ -42,14 +44,19 @@ public class EntityListener extends HttpServlet {
      * entity/Match?Match/MatchId=2312321
      */
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         if ("GET".equals(request.getMethod()) && request.getParameter("getDefinition") != null) {
             performHeadRequest(request, response);
         } else {
-            EntityContinuationRunner runner = new EntityContinuationRunner(request, response,requestTimeout);
-            runner.setEntityDispatcher(entityDispatcher);
-            runner.setDispatcher(dispatcherInterface);
-            tmlScheduler.submit(runner, false);
+            EntityContinuationRunner runner = new EntityContinuationRunner(request, response,
+                    requestTimeout);
+            if (!runner.isAborted()) {
+                runner.setEntityDispatcher(entityDispatcher);
+                runner.setDispatcher(dispatcherInterface);
+                tmlScheduler.submit(runner, false);
+            }
         }
     }
 
