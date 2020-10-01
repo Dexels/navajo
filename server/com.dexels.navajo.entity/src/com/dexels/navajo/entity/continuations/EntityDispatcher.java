@@ -50,7 +50,7 @@ public class EntityDispatcher {
     private final static Logger statLogger = LoggerFactory.getLogger("stats");
 
     private final static String DEFAULT_OUTPUT_FORMAT = "json";
-    private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "birt", "tml"));
+    private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "birt", "tml", "bin"));
 
     private EntityManager myManager;
     private AuthenticationMethodBuilder authMethodBuilder;
