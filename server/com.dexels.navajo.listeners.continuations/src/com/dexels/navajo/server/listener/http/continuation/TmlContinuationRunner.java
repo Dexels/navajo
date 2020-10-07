@@ -41,7 +41,8 @@ public class TmlContinuationRunner extends TmlStandardRunner {
             logger.error("Expired continuation at request start!");
             abort("Internal server error");
         } else if (!continuation.isInitial()) {
-            logger.error("Non-initial continuation at request start!");
+            logger.error("Non-initial continuation at request start! Dispatcher type {}",
+                    request.getHttpRequest().getDispatcherType());
             abort("Internal server error");
         } else {
             continuation.setTimeout(timeout);
