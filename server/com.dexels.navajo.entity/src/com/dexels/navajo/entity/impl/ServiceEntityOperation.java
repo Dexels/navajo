@@ -125,36 +125,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 	/**
-	 * Following method checks for required properties. It checks the existence of
-	 * the properties and non-null values.
-	 * 
-	 * @param message
-	 * @param entityMessage
-	 * @param ignoreNonExistent,
-	 *            set to true for checking updates, set to false for inserts, set to
-	 *            true for updates (modifications)
-	 * @return
-	 * @throws EntityException
-	 */
-	private List<String> checkRequired(Message message, Message entityMessage, boolean ignoreNonExistent)
-			throws EntityException {
-		List<Property> entityProperties = entityMessage.getAllProperties();
-		List<String> missingProperties = new ArrayList<String>();
-		for (Property ep : entityProperties) {
-			// Check non-auto, non-optional key properties.
-			if (Key.isKey(ep.getKey()) && !Key.isAutoKey(ep.getKey()) && !Key.isOptionalKey(ep.getKey())
-					&& missingProperty(message, ep.getFullPropertyName(), ignoreNonExistent)) {
-				missingProperties.add(ep.getFullPropertyName() + ":key");
-			} // Check required non-key properties.
-			else if (Key.isRequiredKey(ep.getKey())
-					&& missingProperty(message, ep.getFullPropertyName(), ignoreNonExistent)) {
-				missingProperties.add(ep.getFullPropertyName());
-			}
-		}
-		return missingProperties;
-	}
-
-	/**
 	 * Following method checks whether the types in the input message match the
 	 * types in the entity message
 	 * 
@@ -408,24 +378,14 @@ public class ServiceEntityOperation implements EntityOperation {
 
         myKey = myEntity.getKey(props, entityVersion);
 		if (myKey == null) {
-			// Check for _id property. If _id is present it is good as a key.
 			// It's also possible our entity has no keys defined. In that case accept input
-            if (inputEntity.getProperty("_id") == null && myEntity.getRequiredKeys(entityVersion).size() > 0
+            if (myEntity.getRequiredKeys(entityVersion).size() > 0
                     && myEntity.getAutoKey(entityVersion) == null) {
 				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
                 myKey = new Key("", myEntity);
 			}
 		}
-
-        // Check required properties on post only
-        if (myOperation.getMethod().equals(Operation.POST)) {
-            List<String> missing = checkRequired(inputEntity, myEntity.getMessage(entityVersion), false);
-            if (missing.size() > 0) {
-                throw new EntityException(EntityException.BAD_REQUEST,
-                        "Could not perform insert, missing required properties: " + listToString(missing));
-            }
-        }
         
         // first clean the input without merging, so we can check do the checksubtypes without the merged properties
         clean(input, "request", false, false, entityVersion);
