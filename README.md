@@ -1,5 +1,5 @@
-# navajo
+# Navajo
+
 Navajo/Tipi Service Oriented Applications
 
-WBSO project
-
+See the [Navajo Wiki](https://github.com/Dexels/navajo/wiki) for more information.
