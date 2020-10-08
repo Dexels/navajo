@@ -116,7 +116,7 @@ public class Key {
 	}
 	
 	public static boolean isKey(String key) {
-		return ( key != null && key.indexOf("true") != -1 );
+		return ( key != null );
 	}
 	
 	public static boolean isAutoKey(String key) {
@@ -125,10 +125,6 @@ public class Key {
 	
 	public static boolean isOptionalKey(String key) {
 		return ( key != null && key.indexOf("optional") != -1 );
-	}
-	
-	public static boolean isRequiredKey(String key) {
-		return ( key != null && key.indexOf("required") != -1 );
 	}
 	
 	public static String getKeyId(String key) {

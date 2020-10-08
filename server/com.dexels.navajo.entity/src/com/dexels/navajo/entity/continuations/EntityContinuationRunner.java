@@ -30,16 +30,21 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.NavajoLaszloConverter;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityContinuationRunner implements TmlRunnable {
+
     private final static Logger logger = LoggerFactory.getLogger(EntityContinuationRunner.class);
- 
+
+    private final Map<String, Object> attributes = new HashMap<String, Object>();
+
     private final Continuation continuation;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -55,39 +60,38 @@ public class EntityContinuationRunner implements TmlRunnable {
     private String outputEtag;
 
     private RequestQueue myQueue;
-    private final Map<String, Object> attributes;
 
     private EntityDispatcher entityDispatcher;
     private DispatcherInterface dispatcher;
     private String contentEncoding;
     private String acceptEncoding;
 
-    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response, long timeout) {
+    public EntityContinuationRunner(HttpServletRequest request, HttpServletResponse response,
+            long timeout) {
+
         this.request = request;
         this.response = response;
         continuation = ContinuationSupport.getContinuation(request);
-        continuation.setTimeout(timeout); // 5 minutes
-        continuation.suspend(response);
-        
+
         if (continuation.isExpired()) {
-            logger.warn("Expired continuation!");
+            logger.error("Expired continuation at request start!");
             abort("Internal server error");
-        }
-        if (!continuation.isInitial()) {
-            logger.warn("Non-initial continuation!");
+        } else if (!continuation.isInitial()) {
+            logger.error("Non-initial continuation at request start!");
             abort("Internal server error");
+        } else {
+            continuation.setTimeout(timeout);
+            continuation.suspend(response);
+            String entity = "invalid";
+            if (request.getPathInfo() != null) {
+                entity = request.getPathInfo().substring(1);
+            }
+            requestNavajo = NavajoFactory.getInstance().createNavajo();
+            Header h = NavajoFactory.getInstance().createHeader(requestNavajo, entity, null, "", -1);
+            requestNavajo.addHeader(h);
+            contentEncoding = request.getHeader("Content-Encoding");
+            acceptEncoding = request.getHeader("Accept-Encoding");
         }
-        String entity = "invalid";
-        if (request.getPathInfo() != null) 
-        	entity = request.getPathInfo().substring(1);
-        requestNavajo = NavajoFactory.getInstance().createNavajo();
-        Header h = NavajoFactory.getInstance().createHeader(requestNavajo, entity, null,"", -1);
-        requestNavajo.addHeader(h);
-
-        attributes = new HashMap<String, Object>();
-
-        contentEncoding = request.getHeader("Content-Encoding");
-        acceptEncoding = request.getHeader("Accept-Encoding");
     }
 
     public void setEntityDispatcher(EntityDispatcher ed) {
@@ -207,8 +211,8 @@ public class EntityContinuationRunner implements TmlRunnable {
         if (outputEtag != null) {
             response.setHeader("etag", outputEtag);
         }
-        
-        
+
+
         try (OutputStream out = getOutputStream(acceptEncoding, response.getOutputStream())) {
             if (outputFormat.equals("json")) {
                 response.setHeader("content-type", "application/json");
@@ -227,12 +231,22 @@ public class EntityContinuationRunner implements TmlRunnable {
                 Writer w = new OutputStreamWriter(out);
                 NavajoLaszloConverter.writeBirtXml(responseNavajo,w );
                 w.close();
+            } else if (outputFormat.equals("bin")) {
+                // find the first binary property and output that
+                for (Property property : responseNavajo.getRootMessage().getMessage(0).getAllProperties()) {
+                    if (Property.BINARY_PROPERTY.equals(property.getType())) {
+                        out.write(((Binary) property.getTypedValue()).getData());
+                        break;
+                    }
+                }
+                out.flush();
+                out.close();
             } else {
                 response.setHeader("content-type", "text/xml");
                 responseNavajo.write(out);
             }
         }
-      
+
     }
 
     @Override
@@ -313,7 +327,7 @@ public class EntityContinuationRunner implements TmlRunnable {
         throw new UnsupportedOperationException("EntityRunnable does not support writeOutput");
 
     }
-    
+
     private static OutputStream getOutputStreamByEncoding(String encoding, OutputStream source) throws IOException {
         if(AsyncRequest.COMPRESS_JZLIB.equals(encoding)) {
             return new DeflaterOutputStream(source);
