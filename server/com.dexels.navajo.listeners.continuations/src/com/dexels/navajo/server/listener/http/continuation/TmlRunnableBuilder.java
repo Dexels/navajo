@@ -18,6 +18,7 @@ public class TmlRunnableBuilder {
             HttpServletResponse resp, LocalClient localClient, String instance, long timeout)
             throws IOException {
 
+        // Prevent the double creation of an asynchronous request handler for this request.
         TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
         if (tmlRunner != null) {
             return null;
@@ -25,15 +26,15 @@ public class TmlRunnableBuilder {
 
         AsyncRequest request = constructRequest(req, resp, instance);
         TmlContinuationRunner runner = new TmlContinuationRunner(request, localClient, timeout);
-        if (!runner.isAborted()) {
-            req.setAttribute("tmlRunner", runner);
-            runner.setAttribute("tester", req.getHeader("X-Navajo-Tester") != null);
-            runner.suspendContinuation(resp);
-
-            return runner;
-        } else {
+        if (runner.isAborted()) {
             return null;
         }
+
+        req.setAttribute("tmlRunner", runner);
+        runner.setAttribute("tester", req.getHeader("X-Navajo-Tester") != null);
+        runner.suspendContinuation(resp);
+
+        return runner;
     }
 
     private static AsyncRequest constructRequest(final HttpServletRequest req,
