@@ -77,7 +77,8 @@ public class EntityContinuationRunner implements TmlRunnable {
             logger.error("Expired continuation at request start!");
             abort("Internal server error");
         } else if (!continuation.isInitial()) {
-            logger.error("Non-initial continuation at request start!");
+            logger.error("Non-initial continuation at request start! Dispatcher type {}",
+                    request.getDispatcherType());
             abort("Internal server error");
         } else {
             continuation.setTimeout(timeout);
