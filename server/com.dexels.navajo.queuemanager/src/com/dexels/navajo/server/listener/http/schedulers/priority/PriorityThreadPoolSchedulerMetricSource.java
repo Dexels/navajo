@@ -12,11 +12,11 @@ public class PriorityThreadPoolSchedulerMetricSource implements MetricSource {
     private static final Logger logger = LoggerFactory
             .getLogger(PriorityThreadPoolSchedulerMetricSource.class);
 
-    private Gauge normalPoolSize;
+    private Gauge normalThreadPoolSize;
 
-    private Gauge normalActive;
+    private Gauge activeNormalRequestCount;
 
-    private Gauge normalQueueSize;
+    private Gauge queuedNormalRequestCount;
 
     private PriorityThreadPoolScheduler scheduler;
 
@@ -24,13 +24,13 @@ public class PriorityThreadPoolSchedulerMetricSource implements MetricSource {
 
         logger.info("Prometheus priority threadpool scheduler data source started");
 
-        normalPoolSize = MetricSource.registerGauge("normalPoolSize",
+        normalThreadPoolSize = MetricSource.registerGauge("navajo_normal_threadpool_size",
                 "Maximum number of simultaneously processed requests");
 
-        normalActive = MetricSource.registerGauge("normalActive",
+        activeNormalRequestCount = MetricSource.registerGauge("navajo_active_normal_request_count",
                 "Number of requests currently processed");
 
-        normalQueueSize = MetricSource.registerGauge("normalQueueSize",
+        queuedNormalRequestCount = MetricSource.registerGauge("navajo_queued_normal_request_count",
                 "Number of queued requests");
     }
 
@@ -38,17 +38,17 @@ public class PriorityThreadPoolSchedulerMetricSource implements MetricSource {
 
         logger.info("Prometheus priority threadpool scheduler data source stopped");
 
-        MetricSource.unregisterCollector(normalPoolSize);
-        MetricSource.unregisterCollector(normalActive);
-        MetricSource.unregisterCollector(normalQueueSize);
+        MetricSource.unregisterCollector(normalThreadPoolSize);
+        MetricSource.unregisterCollector(activeNormalRequestCount);
+        MetricSource.unregisterCollector(queuedNormalRequestCount);
     }
 
     @Override
     public void recordValues() {
 
-        normalPoolSize.set(scheduler.getNormalPoolSize());
-        normalActive.set(scheduler.getNormalActive());
-        normalQueueSize.set(scheduler.getNormalQueueSize());
+        normalThreadPoolSize.set(scheduler.getNormalPoolSize());
+        activeNormalRequestCount.set(scheduler.getNormalActive());
+        queuedNormalRequestCount.set(scheduler.getNormalQueueSize());
     }
 
     public void setPriorityThreadPoolScheduler(PriorityThreadPoolScheduler scheduler) {
