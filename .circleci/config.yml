@@ -19,9 +19,9 @@ jobs:
       - run:
           name: Run maven install in setup/com.dexels.target
           command: |
-          # cd setup/com.dexels.target
-          # mvn -s ../../.circleci/conf/settings.xml -B install
-          # cd ../..
+            cd setup/com.dexels.target
+            mvn -s ../../.circleci/conf/settings.xml -B install
+            cd ../..
       - save_cache:
           paths:
             - ~/.m2
