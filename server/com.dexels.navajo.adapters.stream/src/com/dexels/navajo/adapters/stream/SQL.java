@@ -20,12 +20,12 @@ import org.dexels.grus.GrusProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.immutable.factory.ImmutableFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.resource.jdbc.mysql.MySqlDataSourceComponent;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 import io.reactivex.Flowable;
 import oracle.jdbc.pool.OracleDataSource;

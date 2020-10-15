@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Queue Manager
 Bundle-SymbolicName: com.dexels.navajo.queuemanager
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.9.qualifier
+Bundle-Version: 3.1.19.qualifier
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
@@ -13,11 +13,14 @@ Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.server.jmx,
  com.dexels.navajo.server.resource,
  com.dexels.navajo.version,
+ com.dexels.prometheus.api;version="3.0.0",
+ io.prometheus.client;version="0.8.1",
  javax.script,
  javax.servlet,
  javax.servlet.http,
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="[1.6.1,1.8.0)"
+ org.slf4j;version="[1.6.1,1.8.0)",
+ sun.misc
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
  com.dexels.navajo.queuemanager.internal,
@@ -26,5 +29,6 @@ Bundle-Activator: navajoqueuemanager.Version
 Service-Component: OSGI-INF/navajo.server.threadpool.priority.xml,
  OSGI-INF/navajo.server.queuemanager.xml,
  OSGI-INF/navajo.server.queuemanager.null.xml,
- OSGI-INF/navajo.server.threadpool.health.xml
+ OSGI-INF/navajo.server.threadpool.health.xml,
+ OSGI-INF/navajo.server.threadpool.prometheus.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

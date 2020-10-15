@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.config.runtime.RuntimeConfig;
 import com.dexels.immutable.api.ImmutableMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -29,6 +28,7 @@ import com.dexels.navajo.parser.NamedExpression;
 import com.dexels.navajo.parser.compiled.api.CacheSubexpression;
 import com.dexels.navajo.parser.compiled.api.ReactiveParseItem;
 import com.dexels.navajo.reactive.api.Reactive;
+import com.dexels.navajo.runtime.config.RuntimeConfig;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;

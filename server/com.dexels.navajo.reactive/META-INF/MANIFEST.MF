@@ -5,8 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.reactive
 Bundle-Version: 2.1.19.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.immutable.api;version="1.0.0",
+Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.0.0",
  com.dexels.navajo.adapters.stream,
  com.dexels.navajo.authentication.api,
@@ -27,6 +26,7 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.reactive;version="1.0.0",
  com.dexels.navajo.reactive.api,
  com.dexels.navajo.repository.api.util;version="1.0.0",
+ com.dexels.navajo.runtime.config;resolution:=optional,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.server.listener.http.continuation,

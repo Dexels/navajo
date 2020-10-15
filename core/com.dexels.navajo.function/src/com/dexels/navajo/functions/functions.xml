@@ -30,7 +30,7 @@
 	</function>
 	<function name="Base64Encode" class="com.dexels.navajo.functions.Base64Encode">
 		<description>Get a Base64 representation of a given string or
-			binary(deprecated).
+			binary.
 		</description>
 		<input />
 		<result />

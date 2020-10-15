@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 5.3.59.qualifier
+Bundle-Version: 5.3.61.qualifier
 Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
 Navajo-Name: Core
 Eclipse-ExtensibleAPI: true
@@ -101,8 +101,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  navajocore;uses:="org.osgi.framework,navajoextension",
  navajoextension;uses:="org.osgi.framework,navajo,com.dexels.navajo.version"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.immutable.api;version="1.0.0",
+Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.2.0",
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
@@ -121,12 +120,15 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.repository.api,
  com.dexels.navajo.repository.api.diff;version="2.0.0",
  com.dexels.navajo.repository.api.util,
+ com.dexels.navajo.runtime.config;resolution:=optional,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.version,
+ com.dexels.prometheus.api;version="3.0.0",
  com.dexels.replication.api;version="9.1.0",
  com.dexels.replication.factory;version="1.1.0",
  com.dexels.resourcebundle;version="2.0.2",
  com.google.common.cache;version="20.0.0",
+ io.prometheus.client;version="0.8.1",
  io.reactivex;version="2.1.2";resolution:=optional,
  io.reactivex.functions;version="2.1.2";resolution:=optional,
  javax.imageio,
