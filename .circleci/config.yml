@@ -3,6 +3,9 @@ jobs:
   build_test_n_deploy:
     docker:
       - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASS
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1000m
@@ -13,21 +16,27 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
-      - run: |
-          cd setup/com.dexels.target
-          mvn -s ../../.circleci/conf/settings.xml -B install
-          cd ../..
+      - run:
+          name: Run maven install in setup/com.dexels.target
+          command: |
+          # cd setup/com.dexels.target
+          # mvn -s ../../.circleci/conf/settings.xml -B install
+          # cd ../..
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # Build; tests are skipped for now
-      - run: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
-      - run: |
-          cd ~
-          du -hs .m2
-          zip -r navajo_maven.zip .m2
+      - run:
+          name: Run maven install
+          command: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
+      - run:
+          name: zip .m2 environment in navajo_maven.zip
+          command: |
+            cd ~
+            du -hs .m2
+            zip -r navajo_maven.zip .m2
       - store_artifacts:
           path: ~/navajo_maven.zip
           destination: navajo_maven.zip
@@ -52,35 +61,45 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-      - run: |
-          ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
-          scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@repo.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
+      - run:
+          name: Push (scp) com.dexels P2 environment to p2.dexels.com
+          command: |
+            ssh -o StrictHostKeyChecking=no navajo@repo.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}/"
+            scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@p2.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}
 
       # Update enterprise
-      - run: |
-          mkdir ~/enterprisecheckout
-          cd  ~/enterprisecheckout
-          git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git
-          ls -l
-          cd enterprise/enterprise/com.dexels.enterprise.target
-          ./updateversion.sh
-          # Push changes
-          git config credential.helper 'cache --timeout=120'
-          git config user.email "Dexels Butler"
-          git config user.name "butler@dexels.com"
-          git add .
-          echo "commiting changes"
-          git commit --allow-empty -m "Update via CircleCI"
-          git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
-          echo "push complete"
-      - run: |
-          echo "skipping downstream"
-          #curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
-          curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
+      - run:
+          name: Update enterprise dependency on navajo to latest navajo build version (Triggers CI build on enterprise)
+          command: |
+            mkdir ~/enterprisecheckout
+            cd  ~/enterprisecheckout
+            git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git
+            ls -l
+            cd enterprise/enterprise/com.dexels.enterprise.target
+            ./updateversion.sh
+            # Push changes
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "Dexels Butler"
+            git config user.name "butler@dexels.com"
+            git add .
+            echo "commiting changes"
+            git commit --allow-empty -m "Update via CircleCI"
+            git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git master
+            echo "push complete"
+
+      - run:
+          name: Trigger navajo-vaadin build
+          command: |
+            echo "skipping downstream"
+            #curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build?circle-token=${CIRCLE_TOKEN}"
+            curl -X POST --header "Content-Type: application/json" -d '{"branch":"master"}' "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build?circle-token=${CIRCLE_TOKEN}"
 
   build_n_test:
     docker:
       - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASS
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1000m
@@ -91,28 +110,37 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
-      - run: |
-          cd setup/com.dexels.target
-          mvn -s ../../.circleci/conf/settings.xml -B install
-          cd ../..
+      - run:
+          name: Run maven install in setup/com.dexels.target
+          command: |
+            cd setup/com.dexels.target
+            mvn -s ../../.circleci/conf/settings.xml -B install
+            cd ../..
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "setup/com.dexels.target/maven.target" }}
 
       # Build; tests are skipped for now
-      - run: mvn  -B  package  -Denvironment=release
+      - run:
+          name: Run maven package
+          command: mvn  -B  package  -Denvironment=release
 
 workflows:
   version: 2
   workflow:
     jobs:
       - build_test_n_deploy:
+          context:
+          - dexels_docker_hub
           filters:
             branches:
               only:
                 - master
+
       - build_n_test:
+          context:
+          - dexels_docker_hub
           filters:
             branches:
               ignore:
