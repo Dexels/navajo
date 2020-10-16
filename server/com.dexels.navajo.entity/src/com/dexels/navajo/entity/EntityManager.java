@@ -2,6 +2,7 @@ package com.dexels.navajo.entity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,9 +10,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +27,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
+import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.FatalException;
@@ -33,8 +40,9 @@ import com.dexels.navajo.server.NavajoConfigInterface;
  * @author arjenschoneveld / cbrouwer
  * 
  */
-public class EntityManager {
+public class EntityManager implements EventHandler {
     private final static Logger logger = LoggerFactory.getLogger(EntityManager.class);
+    private static final String ENTITY_FOLDER = "scripts" + File.separator + "entity" + File.separator;
     private static EntityManager instance;
 
     private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
@@ -44,23 +52,21 @@ public class EntityManager {
     private DispatcherInterface dispatcher;
     private BundleCreator bundleCreator;
     private BundleContext bundleContext;
-    private EntityCompiler entityCompiler;
-
-    private boolean lazy;
+    private ExecutorService executorService;
+    private List<Future<?>> entityCompilations = new ArrayList<Future<?>>();
+    private List<String> failedCompilations = Collections.synchronizedList(new ArrayList<>());
 
     public void activate(BundleContext bundleContext) throws Exception {
         instance = this;
         this.bundleContext = bundleContext;
-        this.entityCompiler = new EntityCompiler();
+        this.executorService = Executors.newFixedThreadPool(1); // TODO multi threading doesn't work yet
         buildAndLoadScripts();
     }
 
     public void deactivate() {
         entityMap.clear();
         operationsMap.clear();
-        if (entityCompiler != null) {
-            entityCompiler.stop();
-        }
+        executorService.shutdown();
         instance = null;
     }
 
@@ -68,12 +74,31 @@ public class EntityManager {
         return instance;
     }
 
+    @Override
+    public void handleEvent(Event e) {
+        try {
+            Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, ENTITY_FOLDER));
+            Set<String> deletedScripts = new HashSet<String>(RepositoryEventParser.filterDeleted(e, ENTITY_FOLDER));
+
+            for (String changed : deletedScripts) {
+                fireCompileEntity(changed, true);
+            }
+
+            for (String changed : changedScripts) {
+                fireCompileEntity(changed, false);
+            }
+        } catch (Throwable t) {
+            logger.error("Error while handling event!", t);
+        }
+
+    }
+
     public Entity getEntity(String name) {
         if (name == null) {
             return null;
         }
         Entity e = entityMap.get(name);
-        if (e == null && lazy) {
+        if (e == null) {
             // Try lazy compilation
             e = checkAndLoadScript(name);
         }
@@ -95,7 +120,6 @@ public class EntityManager {
 
     public Set<String> getRegisteredEntities(String packagePath) {
         Set<String> unsortedResult = new HashSet<String>();
-        // List<String> result = ;
 
         for (String entity : entityMap.keySet()) {
             // Reconstruct entity from packagePath + entityName
@@ -152,13 +176,13 @@ public class EntityManager {
         if (getEntity(entity) == null) {
             throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Unknown entity: " + entity);
         }
-        throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED, "Operation " + method + " not supported for entity: " + entity);
+        throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED,
+                "Operation " + method + " not supported for entity: " + entity);
     }
 
     private void buildAndLoadScripts() throws Exception {
         if ("true".equals(System.getenv("DEVELOP_MODE"))) {
             logger.warn("Lazy compilation of entities!");
-            this.lazy = true;
             return;
         }
         String scriptPath = navajoConfig.getScriptPath();
@@ -169,12 +193,14 @@ public class EntityManager {
         }
 
         buildAndLoadScript(entityDir);
-        // Start compilation in a separate thread to not hold up the activator
-        new Thread(entityCompiler).start();
     }
-    
+
     public boolean isFinishedCompiling() {
-        return !entityCompiler.isRunning();
+        boolean allDone = true;
+        for (Future<?> entityCompilation : entityCompilations) {
+            allDone &= entityCompilation.isDone(); // check if future is done
+        }
+        return allDone && failedCompilations.isEmpty();
     }
 
     // Can be called on file or directory. If on directory, call recursively on
@@ -182,16 +208,7 @@ public class EntityManager {
     private void buildAndLoadScript(File file) throws Exception {
         if (file.isFile()) {
             String filename = file.toString();
-            if (!filename.endsWith(".xml")) {
-                return;
-            }
-            if (filename.endsWith("entitymapping.xml")) {
-                return;
-            }
-            String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"), filename.indexOf(".xml"));
-            String stripped = script.substring("scripts".length() + 1);
-            stripped = stripped.replace("\\", "/");
-            entityCompiler.addEntityToCompile(stripped);;
+            fireCompileEntity(filename, false);
         } else if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 buildAndLoadScript(f);
@@ -199,31 +216,42 @@ public class EntityManager {
         }
     }
 
+    private void fireCompileEntity(String filename, boolean onlyUnregister) {
+        if (!filename.endsWith(".xml")) {
+            return;
+        }
+        if (filename.endsWith("entitymapping.xml")) {
+            return;
+        }
+        String script = filename.substring(filename.indexOf("scripts" + File.separator + "entity"),
+                filename.indexOf(".xml"));
+        String stripped = script.substring("scripts".length() + 1);
+        stripped = stripped.replace("\\", "/");
+        entityCompilations.add(executorService.submit(new EntityCompiler(stripped, onlyUnregister)));
+    }
+
     private Entity checkAndLoadScript(String entityName) {
         String scriptPath = navajoConfig.getScriptPath();
         String entityPath = entityName.replace(".", File.separator);
-        String rpcName = "entity/" + entityName.replace('.', '/');
+        String entity = entityPath.replace("\\", "/");
 
         File entityFile = new File(scriptPath + File.separator + "entity", entityPath + ".xml");
         if (!entityFile.exists()) {
+            logger.error("File does not exist: " + entityFile);
             return null;
         }
-
-        logger.info("getOnDemand of entity {}", entityPath);
+        
         try {
-            CompiledScriptInterface onDemandScriptService = bundleCreator.getOnDemandScriptService(rpcName, null);
-
-            // Also compile all dependencies of this entity
-            for (int i = 0; i < onDemandScriptService.getDependencies().length; i++) {
-                Dependency d = onDemandScriptService.getDependencies()[i];
-                if (d instanceof ExtendDependency) {
-                    String extendedEntity = d.getId().replaceAll("/", ".");
-                    checkAndLoadScript(extendedEntity);
-                }
+            List<String> success = new ArrayList<>();
+            List<String> failures = new ArrayList<>();
+            List<String> skipped = new ArrayList<>();
+            bundleCreator.createBundle(entity, failures, success, skipped, true, false);
+            bundleCreator.installBundle(entity, failures, success, skipped, true);
+            if (failures.size() > 0) {
+                logger.error("Failure compiling entity: " + entity);
             }
-        } catch (Exception e) {
-            logger.error("Exception on getting compiled service {}", rpcName, e);
-            return null;
+        } catch (Throwable e) {
+            logger.error("Error compiling entity: " + entity, e);
         }
 
         return getEntityService(entityName);
@@ -234,7 +262,8 @@ public class EntityManager {
         String filter = "(entity.name=" + entityName + ")";
         ServiceReference<Entity>[] servicereferences;
         try {
-            servicereferences = (ServiceReference<Entity>[]) bundleContext.getServiceReferences(Entity.class.getName(), filter);
+            servicereferences = (ServiceReference<Entity>[]) bundleContext.getServiceReferences(Entity.class.getName(),
+                    filter);
             if (servicereferences != null) {
                 // First try to find one that matches our tenant
                 for (ServiceReference<Entity> srinstance : servicereferences) {
@@ -280,46 +309,40 @@ public class EntityManager {
     }
 
     private class EntityCompiler implements Runnable {
-        private List<String> success = new ArrayList<String>();
-        private List<String> failures = new ArrayList<String>();
-        private List<String> skipped = new ArrayList<String>();
-        
-        private Set<String> entitiesToCompile = new HashSet<>();
-        private boolean running = false;
-        
-        protected void addEntityToCompile(String entity) {
-            entitiesToCompile.add(entity);
+
+        private String entity;
+        private boolean onlyUnregister;
+
+        public EntityCompiler(String entity, boolean onlyUnregister) {
+            this.entity = entity;
+            this.onlyUnregister = onlyUnregister;
         }
-        
-        protected boolean isRunning() {
-            return running;
-        }
-        
-        protected void stop() {
-            running = false;
-        }
-        
+
         @Override
         public void run() {
-            running = true;
-            while (running == true) {
-                for (String script : entitiesToCompile) {
-                    try {
-                        bundleCreator.createBundle(script, failures, success, skipped, true, false);
-                        bundleCreator.installBundle(script, failures, success, skipped, true);
-                        if (!skipped.isEmpty()) {
-                            logger.info("Script compilation skipped: " + script);
-                        }
-                        if (!failures.isEmpty()) {
-                            logger.info("Script compilation failed: " + script);
-                        }
-
-                    } catch (Throwable e) {
-                        logger.error("Error: ", e);
+            boolean compilationSuccess = true;
+            try {
+                List<String> success = new ArrayList<>();
+                List<String> failures = new ArrayList<>();
+                List<String> skipped = new ArrayList<>();
+                bundleCreator.uninstallBundle(entity);
+                if (!onlyUnregister) {
+                    bundleCreator.createBundle(entity, failures, success, skipped, true, false);
+                    bundleCreator.installBundle(entity, failures, success, skipped, true);
+                    if (failures.size() > 0) {
+                        logger.error("Failure compiling entity: " + entity);
+                        compilationSuccess = false;
                     }
                 }
-                entitiesToCompile.clear();
-                running = false;
+            } catch (Throwable e) {
+                logger.error("Error compiling entity: " + entity, e);
+                compilationSuccess = false;
+            }
+            // update our administration for the health status
+            if (compilationSuccess) {
+                failedCompilations.remove(entity);
+            } else {
+                failedCompilations.add(entity);
             }
         }
     }
