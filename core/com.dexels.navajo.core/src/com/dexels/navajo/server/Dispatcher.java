@@ -356,13 +356,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         try {
             ServiceHandler sh = handlerFactory.createHandler(navajoConfig, access, simulationMode); 
 
-            // If recompile is needed ALWAYS set expirationInterval to -1.
-            // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
-            long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-            if (expirationInterval > 0 && sh.needsRecompile( access )) {
-                expirationInterval = -1;
-            }
-
             // Remove password from in to create password independent
             // persistenceKey.
             in.getHeader().setRPCPassword("");
@@ -377,12 +370,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             }
 
             return out;
-        } catch (java.lang.ClassNotFoundException cnfe) {
-            throw new SystemException(-1, cnfe.getMessage(), cnfe);
-        } catch (java.lang.IllegalAccessException iae) {
-            throw new SystemException(-1, iae.getMessage(), iae);
-        } catch (java.lang.InstantiationException ie) {
-            throw new SystemException(-1, ie.getMessage(), ie);
         } finally {
             // Remove stored access from worker request list.
             if (integ != null) {

@@ -13,9 +13,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import com.dexels.navajo.persistence.Persistable;
-
-public interface Navajo extends Persistable {
+public interface Navajo  {
 
     /**
      * Public constants.
@@ -268,15 +266,6 @@ public interface Navajo extends Persistable {
      * Delete a message from a specified message.
      */
     public void removeMessage(String message);
-
-    /**
-     * Return the persisetence key
-     * 
-     * @return String persistence key
-     */
-
-    @Override
-    public String persistenceKey();
 
     /**
      * Retun the Message buffer object

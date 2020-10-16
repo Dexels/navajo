@@ -1,7 +1,6 @@
 package com.dexels.navajo.server;
 
 import com.dexels.navajo.mapping.AsyncStore;
-import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -18,7 +17,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public String getInstanceGroup();
 	
 	// Available modules.
-	public PersistenceManager getPersistenceManager();
 	public SharedStoreInterface getSharedStore();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public ClassLoader getClassloader();
