@@ -9,50 +9,54 @@ import io.prometheus.client.Gauge;
 
 public class PriorityThreadPoolSchedulerMetricSource implements MetricSource {
 
-    private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolSchedulerMetricSource.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(PriorityThreadPoolSchedulerMetricSource.class);
 
-    private static Gauge normalActive;
+    private Gauge normalThreadPoolSize;
 
-    private Gauge normalPoolSize;
+    private Gauge activeNormalRequestCount;
 
-    private Gauge normalQueueSize;
-
-    private Gauge normalRequestsSize;
+    private Gauge queuedNormalRequestCount;
 
     private PriorityThreadPoolScheduler scheduler;
-    
+
     public void activate() {
 
         logger.info("Prometheus priority threadpool scheduler data source started");
-        normalActive = MetricSource.registerGauge("normalActive", "Normal Active");
-        normalPoolSize = MetricSource.registerGauge("normalPoolSize", "Normal Pool Size");
-        normalQueueSize = MetricSource.registerGauge("normalQueueSize", "Normal Pool Queue Size");
-        normalRequestsSize = MetricSource.registerGauge("normalRequests", "Normal Pool Requests");
+
+        normalThreadPoolSize = MetricSource.registerGauge("navajo_normal_threadpool_size",
+                "Maximum number of simultaneously processed requests");
+
+        activeNormalRequestCount = MetricSource.registerGauge("navajo_active_normal_request_count",
+                "Number of requests currently processed");
+
+        queuedNormalRequestCount = MetricSource.registerGauge("navajo_queued_normal_request_count",
+                "Number of queued requests");
     }
-    
+
     public void deactivate() {
 
         logger.info("Prometheus priority threadpool scheduler data source stopped");
-        MetricSource.unregisterCollector(normalActive);
-        MetricSource.unregisterCollector(normalPoolSize);
-        MetricSource.unregisterCollector(normalQueueSize);
-        MetricSource.unregisterCollector(normalRequestsSize);
+
+        MetricSource.unregisterCollector(normalThreadPoolSize);
+        MetricSource.unregisterCollector(activeNormalRequestCount);
+        MetricSource.unregisterCollector(queuedNormalRequestCount);
     }
-    
+
     @Override
     public void recordValues() {
 
-        normalActive.set((double) scheduler.getNormalActive());
-        normalPoolSize.set((double) scheduler.getNormalPoolSize());
-        normalQueueSize.set((double) scheduler.getNormalQueueSize());
-        normalRequestsSize.set((double) scheduler.getNormalRequests().size());
+        normalThreadPoolSize.set(scheduler.getNormalPoolSize());
+        activeNormalRequestCount.set(scheduler.getNormalActive());
+        queuedNormalRequestCount.set(scheduler.getNormalQueueSize());
     }
 
     public void setPriorityThreadPoolScheduler(PriorityThreadPoolScheduler scheduler) {
         this.scheduler = scheduler;
     }
-    
+
     public void clearPriorityThreadPoolScheduler(PriorityThreadPoolScheduler scheduler) {
         this.scheduler = null;
     }
+
 }
