@@ -233,7 +233,7 @@ public class EntityManager implements EventHandler {
     private Entity checkAndLoadScript(String entityName) {
         String scriptPath = navajoConfig.getScriptPath();
         String entityPath = entityName.replace(".", File.separator);
-        String entity = entityPath.replace("\\", "/");
+        String entity = "entity/" + entityPath.replace("\\", "/");
 
         File entityFile = new File(scriptPath + File.separator + "entity", entityPath + ".xml");
         if (!entityFile.exists()) {
@@ -331,6 +331,10 @@ public class EntityManager implements EventHandler {
                     bundleCreator.installBundle(entity, failures, success, skipped, true);
                     if (failures.size() > 0) {
                         logger.error("Failure compiling entity: " + entity);
+                        compilationSuccess = false;
+                    }
+                    if (skipped.size() > 0) {
+                        logger.error("Skipping compiling entity: " + entity);
                         compilationSuccess = false;
                     }
                 }
