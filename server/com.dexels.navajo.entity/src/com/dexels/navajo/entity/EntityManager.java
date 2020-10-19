@@ -26,56 +26,61 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
-import com.dexels.navajo.script.api.CompiledScriptInterface;
-import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
-/**
- * TODO: NAVAJO CLUSTER ENABLING
- * 
- * @author arjenschoneveld / cbrouwer
- * 
- */
+
 public class EntityManager implements EventHandler {
-    private final static Logger logger = LoggerFactory.getLogger(EntityManager.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(EntityManager.class);
+
     private static final String ENTITY_FOLDER = "scripts" + File.separator + "entity" + File.separator;
+
     private static EntityManager instance;
 
     private Map<String, Entity> entityMap = new ConcurrentHashMap<String, Entity>();
     private Map<String, Map<String, Operation>> operationsMap = new ConcurrentHashMap<String, Map<String, Operation>>();
+    private List<Future<?>> entityCompilations = new ArrayList<Future<?>>();
+    private List<String> failedCompilations = Collections.synchronizedList(new ArrayList<>());
 
     private NavajoConfigInterface navajoConfig;
     private DispatcherInterface dispatcher;
     private BundleCreator bundleCreator;
     private BundleContext bundleContext;
     private ExecutorService executorService;
-    private List<Future<?>> entityCompilations = new ArrayList<Future<?>>();
-    private List<String> failedCompilations = Collections.synchronizedList(new ArrayList<>());
 
     public void activate(BundleContext bundleContext) throws Exception {
-        instance = this;
+
+        EntityManager.instance = this;
         this.bundleContext = bundleContext;
         this.executorService = Executors.newFixedThreadPool(1); // TODO multi threading doesn't work yet
+
         buildAndLoadScripts();
     }
 
+    void activateForTest() throws Exception {
+
+        EntityManager.instance = this;
+        this.executorService = Executors.newFixedThreadPool(1);
+    }
+
     public void deactivate() {
+
         entityMap.clear();
         operationsMap.clear();
         executorService.shutdown();
-        instance = null;
+        EntityManager.instance = null;
     }
 
     public static EntityManager getInstance() {
-        return instance;
+        return EntityManager.instance;
     }
 
     @Override
     public void handleEvent(Event e) {
+
         try {
             Set<String> changedScripts = new HashSet<String>(RepositoryEventParser.filterChanged(e, ENTITY_FOLDER));
             Set<String> deletedScripts = new HashSet<String>(RepositoryEventParser.filterDeleted(e, ENTITY_FOLDER));
@@ -90,10 +95,10 @@ public class EntityManager implements EventHandler {
         } catch (Throwable t) {
             logger.error("Error while handling event!", t);
         }
-
     }
 
     public Entity getEntity(String name) {
+
         if (name == null) {
             return null;
         }
@@ -102,10 +107,12 @@ public class EntityManager implements EventHandler {
             // Try lazy compilation
             e = checkAndLoadScript(name);
         }
+
         return e;
     }
 
     public Navajo getEntityNavajo(String serviceName) throws InterruptedException, FatalException {
+
         Navajo in = NavajoFactory.getInstance().createNavajo();
         Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "_internal_", "", -1);
         in.addHeader(h);
@@ -119,6 +126,7 @@ public class EntityManager implements EventHandler {
     }
 
     public Set<String> getRegisteredEntities(String packagePath) {
+
         Set<String> unsortedResult = new HashSet<String>();
 
         for (String entity : entityMap.keySet()) {
@@ -142,6 +150,7 @@ public class EntityManager implements EventHandler {
     }
 
     public void addOperation(Operation o) {
+
         Map<String, Operation> operationEntry = null;
         if ((operationEntry = operationsMap.get(o.getEntityName())) == null) {
             operationEntry = new HashMap<String, Operation>();
@@ -158,6 +167,7 @@ public class EntityManager implements EventHandler {
     }
 
     public void registerEntity(Entity e) {
+
         entityMap.put(e.getName(), e);
         if (operationsMap.get(e.getName()) == null) {
             operationsMap.put(e.getName(), new HashMap<String, Operation>());
@@ -170,6 +180,7 @@ public class EntityManager implements EventHandler {
     }
 
     public Operation getOperation(String entity, String method) throws EntityException {
+
         if (operationsMap.get(entity) != null && operationsMap.get(entity).get(method) != null) {
             return operationsMap.get(entity).get(method);
         }
@@ -181,6 +192,7 @@ public class EntityManager implements EventHandler {
     }
 
     private void buildAndLoadScripts() throws Exception {
+
         if ("true".equals(System.getenv("DEVELOP_MODE"))) {
             logger.warn("Lazy compilation of entities!");
             return;
@@ -196,6 +208,7 @@ public class EntityManager implements EventHandler {
     }
 
     public boolean isFinishedCompiling() {
+
         boolean allDone = true;
         for (Future<?> entityCompilation : entityCompilations) {
             allDone &= entityCompilation.isDone(); // check if future is done
@@ -206,6 +219,7 @@ public class EntityManager implements EventHandler {
     // Can be called on file or directory. If on directory, call recursively on
     // each file
     private void buildAndLoadScript(File file) throws Exception {
+
         if (file.isFile()) {
             String filename = file.toString();
             fireCompileEntity(filename, false);
@@ -217,6 +231,7 @@ public class EntityManager implements EventHandler {
     }
 
     private void fireCompileEntity(String filename, boolean onlyUnregister) {
+
         if (!filename.endsWith(".xml")) {
             return;
         }
@@ -231,6 +246,7 @@ public class EntityManager implements EventHandler {
     }
 
     private Entity checkAndLoadScript(String entityName) {
+
         String scriptPath = navajoConfig.getScriptPath();
         String entityPath = entityName.replace(".", File.separator);
         String entity = "entity/" + entityPath.replace("\\", "/");
@@ -240,7 +256,7 @@ public class EntityManager implements EventHandler {
             logger.error("File does not exist: " + entityFile);
             return null;
         }
-        
+
         try {
             List<String> success = new ArrayList<>();
             List<String> failures = new ArrayList<>();
@@ -259,6 +275,7 @@ public class EntityManager implements EventHandler {
 
     @SuppressWarnings("unchecked")
     private Entity getEntityService(String entityName) {
+
         String filter = "(entity.name=" + entityName + ")";
         ServiceReference<Entity>[] servicereferences;
         try {
@@ -320,6 +337,7 @@ public class EntityManager implements EventHandler {
 
         @Override
         public void run() {
+
             boolean compilationSuccess = true;
             try {
                 List<String> success = new ArrayList<>();
@@ -350,4 +368,5 @@ public class EntityManager implements EventHandler {
             }
         }
     }
+
 }
