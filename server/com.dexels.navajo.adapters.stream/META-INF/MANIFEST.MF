@@ -4,7 +4,7 @@ Bundle-Name: Set of Stream Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters.stream
 Bundle-Version: 2.0.25.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.0.0",
  com.dexels.navajo.adapter.sqlmap,

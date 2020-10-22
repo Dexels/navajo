@@ -67,4 +67,4 @@ Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.insta
  OSGI-INF/tipi.multitenant.configurator.xml,
  OSGI-INF/tipi.repository.provider.xml
 Require-Bundle: com.dexels.navajo.client.impl.javanet;bundle-version="0.9.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
