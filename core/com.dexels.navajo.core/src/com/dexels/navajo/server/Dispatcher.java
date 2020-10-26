@@ -350,10 +350,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         try {
             ServiceHandler sh = handlerFactory.createHandler(navajoConfig, access, simulationMode);
 
-            // Remove password from in to create password independent
-            // persistenceKey.
-            in.getHeader().setRPCPassword("");
-
             out = sh.doService( access );
 
             access.setOutputDoc(out);
