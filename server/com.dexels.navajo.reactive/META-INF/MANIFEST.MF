@@ -4,7 +4,7 @@ Bundle-Name: Reactive Script implementation
 Bundle-SymbolicName: com.dexels.navajo.reactive
 Bundle-Version: 2.1.19.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.0.0",
  com.dexels.navajo.adapters.stream,

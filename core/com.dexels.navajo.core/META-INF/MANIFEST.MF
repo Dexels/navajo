@@ -158,6 +158,6 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
  org.slf4j,
  org.w3c.dom
 Service-Component: OSGI-INF/*.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.core

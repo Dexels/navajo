@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.dexels.navajo.example.adapter
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.dexels.navajo.example.adapter.Activator
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Navajo-Extension: com/dexels/navajo/example/adapter/adapters.xml
 Navajo-Name: ExampleAdapters
 Eclipse-ExtensibleAPI: true
