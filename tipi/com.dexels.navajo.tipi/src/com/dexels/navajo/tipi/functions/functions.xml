@@ -296,11 +296,6 @@
         <input>integer|float,integer|float</input>
         <result>integer|float</result>
     </function>
-    <function name="IsServiceCached" class="com.dexels.navajo.tipi.functions.IsServiceCached">
-        <description>Function to check whether a service with optionally service key values is cached</description>
-        <input>string,string</input>
-        <result>boolean</result>
-    </function>
     <function name="IsNull" class="com.dexels.navajo.tipi.functions.IsNull">
         <description>Will return true if the supplied argument is null, false otherwise</description>
         <input>any</input>

@@ -33,9 +33,6 @@
         <message name="repository">
             <property name="class" value="com.dexels.navajo.server.SimpleRepository"/>
         </message>
-        <message name="persistence-manager">
-            <property name="class" value="com.dexels.navajo.persistence.impl.PersistenceManagerImpl"/>
-        </message>
         <message name="logging">
             <property name="level" value="4"/>
             <property name="filename" value="navajolog"/>
