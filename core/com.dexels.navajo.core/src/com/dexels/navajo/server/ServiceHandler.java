@@ -27,14 +27,12 @@ package com.dexels.navajo.server;
  */
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.persistence.Constructor;
-import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.UserException;
 
-public abstract class ServiceHandler implements Constructor {
+public abstract class ServiceHandler {
 
     public abstract String getIdentifier();
 
@@ -45,16 +43,6 @@ public abstract class ServiceHandler implements Constructor {
      * @throws SystemException
      */
     public abstract Navajo doService( Access a ) throws NavajoException, UserException, SystemException, AuthorizationException;
-
-    /**
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-	public final Persistable construct() throws Exception {
-        return doService( null );
-    }
 
     public abstract boolean needsRecompile( Access a ) throws Exception;
 

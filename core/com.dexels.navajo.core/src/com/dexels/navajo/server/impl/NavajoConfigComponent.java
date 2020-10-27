@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.mapping.AsyncStore;
-import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
@@ -42,7 +40,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 	private ConfigurationAdmin myConfigurationAdmin;
-	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
 	private SharedStoreInterface sharedStore;
@@ -88,11 +85,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public void activate(Map<String,Object> props, BundleContext bundleContext) throws InstantiationException {
 			this.properties = props;
 			this.bundleContext = bundleContext;
-			this.persistenceManager = new PersistenceManagerImpl(this.tribeManager);
-			if(bundleContext==null) {
-				// just for non-osgi, to be sure
-				this.persistenceManager.setSharedStore(getSharedStore());
-			}
 	}
 
 	public void deactivate() {
@@ -180,11 +172,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	@Override
 	public String getInstanceGroup() {
 		return (String) properties.get("instanceGroup");
-	}
-
-	@Override
-	public PersistenceManager getPersistenceManager() {
-		return this.persistenceManager;
 	}
 
 	private Object getService(Class<?> clz) {

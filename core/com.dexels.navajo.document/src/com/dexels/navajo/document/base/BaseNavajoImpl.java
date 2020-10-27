@@ -211,19 +211,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public String persistenceKey() {
-        Navajo copy = this.copy();
-        copy.removeHeader();
-        StringWriter sw = new StringWriter();
-        try {
-            copy.write(sw);
-        } catch (NavajoException e) {
-            logger.error("Error: ", e);
-        }
-        return sw.toString().hashCode() + "";
-    }
-
-    @Override
     public void removeMessage(String s) {
         rootMessage.removeMessage(s);
     }
