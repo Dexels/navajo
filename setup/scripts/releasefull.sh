@@ -1,4 +1,23 @@
 #!/bin/bash
+#
+# This scripts releases a module from within the root of the module.
+#
+# The following stpes are performed:
+# 1. The new version of the package is determined, you can override this version manually. By default this just strips the -SNAPSHOT suffix
+# 2. It checks whether the module already exists on repo.dexels.com; if so, the script fails
+# 3. It performs a local build to test whether there are any build issues; if so, the script fails
+# 4. The version in the pom.xml and MANIFEST.MF files is set to the new version.
+# 5. The module is built and deployed to repo.dexels.com, git-committed, git-tagged and git-pushed
+# 6. A new snapshot version is prepared with the last version number +1.
+# 7. The snapshot version is  git-committed and git-pushed
+#
+# Example:
+# ```
+# > cd core/com.dexels.navajo.core
+# > ../../setup/core/scripts/releasefull.sh
+# ```
+
+
 
 function git_num_files {
   expr `git status --porcelain 2>/dev/null| grep -v '??' |wc -l`
