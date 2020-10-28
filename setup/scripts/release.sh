@@ -17,7 +17,7 @@ commitMsg="Release of ${PWD##*/} version ${RELEASEVERSION}"
 releaseTag="Release_${PWD##*/}-${RELEASEVERSION}"
 environmentSwitch=" -Denvironment=release"
 
-echo Setting version to ${RELEASEVERSION}
+echo Setting version to ${RELEASEVERSION} and deploy
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${RELEASEVERSION} $environmentSwitch
 mvn deploy -DskipTests -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch $SETREPO
 git commit -m "$commitMsg" -a
@@ -25,7 +25,6 @@ git tag -a -f "$releaseTag" -m "$commitMsg"
 
 echo Setting version to ${SNAPSHOTVERSION}-SNAPSHOT
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${SNAPSHOTVERSION}-SNAPSHOT $environmentSwitch
-mvn install -DskipTests -Dmaven.test.failure.ignore=true  -Dbranch=$branch_name $environmentSwitch $SETREPO
 git commit -m "Development stream of ${PWD##*/} version ${SNAPSHOTVERSION}" -a
 git push --tags
 git push
