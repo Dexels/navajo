@@ -24,6 +24,8 @@ then
     exit 1
 fi
 
+## TODO Only allow release from master
+
 echo "Git pulling..."
 git pull
 
@@ -32,7 +34,7 @@ VERSION=`cat META-INF/MANIFEST.MF | grep Bundle-Version | awk '{ print $2 }'`
 VERSION=${VERSION%.qualifier}
 BASEVERSION=`echo "$VERSION" | cut -f1-2 -d '.'`
 MINORVERSION=`echo "$VERSION" | cut -f3 -d '.'`
-NEWMINOR1=`expr $MINORVERSION + 1`
+NEWMINOR1=$MINORVERSION
 NEWMINOR1=$BASEVERSION.$NEWMINOR1
 
 echo "Current version: $VERSION"
@@ -55,7 +57,7 @@ then
     exit 1
 fi
 
-echo "Going to release $BUNDLENAME $NEWMINOR1 and $NEWMINOR2 - press ctrl+c to cancel within 5 seconds"
+echo "Going to release $BUNDLENAME $NEWMINOR - press ctrl+c to cancel within 5 seconds"
 echo "SETREPO: ${SETREPO}"
 prettysleep 5
 
@@ -66,7 +68,7 @@ then
 	exit 1
 fi
 
-release.sh $NEWMINOR1 $NEWMINOR2
+$(dirname $0)/release.sh $NEWMINOR1 $NEWMINOR2
 
 if [ $? -ne 0 ]
 then
@@ -76,4 +78,3 @@ fi
 echo ""
 echo ""
 echo "Released $BUNDLENAME $NEWMINOR1"
-
