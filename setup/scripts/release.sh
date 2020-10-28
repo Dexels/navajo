@@ -26,6 +26,6 @@ git tag -a -f "$releaseTag" -m "$commitMsg"
 echo Setting version to ${SNAPSHOTVERSION}-SNAPSHOT
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${SNAPSHOTVERSION}-SNAPSHOT $environmentSwitch
 git commit -m "Development stream of ${PWD##*/} version ${SNAPSHOTVERSION}" -a
-git push --tags
+git push origin "$releaseTag"
 git push
 
