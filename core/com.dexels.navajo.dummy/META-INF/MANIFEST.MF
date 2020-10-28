@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Dummy package
 Bundle-SymbolicName: com.dexels.navajo.dummy
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: com.dexels.immutable.api;version="1.0.0"
