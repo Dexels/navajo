@@ -62,6 +62,6 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  pl",com.dexels.osgicompiler,com.dexels.osgicompiler.internal;uses:="j
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.compiler.tsl

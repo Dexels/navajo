@@ -579,13 +579,6 @@
 		<input>string|integer|float</input>
 		<result>boolean</result>
 	</function>
-	<function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
-		<description>Function to check whether a service with optionally
-			service key values is cached
-		</description>
-		<input>string,string</input>
-		<result>boolean</result>
-	</function>
     <function name="IsValidXMLFile" class="com.dexels.navajo.functions.IsValidXMLFile">
         <description>This function checks whether a given binary argmument represents a valid xml format</description>
         <input>binary</input>

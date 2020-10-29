@@ -1,12 +1,7 @@
 package com.dexels.navajo.server;
 
 /**
- * Title:        Navajo
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:      Dexels
- * @author Arjen Schoneveld en Martin Bergman
- * @version $Id$
+ * Copyright (c) 2001  Dexels B.V.
  *
  * DISCLAIMER
  *
@@ -20,16 +15,14 @@ package com.dexels.navajo.server;
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
  */
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -43,6 +36,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
@@ -75,7 +69,6 @@ import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
-import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
@@ -87,6 +80,9 @@ import com.dexels.navajo.server.global.GlobalManagerRepository;
 import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.tenant.TenantConfig;
 import com.dexels.navajo.util.AuditLog;
+import com.dexels.prometheus.api.MetricSource;
+
+import io.prometheus.client.Counter;
 
 /**
  * This class implements the general Navajo Dispatcher. This class handles
@@ -96,42 +92,48 @@ import com.dexels.navajo.util.AuditLog;
 
 public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
+    private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+
     /**
      * Fields accessable by webservices
      */
     private static final String NAVAJO_TOPIC = "navajo/request";
-    
-    private final Map<String, GlobalManager> globalManagers = new HashMap<>();
 
-    private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+    private static final int rateWindowSize = 20;
+
+    private final Map<String, GlobalManager> globalManagers = new HashMap<>();
 
     private final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access, Boolean>());
 
+    private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
+
+    private long [] rateWindow = new long [rateWindowSize];
+
     private boolean useAuthorisation = true;
 
-    private long requestCount = 0;
+    private long requestCount;
     private NavajoConfigInterface navajoConfig;
 
     private EventAdmin eventAdmin;
-    private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<>();
 
-    
     private String keyStore;
     private String keyPassword;
 
-    private static final int rateWindowSize = 20;
-    private static final double requestRate = 0.0;
-    private long[] rateWindow = new long[rateWindowSize];
-
-    private int peakAccessSetSize = 0;
+    private int peakAccessSetSize;
 
     protected boolean simulationMode;
     private AuthenticationMethodBuilder authMethodBuilder;
     private HandlerFactory handlerFactory;
 
+    private int health;
+
+    private Counter navajoExceptionsTotal;
+    private Counter navajoRequestsTotal;
+
     // optional, can be null
 
     public Dispatcher(NavajoConfigInterface nc) {
+
         navajoConfig = nc;
     }
 
@@ -139,33 +141,27 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
      * Constructor for usage in web service scripts.
      */
     public Dispatcher() {
-        navajoConfig = null;
+        this(null);
+    }
+
+    public void activate(BundleContext context) {
+
+        navajoExceptionsTotal = MetricSource.registerCounter("navajo_exceptions_total",
+                "Total count of requests with exceptions");
+
+        navajoRequestsTotal = MetricSource.registerCounter("navajo_requests_total",
+                "Total count of requests");
+    }
+
+    public void deactivate() {
+
+        MetricSource.unregisterCollector(navajoExceptionsTotal);
+        MetricSource.unregisterCollector(navajoRequestsTotal);
     }
 
     @Override
     public void generateServerReadyEvent() {
         NavajoEventRegistry.getInstance().publishEvent(new ServerReadyEvent());
-    }
-
-    private final void startUpServices() {
-
-        // Clear temp space.
-        clearTempSpace();
-
-        // Bootstrap event registry.
-        NavajoEventRegistry.getInstance();
-
-        // Bootstrap async store.
-        navajoConfig.getAsyncStore();
-
-        // Startup user defined services.
-        UserDaemon.startup();
-
-        // Startup queued adapter.
-        RequestResponseQueueFactory.getInstance();
-
-        // Bootstrap integrity worker.
-        navajoConfig.getIntegrityWorker();
     }
 
     public Access[] getUsers() {
@@ -218,7 +214,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.dexels.navajo.server.DispatcherMXBean#getRequestRate()
      */
     @Override
@@ -253,7 +249,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     /*
      * Get the (singleton) NavajoConfig object reference.
-     * 
+     *
      * @return
      */
     @Override
@@ -274,7 +270,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     /*
      * Get the default NavajoClassLoader. Note that when hot-compile is enabled
      * each webservice context uses its own NavajoClassLoader instance.
-     * 
+     *
      * @return
      */
     public final ClassLoader getNavajoClassLoader() {
@@ -287,17 +283,17 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     /*
      * Process a webservice using a special handler class.
-     * 
+     *
      * @param handler the class the will process the webservice.
-     * 
+     *
      * @param in the request Navajo document.
-     * 
+     *
      * @param access
-     * 
+     *
      * @param parms
-     * 
+     *
      * @return
-     * 
+     *
      * @throws Exception
      */
     private final Navajo dispatch(Access access) throws Exception {
@@ -310,8 +306,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         }
 
         Navajo in = access.getInDoc();
-        boolean birtMode = false;
-
         if (in != null) {
             Header h = in.getHeader();
             if (h != null) {
@@ -334,7 +328,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                         access.addPiggybackData(element);
                     }
                 }
-                
+
             }
         } else {
             throw NavajoFactory.getInstance().createNavajoException("Null input message in dispatch");
@@ -354,20 +348,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         }
 
         try {
-            ServiceHandler sh = handlerFactory.createHandler(navajoConfig, access, simulationMode); 
+            ServiceHandler sh = handlerFactory.createHandler(navajoConfig, access, simulationMode);
 
-            // If recompile is needed ALWAYS set expirationInterval to -1.
-            // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
-            long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-            if (expirationInterval > 0 && sh.needsRecompile( access )) {
-                expirationInterval = -1;
-            }
-
-            // Remove password from in to create password independent
-            // persistenceKey.
-            in.getHeader().setRPCPassword("");
-
-            out = sh.doService( access ); 
+            out = sh.doService( access );
 
             access.setOutputDoc(out);
 
@@ -377,12 +360,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             }
 
             return out;
-        } catch (java.lang.ClassNotFoundException cnfe) {
-            throw new SystemException(-1, cnfe.getMessage(), cnfe);
-        } catch (java.lang.IllegalAccessException iae) {
-            throw new SystemException(-1, iae.getMessage(), iae);
-        } catch (java.lang.InstantiationException ie) {
-            throw new SystemException(-1, ie.getMessage(), ie);
         } finally {
             // Remove stored access from worker request list.
             if (integ != null) {
@@ -516,7 +493,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         if (t != null) {
             logger.error("Generating error message for: ", t);
         }
-        
+
         try {
             Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
@@ -644,7 +621,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
     /**
      * Entry point for HTTP Servlet Listener.
-     * 
+     *
      * @param inMessage
      *            , the Navajo request message
      * @param userCertificate
@@ -689,8 +666,8 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         String origThreadName = null;
         boolean scheduledWebservice = false;
         boolean afterWebServiceActivated = false;
-        
-        
+
+
         int accessSetSize = accessSet.size();
         setRequestRate(clientInfo, accessSetSize);
 
@@ -716,7 +693,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             if (rpcName == null) {
                 throw new FatalException("No script defined");
             }
-            
+
 //            if (instance != null && !tenantConfig.getTenants().contains(instance)) {
 //                throw new FatalException("Unsupported tenant: " + instance);
 //            }
@@ -734,7 +711,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             access.setTenant(instance);
             access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
-           
+
             access.setClientDescription(header.getHeaderAttribute("clientdescription"));
             access.setApplication(header.getHeaderAttribute("application"));
             access.setOrganization(header.getHeaderAttribute("organization"));
@@ -761,9 +738,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                     } else {
                         authenticator =  authMethodBuilder.getInstanceForRequest(clientInfo.getAuthHeader());
                     }
-                   
+
                     if (authenticator == null) {
-                        throw new FatalException("Missing authenticator"); 
+                        throw new FatalException("Missing authenticator");
                     }
                     authenticator.process(access);
 
@@ -858,7 +835,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 // Be very defensive not to add null values to the MDC, as they will fail at unexpected moments
                 if(access.accessID!=null) {
                     MDC.put("accessId", access.accessID);
-                	
+
                 }
                 if(access.getRpcName()!=null) {
                     MDC.put("rpcName", access.getRpcName());
@@ -921,7 +898,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                     // Create beforeWebservice event.
                     access.setInDoc(inMessage);
                     long bstart = System.currentTimeMillis();
-                    Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?  
+                    Navajo useProxy = ( WebserviceListenerFactory.getInstance() != null ?
                     		WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access) : null);
                     access.setBeforeServiceTime((int) (System.currentTimeMillis() - bstart));
 
@@ -1005,7 +982,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             String[] allRefs = inMessage.getHeader().getCallBackPointers();
             if (AsyncStore.getInstance().getInstance(allRefs[0]) == null) {
                 RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
-                
+
                 logger.info("Broadcasting async pointer: {}", allRefs[0]);
                 RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
                 if (rasa != null) {
@@ -1056,8 +1033,9 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 access.setAfterServiceTime(0);
                 if (access.getExitCode() != Access.EXIT_AUTH_EXECPTION) {
                     long astart = System.currentTimeMillis();
-                    boolean after = ( WebserviceListenerFactory.getInstance() != null ? 
-                            WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access) : false);
+                    if (WebserviceListenerFactory.getInstance() != null) {
+                        WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+                    }
                     access.setAfterServiceTime((int) (System.currentTimeMillis() - astart));
                 }
                 // Set access to finished state.
@@ -1083,7 +1061,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 accessSet.remove(access);
             }
         }
-        
+
         generateNavajoRequestEvent(myException != null);
 
         if (origThreadName != null) {
@@ -1092,19 +1070,23 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     }
 
     private void generateNavajoRequestEvent(boolean hadException) {
+
         if (eventAdmin == null) {
             // non-OSGi?
             return;
         }
+
         Map<String, Object> properties = new HashMap<String, Object>();
         if (hadException) {
+            navajoExceptionsTotal.inc();
             properties.put("type", "navajoexception");
         } else {
+            navajoRequestsTotal.inc();
             properties.put("type", "navajo");
         }
+
         Event event = new Event(Dispatcher.NAVAJO_TOPIC, properties);
         eventAdmin.postEvent(event);
-        
     }
 
     private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage, Access access) {
@@ -1126,7 +1108,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             return;
         }
 
-        
+
         for (DescriptionProviderInterface dpi : desciptionProviders.values()) {
             try {
                 dpi.updatePropertyDescriptions(inMessage, outMessage, access);
@@ -1134,7 +1116,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 logger.error("Error updating descriptions in {}", dpi.getClass().getName(), e);
             }
         }
-      
+
     }
 
     /**
@@ -1168,43 +1150,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         return tempDir;
     }
 
-    /**
-     * Recursively delete files including directories.
-     * 
-     * @param f
-     */
-    private void deleteFiles(File f) {
-        if (f != null && f.isDirectory()) {
-            File[] dirs = f.listFiles();
-            if (dirs != null && dirs.length > 0) {
-                for (int i = 0; i < dirs.length; i++) {
-                    deleteFiles(dirs[i]);
-                }
-            }
-            try {
-				Files.deleteIfExists(f.toPath());
-			} catch (IOException e) {
-				logger.error("Error: ", e);
-			}
-        } else if (f != null) {
-            try {
-				Files.deleteIfExists(f.toPath());
-			} catch (IOException e) {
-				logger.error("Error: ", e);
-			}
-        }
-    }
-
-    private void clearTempSpace() {
-        File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
-        File[] dirs = tempDir.listFiles();
-        if (dirs != null && dirs.length > 0) {
-            for (int i = 0; i < dirs.length; i++) {
-                deleteFiles(dirs[i]);
-            }
-        }
-    }
-
     @Override
     public File createTempFile(String prefix, String suffix) throws IOException {
         File f = File.createTempFile(prefix, suffix, getTempDir());
@@ -1218,9 +1163,8 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     public int getAccessSetSize() {
         return DispatcherFactory.getInstance().getAccessSet().size();
     }
+
     /*
-     * (non-Javadoc)
-     * 
      * @see com.dexels.navajo.server.DispatcherMXBean#getPeakAccessSetSize()
      */
     @Override
@@ -1229,8 +1173,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.dexels.navajo.server.DispatcherMXBean#resetAccessSetPeakSize()
      */
     @Override
@@ -1239,8 +1181,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.dexels.navajo.server.DispatcherMXBean#getRequestCount()
      */
     @Override
@@ -1317,12 +1257,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
         return getNavajoConfig().getCurrentCPUload();
     }
 
-    private int health;
-
-    private TenantConfig tenantConfig;
-
-	private BundleCreator bundleCreator;
-
 
     @Override
     public int getHealth(String resourceId) {
@@ -1355,8 +1289,6 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     public void removeGlobalManager(GlobalManager gm, Map<String, Object> settings) {
         globalManagers.remove(settings.get("instance"));
     }
-    
-
 
     public void setEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;
@@ -1365,7 +1297,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     public void clearEventAdmin(EventAdmin eventAdmin) {
         this.eventAdmin = null;
     }
-    
+
     public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
         this.authMethodBuilder = amb;
     }
@@ -1373,7 +1305,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     public void clearAuthenticationMethodBuilder(AuthenticationMethodBuilder eventAdmin) {
         this.authMethodBuilder = null;
     }
-    
+
     public void setHandlerFactory(HandlerFactory hf) {
         this.handlerFactory = hf;
     }
@@ -1381,29 +1313,21 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
     public void clearHandlerFactory(HandlerFactory hf) {
         this.handlerFactory = null;
     }
-    
+
     public void addDescriptionProvider(DescriptionProviderInterface dpi) {
         desciptionProviders.put(dpi.getClass().getName(), dpi);
-
     }
-    
+
     public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
         desciptionProviders.remove(dpi.getClass().getName());
     }
-    
-    public void setTenantConfig(TenantConfig tenantConfig) {
-        this.tenantConfig = tenantConfig;
-    }
 
-    public void clearTenantConfig(TenantConfig tenantConfig) {
-        this.tenantConfig = null;
-    }
+    public void setTenantConfig(TenantConfig tenantConfig) {}
 
-	public void setBundleCreator(BundleCreator bundleCreator) {
-		this.bundleCreator = bundleCreator;
-	}
+    public void clearTenantConfig(TenantConfig tenantConfig) {}
 
-	public void clearBundleCreator(BundleCreator bundleCreator) {
-		this.bundleCreator = null;
-	}
+	public void setBundleCreator(BundleCreator bundleCreator) {}
+
+	public void clearBundleCreator(BundleCreator bundleCreator) {}
+
 }

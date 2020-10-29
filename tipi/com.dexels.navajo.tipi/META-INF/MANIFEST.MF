@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.16.27.qualifier
+Bundle-Version: 2.16.29.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;version="1.1.42",
  tipi;version="1.1.42",
@@ -67,4 +67,4 @@ Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.insta
  OSGI-INF/tipi.multitenant.configurator.xml,
  OSGI-INF/tipi.repository.provider.xml
 Require-Bundle: com.dexels.navajo.client.impl.javanet;bundle-version="0.9.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

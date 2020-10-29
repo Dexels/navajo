@@ -42,41 +42,37 @@ import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class EntityDispatcher {
+
+    private static final Logger logger = LoggerFactory.getLogger(EntityDispatcher.class);
+
+    private static final Logger statLogger = LoggerFactory.getLogger("stats");
+
     private static final String HTTP_METHOD_DELETE = "DELETE";
     private static final String HTTP_METHOD_GET = "GET";
     private static final Object HTTP_METHOD_OPTIONS = "OPTIONS";
-
-    private final static Logger logger = LoggerFactory.getLogger(EntityDispatcher.class);
-    private final static Logger statLogger = LoggerFactory.getLogger("stats");
-
-    private final static String DEFAULT_OUTPUT_FORMAT = "json";
-    private static final Set<String> SUPPORTED_OUTPUT = new HashSet<String>(Arrays.asList("json", "xml", "birt", "tml", "bin"));
+    private static final String DEFAULT_OUTPUT_FORMAT = "json";
+    private static final Set<String> SUPPORTED_OUTPUT =
+            new HashSet<String>(Arrays.asList("json", "xml", "birt", "tml", "bin"));
 
     private EntityManager myManager;
     private AuthenticationMethodBuilder authMethodBuilder;
     private EntityMapper myMapper;
     private NavajoIOConfig navajoIOConfig;
-    
-    private Map<String,String> additionalHttpHeaders = new HashMap<>();
-    
-	public void setConfig(NavajoIOConfig navajoIOConfig) {
-		this.navajoIOConfig = navajoIOConfig;
-	}
 
-	public void activate(Map<String, Object> properties) {
-		for ( String h : properties.keySet() ) {
-			if ( h.startsWith("header.")) {
-				String header = h.split("\\.")[1];
-				String key = (String) properties.get(h);
-				additionalHttpHeaders.put(header, key);
-			}
-		}
-	}
-	
-	public void deactivate() {
-		
-	}
-	
+    private Map<String, String> additionalHttpHeaders = new HashMap<>();
+
+    public void activate(Map<String, Object> properties) {
+        for (String h : properties.keySet()) {
+            if (h.startsWith("header.")) {
+                String header = h.split("\\.")[1];
+                String key = (String) properties.get(h);
+                additionalHttpHeaders.put(header, key);
+            }
+        }
+    }
+
+    public void deactivate() {}
+
     public void run(EntityContinuationRunner runner) {
         Navajo result = null;
         Access access = null;
@@ -89,10 +85,10 @@ public class EntityDispatcher {
         Navajo input = null;
         String inputEtag = null;
         boolean entityFound = false;
-        
+
         String locale = runner.getHttpRequest().getHeader("X-Navajo-Locale");
         String userAgent = runner.getHttpRequest().getHeader("User-Agent");
-        
+
         try {
 
             // Check for a .<format> in the URL - can be in RequestURI
@@ -117,7 +113,7 @@ public class EntityDispatcher {
                 // Remove .<format> from entityName
                 entityName = entityName.substring(0, entityName.indexOf('.'));
             }
-            
+
             // Auth is only required for methods other than OPTIONS
             String authHeader = null;
             String tenant = null;
@@ -128,13 +124,13 @@ public class EntityDispatcher {
                     throw new EntityException(EntityException.UNAUTHORIZED);
 
                 }
-                
+
                 tenant = determineInstanceFromRequest(runner.getHttpRequest());
 //                if (tenant == null && !authHeader.startsWith(AuthenticationMethod.OAUTH_IDENTIFIER)) {
 //                    // No tenant only supported for Oauth login
 //                    logger.warn("Entity request without tenant! This will result in some weird behavior when authenticating");
 //                    throw new EntityException(EntityException.UNAUTHORIZED);
-//                    
+//
 //                }
             }
 
@@ -144,7 +140,8 @@ public class EntityDispatcher {
             }
 
             if (entityName.equals("")) {
-                logger.error("No entity name found in request. Request URI: {}", runner.getHttpRequest().getRequestURI());
+                logger.error("No entity name found in request. Request URI: {}",
+                        runner.getHttpRequest().getRequestURI());
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
@@ -167,7 +164,7 @@ public class EntityDispatcher {
                     folder = path.substring(1, path.lastIndexOf("/"));
                 }
                 Set<String> entities = myMapper.getEntities(folder);
-               
+
                 for (String s : entities) {
                     String anEntity = s.substring(s.lastIndexOf('.') + 1);
                     if (anEntity.equals(entitySubName)) {
@@ -176,7 +173,7 @@ public class EntityDispatcher {
                     }
                 }
             }
-            
+
             entity = myManager.getEntity(mappedEntity);
 
             if (entity == null) {
@@ -196,12 +193,14 @@ public class EntityDispatcher {
             } else {
                 logger.debug("Requesting entity {} version {}", entity.getName(), version);
             }
-            
+
             Message entityMessage = entity.getMessage(version);
 
             // Get the input document
-            if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET) || method.equals(HTTP_METHOD_DELETE)) {
-                input = EntityHelper.deriveNavajoFromParameterMap(entity, runner.getHttpRequest().getParameterMap(), version);
+            if (method.equals(HTTP_METHOD_OPTIONS) || method.equals(HTTP_METHOD_GET)
+                    || method.equals(HTTP_METHOD_DELETE)) {
+                input = EntityHelper.deriveNavajoFromParameterMap(entity,
+                        runner.getHttpRequest().getParameterMap(), version);
             } else {
                 JSONTML json = JSONTMLFactory.getInstance();
                 json.setEntityTemplate(entityMessage.getRootDoc());
@@ -211,10 +210,11 @@ public class EntityDispatcher {
                     logger.error("Error in parsing input JSON");
                     throw new EntityException(EntityException.BAD_REQUEST);
                 }
-            }            
+            }
             // Check if input contains the entityMessage
             if (input.getMessage(entityMessage.getName()) == null) {
-                logger.error("Entity name {} not found in input - format incorrect or bad request", entityMessage.getName());
+                logger.error("Entity name {} not found in input - format incorrect or bad request",
+                        entityMessage.getName());
                 throw new EntityException(EntityException.BAD_REQUEST);
             }
 
@@ -224,7 +224,7 @@ public class EntityDispatcher {
                 return;
             }
             Operation entityOperation = myManager.getOperation(entity.getName(), method);
-            
+
             // Create an access object for logging purposes
             Long startAuth = System.currentTimeMillis();
             String scriptName = "entity/" + entityName.replace('.', '/');
@@ -235,7 +235,6 @@ public class EntityDispatcher {
             if (queryString != null) {
                 access.addScriptLogging("Entity Query = " + queryString);
             }
-            
 
             try {
                 access = authenticateUser(input, tenant, access, authHeader);
@@ -244,9 +243,10 @@ public class EntityDispatcher {
                 throw new EntityException(EntityException.UNAUTHORIZED);
             }
             entityOperation.setTenant(access.getTenant());
-            
+
             // Create a header from the input
-            Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser, access.rpcPwd, -1);
+            Header header = NavajoFactory.getInstance().createHeader(input, "", access.rpcUser,
+                    access.rpcPwd, -1);
 
             if (locale != null) {
                 header.setHeaderAttribute("locale", locale);
@@ -264,8 +264,7 @@ public class EntityDispatcher {
             header.setHeaderAttribute("parentaccessid", access.accessID);
 
             runner.getDispatcher().getAccessSet().add(access);
-            
-            
+
             // Update RPCName to reflect method
             access.rpcName = access.rpcName + "-" + method;
             inputEtag = runner.getHttpRequest().getHeader("If-Match");
@@ -280,12 +279,14 @@ public class EntityDispatcher {
             }
 
             long opStartTime = System.currentTimeMillis();
-            ServiceEntityOperation seo = new ServiceEntityOperation(myManager, runner.getDispatcher(), entityOperation, version,
-                    entityName);
+            ServiceEntityOperation seo = new ServiceEntityOperation(myManager,
+                    runner.getDispatcher(), entityOperation, version, entityName);
             result = seo.perform(input);
 
             if (result.getMessage(entityMessage.getName()) == null) {
-            	logger.error("Entity message {} does not exist in the webservice output. Please check the OutDoc of the webservice.", entityMessage.getName());
+                logger.error("Entity message {} does not exist in the webservice output. "
+                                + "Please check the OutDoc of the webservice.",
+                        entityMessage.getName());
                 throw new EntityException(EntityException.ENTITY_NOT_FOUND);
             }
 
@@ -294,7 +295,8 @@ public class EntityDispatcher {
                 setCachingHeader(result, entity, runner);
             }
 
-            if (method.equals(HTTP_METHOD_GET) && result.getMessage(entityMessage.getName()) != null) {
+            if (method.equals(HTTP_METHOD_GET)
+                    && result.getMessage(entityMessage.getName()) != null) {
                 runner.setOutputEtag(result.getMessage(entityMessage.getName()).generateEtag());
             }
             access.processingTime = (int) (System.currentTimeMillis() - opStartTime);
@@ -304,13 +306,13 @@ public class EntityDispatcher {
 
         } catch (Throwable ex) {
             result = handleException(ex, runner.getHttpResponse(), locale);
-            
+
             if (access != null) {
                 boolean skipLogging = false;
                 if (ex instanceof EntityException) {
                     EntityException e = (EntityException) ex;
                     if (e.getCode() == EntityException.NOT_MODIFIED) {
-                    	// Set Caching parameter
+                        // Set Caching parameter
                         if (entity.getMyCaching().size() > 0) {
                             setCachingHeader(result, entity, runner);
                         }
@@ -324,10 +326,10 @@ public class EntityDispatcher {
                     } else if (e.getCode() == EntityException.VALIDATION_ERROR) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_VALIDATION_ERR);
-	                } else if (e.getCode() == EntityException.CONFLICT) {
-	                    skipLogging = true;
-	                    access.setExitCode(Access.EXIT_ENTITY_CONFLICT);
-	                } else if (e.getCode() == EntityException.BAD_REQUEST) {
+                    } else if (e.getCode() == EntityException.CONFLICT) {
+                        skipLogging = true;
+                        access.setExitCode(Access.EXIT_ENTITY_CONFLICT);
+                    } else if (e.getCode() == EntityException.BAD_REQUEST) {
                         skipLogging = true;
                         access.setExitCode(Access.EXIT_VALIDATION_ERR);
                     }
@@ -340,22 +342,24 @@ public class EntityDispatcher {
             }
 
         } finally {
-        	// TODO: maybe put this in some earlier/other stage??
-        	// This part is necessary to use the entities from a webserver (ClubWeb) and not run into CORS misery
-        	
-        	if ( additionalHttpHeaders.size() > 0 ) {
-        		for ( String key : additionalHttpHeaders.keySet() ) {
-        			runner.getHttpResponse().setHeader(key, additionalHttpHeaders.get(key));
-        		}
-        	}
-        	
+            // TODO: maybe put this in some earlier/other stage??
+            // This part is necessary to use the entities from a webserver (ClubWeb)
+            // and not run into CORS misery
+
+            if (additionalHttpHeaders.size() > 0) {
+                for (String key : additionalHttpHeaders.keySet()) {
+                    runner.getHttpResponse().setHeader(key, additionalHttpHeaders.get(key));
+                }
+            }
+
             runner.setResponseNavajo(result);
             if (access != null) {
                 runner.getDispatcher().getAccessSet().remove(access);
                 access.setFinished();
                 access.setOutputDoc(result);
                 NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
-                statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(), (System.currentTimeMillis() - runner.getStartedAt()));
+                statLogger.info("Finished {} ({}) in {}ms", access.accessID, access.getRpcName(),
+                        (System.currentTimeMillis() - runner.getStartedAt()));
             }
 
         }
@@ -398,22 +402,24 @@ public class EntityDispatcher {
         }
 
         cacheHeader = cacheHeader.trim();
-        //cacheHeader = cacheHeader.replace("public", "private");
+        // cacheHeader = cacheHeader.replace("public", "private");
         if (cacheHeader.endsWith(",")) {
             cacheHeader = cacheHeader.substring(0, cacheHeader.length() - 1);
         }
 
         // Add to runner httpResponse
         runner.getHttpResponse().setHeader("Cache-Control", cacheHeader);
-        // The Vary HTTP response header determines how to match future request headers to 
-        // decide whether a cached response can be used rather than requesting a fresh one 
-        // from the origin server. It is used by the server to indicate which headers it used 
-        // when selecting a representation of a resource in a content negotiation algorithm.
+        // The Vary HTTP response header determines how to match future request headers
+        // to decide whether a cached response can be used rather than requesting a fresh
+        // one from the origin server. It is used by the server to indicate which headers it
+        // used when selecting a representation of a resource in a content negotiation
+        // algorithm.
+        //
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
         //
-        // We set "Vary" to "X-Navajo-Version" to help clients to ask for a fresh response when it
-        // has an older version in its cache. Not all networking libraries have support for this 
-        // header.
+        // We set "Vary" to "X-Navajo-Version" to help clients to ask for a fresh response
+        // when it has an older version in its cache. Not all networking libraries have support
+        // for this header.
         runner.getHttpResponse().setHeader("Vary", "X-Navajo-Version");
     }
 
@@ -423,11 +429,11 @@ public class EntityDispatcher {
         for (Operation op : operations.values()) {
             allowed += op.getMethod() + ", ";
         }
-        if (!allowed.equals("")) allowed = allowed.substring(0,  allowed.length() -2); // remove , at the end
+        if (!allowed.equals(""))
+            allowed = allowed.substring(0, allowed.length() - 2); // remove , at the end
         response.setHeader("Access-Control-Allow-Methods", allowed);
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,authorization");
     }
-
 
     private String determineInstanceFromRequest(final HttpServletRequest req) {
         String requestInstance = req.getHeader("X-Navajo-Instance");
@@ -437,79 +443,88 @@ public class EntityDispatcher {
         return null;
     }
 
-
     // In case of an exception, we create a Navajo document with some messages
     // describing the error. This allows us to output the exception in the
     // format the user requested(eg.g JSON).
     private Navajo handleException(Throwable ex, HttpServletResponse response, String locale) {
         Navajo result = null;
         if (ex instanceof EntityException) {
-        	EntityException entityEx = (EntityException) ex;
-        	if (entityEx.getCode() != EntityException.NOT_MODIFIED) {
-        		logger.warn("EntityException in handling entity request: {}. Going to try to handle it nicely.", ex.getMessage());
-        	}
+            EntityException entityEx = (EntityException) ex;
+            if (entityEx.getCode() != EntityException.NOT_MODIFIED) {
+                logger.warn("EntityException in handling entity request: {}. "
+                        + "Going to try to handle it nicely.", ex.getMessage());
+            }
         } else {
-            logger.error("Exception in handling entity request. Going to try to handle it nicely.", ex);
-
+            logger.error("Exception in handling entity request. Going to try to handle it nicely.",
+                    ex);
         }
+
         result = NavajoFactory.getInstance().createNavajo();
         Message m = NavajoFactory.getInstance().createMessage(result, "errors");
         result.addMessage(m);
-        m.addProperty(NavajoFactory.getInstance().createProperty(result, "Error", "boolean", "true", 1, null, null));
+        m.addProperty(NavajoFactory.getInstance().createProperty(result, "Error", "boolean", "true",
+                1, null, null));
         if (ex instanceof EntityException) {
             response.setStatus(((EntityException) ex).getCode());
             int code = ((EntityException) ex).getCode();
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(code), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string",
+                    String.valueOf(code), 1, null, null));
 
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string",
+                    ex.getMessage(), 1, null, null));
 
             // Specifically check for condition errors
             Navajo n = ((EntityException) ex).getNavajo();
             if (n != null && n.getMessage("ConditionErrors") != null) {
-            	Message violationsMessage = NavajoFactory.getInstance().createMessage(result, "Violations");
+                Message violationsMessage = NavajoFactory.getInstance().createMessage(result,
+                        "Violations");
                 ArrayList<String> viols = new ArrayList<String>();
-                HashMap<String, String> detailedViols = new HashMap<String,String>();
                 for (Message message : n.getMessage("ConditionErrors").getAllMessages()) {
                     String id = message.getProperty("Id").getValue();
-                	viols.add(id);
+                    viols.add(id);
                     String description = message.getProperty("Description").getValue();
                     if (description == null || "null".equals(description)) {
-                    	// try to load it from the validation.properties with the current locale
-                    	description = getValidationDescription(locale, id);
+                        // try to load it from the validation.properties with the current locale
+                        description = getValidationDescription(locale, id);
                     }
-                    violationsMessage.addProperty(NavajoFactory.getInstance().createProperty(result, id, "string", description, 1, null, null));
+                    violationsMessage.addProperty(NavajoFactory.getInstance().createProperty(result,
+                            id, "string", description, 1, null, null));
                 }
-                m.addProperty(
-                        NavajoFactory.getInstance().createProperty(result, "ViolationCodes", "list", viols.toString(), 1, null, null));
+                m.addProperty(NavajoFactory.getInstance().createProperty(result, "ViolationCodes",
+                        "list", viols.toString(), 1, null, null));
                 m.addMessage(violationsMessage);
             } else {
-                m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", ex.getMessage(), 1, null, null));
+                m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message",
+                        "string", ex.getMessage(), 1, null, null));
             }
-            
+
         } else {
             response.setStatus(EntityException.SERVER_ERROR);
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string", String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
-            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string", "Server error " + ex.toString(), 1, null,
-                    null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Status", "string",
+                    String.valueOf(EntityException.SERVER_ERROR), 1, null, null));
+            m.addProperty(NavajoFactory.getInstance().createProperty(result, "Message", "string",
+                    "Server error " + ex.toString(), 1, null, null));
         }
         response.addHeader("Connection", "close");
         return result;
     }
 
-	private String getValidationDescription(String locale, String id) {
-		String description;
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream(navajoIOConfig.getResourcePath() + "/texts/validation_" + locale + ".properties"));
-		} catch (IOException e) {
-			try {
-				properties.load(new FileInputStream(navajoIOConfig.getResourcePath() + "/texts/validation.properties"));
-			} catch (IOException e1) {
-			}
-		}
-		description = properties.getProperty(id, "");
-		return description;
-	}
+    private String getValidationDescription(String locale, String id) {
+        String description;
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(navajoIOConfig.getResourcePath()
+                    + "/texts/validation_" + locale + ".properties"));
+        } catch (IOException e) {
+            try {
+                properties.load(new FileInputStream(navajoIOConfig.getResourcePath()
+                        + "/texts/validation.properties"));
+            } catch (IOException e1) {
+            }
+        }
+        description = properties.getProperty(id, "");
+        return description;
+    }
 
     private String getOutputFormat(HttpServletRequest request, String urlOutput) {
         if (urlOutput != null) {
@@ -537,44 +552,46 @@ public class EntityDispatcher {
                 }
 
             } catch (MimeTypeParseException e) {
-                logger.warn("MimeTypeParseException in getting mime-types from Accept header - using default output");
+                logger.warn("MimeTypeParseException in getting mime-types from Accept header "
+                        + "- using default output");
                 mimeResult = DEFAULT_OUTPUT_FORMAT;
             }
         }
 
         if (!SUPPORTED_OUTPUT.contains(mimeResult)) {
-            logger.debug("No supported output format requested - using default output: {}", DEFAULT_OUTPUT_FORMAT);
+            logger.debug("No supported output format requested - using default output: {}",
+                    DEFAULT_OUTPUT_FORMAT);
             mimeResult = DEFAULT_OUTPUT_FORMAT;
         }
         return mimeResult;
     }
 
-    private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader) throws AuthorizationException {
+    private Access authenticateUser(Navajo inDoc, String tenant, Access access, String authHeader)
+            throws AuthorizationException {
         access.setTenant(tenant);
         access.setInDoc(inDoc);
 
         if (LoginStatisticsProvider.reachedAbortThreshold(access.getRpcUser())) {
-            logger.info("Refusing request from {} for {}  due to too many failed auth attempts", access.getIpAddress(), access.getRpcUser());
+            logger.info("Refusing request from {} for {}  due to too many failed auth attempts",
+                    access.getIpAddress(), access.getRpcUser());
             throw new AuthorizationException(true, false, access.getRpcUser(), "Not authorized");
         }
 
-       
         AuthenticationMethod authenticator = authMethodBuilder.getInstanceForRequest(authHeader);
         if (authenticator == null) {
             throw new AuthorizationException(false, false, null, "Missing authenticator");
         }
-        
+
         authenticator.process(access);
         return access;
     }
 
-
-    public void setEntityManager(EntityManager em) {
-        myManager = em;
+    public EntityManager getMyManager() {
+        return this.myManager;
     }
 
-    public void clearEntityManager(EntityManager em) {
-        myManager = null;
+    public EntityMapper getMyMapper() {
+        return this.myMapper;
     }
 
     public void setAuthenticationMethodBuilder(AuthenticationMethodBuilder amb) {
@@ -585,20 +602,28 @@ public class EntityDispatcher {
         this.authMethodBuilder = null;
     }
 
+    public void setConfig(NavajoIOConfig navajoIOConfig) {
+        this.navajoIOConfig = navajoIOConfig;
+    }
+
+    public void clearConfig(NavajoIOConfig navajoIOConfig) {
+        this.navajoIOConfig = null;
+    }
+
+    public void setEntityManager(EntityManager em) {
+        myManager = em;
+    }
+
+    public void clearEntityManager(EntityManager em) {
+        myManager = null;
+    }
+
     public void setEntityMapper(EntityMapper mapp) {
         myMapper = mapp;
     }
 
     public void clearEntityMapper(EntityMapper mapp) {
         myMapper = null;
-    }
-
-    public EntityManager getMyManager() {
-        return this.myManager;
-    }
-
-    public EntityMapper getMyMapper() {
-        return this.myMapper;
     }
 
 }

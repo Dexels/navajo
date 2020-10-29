@@ -79,7 +79,7 @@ Export-Package: com.dexels.navajo.tipi.vaadin.touch,
  com.vaadin.addon.touchkit.service,
  com.vaadin.addon.touchkit.ui
 Service-Component: OSGI-INF/tipi.instance.touch.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.tipi
 Automatic-Module-Name: com.dexels.navajo.tipi.vaadin.touch

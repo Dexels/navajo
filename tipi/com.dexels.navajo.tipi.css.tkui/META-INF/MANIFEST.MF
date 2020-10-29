@@ -187,4 +187,4 @@ Import-Package: com.dexels.navajo.tipi;version="[1.1.42,2.0.0)",
  org.w3c.dom,
  org.w3c.dom.css,
  org.w3c.dom.stylesheets
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

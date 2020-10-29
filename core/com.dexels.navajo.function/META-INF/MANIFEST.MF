@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Functions
 Bundle-SymbolicName: com.dexels.navajo.function
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.5.17.qualifier
+Bundle-Version: 3.5.19.qualifier
 Bundle-Activator: navajofunctions.Version
 Navajo-Name: Function
 Navajo-Extension: com/dexels/navajo/functions/functions.xml
@@ -47,4 +47,4 @@ Import-Package: com.dexels.immutable.api;version="1.0.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom,
  org.xml.sax
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
