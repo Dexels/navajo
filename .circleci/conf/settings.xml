@@ -38,60 +38,6 @@
         </server>
 
         <server>
-            <id>everywear_release</id>
-            <username>deployment</username>
-            <password>${env.DEPLOYPASS}</password>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-        </server>
-
-        <server>
-            <id>everywear_snapshot</id>
-            <username>deployment</username>
-            <password>${env.DEPLOYPASS}</password>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-        </server>
-
-        <server>
-            <id>dexels_snap</id>
-            <username>deployment</username>
-            <password>${env.DEPLOYPASS}</password>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-        </server>
-
-        <server>
-            <id>dexels_oh_snap</id>
-            <username>deployment</username>
-            <password>${env.DEPLOYPASS}</password>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-        </server>
-
-        <server>
-            <id>dexels_test</id>
-            <username>deployment</username>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-            <password>${env.DEPLOYPASS}</password>
-        </server>
-
-        <server>
-            <id>dexels_snap_test</id>
-            <username>deployment</username>
-            <configuration>
-                <timeout>120000</timeout> <!-- your timeout in milliseconds -->
-            </configuration>
-            <password>${env.DEPLOYPASS}</password>
-        </server>
-
-        <server>
             <id>dexels_thirdparty</id>
             <username>deployment</username>
             <configuration>
@@ -111,4 +57,3 @@
     </servers>
 
 </settings>
-

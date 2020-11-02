@@ -321,18 +321,6 @@
                     <layout>default</layout>
                 </repository>
 
-                <repository>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                    <id>dexels_snap</id>
-                    <name>Dexels Snapshots</name>
-                    <url>http://repo.dexels.com/nexus/content/repositories/navajo_snapshot</url>
-                    <layout>default</layout>
-                </repository>
             </repositories>
 
             <distributionManagement>
@@ -345,13 +333,6 @@
                     <layout>default</layout>
                 </repository>
 
-                <snapshotRepository>
-                    <uniqueVersion>true</uniqueVersion>
-                    <id>dexels_snap</id>
-                    <name>Dexels Snapshots</name>
-                    <url>http://repo.dexels.com/nexus/content/repositories/navajo_snapshot</url>
-                    <layout>default</layout>
-                </snapshotRepository>
             </distributionManagement>
         </profile>
     </profiles>
