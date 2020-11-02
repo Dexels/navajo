@@ -291,7 +291,7 @@
                     </snapshots>
                     <id>central</id>
                     <name>Dexels Central</name>
-                    <url>http://repo.dexels.com/repository/public/</url>
+                    <url>https://repo.dexels.com/repository/public/</url>
                     <layout>default</layout>
                 </repository>
 
@@ -304,7 +304,7 @@
                     </snapshots>
                     <id>repo_thirdparty</id>
                     <name>Dexels Third</name>
-                    <url>http://repo.dexels.com/repository/thirdparty/</url>
+                    <url>https://repo.dexels.com/repository/thirdparty/</url>
                     <layout>default</layout>
                 </repository>
 
@@ -329,7 +329,7 @@
                     <id>dexels</id>
                     <name>Dexels Repository</name>
                     <!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-                    <url>http://repo.dexels.com/nexus/content/repositories/navajo/</url>
+                    <url>https://repo.dexels.com/nexus/content/repositories/navajo/</url>
                     <layout>default</layout>
                 </repository>
 

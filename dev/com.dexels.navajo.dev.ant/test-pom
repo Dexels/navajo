@@ -454,7 +454,7 @@
             </snapshots>
             <id>central</id>
             <name>Dexels Central</name>
-            <url>http://repo.dexels.com/repository/public/</url>
+            <url>https://repo.dexels.com/repository/public/</url>
             <layout>default</layout>
         </repository>
         <repository>
@@ -466,7 +466,7 @@
             </snapshots>
             <id>repo_thirdparty</id>
             <name>Dexels Third</name>
-            <url>http://repo.dexels.com/repository/thirdparty/</url>
+            <url>https://repo.dexels.com/repository/thirdparty/</url>
             <layout>default</layout>
         </repository>
         <repository>

@@ -69,7 +69,7 @@ GROUPARR=(${GROUPID//\./ })
 for i in ${GROUPARR[@]}; do
     GROUPURL="$GROUPURL/$i"
 done
-STATUS=`curl  -s -w "%{http_code}" "http://repo.dexels.com/nexus/service/local/repositories/navajo/content$GROUPURL/$BUNDLENAME/$NEWMINOR1/$BUNDLENAME-$NEWMINOR1.jar" -o /dev/null`
+STATUS=`curl  -s -w "%{http_code}" "https://repo.dexels.com/nexus/service/local/repositories/navajo/content$GROUPURL/$BUNDLENAME/$NEWMINOR1/$BUNDLENAME-$NEWMINOR1.jar" -o /dev/null`
 if [ $STATUS -eq "200" ]
 then
     echo "$BUNDLENAME version $NEWMINOR1 already exists - exiting!"
