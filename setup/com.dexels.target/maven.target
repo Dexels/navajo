@@ -3,7 +3,7 @@
 <target name="Navajo Target Platform: 3.3.705" sequenceNumber="3505">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="http://p2.dexels.com/eclipse/equinox_4.16/"/>
+            <repository location="https://p2.dexels.com/eclipse/equinox_4.16/"/>
             <unit id="org.eclipse.equinox.core.feature.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
@@ -11,7 +11,7 @@
             <unit id="org.eclipse.equinox.server.p2.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="http://p2.dexels.com/eclipse/3rdparty_3.3.705"/>
+            <repository location="https://p2.dexels.com/eclipse/3rdparty_3.3.705"/>
             <unit id="dexels-navajo-target.feature.group" version="3.3.705" />
         </location>
     </locations>
