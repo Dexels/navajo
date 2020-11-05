@@ -66,7 +66,7 @@ public class SQLMapHelper {
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
-			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) { 
+			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier) || SQLMapConstants.ORACLEDB.equals(dbIdentifier)) { 
 				if (debug) {
 					Access.writeToConsole(access, "Had to do something in order to not get the cast error from a null value, because it concerns " + dbIdentifier + "\n");
 				}
