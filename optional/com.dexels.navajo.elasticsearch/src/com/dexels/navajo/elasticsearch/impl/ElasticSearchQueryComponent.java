@@ -59,18 +59,18 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 	@Override
 	public ElasticSearchResult[] search(String keyword) throws IOException {
-		ArrayList<ElasticSearchResult> es_result = new ArrayList<ElasticSearchResult>();
+		ArrayList<ElasticSearchResult> esResult = new ArrayList<ElasticSearchResult>();
 		String result = null;
 
-		//curl -XGET "http://localhost:9200/job_10/_search?q=content:dokimastiko OR content:txt"
+		//curl -XGET "http://localhost:9200/job_10/_search?q=content:SOME_TEXT"
 		//if we want to search exact phrase into a document or one or more fields we can use OR, AND etc
 		
 		System.out.println("the keyword is: " + keyword);
 		
-		String es_url = this.url + URLEncoder.encode(keyword, "UTF-8");;
+		String esUrl = this.url + URLEncoder.encode(keyword, "UTF-8");;
 		
 			
-		HttpGet request = new HttpGet(es_url);
+		HttpGet request = new HttpGet(esUrl);
 		
 		request.addHeader("Content-Type", "application/json");
 		
@@ -88,18 +88,18 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode n = mapper.readTree(result);
-		JsonNode json_array = n.get("hits").get("hits");
+		JsonNode jsonArray = n.get("hits").get("hits");
 		
-		for(JsonNode jsonNode : json_array) {
+		for(JsonNode jsonNode : jsonArray) {
 			String id = jsonNode.get("_id").toString();
 			String score = jsonNode.get("_score").toString();
 			String fileName = jsonNode.get("_source").get("file").get("filename").toString();
 			ElasticSearchResult esr = new ElasticSearchResult(id, score, fileName);
-			es_result.add(esr);
+			esResult.add(esr);
 		}
 		
 
-		ElasticSearchResult[] es_result_array = es_result.toArray(new ElasticSearchResult[es_result.size()]);
+		ElasticSearchResult[] es_result_array = esResult.toArray(new ElasticSearchResult[esResult.size()]);
 	
 		response.close();
 		
