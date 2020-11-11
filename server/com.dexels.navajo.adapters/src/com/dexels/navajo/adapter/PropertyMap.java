@@ -77,13 +77,12 @@ public class PropertyMap implements Mappable {
 
 			Property prop = null;
 			prop = msg.getProperty(name);
-			if (prop != null && !removeExisting)
+			if (prop == null || removeExisting)
 			{
-				throw new UserException(-1, "Cannot add already existing property " + name + " when removeExisting is false.");
+    			// this will create if property not found and otherwise update value and other attributes, except for subtype and the options
+    			// Do not have to pass inDoc as we're not creating a param
+				prop = MappingUtils.setProperty(false, msg, name, currentValue, type, null, direction, description, length == null ? -1 : length, outMessage, null, false);
 			}
-			// this will create if property not found and otherwise update value and other attributes, except for subtype and the options
-			// Do not have to pass inDoc as we're not creating a param
-		    prop = MappingUtils.setProperty(false, msg, name, currentValue, type, null, direction, description, length == null ? -1 : length, outMessage, null, false);
 
 			if (subtype != null)
 			{
@@ -95,7 +94,9 @@ public class PropertyMap implements Mappable {
 			{
 				if (optionList != null)
 				{
-					prop.clearSelections();
+					if (removeExisting) {
+						prop.clearSelections();
+					}
 					for(Option o : optionList)
 					{
 						Selection sel = NavajoFactory.getInstance().createSelection(outMessage, o.getName(), o.getValue(), o.getSelected());
