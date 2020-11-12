@@ -65,14 +65,13 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 	}
 	public void upload(Binary data, String id, String name) throws IOException {
-		//String url = "http://127.0.0.1:8080/fscrawler/_upload";
+		
 		 	
 		logger.info("IN UPLOAD: " + name);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyResource(baos, data.getDataAsStream());
 		
-		//Binary b;
-		//b.guessContentType();
+		
 		
 	    HttpEntity entity = MultipartEntityBuilder.create()
                 .addPart("file", new ByteArrayBody(baos.toByteArray(), ContentType.TEXT_PLAIN,name))
