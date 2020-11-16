@@ -1,5 +1,6 @@
 package com.dexels.navajo.entity;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +21,9 @@ public class TestEntity {
 
     @Before
     public void setup() throws Exception {
-    	System.err.println("SETUP!");
+
         manager = new EntityManager();
+        manager.activateForTest();
 
         NavajoFactory f = NavajoFactory.getInstance();
 
@@ -52,17 +54,11 @@ public class TestEntity {
         keyProp3_ALT.setKey("true,id=ALT");
         entity.addProperty(keyProp3_ALT);
 
-//        entity.write(System.err);
-
-        // Create Activity entity.
-
         Message activity = f.createMessage(n, "Activity");
         activity.addProperty(f.createProperty(n, "ActivityType", Property.STRING_PROPERTY, "", 0, "", ""));
         Property keyPropAct = f.createProperty(n, "ActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
         keyPropAct.setKey("true,auto");
         activity.addProperty(keyPropAct);
-
-//        activity.write(System.err);
 
         Entity e1 = new Entity(entity, manager);
         e1.entityName = "MyEntity";
@@ -78,12 +74,11 @@ public class TestEntity {
         e1.addSuperEntity(e2, null);
         e1.startEntity();
         e2.startEntity();
-
     }
-    
+
     @After
     public void teardown() {
-    	System.err.println("TEARDOWN!");
+
     	this.manager.deactivate();
     	this.manager = null;
     	NavajoFactory.resetImplementation();
@@ -91,22 +86,21 @@ public class TestEntity {
 
     @Test
     public void testEntityGetKeySize() throws Exception {
+
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Assert.assertEquals(4, e.getKeys(Entity.DEFAULT_VERSION).size());
-        System.err.println("AFTER EXTEND: ******************************************* ");
-        e.getMessage(Entity.DEFAULT_VERSION).write(System.err);
     }
 
     @Test
     public void testEntityGetKeyMessage() throws Exception {
+
         Entity e = manager.getEntity("MyEntity");
         e.startEntity();
         Set<Key> keys = e.getKeys(Entity.DEFAULT_VERSION);
         int found = 3;
         for (Key k : keys) {
             Navajo m = k.generateRequestMessage();
-            m.write(System.err);
 
             Assert.assertNotNull(m.getMessage("MyEntity"));
 
@@ -125,15 +119,17 @@ public class TestEntity {
         Assert.assertEquals(0, found);
     }
 
-    @Test @Ignore // Seems to fail only if ran with all tests 
+    @Test
+    @Ignore // Seems to fail only if ran with all tests
     public void testMatchKeyByPropertySet1() throws Exception {
+
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
         Message m = f.createMessage(p_n, "MyEntity");
         Property p = f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "100", 0, "", "");
         m.addProperty(p);
         p_n.addMessage(m);
-        
+
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
@@ -146,13 +142,14 @@ public class TestEntity {
 
     @Test
     public void testMatchKeyByPropertySet2() throws Exception {
+
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
         Message m = f.createMessage(p_n, "MyEntity");
         Property p = f.createProperty(p_n, "MatchId", Property.STRING_PROPERTY, "", 0, "", "");
         m.addProperty(p);
         p_n.addMessage(m);
-        
+
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
@@ -160,11 +157,12 @@ public class TestEntity {
         e.printKeys(Entity.DEFAULT_VERSION);
         Key k = e.getKey(matchingProperties, Entity.DEFAULT_VERSION);
         Assert.assertNotNull(k);
-
     }
 
-    @Test @Ignore // Seems to fail only if ran with all tests 
+    @Test
+    @Ignore // Seems to fail only if ran with all tests
     public void testMatchKeyByPropertySet3() throws Exception {
+
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
         Message m = f.createMessage(p_n, "MyEntity");
@@ -173,7 +171,7 @@ public class TestEntity {
         Property p2 = f.createProperty(p_n, "Irrelevant", Property.INTEGER_PROPERTY, "5", 0, "", "");
         m.addProperty(p2);
         p_n.addMessage(m);
-        
+
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(p1);
         matchingProperties.add(p2);
@@ -187,13 +185,14 @@ public class TestEntity {
 
     @Test
     public void testMatchKeyByPropertySet4() throws Exception {
+
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
         Message m = f.createMessage(p_n, "MyEntity");
         Property p = f.createProperty(p_n, "_id", Property.STRING_PROPERTY, "12", 0, "", "");
         m.addProperty(p);
         p_n.addMessage(m);
-        
+
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(p);
         Entity e = manager.getEntity("MyEntity");
@@ -202,8 +201,10 @@ public class TestEntity {
         Assert.assertNotNull(k);
     }
 
-    @Test  @Ignore // Seems to fail only if ran with all tests 
+    @Test
+    @Ignore // Seems to fail only if ran with all tests
     public void testMatchKeyByPropertySet5() throws Exception {
+
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo p_n = f.createNavajo();
         Message m = f.createMessage(p_n, "MyEntity");
@@ -214,7 +215,7 @@ public class TestEntity {
         m.addProperty(p2);
         m.addProperty(p3);
         p_n.addMessage(m);
-        
+
         HashSet<Property> matchingProperties = new HashSet<Property>();
         matchingProperties.add(p1);
         matchingProperties.add(p2);
@@ -225,11 +226,9 @@ public class TestEntity {
         Assert.assertNotNull(k);
         Navajo generateRequestMessage = k.generateRequestMessage();
         Assert.assertNotNull(generateRequestMessage);
-        generateRequestMessage.write(System.err);
 		Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/SeasonId"));
         Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/ExternalMatchId"));
         Assert.assertNotNull(generateRequestMessage.getProperty("/MyEntity/OrganizingDistrictId"));
-
     }
 
     @Test
@@ -254,26 +253,21 @@ public class TestEntity {
 
         m.getMessage(Entity.DEFAULT_VERSION).setExtends("");
         m.getMessage(Entity.DEFAULT_VERSION).getProperty("MatchId").setExtends("");
+        m.getMessage(Entity.DEFAULT_VERSION).write(new ByteArrayOutputStream());
 
-        System.err.println("**************************************************");
-        m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
         m.deactivate();
         m.startEntity();
-        System.err.println("**************************************************");
 
         Assert.assertEquals(0, m.getSuperEntities().size());
-
     }
 
     @Test
     public void testSetMessage() throws Exception {
 
-        System.err.println("=================================================================================");
         Entity a = manager.getEntity("Activity");
         Entity m = manager.getEntity("MyEntity");
         Assert.assertEquals(1, m.getSuperEntities().size());
 
-        // Create new Activity Message
         NavajoFactory f = NavajoFactory.getInstance();
         Navajo n = f.createNavajo();
         Message activity = f.createMessage(n, "Activity");
@@ -287,29 +281,21 @@ public class TestEntity {
         keyPropActAlt.setKey("true,auto");
         activity.addProperty(keyPropActAlt);
 
-        System.err.println("INJECTING NEW MESSAGE!!!!!!!");
+        m.getMessage(Entity.DEFAULT_VERSION).write(new ByteArrayOutputStream());
 
-        // m = manager.getEntity("MyEntity");
-        // m.activate();
-        m.getMessage(Entity.DEFAULT_VERSION).write(System.err);
         m.deactivate();
         m.startEntity();
-
-        // for ( Key k : m.getKeys() ) {
-        // System.err.println("KEY:");
-        // k.generateRequestMessage().write(System.err);
-        // }
-        // System.err.println("=================================================================================");
 
         Assert.assertEquals(1, m.getSuperEntities().size());
         Assert.assertEquals(4, m.getKeys(Entity.DEFAULT_VERSION).size());
 
         a.getMessage(Entity.DEFAULT_VERSION).merge(activity, true);
-        a.getMessage(Entity.DEFAULT_VERSION).write(System.err);
+        a.getMessage(Entity.DEFAULT_VERSION).write(new ByteArrayOutputStream());
 
         a.deactivate();
         a.startEntity();
 
         Assert.assertEquals(2, a.getKeys(Entity.DEFAULT_VERSION).size());
     }
+
 }
