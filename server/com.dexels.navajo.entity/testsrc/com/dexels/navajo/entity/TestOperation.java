@@ -19,9 +19,10 @@ public class TestOperation {
 	EntityManager manager;
 
 	@Before
-    public void setup() {
+    public void setup() throws Exception {
 
         manager = new EntityManager();
+        manager.activateForTest();
 
         NavajoFactory f = NavajoFactory.getInstance();
 
@@ -53,17 +54,11 @@ public class TestOperation {
         keyProp3_ALT.setKey("true,id=ALT");
         entity.addProperty(keyProp3_ALT);
 
-        entity.write(System.err);
-
-        // Create Activity entity.
-
         Message activity = f.createMessage(n, "Activity");
         activity.addProperty(f.createProperty(n, "ActivityType", Property.STRING_PROPERTY, "", 0, "", ""));
         Property keyPropAct = f.createProperty(n, "ActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
         keyPropAct.setKey("true,auto");
         activity.addProperty(keyPropAct);
-
-        activity.write(System.err);
 
         Entity e1 = new Entity(entity, manager);
         Entity e2 = new Entity(activity, manager);
@@ -76,12 +71,11 @@ public class TestOperation {
 
         manager.registerEntity(e1);
         manager.registerEntity(e2);
-
     }
-	
+
     @After
     public void teardown() {
-    	System.err.println("TEARDOWN!");
+
     	this.manager.deactivate();
     	this.manager = null;
     	NavajoFactory.resetImplementation();
@@ -89,41 +83,36 @@ public class TestOperation {
 
 	@Test
 	public void testAddOperation() throws Exception {
+
 		OperationComponent oc = new OperationComponent();
 		oc.setEntityName("MyEntity");
 		oc.setMethod("HEAD");
 		oc.setService("aap/ProcessGetAap");
 		manager.addOperation(oc);
-		
+
 		Operation o = manager.getOperation("MyEntity", "HEAD");
-		
+
 		Assert.assertNotNull(o);
 		Assert.assertEquals("MyEntity", o.getEntityName());
 		Assert.assertEquals("HEAD", o.getMethod());
 		Assert.assertEquals("aap/ProcessGetAap", o.getService());
-		
 	}
-	
+
 	@Test
 	public void testHEADOperation() throws Exception {
-		
+
 		OperationComponent oc = new OperationComponent();
 		oc.setEntityName("MyEntity");
 		oc.setMethod("HEAD");
 		oc.setService("aap/ProcessGetAap");
 		manager.addOperation(oc);
-		
-        ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null, oc, Entity.DEFAULT_VERSION);
-		
+
+        ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null,
+                oc, Entity.DEFAULT_VERSION);
+
 		Navajo result = seo.perform(null);
-		
 		Assert.assertNotNull(result);
-		
 		Assert.assertNotNull(result.getMessage("MyEntity"));
-		
-		System.err.println("RESULT OF HEAD:");
-		result.write(System.err);
-		
-		
 	}
+
 }
