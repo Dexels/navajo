@@ -42,12 +42,10 @@ public class GetPropertyAttribute extends FunctionInterface {
 		return "Gets the type of property as a string";
 	}
 
-	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.expression.api.TMLExpressionException {
-
-
-		Property p = (getCurrentMessage() != null ? getCurrentMessage().getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+	public Object getAttribute(Object operand, String attribute) throws com.dexels.navajo.expression.api.TMLExpressionException {
+		Property p = operand instanceof Property ? (Property) operand : this.getNavajo().getProperty(operand.toString());
 		if (p == null) {
-			throw new TMLExpressionException(this, "Property " + propertyName + " not found");
+			throw new TMLExpressionException(this, "Property " + operand.toString() + " not found");
 		}
 		if ( attribute.equals("direction") ) {
 			return p.getDirection();
@@ -70,10 +68,10 @@ public class GetPropertyAttribute extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		String propertyName = getStringOperand(0);
+		Object operand = getOperands().get(0);
 		String attribute = getStringOperand(1);
 
-		return getAttribute(propertyName, attribute);
+		return getAttribute(operand, attribute);
 	}
 
 	@Override
