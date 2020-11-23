@@ -70,7 +70,12 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		gridLayout.addComponent(component, currentx, currenty,endcolumn,endrow);
 		gridLayout.setComponentAlignment(component, myData.getAlignment());
 		int currentWidth = myWidths.get(currentx);
-		logger.debug("Adding component: "+currentx+" :: "+currenty+" >> "+myWidths.get(currentx));
+		// If we have a colspan of more than one, also add the width for the subsequent columns! See also Navajo issue https://github.com/Dexels/navajo/issues/571
+		for( int i = 1; i < myData.getColumnSpan(); i++ )
+		{
+		    currentWidth += myWidths.size() > currentx + i ? myWidths.get( currentx + i ) : 0;
+		}
+		logger.debug("Adding component: "+currentx+" :: "+currenty+" >> "+currentWidth);
 		component.setWidth(currentWidth,Sizeable.UNITS_PIXELS);
         advance();
 	}
