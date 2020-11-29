@@ -1,5 +1,7 @@
 package com.dexels.navajo.document;
 
+import java.io.Serializable;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -9,30 +11,31 @@ package com.dexels.navajo.document;
  * @version $Id$
  */
 
-public interface FieldTag {
-  /**
-  * Public constants for the property node.
-  */
- public static final String FIELD_DEFINITION = "field";
- public static final String FIELD_CONDITION = "condition";
- public static final String FIELD_NAME = "name";
- public static final String FIELD_COMMENT = "comment";
+public interface FieldTag extends Serializable {
+	/**
+	 * Public constants for the property node.
+	 */
+	public static final String FIELD_DEFINITION = "field";
+	public static final String FIELD_CONDITION = "condition";
+	public static final String FIELD_NAME = "name";
+	public static final String FIELD_COMMENT = "comment";
 
- public void addExpression(ExpressionTag e);
+	public void addExpression(ExpressionTag e);
 
- public String getName();
+	public String getName();
 
- public void setName(String s);
+	public void setName(String s);
 
- public String getComment();
+	public String getComment();
 
- public void setComment(String s);
+	public void setComment(String s);
 
+	public void setParent(MapTag p);
+	
+	public String getCondition();
 
- public String getCondition();
+	public void setCondition(String s);
 
- public void setCondition(String s);
-
-  public Object getRef();
+	public Object getRef();
 
 }

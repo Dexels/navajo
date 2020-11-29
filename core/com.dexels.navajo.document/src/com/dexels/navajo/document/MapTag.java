@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version $Id$
  */
 
-public interface MapTag {
+public interface MapTag extends java.io.Serializable {
 
   /**
    * Public constants for the map node.
@@ -24,7 +24,11 @@ public interface MapTag {
 
   public void addParam(ParamTag p);
 
+  public void setParent(MapTag m);
+  
   public void addMessage(Message m);
+  
+  public void addProperty(Property p);  // in case of a ref map, properties can be added
 
   public String getObject();
 
@@ -43,5 +47,8 @@ public interface MapTag {
   public void setFilter(String s);
 
   public Object getRef();
+  
+  public void addAttributeNameValue(String name, String expression);
+  
 
 }

@@ -382,7 +382,7 @@ public abstract class NavajoFactory {
 	 *            InputStream
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript(java.io.InputStream stream);
+	public abstract Navascript createNavaScript(java.io.InputStream stream);
 
 	/**
 	 * Create a NavaScript object from a given Object
@@ -391,14 +391,14 @@ public abstract class NavajoFactory {
 	 *            Object
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript(Object representation);
+	public abstract Navascript createNavaScript(Object representation);
 
 	/**
 	 * Create an empty NavaScriptObject
 	 * 
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript();
+	public abstract Navascript createNavaScript();
 
 	/**
 	 * Create an Header object for a given Navajo
@@ -558,8 +558,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return FieldTag
 	 */
-	public abstract FieldTag createField(Navajo tb, String condition,
-			String name);
+	public abstract FieldTag createField(Navajo tb, String condition, String name);
 
 	/**
 	 * Create a ParamTag object
@@ -588,8 +587,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapObject(Navajo tb, String object,
-			String condition);
+	public abstract MapTag createMapObject(Navajo tb, String object, String condition);
 
 	/**
 	 * Create a MapTag reference
@@ -605,8 +603,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapRef(Navajo tb, String ref,
-			String condition, String filter);
+	public abstract MapTag createMapRef(Navajo tb, String ref, String condition, String filter, MapTag parent);
 
 	/**
 	 * Create a Selection object

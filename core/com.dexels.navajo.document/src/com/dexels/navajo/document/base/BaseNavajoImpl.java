@@ -131,11 +131,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void addMap(com.dexels.navajo.document.MapTag map) {
-        throw new java.lang.UnsupportedOperationException("Method addMap() not yet implemented.");
-    }
-
-    @Override
     public Message addMessage(Message m) {
         if (m == null) {
             throw new NullPointerException("Can not add null message to Navajo object");

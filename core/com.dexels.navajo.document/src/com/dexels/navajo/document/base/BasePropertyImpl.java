@@ -160,6 +160,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String subType = null;
 	private transient Object tipiProperty = null;
 	   
+	protected List<ExpressionTag> myExpressions = new ArrayList<>();
+	
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
 		isListType = false;
@@ -1937,7 +1939,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public void addExpression(ExpressionTag e) {
-		throw new java.lang.UnsupportedOperationException("Method addExpression() not yet implemented.");
+		myExpressions.add(e);
 	}
 
 	@Override
@@ -1998,7 +2000,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public List<? extends BaseNode> getChildren() {
-		return selectionList;
+		if ( myExpressions != null && myExpressions.size() > 0 ) {
+			List<BaseNode> c = new ArrayList<>();
+			for ( ExpressionTag et : myExpressions ) {
+				c.add((BaseExpressionTagImpl) et);
+			}
+			return c;
+		} else {
+			return selectionList;
+		}
 	}
 
 	@Override

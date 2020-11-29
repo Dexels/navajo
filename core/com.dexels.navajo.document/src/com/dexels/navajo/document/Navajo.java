@@ -238,8 +238,6 @@ public interface Navajo  {
      */
     public Message addMessage(Message message);
 
-    public void addMap(MapTag map);
-
     /**
      * Add a message to the Navajo document. If the message name already exists,
      * replace the old one.

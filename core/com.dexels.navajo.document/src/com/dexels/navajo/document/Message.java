@@ -303,6 +303,11 @@ public interface Message
   public Message addMessage(Message m, boolean overwrite);
   
   /**
+   * Add a <map ref=> tag to map an adapter on a message.
+   */
+  public void addMapRef(MapTag m);
+  
+  /**
    * Replaces a message with messsage m. The location of the message in the XML will NOT change.
    * 
    * @return Message

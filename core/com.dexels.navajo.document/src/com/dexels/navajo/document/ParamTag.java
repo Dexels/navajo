@@ -9,29 +9,28 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-public interface ParamTag {
-  /**
-  * Public constants for the param node.
-  */
- public static final String PARAM_DEFINITION = "param";
- public static final String PARAM_CONDITION = "condition";
- public static final String PARAM_NAME = "name";
- public static final String PARAM_COMMENT = "comment";
+public interface ParamTag extends Property {
+	/**
+	 * Public constants for the param node.
+	 */
+	public static final String PARAM_DEFINITION = "param";
+	public static final String PARAM_CONDITION = "condition";
+	public static final String PARAM_NAME = "name";
+	public static final String PARAM_COMMENT = "comment";
 
- public void addExpression(ExpressionTag e);
+	public String getName();
 
- public String getName();
+	public void setName(String s);
 
- public void setName(String s);
+	public String getComment();
 
- public String getComment();
+	public void setComment(String s);
 
- public void setComment(String s);
+	public String getCondition();
 
- public String getCondition();
+	public void setCondition(String s);
 
- public void setCondition(String s);
-
-  public Object getRef();
+	public Object getRef();
+	
 
 }

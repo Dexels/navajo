@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.ParamTag;
 import com.dexels.navajo.document.Point;
@@ -73,6 +74,10 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 
 	public Property createProperty(Navajo n, String name) {
 		return new BasePropertyImpl(n, name);
+	}
+	
+	public ParamTag createParam(Navajo n, String name) {
+		return new BaseParamTagImpl(n, name);
 	}
 
 	@Override
@@ -190,43 +195,43 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	}
 
 	@Override
-	public  Navajo createNavaScript(java.io.InputStream stream) {
+	public  Navascript createNavaScript(java.io.InputStream stream) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
 	@Override
-	public Navajo createNavaScript(Object representation) {
+	public Navascript createNavaScript(Object representation) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
 	@Override
-	public Navajo createNavaScript() {
-		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+	public Navascript createNavaScript() {
+		return new BaseNavascriptImpl(this);
 	}
 
 	@Override
 	public ExpressionTag createExpression(Navajo tb, String condition, String value) {
-		throw new java.lang.UnsupportedOperationException("Method createExpression() not yet implemented.");
+		return new BaseExpressionTagImpl(tb, condition, value);
 	}
 
 	@Override
 	public FieldTag createField(Navajo tb, String condition, String name) {
-		throw new java.lang.UnsupportedOperationException("Method createExpression() not yet implemented.");
+		return new BaseFieldTagImpl(tb, name, condition);
 	}
 
 	@Override
 	public MapTag createMapObject(Navajo tb, String object, String condition) {
-		throw new java.lang.UnsupportedOperationException("Method createMapObject() not yet implemented.");
+		return new BaseMapTagImpl(tb, object, condition);
 	}
 
 	@Override
-	public MapTag createMapRef(Navajo tb, String ref, String condition, String filter) {
-		throw new java.lang.UnsupportedOperationException("Method createMapRef() not yet implemented.");
+	public MapTag createMapRef(Navajo tb, String ref, String condition, String filter, MapTag parent) {
+		return new BaseMapTagImpl(tb, ref, filter, parent);
 	}
 
 	@Override
 	public ParamTag createParam(Navajo tb, String condition, String name) {
-		throw new java.lang.UnsupportedOperationException("Method createParam() not yet implemented.");
+		return new BaseParamTagImpl(tb, condition, name);
 	}
 
 	@Override

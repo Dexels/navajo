@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.MapTag;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.MessageMappable;
 import com.dexels.navajo.document.Navajo;
@@ -91,6 +92,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private Map<String, String> subtypeMap;
 
+    private BaseMapTagImpl ref;
+    
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -1313,6 +1316,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     @Override
     public final List<BaseNode> getChildren() {
         ArrayList<BaseNode> al = new ArrayList<>();
+        
+        if (ref != null ) {  // If a  <map ref=> construction is used, message can only have 1 child.
+        	al.add(ref); 
+        	return al;
+        }
+        
         if (propertyList == null) {
 
         } else {
@@ -2011,6 +2020,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public void addMapRef(MapTag m) {
+		this.ref = (BaseMapTagImpl) m;
 	}
 
 }
