@@ -9,14 +9,30 @@ public class NavascriptGenerator {
 		
 		NavascriptTag navascript = new NavascriptTag();
 		
-		navascript.addParam(null, "MyParam").addExpression("1 == 2", "60").addExpression(null, "78");
+		navascript
+			.addParam(null, "MyParam").addExpression("1 == 2", "60").addExpression(null, "78");
 		
 		MapTag map = navascript.addMap(null, "sqlquery");
-		map.addParam(null, "AnotherParam").addExpression(null, "'AAP'");
-		map.addField(null, "transactionContext").addExpression(null, "[/Transaction/TransactionContext]");
 		
-		navascript.addMessage("SomeMessage", null).addProperty(null, "LastName", "string").addExpression(null, "'Bergman'");
-		map.addMessage("ResultSet", null).addMap(null, "resultSet", map).addProperty(null, "FirstName", "string").addExpression(null, "$columnValue('firstname')");
+		navascript.addMap(null, "sqlquery");
+		
+		map.addParam(null, "AnotherParam")
+			.addExpression("1 == 2", "'AAP'")
+			.addExpression("IsEmpty([/Fluit/Ketel]", "'MIES'")
+			.addExpression(null, "'NOOT'");
+		
+		map.addField(null, "transactionContext")
+			.addExpression("?[/Transaction/TransactionContext]", "[/Transaction/TransactionContext]")
+			.addExpression(null, "23124343");
+		
+		navascript.addMessage("SomeMessage", null)
+			.addProperty(null, "LastName", "string")
+				.addExpression(null, "'Bergman'");
+		
+		map.addMessage("ResultSet", null)
+			.addMap(null, "resultSet", map)
+				.addProperty(null, "FirstName", "string")
+					.addExpression(null, "$columnValue('firstname')");
 		
 		navascript.write(System.out);
 		
