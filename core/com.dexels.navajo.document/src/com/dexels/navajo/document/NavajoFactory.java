@@ -558,7 +558,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return FieldTag
 	 */
-	public abstract FieldTag createField(Navajo tb, String condition, String name);
+	public abstract Field createField(Navajo tb, String condition, String name);
 
 	/**
 	 * Create a ParamTag object
@@ -572,7 +572,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return ParamTag
 	 */
-	public abstract ParamTag createParam(Navajo tb, String condition,
+	public abstract Param createParam(Navajo tb, String condition,
 			String name);
 
 	/**
@@ -587,7 +587,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapObject(Navajo tb, String object, String condition);
+	public abstract MapAdapter createMapObject(Navajo tb, String object, String condition);
 
 	/**
 	 * Create a MapTag reference
@@ -603,7 +603,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapRef(Navajo tb, String ref, String condition, String filter, MapTag parent);
+	public abstract MapAdapter createMapRef(Navajo tb, String ref, String condition, String filter, MapAdapter parent);
 
 	/**
 	 * Create a Selection object

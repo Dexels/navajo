@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.dexels.navajo.document.ExpressionTag;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Param;
 
-public class BaseParamTagImpl extends BasePropertyImpl implements ParamTag {
+public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 
 	
 	/**
@@ -68,10 +68,10 @@ public class BaseParamTagImpl extends BasePropertyImpl implements ParamTag {
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = super.getAttributes();
 		if ( condition != null && !"".equals(condition) ) {
-			m.put(ParamTag.PARAM_CONDITION, condition);
+			m.put(Param.PARAM_CONDITION, condition);
 		}
 		if ( comment != null && !"".equals(comment) ) {
-			m.put(ParamTag.PARAM_COMMENT, comment);
+			m.put(Param.PARAM_COMMENT, comment);
 		}
 		return m;
 	}

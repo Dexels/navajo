@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
-import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Param;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
@@ -20,13 +20,13 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	}
 
 	@Override
-	public ParamTag addParam(ParamTag p) {
+	public Param addParam(Param p) {
 		myChildren.add(p);
 		return p;
 	}
 
 	@Override
-	public MapTag addMap(MapTag map) {
+	public MapAdapter addMap(MapAdapter map) {
 		myChildren.add(map);
 		return map;
 	}

@@ -6,18 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.FieldTag;
-import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.Field;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 
-public class BaseFieldTagImpl extends BaseParamTagImpl implements FieldTag {
+public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 9083129086534100907L;
 
-	MapTag parent;
+	MapAdapter parent;
 	String fieldName;
 
 	public BaseFieldTagImpl(Navajo n, String name, String condition) {
@@ -25,7 +26,7 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements FieldTag {
 		fieldName = name;
 	}
 
-	public void setParent(MapTag p) {
+	public void setParent(MapAdapter p) {
 		this.parent = p;
 	}
 
@@ -53,7 +54,7 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements FieldTag {
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<>();
 		if ( condition != null && !"".equals(condition) ) {
-			m.put(FieldTag.FIELD_CONDITION, condition);
+			m.put(Field.FIELD_CONDITION, condition);
 		}
 		if (this.myExpressions.size() == 1 ) {
 			ExpressionTag et = myExpressions.get(0);

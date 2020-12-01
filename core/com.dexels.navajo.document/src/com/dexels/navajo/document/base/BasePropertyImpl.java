@@ -1938,8 +1938,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public void addExpression(ExpressionTag e) {
+	public Property addExpression(ExpressionTag e) {
 		myExpressions.add(e);
+		return this;
 	}
 
 	@Override

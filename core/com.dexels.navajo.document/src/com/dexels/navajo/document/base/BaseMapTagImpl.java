@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dexels.navajo.document.FieldTag;
-import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.Field;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 
-public class BaseMapTagImpl extends BaseNode implements MapTag {
+public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	List<Serializable> children = new ArrayList<>();
 	Map<String,String> attributes = new HashMap<>();
-	MapTag parent;
+	MapAdapter parent;
 	String name;
 	String ref;
 	String condition;
@@ -29,7 +29,7 @@ public class BaseMapTagImpl extends BaseNode implements MapTag {
 		this.condition = condition;
 	}
 	
-	public BaseMapTagImpl(Navajo n, String ref, String filter, MapTag parent) {
+	public BaseMapTagImpl(Navajo n, String ref, String filter, MapAdapter parent) {
 		super(n);
 		this.ref = ref;
 		this.filter = filter;
@@ -60,7 +60,7 @@ public class BaseMapTagImpl extends BaseNode implements MapTag {
 		return c;
 	}
 	
-	public void setParent(MapTag m) {
+	public void setParent(MapAdapter m) {
 		this.parent = m;
 	}
 
@@ -74,13 +74,13 @@ public class BaseMapTagImpl extends BaseNode implements MapTag {
 	}
 
 	@Override
-	public void addField(FieldTag f) {
+	public void addField(Field f) {
 		children.add(f);
 		f.setParent(this);
 	}
 
 	@Override
-	public void addParam(ParamTag p) {
+	public void addParam(Param p) {
 		children.add(p);
 	}
 

@@ -1,4 +1,4 @@
-package com.dexels.navajo.document.navascript3;
+package com.dexels.navajo.document.navascript;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;

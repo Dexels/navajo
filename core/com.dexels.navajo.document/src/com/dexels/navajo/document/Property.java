@@ -196,7 +196,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public List<Selection> getAllSelectedSelections();
 
-  public void addExpression(ExpressionTag e);
+  public Property addExpression(ExpressionTag e);
 
   /**
    * Add a selection option to a "selection" property. If the option name already exists, replace

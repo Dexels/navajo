@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.FieldTag;
+import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
@@ -17,7 +17,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Point;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -76,7 +76,7 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		return new BasePropertyImpl(n, name);
 	}
 	
-	public ParamTag createParam(Navajo n, String name) {
+	public Param createParam(Navajo n, String name) {
 		return new BaseParamTagImpl(n, name);
 	}
 
@@ -215,22 +215,22 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	}
 
 	@Override
-	public FieldTag createField(Navajo tb, String condition, String name) {
+	public Field createField(Navajo tb, String condition, String name) {
 		return new BaseFieldTagImpl(tb, name, condition);
 	}
 
 	@Override
-	public MapTag createMapObject(Navajo tb, String object, String condition) {
+	public MapAdapter createMapObject(Navajo tb, String object, String condition) {
 		return new BaseMapTagImpl(tb, object, condition);
 	}
 
 	@Override
-	public MapTag createMapRef(Navajo tb, String ref, String condition, String filter, MapTag parent) {
+	public MapAdapter createMapRef(Navajo tb, String ref, String condition, String filter, MapAdapter parent) {
 		return new BaseMapTagImpl(tb, ref, filter, parent);
 	}
 
 	@Override
-	public ParamTag createParam(Navajo tb, String condition, String name) {
+	public Param createParam(Navajo tb, String condition, String name) {
 		return new BaseParamTagImpl(tb, condition, name);
 	}
 

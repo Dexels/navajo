@@ -2,8 +2,8 @@ package com.dexels.navajo.document;
 
 public interface Navascript extends Navajo {
 
-	public ParamTag addParam(ParamTag p);
+	public Param addParam(Param p);
 	
-	public MapTag addMap(MapTag map);
+	public MapAdapter addMap(MapAdapter map);
 	
 }

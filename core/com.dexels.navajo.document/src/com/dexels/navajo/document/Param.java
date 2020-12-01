@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-public interface ParamTag extends Property {
+public interface Param extends Property {
 	/**
 	 * Public constants for the param node.
 	 */

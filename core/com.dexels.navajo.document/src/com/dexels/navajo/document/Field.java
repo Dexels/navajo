@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @version $Id$
  */
 
-public interface FieldTag extends Serializable {
+public interface Field extends Property {
 	/**
 	 * Public constants for the property node.
 	 */
@@ -19,8 +19,6 @@ public interface FieldTag extends Serializable {
 	public static final String FIELD_CONDITION = "condition";
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_COMMENT = "comment";
-
-	public void addExpression(ExpressionTag e);
 
 	public String getName();
 
@@ -30,12 +28,13 @@ public interface FieldTag extends Serializable {
 
 	public void setComment(String s);
 
-	public void setParent(MapTag p);
+	public void setParent(MapAdapter p);
 	
 	public String getCondition();
 
 	public void setCondition(String s);
 
 	public Object getRef();
+	
 
 }
