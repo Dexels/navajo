@@ -2,7 +2,8 @@
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -10,27 +11,24 @@
         <groupId>com.dexels.navajo</groupId>
         <artifactId>com.dexels.navajo.super</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>setup/com.dexels.repository/</relativePath>
+        <relativePath>setup/com.dexels.navajo.super</relativePath>
     </parent>
     
     <groupId>com.dexels</groupId>
-    <artifactId>com.dexels.opensource</artifactId>
+    <artifactId>com.dexels.navajo.root</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>setup/com.dexels.target/</module>    
-        <module>setup/com.dexels.repository/</module>    
-        <module>core/</module>
-        <module>server/</module>
-        <module>dev/</module>
-        <module>tipi/</module>
-        <module>optional/com.dexels.navajo.other.feature/allgit/</module>
-        <module>optional/com.dexels.navajo.twitter.feature/allgit/</module>
-        <module>scala/</module>
-        <module>example/</module>
-        <module>setup/com.dexels.p2</module>
-        <module>setup/com.dexels.vaadin.p2</module>
+        <module>setup/com.dexels.navajo.target</module>
+        <module>core</module>
+        <module>server</module>
+        <module>dev</module>
+        <module>optional/com.dexels.navajo.other.feature/allgit</module>
+        <module>optional/com.dexels.navajo.twitter.feature/allgit</module>
+        <module>scala</module>
+        <module>example</module>
+        <module>setup/com.dexels.navajo.p2</module>
         <module>setup/com.dexels.streams.p2</module>
     </modules>
 

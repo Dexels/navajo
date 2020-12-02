@@ -21,12 +21,6 @@
    <feature id="com.dexels.navajo.reactive.feature">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature id="com.dexels.navajo.tipi.feature">
-      <category name="Tipi"/>
-   </feature>
-   <feature id="com.dexels.navajo.tipi.swing.feature">
-      <category name="Tipi"/>
-   </feature>
    <feature url="features/com.dexels.navajo.streams.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.streams.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
@@ -37,7 +31,4 @@
    <category-def name="Navajo SDK" label="Navajo SDK"/>
    <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
    <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
-   <category-def name="Tipi" label="Tipi"/>
-   <category-def name="TipiOptional" label="Tipi optional packages"/>
-   <category-def name="Tipi SDK" label="Tipi SDK"/>
 </site>
