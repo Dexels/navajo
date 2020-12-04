@@ -23,6 +23,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
+import com.dexels.navajo.document.saximpl.NavascriptSaxHandler;
 import com.dexels.navajo.document.saximpl.SaxHandler;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
@@ -196,7 +197,15 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 
 	@Override
 	public  Navascript createNavaScript(java.io.InputStream stream) {
-		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+		try {
+			NavascriptSaxHandler sax = new NavascriptSaxHandler();
+			try(Reader isr = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+				QDParser.parse(sax, isr);
+			}
+			return sax.getNavascript();
+		} catch (Exception e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
 	}
 
 	@Override
