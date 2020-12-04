@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 /**
  * A sorter for TableModels. The sorter has a model (conforming to TableModel)
  * and itself implements TableModel. TableSorter does not store or copy
