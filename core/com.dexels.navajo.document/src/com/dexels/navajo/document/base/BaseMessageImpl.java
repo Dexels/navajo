@@ -75,7 +75,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     protected transient Map<String, Message> messageMap = null;
 
-    private transient List<Message> messageList = null;
+    protected transient List<Message> messageList = null;
 
     private List<Serializable> children = new ArrayList<>();
     
@@ -273,7 +273,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Message addMessage(Message m, boolean overwrite) {
+    public  Message addMessage(Message m, boolean overwrite) {
         if (messageList == null) {
             messageList = new ArrayList<>();
         }
@@ -2043,8 +2043,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	@Override
 	public void addMap(MapAdapter m) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

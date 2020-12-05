@@ -5,6 +5,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document;
 
+import com.dexels.navajo.document.navascript.tags.MapTag;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -32,6 +34,8 @@ public interface MapAdapter extends java.io.Serializable {
   public void setParent(MapAdapter m);
   
   public void addMessage(Message m);
+  
+  public void addMap(MapAdapter m);
   
   public void addProperty(Property p);  // in case of a ref map, properties can be added
 

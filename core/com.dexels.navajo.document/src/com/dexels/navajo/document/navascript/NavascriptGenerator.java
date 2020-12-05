@@ -30,7 +30,7 @@ public class NavascriptGenerator {
 				.addExpression(null, "'Bergman'");
 		
 		map.addMessage("ResultSet", null)
-			.addMap(null, "resultSet", map)
+			.addMap(null, "resultSet", map, false)
 				.addProperty(null, "FirstName", "string")
 					.addExpression(null, "$columnValue('firstname')");
 		

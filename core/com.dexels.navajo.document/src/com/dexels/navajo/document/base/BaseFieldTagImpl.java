@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.base;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,24 +22,46 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 
 	MapAdapter parent;
 	String fieldName;
-
+	String constant;
+	private boolean oldSkool;
+	List<BaseMapTagImpl> children = new ArrayList<>();
+	
 	public BaseFieldTagImpl(Navajo n, String name, String condition) {
 		super(n, condition, name);
+		fieldName = name;
+	}
+	
+	public BaseFieldTagImpl(Navajo n, String name, String condition, boolean oldSkool) {
+		super(n, condition, name);
+		this.oldSkool = oldSkool;
 		fieldName = name;
 	}
 
 	public void setParent(MapAdapter p) {
 		this.parent = p;
 	}
-
-	@Override
-	public String getTagName() {
-		return parent.getObject() + "." + fieldName;
+	
+	public void addMap(BaseMapTagImpl m) {
+		children.add(m);
 	}
 
 	@Override
+	public String getTagName() {
+		if ( oldSkool ) {
+			return "field";
+		} else {
+			return parent.getObject() + "." + fieldName;
+		}
+	}
+
+	public void setConstant(String c) {
+		constant = c;
+	}
+	
+	@Override
 	public List<? extends BaseNode> getChildren() {
-		if ( this.myExpressions.size() > 1 ) {
+		
+		if ( this.myExpressions.size() > 1 || ( oldSkool && myExpressions.size() > 0 ) ) {
 			List<BaseExpressionTagImpl> expressions = new ArrayList<>();
 			for ( ExpressionTag et: this.myExpressions) {
 				if ( et instanceof BaseExpressionTagImpl ) {
@@ -45,6 +69,8 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 				}
 			}
 			return expressions;
+		} else if ( children.size() >  0) {
+			return children;
 		} else {
 			return null;
 		}
@@ -56,7 +82,10 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 		if ( condition != null && !"".equals(condition) ) {
 			m.put(Field.FIELD_CONDITION, condition);
 		}
-		if (this.myExpressions.size() == 1 ) {
+		if ( oldSkool ) {
+			m.put("name", fieldName);
+		}
+		if ( !oldSkool && this.myExpressions.size() == 1 ) {
 			ExpressionTag et = myExpressions.get(0);
 			if ( et.getCondition() != null && !"".equals(et.getCondition())) {
 				m.put("condition", et.getCondition());
@@ -66,4 +95,15 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 		return m;
 	}
 
+	@Override
+	public boolean hasTextNode() {
+		return ( constant != null );
+	}
+	
+	@Override
+	public void writeText(Writer w) throws IOException  {
+		if ( constant != null ) {
+			w.write(constant); 
+		}
+	}
 }

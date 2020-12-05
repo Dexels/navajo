@@ -1399,7 +1399,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		
 	    
 		if (getType().equals(Property.DATE_PROPERTY)) {

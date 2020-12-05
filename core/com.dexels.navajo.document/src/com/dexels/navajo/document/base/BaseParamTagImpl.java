@@ -1,10 +1,12 @@
 package com.dexels.navajo.document.base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 
@@ -54,14 +56,19 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	}
 
 	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	@Override
 	public List<? extends BaseNode> getChildren() {
-		 List<BaseExpressionTagImpl> expressions = new ArrayList<>();
-		 for ( ExpressionTag et: this.myExpressions) {
-			 if ( et instanceof BaseExpressionTagImpl ) {
-				 expressions.add((BaseExpressionTagImpl) et);
-			 }
-		 }
-		 return expressions;
+		List<BaseExpressionTagImpl> expressions = new ArrayList<>();
+		for ( ExpressionTag et: this.myExpressions) {
+			if ( et instanceof BaseExpressionTagImpl ) {
+				expressions.add((BaseExpressionTagImpl) et);
+			}
+		}
+		return expressions;
 	}
 
 	@Override

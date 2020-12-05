@@ -538,7 +538,7 @@ public final class SaxHandler implements DocHandler {
 
 
     @Override
-	public final void text(Reader r) throws Exception {
+	public void text(Reader r) throws Exception {
         if (currentProperty==null) {
             return;
 //            throw new IllegalArgumentException("Huh?");

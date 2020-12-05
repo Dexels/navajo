@@ -42,8 +42,8 @@ public class MessageTag extends BaseMessageTagImpl {
 	}
 
 	// add <map>
-	public MapTag addMap(String filter, String field, MapTag refParent) {
-		MapTag m = new MapTag(myScript, field, filter, refParent);
+	public MapTag addMap(String filter, String field, MapTag refParent, boolean oldStyleMap) {
+		MapTag m = new MapTag(myScript, field, filter, refParent ,oldStyleMap);
 		super.addMap(m);
 		return m;
 	}

@@ -2,7 +2,7 @@
 This file is part of the Navajo Project. 
 It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ */
 package com.dexels.navajo.document;
 
 /**
@@ -16,21 +16,25 @@ package com.dexels.navajo.document;
 
 public interface ExpressionTag extends java.io.Serializable, Comparable<ExpressionTag>, Cloneable {
 
-  /**
-   * Public constants for the property node.
-   */
-  public static final String EXPRESSION_DEFINITION = "expression";
-  public static final String EXPRESSION_CONDITION = "condition";
-  public static final String EXPRESSION_VALUE = "value";
+	/**
+	 * Public constants for the property node.
+	 */
+	public static final String EXPRESSION_DEFINITION = "expression";
+	public static final String EXPRESSION_CONDITION = "condition";
+	public static final String EXPRESSION_VALUE = "value";
 
-  public String getValue();
+	public String getValue();
 
-  public void setValue(String s);
+	public void setValue(String s);
 
-  public String getCondition();
+	public String getCondition();
 
-  public void setCondition(String s);
+	public void setCondition(String s);
 
-   public Object getRef();
+	public Object getRef();
 
+	public String getConstant();
+
+	public void setConstant(String c);
+	
 }

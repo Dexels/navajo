@@ -1,11 +1,16 @@
 package com.dexels.navajo.document.base;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -16,7 +21,7 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	List<Serializable> children = new ArrayList<>();
 	Map<String,String> attributes = new HashMap<>();
-	
+
 	/**
 	 * 
 	 */
@@ -41,21 +46,21 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	public void addMap(MapAdapter m) {
 		children.add(m);
 	}
-	
+
 	@Override
 	public Message addMessage(Message m) {
 		children.add(m);
 		return m;
 	}
-	
+
 	@Override
 	public void addParam(Param p) {
 		children.add(p);
 	}
-	
+
 	@Override
 	public void addProperty(Property p) {
 		children.add(p);
 	}
-	
+
 }

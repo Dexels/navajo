@@ -12,6 +12,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.navascript.tags.MapTag;
 
 public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
@@ -22,6 +23,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	String ref;
 	String condition;
 	String filter;
+	boolean oldStyleMap;
 	
 	public BaseMapTagImpl(Navajo n, String name, String condition) {
 		super(n);
@@ -29,11 +31,26 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		this.condition = condition;
 	}
 	
+	public BaseMapTagImpl(Navajo n, String name, String condition, boolean oldStyleMap) {
+		super(n);
+		this.name = name;
+		this.condition = condition;
+		this.oldStyleMap = oldStyleMap;
+	}
+	
 	public BaseMapTagImpl(Navajo n, String ref, String filter, MapAdapter parent) {
 		super(n);
 		this.ref = ref;
 		this.filter = filter;
 		this.parent = parent;
+	}
+	
+	public BaseMapTagImpl(Navajo n, String ref, String filter, MapAdapter parent, boolean oldStyleMap) {
+		super(n);
+		this.ref = ref;
+		this.filter = filter;
+		this.parent = parent;
+		this.oldStyleMap = oldStyleMap;
 	}
 	
 	@Override
@@ -44,6 +61,12 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		}
 		if ( filter != null && !"".equals(filter))  {
 			attr.put("filter", filter);
+		}
+		if ( oldStyleMap && name != null)  {
+			attr.put("object", name);
+		}
+		if ( oldStyleMap && ref != null)  {
+			attr.put("ref", ref);
 		}
 		attr.putAll(attributes);
 		return attr;
@@ -66,11 +89,13 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	@Override
 	public String getTagName() {
-		if ( ref != null ) {
+		if ( oldStyleMap ) {
+			return "map";
+		} else if ( ref != null ) {
 			return parent.getObject() + "." + ref;
 		} else {
 			return "map."+name;
-		}
+		} 
 	}
 
 	@Override
@@ -86,6 +111,11 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	@Override
 	public void addMessage(Message m) {
+		children.add(m);
+	}
+	
+	@Override
+	public void addMap(MapAdapter m) {
 		children.add(m);
 	}
 

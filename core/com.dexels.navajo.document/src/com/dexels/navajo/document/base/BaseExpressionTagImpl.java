@@ -1,5 +1,7 @@
 package com.dexels.navajo.document.base;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 	
 	String condition;
 	String value;
+	String constant;
 	
 	public BaseExpressionTagImpl(Navajo n, String condition, String value) {
 		super(n);
@@ -77,5 +80,28 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getConstant() {
+		return constant;
+	}
+	
+	@Override
+	public void setConstant(String c) {
+		constant = c;
+	}
+	
+	@Override
+	public boolean hasTextNode() {
+		return ( constant != null );
+	}
+	
+	@Override
+	public void writeText(Writer w) throws IOException  {
+		if ( constant != null ) {
+			w.write(constant); 
+		}
+	}
+	
 
 }
