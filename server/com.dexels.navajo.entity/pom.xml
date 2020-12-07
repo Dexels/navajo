@@ -11,5 +11,5 @@
         <relativePath>../../setup/com.dexels.repository</relativePath>
     </parent>
 
-    <version>7.0.97</version>
+    <version>7.0.98-SNAPSHOT</version>
 </project>
