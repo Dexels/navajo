@@ -253,6 +253,7 @@ $(document).ready(function() {
             addSpinner();
             // Do request
             $.ajax({
+                cache: false,
                 beforeSend: function(req) {
                 		if(sessionStorage.authType == 'oauth'){
                 			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
@@ -295,6 +296,7 @@ $(document).ready(function() {
             var requestdata = myRequest.find('textarea.call-entityinput').val();
             addSpinner();
             $.ajax({
+                cache: false,
                 beforeSend: function(req) {
 	                	if(sessionStorage.authType == 'oauth'){
 	            			req.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.token);
