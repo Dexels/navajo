@@ -21,6 +21,12 @@ public class MessageTag extends BaseMessageTagImpl {
 		super.addParam(pt);
 		return pt;
 	}
+	
+	public FieldTag addField(MapTag parent, String condition, String name) {
+		FieldTag pt = new FieldTag(parent, condition, name);
+		super.addField(pt);
+		return pt;
+	}
 
 	public PropertyTag addProperty(String condition, String name, String type, String value, int length, String description, String dir) {
 		PropertyTag pt = new PropertyTag(myScript, name, type, value, length, description, dir);

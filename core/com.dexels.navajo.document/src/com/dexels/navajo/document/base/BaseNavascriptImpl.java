@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dexels.navajo.document.Include;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Param;
+import com.dexels.navajo.document.Validations;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
@@ -52,6 +54,18 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 			}
 		}
 		return children;
+	}
+
+	@Override
+	public void addInclude(Include inc) {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>> Adding include tag: " + inc.getScript());
+		myChildren.add(inc);
+	}
+	
+	@Override
+	public void addValidations(Validations val) {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>> Adding validations tah");
+		myChildren.add(val);
 	}
 
 }

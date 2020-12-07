@@ -58,7 +58,7 @@ public class QDParser {
 
     public static void parse(DocHandler doc, Reader re) throws Exception {
         PushbackReader r = new PushbackReader(new BufferedReader(re), PUSHBACK_SIZE);
-        StringBuilder attributeBuffer = new StringBuilder(50);
+        StringBuilder attributeBuffer = new StringBuilder(300);
         int depth = 0;
         int mode = PRE;
         int c = 0;

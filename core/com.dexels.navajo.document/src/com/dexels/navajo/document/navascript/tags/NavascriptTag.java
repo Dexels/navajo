@@ -28,4 +28,17 @@ public class NavascriptTag extends BaseNavascriptImpl {
 		return pt;
 	}
 	
+	public IncludeTag addInclude(String script) {
+		IncludeTag it = new IncludeTag(this, script);
+		super.addInclude(it);
+		return it;
+	}
+	
+	public ValidationsTag addValidations() {
+		ValidationsTag vt = new ValidationsTag(this);
+		super.addValidations(vt);
+		return vt;
+	}
+	
+	
 }

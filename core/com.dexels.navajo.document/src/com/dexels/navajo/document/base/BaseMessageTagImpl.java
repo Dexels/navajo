@@ -16,6 +16,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.navascript.tags.FieldTag;
 
 public class BaseMessageTagImpl extends BaseMessageImpl {
 
@@ -46,6 +47,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	public void addMap(MapAdapter m) {
 		children.add(m);
 	}
+	
+	public void removeMap(MapAdapter m) {
+		children.remove(m);
+	}
 
 	@Override
 	public Message addMessage(Message m) {
@@ -60,6 +65,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	@Override
 	public void addProperty(Property p) {
+		children.add(p);
+	}
+	
+	public void addField(FieldTag p) {
 		children.add(p);
 	}
 

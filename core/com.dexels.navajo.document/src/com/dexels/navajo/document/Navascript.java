@@ -6,4 +6,8 @@ public interface Navascript extends Navajo {
 	
 	public MapAdapter addMap(MapAdapter map);
 	
+	public void addInclude(Include inc);
+
+	public void addValidations(Validations val);
+	
 }
