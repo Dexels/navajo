@@ -103,6 +103,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private BaseMapTagImpl ref;
     
+    private boolean isAntiMessage = false;
+    
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -1366,9 +1368,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public String getTagName() {
-        return Message.MSG_DEFINITION;
-    }
+	public String getTagName() {
+		if ( isAntiMessage() ) {
+			return "anti" + Message.MSG_DEFINITION;
+		} else {
+			return Message.MSG_DEFINITION;
+		}
+	}
 
     public final int getChildCount() {
         return getAllProperties().size() + (messageList != null ? messageList.size() : 0);
@@ -2043,6 +2049,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	@Override
 	public void addMap(MapAdapter m) {
+	}
+
+	@Override
+	public boolean isAntiMessage() {
+		return isAntiMessage;
+	}
+	
+	public void setAntiMessage(boolean b) {
+		isAntiMessage = b;
 	}
 
 }

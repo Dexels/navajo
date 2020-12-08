@@ -10,6 +10,9 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.base.BaseCheckTagImpl;
@@ -25,9 +28,15 @@ import com.dexels.navajo.document.navascript.tags.MessageTag;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
+import com.dexels.navajo.document.navascript.tags.SelectionTag;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
 public class NavascriptSaxHandler extends SaxHandler {
+
+	public NavascriptSaxHandler(QDParser parser) {
+		super(parser);
+	}
 
 	private NavascriptTag currentDocument=null;
 	private Stack<MapTag> currentMap = new Stack<>();
@@ -35,6 +44,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 	private Stack<FieldTag> currentField = new Stack<>();
 	private Stack<BaseNode> currentNode = new Stack<>();
 	private ValidationsTag validationsBlock;
+	
+	private static final Logger logger = LoggerFactory.getLogger(NavascriptSaxHandler.class);
 	
 	public Navascript getNavascript() {
 		return currentDocument;
@@ -59,25 +70,45 @@ public class NavascriptSaxHandler extends SaxHandler {
 		}
 		
 		if (tag.equals("validations")) {
+			if ( !(currentParent instanceof NavascriptTag) ) {
+				throw new Exception("Validation tags can only be specified as top level tags");
+			}
 			validationsBlock = currentDocument.addValidations();
 			currentNode.push(validationsBlock);
+			return;
+		}
+		
+		if (tag.equals("option")) {
+			String name = h.get("name");
+			String value = h.get("value");
+			String selected = h.get("selected");
+			boolean bSel = (selected != null ? selected.equals("1") : false);
+			if ( currentParent instanceof PropertyTag ) {
+				SelectionTag st = ((PropertyTag) currentParent).addSelection(name, value, bSel);
+				currentNode.push(st);
+			} else {
+				throw new Exception("Option tags are only allowed after a property tag.");
+			}
 			return;
 		}
 		
 		if (tag.equals("check")) {
 			String code = h.get("code");
 			String desc = h.get("description");
+			String condition = h.get("condition");
 			if ( validationsBlock != null  ) {
-				CheckTag ct = validationsBlock.addCheck(code, desc);
+				CheckTag ct = validationsBlock.addCheck(code, desc, condition);
 				currentNode.push(ct);
 			} else {
-				// log error
+				throw new Exception("Check tags can only be found under validations tag.");
 			}
 			return;
 		}
 		
-		if (tag.equals("message")) {
+		if (tag.equals("message") || tag.equals("antimessage")) {
 			MessageTag mt = new MessageTag(currentDocument, h.get("name"),  h.get("type"));
+			boolean isAntiMsg = tag.equals("antimessage");
+			mt.setAntiMessage(isAntiMsg);
 			if ( h.get("mode") != null ) {
 				mt.setMode(h.get("mode") + "_"); // postfix mode to prevent ignore message. Strip character later
 			}
@@ -123,6 +154,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addField(ft);
 			} else if ( currentParent instanceof MapTag ) {
 				currentMap.lastElement().addField(ft);
+			} else {
+				throw new Exception("Field tags can only be found under message or map tags.");
 			}
 			currentField.push(ft);
 			currentNode.push(ft);
@@ -163,13 +196,14 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().removeMap(fixThis);
 				currentMessage.lastElement().addField(ft);
 				ft.addExpression(et);
+			} else {
+				throw new Exception("Expression tags can only be found under following tags: property, field, param");
 			}
 			currentNode.push(et);
 			return;
 		}
 		if (tag.equals("param")) {
 			ParamTag pt = new ParamTag(currentDocument, h.get("condition"), h.get("name"));
-			String name = pt.getName();
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addParam(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
@@ -183,7 +217,15 @@ public class NavascriptSaxHandler extends SaxHandler {
 			String name = h.get("name");
 			String val = h.get("value");
 			String type = h.get("type");
-			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, 0, "", "");
+			String direction = h.get("direction");
+			String description = h.get("description");
+			String length = h.get("lenghth");
+			String cardinality = h.get("cardinality");
+			int iLen = ( length != null ? Integer.parseInt(length) : 0 );
+			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, iLen, description, direction);
+			if ( cardinality != null ) {
+				pt.setCardinality(cardinality);
+			}
 			if (val!=null) {
 				// Dit kan NOG strakker. Niet alle types hoeven geunescaped worder
 				Hashtable<String,String> h2 = new Hashtable<String,String>(h);
@@ -195,6 +237,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addProperty(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
 				currentMap.lastElement().addProperty(pt);
+			} else {
+				throw new Exception("Property tags can only be found under a message or a map tag.");
 			}
 			currentNode.push(pt);
 			return;
@@ -219,18 +263,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentNode.push(ft);
 			}
 		}
-		//		if (tag.equals("option")) {
-		//			String val = h.get("value");
-		//			String name = h.get("name");
-		//			Hashtable<String,String> h2 = new Hashtable<String,String>(h);
-		//			val = BaseNode.XMLUnescape(val);
-		//			name = BaseNode.XMLUnescape(name);
-		//			h2.put("value", val);
-		//			h2.put("name", name);
-		//
-		//			//parseSelection(h2);
-		//			return;
-		//		} 
 
 	}
 
@@ -243,7 +275,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentMap.pop();
 			currentNode.pop();
 		}
-		if (tag.equals("message")) {
+		if (tag.equals("message") || tag.equals("antimessage")) {
 			currentMessage.pop();
 			currentNode.pop();
 		}
@@ -277,19 +309,20 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.equals("validations")) {
 			currentNode.pop();
 		}
+		if (tag.equals("option")) {
+			currentNode.pop();
+		}
 		
 	}
 
 	@Override
 	public void startDocument() throws Exception {
-		// TODO Auto-generated method stub
-
+		logger.info("Start parsing of Navascript filed");
 	}
 
 	@Override
 	public void endDocument() throws Exception {
-		// TODO Auto-generated method stub
-
+		logger.info("End parsing of Navascript filed");
 	}
 
 	@Override

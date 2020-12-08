@@ -47,7 +47,7 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	public void addMap(MapAdapter m) {
 		children.add(m);
 	}
-	
+
 	public void removeMap(MapAdapter m) {
 		children.remove(m);
 	}
@@ -67,7 +67,7 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	public void addProperty(Property p) {
 		children.add(p);
 	}
-	
+
 	public void addField(FieldTag p) {
 		children.add(p);
 	}

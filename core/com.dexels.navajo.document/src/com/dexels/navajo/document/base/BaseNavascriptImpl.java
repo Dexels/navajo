@@ -58,13 +58,11 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	@Override
 	public void addInclude(Include inc) {
-		System.err.println(">>>>>>>>>>>>>>>>>>>>> Adding include tag: " + inc.getScript());
 		myChildren.add(inc);
 	}
 	
 	@Override
 	public void addValidations(Validations val) {
-		System.err.println(">>>>>>>>>>>>>>>>>>>>> Adding validations tah");
 		myChildren.add(val);
 	}
 

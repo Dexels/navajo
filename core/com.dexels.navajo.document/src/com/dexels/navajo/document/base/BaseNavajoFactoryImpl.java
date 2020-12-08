@@ -203,9 +203,10 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	@Override
 	public  Navascript createNavaScript(java.io.InputStream stream) {
 		try {
-			NavascriptSaxHandler sax = new NavascriptSaxHandler();
+			QDParser parser = new QDParser();
+			NavascriptSaxHandler sax = new NavascriptSaxHandler(parser);
 			try(Reader isr = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-				QDParser.parse(sax, isr);
+				parser.parse(sax, isr);
 			}
 			return sax.getNavascript();
 		} catch (Exception e) {
@@ -251,9 +252,10 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	@Override
 	public Navajo createNavajo(InputStream stream) {
 		try {
-			SaxHandler sax = new SaxHandler();
+			QDParser parser = new QDParser();
+			SaxHandler sax = new SaxHandler(parser);
 			try(Reader isr = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-				QDParser.parse(sax, isr);
+				parser.parse(sax, isr);
 			}
 			return sax.getNavajo();
 		} catch (Exception e) {
@@ -264,8 +266,9 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	@Override
 	public Navajo createNavajo(Reader r) {
 		try {
-			SaxHandler sax = new SaxHandler();
-			QDParser.parse(sax, r);
+			QDParser parser = new QDParser();
+			SaxHandler sax = new SaxHandler(parser);
+			parser.parse(sax, r);
 			return sax.getNavajo();
 		} catch (Exception e) {
 			throw NavajoFactory.getInstance().createNavajoException(e);

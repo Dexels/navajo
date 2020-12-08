@@ -12,8 +12,8 @@ public class ValidationsTag extends BaseValidationsTagImpl {
 		myNavajo = n;
 	}
 	
-	public CheckTag addCheck(String code, String description) {
-		CheckTag ct = new CheckTag(myNavajo, code, description);
+	public CheckTag addCheck(String code, String description, String condition) {
+		CheckTag ct = new CheckTag(myNavajo, code, description, condition);
 		super.addCheck(ct);
 		return ct;
 	}

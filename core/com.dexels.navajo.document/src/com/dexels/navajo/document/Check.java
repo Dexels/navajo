@@ -8,6 +8,8 @@ public interface Check extends Serializable {
 	
 	public String getDescription();
 	
+	public String getCondition();
+	
 	public String getRule();
 	
 	public void setRule(String r);

@@ -651,5 +651,6 @@ public interface Message
 	public boolean isInternal();
 	
 
+	public boolean isAntiMessage();
 
 }

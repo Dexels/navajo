@@ -42,6 +42,7 @@ import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
 import com.dexels.navajo.document.base.BaseTransactionImpl;
 import com.dexels.navajo.document.saximpl.qdxml.DocHandler;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 import com.dexels.navajo.document.types.Binary;
 
 public  class SaxHandler implements DocHandler {
@@ -51,9 +52,16 @@ public  class SaxHandler implements DocHandler {
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
     private Method currentMethod = null;
+    private final QDParser myParser;
     
 	private static final Logger logger = LoggerFactory
 			.getLogger(SaxHandler.class);
+	
+	
+	public SaxHandler(QDParser parser) {
+		myParser = parser;
+	}
+	
     public void reset() {
         currentDocument = null;
         messageStack.clear();
@@ -579,6 +587,12 @@ public  class SaxHandler implements DocHandler {
         }        
         throw new EOFException("Non terminated quote!");
     }
+
+
+	@Override
+	public QDParser getParser() {
+		return myParser;
+	}
     
 
 }

@@ -14,12 +14,14 @@ public class BaseCheckTagImpl extends BaseNode implements Check {
 	String code;
 	String description;
 	String rule;
+	String condition;
 
-	public BaseCheckTagImpl(Navajo n, String code, String description, String rule) {
+	public BaseCheckTagImpl(Navajo n, String code, String description, String rule, String condition) {
 		super(n);
 		this.code = code;
 		this.description = description;
 		this.rule = rule;
+		this.condition = condition;
 	}
 
 	@Override
@@ -28,6 +30,9 @@ public class BaseCheckTagImpl extends BaseNode implements Check {
 		map.put("code", code);
 		if ( description != null ) {
 			map.put("description", description);
+		}
+		if ( condition != null ) {
+			map.put("condition", condition);
 		}
 		return map;
 
@@ -73,6 +78,11 @@ public class BaseCheckTagImpl extends BaseNode implements Check {
 	@Override
 	public void setRule(String r) {
 		rule = r;
+	}
+
+	@Override
+	public String getCondition() {
+		return condition;
 	}
 
 }

@@ -18,4 +18,10 @@ public class PropertyTag extends BasePropertyImpl {
 		return this;
 	}
 	
+	public SelectionTag addSelection(String name, String value, boolean selected) {
+		SelectionTag st = new SelectionTag(myScript, name, value, selected);
+		super.addSelection(st);
+		return st;
+	}
+	
 }
