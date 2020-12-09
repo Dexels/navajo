@@ -19,6 +19,7 @@ import com.dexels.navajo.document.base.BaseCheckTagImpl;
 import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 import com.dexels.navajo.document.base.BaseFieldTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
+import com.dexels.navajo.document.navascript.tags.Attributes;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
@@ -29,6 +30,7 @@ import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
 import com.dexels.navajo.document.navascript.tags.SelectionTag;
+import com.dexels.navajo.document.navascript.tags.Tags;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
@@ -55,7 +57,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 	@Override
 	public final void startElement(String tag, Map<String,String> h) throws Exception {
 
-		if (tag.equals("navascript")) {
+		if (tag.equals(Tags.NAVASCRIPT)) {
 			currentDocument =  new NavascriptTag();
 			currentNode.push(currentDocument);
 			return;
@@ -63,13 +65,13 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		BaseNode currentParent = currentNode.lastElement();
 		
-		if (tag.equals("include")) {
+		if (tag.equals(Tags.INCLUDE)) {
 			IncludeTag it = currentDocument.addInclude(h.get("script"));
 			currentNode.push(it);
 			return;
 		}
 		
-		if (tag.equals("validations")) {
+		if (tag.equals(Tags.VALIDATIONS)) {
 			if ( !(currentParent instanceof NavascriptTag) ) {
 				throw new Exception("Validation tags can only be specified as top level tags");
 			}
@@ -78,10 +80,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
-		if (tag.equals("option")) {
-			String name = h.get("name");
-			String value = h.get("value");
-			String selected = h.get("selected");
+		if (tag.equals(Tags.OPTION)) {
+			String name = h.get(Attributes.NAME);
+			String value = h.get(Attributes.VALUE);
+			String selected = h.get(Attributes.SELECTED);
 			boolean bSel = (selected != null ? selected.equals("1") : false);
 			if ( currentParent instanceof PropertyTag ) {
 				SelectionTag st = ((PropertyTag) currentParent).addSelection(name, value, bSel);
@@ -92,10 +94,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
-		if (tag.equals("check")) {
+		if (tag.equals(Tags.CHECK)) {
 			String code = h.get("code");
-			String desc = h.get("description");
-			String condition = h.get("condition");
+			String desc = h.get(Attributes.DESCRIPTION);
+			String condition = h.get(Attributes.CONDITION);
 			if ( validationsBlock != null  ) {
 				CheckTag ct = validationsBlock.addCheck(code, desc, condition);
 				currentNode.push(ct);
@@ -105,9 +107,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
-		if (tag.equals("message") || tag.equals("antimessage")) {
-			MessageTag mt = new MessageTag(currentDocument, h.get("name"),  h.get("type"));
-			boolean isAntiMsg = tag.equals("antimessage");
+		if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
+			MessageTag mt = new MessageTag(currentDocument, h.get(Attributes.NAME),  h.get(Attributes.TYPE));
+			boolean isAntiMsg = tag.equals(Tags.ANTIMESSAGE);
 			mt.setAntiMessage(isAntiMsg);
 			if ( h.get("mode") != null ) {
 				mt.setMode(h.get("mode") + "_"); // postfix mode to prevent ignore message. Strip character later
@@ -123,15 +125,15 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(mt);
 			return;
 		}
-		if (tag.equals("map")) {
-			String object = h.get("object");
-			String ref = h.get("ref");
+		if (tag.equals(Tags.MAP)) {
+			String object = h.get(Attributes.OBJECT);
+			String ref = h.get(Attributes.REF);
 			MapTag mt = null;
 			if ( object != null ) {
-				mt = new MapTag(currentDocument, object, h.get("condition"), true);
+				mt = new MapTag(currentDocument, object, h.get(Attributes.CONDITION), true);
 			}else {
 				// map ref on message
-				mt = new MapTag(currentDocument, ref, h.get("filter"), currentMap.lastElement(), true);
+				mt = new MapTag(currentDocument, ref, h.get(Attributes.FILTER), currentMap.lastElement(), true);
 			}
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addMap(mt);
@@ -146,8 +148,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(mt);
 			return;
 		}
-		if ( tag.equals("field")) {
-			String name = h.get("name");
+		if ( tag.equals(Tags.FIELD)) {
+			String name = h.get(Attributes.NAME);
 			FieldTag ft = new FieldTag(currentMap.lastElement(), null, name, true);
 			 // FIELD CAN ALSO BE UNDER MESSAGE!!!
 			if ( currentParent instanceof MessageTag ) {
@@ -160,9 +162,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentField.push(ft);
 			currentNode.push(ft);
 		}
-		if (tag.startsWith("map.")) { //map.navajo
+		if (tag.startsWith(Tags.MAP + ".")) { //map.navajo
 			String name = tag.split("\\.")[1];
-			MapTag mt = new MapTag(currentDocument, name, h.get("condition"));
+			MapTag mt = new MapTag(currentDocument, name, h.get(Attributes.CONDITION));
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addMap(mt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
@@ -175,9 +177,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
-		if (tag.equals("expression")) {
-			String condition = h.get("condition");
-			String value = h.get("value");
+		if (tag.equals(Tags.EXPRESSION)) {
+			String condition = h.get(Attributes.CONDITION);
+			String value = h.get(Attributes.VALUE);
 			ExpressionTag et = new ExpressionTag(currentDocument, condition, value);
 			if ( currentParent instanceof PropertyTag ) {
 				((PropertyTag) currentParent).addExpression(et);
@@ -202,8 +204,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(et);
 			return;
 		}
-		if (tag.equals("param")) {
-			ParamTag pt = new ParamTag(currentDocument, h.get("condition"), h.get("name"));
+		if (tag.equals(Tags.PARAM)) {
+			ParamTag pt = new ParamTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.NAME));
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addParam(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
@@ -213,14 +215,14 @@ public class NavascriptSaxHandler extends SaxHandler {
 			}
 			currentNode.push(pt);
 		}
-		if (tag.equals("property")) {
-			String name = h.get("name");
-			String val = h.get("value");
-			String type = h.get("type");
-			String direction = h.get("direction");
-			String description = h.get("description");
-			String length = h.get("lenghth");
-			String cardinality = h.get("cardinality");
+		if (tag.equals(Tags.PROPERTY)) {
+			String name = h.get(Attributes.NAME);
+			String val = h.get(Attributes.VALUE);
+			String type = h.get(Attributes.TYPE);
+			String direction = h.get(Attributes.DIRECTION);
+			String description = h.get(Attributes.DESCRIPTION);
+			String length = h.get(Attributes.LENGTH);
+			String cardinality = h.get(Attributes.CARDINALITY);
 			int iLen = ( length != null ? Integer.parseInt(length) : 0 );
 			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, iLen, description, direction);
 			if ( cardinality != null ) {
@@ -230,7 +232,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 				// Dit kan NOG strakker. Niet alle types hoeven geunescaped worder
 				Hashtable<String,String> h2 = new Hashtable<String,String>(h);
 				val = BaseNode.XMLUnescape(val);
-				h2.put("value", val);
+				h2.put(Attributes.VALUE, val);
 
 			} 
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
@@ -246,16 +248,16 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		if (currentMap.size() > 0 && tag.startsWith(currentMap.lastElement().getAdapterName()+".")) {  // navajomap.callwebservice
 			String fieldName = tag.split("\\.")[1];
-			if ( currentParent instanceof MessageTag && h.get("value") == null ) { // Mapped field if it is a getter (no value field specified and no expression under the tag)
+			if ( currentParent instanceof MessageTag && h.get(Attributes.VALUE) == null ) { // Mapped field if it is a getter (no value field specified and no expression under the tag)
 				// map ref on message
-				MapTag mt = new MapTag(currentDocument, fieldName, h.get("filter"), currentMap.lastElement(), false);
+				MapTag mt = new MapTag(currentDocument, fieldName, h.get(Attributes.FILTER), currentMap.lastElement(), false);
 				currentMessage.lastElement().addMap(mt);
 				currentMap.push(mt);
 				currentNode.push(mt);
 			} else { // Normal field
 				FieldTag ft = new FieldTag(currentMap.lastElement(), null, fieldName);
-				if ( h.get("value") != null ) {
-					ExpressionTag et = new ExpressionTag(currentDocument, h.get("condition"), h.get("value"));
+				if ( h.get(Attributes.VALUE) != null ) {
+					ExpressionTag et = new ExpressionTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.VALUE));
 					ft.addExpression(et);
 				}
 				currentMap.lastElement().addField(ft);
@@ -274,42 +276,31 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (currentMap.size() > 0 && tag.endsWith("." + currentMap.lastElement().getTagName())) {
 			currentMap.pop();
 			currentNode.pop();
-		}
-		if (tag.equals("message") || tag.equals("antimessage")) {
+		} else if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
 			currentMessage.pop();
 			currentNode.pop();
-		}
-		if (tag.equals("property")) {
+		} else if (tag.equals(Tags.PROPERTY)) {
 			currentNode.pop();
-		}
-		if (tag.equals("expression")) {
+		} else if (tag.equals(Tags.EXPRESSION)) {
 			currentNode.pop();
-		}
-		if (tag.equals("param")) {
+		} else if (tag.equals(Tags.PARAM)) {
 			currentNode.pop();
-		}
-		if (tag.equals("map")) {
+		} else if (tag.equals(Tags.MAP)) {
 			currentMap.pop();
 			currentNode.pop();
-		}
-		if (tag.equals("field")) {
+		} else if (tag.equals(Tags.FIELD)) {
 			currentField.pop();
 			currentNode.pop();
-		}
-		if ( currentField.size() > 0 && tag.endsWith("." + currentField.lastElement().getName())) {
+		} else if ( currentField.size() > 0 && tag.endsWith("." + currentField.lastElement().getName())) {
 			currentField.pop();
 			currentNode.pop();
-		}
-		if (tag.equals("include")) {
+		} else if (tag.equals(Tags.INCLUDE)) {
 			currentNode.pop();
-		}
-		if (tag.equals("check")) {
+		} else if (tag.equals(Tags.CHECK)) {
 			currentNode.pop();
-		}
-		if (tag.equals("validations")) {
+		} else if (tag.equals(Tags.VALIDATIONS)) {
 			currentNode.pop();
-		}
-		if (tag.equals("option")) {
+		} else if (tag.equals(Tags.OPTION)) {
 			currentNode.pop();
 		}
 		
