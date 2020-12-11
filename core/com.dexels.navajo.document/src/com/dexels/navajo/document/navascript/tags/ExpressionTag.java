@@ -5,13 +5,26 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.navascript.tags;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 
-public class ExpressionTag extends BaseExpressionTagImpl {
+public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatible {
 
 	public ExpressionTag(Navajo n, String condition, String value) {
 		super(n, condition, value);
+	}
+
+	@Override
+	public void writeNS3(int indent, OutputStream w) throws IOException {
+		StringBuffer sb = new StringBuffer();
+		if ( getCondition() != null && !"".equals(getCondition()) ) {
+			sb.append(NS3Constants.CONDITION_IF + getCondition() + NS3Constants.CONDITION_THEN);
+		} 
+		sb.append(getValue());
+		w.write((NS3Utils.generateIndent(indent) + sb.toString()).getBytes());
 	}
 
 }

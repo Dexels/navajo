@@ -17,4 +17,5 @@ public interface Navascript extends Navajo {
 
 	public void addBreak(Break b);
 	
+	
 }

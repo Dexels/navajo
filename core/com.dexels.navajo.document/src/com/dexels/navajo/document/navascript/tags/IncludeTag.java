@@ -5,13 +5,28 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.navascript.tags;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseIncludeTagImpl;
 
-public class IncludeTag extends BaseIncludeTagImpl {
+public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 
 	public IncludeTag(Navajo n,String s) {
 		super(n, s);
+	}
+	
+	/**
+	 * include constants/Globals
+	 * 
+	 * @param w
+	 */
+	@Override
+	public void writeNS3(int indent, OutputStream w) throws IOException {
+		String r = NS3Utils.generateIndent(indent) + "include " + getScript() + "\n\n";
+		w.write(r.getBytes());
 	}
 
 }

@@ -5,11 +5,15 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.navascript.tags;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.base.BaseNavascriptImpl;
+import com.dexels.navajo.document.base.BaseNode;
 
-public class NavascriptTag extends BaseNavascriptImpl {
+public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
 	public NavascriptTag() {
 		super(NavajoFactory.getInstance());
@@ -49,6 +53,16 @@ public class NavascriptTag extends BaseNavascriptImpl {
 		ValidationsTag vt = new ValidationsTag(this);
 		super.addValidations(vt);
 		return vt;
+	}
+
+	@Override
+	public void writeNS3(int indent, OutputStream w) throws IOException {
+		for ( BaseNode c : getChildren() ) {
+			if ( c instanceof NS3Compatible ) {
+				((NS3Compatible) c).writeNS3(indent, w);
+			}
+		}
+		
 	}
 	
 	

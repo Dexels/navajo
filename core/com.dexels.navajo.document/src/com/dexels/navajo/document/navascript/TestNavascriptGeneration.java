@@ -5,15 +5,19 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.navascript;
 
-import com.dexels.navajo.document.Navajo;
+import java.io.FileInputStream;
+
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 
 public class TestNavascriptGeneration {
 
-	public static void main(String [] args) {
+	public static void main(String [] args) throws Exception {
 		
-		Navajo navascript = NavajoFactory.getInstance().createNavajo();
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessCountMatchEvents.xml");
+		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
 		
+		navascript.writeNS3(0, System.err);
 		
 	}
 }

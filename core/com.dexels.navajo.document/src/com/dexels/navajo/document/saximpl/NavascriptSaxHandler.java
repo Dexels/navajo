@@ -73,7 +73,14 @@ public class NavascriptSaxHandler extends SaxHandler {
 		BaseNode currentParent = currentNode.lastElement();
 		
 		if (tag.equals(Tags.INCLUDE)) {
-			IncludeTag it = currentDocument.addInclude(h.get("script"));
+			IncludeTag it = new IncludeTag(currentDocument, (h.get("script")));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addInclude(it);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addInclude(it);
+			} else {
+				currentDocument.addInclude(it);
+			} 
 			currentNode.push(it);
 			return;
 		}
@@ -129,8 +136,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 		
 		if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
 			MessageTag mt = new MessageTag(currentDocument, h.get(Attributes.NAME),  h.get(Attributes.TYPE));
-			String condition = h.get(Attributes.CONDITION);
-			mt.setCondition(condition);
+			mt.setCondition(h.get(Attributes.CONDITION));
+			mt.setOrderBy(h.get(Attributes.ORDERBY));
 			boolean isAntiMsg = tag.equals(Tags.ANTIMESSAGE);
 			mt.setAntiMessage(isAntiMsg);
 			if ( h.get("mode") != null ) {
@@ -394,7 +401,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	public static void main(String [] args) throws Exception {
 
-		FileInputStream fis = new FileInputStream(new File("/Users/arjenschoneveld/ProcessGetMatch.xml"));
+		FileInputStream fis = new FileInputStream(new File("/Users/arjenschoneveld/ProcessCountMatchEvents.xml"));
 		Navascript ns = NavajoFactory.getInstance().createNavaScript(fis);
 		fis.close();
 

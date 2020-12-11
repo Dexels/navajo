@@ -23,6 +23,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
+import com.dexels.navajo.document.navascript.tags.IncludeTag;
 
 public class BaseMessageTagImpl extends BaseMessageImpl {
 
@@ -81,6 +82,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	@Override
 	public void addBreak(Break b) {
 		children.add(b);
+	}
+
+	public void addInclude(IncludeTag it) {
+		children.add(it);
 	}
 
 }
