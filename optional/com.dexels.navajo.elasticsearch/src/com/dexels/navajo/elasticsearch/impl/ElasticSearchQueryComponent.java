@@ -69,20 +69,11 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 		//curl -XGET "http://localhost:9200/job_10/_search?q=content:SOME_TEXT"
 		//if we want to search exact phrase into a document or one or more fields we can use OR, AND etc
-		
-		System.out.println("the keyword is: " + keyword);
-		
 		String esUrl = this.url + URLEncoder.encode(keyword, "UTF-8");;
 		
-			
 		HttpGet request = new HttpGet(esUrl);
-		
 		request.addHeader("Content-Type", "application/json");
-		
 		CloseableHttpResponse response = httpclient.execute(request);
-
-		
-		
 		HttpEntity entity = response.getEntity();
 		
 		if (entity != null) {
@@ -105,7 +96,6 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		
 
 		ElasticSearchResult[] es_result_array = esResult.toArray(new ElasticSearchResult[esResult.size()]);
-	
 		response.close();
 		
 		return es_result_array;
