@@ -30,6 +30,7 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	String constant;
 	private boolean oldSkool;
 	List<BaseMapTagImpl> children = new ArrayList<>();
+	Map<String,String> attributes = new HashMap<>();
 	
 	public BaseFieldTagImpl(Navajo n, String name, String condition) {
 		super(n, condition, name);
@@ -81,16 +82,21 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 		}
 	}
 
+	public void setAddAttributes(Map<String,String> attr) {
+		this.attributes = attr;
+	}
+	
 	@Override
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<>();
-		if ( condition != null && !"".equals(condition) ) {
+		m.putAll(attributes);
+		if ( !m.containsKey(Field.FIELD_CONDITION) && condition != null && !"".equals(condition) ) {
 			m.put(Field.FIELD_CONDITION, condition);
 		}
 		if ( oldSkool ) {
 			m.put("name", fieldName);
 		}
-		if ( !oldSkool && this.myExpressions.size() == 1 ) {
+		if ( !m.containsKey(Field.FIELD_CONDITION) && !oldSkool && this.myExpressions.size() == 1 ) {
 			ExpressionTag et = myExpressions.get(0);
 			if ( et.getCondition() != null && !"".equals(et.getCondition())) {
 				m.put("condition", et.getCondition());

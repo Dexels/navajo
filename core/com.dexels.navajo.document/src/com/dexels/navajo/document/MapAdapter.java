@@ -58,6 +58,8 @@ public interface MapAdapter extends java.io.Serializable {
   public Object getRef();
   
   public void addAttributeNameValue(String name, String expression);
-  
+
+  public void addBreak(Break b);
+ 
 
 }

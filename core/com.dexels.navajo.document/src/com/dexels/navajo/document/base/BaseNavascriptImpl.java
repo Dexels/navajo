@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.Include;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
@@ -36,6 +37,11 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	public MapAdapter addMap(MapAdapter map) {
 		myChildren.add(map);
 		return map;
+	}
+	
+	@Override
+	public void addBreak(Break b) {
+		myChildren.add(b);
 	}
 	
 	@Override

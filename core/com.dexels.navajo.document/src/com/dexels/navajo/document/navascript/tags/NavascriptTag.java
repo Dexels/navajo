@@ -15,6 +15,12 @@ public class NavascriptTag extends BaseNavascriptImpl {
 		super(NavajoFactory.getInstance());
 	}
 	
+	public BreakTag addBreak(String condition, String id, String description) {
+		BreakTag bt = new BreakTag(this, condition, id, description);
+		super.addBreak(bt);
+		return bt;
+	}
+	
 	public MapTag addMap(String condition, String object) {
 		MapTag m = new MapTag(this, object, condition);
 		super.addMap(m);

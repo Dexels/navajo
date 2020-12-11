@@ -22,5 +22,6 @@ public class Tags {
 	public static String VALIDATIONS = "validations";
 	public static String CHECK = "check";
 	public static String INCLUDE = "include";	
+	public static String BREAK = "break";	
 	
 }

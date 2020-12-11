@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
@@ -25,6 +26,7 @@ import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 import com.dexels.navajo.document.base.BaseFieldTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.navascript.tags.Attributes;
+import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
@@ -112,8 +114,23 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
+		if (tag.equals(Tags.BREAK)) {
+			BreakTag bt = new BreakTag(currentDocument, h.get(Attributes.CONDITION), h.get("conditionId"), h.get("conditionDescription"));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addBreak(bt);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addBreak(bt);
+			} else {
+				currentDocument.addBreak(bt);
+			} 
+			currentNode.push(bt);
+			return;
+		}
+		
 		if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
 			MessageTag mt = new MessageTag(currentDocument, h.get(Attributes.NAME),  h.get(Attributes.TYPE));
+			String condition = h.get(Attributes.CONDITION);
+			mt.setCondition(condition);
 			boolean isAntiMsg = tag.equals(Tags.ANTIMESSAGE);
 			mt.setAntiMessage(isAntiMsg);
 			if ( h.get("mode") != null ) {
@@ -133,6 +150,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.equals(Tags.MAP)) {
 			String object = h.get(Attributes.OBJECT);
 			String ref = h.get(Attributes.REF);
+			String condition = h.get(Attributes.CONDITION);
 			MapTag mt = null;
 			if ( object != null ) {
 				mt = new MapTag(currentDocument, object, h.get(Attributes.CONDITION), true);
@@ -140,6 +158,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 				// map ref on message
 				mt = new MapTag(currentDocument, ref, h.get(Attributes.FILTER), currentMap.lastElement(), true);
 			}
+			mt.setCondition(condition);
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addMap(mt);
 			} else if ( currentParent instanceof MapTag && currentMap.size() > 0) {
@@ -170,6 +189,11 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.startsWith(Tags.MAP + ".")) { //map.navajo
 			String name = tag.split("\\.")[1];
 			MapTag mt = new MapTag(currentDocument, name, h.get(Attributes.CONDITION));
+			Map<String,String> attributeMap = new HashMap<>();
+			for ( String key : h.keySet() ) {
+				attributeMap.put(key, h.get(key));
+			}
+			mt.addAttributes(attributeMap);
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addMap(mt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
@@ -256,11 +280,22 @@ public class NavascriptSaxHandler extends SaxHandler {
 			if ( currentParent instanceof MessageTag && h.get(Attributes.VALUE) == null ) { // Mapped field if it is a getter (no value field specified and no expression under the tag)
 				// map ref on message
 				MapTag mt = new MapTag(currentDocument, fieldName, h.get(Attributes.FILTER), currentMap.lastElement(), false);
+				Map<String,String> attributeMap = new HashMap<>();
+				for ( String key : h.keySet() ) {
+					attributeMap.put(key, h.get(key));
+				}
+				mt.addAttributes(attributeMap);
 				currentMessage.lastElement().addMap(mt);
 				currentMap.push(mt);
 				currentNode.push(mt);
 			} else { // Normal field
 				FieldTag ft = new FieldTag(currentMap.lastElement(), null, fieldName);
+				Map<String,String> attributeMap = new HashMap<>();
+				for ( String key : h.keySet() ) {
+					attributeMap.put(key, h.get(key));
+				}
+				ft.setAddAttributes(attributeMap);
+				// TODO: Get all attributes of this tag and set them in field (navascript field can have any attribute value!
 				if ( h.get(Attributes.VALUE) != null ) {
 					ExpressionTag et = new ExpressionTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.VALUE));
 					ft.addExpression(et);
@@ -306,6 +341,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if (tag.equals(Tags.VALIDATIONS)) {
 			currentNode.pop();
 		} else if (tag.equals(Tags.OPTION)) {
+			currentNode.pop();
+		} else if (tag.equals(Tags.BREAK)) {
 			currentNode.pop();
 		}
 		
@@ -357,7 +394,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	public static void main(String [] args) throws Exception {
 
-		FileInputStream fis = new FileInputStream(new File("/Users/arjenschoneveld/noot.xml"));
+		FileInputStream fis = new FileInputStream(new File("/Users/arjenschoneveld/ProcessGetMatch.xml"));
 		Navascript ns = NavajoFactory.getInstance().createNavaScript(fis);
 		fis.close();
 

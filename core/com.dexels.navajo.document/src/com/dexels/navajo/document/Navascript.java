@@ -14,5 +14,7 @@ public interface Navascript extends Navajo {
 	public void addInclude(Include inc);
 
 	public void addValidations(Validations val);
+
+	public void addBreak(Break b);
 	
 }

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
@@ -61,19 +62,19 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String,String> attr = new HashMap<>();
-		if ( condition != null && !"".equals(condition))  {
+		attr.putAll(attributes);
+		if ( !attr.containsKey("condition") && condition != null && !"".equals(condition))  {
 			attr.put("condition", condition);
 		}
-		if ( filter != null && !"".equals(filter))  {
+		if ( !attr.containsKey("filter") && filter != null && !"".equals(filter))  {
 			attr.put("filter", filter);
 		}
-		if ( oldStyleMap && name != null)  {
+		if ( !attr.containsKey("object") &&  oldStyleMap && name != null)  {
 			attr.put("object", name);
 		}
-		if ( oldStyleMap && ref != null)  {
+		if ( !attr.containsKey("ref") &&  oldStyleMap && ref != null)  {
 			attr.put("ref", ref);
 		}
-		attr.putAll(attributes);
 		return attr;
 	}
 
@@ -173,10 +174,19 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public void addProperty(Property p) {
 		children.add(p);
 	}
+	
+	public void addAttributes(Map<String,String> attr) {
+		attributes.putAll(attr);
+	}
 
 	@Override
 	public void addAttributeNameValue(String name, String expression) {
 		attributes.put(name, expression);
+	}
+	
+	@Override
+	public void addBreak(Break b) {
+		children.add(b);
 	}
 
 }

@@ -75,4 +75,5 @@ public class MapTag extends BaseMapTagImpl {
 	protected Navajo getNavajo() {
 		return myScript;
 	}
+
 }

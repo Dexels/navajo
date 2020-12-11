@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
@@ -104,6 +105,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     private BaseMapTagImpl ref;
     
     private boolean isAntiMessage = false;
+
+	private String myCondition;
     
     public BaseMessageImpl(Navajo n) {
         super(n);
@@ -146,6 +149,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setCondition(String condition) {
+    	 myCondition = condition;
     }
 
     /**
@@ -1290,7 +1294,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Map<String, String> getAttributes() {
+    public  Map<String, String> getAttributes() {
         Map<String, String> m = new HashMap<>();
         m.put("name", myName);
         if (!"".equals(orderBy)) {
@@ -1308,6 +1312,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         }
         if (myMode != null && !myMode.equals("")) {
             m.put("mode", myMode);
+        }
+        if (myCondition != null && !myCondition.equals("")) {
+            m.put("condition", myCondition);
         }
         if (myExtends != null && !myExtends.equals("")) {
             m.put(Message.MSG_EXTENDS, myExtends);
@@ -2058,6 +2065,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	
 	public void setAntiMessage(boolean b) {
 		isAntiMessage = b;
+	}
+
+	public void addBreak(Break b) {
+		// Not supported here.
 	}
 
 }

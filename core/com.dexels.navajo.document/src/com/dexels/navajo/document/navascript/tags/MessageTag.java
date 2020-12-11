@@ -69,4 +69,5 @@ public class MessageTag extends BaseMessageTagImpl {
 	protected Navajo getNavajo() {
 		return myScript;
 	}
+
 }
