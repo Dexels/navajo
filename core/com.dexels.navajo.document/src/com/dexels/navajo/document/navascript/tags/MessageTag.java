@@ -7,6 +7,7 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PushbackReader;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseMessageTagImpl;
@@ -88,22 +89,42 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		return myScript;
 	}
 
+	private boolean hasParameters() {
+		return  ( getOrderBy() != null && !"".equals(getOrderBy() )) || ( getMode() != null && !"".equals(getMode())) || ( getType() != null && !"simple".equals(getType()) && !"".equals(getType()));
+	}
+	
 	@Override
-	public void writeNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws IOException {
 		int size = getChildren().size();
-		String start = "\n" + NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message " + getName(); 
+		String start = "\n" + NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
 		w.write(start.getBytes());
+		int index = 0;
+		if (hasParameters() ) {
+			w.write(NS3Constants.PARAMETERS_START.getBytes());
+		}
 		if ( getOrderBy() != null && !"".equals(getOrderBy())) {
-			String ob = " orderby=" + getOrderBy();
+			String ob = "orderby=" + getOrderBy() + " ";
 			w.write(ob.getBytes());
+			index++;
 		}
 		if ( getMode() != null && !"".equals(getMode())) {
-			String ob = " mode=" + "\"" + getMode() + "\"";
+			if ( index > 0 ) {
+				w.write(",".getBytes());
+			}
+			String ob = "mode:"+getMode();
 			w.write(ob.getBytes());
+			index++;
 		}
-		if ( getType() != null && !"".equals(getType())) {
-			String ob = " type=" + "\"" + getType() + "\"";
+		if ( getType() != null && !"simple".equals(getType()) && !"".equals(getType())) {
+			if ( index > 0 ) {
+				w.write(",".getBytes());
+			}
+			String ob = "type:"+getType();
 			w.write(ob.getBytes());
+			index++;
+		}
+		if ( index > 0 ) {
+			w.write(NS3Constants.PARAMETERS_END.getBytes());
 		}
 		if ( size > 0 ) {
 			String openBlock = " {\n\n";
@@ -114,7 +135,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		// Loop over children
 		for ( BaseNode n : getChildren() ) {
 			if ( n instanceof NS3Compatible ) {
-				((NS3Compatible) n).writeNS3(indent + 1, w);
+				((NS3Compatible) n).formatNS3(indent + 1, w);
 			}
 		}
 		if ( size > 0 ) {

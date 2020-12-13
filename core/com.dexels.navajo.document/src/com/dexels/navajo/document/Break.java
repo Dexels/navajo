@@ -8,7 +8,7 @@ public interface Break extends Serializable {
 	
 	public String getConditionId();
 	
-	public String getConditioDescription();
+	public String getConditionDescription();
 	
 	public void setCondition(String condition);
 	

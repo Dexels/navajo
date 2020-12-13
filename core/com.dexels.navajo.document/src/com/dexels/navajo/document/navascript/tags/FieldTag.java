@@ -7,6 +7,8 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PushbackReader;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.dexels.navajo.document.Navajo;
@@ -45,34 +47,46 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void writeNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws IOException {
+		StringBuffer sb =  new StringBuffer();
+		sb.append(NS3Utils.generateIndent(indent));
+		// Check for condition
+		Map<String,String> map = getAttributes();
+		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
+			sb.append(NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN);
+		}
 		if (  getChildren() == null || getChildren().size() == 0  ) { // No expressions defined, it is an operation not a "setter".
-			StringBuffer sb =  new StringBuffer();
-			sb.append(NS3Utils.generateIndent(indent));
-			sb.append("$"+getName() + " ");
-			Map<String,String> map = getAttributes();
-			// key=value
+			sb.append("$"+getName());
+			sb.append(NS3Constants.PARAMETERS_START);
+			Map<String,String> parameters = new HashMap<>();
 			for ( String k : map.keySet() ) {
-				if ( !"condition".equals(k) ) {
-					sb.append(k+"=" + NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END + " ");
+				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
+					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
 				}
 			}
+			int index = 0;
+			for ( String k : parameters.keySet() ) {
+				index++;
+				sb.append(k + "=" + parameters.get(k));
+				if ( index < parameters.size() ) {
+					sb.append(NS3Constants.PARAMETERS_SEP);
+				}
+			}
+			sb.append(NS3Constants.PARAMETERS_END);
 			sb.append(NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
 		} else {
-			StringBuffer sb =  new StringBuffer();
-			sb.append(NS3Utils.generateIndent(indent));
 			sb.append("$"+getName() + " = ");
 			w.write(sb.toString().getBytes());
 			if ( getChildren().size() == 1 ) {
 				ExpressionTag et = (ExpressionTag) getChildren().get(0);
-				et.writeNS3(0, w);
+				et.formatNS3(0, w);
 			} else {
 				w.write("\n".getBytes());
 				int index = 0;
 				for ( BaseNode e : getChildren() ) {
 					ExpressionTag et = (ExpressionTag) e;
-					et.writeNS3(indent+1, w);
+					et.formatNS3(indent+1, w);
 					index++;
 					if ( index < getChildren().size() ) {
 						w.write("\n".getBytes());

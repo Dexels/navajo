@@ -33,6 +33,7 @@ import com.dexels.immutable.api.customtypes.CoordinateType;
 import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -42,6 +43,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.PropertyTypeChecker;
 import com.dexels.navajo.document.PropertyTypeException;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
@@ -166,6 +168,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private transient Object tipiProperty = null;
 	   
 	protected List<ExpressionTag> myExpressions = new ArrayList<>();
+	private BaseMapTagImpl selectionMap = null;
 	
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
@@ -1948,6 +1951,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return this;
 	}
 
+	public void addMap(MapTag m) {
+		System.err.println("-------------------> ADDING MAP TO PROPERTY");
+		selectionMap = m;
+	}
+
 	@Override
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<>();
@@ -2011,6 +2019,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			for ( ExpressionTag et : myExpressions ) {
 				c.add((BaseExpressionTagImpl) et);
 			}
+			return c;
+		} else if ( selectionMap != null ) {
+			List<BaseNode> c = new ArrayList<>();
+			c.add(selectionMap);
 			return c;
 		} else {
 			return selectionList;

@@ -14,10 +14,10 @@ public class TestNavascriptGeneration {
 
 	public static void main(String [] args) throws Exception {
 		
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessCountMatchEvents.xml");
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessAuthenticate.xml");
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
 		
-		navascript.writeNS3(0, System.err);
+		navascript.formatNS3(0, System.err);
 		
 	}
 }

@@ -4,11 +4,13 @@ public class NS3Constants {
 
 	public static String EOL_DELIMITER = ";";
 	public static String INDENT_STEP = "\t";
-	public static String CONDITION_IF = "?";
-	public static String CONDITION_THEN = " : ";
-	public static String CONDITION_ELSE = "";
+	public static String CONDITION_IF = "if ";
+	public static String CONDITION_THEN = " then ";
+	public static String CONDITION_ELSE = "else ";
 	public static String EXPRESSION_START = "";
 	public static String EXPRESSION_END = "";
-
+	public static String PARAMETERS_START = "(";
+	public static String PARAMETERS_END = ")";
+	public static String PARAMETERS_SEP = ",";
 	
 }

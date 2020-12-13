@@ -7,6 +7,7 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PushbackReader;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoFactory;
@@ -56,14 +57,13 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void writeNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws IOException {
 		for ( BaseNode c : getChildren() ) {
 			if ( c instanceof NS3Compatible ) {
-				((NS3Compatible) c).writeNS3(indent, w);
+				((NS3Compatible) c).formatNS3(indent, w);
 			}
 		}
 		
 	}
-	
 	
 }

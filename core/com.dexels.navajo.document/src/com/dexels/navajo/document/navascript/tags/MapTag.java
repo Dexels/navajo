@@ -7,6 +7,7 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.dexels.navajo.document.Navajo;
@@ -15,7 +16,22 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6950939861324563776L;
+
 	private Navajo myScript;
+	private boolean isOldStyleMap = false;
+	private boolean isMappedSelection = false;
+
+	public boolean isMappedSelection() {
+		return isMappedSelection;
+	}
+
+	public void setMappedSelection(boolean isMappedSelection) {
+		this.isMappedSelection = isMappedSelection;
+	}
 
 	public MapTag(Navajo n, String name, String condition) {
 		super(n, name, condition);
@@ -24,11 +40,13 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 
 	public MapTag(Navajo n, String name, String condition, boolean isOldStyleMap) {
 		super(n, name, condition, isOldStyleMap);
+		this.isOldStyleMap = isOldStyleMap;
 		myScript = n;
 	}
 
 	public MapTag(Navajo n, String field, String filter, MapTag parent, boolean isOldStyleMap) {
 		super(n, field, filter, parent, isOldStyleMap);
+		this.isOldStyleMap = isOldStyleMap;
 		myScript = n;
 	}
 
@@ -96,30 +114,56 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void writeNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
-		if ( getAdapterName() != null ) {
-			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName() + " ");
+		sb.append("\n");
+		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
+			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+		} else if ( getAdapterName() != null && !"".equals(getAdapterName())) {
+			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
+			Map<String,String> map = getAttributes();
+
+			sb.append(NS3Constants.PARAMETERS_START);
+			Map<String,String> parameters = new HashMap<>();
+			for ( String k : map.keySet() ) {
+				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
+					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
+				}
+			}
+			int index = 0;
+			for ( String k : parameters.keySet() ) {
+				index++;
+				sb.append(k + "=" + parameters.get(k));
+				if ( index < parameters.size() ) {
+					sb.append(NS3Constants.PARAMETERS_SEP);
+				}
+			}
+			sb.append(NS3Constants.PARAMETERS_END);
 		} else {
-			sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute() + " ");
-		}
-		Map<String,String> map = getAttributes();
-		// key=value
-		for ( String k : map.keySet() ) {
-			if ( !"condition".equals(k) && !"ref".equals(k) ) {
-				sb.append(k+"=" + NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END + " ");
+			sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute());
+			if ( getFilter() != null && !"".equals(getFilter())) {
+				sb.append(NS3Constants.PARAMETERS_START + Attributes.FILTER+"="+getFilter() + NS3Constants.PARAMETERS_END);
 			}
 		}
-		sb.append(" {\n\n");
+
+		if ( isMappedSelection) {
+			sb.append(" {\n");
+		} else {
+			sb.append(" {\n\n");
+		}
 		w.write(sb.toString().getBytes());
 		// Loop over children
 		for ( BaseNode n : getChildren() ) {
 			if ( n instanceof NS3Compatible ) {
-				((NS3Compatible) n).writeNS3(indent + 1, w);
+				if ( n instanceof PropertyTag && isMappedSelection ) {
+					((PropertyTag) n).setPartOfMappedSelection(true);
+				}
+				((NS3Compatible) n).formatNS3(indent + 1, w);
 			}
 		}
 		w.write((NS3Utils.generateIndent(indent) + "}\n\n").getBytes());
 
 	}
+
 
 }

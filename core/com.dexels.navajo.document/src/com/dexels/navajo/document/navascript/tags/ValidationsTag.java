@@ -5,10 +5,14 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.navascript.tags;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.base.BaseValidationsTagImpl;
 
-public class ValidationsTag extends BaseValidationsTagImpl {
+public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compatible {
 
 	private Navajo myNavajo;
 	
@@ -21,6 +25,18 @@ public class ValidationsTag extends BaseValidationsTagImpl {
 		CheckTag ct = new CheckTag(myNavajo, code, description, condition);
 		super.addCheck(ct);
 		return ct;
+	}
+
+	@Override
+	public void formatNS3(int indent, OutputStream w) throws IOException {
+		String r = NS3Utils.generateIndent(indent) + NS3Keywords.VALIDATIONS + " {\n";
+		w.write(r.getBytes());
+		for ( BaseNode c : getChildren() ) {
+			if ( c instanceof CheckTag ) {
+				((CheckTag) c).formatNS3(indent+1, w);
+			}
+		}
+		w.write("}\n\n".getBytes());
 	}
 
 }

@@ -31,7 +31,7 @@ public class BaseBreakTagImpl extends BaseNode implements Break {
 	}
 
 	@Override
-	public String getConditioDescription() {
+	public String getConditionDescription() {
 		return description;
 	}
 
