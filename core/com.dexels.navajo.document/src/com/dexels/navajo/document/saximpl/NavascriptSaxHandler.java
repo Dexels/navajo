@@ -166,6 +166,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 				mt = new MapTag(currentDocument, ref, h.get(Attributes.FILTER), currentMap.lastElement(), true);
 			}
 			mt.setCondition(condition);
+			System.err.println("Adding map with ref: " + ref + " to " + currentParent);
 			if ( currentParent instanceof PropertyTag ) { // selection property.
 				((PropertyTag) currentParent).addMap(mt);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
@@ -173,6 +174,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof MapTag && currentMap.size() > 0) {
 				currentMap.lastElement().addMap(mt);
 			} else if ( currentParent instanceof FieldTag && currentField.size() > 0){
+				System.err.println("HERE!");
 				currentField.lastElement().addMap(mt);
 			} else {
 				currentDocument.addMap(mt);

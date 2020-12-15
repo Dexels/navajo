@@ -40,6 +40,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 	// add <map>
 	public MapTag addMap(String filter, String field, MapTag refParent, boolean oldStyleMap) {
+		System.err.println("adding map " + field + " to " + getName());
 		MapTag m = new MapTag(myScript, field, filter, refParent, oldStyleMap);
 		super.addMap(m);
 		return m;
@@ -55,7 +56,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 			sb.append(NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN);
 		}
 		if (  getChildren() == null || getChildren().size() == 0  ) { // No expressions defined, it is an operation not a "setter".
-			sb.append("$"+getName());
+			sb.append("$"+getName() + " ");
 			sb.append(NS3Constants.PARAMETERS_START);
 			Map<String,String> parameters = new HashMap<>();
 			for ( String k : map.keySet() ) {
@@ -74,7 +75,25 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 			sb.append(NS3Constants.PARAMETERS_END);
 			sb.append(NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
-		} else {
+		} else if ( getChildren() != null && getChildren().get(0) instanceof MapTag ) { // <map ref=<array message> >
+			
+			sb.append("$"+getName() + " ");
+			sb.append(NS3Constants.PARAMETERS_START);
+			Map<String,String> parameters = new HashMap<>();
+			for ( String k : map.keySet() ) {
+				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
+					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
+				}
+			}
+			sb.append(NS3Constants.PARAMETERS_END);
+			sb.append(" {\n");
+			w.write(sb.toString().getBytes());
+			((MapTag) getChildren().get(0)).setMappedMessage(true); // Mark map as a mapped message
+			((MapTag) getChildren().get(0)).formatNS3(indent+1,w);
+			
+			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
+			
+		} else { // standard "setter" field
 			sb.append("$"+getName() + " = ");
 			w.write(sb.toString().getBytes());
 			if ( getChildren().size() == 1 ) {

@@ -1951,7 +1951,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return this;
 	}
 
-	public void addMap(MapTag m) {
+	public void addSelectionMap(MapTag m) {
+		// COULD BE A SELECTION...
 		selectionMap = m;
 	}
 

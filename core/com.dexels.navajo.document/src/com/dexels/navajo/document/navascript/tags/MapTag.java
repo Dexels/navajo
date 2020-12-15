@@ -24,6 +24,16 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	private Navajo myScript;
 	private boolean isOldStyleMap = false;
 	private boolean isMappedSelection = false;
+	private boolean isMappedMessage = false;
+	private String field = null;
+
+	public boolean isMappedMessage() {
+		return isMappedMessage;
+	}
+
+	public void setMappedMessage(boolean isMappedMessage) {
+		this.isMappedMessage = isMappedMessage;
+	}
 
 	public boolean isMappedSelection() {
 		return isMappedSelection;
@@ -47,6 +57,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public MapTag(Navajo n, String field, String filter, MapTag parent, boolean isOldStyleMap) {
 		super(n, field, filter, parent, isOldStyleMap);
 		this.isOldStyleMap = isOldStyleMap;
+		this.field = field;
 		myScript = n;
 	}
 
@@ -118,9 +129,9 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		StringBuffer sb = new StringBuffer();
 		sb.append("\n");
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
-			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
-		} else if ( getAdapterName() != null && !"".equals(getAdapterName())) {
-			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
+			sb.append(NS3Utils.generateIndent(indent) + "map " + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
+			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName() + " ");
 			Map<String,String> map = getAttributes();
 
 			sb.append(NS3Constants.PARAMETERS_START);
@@ -140,10 +151,23 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 			}
 			sb.append(NS3Constants.PARAMETERS_END);
 		} else {
-			sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute());
-			if ( getFilter() != null && !"".equals(getFilter())) {
-				sb.append(NS3Constants.PARAMETERS_START + Attributes.FILTER+"="+getFilter() + NS3Constants.PARAMETERS_END);
+			int index = 0;
+			if ( isMappedMessage() ) {
+				sb.append(NS3Utils.generateIndent(indent));
+				if ( getRefAttribute().indexOf("[") == -1 ) {
+					sb.append("[" + getRefAttribute() + "] ");
+				} else {
+					sb.append(getRefAttribute());
+				}
+				sb.append(NS3Constants.PARAMETERS_START);
+			} else {
+				sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute() + " ");
+				sb.append(NS3Constants.PARAMETERS_START);
 			}
+			if ( getFilter() != null && !"".equals(getFilter())) {
+				sb.append( ( index > 0 ? "," : "") + Attributes.FILTER+"="+getFilter());
+			}
+			sb.append(NS3Constants.PARAMETERS_END);
 		}
 
 		if ( isMappedSelection) {

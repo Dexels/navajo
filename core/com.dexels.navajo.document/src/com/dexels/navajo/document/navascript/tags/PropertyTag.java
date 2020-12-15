@@ -54,7 +54,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	}
 	
 	public void addMap(MapTag mt) {
-		super.addMap(mt);
+		super.addSelectionMap(mt);
 		mt.setMappedSelection(true);
 	}
 
