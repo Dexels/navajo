@@ -1952,7 +1952,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public void addMap(MapTag m) {
-		System.err.println("-------------------> ADDING MAP TO PROPERTY");
 		selectionMap = m;
 	}
 

@@ -61,8 +61,11 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
-		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ? "option" : NS3Keywords.PROPERTY ) + " \"" + getName() + "\" ");
 		Map<String,String> map = getAttributes();
+		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
+			sb.append(NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN);
+		}
+		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ? "option" : NS3Keywords.PROPERTY ) + " \"" + getName() + "\" ");
 		// key=value
 		if ( map.size() > 1 ) {
 			sb.append(NS3Constants.PARAMETERS_START);

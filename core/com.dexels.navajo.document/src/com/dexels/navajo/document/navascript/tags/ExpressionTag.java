@@ -7,10 +7,8 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PushbackReader;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 
 public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatible {

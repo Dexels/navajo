@@ -7,7 +7,6 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PushbackReader;
 import java.util.HashMap;
 import java.util.Map;
 
