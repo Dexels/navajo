@@ -19,7 +19,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 
 	Navajo myScript;
 	private boolean isPartOfMappedSelection = false;
-	
+
 	public boolean isPartOfMappedSelection() {
 		return isPartOfMappedSelection;
 	}
@@ -52,7 +52,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		m.setMappedSelection(true);
 		return m;
 	}
-	
+
 	public void addMap(MapTag mt) {
 		super.addSelectionMap(mt);
 		mt.setMappedSelection(true);
@@ -89,8 +89,20 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 				ref = (MapTag) b;
 			}
 		}
-		if ( ref == null ) {
-			sb.append(" = ");
+		if ( getChildren().size() > 0 && getChildren().get(0) instanceof SelectionTag) {
+			sb.append(" {\n");
+			w.write(sb.toString().getBytes());
+			for ( BaseNode b : getChildren() ) {
+				((NS3Compatible) b).formatNS3(indent+1, w);
+			}
+			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
+			return;
+		} else if ( ref == null ) {
+			if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0) ).getConstant() != null ) {
+				sb.append(" : "); // It is a string literal in the expression.
+			} else {
+				sb.append(" = ");
+			}
 			w.write(sb.toString().getBytes());
 			NS3Utils.writeConditionalExpressions(indent, w, getChildren());
 			w.write((NS3Constants.EOL_DELIMITER + "\n\n").getBytes());

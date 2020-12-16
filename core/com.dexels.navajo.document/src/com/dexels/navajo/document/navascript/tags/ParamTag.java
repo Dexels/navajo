@@ -7,12 +7,8 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PushbackReader;
-import java.io.Writer;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.base.BaseParamTagImpl;
 
 public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
