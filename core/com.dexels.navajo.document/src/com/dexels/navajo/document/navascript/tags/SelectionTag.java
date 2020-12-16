@@ -13,13 +13,19 @@ import com.dexels.navajo.document.base.BaseSelectionImpl;
 
 public class SelectionTag extends BaseSelectionImpl implements NS3Compatible {
 
+	private static final long serialVersionUID = -524751891657339838L;
+
 	public SelectionTag(Navajo n, String name, String value, boolean isSelected) {
 		super(n, name, value, isSelected);
 	}
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
-		w.write((NS3Utils.generateIndent(indent) + "option\n").getBytes());
+		StringBuffer sb = new StringBuffer();
+		sb.append(NS3Utils.generateIndent(indent));
+		sb.append(Tags.OPTION + " (" + Attributes.NAME + ":" + getName() + ", " + Attributes.VALUE + ":" + 
+										getValue() + ", " + Attributes.SELECTED + ":" + isSelected() + ")\n");
+		w.write(sb.toString().getBytes());
 	}
 
 }

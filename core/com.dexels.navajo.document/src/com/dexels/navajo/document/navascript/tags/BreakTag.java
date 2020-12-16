@@ -8,6 +8,8 @@ import com.dexels.navajo.document.base.BaseBreakTagImpl;
 
 public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 
+	private static final long serialVersionUID = 3907539607911418826L;
+
 	public BreakTag(Navajo n, String condition, String id, String description) {
 		super(n, condition, id, description);
 	}

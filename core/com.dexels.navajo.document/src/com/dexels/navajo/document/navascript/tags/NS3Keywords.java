@@ -11,6 +11,7 @@ public class NS3Keywords {
 	public static String PROPERTY = "property";
 	public static String VALIDATIONS = "validations";
 	public static String CHECK = "check";
+	public static String VAR = "var";
 	
 	// Attributes
 	public static String FILTER = "filter";

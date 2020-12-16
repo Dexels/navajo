@@ -13,6 +13,8 @@ import com.dexels.navajo.document.base.BaseCheckTagImpl;
 
 public class CheckTag extends BaseCheckTagImpl implements NS3Compatible {
 
+	private static final long serialVersionUID = 3708858001793910176L;
+
 	public CheckTag(Navajo n, String code, String description, String condition) {
 		super(n, code, description, null, condition);
 	}

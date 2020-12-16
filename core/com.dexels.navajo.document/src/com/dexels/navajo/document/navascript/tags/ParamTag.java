@@ -13,6 +13,8 @@ import com.dexels.navajo.document.base.BaseParamTagImpl;
 
 public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 
+	
+	private static final long serialVersionUID = -1401899712855487877L;
 	private Navajo myScript;
 
 	public ParamTag(Navajo n, String condition, String name) {
@@ -29,9 +31,9 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0)).getConstant() != null ) {
-			w.write((NS3Utils.generateIndent(indent) + "var " + getName() + " : ").getBytes());
+			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " : ").getBytes());
 		} else {
-			w.write((NS3Utils.generateIndent(indent) + "var " + getName() + " = ").getBytes());
+			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " = ").getBytes());
 		}
 		NS3Utils.writeConditionalExpressions(indent, w, getChildren());
 		w.write((NS3Constants.EOL_DELIMITER + "\n\n").getBytes());

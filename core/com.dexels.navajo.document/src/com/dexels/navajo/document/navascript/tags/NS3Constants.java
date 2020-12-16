@@ -12,5 +12,7 @@ public class NS3Constants {
 	public static String PARAMETERS_START = "(";
 	public static String PARAMETERS_END = ")";
 	public static String PARAMETERS_SEP = ",";
+	public static String EXPRESSION_ASSIGNMENT = "=";
+	public static String LITERAL_ASSIGNMENT = ":";
 	
 }
