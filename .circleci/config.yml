@@ -71,7 +71,7 @@ jobs:
             SUFFIX=`[[ "${CIRCLE_BRANCH}" = "master" ]] && echo "" || echo "-${CIRCLE_BRANCH}"`
             echo 'p2.dexels.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrZzVVA2wObMu7J+IQ8NPMfRMVf+VaJgOrutfISWTqm9NCErJjze5ESgP6MGrzNcC8zNBSyN67nFV5HnDtfOmelAmQeJWHj6MT2kFRhIzxS9WX1G2pOnO8uXj/D/hJalbF2RhF29VhICZ1K9dKRu/SukNjyaZZ1UhHZGKhDgNuK9JfJsZVolVV1+rNr+AzKEKylQ/B6u+dltgLt1Zhdyk7aaPTWFPXICKFcCvR2z2As1fKWok5otixDmhq8dZbq9uzsUUyjFMuOBbijOX0GBRgqMF+v/Opgmz+Ad/yOhyZXhqMr63yVQxNPrZRXFbQWrvxnQSQA88zax49XuBDK71t' >> ~/.ssh/known_hosts
             ssh navajo@p2.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}${SUFFIX}/"
-            scp -r ~/repo/setup/com.dexels.p2/target/repository/* navajo@p2.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}${SUFFIX}
+            scp -r ~/repo/setup/com.dexels.navajo.p2/target/repository/* navajo@p2.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}${SUFFIX}
 
       # Update enterprise
       - run:
