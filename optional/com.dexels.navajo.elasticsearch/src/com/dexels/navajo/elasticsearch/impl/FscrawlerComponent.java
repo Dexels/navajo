@@ -1,18 +1,17 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.elasticsearch.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,10 +25,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.elasticsearch.ElasticSearch;
-import com.dexels.navajo.elasticsearch.ElasticSearchFactory;
 import com.dexels.navajo.elasticsearch.FscrawlerFactory;
 import com.dexels.navajo.elasticsearch.FscrawlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,13 +61,11 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 	}
 	public void upload(Binary data, String id, String name) throws IOException {
-		
 		 	
 		logger.info("IN UPLOAD: " + name);
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyResource(baos, data.getDataAsStream());
-		
-		
 		
 	    HttpEntity entity = MultipartEntityBuilder.create()
                 .addPart("file", new ByteArrayBody(baos.toByteArray(), ContentType.TEXT_PLAIN,name))

@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.elasticsearch.impl;
 
 import java.io.IOException;
@@ -64,20 +69,11 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 
 		//curl -XGET "http://localhost:9200/job_10/_search?q=content:SOME_TEXT"
 		//if we want to search exact phrase into a document or one or more fields we can use OR, AND etc
-		
-		System.out.println("the keyword is: " + keyword);
-		
 		String esUrl = this.url + URLEncoder.encode(keyword, "UTF-8");;
 		
-			
 		HttpGet request = new HttpGet(esUrl);
-		
 		request.addHeader("Content-Type", "application/json");
-		
 		CloseableHttpResponse response = httpclient.execute(request);
-
-		
-		
 		HttpEntity entity = response.getEntity();
 		
 		if (entity != null) {
@@ -100,7 +96,6 @@ private final static Logger logger = LoggerFactory.getLogger(FscrawlerComponent.
 		
 
 		ElasticSearchResult[] es_result_array = esResult.toArray(new ElasticSearchResult[esResult.size()]);
-	
 		response.close();
 		
 		return es_result_array;
