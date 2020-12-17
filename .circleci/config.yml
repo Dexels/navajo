@@ -93,22 +93,6 @@ jobs:
             git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git ${CIRCLE_BRANCH}
             echo "push complete"
 
-      - run:
-          name: Trigger navajo-vaadin build
-          command: |
-            echo "skipping downstream"
-            #curl -X POST \
-            #   --header "Content-Type: application/json" \
-            #   --header "Circle-Token: ${CIRCLE_TOKEN}" \
-            #   -d "{\"branch\":\"${CIRCLE_BRANCH}\"}" \
-            # "https://circleci.com/api/v1.1/project/github/dexels/enterprise/build"
-            if [ "$CIRCLE_BRANCH" = "master" ]; then
-              curl -X POST \
-                  --header "Content-Type: application/json" \
-                  --header "Circle-Token: ${CIRCLE_TOKEN}" \
-                  -d "{\"branch\":\"${CIRCLE_BRANCH}\"}" \
-                  "https://circleci.com/api/v1.1/project/github/dexels/navajo-vaadin/build"
-            fi
 
   build_n_test:
     docker:
