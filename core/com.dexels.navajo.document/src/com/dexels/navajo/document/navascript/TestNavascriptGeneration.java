@@ -14,7 +14,8 @@ public class TestNavascriptGeneration {
 
 	public static void main(String [] args) throws Exception {
 		
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/noot.xml");
+				
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessUpsertBinaryStore.xml");
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
 		
 		navascript.formatNS3(0, System.err);

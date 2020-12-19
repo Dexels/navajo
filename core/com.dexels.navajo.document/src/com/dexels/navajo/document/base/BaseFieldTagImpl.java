@@ -47,6 +47,10 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 		this.parent = p;
 	}
 	
+	public MapAdapter getParent() {
+		return parent;
+	}
+	
 	public void addMap(BaseMapTagImpl m) {
 		children.add(m);
 	}
@@ -62,6 +66,10 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 
 	public void setConstant(String c) {
 		constant = c;
+	}
+	
+	public String getConstant() {
+		return constant;
 	}
 	
 	@Override

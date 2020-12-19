@@ -346,7 +346,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if (tag.equals(Tags.PARAM)) {
 			currentNode.pop();
-		} else if (tag.equals(Tags.MAP)) {
+		} else if (tag.startsWith(Tags.MAP)) {
 			currentMap.pop();
 			currentNode.pop();
 		} else if (tag.equals(Tags.FIELD)) {

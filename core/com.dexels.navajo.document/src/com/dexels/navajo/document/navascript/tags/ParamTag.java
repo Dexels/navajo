@@ -7,6 +7,7 @@ package com.dexels.navajo.document.navascript.tags;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseParamTagImpl;
@@ -30,12 +31,19 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
+		Map<String,String> map = getAttributes();
+		int origIndent = indent;
+		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
+			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN;
+			indent = 0;
+			w.write(conditionStr.getBytes());
+		}
 		if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0)).getConstant() != null ) {
 			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " : ").getBytes());
 		} else {
 			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " = ").getBytes());
 		}
-		NS3Utils.writeConditionalExpressions(indent, w, getChildren());
+		NS3Utils.writeConditionalExpressions(origIndent, w, getChildren());
 		w.write((NS3Constants.EOL_DELIMITER + "\n\n").getBytes());
 	}
 

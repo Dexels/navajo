@@ -16,8 +16,18 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
+	MapDefinitionInterrogator mapChecker;
+	
 	public NavascriptTag() {
 		super(NavajoFactory.getInstance());
+	}
+	
+	public void setMapChecker(MapDefinitionInterrogator m) {
+		mapChecker = m;
+	}
+	
+	public MapDefinitionInterrogator getMapChecker() {
+		return mapChecker;
 	}
 	
 	public BreakTag addBreak(String condition, String id, String description) {

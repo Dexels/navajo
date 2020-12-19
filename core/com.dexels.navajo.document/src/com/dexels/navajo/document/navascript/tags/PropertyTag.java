@@ -18,7 +18,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	
 	private static final long serialVersionUID = 7993747297861067599L;
 	
-	Navajo myScript;
+	NavascriptTag myScript;
 	private boolean isPartOfMappedSelection = false;
 
 	public boolean isPartOfMappedSelection() {
@@ -29,7 +29,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		this.isPartOfMappedSelection = isPartOfMappedSelection;
 	}
 
-	public PropertyTag(Navajo n, String name, String type, String value, int length, String desc, String direction) {
+	public PropertyTag(NavascriptTag n, String name, String type, String value, int length, String desc, String direction) {
 		super(n, name, type, value, length, desc, direction);
 		myScript = n;
 	}

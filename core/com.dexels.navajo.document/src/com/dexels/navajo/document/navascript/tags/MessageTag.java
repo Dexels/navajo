@@ -8,6 +8,7 @@ package com.dexels.navajo.document.navascript.tags;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PushbackReader;
+import java.util.Map;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseMessageTagImpl;
@@ -15,9 +16,9 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
-	private Navajo myScript;
+	private NavascriptTag myScript;
 
-	public MessageTag(Navajo n, String name, String type) {
+	public MessageTag(NavascriptTag n, String name, String type) {
 		super(n, name);
 		if ( type != null ) {
 			super.setType(type);
@@ -96,8 +97,16 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		int size = getChildren().size();
-		String start = "\n" + NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
-		w.write(start.getBytes());
+		Map<String,String> map = getAttributes();
+		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
+			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN;
+			w.write(conditionStr.getBytes());
+			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
+			w.write(start.getBytes());
+		} else {
+			String start = NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
+			w.write(start.getBytes());
+		}
 		int index = 0;
 		if (hasParameters() ) {
 			w.write(NS3Constants.PARAMETERS_START.getBytes());

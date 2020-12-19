@@ -21,7 +21,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	 */
 	private static final long serialVersionUID = -6950939861324563776L;
 
-	private Navajo myScript;
+	private NavascriptTag myScript;
 	private boolean isOldStyleMap = false;
 	private boolean isMappedSelection = false;
 	private boolean isMappedMessage = false;
@@ -43,18 +43,18 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		this.isMappedSelection = isMappedSelection;
 	}
 
-	public MapTag(Navajo n, String name, String condition) {
+	public MapTag(NavascriptTag n, String name, String condition) {
 		super(n, name, condition);
 		myScript = n;
 	}
 
-	public MapTag(Navajo n, String name, String condition, boolean isOldStyleMap) {
+	public MapTag(NavascriptTag n, String name, String condition, boolean isOldStyleMap) {
 		super(n, name, condition, isOldStyleMap);
 		this.isOldStyleMap = isOldStyleMap;
 		myScript = n;
 	}
 
-	public MapTag(Navajo n, String field, String filter, MapTag parent, boolean isOldStyleMap) {
+	public MapTag(NavascriptTag n, String field, String filter, MapTag parent, boolean isOldStyleMap) {
 		super(n, field, filter, parent, isOldStyleMap);
 		this.isOldStyleMap = isOldStyleMap;
 		this.field = field;
@@ -120,7 +120,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		return it;
 	}
 
-	protected Navajo getNavajo() {
+	protected NavascriptTag getNavascript() {
 		return myScript;
 	}
 
@@ -128,11 +128,14 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append("\n");
+		Map<String,String> map = getAttributes();
+		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
+			sb.append(NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN);
+		}
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
-			sb.append(NS3Utils.generateIndent(indent) + "map " + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
 		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
-			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName() + " ");
-			Map<String,String> map = getAttributes();
+			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
 
 			sb.append(NS3Constants.PARAMETERS_START);
 			Map<String,String> parameters = new HashMap<>();
