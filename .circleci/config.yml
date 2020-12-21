@@ -73,15 +73,15 @@ jobs:
             ssh navajo@p2.dexels.com "mkdir -p /var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}${SUFFIX}/"
             scp -r ~/repo/setup/com.dexels.navajo.p2/target/repository/* navajo@p2.dexels.com:/var/www/html/repo/eclipse/navajo_${MINORTAG}.${CIRCLE_BUILD_NUM}${SUFFIX}
 
-      # Update enterprise
+      # Update Tipi
       - run:
-          name: Update enterprise dependency on navajo to latest navajo build version (Triggers CI build on enterprise)
+          name: Update tipi dependency on navajo to latest navajo build version (Triggers CI build on tipi)
           command: |
-            mkdir ~/enterprisecheckout
-            cd  ~/enterprisecheckout
-            git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git -b ${CIRCLE_BRANCH} --depth 1
+            mkdir ~/tipicheckout
+            cd  ~/tipicheckout
+            git clone https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/tipi.git -b ${CIRCLE_BRANCH} --depth 1
             ls -l
-            cd enterprise/enterprise/com.dexels.enterprise.target
+            cd tipi/tipi/com.dexels.navajo.tipi.target
             BRANCH=${CIRCLE_BRANCH} ./updateversion.sh
             # Push changes
             git config credential.helper 'cache --timeout=120'
@@ -90,7 +90,7 @@ jobs:
             git add .
             echo "commiting changes"
             git commit --allow-empty -m "Update via CircleCI"
-            git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/enterprise.git ${CIRCLE_BRANCH}
+            git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/Dexels/tipi.git ${CIRCLE_BRANCH}
             echo "push complete"
 
 
