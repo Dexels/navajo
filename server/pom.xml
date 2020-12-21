@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>temp</groupId>
-	<artifactId>com.dexels.navajo.server.aggr</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modules>
-		<module>com.dexels.navajo.listeners</module>
-		<module>com.dexels.navajo.listeners.continuations</module>
-		<module>com.dexels.navajo.adapters.stream</module>
-		<module>com.dexels.navajo.listeners.stream</module>
-		<module>com.dexels.navajo.reactive</module>
-		<module>com.dexels.navajo.reactive.subscriber</module>
-		<module>com.dexels.navajo.queuemanager</module>
-		<module>com.dexels.navajo.adapters</module>
-		<module>com.dexels.navajo.adapters.resource</module>
-		<module>com.dexels.navajo.adapters.eventemitter</module>
-		<module>com.dexels.navajo.adapters.binarystore</module>
-		<module>com.dexels.navajo.resource</module>
-		<module>com.dexels.navajo.resource.jdbc.oracle</module>
-		<module>com.dexels.navajo.resource.jdbc.postgresql</module>
-		<module>com.dexels.navajo.resource.jdbc.mysql</module>
-		<module>com.dexels.navajo.resource.jdbc.mssql</module>
-		<module>com.dexels.navajo.resource.http</module>
-		<module>com.dexels.navajo.resource.binarystore</module>
-		<module>com.dexels.navajo.resource.swift</module>
-		<module>com.dexels.navajo.resource.mail</module>
-		<module>com.dexels.navajo.resource.sftp</module>
-		<module>com.dexels.navajo.resource.feature</module>
-		<module>com.dexels.navajo.streams.feature</module>
-		<module>com.dexels.navajo.kafkastreams.feature</module>
-		<module>com.dexels.navajo.mgmt</module>
-		<module>com.dexels.navajo.tester.js</module>
-		<module>com.dexels.navajo.authentication.api</module>
-		<module>com.dexels.navajo.webconsole.branding</module>
-		<module>com.dexels.navajo.compiler.tsl</module>
-		<module>com.dexels.navajo.article</module>
-		<module>com.dexels.navajo.entity</module>
-		<module>com.dexels.navajo.instance.factory</module>
-		<module>com.dexels.navajo.server.feature</module>
-		<module>com.dexels.navajo.reactive.feature</module>
+    <modelVersion>4.0.0</modelVersion>
 
-	</modules>
-        <parent>
-                <groupId>com.dexels.navajo</groupId>
-                <artifactId>com.dexels.navajo.super</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-                <relativePath>../setup/com.dexels.repository</relativePath>
-        </parent>
+    <parent>
+        <groupId>com.dexels.navajo</groupId>
+        <artifactId>com.dexels.navajo.super</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../setup/com.dexels.navajo.super</relativePath>
+    </parent>
 
-	
+    <groupId>com.dexels.navajo</groupId>
+    <artifactId>com.dexels.navajo.server.aggr</artifactId>
+    <version>1.0.3-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>com.dexels.navajo.listeners</module>
+        <module>com.dexels.navajo.listeners.continuations</module>
+        <module>com.dexels.navajo.adapters.stream</module>
+        <module>com.dexels.navajo.listeners.stream</module>
+        <module>com.dexels.navajo.reactive</module>
+        <module>com.dexels.navajo.reactive.subscriber</module>
+        <module>com.dexels.navajo.queuemanager</module>
+        <module>com.dexels.navajo.adapters</module>
+        <module>com.dexels.navajo.adapters.resource</module>
+        <module>com.dexels.navajo.adapters.eventemitter</module>
+        <module>com.dexels.navajo.adapters.binarystore</module>
+        <module>com.dexels.navajo.resource</module>
+        <module>com.dexels.navajo.resource.jdbc.oracle</module>
+        <module>com.dexels.navajo.resource.jdbc.postgresql</module>
+        <module>com.dexels.navajo.resource.jdbc.mysql</module>
+        <module>com.dexels.navajo.resource.jdbc.mssql</module>
+        <module>com.dexels.navajo.resource.http</module>
+        <module>com.dexels.navajo.resource.binarystore</module>
+        <module>com.dexels.navajo.resource.swift</module>
+        <module>com.dexels.navajo.resource.mail</module>
+        <module>com.dexels.navajo.resource.sftp</module>
+        <module>com.dexels.navajo.resource.feature</module>
+        <module>com.dexels.navajo.streams.feature</module>
+        <module>com.dexels.navajo.kafkastreams.feature</module>
+        <module>com.dexels.navajo.mgmt</module>
+        <module>com.dexels.navajo.tester.js</module>
+        <module>com.dexels.navajo.authentication.api</module>
+        <module>com.dexels.navajo.webconsole.branding</module>
+        <module>com.dexels.navajo.compiler.tsl</module>
+        <module>com.dexels.navajo.article</module>
+        <module>com.dexels.navajo.entity</module>
+        <module>com.dexels.navajo.instance.factory</module>
+        <module>com.dexels.navajo.server.feature</module>
+        <module>com.dexels.navajo.reactive.feature</module>
+    </modules>
+    
 </project>
