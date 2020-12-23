@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Navajo Target Platform: DEXELSBASEVERSION" sequenceNumber="SEQUENCE">
+<target name="Navajo Target Platform: ##DEXELSBASEVERSION####DEXELSBASESUFFIX##" sequenceNumber="##SEQUENCE##">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <repository location="https://p2.dexels.com/eclipse/equinox_4.16/"/>
@@ -11,8 +11,8 @@
             <unit id="org.eclipse.equinox.server.p2.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://p2.dexels.com/eclipse/3rdparty_DEXELSBASEVERSION"/>
-            <unit id="dexels-navajo-target.feature.group" version="DEXELSBASEVERSION" />
+            <repository location="https://p2.dexels.com/eclipse/3rdparty_##DEXELSBASEVERSION####DEXELSBASESUFFIX##"/>
+            <unit id="dexels-navajo-target.feature.group" version="##DEXELSBASEVERSION##" />
         </location>
     </locations>
 </target>
