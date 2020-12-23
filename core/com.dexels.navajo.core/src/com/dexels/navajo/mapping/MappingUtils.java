@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.mapping;
@@ -39,7 +39,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.TypeUtils;
-import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -176,7 +175,7 @@ public final class MappingUtils {
             }
         }
 
-      
+
         return newMsg;
     }
 
@@ -360,7 +359,7 @@ public final class MappingUtils {
 
     /**
      * Get parent message of a (possibly non-existing) message name.
-     * 
+     *
      * @param parent
      * @param name
      * @return
@@ -631,7 +630,7 @@ public final class MappingUtils {
      * If type of field is an array (Object []) the underlying simple Object type is
      * returned. If type of field is java.util.Iterator<Object>, the generic type is
      * returned.
-     * 
+     *
      * @param c
      * @param field
      * @param methodName
@@ -709,7 +708,7 @@ public final class MappingUtils {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param c
      * @return
