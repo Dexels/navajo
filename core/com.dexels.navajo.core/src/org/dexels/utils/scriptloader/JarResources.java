@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package org.dexels.utils.scriptloader;
@@ -38,20 +38,20 @@ public final class JarResources {
 
     // a jar file
     private File jarFile;
-    
-    
+
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(JarResources.class);
-	
-	
+
+
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
      * internal hashtable, keyed by resource names.
-     * 
+     *
      * @param jarFileName
      *            a jar or zip file
-    * @throws IOException 
-    * @throws ZipException 
+    * @throws IOException
+    * @throws ZipException
      */
     public JarResources(File jarFile) throws IOException {
         this.jarFile = jarFile;
@@ -72,7 +72,7 @@ public final class JarResources {
 
     /**
      * Extracts a jar resource as a blob.
-     * 
+     *
      * @param name
      *            a resource name.
      */
@@ -132,8 +132,8 @@ public final class JarResources {
 
     /**
      * initializes internal hash tables with Jar file resources.
-    * @throws IOException 
-    * @throws ZipException 
+    * @throws IOException
+    * @throws ZipException
      */
     private final void init() throws ZipException, IOException {
         // extracts just sizes only.
@@ -146,7 +146,7 @@ public final class JarResources {
                 ZipEntry ze = e.nextElement();
 
                 // System.out.println(ze.getName());
-                htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
+                htSizes.put(ze.getName(), (int) ze.getSize());
             }
 
         } finally {
@@ -180,7 +180,7 @@ public final class JarResources {
                     size = htSizes.get(ze.getName()).intValue();
                 }
                 byte[] b = new byte[size];
-                
+
                 int rb = 0;
                 int chunk = 0;
 
@@ -223,11 +223,11 @@ public final class JarResources {
     /**
      * Is a test driver. Given a jar file and a resource name, it trys to
      * extract the resource and then tells us whether it could or not.
-     * 
+     *
      * <strong>Example</strong> Let's say you have a JAR file which jarred up a
      * bunch of gif image files. Now, by using JarResources, you could extract,
      * create, and display those images on-the-fly.
-     * 
+     *
      * <pre>
      *       ...
      *       JarResources JR=new JarResources(&quot;GifBundle.jar&quot;);

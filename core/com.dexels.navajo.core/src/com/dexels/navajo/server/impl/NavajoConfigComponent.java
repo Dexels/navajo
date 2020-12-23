@@ -1,17 +1,15 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,42 +49,42 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private TribeManagerInterface tribeManager;
 	private static final Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
-	
+
 	public NavajoConfigComponent() {
 	}
-	
-	
+
+
 	public void setSharedStore(SharedStoreInterface sharedStore) {
 		this.sharedStore = sharedStore;
 	}
-	
+
 	public void clearSharedStore(SharedStoreInterface sharedShore) {
 		this.sharedStore = null;
 	}
-	
+
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
 	}
-	
+
 	/**
 	 * @param config the navajoioconfig to clear
 	 */
 	public void clearIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = null;
 	}
-	
+
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = configAdmin;
 	}
 
 	/**
-	 * @param configAdmin the configAdmin to remove 
+	 * @param configAdmin the configAdmin to remove
 	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = null;
 	}
-	
+
 	public void activate(Map<String,Object> props, BundleContext bundleContext) throws InstantiationException {
 			this.properties = props;
 			this.bundleContext = bundleContext;
@@ -95,7 +93,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public void deactivate() {
 		logger.info(">>>>>> deactivating navajo config");
 	}
-	
+
 	@Override
 	public File getContextRoot() {
 		return navajoIOConfig.getContextRoot();
@@ -194,8 +192,8 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 			return null;
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public StatisticsRunnerInterface getStatisticsRunner() {
@@ -213,11 +211,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public void setAsyncStore(AsyncStore as) {
 		this.asyncStore = as;
 	}
-	
+
 	public void clearAsyncStore(AsyncStore as) {
 		this.asyncStore = null;
 	}
-	
+
 	@Override
 	public AsyncStore getAsyncStore() {
 		return this.asyncStore;
@@ -234,11 +232,11 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public void setTribeManager(TribeManagerInterface tmi) {
 		tribeManager = tmi;
 	}
-	
+
 	public void clearTribeManager(TribeManagerInterface tmi) {
 		tribeManager = null;
 	}
-	
+
 	public void clearIntegrityWorker(WorkerInterface dpi) {
 		this.integrityWorker = null;
 	}
@@ -246,7 +244,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	public void setIntegrityWorker(WorkerInterface dpi) {
 		this.integrityWorker = dpi;
 	}
-	
+
 	@Override
 	public DescriptionProviderInterface getDescriptionProvider() {
 		return desciptionProviders.get(properties.get("descriptionProviderClass"));
@@ -384,9 +382,9 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 		return navajoIOConfig.getScript(name, tenant,extension);
 	}
 
-    @Override 
+    @Override
     public boolean useLegacyDateMode() {
-        Object value = getParameter("isLegacyMode"); 
+        Object value = getParameter("isLegacyMode");
         if (value != null) {
             if(!(value instanceof Boolean)) {
                 logger.error("Error: isLegacy mode is set to: "+value+" this should be boolean type, this will fail");

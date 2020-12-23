@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.geo.element;
@@ -13,14 +13,14 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class GeoPoint extends GeoElement {
 	public static final double MIN_DISTANCE = 0.00001;
 	public double lat,lon;
-//	
+//
 	private static int pointCounter = 0;
-	
+
 	public GeoPoint(double lon, double lat) {
 		this.lat = lat;
 		this.lon = lon;
 	}
-	
+
 	@Override
 	public String getId() {
 		return id;
@@ -38,7 +38,7 @@ public class GeoPoint extends GeoElement {
 			this.lon = Double.parseDouble(lonString);
 			this.lat = Double.parseDouble(latString);
 	}
-	
+
 	@Override
 	public String toString() {
 
@@ -47,7 +47,7 @@ public class GeoPoint extends GeoElement {
 		}
 		return getCoordinates();
 	}
-	
+
 	public String getCoordinates() {
 
 		String sss =""+lon+","+lat;
@@ -87,14 +87,14 @@ public class GeoPoint extends GeoElement {
 		c.addChild(point);
 		return c;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();
 	}
-	
 
-	
+
+
 	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof GeoPoint)) {
@@ -107,23 +107,23 @@ public class GeoPoint extends GeoElement {
 		}
 		return false;
 	}
-	
+
 	public double distance(GeoPoint g) {
 		double eucl = Math.sqrt(Math.pow((g.lat-lat),2) + Math.pow((g.lon-lon),2));
 		return eucl;
-		
+
 	}
-	
+
 	public int compareTo(Object o) {
 		GeoPoint g = (GeoPoint)o;
-		Double d = new Double(lat);
-		Double e = new Double(g.lat);
+		Double d = lat;
+		Double e = g.lat;
 		int x = d.compareTo(e);
 		if(x!=0) {
 			return x;
 		}
-		d = new Double(lon);
-		e = new Double(g.lon);
+		d = lon;
+		e = g.lon;
 		return d.compareTo(e);
 	}
 

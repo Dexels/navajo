@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.mapping.bean;
@@ -22,7 +22,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 /**
  * ServiceMapper can be used to call singleton service class methods. Domain object arguments are proxied
  * by a DomainObjectMapper object. The result of a method can either be a proxied domain object or a simple result.
- * 
+ *
  * @author arjen
  *
  */
@@ -30,19 +30,19 @@ public class ServiceMapper implements Mappable {
 
 	protected String serviceClass;
 	protected String serviceMethod;
-	
+
 	private List<Object> methodParameters = new ArrayList<Object>();
 	private Object result;
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(ServiceMapper.class);
-	
+
 //	private Access myAccess;
-	
+
 	/**
 	 * Get a instance of the specified service class.
 	 * This method can be overwritten in sub classes of ServiceMapper.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -55,7 +55,7 @@ public class ServiceMapper implements Mappable {
 		}
 		return c.newInstance();
 	}
-	
+
 	private String listParameterTypes(Class [] params) {
 		StringBuffer sb = new StringBuffer();
 		for (int j = 0; j < params.length; j++) {
@@ -63,17 +63,17 @@ public class ServiceMapper implements Mappable {
 		}
 		return sb.toString();
 	}
-	
+
 	private void listAllMethods() throws Exception {
 		Method [] am = getServiceObject().getClass().getMethods();
 		for (int i = 0; i < am.length; i++) {
 			logger.info(am[i].getName() + ", parameters: " + listParameterTypes(am[i].getParameterTypes()));
 		}
 	}
-	
+
 	/**
 	 * Invokes the specified method of the specified service class using the specified parameters.
-	 * 
+	 *
 	 * @param b
 	 * @throws Exception
 	 */
@@ -94,31 +94,31 @@ public class ServiceMapper implements Mappable {
 		Method m = o.getClass().getMethod(serviceMethod, parameterTypes);
 		result = m.invoke(o, objectArray);
 	}
-	
+
 	/**
 	 * Return a simple (non domain-object) result of the invoked method.
-	 * 
+	 *
 	 * @return
 	 */
 	public Object getResult() {
 		return result;
 	}
-	
+
 	/**
 	 * Returns a domain object as a result of the service method call.
 	 * If result was null. Return an instance of Object.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	public DomainObjectMapper getDomainObjectResult() throws Exception {
 		return new DomainObjectMapper((result != null ? result : new Object()));
 	}
-	
+
 	/**
 	 * Returns an array of domain objects as a result of the service method call.
 	 * An array is returned if the method return type of the service is either an array or a list.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -146,7 +146,7 @@ public class ServiceMapper implements Mappable {
 		}
 		return doms;
 	}
-	
+
 	/**
 	 * Add a simple (non domain object class) parameter (String, Integer, Float, Double, Date, Boolean, etc.)
 	 */
@@ -154,38 +154,38 @@ public class ServiceMapper implements Mappable {
 		//logger.info("addParameter: " + o.getClass());
 		methodParameters.add(o);
 	}
-	
+
 	/**
 	 * Add a domain object as a parameter.
-	 *  
+	 *
 	 * @param dom
 	 */
 	public void setAddDomainObject(DomainObjectMapper dom) {
 		methodParameters.add(dom);
 	}
-	
+
 	/**
 	 * Set the service class to be used.
-	 * 
+	 *
 	 * @param s
 	 */
 	public void setServiceClass(String s) {
 		this.serviceClass = s;
 	}
-	
+
 	/**
 	 * Sets the service class method that needs to be invoked.
-	 * 
+	 *
 	 * @param s
 	 */
 	public void setServiceMethod(String s) {
 		this.serviceMethod = s;
 	}
-	
+
 	/**
 	 * Methods from Mappable interface, not yet used.
 	 */
-	
+
 	@Override
 	public void kill() {
 	}
@@ -207,17 +207,17 @@ public class ServiceMapper implements Mappable {
 	}
 
 	public static void main(String [] args) throws Exception {
-		
+
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("mergeBeans");
 		sm.setAddDomainObject(new DomainObjectMapper(new TestBean()));
 		sm.setAddDomainObject(new DomainObjectMapper(new TestBean()));
 		sm.setInvoke(true);
-		
-		
+
+
 		logger.info("Next...");
-		
+
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("getABean");
@@ -225,44 +225,44 @@ public class ServiceMapper implements Mappable {
 		sm.setInvoke(true);
 		DomainObjectMapper result = sm.getDomainObjectResult();
 		logger.info("result = " + result.getMyObject());
-	
+
 		logger.info("Again...");
-		
+
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("getTestBeans");
-		sm.setAddParameter(new Integer(2));
+		sm.setAddParameter(2);
 		sm.setInvoke(true);
-		DomainObjectMapper [] results = sm.getDomainObjectResults(); 
-	
+		DomainObjectMapper [] results = sm.getDomainObjectResults();
+
 		for ( int i = 0; i < results.length; i++ ) {
 			logger.info("result[" + i + "]=" + results[i].getMyObject());
 		}
-		
+
 		logger.info("Try using Lists...");
-		
+
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("getTestBeansAsList");
-		sm.setAddParameter(new Integer(2));
+		sm.setAddParameter(2);
 		sm.setInvoke(true);
-		results = sm.getDomainObjectResults(); 
-	
+		results = sm.getDomainObjectResults();
+
 		for ( int i = 0; i < results.length; i++ ) {
 			logger.info("LIST result[" + i + "]=" + results[i].getMyObject());
 		}
-		
+
 		logger.info("Try something simple...");
-		
+
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("getStupid");
 		sm.setAddParameter(2);
 		sm.setInvoke(true);
-		Object or = sm.getResult(); 
+		Object or = sm.getResult();
 		logger.info("or = " + or);
-		
+
 		sm.listAllMethods();
 	}
-	
-} 
+
+}

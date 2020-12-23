@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server;
@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.BundleCreatorFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -70,11 +69,11 @@ public class GenericHandler extends ServiceHandler {
     private static final Map<String,NavajoClassSupplier> loadedClasses = new ConcurrentHashMap<>();
 
     private static Object mutex1 = new Object();
-   
-    
+
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(GenericHandler.class);
-    
+
     private NavajoConfigInterface tenantConfig;
 
 	protected NavajoConfigInterface navajoConfig;
@@ -82,7 +81,7 @@ public class GenericHandler extends ServiceHandler {
     public GenericHandler() {
 
     }
-    
+
 	@Override
 	public String getIdentifier() {
 		return "default";
@@ -111,7 +110,7 @@ public class GenericHandler extends ServiceHandler {
     	}
     	return null;
     }
-    
+
     private static final boolean hasDirtyDepedencies(Access a, String className) {
     	CompiledScript cso = null;
     	try {
@@ -123,7 +122,7 @@ public class GenericHandler extends ServiceHandler {
         	if ( cs != null ) {
         		cso = (CompiledScript) cs.getDeclaredConstructor().newInstance();
         		cso.setClassLoader(loader);
-        	}	
+        	}
     	} catch (Exception e) {
     		logger.error("Error: ", e);
     		return false;
@@ -135,7 +134,7 @@ public class GenericHandler extends ServiceHandler {
     	}
 
     }
-    
+
     private final Object[] getScriptPathServiceNameAndScriptFile(Access a, String rpcName, boolean betaUser) throws Exception {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	int strip = rpcName.lastIndexOf("/");
@@ -151,7 +150,7 @@ public class GenericHandler extends ServiceHandler {
 		} else {
 			applicationGroup = a.getTenant();
 		}
-        
+
     	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
     	if (scriptFile.exists()) {
     		serviceName += "_" + applicationGroup;
@@ -162,10 +161,10 @@ public class GenericHandler extends ServiceHandler {
     			scriptFile = new File(scriptPath + "/" + rpcName + ".xml" );
     		} else if ( betaUser ) {
     			serviceName += "_beta";
-    		} 
+    		}
     		// Check if scriptFile exists.
     	}
-    	
+
     	if(!scriptFile.exists()) {
        	//-------------------------------
        	// Now, check the context folder:
@@ -182,27 +181,27 @@ public class GenericHandler extends ServiceHandler {
        			scriptFile = new File(scrPath, rpcName + ".xml" );
        		} else if ( betaUser ) {
        			serviceName += "_beta";
-       		} 
+       		}
        		// Check if scriptFile exists.
    			if ( !scriptFile.exists() ) {
    			}
        	}
 
     	}
-    	
-    	
-    	
-    	
+
+
+
+
     	String sourceFileName = null;
     	if(scriptFile.exists()) {
     		sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath()+ "/" + pathPrefix + serviceName + ".java";
-    		// regular scriptfile, 
+    		// regular scriptfile,
     	} else {
     		// pure java scriptfile
     		String temp =DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+ "/" + pathPrefix + serviceName + ".java";
     		File javaScriptfile = new File(temp);
     		if(javaScriptfile.exists()) {
-       		sourceFileName = temp;    			    			
+       		sourceFileName = temp;
 			}
 		}
     	// set when either normal script or pure java, will skip if its neither (-> a jsr223 script)
@@ -214,8 +213,8 @@ public class GenericHandler extends ServiceHandler {
 			return new Object[] { pathPrefix, serviceName, scriptFile, sourceFileName, new File(sourceFileName), className,
 					classFileName, new File(classFileName),true };
 		}
-    	
-    	
+
+
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
 		File[] scripts = currentScriptDir.listFiles(new FilenameFilter() {
@@ -227,7 +226,7 @@ public class GenericHandler extends ServiceHandler {
 		if(scripts==null) {
 			return null;
 		}
-		
+
 		if (scripts.length > 1) {
 			logger.warn("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
 		}
@@ -236,15 +235,15 @@ public class GenericHandler extends ServiceHandler {
 			return null;
 		}
 		String classFileName = null;
-		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";    	
-    	
+		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";
+
     	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,scripts[0],className,classFileName,null,false};
 
     }
-    
+
     /**
      * Check whether Navajo script file needs to be recompiled.
-     * 
+     *
      * @param scriptFile
      * @param sourceFile
      * @return
@@ -255,10 +254,10 @@ public class GenericHandler extends ServiceHandler {
     	}
     	return (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0);
     }
-    
+
     /**
      * Check whether Java class file needs to be recompiled.
-     * 
+     *
      * @param serviceName
      * @param sourceFile
      * @param targetFile
@@ -267,11 +266,11 @@ public class GenericHandler extends ServiceHandler {
     private static final boolean checkJavaRecompile(File sourceFile, File targetFile) {
     	return !targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified());
     }
-    
+
     private static final NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
     	NavajoClassSupplier newLoader = loadedClasses.get(className);
          if (newLoader == null ) {
-         	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
+         	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(),
          			DispatcherFactory.getInstance().getNavajoConfig().getClassloader() );
          	// Use concurrent hashmap: if key exists, return existing classloader.
          	NavajoClassSupplier ncs = loadedClasses.putIfAbsent(className, newLoader);
@@ -281,11 +280,11 @@ public class GenericHandler extends ServiceHandler {
          }
          return newLoader;
     }
-    
+
     /**
      * Check whether web service Access needs recompile.
      * Can be used by interested parties, e.g. Dispatcher.
-     * 
+     *
      * @param a
      * @return
      */
@@ -301,11 +300,11 @@ public class GenericHandler extends ServiceHandler {
     	File targetFile = (File) all[7];
     	boolean isCompilable = (Boolean)all[8];
 
-    	return isCompilable && (checkScriptRecompile(scriptFile, sourceFile) || 
+    	return isCompilable && (checkScriptRecompile(scriptFile, sourceFile) ||
     	             checkJavaRecompile(sourceFile, targetFile) ||
     	             hasDirtyDepedencies(a, className));
     }
-    
+
     /**
      * Non-OSGi only
      * @param a
@@ -314,11 +313,11 @@ public class GenericHandler extends ServiceHandler {
      * @throws Exception
      */
     public CompiledScript compileScript(Access a, StringBuilder compilerErrors) throws Exception {
-    	
+
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
     	List<Dependency> deps = new ArrayList<>();
     	String scriptPath = properties.getScriptPath();
-    	
+
     		Object [] all = getScriptPathServiceNameAndScriptFile(a, a.rpcName, a.betaUser);
     		if(all==null) {
     			throw new FileNotFoundException("No script found for: "+a.rpcName);
@@ -346,7 +345,7 @@ public class GenericHandler extends ServiceHandler {
 
     							try {
     								final String tenant = tenantConfig.getInstanceGroup();
-									tslCompiler.compileScript(serviceName, 
+									tslCompiler.compileScript(serviceName,
     										scriptPath,
     										properties.getCompiledScriptPath(),
     										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant, null), false);
@@ -364,7 +363,7 @@ public class GenericHandler extends ServiceHandler {
 //    				compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
 
     			} else {
-    				
+
     				// Maybe the jave file exists in the script path.
     				if ( !sourceFile.exists() ) { // There is no java file present.
     					AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, a.accessID);
@@ -376,10 +375,10 @@ public class GenericHandler extends ServiceHandler {
     				}
     			}
     		}
-    
+
     		return getCompiledScript(a, className,sourceFile,serviceName);
     }
-    
+
     /**
      * doService() is called by Dispatcher to perform web service.
      *
@@ -455,8 +454,8 @@ public class GenericHandler extends ServiceHandler {
 
 	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(Access a, String rpcName) throws Exception {
-		
-		
+
+
 		final String tenant;
 		if (a.getTenant()==null) {
 			tenant = tenantConfig.getInstanceGroup();
