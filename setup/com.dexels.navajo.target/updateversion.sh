@@ -11,8 +11,7 @@ if [ -z "${BRANCH}" ]; then
 fi
 
 export TARGETBUILD=$(
-	curl -s "https://circleci.com/api/v1.1/project/github/Dexels/dexels-base?circle-token=${CIRCLE_TOKEN}&offset=0&filter=successful" \
-	| jq "[.[]| select(.workflows.job_name == \"targetplatform\" and .branch == \"${BRANCH}\")][0].build_num"
+	curl -s "https://circleci.com/api/v1.1/project/github/Dexels/dexels-base?circle-token=${CIRCLE_TOKEN}&offset=0&filter=successful" | jq "[.[]| select(.workflows.job_name == \"targetplatform\" and .branch == \"${BRANCH}\")][0].build_num"
 )
 if [ "$TARGETBUILD" = "null" ]; then
    echo "No version found for dexels-base"
@@ -30,11 +29,12 @@ fi
 
 export MINORVERSION=3.3
 export SEQUENCEVERSION=$(( 2800 + $TARGETBUILD ))
-VERSION=${MINORVERSION}.${TARGETBUILD}${SUFFIX}
+VERSION=${MINORVERSION}.${TARGETBUILD}
 
 echo "Upgrading to dexels-base version: ${VERSION} sequence: ${SEQUENCEVERSION}"
 cat maven.template | \
-    sed "s/DEXELSBASEVERSION/${VERSION}/g" | \
-	sed "s/SEQUENCE/${SEQUENCEVERSION}/g" \
-	> maven.target
+  sed "s/##DEXELSBASEVERSION##/${VERSION}/g" | \
+	sed "s/##DEXELSBASESUFFIX##/${SUFFIX}/g" | \
+  sed "s/##SEQUENCE##/${SEQUENCEVERSION}/g"	\
+  > maven.target
 echo "$VERSION - $SEQUENCEVERSION" > VERSION
