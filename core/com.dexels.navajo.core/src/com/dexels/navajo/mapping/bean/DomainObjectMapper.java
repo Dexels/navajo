@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.mapping.bean;
@@ -26,10 +26,10 @@ import com.dexels.navajo.script.api.MappingException;
 import com.dexels.navajo.script.api.UserException;
 
 /**
- * This is a special proxy class to wrap/proxy simple POJOs (domain objects). 
+ * This is a special proxy class to wrap/proxy simple POJOs (domain objects).
  * A bean style (with setters/getters) POJO is expected.
  * It is assumed that sub POJOs (either single or multiple) are also proxied as DomainObjectMapper objects.
- * 
+ *
  * @author arjen
  *
  */
@@ -41,33 +41,33 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	private boolean ignoreNonExistingAttributes = false;
 	private boolean automaticMapping = true;
 	private Object myObject;
-	
+
 	private String currentMessageName = null;
 	private Access myAccess = null;
-	
+
 	private HashMap<String,Method> methods = new HashMap<String,Method>();
 	private boolean setting = true;
 	private HashSet<String> allExcludedProperties = new HashSet<String>();
-	
+
 	/**
 	 * Empty constructor for creating domain objects (for setting).
 	 */
 	public DomainObjectMapper() {
 	}
-	
+
 	/**
 	 * Constructor for wrapping existing domain objects (for getting).
-	 * 
+	 *
 	 * @param o
 	 */
 	public DomainObjectMapper(Object o) throws Exception {
 		setting = false;
 		myObject = o;
 	}
-	
+
 	/**
 	 * Creates an DomainObjectMapper array from a simple POJO array.
-	 * 
+	 *
 	 * @param dom
 	 * @return
 	 * @throws Exception
@@ -82,14 +82,14 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		}
 		return array;
 	}
-	
+
 	public final Method getMethod(String name, Class [] parameters) {
 		return methods.get(constructParameterSignature(name, parameters));
 	}
-	
+
 	 /**
 	  * Gets the appropriate 'setter' for an attribute name with parameters signature.
-	  * 
+	  *
 	  * @param myClass the class to introspect
 	  * @param name name of the attribute
 	  * @param parameters type signature for method parameters
@@ -106,9 +106,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			Class c = this.myObject.getClass();
 			java.lang.reflect.Method[] all = c.getMethods();
 			for (int i = 0; i < all.length; i++) {
-				if (all[i].getName().equalsIgnoreCase(methodName) && 
+				if (all[i].getName().equalsIgnoreCase(methodName) &&
 					equalsParameterTypes(all[i].getParameterTypes(), parameters)) {
-					m = all[i]; 
+					m = all[i];
 					break;
 				}
 			}
@@ -116,13 +116,13 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			if (m == null) {
 				throw new MappingException("Could not find setter in class " + myClass.getCanonicalName() + " for attribute: " + name);
 			}
-			
+
 			methods.put(key, m);
 		}
 
 		return m;
 	}
-	
+
 	 @SuppressWarnings("unchecked")
 	private final boolean equalsParameterTypes(Class [] array1, Class [] array2) {
 		 if ( ( array1 == null || array1.length == 0 ) && ( array2 == null || array2.length == 0) ) {
@@ -141,7 +141,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		 }
 		 return true;
 	 }
-//	 
+//
 //	 private String printClassArray(Class [] array) {
 //		 if ( array == null ) {
 //			 return "";
@@ -152,7 +152,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 //		 }
 //		 return sb.toString();
 //	 }
-//	 
+//
 	 private final String constructParameterSignature(String name, Class [] classArray) {
 
 		 StringBuffer key = new StringBuffer();
@@ -166,10 +166,10 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 		 return key.toString();
 	 }
-	 
+
 	/**
 	 * Returns a method associated with a propertyName getter
-	 * 
+	 *
 	 * @param myClass the class to introspect
 	 * @param propertyName the attribute to find the getter
 	 * @param arguments object array to be passed as method parameters
@@ -192,11 +192,11 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 				key.append(arguments[i].getClass().getName());
 			}
 		}
-    
+
 		java.lang.reflect.Method m = methods.get(key.toString());
 
 		if (m == null) {
-		
+
 			java.lang.reflect.Method[] all = myClass.getMethods();
 			for (int i = 0; i < all.length; i++) {
 				if (all[i].getName().equalsIgnoreCase("get"+propertyName) ) {
@@ -214,18 +214,18 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 		return m;
 	}
-	
+
 	private Object createObject() throws Exception {
 		if ( myObject == null ) {
 			if ( objectName == null ) {
 				throw new Exception("DomainObjectMapper failure. No objectName specified.");
 			}
 			Class myClass = Class.forName(objectName);
-			myObject = myClass.newInstance();
+			myObject = myClass.getDeclaredConstructor().newInstance();
 		}
 		return myObject;
 	}
-	
+
 	@Override
 	public void kill() {
 	}
@@ -237,11 +237,11 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	@Override
 	public void store() throws MappableException, UserException {
-		
+
 		if ( !isAutomaticMapping() ) {
 			return;
 		}
-		
+
 		try {
 			if ( setting ) {
 				mapAllPropertiesToObject(myObject.getClass());
@@ -258,7 +258,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	/**
 	 * Automatically maps all 'getters' to a property.
-	 * 
+	 *
 	 * Only add property if:
 	 *  1. attribute 'getter' does not expect any arguments.
 	 *  2. attribute has a 'getter'.
@@ -278,17 +278,17 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		if ( currentOutMsg == null  ) {
 			throw new Exception("No current message for mapping object attributes to properties.");
 		}
-		
+
 		for ( int i = 0; i < all.length; i++ ) {
-			
+
 			String attributeName = all[i].getName().substring(3);
-			
-			if ( all[i].getParameterTypes().length == 0 && 
-			     all[i].getName().startsWith("get") && 
+
+			if ( all[i].getParameterTypes().length == 0 &&
+			     all[i].getName().startsWith("get") &&
 			     !all[i].getName().startsWith("getClass") &&
 			     currentOutMsg.getProperty(attributeName) == null &&
 			     !isAnExcludedProperty(attributeName) ) {
-				
+
 				Object result = all[i].invoke(myObject, (Object[])null);
 				if ( result == null || !( result.toString().startsWith("[L") || List.class.isAssignableFrom(result.getClass()) ) ) {
 					Property p = NavajoFactory.getInstance().createProperty(out, attributeName, "string", "", 0, "", "", "");
@@ -296,10 +296,10 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 					p.setDirection(isAnInputProperty(attributeName) ? Property.DIR_IN : Property.DIR_OUT);
 					currentOutMsg.addProperty(p);
 				}
-				
+
 			}
 		}
-		
+
 	}
 
 	public void setObjectName(String objectName) throws Exception {
@@ -310,9 +310,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	public void setAttributeName(String attribute) {
 		this.attributeName = attribute;
 	}
-	
+
 	public void setAttributeValue(Object value) throws UserException {
-		
+
 		if ( attributeName == null ) {
 			throw new UserException(-1, "Set attribute name before setting its value.");
 		}
@@ -322,12 +322,12 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		} catch (Exception e) {
 			throw new UserException(-1, e.getMessage(), e);
 		}
-		
+
 	}
 
 	/**
 	 * Checks whether a property needs to exluded from automatic mapping.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -337,10 +337,10 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		}
 		return allExcludedProperties.contains(name.toLowerCase());
 	}
-	
+
 	/**
 	 * Checks whether a property needs to be an input property.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -356,15 +356,15 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Automatically maps all properties to appropriate 'setters'.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void mapAllPropertiesToObject(Class myClass) throws Exception {
 		createObject();
-		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().getCurrentInMsg() :  
+		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().getCurrentInMsg() :
 			myAccess.getInDoc().getMessage(currentMessageName));
 		if ( mapMsg == null ) {
 			throw new UserException(-1, "No mappable message specified.");
@@ -404,7 +404,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	/**
 	 * Calls a 'setter' for a given attribute and a given value.
-	 * 
+	 *
 	 * @param name name of the attribute
 	 * @param value value to be set
 	 * @throws Exception
@@ -417,13 +417,13 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		Method m = setMethodReference(myObject.getClass(), name, new Class[]{value.getClass()});
 		m.invoke(myObject, value);
 	}
-	
+
 	/**
 	 * Performs a 'getter' on a domainobject attribute. If result is a list, transform it to an array.
-	 * This method does not automatically proxy POJOs as a domain object. 
+	 * This method does not automatically proxy POJOs as a domain object.
 	 * This should be done by the calling class (CompiledScript objects).
 	 * If the domain object happens to be null, return null.
-	 * 
+	 *
 	 * @param name
 	 * @param parameters
 	 * @return
@@ -449,10 +449,10 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns the proxied POJO.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -463,7 +463,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	/**
 	 * Adds a ;-seperated list of property/attribute names to exclude (both for getting and setting).
 	 * Method can be called multiple times.
-	 * 
+	 *
 	 * @param excludedProperties
 	 */
 	public void setExcludedProperties(String excludedProperties) {
@@ -476,7 +476,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	/**
 	 * Sets a ;-seperated list of properties that will be direction="in".
 	 * Can only be called once.
-	 * 
+	 *
 	 * @param inputProperties
 	 */
 	public void setInputProperties(String inputProperties) {
@@ -507,7 +507,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	/**
 	 * If set to true properties that do not have a corresponding attribute in the domain object are silently ignored.
 	 * Default is false.
-	 * 
+	 *
 	 * @param ignoreNonExistingAttributes
 	 */
 	public void setIgnoreNonExistingAttributes(boolean ignoreNonExistingAttributes) {
@@ -521,7 +521,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	/**
 	 * If set to false automatic property<->attribute mapping is NOT performed.
 	 * Default value is true.
-	 * 
+	 *
 	 * @param automaticMapping
 	 */
 	public void setAutomaticMapping(boolean automaticMapping) {

@@ -47,13 +47,13 @@ public class ServiceMapper implements Mappable {
 	 * @throws Exception
 	 */
 	protected Object getServiceObject() throws Exception {
-		Class c = null;
+		Class<?> c;
 		if ( DispatcherFactory.getInstance() != null ) {
 			c = Class.forName(serviceClass, true, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 		} else {
 			c = Class.forName(serviceClass);
 		}
-		return c.newInstance();
+		return c.getDeclaredConstructor().newInstance();
 	}
 
 	private String listParameterTypes(Class [] params) {

@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server.enterprise.statistics;
@@ -58,9 +58,9 @@ public class StatisticsRunnerFactory {
     private static StatisticsRunnerInterface getStatisticsRunnerInstance(String storePath, Map parameters, String storeClass)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException,
             InvocationTargetException {
-        Class<StatisticsRunnerInterface> c = (Class<StatisticsRunnerInterface>) Class
-                .forName("com.dexels.navajo.server.statistics.StatisticsRunner");
-        StatisticsRunnerInterface dummy = c.newInstance();
+        Class<?> c = Class.forName("com.dexels.navajo.server.statistics.StatisticsRunner");
+        StatisticsRunnerInterface dummy = (StatisticsRunnerInterface) c.getDeclaredConstructor()
+                .newInstance();
         Method m = c.getMethod("getInstance", new Class[] { String.class, Map.class, String.class });
         StatisticsRunnerInterface result = (StatisticsRunnerInterface) m.invoke(dummy, new Object[] { storePath, parameters,
                 storeClass });
