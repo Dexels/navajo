@@ -1,62 +1,62 @@
 Navascript  ::= Validations? Body* EOF
 
-Validations ::= ( VALIDATIONS "{" Checks "}" )
+Validations ::= VALIDATIONS "{" Checks "}"
 
-Body ::= Include | message | Var | break | map
+Body ::= Include | Message | Var | Break | Map
 
 Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
 
-InnerBody ::=  Property | operation_or_setter | Body
+InnerBody ::=  Property | MethodOrSetter | Body
 
 Checks ::=  Check*
 
-Check ::= CHECK "(" check_attributes ")"
+Check ::= CHECK "(" CheckAttributes ")"
 
-check_attributes ::= "condition" literal_or_expression ( "," "code" literal_or_expression)? ("," "description" literal_or_expression )?
+CheckAttributes ::= "condition" LiteralOrExpression ( "," "code" LiteralOrExpression)? ("," "description" LiteralOrExpression )?
 
-literal_or_expression ::= ( ":" StringConstant | "=" expression )? 
+LiteralOrExpression ::= ( ":" StringConstant | "=" expression )? 
 
-break ::= ( Conditional )?  BREAK ( "(" "conditionId" literal_or_expression "conditionDescription" literal_or_expression ")" )? 
+Break ::= ( Conditional )?  BREAK ( "(" "conditionId" LiteralOrExpression "conditionDescription" LiteralOrExpression ")" )? 
 
 Conditional ::= IF expression THEN
 
-Var ::= ( Conditional )? VAR var_name (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+Var ::= ( Conditional )? VAR VarName (":" StringConstant  |  "=" ConditionalExpressions ) ";"
 
 ConditionalExpressions ::= (( Conditional  expression )* ELSE expression  |  expression)
  
-message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE msg_Identifier DOUBLE_QUOTE ( "(" key_value_arguments ")" )? "{" ( MappedArrayField | MappedArrayMessage )? InnerBody* "}"
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE msg_Identifier DOUBLE_QUOTE ( "(" KeyValueArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage )? InnerBody* "}"
 
-Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE property_name DOUBLE_QUOTE ( "(" key_value_arguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE property_name DOUBLE_QUOTE ( "(" KeyValueArguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions ) ";"
 
-key_value_arguments ::= param_key_name literal_or_expression ( "," param_key_name literal_or_expression  )*
+KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName LiteralOrExpression  )*
 
-map ::= ( Conditional )? ( "map." adapter_name ( "(" key_value_arguments ")" )?  |  "map" "(" "object:" object_name ( "," key_value_arguments )?  ")" ) "{" InnerBody* "}"
+Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments ")" )?  |  "map" "(" "object:" ClassName ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
 
-operation_or_setter ::= ( Conditional )?  (AdapterOperation | field_setter) ";"
+MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField) ";"
 
-field_setter ::= ( Conditional )?  "$" FieldName (":" StringConstant  |  "=" ConditionalExpressions ) 
+SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant  |  "=" ConditionalExpressions ) 
 
-AdapterOperation ::= ( Conditional )?  "." MethodName "(" key_value_arguments ")" (  "{" (MappedArrayField | MappedArrayMessage) "}"  )? 
+AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" (  "{" (MappedArrayField | MappedArrayMessage) "}"  )? 
 
-MappedArrayField ::= "$" FieldName "(" key_value_arguments ( "," FILTER "=" expression  )?   ")" "{ " InnerBody* " }"
+MappedArrayField ::= "$" FieldName "(" KeyValueArguments ( "," FILTER "=" expression  )?   ")" "{ " InnerBody* " }"
 
 MappedArrayMessage ::= "[ " msg_Identifier " )? "  (  "(" FILTER "=" expression ")" )?  "{ " InnerBody* " }"
 
-mappable_Identifier ::= "$" ( parent_msg )* Identifier ( arguments )? 
+MappableIdentifier ::= "$" ( parent_msg )* Identifier ( arguments )? 
 
-date_pattern ::= IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral 
+DatePattern ::= IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral 
 
-expression_literal ::= "`" ( expression )* "`" 
+ExpressionLiteral ::= "`" ( expression )* "`" 
 
-function_literal ::= Identifier arguments
+FunctionLiteral ::= Identifier arguments
 
-forall_literal ::= SARTRE "(" tml_literal "," expression_literal ")"
+ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
 
 arguments ::= "(" expression ( "," expression )* ")" 
 
-operator ::= forall_literal | TODAY | function_literal | IntegerLiteral | StringLiteral | FloatLiteral | date_pattern | tml_Identifier | mappable_Identifier | exists_tml_Identifier
+operator ::= ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
-expression ::= arithmetic_expression | boolean_expression 
+expression ::= arithmetic_expression | BooleanExpression 
 
 arithmetic_expression ::= term ( ("+" | "-") term )*
 
@@ -64,13 +64,13 @@ term       ::= factor ( ("*"|"/") factor )*
 
 factor     ::= operator | "(" expression ")" 
 
-and_or_expression ::= comparison_expression ( ( OR | AND ) comparison_expression )* 
+AndOrExpression ::= ComparisonExpression ( ( OR | AND ) ComparisonExpression )* 
  
-comparison_expression ::= ( "true" | "false" | comparison ) 
+ComparisonExpression ::= ( "true" | "false" | comparison ) 
 
 comparison ::= arithmetic_expression ( "<" | "<=" | ">" | ">=" | "==" | "!=" ) arithmetic_expression 
 
-boolean_expression ::= ("!")? and_or_expression
+BooleanExpression ::= ("!")? AndOrExpression
 
 Ignore   ::= WhiteSpace
            | Comment
@@ -129,13 +129,13 @@ Identifier ::= IDENTIFIER_DEF - Keyword
 
 IDENTIFIER_DEF ::= ( LETTER | "_" ) ( LETTER | DIGIT | "_" )*
 
-var_name ::= Identifier
+VarName ::= Identifier
 
-param_key_name ::= Identifier
+ParamKeyName ::= Identifier
 
-adapter_name ::= Identifier
+AdapterName ::= Identifier
 
-object_name ::= Identifier
+ClassName ::= Identifier
 
 MethodName ::= Identifier
 
@@ -155,7 +155,7 @@ IntegerLiteral ::= ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIG
 
 FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
 
-exists_tml_Identifier ::= "?" tml_Identifier
+ExistsTmlIdentifier ::= "?" TmlIdentifier
 
 ScriptIdentifier ::= Identifier ( "/" Identifier )*
 
@@ -165,11 +165,11 @@ msg_Identifier ::= ( ( parent_msg )* "/" )? msg_element_Identifier ( "/" msg_ele
 
 property_Identifier ::= ( msg_Identifier )? Identifier ( name_option | value_option )? 
 
-tml_Identifier ::= "[" ( msg_Identifier | property_Identifier ) "]" 
+TmlIdentifier ::= "[" ( msg_Identifier | property_Identifier ) "]" 
 
 StringLiteral ::= "'" ( CHARACTER )* "'" 
 
-tml_literal ::= "'" ( tml_Identifier )* "'" 
+TmlLiteral ::= "'" ( TmlIdentifier )* "'" 
 
 SARTRE ::= ( "FORALL" | "EXISTS" )
 
