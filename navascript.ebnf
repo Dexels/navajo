@@ -1,0 +1,221 @@
+Navascript  ::= Validations? Body* EOF
+
+Validations ::= ( VALIDATIONS "{" Checks "}" )
+
+Body ::= Include | message | Var | break | map
+
+Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
+
+InnerBody ::=  Property | operation_or_setter | Body
+
+Checks ::=  Check*
+
+Check ::= CHECK "(" check_attributes ")"
+
+check_attributes ::= "condition" literal_or_expression ( "," "code" literal_or_expression)? ("," "description" literal_or_expression )?
+
+literal_or_expression ::= ( ":" StringConstant | "=" expression )? 
+
+break ::= ( Conditional )?  BREAK ( "(" "conditionId" literal_or_expression "conditionDescription" literal_or_expression ")" )? 
+
+Conditional ::= IF expression THEN
+
+Var ::= ( Conditional )? VAR var_name (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+
+ConditionalExpressions ::= (( Conditional  expression )* ELSE expression  |  expression)
+ 
+message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE msg_Identifier DOUBLE_QUOTE ( "(" key_value_arguments ")" )? "{" ( MappedArrayField | MappedArrayMessage )? InnerBody* "}"
+
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE property_name DOUBLE_QUOTE ( "(" key_value_arguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+
+key_value_arguments ::= param_key_name literal_or_expression ( "," param_key_name literal_or_expression  )*
+
+map ::= ( Conditional )? ( "map." adapter_name ( "(" key_value_arguments ")" )?  |  "map" "(" "object:" object_name ( "," key_value_arguments )?  ")" ) "{" InnerBody* "}"
+
+operation_or_setter ::= ( Conditional )?  (AdapterOperation | field_setter) ";"
+
+field_setter ::= ( Conditional )?  "$" FieldName (":" StringConstant  |  "=" ConditionalExpressions ) 
+
+AdapterOperation ::= ( Conditional )?  "." MethodName "(" key_value_arguments ")" (  "{" (MappedArrayField | MappedArrayMessage) "}"  )? 
+
+MappedArrayField ::= "$" FieldName "(" key_value_arguments ( "," FILTER "=" expression  )?   ")" "{ " InnerBody* " }"
+
+MappedArrayMessage ::= "[ " msg_Identifier " )? "  (  "(" FILTER "=" expression ")" )?  "{ " InnerBody* " }"
+
+mappable_Identifier ::= "$" ( parent_msg )* Identifier ( arguments )? 
+
+date_pattern ::= IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral 
+
+expression_literal ::= "`" ( expression )* "`" 
+
+function_literal ::= Identifier arguments
+
+forall_literal ::= SARTRE "(" tml_literal "," expression_literal ")"
+
+arguments ::= "(" expression ( "," expression )* ")" 
+
+operator ::= forall_literal | TODAY | function_literal | IntegerLiteral | StringLiteral | FloatLiteral | date_pattern | tml_Identifier | mappable_Identifier | exists_tml_Identifier
+
+expression ::= arithmetic_expression | boolean_expression 
+
+arithmetic_expression ::= term ( ("+" | "-") term )*
+
+term       ::= factor ( ("*"|"/") factor )*
+
+factor     ::= operator | "(" expression ")" 
+
+and_or_expression ::= comparison_expression ( ( OR | AND ) comparison_expression )* 
+ 
+comparison_expression ::= ( "true" | "false" | comparison ) 
+
+comparison ::= arithmetic_expression ( "<" | "<=" | ">" | ">=" | "==" | "!=" ) arithmetic_expression 
+
+boolean_expression ::= ("!")? and_or_expression
+
+Ignore   ::= WhiteSpace
+           | Comment
+          /* ws: definition */
+
+<?TOKENS?>
+
+EOF      ::= $
+
+LETTER ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
+ | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+ | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+ | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+ | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+ | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+ | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+ | "x" | "y" | "z"
+
+DIGIT ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+SYMBOL ::= " " | "\n" | "\t" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | "{" | "}" | "[" | "]" | ":" | ";" | "\" | "/" | "|" | "<" | ">" | "\'" | "," | "." | "?" | "§" | "±" | "~" | "`"
+
+DOUBLE_QUOTE ::= '"' 
+
+INCLUDE ::= "include"
+
+MESSAGE ::= "message"
+
+PROPERTY ::= "property"
+
+VALIDATIONS ::= "validations"
+
+CHECK ::= "check"
+
+BREAK ::= "break"
+
+TODAY ::= "TODAY"
+
+VAR ::= "var"
+
+IF ::= "if"
+
+THEN ::= "then"
+
+ELSE ::= "else"
+
+AND ::= "AND"
+
+OR ::= "OR"
+
+FILTER ::= "filter"
+
+CHARACTER ::= LETTER | DIGIT | SYMBOL
+
+Identifier ::= IDENTIFIER_DEF - Keyword
+
+IDENTIFIER_DEF ::= ( LETTER | "_" ) ( LETTER | DIGIT | "_" )*
+
+var_name ::= Identifier
+
+param_key_name ::= Identifier
+
+adapter_name ::= Identifier
+
+object_name ::= Identifier
+
+MethodName ::= Identifier
+
+FieldName ::= Identifier
+
+property_name ::= Identifier
+
+StringConstant ::= DOUBLE_QUOTE ( CHARACTER )* DOUBLE_QUOTE
+
+name_option ::= ":name"
+
+value_option ::= ":value"
+
+parent_msg ::= "../"
+
+IntegerLiteral ::= ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIGIT )*
+
+FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
+
+exists_tml_Identifier ::= "?" tml_Identifier
+
+ScriptIdentifier ::= Identifier ( "/" Identifier )*
+
+msg_element_Identifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )? 
+
+msg_Identifier ::= ( ( parent_msg )* "/" )? msg_element_Identifier ( "/" msg_element_Identifier )* 
+
+property_Identifier ::= ( msg_Identifier )? Identifier ( name_option | value_option )? 
+
+tml_Identifier ::= "[" ( msg_Identifier | property_Identifier ) "]" 
+
+StringLiteral ::= "'" ( CHARACTER )* "'" 
+
+tml_literal ::= "'" ( tml_Identifier )* "'" 
+
+SARTRE ::= ( "FORALL" | "EXISTS" )
+
+Keyword  ::= 'break'
+           | 'filter'
+           | 'if'
+           | 'true'
+           | 'false'
+           | 'null'
+           | ':name'
+           | ':value'
+           | 'then'
+           | 'else'
+           | 'var'
+           | 'AND'
+           | 'OR'
+           | 'EXISTS'
+           | 'FORALL'
+           | 'conditionDescription'
+           | 'TODAY'
+
+WhiteSpace
+         ::= ' '
+           | #x0009
+           | #x000C
+           | LineTerminator
+Comment  ::= TraditionalComment
+           | EndOfLineComment
+TraditionalComment
+         ::= '/*' CHARACTER*  '*/'
+EndOfLineComment
+         ::= '//' CHARACTER*
+
+SourceCharacter ::= .
+
+LineContinuation ::= '\' LineTerminatorSequence
+
+LineTerminatorSequence
+         ::= #x000D #x000A
+           | #x000A
+           | #x000D
+           | #x2028
+           | #x2029
+
+LineTerminator
+         ::= #x000A
+           | #x000D
+           | #x2028
+           | #x2029
