@@ -198,7 +198,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(ft);
 		}
 		if (tag.startsWith(Tags.MAP + ".")) { //map.navajo
-			String name = tag.split("\\.")[1];
+			String name = tag.split("\\.")[1].trim();
 			MapTag mt = new MapTag(currentDocument, name, h.get(Attributes.CONDITION));
 			Map<String,String> attributeMap = new HashMap<>();
 			for ( String key : h.keySet() ) {

@@ -30,10 +30,10 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 			}
 			return ( mapMetaData.getMapDefinition(adapter).getMethodDefinition(m) != null);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace(System.err);
+			logger.error(e.getLocalizedMessage(), e);
 			return false;
 		} catch (KeywordException e) {
-			e.printStackTrace(System.err);
+			logger.error(e.getLocalizedMessage(), e);
 			return false;
 		}
 	}
@@ -47,10 +47,10 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 			}
 			return ( mapMetaData.getMapDefinition(adapter).getValueDefinition(m) != null);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace(System.err);
+			logger.error(e.getLocalizedMessage(), e);
 			return false;
 		} catch (KeywordException e) {
-			e.printStackTrace(System.err);
+			logger.error(e.getLocalizedMessage(), e);
 			return false;
 		}
 	}
