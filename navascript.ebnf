@@ -2,7 +2,7 @@ Navascript  ::= Validations? TopLevelStatement* EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage
 
 Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
 
@@ -27,6 +27,8 @@ Conditional ::= IF Expression THEN
 Var ::= ( Conditional )? VAR VarName (":" StringConstant  |  "=" ConditionalExpressions ) ";"
 
 ConditionalExpressions ::= (( Conditional  Expression )* ELSE Expression  |  Expression)
+
+AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
  
 Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" KeyValueArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
 
@@ -58,25 +60,25 @@ ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
 
 Arguments ::= "(" Expression ( "," Expression )* ")" 
 
-Operator ::= ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
+Operator ::= TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
-Expression ::= ArithmeticExpression | BooleanExpression 
+Expression ::= OrExpression
 
-ArithmeticExpression ::= Term ( ("+" | "-") Term )*
+OrExpression ::= AndExpression ( OR AndExpression )*
 
-Term       ::= Factor ( ("*"|"/") Factor )*
+AndExpression ::= EqualityExpression ( AND EqualityExpression )*
 
-Factor     ::= Operator | "(" Expression ")" 
+EqualityExpression ::= RelationalExpression ( ( EQ RelationalExpression ) | ( NEQ RelationalExpression ) )*
 
-BooleanExpression ::= BooleanTerm ( ( OR | AND ) BooleanTerm )* 
+RelationalExpression ::= AdditiveExpression ( ( LT AdditiveExpression ) | ( LET AdditiveExpression ) | ( GT AdditiveExpression ) | ( GET AdditiveExpression ) )*
 
-BooleanTerm ::= BooleanOperator | "(" BooleanExpression ")"
+AdditiveExpression ::= MultiplicativeExpression ( ( PLUS MultiplicativeExpression ) | ( MIN MultiplicativeExpression ) )*
 
-BooleanOperator ::= Comparison | "true" | "false" | BooleanNotExpression | FunctionLiteral | MappableIdentifier
- 
-Comparison ::= ArithmeticExpression ( "<" | "<=" | ">" | ">=" | "==" | "!=" ) ArithmeticExpression
+MultiplicativeExpression ::= UnaryExpression ( ( MULT UnaryExpression ) | ( DIV UnaryExpression ) )*
 
-BooleanNotExpression ::= "!" BooleanExpression
+UnaryExpression ::= ( "!" UnaryExpression | MIN UnaryExpression | PrimaryExpression )
+
+PrimaryExpression ::= Operator | "(" Expression ")"
 
 Ignore   ::= WhiteSpace
            | Comment
@@ -105,6 +107,8 @@ INCLUDE ::= "include"
 
 MESSAGE ::= "message"
 
+ANTIMESSAGE ::= "antimessage"
+
 PROPERTY ::= "property"
 
 VALIDATIONS ::= "validations"
@@ -127,7 +131,31 @@ AND ::= "AND"
 
 OR ::= "OR"
 
+PLUS ::= "+"
+
+MULT ::= "*"
+
+DIV ::= "/"
+
+MIN ::= "-"
+
+LT ::= "<"
+
+LET ::= "<="
+
+GT ::= ">"
+
+GET ::= ">="
+
+EQ ::= "=="
+
+NEQ ::= "!="
+
 FILTER ::= "filter"
+
+TRUE ::= "true"
+
+FALSE ::= "false"
 
 CHARACTER ::= LETTER | DIGIT | SYMBOL
 
@@ -149,7 +177,6 @@ FieldName ::= Identifier
 
 PropertyName ::= Identifier
 
-StringConstant ::= DOUBLE_QUOTE ( CHARACTER )* DOUBLE_QUOTE
 
 NameOption ::= ":name"
 
@@ -167,6 +194,8 @@ TmlLiteral ::= "'" ( TmlIdentifier )* "'"
 
 ExistsTmlIdentifier ::= "?" TmlIdentifier
 
+StringConstant ::= DOUBLE_QUOTE CHARACTER* DOUBLE_QUOTE
+
 ScriptIdentifier ::= Identifier ( "/" Identifier )*
 
 MsgElementIdentifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )?
@@ -175,7 +204,9 @@ MsgIdentifier ::= ( ( ParentMsg )* "/" )? MsgElementIdentifier ( "/" MsgElementI
 
 PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption )?
 
-TmlIdentifier ::= "[" ( MsgIdentifier | PropertyIdentifier ) "]"
+ParamIdentifier ::= ( "/@" | "@" ) Identifier
+
+TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "]"
 
 SARTRE ::= ( "FORALL" | "EXISTS" )
 
