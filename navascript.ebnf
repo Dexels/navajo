@@ -36,17 +36,17 @@ Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE (
 
 PropertyArgument ::= ( PropertyType | PropertyDescription | PropertyLength | PropertyDirection )
 
-PropertyType ::= "type" ":" PropertyTypes
+PropertyType ::= "type" ":" PropertyTypeValue
 
 PropertyDescription ::= "description" LiteralOrExpression
 
 PropertyLength ::= "length" ":" IntegerLiteral
 
-PropertyDirection ::= "direction" ":" ( "in" | "out" | "inout" )
+PropertyDirection ::= "direction" ":" PropertyDirectionValue 
 
 PropertyArguments ::= PropertyArgument ( "," PropertyArgument )*
 
-MessageArgument ::= ( "type" ":" ( "array" | "simple" | "arrayelement" ) ) | ("mode" ":" "ignore" ) 
+MessageArgument ::= ( "type" ":" MessageType ) | ("mode" ":" MessageMode ) 
 
 MessageArguments ::= MessageArgument ( "," MessageArgument )*
 
@@ -223,7 +223,13 @@ ParamIdentifier ::= ( "/@" | "@" ) Identifier
 
 TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "]"
 
-PropertyTypes ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" )
+PropertyDirectionValue ::= "in" | "out" | "inout"
+
+MessageType ::= "array" | "simple" | "arrayelement"
+
+MessageMode ::= "ignore"
+
+PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" )
 
 SARTRE ::= ( "FORALL" | "EXISTS" )
 
