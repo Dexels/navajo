@@ -16,5 +16,6 @@ public class NS3Constants {
 	public static String LITERAL_ASSIGNMENT = ":";
 	public static String FIELD_SETTER_GETTER = "$";
 	public static String ADAPTER_OPERATION = ".";
+	public static String DOUBLE_QUOTE = "\"";
 	
 }

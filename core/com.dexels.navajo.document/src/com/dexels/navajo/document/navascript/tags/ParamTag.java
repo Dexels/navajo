@@ -34,7 +34,7 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		Map<String,String> map = getAttributes();
 		int origIndent = indent;
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN;
+			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
 			indent = 0;
 			w.write(conditionStr.getBytes());
 		}

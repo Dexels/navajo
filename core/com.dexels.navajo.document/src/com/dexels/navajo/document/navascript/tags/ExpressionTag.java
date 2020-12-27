@@ -21,12 +21,18 @@ public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatibl
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		if ( getCondition() != null && !"".equals(getCondition()) ) {
-			sb.append(NS3Constants.CONDITION_IF + getCondition() + NS3Constants.CONDITION_THEN);
+			String condition = getCondition();
+			condition = condition.replaceAll("&gt;", ">");
+			condition = condition.replaceAll("&lt;", "<");
+			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
 		} 
 		if ( super.getConstant() != null ) {
-			sb.append(getConstant());
+			sb.append(NS3Constants.DOUBLE_QUOTE + getConstant() + NS3Constants.DOUBLE_QUOTE);
 		} else {
-			sb.append(getValue());
+			String value = getValue();
+			value = value.replaceAll("&gt;", ">");
+			value = value.replaceAll("&lt;", "<");
+			sb.append(value);
 		}
 		w.write((NS3Utils.generateIndent(indent) + sb.toString()).getBytes());
 	}

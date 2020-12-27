@@ -99,7 +99,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		int size = getChildren().size();
 		Map<String,String> map = getAttributes();
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN;
+			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
 			w.write(conditionStr.getBytes());
 			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
 			w.write(start.getBytes());

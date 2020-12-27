@@ -26,13 +26,29 @@ Conditional ::= IF Expression THEN
 
 Var ::= ( Conditional )? VAR VarName (":" StringConstant  |  "=" ConditionalExpressions ) ";"
 
-ConditionalExpressions ::= (( Conditional  Expression )* ELSE Expression  |  Expression)
+ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELSE ( Expression | StringConstant ) | ( Expression | StringConstant ) )
 
 AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
  
-Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" KeyValueArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
 
-Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" KeyValueArguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions )? ";"
+
+PropertyArgument ::= ( PropertyType | PropertyDescription | PropertyLength | PropertyDirection )
+
+PropertyType ::= "type" ":" PropertyTypes
+
+PropertyDescription ::= "description" LiteralOrExpression
+
+PropertyLength ::= "length" ":" IntegerLiteral
+
+PropertyDirection ::= "direction" ":" ( "in" | "out" | "inout" )
+
+PropertyArguments ::= PropertyArgument ( "," PropertyArgument )*
+
+MessageArgument ::= ( "type" ":" ( "array" | "simple" | "arrayelement" ) ) | ("mode" ":" "ignore" ) 
+
+MessageArguments ::= MessageArgument ( "," MessageArgument )*
 
 KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName LiteralOrExpression  )*
 
@@ -60,7 +76,7 @@ ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
 
 Arguments ::= "(" Expression ( "," Expression )* ")" 
 
-Operator ::= TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
+Operator ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
 Expression ::= OrExpression
 
@@ -177,14 +193,13 @@ FieldName ::= Identifier
 
 PropertyName ::= Identifier
 
-
 NameOption ::= ":name"
 
 ValueOption ::= ":value"
 
 ParentMsg ::= "../"
 
-IntegerLiteral ::= ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIGIT )*
+IntegerLiteral ::= "0" | ( ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIGIT )* )
 
 FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
 
@@ -194,7 +209,7 @@ TmlLiteral ::= "'" ( TmlIdentifier )* "'"
 
 ExistsTmlIdentifier ::= "?" TmlIdentifier
 
-StringConstant ::= DOUBLE_QUOTE CHARACTER* DOUBLE_QUOTE
+StringConstant ::= DOUBLE_QUOTE ( CHARACTER | WhiteSpace | "'" )* DOUBLE_QUOTE 
 
 ScriptIdentifier ::= Identifier ( "/" Identifier )*
 
@@ -208,7 +223,11 @@ ParamIdentifier ::= ( "/@" | "@" ) Identifier
 
 TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "]"
 
+PropertyTypes ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" )
+
 SARTRE ::= ( "FORALL" | "EXISTS" )
+
+NULL ::= "null"
 
 Keyword  ::= 'break'
            | 'filter'

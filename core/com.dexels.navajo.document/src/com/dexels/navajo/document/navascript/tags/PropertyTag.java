@@ -64,7 +64,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			sb.append(NS3Constants.CONDITION_IF + map.get("condition") + NS3Constants.CONDITION_THEN);
+			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}
 		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ? "option" : NS3Keywords.PROPERTY ) + " \"" + getName() + "\" ");
 		// key=value
@@ -72,11 +72,25 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			sb.append(NS3Constants.PARAMETERS_START);
 		}
 		int index = 1;
+		int mapSize = 0;
+		String value = null;
+		for ( String k : map.keySet() ) {
+			if ( !"value".equals(k) && !"name".equals(k) ) {
+				mapSize++;
+			}
+			if ("value".equals(k)) {
+				value = map.get(k);
+			}
+			if ( "description".equals(k)) {
+				String description = NS3Constants.DOUBLE_QUOTE + map.get(k) + NS3Constants.DOUBLE_QUOTE ;
+				map.put(k, description);
+			}
+		}
 		for ( String k : map.keySet() ) {
 			if ( !"value".equals(k) && !"name".equals(k) ) {
 				sb.append(k + ":" + map.get(k));
 				index++;
-				if ( index > 1 && index <  map.keySet().size() ) {
+				if ( index <= mapSize ) {
 					sb.append(NS3Constants.PARAMETERS_SEP);
 				}
 			}
@@ -98,10 +112,14 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			}
 			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
 			return;
+		} else if ( value != null ) {
+			sb.append(" : ");
+			sb.append(NS3Constants.DOUBLE_QUOTE + value + NS3Constants.DOUBLE_QUOTE + NS3Constants.EOL_DELIMITER + "\n");
+			w.write(sb.toString().getBytes());
 		} else if ( ref == null ) {
 			if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0) ).getConstant() != null ) {
 				sb.append(" : "); // It is a string literal in the expression.
-			} else {
+			} else if ( getChildren().size() >= 1) {
 				sb.append(" = ");
 			}
 			w.write(sb.toString().getBytes());
