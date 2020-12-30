@@ -20,7 +20,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	
 	NavascriptTag myScript;
 	private boolean isPartOfMappedSelection = false;
-
+	
 	public boolean isPartOfMappedSelection() {
 		return isPartOfMappedSelection;
 	}
@@ -31,6 +31,11 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 
 	public PropertyTag(NavascriptTag n, String name, String type, String value, int length, String desc, String direction) {
 		super(n, name, type, value, length, desc, direction);
+		myScript = n;
+	}
+
+	public PropertyTag(NavascriptTag n) {
+		super(n);
 		myScript = n;
 	}
 
@@ -59,10 +64,21 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		mt.setMappedSelection(true);
 	}
 
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String s) {
+		condition = s;
+	}
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
+		if ( condition != null ) {
+			map.put("condition", condition);
+		}
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}

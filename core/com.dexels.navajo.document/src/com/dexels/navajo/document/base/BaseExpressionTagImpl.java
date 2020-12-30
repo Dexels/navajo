@@ -25,6 +25,10 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 	String value;
 	String constant;
 	
+	public BaseExpressionTagImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BaseExpressionTagImpl(Navajo n, String condition, String value) {
 		super(n);
 		this.condition = condition;

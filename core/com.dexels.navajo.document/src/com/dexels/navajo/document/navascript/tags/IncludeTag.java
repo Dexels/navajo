@@ -17,10 +17,18 @@ public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 		super(n, s);
 	}
 	
+	public IncludeTag(Navajo n) {
+		super(n);
+	}
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		String r = NS3Utils.generateIndent(indent) + NS3Keywords.INCLUDE + " \"" + getScript() + "\"" + NS3Constants.EOL_DELIMITER + "\n";
 		w.write(r.getBytes());
+	}
+
+	public void setCondition(String consumedFragment) throws Exception {
+		throw new Exception("Condition not supported for include yet.");
 	}
 
 }

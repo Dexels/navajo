@@ -32,6 +32,11 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		this.oldSkool = oldSkool;
 	}
 
+	public FieldTag(MapTag map) {
+		super(map.getNavascript());
+		myScript = map.getNavascript();
+	}
+
 	public FieldTag addExpression(String condition, String value) {
 		ExpressionTag pt = new ExpressionTag(myScript, condition, value);
 		super.addExpression(pt);

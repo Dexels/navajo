@@ -32,6 +32,10 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	List<BaseMapTagImpl> children = new ArrayList<>();
 	Map<String,String> attributes = new HashMap<>();
 	
+	public BaseFieldTagImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BaseFieldTagImpl(Navajo n, String name, String condition) {
 		super(n, condition, name);
 		fieldName = name;
@@ -93,7 +97,7 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	public void setAddAttributes(Map<String,String> attr) {
 		this.attributes = attr;
 	}
-	
+
 	@Override
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<>();
@@ -112,6 +116,18 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 			m.put("value", et.getValue());
 		}
 		return m;
+	}
+
+	public void addAttributeNameValue(String name, String expression) {
+		attributes.put(name, expression);
+	}
+	
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
+	public void setOldSkool(boolean oldSkool) {
+		this.oldSkool = oldSkool;
 	}
 
 	@Override

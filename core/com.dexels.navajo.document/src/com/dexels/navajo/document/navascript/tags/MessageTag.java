@@ -18,6 +18,12 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	private NavascriptTag myScript;
 
+	
+	public MessageTag(NavascriptTag n) {
+		super(n);
+		myScript = n;
+	}
+	
 	public MessageTag(NavascriptTag n, String name, String type) {
 		super(n, name);
 		if ( type != null ) {

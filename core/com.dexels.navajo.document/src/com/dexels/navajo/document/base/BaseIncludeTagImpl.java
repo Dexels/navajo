@@ -15,12 +15,17 @@ import com.dexels.navajo.document.Navajo;
 public class BaseIncludeTagImpl extends BaseNode implements Include {
 
 	String script;
+	protected boolean condition;
 	
 	public BaseIncludeTagImpl(Navajo n, String s) {
 		super(n);
 		script = s;
 	}
 	
+	public BaseIncludeTagImpl(Navajo n) {
+		super(n);
+	}
+
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String,String> m = new HashMap<>();

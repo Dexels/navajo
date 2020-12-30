@@ -150,6 +150,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String reference = null;
 	protected String bind = null;
 	protected String method = "";
+	protected String condition = null;
 	protected String myExtends = null;
 	protected int length = -1;
 	private Map<String,String> subtypeMap = null;
@@ -169,6 +170,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	   
 	protected List<ExpressionTag> myExpressions = new ArrayList<>();
 	private BaseMapTagImpl selectionMap = null;
+	
+	public BasePropertyImpl(Navajo n) {
+		super(n);
+	}
 	
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
@@ -1986,7 +1991,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (direction != null) {
 			m.put(PROPERTY_DIRECTION, direction);
 		}
-		
+		if (condition != null && !condition.equals("") ) {
+			m.put(PROPERTY_CONDITION, condition);
+		}
 		if (description != null && !description.equals("") ) {
 			m.put(PROPERTY_DESCRIPTION, description);
 		}

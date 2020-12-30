@@ -43,6 +43,11 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		this.isMappedSelection = isMappedSelection;
 	}
 
+	public MapTag(NavascriptTag n) {
+		super(n);
+		myScript = n;
+	}
+	
 	public MapTag(NavascriptTag n, String name, String condition) {
 		super(n, name, condition);
 		myScript = n;

@@ -18,6 +18,11 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	private static final long serialVersionUID = -1401899712855487877L;
 	private Navajo myScript;
 
+	public ParamTag(Navajo n) {
+		super(n);
+		myScript = n;
+	}
+	
 	public ParamTag(Navajo n, String condition, String name) {
 		super(n, condition, name);
 		myScript = n;

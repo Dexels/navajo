@@ -13,6 +13,10 @@ import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 
 public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatible {
 
+	public ExpressionTag(Navajo n) {
+		super(n);
+	}
+	
 	public ExpressionTag(Navajo n, String condition, String value) {
 		super(n, condition, value);
 	}

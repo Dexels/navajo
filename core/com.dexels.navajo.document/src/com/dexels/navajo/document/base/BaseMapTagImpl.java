@@ -32,6 +32,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	String filter;
 	boolean oldStyleMap;
 	
+	public BaseMapTagImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BaseMapTagImpl(Navajo n, String name, String condition) {
 		super(n);
 		this.name = name;
@@ -88,6 +92,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 			}
 		}
 		return c;
+	}
+	
+	public void setName(String s) {
+		this.name = s;
 	}
 	
 	public void setParent(MapAdapter m) {

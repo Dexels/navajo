@@ -26,6 +26,10 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	String condition;
 	String comment;
 	
+	public BaseParamTagImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BaseParamTagImpl(Navajo n, String name) {
 		super(n, name);
 	}

@@ -5,18 +5,13 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  */
 package com.dexels.navajo.document.base;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.dexels.navajo.document.Break;
-import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -37,6 +32,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	public BaseMessageTagImpl(Navajo n, String name) {
 		super(n, name);
+	}
+	
+	public BaseMessageTagImpl(Navajo n) {
+		super(n);
 	}
 
 	@Override
