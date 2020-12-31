@@ -27,19 +27,6 @@ import com.dexels.navajo.document.navascript.tags.PropertyTag;
 
 public class NS3ToNSXML implements EventHandler {
 
-	enum ParsedToken {
-		UNKNOWN, TOKEN, Var, VarName, PrimaryExpression, Operator, IntegerLiteral, TmlIdentifier, Conditional;
-	}
-
-	enum ParseState {
-		START,
-		START_VAR, VAR_NAME,
-		START_PROPERTY, 
-		START_MESSAGE, 
-		START_CONDITION, CONDITION_PARSE,
-		START_EXPRESSION, EXPRESSION_PARSE, EXPRESSION_START_CONDITION, EXPRESSION_CONDITION_PARSE
-	}
-
 	private CharSequence input;
 	private String delayedTag;
 	public Writer out;
@@ -47,10 +34,6 @@ public class NS3ToNSXML implements EventHandler {
 	private boolean hasChildElement;
 	private int depth;
 	private NavascriptTag navascript;
-	private ParsedToken currentToken;
-	private ParseState parseState;
-	private NS3Compatible currentTag;
-	private boolean CONSUME_TOKEN = false;
 
 	public StringWriter xmlString = new StringWriter();
 
@@ -953,111 +936,10 @@ public class NS3ToNSXML implements EventHandler {
 		}
 	}
 
-	private ParsedToken transformToToken(String content) {
-		if ( content.equals("[Var]"))  {
-			return ParsedToken.Var;
-		} else if ( content.equals("[TOKEN]")) {
-			return ParsedToken.TOKEN;
-		} else if ( content.equals("[VarName]")) {
-			return ParsedToken.VarName;
-		} else if ( content.equals("[PrimaryExpression]")) {
-			return ParsedToken.PrimaryExpression;
-		} else if ( content.equals("[TmlIdentifier]")) {
-			return ParsedToken.TmlIdentifier;
-		} else if ( content.equals("[IntegerLiteral]")) {
-			return ParsedToken.IntegerLiteral;
-		} else if ( content.equals("[Conditional]")) {
-			return ParsedToken.Conditional;
-		} else {
-			return ParsedToken.UNKNOWN;
-		}
-	}
-
 	public void writeOutput(String content)
 	{
 
 		xmlString.write(content);
-
-		//System.err.println("-> " + content + ", current state: " +  parseState );
-
-		/*currentToken = transformToToken(content);
-
-		if ( currentToken == ParsedToken.TOKEN || 
-				currentToken == ParsedToken.TmlIdentifier || 
-				currentToken == ParsedToken.IntegerLiteral
-				) 
-		{
-			CONSUME_TOKEN = true;
-			return;
-		}
-
-		if ( currentToken == ParsedToken.VarName) {
-			parseState = ParseState.VAR_NAME;
-			return;
-		}
-
-		if ( currentToken == ParsedToken.Conditional ) {
-			System.err.println("Encountered conditional...");
-			if ( parseState == ParseState.EXPRESSION_PARSE ) {
-				parseState = ParseState.EXPRESSION_START_CONDITION;
-				ConditionalExpressionFragment cef = new ConditionalExpressionFragment();
-				currentFragment.add(cef);
-				// Push ConditionFragment too
-				ConditionFragment cf = new ConditionFragment();
-				currentFragment.add(cf);
-			} else {
-				parseState = ParseState.START_CONDITION;
-				ConditionFragment cf = new ConditionFragment();
-				currentFragment.add(cf);
-			}
-
-			return;
-		}
-
-		if ( ( parseState == ParseState.START_CONDITION || parseState == ParseState.EXPRESSION_START_CONDITION )  && content.equals("if")) {
-			parseState = ( parseState ==  ParseState.START_CONDITION ? ParseState.CONDITION_PARSE : ParseState.EXPRESSION_CONDITION_PARSE );
-		} else if ( ( parseState == ParseState.CONDITION_PARSE  || parseState == ParseState.EXPRESSION_CONDITION_PARSE ) && content.equals("then")) {
-			ConditionFragment cf = (ConditionFragment) currentFragment.lastElement();
-			cf.finalize();
-			if ( parseState == ParseState.EXPRESSION_CONDITION_PARSE ) {
-				parseState = ParseState.EXPRESSION_PARSE;
-				currentFragment.pop(); // ConditionFragment is consumed
-				ExpressionFragment ef = (ExpressionFragment) currentFragment.lastElement();
-				//ef.addConditionFragment(cf);
-				System.err.println("condition: " + cf.consumedFragment() + ", expression: " + ef.consumedFragment());
-			}
-			CONSUME_TOKEN = false;
-		} else if ( parseState == ParseState.VAR_NAME ) {
-			ParamFragment pf = new ParamFragment();
-			pf.setName(content);
-			// Check for preceding ConditionFragment.
-			if ( currentFragment.lastElement()  instanceof ConditionFragment ) {
-				ConditionFragment cf = (ConditionFragment) currentFragment.lastElement();
-				pf.setCondition(cf.consumedFragment());
-				currentFragment.pop(); // ConditionFragment is consumed.
-			}
-			parseState = ParseState.START_EXPRESSION;
-			currentFragment.add(pf);
-		} else if ( parseState == ParseState.EXPRESSION_PARSE && content.equals(";") ) {
-			ExpressionFragment ef = (ExpressionFragment) currentFragment.lastElement();
-			parseState = ParseState.START;
-			currentFragment.pop();
-			NavascriptFragment nf = currentFragment.lastElement();
-			System.err.println("NF is " + nf + ", ef is " + ef.consumedFragment());
-			if ( nf instanceof ParamFragment ) {
-				System.err.println("Var " + ((ParamFragment) nf).getName() + " = " + ef.consumedFragment());
-				nf.finalize();
-			}
-		} else if ( parseState == ParseState.START_EXPRESSION && content.equals("=")) {
-			System.err.println("Is NORMAL EXPRESSION");
-			ExpressionFragment ef = new ExpressionFragment();
-			currentFragment.add(ef);
-			parseState = ParseState.EXPRESSION_PARSE;
-			// Two Options: single expression OR conditional expression list
-		} else if ( currentFragment.size() > 0 && CONSUME_TOKEN ) {
-			currentFragment.lastElement().consumeToken(content);
-			CONSUME_TOKEN = false;
-		}*/
 
 	}
 
