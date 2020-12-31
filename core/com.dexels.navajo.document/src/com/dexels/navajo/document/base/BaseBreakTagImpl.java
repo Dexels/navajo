@@ -13,6 +13,10 @@ public class BaseBreakTagImpl extends BaseNode implements Break {
 	private String id;
 	private String description;
 
+	public BaseBreakTagImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BaseBreakTagImpl(Navajo n, String condition, String id, String description) {
 		super(n);
 		this.condition = condition;
@@ -60,7 +64,7 @@ public class BaseBreakTagImpl extends BaseNode implements Break {
 			m.put("conditionId", id);
 		}
 		if ( description != null && !description.equals("") )  {
-			m.put("conditionDescription", id);
+			m.put("conditionDescription", description);
 		}
 		return m;
 	}

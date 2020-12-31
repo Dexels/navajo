@@ -14,6 +14,7 @@ import com.dexels.navajo.compiler.navascript.parser.EventHandler;
 import com.dexels.navajo.compiler.navascript.parser.navascript;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
@@ -319,7 +320,7 @@ public class NS3ToNSXML implements EventHandler {
 				pt.setCondition(currentFragment.consumedFragment());
 				System.err.println("FOUND PROPERTY CONDITIONAL: " + currentFragment.consumedFragment());
 			}
-			
+
 			if (name.equals("PropertyName") ) {
 				pt.setName(content);
 			}
@@ -334,6 +335,13 @@ public class NS3ToNSXML implements EventHandler {
 					pt.addExpression(et);
 				}
 			}
+			
+			if  ( name.equals("StringConstant") ) {
+				String c = content.replaceAll("\"", "");
+				ExpressionTag et = new ExpressionTag(navascript);
+				et.setConstant(c);
+				pt.addExpression(et);
+			} 
 		}
 
 		return pt;
@@ -348,7 +356,7 @@ public class NS3ToNSXML implements EventHandler {
 
 			String name = child.getName();
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
-			
+
 			if ( name.equals("MethodName") ) {
 				System.err.println("Found MethodName: " + content);
 				parent.setFieldName(content);
@@ -361,37 +369,82 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 	
-	private FieldTag parseMethodOrSetter(MapTag parent, XMLElement currentXML) {
-		// if ( name.equals("AdapterMethod" ) ) {
-		
-		System.err.println("Found AdapterMethod");
+	private void parseAdapterField(FieldTag parent, XMLElement currentXML) {
+
 		//MethodName
-		
-		FieldTag ft = new FieldTag(parent);
-		ft.setParent(parent);
-		
 		Vector<XMLElement> children = currentXML.getChildren();
+
+		parent.setOldSkool(true);
 		
 		for ( XMLElement child : children ) {
 
 			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("Conditional") ) {
+				ConditionFragment currentFragment = new ConditionFragment();
+				consumeContent(currentFragment, child);
+				parent.setCondition(currentFragment.consumedFragment());
+			}
 			
+			if ( name.equals("FieldName") ) {
+				System.err.println("Found FieldName: " + content);
+				parent.setFieldName(content);
+			}
+
+			if  ( name.equals("ConditionalExpressions") ) {
+				List<ExpressionTag> expressions = parseConditionalExpressions(parent, child);
+				for ( ExpressionTag et : expressions ) {
+					parent.addExpression(et);
+				}
+			} 
+			
+			if  ( name.equals("StringConstant") ) {
+				String c = content.replaceAll("\"", "");
+				System.err.println("FOUND StringConstant: " + c);
+				ExpressionTag et = new ExpressionTag(navascript);
+				et.setConstant(c);
+				parent.addExpression(et);
+			} 
+		}
+
+	}
+
+	private FieldTag parseMethodOrSetter(MapTag parent, XMLElement currentXML) {
+		// if ( name.equals("AdapterMethod" ) ) {
+
+		System.err.println("Found AdapterMethod");
+		//MethodName
+
+		FieldTag ft = new FieldTag(parent);
+		ft.setParent(parent);
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
 			if ( name.equals("Conditional") ) {
 				ConditionFragment currentFragment = new ConditionFragment();
 				consumeContent(currentFragment, child);
 				ft.setCondition(currentFragment.consumedFragment());
 				System.err.println("parseAdapterMethod HAS CONDITIONAL: " + currentFragment.consumedFragment());
 			}
-			
+
 			if ( name.equals("AdapterMethod") ) {
 				parseAdapterMethod(ft, child);
 			}
+			
+			if ( name.equals("SetterField"))  {
+				parseAdapterField(ft, child);
+			}
 		}
-		
+
 		return ft;
 	}
 
-	private List<NS3Compatible> parseInnerBody(NS3Compatible parent, XMLElement currentXML) {
+	private List<NS3Compatible> parseInnerBody(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
 
@@ -416,6 +469,18 @@ public class NS3ToNSXML implements EventHandler {
 				System.err.println("ParseInnerBody. Found Var");
 				ParamTag pt = parseVar(parent, child);
 				bodyElts.add(pt);
+			}
+
+			if ( name.equals("Break") ) {
+				System.err.println("ParseInnerBody. Found Break");
+				BreakTag mt = parseBreak(parent, child);
+				bodyElts.add(mt);
+			}
+			
+			if ( name.equals("Include") ) {
+				System.err.println("ParseInnerBody. Found Include");
+				IncludeTag mt = parseInclude(parent, child);
+				bodyElts.add(mt);
 			}
 
 			if ( name.equals("Message")) {
@@ -498,7 +563,7 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("AdapterName")) {
 				mapTag.setName(content);
 			} 
-			
+
 			if ( name.equals("Include")) {
 				IncludeTag it = parseInclude(parent, child);
 				mapTag.addInclude(it);
@@ -522,7 +587,7 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
-	private MessageTag parseMessage(NS3Compatible parent, XMLElement currentXML) {
+	private MessageTag parseMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
 
@@ -543,7 +608,7 @@ public class NS3ToNSXML implements EventHandler {
 				consumeContent(currentFragment, child);
 				msgTag.setCondition(currentFragment.consumedFragment());
 			}
-			
+
 			if ( name.equals("MsgIdentifier")) {
 				msgTag.setName(content);
 			}
@@ -562,11 +627,11 @@ public class NS3ToNSXML implements EventHandler {
 	}
 
 	private IncludeTag parseInclude(NS3Compatible parent, XMLElement currentXML) throws Exception {
-		
+
 		currentXML.setAttribute("PROCESSED", "true");
 
 		IncludeTag it = new IncludeTag(navascript);
-		
+
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -578,17 +643,88 @@ public class NS3ToNSXML implements EventHandler {
 				consumeContent(currentFragment, child);
 				it.setCondition(currentFragment.consumedFragment());
 			}
-			
+
 			if ( name.equals("ScriptIdentifier") ) {
 				it.setScript(content);
 			}
 		}
-		
-		
+
+
 		//Include
-		
+
 		return it;
 	}
+
+	private void parseBreakParameters(BreakTag p, XMLElement currentXML) {
+
+		currentXML.setAttribute("PROCESSED", "true");
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		String parameter = null;
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("BreakParameter")) {
+				parseBreakParameters(p, child);
+			}
+
+			if ( name.equals("TOKEN") && content.trim().equals("code") )  {
+				parameter = "code";
+			}
+
+			if ( name.equals("TOKEN") && content.trim().equals("description") )  {
+				parameter = "description";
+			}
+
+			if ( name.equals("LiteralOrExpression") ) {
+				String c = null;
+				if ( isLiteral(child)) {
+					c = parseStringConstant(child);
+				} else {
+					c =  parseExpression(child);
+				}
+				if ( parameter != null ) {
+					if ( parameter.equals("code") ) {
+						p.setConditionId(c);
+					} else if ( parameter.equals("description")) {
+						p.setConditionDescription(c);
+					}
+				}
+				parameter = null;
+			}
+		}
+	}
+
+	private BreakTag parseBreak(NS3Compatible parent, XMLElement currentXML) throws Exception {
+
+		currentXML.setAttribute("PROCESSED", "true");
+
+		BreakTag bt = new BreakTag(navascript);
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("Conditional") ) {
+				ConditionFragment currentFragment = new ConditionFragment();
+				consumeContent(currentFragment, child);
+				bt.setCondition(currentFragment.consumedFragment());
+			}
+
+			if ( name.equals("BreakParameters")) {
+				parseBreakParameters(bt, child);
+			}
+		}
+
+		return bt;
+	}
+
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
 
 		if ( child instanceof ParamTag ) {
@@ -637,7 +773,7 @@ public class NS3ToNSXML implements EventHandler {
 				((MapTag) parent).addMap((MapTag) child);
 			}
 		}
-		
+
 		if ( child instanceof IncludeTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addInclude((IncludeTag) child);
@@ -647,6 +783,18 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof MapTag) {
 				((MapTag) parent).addInclude((IncludeTag) child);
+			}
+		}
+
+		if ( child instanceof BreakTag ) {
+			if ( parent instanceof NavascriptTag) {
+				((NavascriptTag) parent).addBreak((BreakTag) child);
+			}
+			if ( parent instanceof MessageTag) {
+				((MessageTag) parent).addBreak((BreakTag) child);
+			}
+			if ( parent instanceof MapTag) {
+				((MapTag) parent).addBreak((BreakTag) child);
 			}
 		}
 
@@ -672,6 +820,10 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("Map") ) {
 			System.err.println(level + ": Processing map...");
 			MapTag mt = parseMap(parent, xe);
+			addChildTag(parent, mt);
+		} else if ( name.equals("Break") ) {
+			System.err.println(level + ": Processing break...");
+			BreakTag mt = parseBreak(parent, xe);
 			addChildTag(parent, mt);
 		} else if ( name.equals("Include") ) {
 			IncludeTag it = parseInclude(parent, xe);

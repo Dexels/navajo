@@ -1,0 +1,286 @@
+Navascript  ::= Validations? TopLevelStatement* EOF
+
+Validations ::= VALIDATIONS "{" Checks "}"
+
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage
+
+Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
+
+InnerBody ::=  Property | MethodOrSetter | TopLevelStatement
+
+Checks ::=  Check*
+
+Check ::= CHECK "(" CheckAttributes ")"
+
+CheckAttributes ::= "condition" LiteralOrExpression ( "," "code" LiteralOrExpression)? ("," "description" LiteralOrExpression )?
+
+LiteralOrExpression ::= ( ":" StringConstant | "=" Expression )? 
+
+Break ::= ( Conditional )?  BREAK ( "(" BreakParameters ")" )? ";"
+
+BreakParameter ::= ( "code" LiteralOrExpression | "description" LiteralOrExpression | "error" LiteralOrExpression ) 
+
+BreakParameters ::= BreakParameter ( "," BreakParameter )?
+
+Conditional ::= IF Expression THEN
+
+Var ::= ( Conditional )? VAR VarName (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+
+ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELSE ( Expression | StringConstant ) | ( Expression | StringConstant ) )
+
+AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
+ 
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
+
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions )? ";"
+
+PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection )
+
+PropertyType ::= "type" ":" PropertyTypeValue
+
+PropertySubType ::= "subtype" ":" Identifier
+
+PropertyDescription ::= "description" LiteralOrExpression
+
+PropertyLength ::= "length" ":" IntegerLiteral
+
+PropertyDirection ::= "direction" ":" PropertyDirectionValue 
+
+PropertyArguments ::= PropertyArgument ( "," PropertyArgument )*
+
+MessageArgument ::= ( "type" ":" MessageType ) | ("mode" ":" MessageMode ) 
+
+MessageArguments ::= MessageArgument ( "," MessageArgument )*
+
+KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName LiteralOrExpression  )*
+
+Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |  "map" "(" "object:" ClassName ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
+
+MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField) ";"
+
+SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant  |  "=" ConditionalExpressions ) 
+
+AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" (  "{" (MappedArrayField | MappedArrayMessage) "}"  )? 
+
+MappedArrayField ::= "$" FieldName "(" KeyValueArguments? ( "," FILTER "=" Expression )? ")" "{" InnerBody* "}"
+
+MappedArrayMessage ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappableIdentifier ::= "$" ( ParentMsg )* Identifier ( Arguments )? 
+
+DatePattern ::= IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral 
+
+ExpressionLiteral ::= "`" ( Expression )* "`" 
+
+FunctionLiteral ::= Identifier Arguments
+
+ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
+
+Arguments ::= "(" Expression ( "," Expression )* ")" 
+
+Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
+
+Expression ::= OrExpression
+
+OrExpression ::= AndExpression ( OR AndExpression )*
+
+AndExpression ::= EqualityExpression ( AND EqualityExpression )*
+
+EqualityExpression ::= RelationalExpression ( ( EQ RelationalExpression ) | ( NEQ RelationalExpression ) )*
+
+RelationalExpression ::= AdditiveExpression ( ( LT AdditiveExpression ) | ( LET AdditiveExpression ) | ( GT AdditiveExpression ) | ( GET AdditiveExpression ) )*
+
+AdditiveExpression ::= MultiplicativeExpression ( ( PLUS MultiplicativeExpression ) | ( MIN MultiplicativeExpression ) )*
+
+MultiplicativeExpression ::= UnaryExpression ( ( MULT UnaryExpression ) | ( DIV UnaryExpression ) )*
+
+UnaryExpression ::= ( "!" UnaryExpression | MIN UnaryExpression | PrimaryExpression )
+
+PrimaryExpression ::= Operand | "(" Expression ")"
+
+Ignore   ::= WhiteSpace
+           | Comment
+          /* ws: definition */
+
+<?TOKENS?>
+
+EOF      ::= $
+
+LETTER ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
+ | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+ | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+ | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+ | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+ | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+ | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+ | "x" | "y" | "z"
+
+DIGIT ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+SYMBOL ::= " " | "\n" | "\t" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | "{" | "}" | "[" | "]" | ":" | ";" | "\" | "/" | "|" | "<" | ">" | "\'" | "," | "." | "?" | "§" | "±" | "~" | "`"
+
+DOUBLE_QUOTE ::= '"' 
+
+INCLUDE ::= "include"
+
+MESSAGE ::= "message"
+
+ANTIMESSAGE ::= "antimessage"
+
+PROPERTY ::= "property"
+
+VALIDATIONS ::= "validations"
+
+CHECK ::= "check"
+
+BREAK ::= "break"
+
+TODAY ::= "TODAY"
+
+VAR ::= "var"
+
+IF ::= "if"
+
+THEN ::= "then"
+
+ELSE ::= "else"
+
+AND ::= "AND"
+
+OR ::= "OR"
+
+PLUS ::= "+"
+
+MULT ::= "*"
+
+DIV ::= "/"
+
+MIN ::= "-"
+
+LT ::= "<"
+
+LET ::= "<="
+
+GT ::= ">"
+
+GET ::= ">="
+
+EQ ::= "=="
+
+NEQ ::= "!="
+
+FILTER ::= "filter"
+
+TRUE ::= "true"
+
+FALSE ::= "false"
+
+CHARACTER ::= LETTER | DIGIT | SYMBOL
+
+Identifier ::= IDENTIFIER_DEF - Keyword
+
+IDENTIFIER_DEF ::= ( LETTER | "_" ) ( LETTER | DIGIT | "_" )*
+
+VarName ::= Identifier
+
+ParamKeyName ::= Identifier
+
+AdapterName ::= Identifier
+
+ClassName ::= Identifier
+
+MethodName ::= Identifier
+
+FieldName ::= Identifier
+
+PropertyName ::= Identifier
+
+NameOption ::= ":name"
+
+ValueOption ::= ":value"
+
+ParentMsg ::= "../"
+
+IntegerLiteral ::= "0" | ( ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIGIT )* )
+
+FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
+
+StringLiteral ::= "'" ( CHARACTER )* "'" 
+
+TmlLiteral ::= "'" ( TmlIdentifier )* "'" 
+
+ExistsTmlIdentifier ::= "?" TmlIdentifier
+
+StringConstant ::= DOUBLE_QUOTE ( CHARACTER | WhiteSpace | "'" )* DOUBLE_QUOTE 
+
+ScriptIdentifier ::= Identifier ( "/" Identifier )*
+
+MsgElementIdentifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )?
+
+MsgIdentifier ::= ( ( ParentMsg )* "/" )? MsgElementIdentifier ( "/" MsgElementIdentifier )*
+
+PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption )?
+
+ParamIdentifier ::= ( "/@" | "@" ) Identifier
+
+TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "]"
+
+PropertyDirectionValue ::= "in" | "out" | "inout"
+
+MessageType ::= "array" | "simple" | "arrayelement"
+
+MessageMode ::= "ignore"
+
+PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" )
+
+SARTRE ::= ( "FORALL" | "EXISTS" )
+
+NULL ::= "null"
+
+Keyword  ::= 'break'
+           | 'filter'
+           | 'if'
+           | 'true'
+           | 'false'
+           | 'error'
+           | 'null'
+           | ':name'
+           | ':value'
+           | 'then'
+           | 'else'
+           | 'var'
+           | 'AND'
+           | 'OR'
+           | 'EXISTS'
+           | 'FORALL'
+           | 'conditionDescription'
+           | 'TODAY'
+
+WhiteSpace
+         ::= ' '
+           | #x0009
+           | #x000C
+           | LineTerminator
+Comment  ::= TraditionalComment
+           | EndOfLineComment
+TraditionalComment
+         ::= '/*' CHARACTER*  '*/'
+EndOfLineComment
+         ::= '//' CHARACTER*
+
+SourceCharacter ::= .
+
+LineContinuation ::= '\' LineTerminatorSequence
+
+LineTerminatorSequence
+         ::= #x000D #x000A
+           | #x000A
+           | #x000D
+           | #x2028
+           | #x2029
+
+LineTerminator
+         ::= #x000A
+           | #x000D
+           | #x2028
+           | #x2029

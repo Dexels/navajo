@@ -14,6 +14,10 @@ public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 		super(n, condition, id, description);
 	}
 
+	public BreakTag(Navajo n) {
+		super(n);
+	}
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
