@@ -4,11 +4,15 @@ public class ExpressionFragment implements NavascriptFragment {
 
 	private StringBuffer expressionStr = new StringBuffer();
 	private boolean isLiteral;
-	
+
 	public void consumeToken(String content) {
-		expressionStr.append(content + " ");
+		if ( content.equals("$")) {
+			expressionStr.append(content);
+		} else {
+			expressionStr.append(content + " ");
+		}
 	}
-	
+
 	public String getExpressionStr() {
 		return expressionStr.toString();
 	}
@@ -17,8 +21,8 @@ public class ExpressionFragment implements NavascriptFragment {
 	public String consumedFragment() {
 		return expressionStr.toString();
 	}
-	
+
 	public void finalize() {
-		
+
 	}
 }

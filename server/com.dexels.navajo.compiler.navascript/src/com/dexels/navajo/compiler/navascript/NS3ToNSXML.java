@@ -40,7 +40,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Downloads/aap.ns");
+		String fileContent = read("/Users/arjenschoneveld/Downloads/kip.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -76,7 +76,8 @@ public class NS3ToNSXML implements EventHandler {
 			fragment.finalize();
 		} else if ( content.equals("else") ) {
 
-		} else {
+		}
+		else {
 			fragment.consumeToken(content);
 		}
 		Vector<XMLElement> children = xe.getChildren();
@@ -448,6 +449,17 @@ public class NS3ToNSXML implements EventHandler {
 				bodyElts.add(pt);
 			}
 
+			if ( name.equals("Map")) {
+				System.err.println("Found a Map under: " + parent);
+				MapTag mt = parseMap(parent, child);
+				if ( parent instanceof MessageTag ) {
+					((MessageTag) parent).addMap(mt);
+				}
+				if ( parent instanceof MapTag ) {
+					((MapTag) parent).addMap(mt);
+				}
+			}
+	
 			if ( name.equals("Var")) {
 				System.err.println("ParseInnerBody. Found Var");
 				ParamTag pt = parseVar(parent, child);
@@ -570,6 +582,39 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private MapTag parseMappedArrayField(MapTag parent, XMLElement currentXML) throws Exception {
+		
+		currentXML.setAttribute("PROCESSED", "true");
+		
+		MapTag ft = new MapTag(navascript);
+		ft.setParent(parent);
+		
+		Vector<XMLElement> children = currentXML.getChildren();
+		
+		for ( XMLElement child : children ) {
+			String name = child.getName();
+			System.err.println("In parseMappedArrayField. Processing child: " + name);
+
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+			
+			if ( name.equals("FieldName")) {
+				System.err.println("parseMappedArrayField: Setting FieldName: " + content);
+				ft.setRefAttribute(content);
+			}
+			
+			if (name.equals("InnerBody")) {
+				System.err.println("parseMappedArrayField: Found InnerBody");
+				List<NS3Compatible> innerBodyElements = parseInnerBody(ft, child);
+				for ( NS3Compatible ib : innerBodyElements ) {
+					System.err.println("parseMappedArrayField: Found InnerBody Child " + ib);
+					addChildTag(ft, ib);
+				}
+			}
+		}
+		
+		return ft;
+	}
+	
 	private MessageTag parseMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
@@ -592,6 +637,12 @@ public class NS3ToNSXML implements EventHandler {
 				msgTag.setCondition(currentFragment.consumedFragment());
 			}
 
+			if ( name.equals("MappedArrayField")) {
+				System.err.println("Found MappedArrayField under " + parent);
+				MapTag maf = parseMappedArrayField((MapTag) parent, child);
+				msgTag.addMap(maf);
+			}
+			
 			if ( name.equals("MsgIdentifier")) {
 				msgTag.setName(content);
 			}
@@ -713,11 +764,12 @@ public class NS3ToNSXML implements EventHandler {
 		if ( child instanceof ParamTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addParam((ParamTag) child);
-				System.err.println("Adding param tag to navascript tag");
 			}
 			if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addParam((ParamTag) child);
-				System.err.println("Adding param tag to navascript tag");
+			}
+			if ( parent instanceof MapTag) {
+				((MapTag) parent).addParam((ParamTag) child);
 			}
 		}
 
@@ -725,11 +777,17 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addProperty((PropertyTag) child);
 			}
+			if ( parent instanceof MapTag) {
+				((MapTag) parent).addProperty((PropertyTag) child);
+			}
 		}
 
 		if ( child instanceof FieldTag ) {
 			if ( parent instanceof MapTag) {
-				((MapTag) parent).addProperty((FieldTag) child);
+				((MapTag) parent).addField((FieldTag) child);
+			}
+			if ( parent instanceof MessageTag) {
+				((MessageTag) parent).addField((FieldTag) child);
 			}
 		}
 
