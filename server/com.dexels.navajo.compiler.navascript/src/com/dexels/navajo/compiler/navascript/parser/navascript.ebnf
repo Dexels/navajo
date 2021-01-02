@@ -187,7 +187,7 @@ ParamKeyName ::= Identifier
 
 AdapterName ::= Identifier
 
-ClassName ::= Identifier
+ClassName ::= LETTER+ ( "." LETTER+)*
 
 MethodName ::= Identifier
 

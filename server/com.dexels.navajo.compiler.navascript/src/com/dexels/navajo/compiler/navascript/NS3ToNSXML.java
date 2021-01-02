@@ -39,7 +39,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Downloads/array3.ns");
+		String fileContent = read("/Users/arjenschoneveld/Downloads/oldstyle.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -608,6 +608,11 @@ public class NS3ToNSXML implements EventHandler {
 
 			if ( name.equals("AdapterName")) {
 				mapTag.setName(content);
+			} 
+			
+			if ( name.equals("ClassName")) { // old style map
+				mapTag.setOldStyleMap(true);
+				mapTag.setObject(content);
 			} 
 
 			if ( name.equals("Include")) {

@@ -149,7 +149,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	@Override
 	public void setObject(String s) {
-		this.name = name;
+		this.name = s;
 	}
 
 	@Override
