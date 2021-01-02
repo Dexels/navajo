@@ -133,7 +133,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			sb.append(NS3Constants.DOUBLE_QUOTE + value + NS3Constants.DOUBLE_QUOTE + NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
 		} else if ( ref == null ) {
-			if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0) ).getConstant() != null ) {
+			if (  NS3Utils.hasExpressionWithConstant( this)  ) {
 				sb.append(" : "); // It is a string literal in the expression.
 			} else if ( getChildren().size() >= 1) {
 				sb.append(" = ");

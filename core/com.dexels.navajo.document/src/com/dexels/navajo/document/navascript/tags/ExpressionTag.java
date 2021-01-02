@@ -13,24 +13,42 @@ import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 
 public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatible {
 
+	private ValueTag myValueTag;
+	
 	public ExpressionTag(Navajo n) {
 		super(n);
 	}
-	
+
 	public ExpressionTag(Navajo n, String condition, String value) {
 		super(n, condition, value);
 	}
 
+	public void addValueTag(ValueTag vt) {
+		myValueTag = vt;
+	}
+	
+	public ValueTag getValueTag() {
+		return myValueTag;
+	}
+	
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		if ( getCondition() != null && !"".equals(getCondition()) ) {
 			String condition = getCondition();
+			if ( condition == null && getValueTag() != null && getValueTag().getCondition() != null ) {
+				condition = getValueTag().getCondition();
+			}
 			condition = condition.replaceAll("&gt;", ">");
 			condition = condition.replaceAll("&lt;", "<");
 			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
 		} 
-		if ( super.getConstant() != null ) {
+		if ( getValueTag() != null ) {
+			String value = getValueTag().getValue();
+			value = value.replaceAll("&gt;", ">");
+			value = value.replaceAll("&lt;", "<");
+			sb.append(value);
+		} else if ( getConstant() != null ) {
 			sb.append(NS3Constants.DOUBLE_QUOTE + getConstant() + NS3Constants.DOUBLE_QUOTE);
 		} else {
 			String value = getValue();

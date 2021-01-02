@@ -43,7 +43,7 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 			indent = 0;
 			w.write(conditionStr.getBytes());
 		}
-		if ( getChildren().size() == 1 && getChildren().get(0) instanceof ExpressionTag && ((ExpressionTag) getChildren().get(0)).getConstant() != null ) {
+		if ( NS3Utils.hasExpressionWithConstant( this) ) {
 			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " : ").getBytes());
 		} else {
 			w.write((NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName() + " = ").getBytes());

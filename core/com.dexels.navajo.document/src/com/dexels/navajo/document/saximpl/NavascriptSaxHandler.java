@@ -39,6 +39,7 @@ import com.dexels.navajo.document.navascript.tags.PropertyTag;
 import com.dexels.navajo.document.navascript.tags.SelectionTag;
 import com.dexels.navajo.document.navascript.tags.Tags;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
+import com.dexels.navajo.document.navascript.tags.ValueTag;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
 public class NavascriptSaxHandler extends SaxHandler {
@@ -217,6 +218,14 @@ public class NavascriptSaxHandler extends SaxHandler {
 			return;
 		}
 		
+		if ( tag.equals(Tags.VALUE) ) {
+			String condition = h.get(Attributes.CONDITION);
+			ValueTag vt = new ValueTag(currentDocument);
+			vt.setCondition(condition);
+			((ExpressionTag) currentParent).addValueTag(vt);
+			currentNode.push(vt);
+		}
+		
 		if (tag.equals(Tags.EXPRESSION)) {
 			String condition = h.get(Attributes.CONDITION);
 			String value = h.get(Attributes.VALUE);
@@ -365,6 +374,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if (tag.equals(Tags.BREAK)) {
 			currentNode.pop();
+		} else if ( tag.equals(Tags.VALUE)) {
+			currentNode.pop();
 		}
 		
 	}
@@ -392,6 +403,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			((BaseExpressionTagImpl) n).setConstant(text);
 		} else if ( n instanceof BaseFieldTagImpl ) {
 			((BaseFieldTagImpl) n).setConstant(text);
+		} else if ( n instanceof ValueTag ) {
+			((ValueTag) n).setValue(text);
 		}
 	}
 

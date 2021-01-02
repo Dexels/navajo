@@ -25,6 +25,18 @@ public class NS3Utils {
 		return sb.toString();
 	}
 
+	public static boolean hasExpressionWithConstant(BaseNode n) {
+				
+		if ( n.getChildren().size() > 1 ) {
+			return false;
+		}
+		ExpressionTag expression = (ExpressionTag) n.getChildren().get(0);		
+		if ( expression.getValueTag() == null && expression.getConstant() != null ) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static void writeConditionalExpressions(int indent, OutputStream w, List<? extends BaseNode> expressions) throws IOException {
 		if ( expressions.size() == 1 ) {
 			ExpressionTag et = (ExpressionTag) expressions.get(0);

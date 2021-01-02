@@ -19,6 +19,7 @@ public class Tags {
 	public static String MAP = "map";
 	public static String FIELD = "field";
 	public static String EXPRESSION = "expression";
+	public static String VALUE = "value";
 	public static String VALIDATIONS = "validations";
 	public static String CHECK = "check";
 	public static String INCLUDE = "include";	
