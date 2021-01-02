@@ -19,13 +19,17 @@ public class CheckTag extends BaseCheckTagImpl implements NS3Compatible {
 		super(n, code, description, null, condition);
 	}
 	
+	public CheckTag(Navajo n) {
+		super(n);
+	}
+
 	public void setRule(String r) {
 		super.setRule(r);
 	}
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
-		String r = NS3Utils.generateIndent(indent) + NS3Keywords.CHECK + " " + NS3Constants.PARAMETERS_START + NS3Keywords.CHECK_CODE + ":" + getCode();
+		String r = NS3Utils.generateIndent(indent) + NS3Keywords.CHECK + " " + NS3Constants.PARAMETERS_START + NS3Keywords.CHECK_CODE + ":\"" + getCode() + "\"";
 		w.write(r.getBytes());
 		if ( getDescription() != null ) {
 			String c = "," + NS3Keywords.CHECK_DESCRIPTION + "=" + getDescription();
@@ -36,7 +40,10 @@ public class CheckTag extends BaseCheckTagImpl implements NS3Compatible {
 			w.write(c.getBytes());
 		}
 		w.write((NS3Constants.PARAMETERS_END + " =\n").getBytes());
-		w.write((NS3Utils.generateIndent(indent+1) + getRule() + NS3Constants.EOL_DELIMITER + "\n").getBytes());
+		String rule = getRule();
+		rule = rule.replaceAll("&gt;", ">");
+		rule = rule.replaceAll("&lt;", "<");
+		w.write((NS3Utils.generateIndent(indent+1) + rule + NS3Constants.EOL_DELIMITER + "\n").getBytes());
 	}
 
 }

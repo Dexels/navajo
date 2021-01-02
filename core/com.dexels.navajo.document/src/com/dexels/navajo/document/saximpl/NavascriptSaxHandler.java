@@ -64,7 +64,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 	@Override
 	public final void startElement(String tag, Map<String,String> h) throws Exception {
 
-		if (tag.equals(Tags.NAVASCRIPT)) {
+		if (tag.equals(Tags.NAVASCRIPT) || tag.equals("tsl")) {
 			currentDocument =  new NavascriptTag();
 			currentNode.push(currentDocument);
 			return;

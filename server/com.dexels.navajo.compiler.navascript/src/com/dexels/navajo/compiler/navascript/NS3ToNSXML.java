@@ -15,6 +15,7 @@ import com.dexels.navajo.compiler.navascript.parser.navascript;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
+import com.dexels.navajo.document.navascript.tags.CheckTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
@@ -24,6 +25,7 @@ import com.dexels.navajo.document.navascript.tags.NS3Compatible;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
+import com.dexels.navajo.document.navascript.tags.ValidationsTag;
 
 public class NS3ToNSXML implements EventHandler {
 
@@ -39,7 +41,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Downloads/oldstyle.ns");
+		String fileContent = read("/Users/arjenschoneveld/ProcessGetMemberLocations.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -383,7 +385,7 @@ public class NS3ToNSXML implements EventHandler {
 				MapTag maf = parseMappedArrayField((MapTag) parent.getParent(), child);
 				parent.addMap(maf);
 			}
-			
+
 			if  ( name.equals("MappedArrayMessage") ) {
 				System.err.println("Found MappedArrayMessage");
 				MapTag mt = parsedMappedArrayMessage(parent, child);
@@ -411,9 +413,9 @@ public class NS3ToNSXML implements EventHandler {
 		if ( parent != null ) {
 			mapTag.setName(parent.getParent().getObject());
 		}
-		
+
 		boolean hasFilter = false;
-		
+
 		for ( XMLElement child : children ) {
 
 			String name = child.getName();
@@ -422,17 +424,17 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("MsgIdentifier" )) {
 				mapTag.setRefAttribute("[" + content + "]");
 			}
-			
+
 			if ( name.equals("TOKEN") && content.equals("filter") ) {
 				hasFilter = true;
 			}
-			
+
 			if ( hasFilter && name.equals("Expression") ) {
 				ExpressionFragment ef = new ExpressionFragment();
 				consumeContent(ef, child);
 				mapTag.setFilter(ef.consumedFragment());
 			}
-			
+
 			if (name.equals("InnerBody")) {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(mapTag, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
@@ -609,7 +611,7 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("AdapterName")) {
 				mapTag.setName(content);
 			} 
-			
+
 			if ( name.equals("ClassName")) { // old style map
 				mapTag.setOldStyleMap(true);
 				mapTag.setObject(content);
@@ -644,11 +646,11 @@ public class NS3ToNSXML implements EventHandler {
 	 * @return
 	 */
 	private String parseMappableIdentifier(XMLElement currentXML) {
-		
+
 		StringBuffer result = new StringBuffer();
-		
+
 		Vector<XMLElement> children = currentXML.getChildren();
-		
+
 		for ( XMLElement child : children ) {
 			String name = child.getName();
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
@@ -657,19 +659,19 @@ public class NS3ToNSXML implements EventHandler {
 				System.err.println("parseMappedArrayField: Setting FieldName: " + content);
 				result.append("$"+content);
 			}
-			
+
 			if ( name.equals("Arguments")) {
 				ExpressionFragment ef = new ExpressionFragment();
 				consumeContent(ef, child);
 				result.append(ef.consumedFragment());
 			}
-			
+
 		}
-		
+
 		return result.toString();
-		
+
 	}
-	
+
 	private MapTag parseMappedArrayField(MapTag parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
@@ -681,7 +683,7 @@ public class NS3ToNSXML implements EventHandler {
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		boolean hasFilter = false;
-		
+
 		for ( XMLElement child : children ) {
 			String name = child.getName();
 			System.err.println("In parseMappedArrayField. Processing child: " + name);
@@ -692,16 +694,16 @@ public class NS3ToNSXML implements EventHandler {
 				String fieldRef = parseMappableIdentifier(child);
 				ft.setRefAttribute(fieldRef);
 			}
-			
+
 			if ( name.equals("FieldName")) {
 				System.err.println("parseMappedArrayField: Setting FieldName: " + content);
 				ft.setRefAttribute("$"+content);
 			}
-			
+
 			if ( name.equals("TOKEN") && content.equals("filter") ) {
 				hasFilter = true;
 			}
-			
+
 			if ( hasFilter && name.equals("Expression") ) {
 				ExpressionFragment ef = new ExpressionFragment();
 				consumeContent(ef, child);
@@ -748,7 +750,7 @@ public class NS3ToNSXML implements EventHandler {
 				MapTag mt = parsedMappedArrayMessage(null, child);
 				msgTag.addMap(mt);
 			}
-			
+
 			if ( name.equals("MappedArrayField")) { // <map ref="$"
 				System.err.println("Found MappedArrayField under " + parent);
 				MapTag maf = parseMappedArrayField((MapTag) parent, child);
@@ -871,6 +873,88 @@ public class NS3ToNSXML implements EventHandler {
 		return bt;
 	}
 
+	private void parseCheckAttributes(CheckTag ct, XMLElement xe) {
+		Vector<XMLElement> children = xe.getChildren();
+
+		String param = null;
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.endsWith("Conditional")) {
+				ConditionFragment conditionFragment = new ConditionFragment();
+				consumeContent(conditionFragment, child);
+				ct.setCondition(conditionFragment.consumedFragment());
+			}
+
+			if ( name.equals("CheckAttributes")) {
+				parseCheckAttributes(ct, child);
+			}
+
+			if ( name.equals("CheckAttribute")) {
+				parseCheckAttributes(ct, child);
+			}
+
+			if ( name.equals("TOKEN") ) {
+				param = content;
+			}
+
+			if ( name.equals("LiteralOrExpression")) {
+				String c = null;
+				if ( isLiteral(child)) {
+					c = parseStringConstant(child);
+				} else {
+					c =  parseExpression(child);
+				}
+				if ( param.equals("code") ) {
+					ct.setCode(c);
+				}
+				if ( param.equals("description") ) {
+					ct.setDescription(c);
+				}
+			}
+
+			if ( name.equals("Expression")) {
+				ExpressionFragment ef = new ExpressionFragment();
+				consumeContent(ef, child);
+				System.err.println("Rule: " + ef.consumedFragment());
+				ct.setRule(ef.consumedFragment());
+			}
+		}
+	}
+
+	private ValidationsTag parseValidations(NS3Compatible parent, XMLElement xe) {
+
+		ValidationsTag vt = new ValidationsTag(navascript);
+
+		Vector<XMLElement> children = xe.getChildren();
+
+		CheckTag ct = null;
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("Checks")) {
+				return parseValidations(parent, child);
+			}
+
+			if ( name.equals("Check")) {
+				ct = new CheckTag(navascript);
+				vt.addCheck(ct);
+				parseCheckAttributes(ct, child);
+			}
+
+		}
+
+		return vt;
+
+	}
+
+
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
 
 		if ( child instanceof ParamTag ) {
@@ -962,7 +1046,11 @@ public class NS3ToNSXML implements EventHandler {
 		String name = xe.getName();
 		String content = ( xe.getContent() != null && !"".equals(xe.getContent()) ?  xe.getContent() : null );
 
-		if ( name.equals("Var") ) {
+		if ( name.equals("Validations")) {
+			System.err.println(level + ": Processing Validations...");
+			ValidationsTag vt = parseValidations(parent, xe);
+			navascript.addValidations(vt);
+		} else if ( name.equals("Var") ) {
 			System.err.println(level + ": Processing Var...");
 			ParamTag pt = parseVar(parent, xe);
 			addChildTag(parent, pt);
@@ -991,7 +1079,6 @@ public class NS3ToNSXML implements EventHandler {
 		}
 
 	}
-
 
 	public void initialize() throws UnsupportedEncodingException {
 		navascript = new NavascriptTag();

@@ -29,6 +29,10 @@ public class BaseCheckTagImpl extends BaseNode implements Check {
 		this.condition = condition;
 	}
 
+	public BaseCheckTagImpl(Navajo n) {
+		super(n);
+	}
+
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String,String> map = new HashMap<>();
@@ -58,11 +62,23 @@ public class BaseCheckTagImpl extends BaseNode implements Check {
 		return code;
 	}
 
+	public void setCode(String s) {
+		code = s;
+	}
+	
+	public void setCondition(String c) {
+		condition = c;
+	}
+	
 	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	public void setDescription(String s) {
+		description = s;
+	}
+	
 	@Override
 	public String getRule() {
 		return rule;

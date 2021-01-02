@@ -10,9 +10,11 @@ InnerBody ::=  Property | MethodOrSetter | TopLevelStatement
 
 Checks ::=  Check*
 
-Check ::= CHECK "(" CheckAttributes ")"
+Check ::= Conditional? CHECK "(" CheckAttributes ")" "=" Expression ";"
 
-CheckAttributes ::= "condition" LiteralOrExpression ( "," "code" LiteralOrExpression)? ("," "description" LiteralOrExpression )?
+CheckAttributes ::= CheckAttribute ( "," CheckAttribute)?
+
+CheckAttribute ::= ("code" LiteralOrExpression) | ("description" LiteralOrExpression)
 
 LiteralOrExpression ::= ( ":" StringConstant | "=" Expression )? 
 
@@ -54,7 +56,7 @@ MessageArguments ::= MessageArgument ( "," MessageArgument )*
 
 KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName LiteralOrExpression  )*
 
-Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |  "map" "(" "object:" ClassName ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
+Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |  "map" "(" "object:" DOUBLE_QUOTE ClassName DOUBLE_QUOTE ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
 
 MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
 
@@ -76,7 +78,7 @@ FunctionLiteral ::= Identifier Arguments
 
 ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
 
-Arguments ::= "(" Expression ( "," Expression )* ")" 
+Arguments ::= "(" ( Expression ( "," Expression )*) ? ")" 
 
 Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
@@ -207,7 +209,7 @@ FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
 
 StringLiteral ::= "'" ( CHARACTER )* "'" 
 
-TmlLiteral ::= "'" ( TmlIdentifier )* "'" 
+TmlLiteral ::= "'" ( MsgIdentifier )* "'" 
 
 ExistsTmlIdentifier ::= "?" TmlIdentifier
 

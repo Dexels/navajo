@@ -110,13 +110,18 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 				sb.append(map.get("value"));
 				w.write(sb.toString().getBytes());
 			} else { // setter with normal expression(s)
-				sb.append("$"+getName() + " = ");
+				sb.append("$"+getName());
 				w.write(sb.toString().getBytes());
 				if ( getChildren().size() == 1 ) {
 					ExpressionTag et = (ExpressionTag) getChildren().get(0);
+					if ( et.getConstant() != null ) {
+						w.write(":".getBytes());
+					} else {
+						w.write("=".getBytes());
+					}
 					et.formatNS3(0, w);
 				} else {
-					w.write("\n".getBytes());
+					w.write("=\n".getBytes());
 					int index = 0;
 					for ( BaseNode e : getChildren() ) {
 						ExpressionTag et = (ExpressionTag) e;

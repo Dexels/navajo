@@ -126,7 +126,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 			if ( index > 0 ) {
 				w.write(",".getBytes());
 			}
-			String ob = "mode:"+getMode();
+			String ob = "mode:"+getMode().replaceAll("_", "");
 			w.write(ob.getBytes());
 			index++;
 		}

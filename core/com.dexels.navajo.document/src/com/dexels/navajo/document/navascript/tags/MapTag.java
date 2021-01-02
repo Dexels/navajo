@@ -138,7 +138,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 			sb.append(NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
-			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object=\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object:\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
 		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
 			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
 
@@ -167,15 +167,14 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 				} else {
 					sb.append(getRefAttribute());
 				}
-				sb.append(NS3Constants.PARAMETERS_START);
 			} else {
 				sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute() + " ");
-				sb.append(NS3Constants.PARAMETERS_START);
 			}
 			if ( getFilter() != null && !"".equals(getFilter())) {
+				sb.append(NS3Constants.PARAMETERS_START);
 				sb.append( ( index > 0 ? "," : "") + Attributes.FILTER+"="+getFilter());
+				sb.append(NS3Constants.PARAMETERS_END);
 			}
-			sb.append(NS3Constants.PARAMETERS_END);
 		}
 
 		if ( isMappedSelection) {

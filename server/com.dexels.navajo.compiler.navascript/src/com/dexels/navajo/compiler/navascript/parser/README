@@ -1,0 +1,2 @@
+Generate navascript.java class using REX with following arguments:
+-ll 1 -backtrack -java -tree  -main
