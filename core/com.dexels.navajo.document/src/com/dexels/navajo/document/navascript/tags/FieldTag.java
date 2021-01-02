@@ -85,14 +85,14 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		} else if ( getChildren() != null && getChildren().get(0) instanceof MapTag ) { // <map ref=<array message> >
 
 			sb.append("$"+getName());
-			sb.append(NS3Constants.PARAMETERS_START);
-			Map<String,String> parameters = new HashMap<>();
-			for ( String k : map.keySet() ) {
-				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
-					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
-				}
-			}
-			sb.append(NS3Constants.PARAMETERS_END);
+//			sb.append(NS3Constants.PARAMETERS_START);
+//			Map<String,String> parameters = new HashMap<>();
+//			for ( String k : map.keySet() ) {
+//				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
+//					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
+//				}
+//			}
+//			sb.append(NS3Constants.PARAMETERS_END);
 			sb.append(" {\n");
 			w.write(sb.toString().getBytes());
 			((MapTag) getChildren().get(0)).setMappedMessage(true); // Mark map as a mapped message

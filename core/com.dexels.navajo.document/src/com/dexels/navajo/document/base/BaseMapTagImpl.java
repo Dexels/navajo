@@ -32,6 +32,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	String filter;
 	boolean oldStyleMap;
 	
+	public void setOldStyleMap(boolean oldStyleMap) {
+		this.oldStyleMap = oldStyleMap;
+	}
+
 	public BaseMapTagImpl(Navajo n) {
 		super(n);
 	}
@@ -74,7 +78,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		if ( !attr.containsKey("filter") && filter != null && !"".equals(filter))  {
 			attr.put("filter", filter);
 		}
-		if ( !attr.containsKey("object") &&  oldStyleMap && name != null)  {
+		if ( !attr.containsKey("object") &&  oldStyleMap && name != null && ref == null)  {
 			attr.put("object", name);
 		}
 		if ( !attr.containsKey("ref") &&  oldStyleMap && ref != null)  {
@@ -96,6 +100,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	
 	public void setName(String s) {
 		this.name = s;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void setParent(MapAdapter m) {

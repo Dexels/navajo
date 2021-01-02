@@ -1,25 +1,20 @@
 package com.dexels.navajo.compiler.navascript;
 
-public class ExpressionFragment implements NavascriptFragment {
+public class ExpressionFragment extends NavascriptFragment {
 
-	private StringBuffer expressionStr = new StringBuffer();
 	private boolean isLiteral;
 
-	public void consumeToken(String content) {
-		if ( content.equals("$")) {
-			expressionStr.append(content);
-		} else {
-			expressionStr.append(content + " ");
-		}
-	}
+	// +, -, *, /, %, AND, OR, <, >, <=, >=, ==, != should have space before and after.
+//	public void consumeToken(String content) {
+//		if ( content.equals("$")) {
+//			expressionStr.append(content);
+//		} else {
+//			expressionStr.append(content + " ");
+//		}
+//	}
 
 	public String getExpressionStr() {
-		return expressionStr.toString();
-	}
-
-	@Override
-	public String consumedFragment() {
-		return expressionStr.toString();
+		return fragmentBuffer.toString();
 	}
 
 	public void finalize() {

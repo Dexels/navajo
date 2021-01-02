@@ -3,7 +3,7 @@ package com.dexels.navajo.compiler.navascript;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamFragment implements NavascriptFragment {
+public class ParamFragment extends NavascriptFragment {
 
 	public String name;
 	public String condition;

@@ -56,13 +56,13 @@ KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName Litera
 
 Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |  "map" "(" "object:" ClassName ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
 
-MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField) ";"
+MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
 
-SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant  |  "=" ConditionalExpressions ) 
+SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | "{" MappedArrayField "}" ) 
 
-AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" (  "{" (MappedArrayField | MappedArrayMessage) "}"  )? 
+AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" ";"
 
-MappedArrayField ::= "$" FieldName "(" KeyValueArguments? ( "," FILTER "=" Expression )? ")" "{" InnerBody* "}"
+MappedArrayField ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
 
 MappedArrayMessage ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
 

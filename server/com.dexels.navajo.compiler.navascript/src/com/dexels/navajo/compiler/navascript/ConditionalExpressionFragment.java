@@ -1,6 +1,6 @@
 package com.dexels.navajo.compiler.navascript;
 
-public class ConditionalExpressionFragment implements NavascriptFragment {
+public class ConditionalExpressionFragment extends NavascriptFragment {
 
 	private ConditionFragment condition;
 	private ExpressionFragment expression;
