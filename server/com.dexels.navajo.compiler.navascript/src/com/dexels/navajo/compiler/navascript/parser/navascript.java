@@ -1,4 +1,4 @@
-// This file was generated on Sat Jan 2, 2021 17:12 (UTC+02) by REx v5.52 which is Copyright (c) 1979-2020 by Gunther Rademacher <grd@gmx.net>
+// This file was generated on Sun Jan 3, 2021 09:45 (UTC+02) by REx v5.52 which is Copyright (c) 1979-2020 by Gunther Rademacher <grd@gmx.net>
 // REx command line: navascript.ebnf -ll 1 -backtrack -java -tree -main
 
 package com.dexels.navajo.compiler.navascript.parser;
@@ -137,12 +137,6 @@ public class navascript
       e.reset(input);
       stack[0].send(e);
     }
-
-	@Override
-	public void setInput(CharSequence input) {
-		// TODO Auto-generated method stub
-		
-	}
   }
 
   public static abstract class Symbol
@@ -329,12 +323,6 @@ public class navascript
         throw new RuntimeException(e);
       }
     }
-
-	@Override
-	public void setInput(CharSequence input) {
-		// TODO Auto-generated method stub
-		
-	}
   }
 
   private static String read(String input) throws Exception
@@ -3705,8 +3693,8 @@ public class navascript
       /*    80 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
       /*    96 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
       /*   112 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
-      /*   128 */ "8960, 8960, 8960, 8960, 8970, 9075, 9075, 9075, 9075, 9075, 9075, 8992, 9075, 9075, 9075, 9075",
-      /*   144 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
+      /*   128 */ "8960, 8960, 8960, 8960, 8970, 9075, 9075, 9075, 9075, 9075, 9075, 8992, 9075, 9075, 9076, 9075",
+      /*   144 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9076, 9075, 9075, 9075, 9075, 9075",
       /*   160 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
       /*   176 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
       /*   192 */ "9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075, 9075",
