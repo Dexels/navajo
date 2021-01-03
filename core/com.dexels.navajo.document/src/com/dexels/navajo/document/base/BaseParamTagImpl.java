@@ -14,9 +14,11 @@ import com.dexels.navajo.document.ExpressionTag;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
+import com.dexels.navajo.document.Property;
 
 public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 
+	BaseMapTagImpl myMap;
 	
 	/**
 	 * 
@@ -25,6 +27,7 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	
 	String condition;
 	String comment;
+	String mode;
 	
 	public BaseParamTagImpl(Navajo n) {
 		super(n);
@@ -69,8 +72,21 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 		return getName();
 	}
 	
+	public void addMap(BaseMapTagImpl m) {
+		myMap = m;
+	}
+	
+	public BaseMapTagImpl getMap() {
+		return myMap;
+	}
+	
 	@Override
 	public List<? extends BaseNode> getChildren() {
+		if ( myMap != null ) {
+			List<BaseMapTagImpl> map = new ArrayList<>();
+			map.add(myMap);
+			return map;
+		}
 		List<BaseExpressionTagImpl> expressions = new ArrayList<>();
 		for ( ExpressionTag et: this.myExpressions) {
 			if ( et instanceof BaseExpressionTagImpl ) {
@@ -83,13 +99,24 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	@Override
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = super.getAttributes();
+		m.remove(Property.PROPERTY_DIRECTION);
 		if ( condition != null && !"".equals(condition) ) {
 			m.put(Param.PARAM_CONDITION, condition);
 		}
 		if ( comment != null && !"".equals(comment) ) {
 			m.put(Param.PARAM_COMMENT, comment);
 		}
+		if ( mode != null && !"".equals(mode) ) {
+			m.put(Param.PARAM_MODE, mode);
+		}
 		return m;
 	}
 
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public String getMode() {
+		return mode;
+	}
 }

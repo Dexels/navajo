@@ -8,6 +8,8 @@ Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
 
 InnerBody ::=  Property | MethodOrSetter | TopLevelStatement
 
+InnerBodySelection ::=  Option | MethodOrSetter | TopLevelStatement
+
 Checks ::=  Check*
 
 Check ::= Conditional? CHECK "(" CheckAttributes ")" "=" Expression ";"
@@ -26,7 +28,15 @@ BreakParameters ::= BreakParameter ( "," BreakParameter )?
 
 Conditional ::= IF Expression THEN
 
-Var ::= ( Conditional )? VAR VarName (":" StringConstant  |  "=" ConditionalExpressions ) ";"
+Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? (":" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}"  )
+
+VarArguments ::=  VarArgument ( "," VarArgument )*
+
+VarArgument ::= ( VarType | VarMode )
+
+VarType ::= "type" ":" MessageType
+
+VarMode ::= "mode" ":" MessageMode
 
 ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELSE ( Expression | StringConstant ) | ( Expression | StringConstant ) )
 
@@ -34,13 +44,17 @@ AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE
  
 Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
 
-Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? (":" StringConstant  |  "=" ConditionalExpressions )? ";"
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | ":" StringConstant ";" |  "=" ConditionalExpressions ";" | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
 
-PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection )
+Option ::= ( Conditional )?  OPTION ("name" | "value" | "selected" )  (  ":" StringConstant ";" |  "=" ConditionalExpressions ";" )? 
+
+PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection | PropertyCardinality )
 
 PropertyType ::= "type" ":" PropertyTypeValue
 
 PropertySubType ::= "subtype" ":" Identifier
+
+PropertyCardinality ::= "cardinality" ":" PropertyCardinalityValue
 
 PropertyDescription ::= "description" LiteralOrExpression
 
@@ -67,6 +81,10 @@ AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" ";"
 MappedArrayField ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
 
 MappedArrayMessage ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappedArrayFieldSelection ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBodySelection* "}"
+
+MappedArrayMessageSelection ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBodySelection* "}"
 
 MappableIdentifier ::= "$" ( ParentMsg )* Identifier ( Arguments )? 
 
@@ -131,6 +149,8 @@ ANTIMESSAGE ::= "antimessage"
 
 PROPERTY ::= "property"
 
+OPTION ::= "option"
+
 VALIDATIONS ::= "validations"
 
 CHECK ::= "check"
@@ -193,13 +213,15 @@ ClassName ::= LETTER+ ( "." LETTER+)*
 
 MethodName ::= Identifier
 
-FieldName ::= Identifier
+FieldName ::= ParentMsg* Identifier
 
 PropertyName ::= Identifier
 
 NameOption ::= ":name"
 
 ValueOption ::= ":value"
+
+SelectedOption ::= ":selected"
 
 ParentMsg ::= "../"
 
@@ -221,7 +243,7 @@ MsgElementIdentifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )
 
 MsgIdentifier ::= ( ( ParentMsg )* "/" )? MsgElementIdentifier ( "/" MsgElementIdentifier )*
 
-PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption )?
+PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption | SelectedOption )?
 
 ParamIdentifier ::= ( "/@" | "@" ) Identifier
 
@@ -229,11 +251,13 @@ TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "
 
 PropertyDirectionValue ::= "in" | "out" | "inout"
 
+PropertyCardinalityValue ::= "+" | "1"
+
 MessageType ::= "array" | "simple" | "arrayelement"
 
-MessageMode ::= "ignore"
+MessageMode ::= "ignore" | "overwrite" 
 
-PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" )
+PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" | "selection" | "memo" | "money" | "percentage" | "password" )
 
 SARTRE ::= ( "FORALL" | "EXISTS" )
 

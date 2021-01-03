@@ -20,5 +20,6 @@ public class Attributes {
 	public static String REF = "ref";
 	public static String SELECTED = "selected";
 	public static String ORDERBY = "orderby";
+	public static String MODE = "mode";
 	
 }

@@ -27,7 +27,10 @@ public class NS3Utils {
 
 	public static boolean hasExpressionWithConstant(BaseNode n) {
 				
-		if ( n.getChildren().size() > 1 ) {
+		if ( n.getChildren().size() > 1 || n.getChildren().size() == 0) {
+			return false;
+		}
+		if ( !(n.getChildren().get(0) instanceof ExpressionTag ) ) {
 			return false;
 		}
 		ExpressionTag expression = (ExpressionTag) n.getChildren().get(0);		

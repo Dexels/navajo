@@ -164,7 +164,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 				mt = new MapTag(currentDocument, object, h.get(Attributes.CONDITION), true);
 			}else {
 				// map ref on message
-				mt = new MapTag(currentDocument, ref, h.get(Attributes.FILTER), currentMap.lastElement(), true);
+				mt = new MapTag(currentDocument, ref, h.get(Attributes.FILTER), ( currentMap.size() > 0 ? currentMap.lastElement() :  null ), true);
+				if ( ref.startsWith("[")) {
+					mt.setMappedMessage(true);
+				}
 			}
 			mt.setCondition(condition);
 			System.err.println("Adding map with ref: " + ref + " to " + currentParent);
@@ -177,6 +180,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof FieldTag && currentField.size() > 0){
 				System.err.println("HERE!");
 				currentField.lastElement().addMap(mt);
+			} else if ( currentParent instanceof ParamTag ) {
+				((ParamTag) currentParent).addMap(mt);
+				((ParamTag) currentParent).setType("array");
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -255,6 +261,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 		}
 		if (tag.equals(Tags.PARAM)) {
 			ParamTag pt = new ParamTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.NAME));
+			String mode = h.get(Attributes.MODE);
+			pt.setMode(mode);
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addParam(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
@@ -316,6 +324,17 @@ public class NavascriptSaxHandler extends SaxHandler {
 				}
 				mt.addAttributes(attributeMap);
 				((PropertyTag) currentParent).addMap(mt);
+				currentMap.push(mt);
+				currentNode.push(mt);
+			} else if ( currentParent instanceof ParamTag ) { // mapped param
+				MapTag mt = new MapTag(currentDocument, fieldName, h.get(Attributes.FILTER), currentMap.lastElement(), false);
+				Map<String,String> attributeMap = new HashMap<>();
+				for ( String key : h.keySet() ) {
+					attributeMap.put(key, h.get(key));
+				}
+				mt.addAttributes(attributeMap);
+				((ParamTag) currentParent).addMap(mt);
+				((ParamTag) currentParent).setType("array");
 				currentMap.push(mt);
 				currentNode.push(mt);
 			} else { // Normal field

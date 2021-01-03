@@ -82,7 +82,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}
-		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ? "option" : NS3Keywords.PROPERTY ) + " \"" + getName() + "\" ");
+		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ?  NS3Keywords.OPTION + " " + getName(): NS3Keywords.PROPERTY + " \"" + getName() + "\"") );
 		// key=value
 		if ( map.size() > 1 ) {
 			sb.append(NS3Constants.PARAMETERS_START);

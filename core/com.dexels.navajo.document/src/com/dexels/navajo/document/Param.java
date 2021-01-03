@@ -21,13 +21,17 @@ public interface Param extends Property {
 	public static final String PARAM_DEFINITION = "param";
 	public static final String PARAM_CONDITION = "condition";
 	public static final String PARAM_NAME = "name";
+	public static final String PARAM_TYPE = "type";
 	public static final String PARAM_COMMENT = "comment";
+	public static final String PARAM_MODE = "mode";
 
 	public String getName();
 
 	public void setName(String s);
 
 	public String getComment();
+	
+	public String getMode();
 
 	public void setComment(String s);
 

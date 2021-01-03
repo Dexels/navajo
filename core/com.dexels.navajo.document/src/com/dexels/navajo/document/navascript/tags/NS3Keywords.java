@@ -2,6 +2,7 @@ package com.dexels.navajo.document.navascript.tags;
 
 public class NS3Keywords {
 
+	public static String OPTION = "option";
 	public static String IF = "if";
 	public static String THEN = "then";
 	public static String ELSE = "else";
