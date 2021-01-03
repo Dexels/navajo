@@ -24,5 +24,7 @@ public class Tags {
 	public static String CHECK = "check";
 	public static String INCLUDE = "include";	
 	public static String BREAK = "break";	
+	public static String DEFINE = "define";	
+	public static String DEFINES = "defines";	
 	
 }

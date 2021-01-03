@@ -2,7 +2,9 @@ Navascript  ::= Validations? TopLevelStatement* EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define
+
+Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
 
 Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
 
@@ -150,6 +152,8 @@ ANTIMESSAGE ::= "antimessage"
 PROPERTY ::= "property"
 
 OPTION ::= "option"
+
+DEFINE ::= "define"
 
 VALIDATIONS ::= "validations"
 

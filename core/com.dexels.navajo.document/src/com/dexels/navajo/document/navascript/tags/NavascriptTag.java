@@ -30,6 +30,11 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		return mapChecker;
 	}
 	
+	public DefinesTag addDefines(DefinesTag defines) {
+		super.addDefines(defines);
+		return defines;
+	}
+	
 	public BreakTag addBreak(String condition, String id, String description) {
 		BreakTag bt = new BreakTag(this, condition, id, description);
 		super.addBreak(bt);

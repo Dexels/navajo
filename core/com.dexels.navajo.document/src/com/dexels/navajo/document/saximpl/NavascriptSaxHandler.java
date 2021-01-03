@@ -28,6 +28,8 @@ import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.navascript.tags.Attributes;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
+import com.dexels.navajo.document.navascript.tags.DefineTag;
+import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
@@ -49,6 +51,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 	}
 
 	private NavascriptTag currentDocument=null;
+	private DefinesTag currentDefines = null;
 	private Stack<MapTag> currentMap = new Stack<>();
 	private Stack<MessageTag> currentMessage = new Stack<>();
 	private Stack<FieldTag> currentField = new Stack<>();
@@ -72,6 +75,24 @@ public class NavascriptSaxHandler extends SaxHandler {
 		}
 
 		BaseNode currentParent = currentNode.lastElement();
+		
+		if (tag.equals(Tags.DEFINES)) {
+			DefinesTag dt = new DefinesTag(currentDocument);
+			currentDocument.addDefines(dt);
+			currentNode.push(dt);
+			currentDefines = dt;
+		}
+		
+		if (tag.equals(Tags.DEFINE)) {
+			DefineTag dt = new DefineTag(currentDocument);
+			String name = h.get("name");
+			System.err.println("Found define: " + name + ", currentDefines: " + currentDefines);
+			dt.setName(name);
+			if ( currentDefines != null ) {
+				currentDefines.addDefine(dt);
+			}
+			currentNode.push(dt);
+		}
 		
 		if (tag.equals(Tags.INCLUDE)) {
 			IncludeTag it = new IncludeTag(currentDocument, (h.get("script")));
@@ -395,6 +416,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.VALUE)) {
 			currentNode.pop();
+		} else if ( tag.equals(Tags.DEFINES) ) {
+			currentNode.pop();
+		} else if ( tag.equals(Tags.DEFINE) ) {
+			currentNode.pop();
 		}
 		
 	}
@@ -424,6 +449,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			((BaseFieldTagImpl) n).setConstant(text);
 		} else if ( n instanceof ValueTag ) {
 			((ValueTag) n).setValue(text);
+		} else if ( n instanceof DefineTag ) {
+			((DefineTag) n).setExpression(text);
 		}
 	}
 

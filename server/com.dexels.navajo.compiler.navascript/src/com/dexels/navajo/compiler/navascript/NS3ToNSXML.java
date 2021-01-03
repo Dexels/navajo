@@ -16,6 +16,8 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
+import com.dexels.navajo.document.navascript.tags.DefineTag;
+import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
@@ -35,13 +37,14 @@ public class NS3ToNSXML implements EventHandler {
 	private boolean hasChildElement;
 	private int depth;
 	private NavascriptTag navascript;
+	private DefinesTag myDefines = null;
 
 	public StringWriter xmlString = new StringWriter();
 
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/MapProperty.ns");
+		String fileContent = read("/Users/arjenschoneveld/Defines.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -1000,6 +1003,39 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private void addDefine(DefineTag dt) {
+		if ( myDefines == null ) {
+			myDefines = new DefinesTag(navascript);
+			navascript.addDefines(myDefines);
+		}
+		myDefines.addDefine(dt);
+	}
+
+	private DefineTag parseDefine(NS3Compatible parent, XMLElement xe) {
+		DefineTag dt = new DefineTag(navascript);
+		
+		Vector<XMLElement> children = xe.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("Identifier") ) {
+				System.err.println("Identifier: " + content);
+				dt.setName(content);
+			}
+			
+			if ( name.equals("Expression") ) {
+				ExpressionFragment ef = new ExpressionFragment();
+				consumeContent(ef, child);
+				dt.setExpression(ef.consumedFragment());
+			}
+		}
+		
+		return dt;
+	}
+	
 
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
 
@@ -1110,6 +1146,9 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("Include") ) {
 			IncludeTag it = parseInclude(parent, xe);
 			addChildTag(parent, it);
+		} else if ( name.equals("Define") ) {
+			DefineTag dt = parseDefine(parent, xe);
+			addDefine(dt);
 		} else {
 			Vector<XMLElement> children = xe.getChildren();
 			for ( XMLElement x : children ) {

@@ -27,6 +27,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 		super(nf);
 	}
 
+	public void addDefines(BaseNode defines) {
+		myChildren.add(defines);
+	}
+	
 	@Override
 	public Param addParam(Param p) {
 		myChildren.add(p);
