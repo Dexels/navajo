@@ -18,6 +18,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Validations;
+import com.dexels.navajo.document.navascript.tags.BlockTag;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
@@ -79,6 +80,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	@Override
 	public void addValidations(Validations val) {
 		myChildren.add(val);
+	}
+
+	public void addBlock(BlockTag bt) {
+		myChildren.add(bt);
 	}
 
 }

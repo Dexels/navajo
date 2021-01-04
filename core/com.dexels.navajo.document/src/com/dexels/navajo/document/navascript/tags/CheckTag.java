@@ -46,4 +46,5 @@ public class CheckTag extends BaseCheckTagImpl implements NS3Compatible {
 		w.write((NS3Utils.generateIndent(indent+1) + rule + NS3Constants.EOL_DELIMITER + "\n").getBytes());
 	}
 
+
 }

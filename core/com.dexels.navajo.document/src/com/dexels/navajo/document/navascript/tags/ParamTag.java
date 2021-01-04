@@ -75,7 +75,7 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		}
 		
 		if ( NS3Utils.hasExpressionWithConstant( this) ) {
-			sb.append(" : ");
+			sb.append(" = ");
 		} else if ( getMap() == null ) {
 			sb.append(" = ");
 		}

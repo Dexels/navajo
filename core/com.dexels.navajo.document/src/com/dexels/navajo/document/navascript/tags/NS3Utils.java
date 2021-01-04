@@ -40,6 +40,15 @@ public class NS3Utils {
 		return false;
 	}
 	
+	public static String removeParentAddressing(int levels, String s) {
+	
+		String result = s;
+		for ( int i = 0; i < levels; i++ ) {
+			result = result.replaceFirst("\\.\\.\\/", "");
+		}
+		return result;
+	}
+	
 	public static String formatStringLiteral(String s) {
 	
 		s = s.trim();
@@ -177,9 +186,9 @@ public class NS3Utils {
 
 	public static void main(String [] args) throws Exception {
 
-		String test = "Dit is een query\n";
+		String test = "../../../Aap";
 		
-		System.err.println(NS3Utils.formatStringLiteral(test));
+		System.err.println(NS3Utils.removeParentAddressing(2,test));
 		
 	}
 }

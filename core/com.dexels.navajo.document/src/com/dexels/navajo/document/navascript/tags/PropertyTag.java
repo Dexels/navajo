@@ -20,7 +20,8 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	
 	NavascriptTag myScript;
 	private boolean isPartOfMappedSelection = false;
-	
+	private int ignoredMessageLevel = 0;
+
 	public boolean isPartOfMappedSelection() {
 		return isPartOfMappedSelection;
 	}
@@ -76,13 +77,14 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
+		String propertyName = NS3Utils.removeParentAddressing(ignoredMessageLevel, getName());
 		if ( condition != null ) {
 			map.put("condition", condition);
 		}
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}
-		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ?  NS3Keywords.OPTION + " " + getName(): NS3Keywords.PROPERTY + " \"" + getName() + "\"") );
+		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ?  NS3Keywords.OPTION + " " + getName(): NS3Keywords.PROPERTY + " \"" + propertyName + "\"") );
 		// key=value
 		if ( map.size() > 1 ) {
 			sb.append(NS3Constants.PARAMETERS_START);
@@ -129,12 +131,12 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
 			return;
 		} else if ( value != null ) {
-			sb.append(" : ");
+			sb.append(" = ");
 			sb.append(NS3Constants.DOUBLE_QUOTE + value + NS3Constants.DOUBLE_QUOTE + NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
 		} else if ( ref == null ) {
 			if (  NS3Utils.hasExpressionWithConstant( this)  ) {
-				sb.append(" : "); // It is a string literal in the expression.
+				sb.append(" = "); // It is a string literal in the expression.
 			} else if ( getChildren().size() >= 1) {
 				sb.append(" = ");
 			}

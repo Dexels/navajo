@@ -17,6 +17,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 
@@ -85,6 +86,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	public void addInclude(IncludeTag it) {
 		children.add(it);
+	}
+
+	public void addBlock(BlockTag bt) {
+		children.add(bt);
 	}
 
 }

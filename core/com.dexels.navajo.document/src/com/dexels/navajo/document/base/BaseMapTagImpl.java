@@ -18,6 +18,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 
@@ -208,6 +209,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	public void addInclude(IncludeTag it) {
 		children.add(it);
+	}
+
+	public void addBlock(BlockTag bt) {
+		children.add(bt);
 	}
 
 }

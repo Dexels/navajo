@@ -96,6 +96,12 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		return m;
 	}
 
+	// add <block>
+	public BlockTag addBlockTag(BlockTag bt) {
+		super.addBlock(bt);
+		return bt;
+	}
+	
 	// add <map>
 	public MapTag addMap(String condition, String object) {
 		MapTag m = new MapTag(myScript, object, condition);

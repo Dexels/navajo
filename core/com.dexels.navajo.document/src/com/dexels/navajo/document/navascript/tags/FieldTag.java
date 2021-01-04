@@ -103,7 +103,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 		} else { // standard "setter" field
 			if ( getConstant() != null ) { // setter with a constant string literal
-				sb.append("$"+getName() + " : ");
+				sb.append("$"+getName() + " = ");
 				sb.append(NS3Utils.formatStringLiteral(getConstant()));
 				w.write(sb.toString().getBytes());
 			} else if ( getChildren() == null ) { // it must have a value attribute.
@@ -116,7 +116,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 				if ( getChildren().size() == 1 ) {
 					ExpressionTag et = (ExpressionTag) getChildren().get(0);
 					if ( et.getConstant() != null ) {
-						w.write(":".getBytes());
+						w.write("=".getBytes());
 					} else {
 						w.write("=".getBytes());
 					}

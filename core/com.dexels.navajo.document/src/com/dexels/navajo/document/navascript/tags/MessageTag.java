@@ -17,13 +17,13 @@ import com.dexels.navajo.document.base.BaseNode;
 public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	private NavascriptTag myScript;
+	private int ignoredMessageLevel = 0;
 
-	
 	public MessageTag(NavascriptTag n) {
 		super(n);
 		myScript = n;
 	}
-	
+
 	public MessageTag(NavascriptTag n, String name, String type) {
 		super(n, name);
 		if ( type != null ) {
@@ -92,6 +92,12 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		return bt;
 	}
 
+	// add <block/>
+	public BlockTag addBlockTag(BlockTag bt) {
+		super.addBlock(bt);
+		return bt;
+	}
+
 	protected Navajo getNavajo() {
 		return myScript;
 	}
@@ -99,22 +105,23 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	private boolean hasParameters() {
 		return  ( getOrderBy() != null && !"".equals(getOrderBy() )) || ( getMode() != null && !"".equals(getMode())) || ( getType() != null && !"simple".equals(getType()) && !"".equals(getType()));
 	}
-	
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		int size = getChildren().size();
+		String msgName = NS3Utils.removeParentAddressing(ignoredMessageLevel, getName());
 		Map<String,String> map = getAttributes();
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
 			w.write(conditionStr.getBytes());
-			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
+			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
 			w.write(start.getBytes());
 		} else {
-			String start = NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + getName() + "\" "; 
+			String start = NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
 			w.write(start.getBytes());
 		}
 		int index = 0;
-		if (hasParameters() ) {
+		if ( hasParameters() ) {
 			w.write(NS3Constants.PARAMETERS_START.getBytes());
 		}
 		if ( getOrderBy() != null && !"".equals(getOrderBy())) {

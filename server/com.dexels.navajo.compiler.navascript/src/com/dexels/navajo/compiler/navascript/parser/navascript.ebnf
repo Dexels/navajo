@@ -2,7 +2,7 @@ Navascript  ::= Validations? TopLevelStatement* EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage
 
 Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
 
@@ -20,7 +20,7 @@ CheckAttributes ::= CheckAttribute ( "," CheckAttribute)?
 
 CheckAttribute ::= ("code" LiteralOrExpression) | ("description" LiteralOrExpression)
 
-LiteralOrExpression ::= ( ":" StringConstant | "=" Expression )? 
+LiteralOrExpression ::= ( "=" StringConstant | "=" Expression )? 
 
 Break ::= ( Conditional )?  BREAK ( "(" BreakParameters ")" )? ";"
 
@@ -30,7 +30,7 @@ BreakParameters ::= BreakParameter ( "," BreakParameter )?
 
 Conditional ::= IF Expression THEN
 
-Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? (":" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}"  )
+Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? ("=" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}"  )
 
 VarArguments ::=  VarArgument ( "," VarArgument )*
 
@@ -44,11 +44,13 @@ ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELS
 
 AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
  
+ConditionalEmptyMessage ::= Conditional "{" InnerBody* "}"
+
 Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) )
 
-Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | ":" StringConstant ";" |  "=" ConditionalExpressions ";" | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | "=" StringConstant ";" |  "=" ConditionalExpressions ";" | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
 
-Option ::= ( Conditional )?  OPTION ("name" | "value" | "selected" )  (  ":" StringConstant ";" |  "=" ConditionalExpressions ";" )? 
+Option ::= ( Conditional )?  OPTION ("name" | "value" | "selected" )  (  "=" StringConstant ";" |  "=" ConditionalExpressions ";" )? 
 
 PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection | PropertyCardinality )
 
@@ -76,7 +78,7 @@ Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |
 
 MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
 
-SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | "{" MappedArrayField "}" ) 
+SetterField ::= ( Conditional )?  "$" FieldName ("=" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | "{" MappedArrayField "}" ) 
 
 AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments? ")" ";"
 

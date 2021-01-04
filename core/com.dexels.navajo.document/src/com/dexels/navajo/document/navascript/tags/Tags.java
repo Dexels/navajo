@@ -26,5 +26,6 @@ public class Tags {
 	public static String BREAK = "break";	
 	public static String DEFINE = "define";	
 	public static String DEFINES = "defines";	
+	public static String BLOCK = "block";	
 	
 }

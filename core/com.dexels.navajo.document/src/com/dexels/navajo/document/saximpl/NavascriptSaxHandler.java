@@ -2,7 +2,7 @@
 This file is part of the Navajo Project. 
 It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ */
 package com.dexels.navajo.document.saximpl;
 
 import java.io.File;
@@ -26,6 +26,7 @@ import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 import com.dexels.navajo.document.base.BaseFieldTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.navascript.tags.Attributes;
+import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
 import com.dexels.navajo.document.navascript.tags.DefineTag;
@@ -57,9 +58,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 	private Stack<FieldTag> currentField = new Stack<>();
 	private Stack<BaseNode> currentNode = new Stack<>();
 	private ValidationsTag validationsBlock;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(NavascriptSaxHandler.class);
-	
+
 	public Navascript getNavascript() {
 		return currentDocument;
 	}
@@ -75,14 +76,14 @@ public class NavascriptSaxHandler extends SaxHandler {
 		}
 
 		BaseNode currentParent = currentNode.lastElement();
-		
+
 		if (tag.equals(Tags.DEFINES)) {
 			DefinesTag dt = new DefinesTag(currentDocument);
 			currentDocument.addDefines(dt);
 			currentNode.push(dt);
 			currentDefines = dt;
 		}
-		
+
 		if (tag.equals(Tags.DEFINE)) {
 			DefineTag dt = new DefineTag(currentDocument);
 			String name = h.get("name");
@@ -93,20 +94,22 @@ public class NavascriptSaxHandler extends SaxHandler {
 			}
 			currentNode.push(dt);
 		}
-		
+
 		if (tag.equals(Tags.INCLUDE)) {
 			IncludeTag it = new IncludeTag(currentDocument, (h.get("script")));
 			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
 				currentMap.lastElement().addInclude(it);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addInclude(it);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(it);
 			} else {
 				currentDocument.addInclude(it);
 			} 
 			currentNode.push(it);
 			return;
 		}
-		
+
 		if (tag.equals(Tags.VALIDATIONS)) {
 			if ( !(currentParent instanceof NavascriptTag) ) {
 				throw new Exception("Validation tags can only be specified as top level tags");
@@ -115,7 +118,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(validationsBlock);
 			return;
 		}
-		
+
 		if (tag.equals(Tags.OPTION)) {
 			String name = h.get(Attributes.NAME);
 			String value = h.get(Attributes.VALUE);
@@ -129,7 +132,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			}
 			return;
 		}
-		
+
 		if (tag.equals(Tags.CHECK)) {
 			String code = h.get("code");
 			String desc = h.get(Attributes.DESCRIPTION);
@@ -142,22 +145,39 @@ public class NavascriptSaxHandler extends SaxHandler {
 			}
 			return;
 		}
-		
+
 		if (tag.equals(Tags.BREAK)) {
 			BreakTag bt = new BreakTag(currentDocument, h.get(Attributes.CONDITION), h.get("conditionId"), h.get("conditionDescription"));
 			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
 				currentMap.lastElement().addBreak(bt);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addBreak(bt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(bt);
 			} else {
 				currentDocument.addBreak(bt);
 			} 
 			currentNode.push(bt);
 			return;
 		}
-		
+
+		if (tag.equals(Tags.BLOCK)) {
+			BlockTag bt = new BlockTag(currentDocument);
+			bt.setCondition(h.get(Attributes.CONDITION));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addBlock(bt);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addBlock(bt);
+			} else if ( currentParent instanceof BlockTag) {
+				((BlockTag) currentParent).addBlock(bt);
+			}
+			currentNode.push(bt);
+			return;
+		}
+
 		if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
 			MessageTag mt = new MessageTag(currentDocument, h.get(Attributes.NAME),  h.get(Attributes.TYPE));
+			MessageTag parent = ( currentMessage.size() > 0 ? currentMessage.lastElement() : null);
 			mt.setCondition(h.get(Attributes.CONDITION));
 			mt.setOrderBy(h.get(Attributes.ORDERBY));
 			boolean isAntiMsg = tag.equals(Tags.ANTIMESSAGE);
@@ -169,6 +189,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMap.lastElement().addMessage(mt);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addMessage(mt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(mt);
 			} else {
 				currentDocument.addMessage(mt);
 			} 
@@ -204,6 +226,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof ParamTag ) {
 				((ParamTag) currentParent).addMap(mt);
 				((ParamTag) currentParent).setType("array");
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(mt);
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -214,11 +238,13 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if ( tag.equals(Tags.FIELD)) {
 			String name = h.get(Attributes.NAME);
 			FieldTag ft = new FieldTag(currentMap.lastElement(), null, name, true);
-			 // FIELD CAN ALSO BE UNDER MESSAGE!!!
+			// FIELD CAN ALSO BE UNDER MESSAGE!!!
 			if ( currentParent instanceof MessageTag ) {
 				currentMessage.lastElement().addField(ft);
 			} else if ( currentParent instanceof MapTag ) {
 				currentMap.lastElement().addField(ft);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(ft);
 			} else {
 				throw new Exception("Field tags can only be found under message or map tags.");
 			}
@@ -237,6 +263,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addMap(mt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
 				currentMap.lastElement().addMap(mt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(mt);
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -244,7 +272,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(mt);
 			return;
 		}
-		
+
 		if ( tag.equals(Tags.VALUE) ) {
 			String condition = h.get(Attributes.CONDITION);
 			ValueTag vt = new ValueTag(currentDocument);
@@ -252,7 +280,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			((ExpressionTag) currentParent).addValueTag(vt);
 			currentNode.push(vt);
 		}
-		
+
 		if (tag.equals(Tags.EXPRESSION)) {
 			String condition = h.get(Attributes.CONDITION);
 			String value = h.get(Attributes.VALUE);
@@ -265,9 +293,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((ParamTag) currentParent).addExpression(et);
 			} else if ( currentParent instanceof MapTag )  { // Oops. this cannot happen. Should have been a FieldTag. Fix this.
 				MapTag fixThis = currentMap.pop();
-				
+
 				currentNode.pop();
-				
+
 				FieldTag ft = new FieldTag(currentMap.lastElement(), null, fixThis.getRefAttribute());
 				currentNode.push(ft);
 				currentField.push(ft);
@@ -288,6 +316,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addParam(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
 				currentMap.lastElement().addParam(pt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(pt);
 			} else {
 				currentDocument.addParam(pt);
 			}
@@ -303,6 +333,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			String cardinality = h.get(Attributes.CARDINALITY);
 			int iLen = ( length != null ? Integer.parseInt(length) : 0 );
 			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, iLen, description, direction);
+			MessageTag parent = ( currentMessage.size() > 0 ? currentMessage.lastElement() : null);
+
 			if ( cardinality != null ) {
 				pt.setCardinality(cardinality);
 			}
@@ -317,8 +349,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addProperty(pt);
 			} else if ( currentParent instanceof MapTag && currentMap != null ) {
 				currentMap.lastElement().addProperty(pt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(pt);
 			} else {
-				throw new Exception("Property tags can only be found under a message or a map tag.");
+				throw new Exception("Property tags can only be found under a message, map or block tag.");
 			}
 			currentNode.push(pt);
 			return;
@@ -370,7 +404,11 @@ public class NavascriptSaxHandler extends SaxHandler {
 					ExpressionTag et = new ExpressionTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.VALUE));
 					ft.addExpression(et);
 				}
-				currentMap.lastElement().addField(ft);
+				if ( currentParent instanceof BlockTag) {
+					((BlockTag) currentParent).add(ft);
+				} else {
+					currentMap.lastElement().addField(ft);
+				}
 				currentField.push(ft);
 				currentNode.push(ft);
 			}
@@ -382,7 +420,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 	public void endElement(String tag) throws Exception {
 
 
-		
+
 		if (currentMap.size() > 0 && tag.endsWith("." + currentMap.lastElement().getTagName())) {
 			currentMap.pop();
 			currentNode.pop();
@@ -420,8 +458,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.DEFINE) ) {
 			currentNode.pop();
+		} else if ( tag.equals(Tags.BLOCK) ) {
+			currentNode.pop();
 		}
-		
+
 	}
 
 	@Override
@@ -436,12 +476,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	@Override
 	public void text(Reader r) throws Exception {
-		
+
 		StringWriter sw = new StringWriter();
 		copyTextBuffer(sw, (PushbackReader) r);
 		String text = sw.toString();
 		BaseNode n = currentNode.lastElement();
-				
+
 		if ( n instanceof BaseCheckTagImpl ) {
 			((BaseCheckTagImpl) n).setRule(text);
 		} else if ( n instanceof BaseExpressionTagImpl ) {

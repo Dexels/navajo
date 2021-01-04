@@ -55,7 +55,5 @@ public class ValueTag extends BaseNode implements NS3Compatible {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	
 
 }

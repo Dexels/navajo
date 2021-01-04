@@ -43,4 +43,5 @@ public class DefinesTag extends BaseNode implements NS3Compatible {
 	public void addDefine(DefineTag dt) {
 		myDefines.add(dt);
 	}
+
 }

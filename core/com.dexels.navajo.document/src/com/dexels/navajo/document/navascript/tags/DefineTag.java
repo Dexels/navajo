@@ -86,5 +86,6 @@ public class DefineTag extends BaseNode implements NS3Compatible {
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}
+
 	
 }
