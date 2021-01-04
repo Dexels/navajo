@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -29,11 +28,11 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 
     private final InputStreamReader inputStreamReader = new FileInputStreamReader();
 
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(FileNavajoConfig.class);
-	
-	
+
+
 	@Override
 	public final Writer getOutputWriter(String outputPath, String scriptPackage,String scriptName, String extension) throws IOException {
 	      File dir = new File(outputPath);
@@ -76,13 +75,13 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		FileInputStream fix = new FileInputStream(bundleFile);
 		return fix;
     }
-	
+
 
     @Override
     public final InputStream getScript(String name) throws IOException {
     	return getScript(name, null,".xml");
     }
-    
+
 	@Override
     public final InputStream getScript(String name, String tenant, String extension) throws IOException {
     	InputStream input;
@@ -129,10 +128,10 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),null ,true);
 		return qualifiedFile!=null;
 	}
-	
 
-	
-	
+
+
+
 	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) {
 		String name = rpcName.replaceAll("\\.", "/");
 		if(!parent.endsWith("/")) {
@@ -145,7 +144,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		}
 		return null;
 	}
-	
+
 	private File getGenericFile(String rpcName,  String parent, String extension) {
 		String name = rpcName.replaceAll("\\.", "/");
 		if(!parent.endsWith("/")) {
@@ -155,7 +154,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		File file = new File(qualifiedPath);
 		return file;
 	}
-	
+
 	private File getApplicableFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) throws FileNotFoundException {
 		String name = rpcName.replaceAll("\\.", "/");
 		if(!parent.endsWith("/")) {
@@ -172,7 +171,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		}
 		return generalFile;
 	}
-	
+
 	@Override
     public final InputStream getConfig(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
@@ -204,7 +203,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	   	IOUtils.copy(is, fos);
 	   	fos.close();
 	   	is.close();
-	}    
+	}
     @Override
     public final Navajo readConfig(String name) throws IOException {
     	InputStream is = inputStreamReader.getResource(getConfigPath() + File.separator + name);
@@ -223,7 +222,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     		}
     	}
     }
-    
+
 
     @Override
     public String getDeployment() {
@@ -231,6 +230,6 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
         return null;
     }
 
-	
-    
+
+
 }

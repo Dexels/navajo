@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.functions;
@@ -25,7 +25,7 @@ import com.dexels.navajo.expression.api.TMLExpressionException;
  * <p>
  * Company: Dexels.com<br>
  * </p>
- * 
+ *
  * @author not attributable
  * @version $Id: Weekday.java,v 1.1 2012/07/06 10:26:58 eversteeg Exp $
  */
@@ -89,7 +89,7 @@ public final class DayOfWeek extends FunctionInterface {
         DayOfWeek f = new DayOfWeek();
         f.reset();
         f.insertIntegerOperand(Integer.valueOf(6));
-        f.insertBooleanOperand(new Boolean(false));
+        f.insertBooleanOperand(false);
         Object o = f.evaluate();
         System.err.println("f = " + o);
     }
