@@ -51,18 +51,18 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		}
 		sb.append(NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName());
 		// Check for attributes
-		if ( map.size() > 1 ) {
-			sb.append(NS3Constants.PARAMETERS_START);
-		}
 		int index = 1;
 		int mapSize = 0;
 		for ( String k : map.keySet() ) {
-			if ( !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
+			if ( !"condition".equals(k) && !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
 				mapSize++;
 			}
 		}
+		if ( mapSize > 1 ) {
+			sb.append(NS3Constants.PARAMETERS_START);
+		}
 		for ( String k : map.keySet() ) {
-			if ( !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
+			if ( !"condition".equals(k) && !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
 				sb.append(k + ":" + map.get(k));
 				index++;
 				if ( index <= mapSize ) {
@@ -70,14 +70,14 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 				}
 			}
 		}
-		if ( map.size() > 1 ) {
+		if ( mapSize > 1 ) {
 			sb.append(NS3Constants.PARAMETERS_END);
 		}
 		
 		if ( NS3Utils.hasExpressionWithConstant( this) ) {
-			sb.append(":");
+			sb.append(" : ");
 		} else if ( getMap() == null ) {
-			sb.append("=");
+			sb.append(" = ");
 		}
 		
 		MapTag ref = (MapTag) getMap(); // It has a mapped ref.

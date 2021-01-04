@@ -40,6 +40,19 @@ public class NS3Utils {
 		return false;
 	}
 	
+	public static String formatStringLiteral(String s) {
+	
+		s = s.trim();
+		int newLineAt = s.length() - 1;
+		if ( s.charAt(newLineAt) == '\n')  {
+			s = s.substring(0, newLineAt);
+			s = "\"" + s + "\"\n";
+		} else {
+			s = "\"" + s + "\"";
+		}
+		return s;
+	}
+	
 	public static void writeConditionalExpressions(int indent, OutputStream w, List<? extends BaseNode> expressions) throws IOException {
 		if ( expressions.size() == 1 ) {
 			ExpressionTag et = (ExpressionTag) expressions.get(0);
@@ -164,27 +177,9 @@ public class NS3Utils {
 
 	public static void main(String [] args) throws Exception {
 
-		String test = "break (name=Κibbeling('/MatchEvents/MatchId' + 'aap'),value=[/CountMatchEvents/MatchId] + (3/2)) ;";
-		PushbackReader r = new PushbackReader(new StringReader(test), 100);
-
-		String token = readUntil(r, ' ');
-		System.err.println("token = " + token);
-
-		String a = readUntil(r, ';');
-
-		System.err.println("a = " + a);
-
-		Map<String,String> kvPairs = parseParameters(a);
-
-		System.err.println("=======================================");
+		String test = "Dit is een query\n";
 		
-		for ( String k : kvPairs.keySet() ) {
-			System.err.println(k + ":" + kvPairs.get(k));
-		}
-
-		String find = "if 3 - 4 == 2 then 'Aap'";
-		r = new PushbackReader(new StringReader(find), 100);
+		System.err.println(NS3Utils.formatStringLiteral(test));
 		
-		System.err.println(readUntil(r, "then"));
 	}
 }

@@ -44,7 +44,7 @@ ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELS
 
 AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
  
-Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}"
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) )
 
 Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | ":" StringConstant ";" |  "=" ConditionalExpressions ";" | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
 
@@ -78,7 +78,7 @@ MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
 
 SetterField ::= ( Conditional )?  "$" FieldName (":" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | "{" MappedArrayField "}" ) 
 
-AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments ")" ";"
+AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments? ")" ";"
 
 MappedArrayField ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
 
@@ -102,7 +102,9 @@ Arguments ::= "(" ( Expression ( "," Expression )*) ? ")"
 
 Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
-Expression ::= OrExpression
+Expression ::= "#" DefinedExpression | OrExpression
+
+DefinedExpression ::= Identifier
 
 OrExpression ::= AndExpression ( OR AndExpression )*
 
@@ -245,7 +247,7 @@ ScriptIdentifier ::= Identifier ( "/" Identifier )*
 
 MsgElementIdentifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )?
 
-MsgIdentifier ::= ( ( ParentMsg )* "/" )? MsgElementIdentifier ( "/" MsgElementIdentifier )*
+MsgIdentifier ::= ( "/" | ParentMsg* ) MsgElementIdentifier ( "/" MsgElementIdentifier )*
 
 PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption | SelectedOption )?
 

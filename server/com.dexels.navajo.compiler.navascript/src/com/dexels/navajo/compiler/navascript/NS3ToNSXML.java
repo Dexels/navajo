@@ -44,7 +44,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Defines.ns");
+		String fileContent = read("/Users/arjenschoneveld/ProcessAutoReassignOfficial.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);

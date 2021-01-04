@@ -441,6 +441,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 		copyTextBuffer(sw, (PushbackReader) r);
 		String text = sw.toString();
 		BaseNode n = currentNode.lastElement();
+				
 		if ( n instanceof BaseCheckTagImpl ) {
 			((BaseCheckTagImpl) n).setRule(text);
 		} else if ( n instanceof BaseExpressionTagImpl ) {

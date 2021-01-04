@@ -30,11 +30,12 @@ public class NSXMLToNS3 {
 	 */
 	public static void main(String [] args)  throws Exception {
 		
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/Defines.xml");
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessAutoReassignOfficial.xml");
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
 		navascript.setMapChecker(new MapDefinitionInterrogatorImpl());
 		
 		navascript.formatNS3(0, System.err);
+		//navascript.write(System.err);
 	}
 }
 

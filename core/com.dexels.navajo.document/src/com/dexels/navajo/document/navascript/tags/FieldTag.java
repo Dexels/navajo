@@ -53,6 +53,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
+		
 		StringBuffer sb =  new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
 		// Check for condition
@@ -103,7 +104,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		} else { // standard "setter" field
 			if ( getConstant() != null ) { // setter with a constant string literal
 				sb.append("$"+getName() + " : ");
-				sb.append(getConstant());
+				sb.append(NS3Utils.formatStringLiteral(getConstant()));
 				w.write(sb.toString().getBytes());
 			} else if ( getChildren() == null ) { // it must have a value attribute.
 				sb.append("$"+getName() + " = ");
