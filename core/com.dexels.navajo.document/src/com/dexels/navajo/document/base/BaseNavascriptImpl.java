@@ -19,6 +19,7 @@ import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Validations;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
+import com.dexels.navajo.document.navascript.tags.FinallyTag;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
@@ -84,6 +85,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	public void addBlock(BlockTag bt) {
 		myChildren.add(bt);
+	}
+
+	public void addFinally(FinallyTag ft) {
+		myChildren.add(ft);
 	}
 
 }

@@ -65,6 +65,11 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		return bt;
 	}
 	
+	public FinallyTag addFinallyTag(FinallyTag ft) {
+		super.addFinally(ft);
+		return ft;
+	}
+	
 	public IncludeTag addInclude(String script) {
 		IncludeTag it = new IncludeTag(this, script);
 		super.addInclude(it);

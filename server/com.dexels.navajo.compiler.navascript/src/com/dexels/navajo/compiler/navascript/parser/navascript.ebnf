@@ -1,6 +1,8 @@
-Navascript  ::= Validations? TopLevelStatement* EOF
+Navascript  ::= Validations? TopLevelStatement* Finally? EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
+
+Finally ::= FINALLY "{" TopLevelStatement* "}"
 
 TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage
 
@@ -160,6 +162,8 @@ OPTION ::= "option"
 DEFINE ::= "define"
 
 VALIDATIONS ::= "validations"
+
+FINALLY ::= "finally"
 
 CHECK ::= "check"
 

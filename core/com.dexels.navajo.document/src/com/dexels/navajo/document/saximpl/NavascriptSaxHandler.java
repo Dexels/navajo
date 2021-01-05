@@ -33,6 +33,7 @@ import com.dexels.navajo.document.navascript.tags.DefineTag;
 import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
+import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
@@ -77,6 +78,13 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		BaseNode currentParent = currentNode.lastElement();
 
+		if (tag.equals(Tags.FINALLY)) {
+			FinallyTag ft = new FinallyTag(currentDocument);
+			currentDocument.addFinally(ft);
+			
+			currentNode.push(ft);
+		}
+		
 		if (tag.equals(Tags.DEFINES)) {
 			DefinesTag dt = new DefinesTag(currentDocument);
 			currentDocument.addDefines(dt);
@@ -103,6 +111,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addInclude(it);
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(it);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(it);
 			} else {
 				currentDocument.addInclude(it);
 			} 
@@ -154,6 +164,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addBreak(bt);
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(bt);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(bt);
 			} else {
 				currentDocument.addBreak(bt);
 			} 
@@ -170,7 +182,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addBlock(bt);
 			} else if ( currentParent instanceof BlockTag) {
 				((BlockTag) currentParent).addBlock(bt);
-			}
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(bt);
+			} 
 			currentNode.push(bt);
 			return;
 		}
@@ -191,6 +205,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMessage.lastElement().addMessage(mt);
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(mt);
+			} else if ( currentParent instanceof FinallyTag ) {
+					((FinallyTag) currentParent).add(mt); 
 			} else {
 				currentDocument.addMessage(mt);
 			} 
@@ -228,6 +244,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((ParamTag) currentParent).setType("array");
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(mt);
+			} else if ( currentParent instanceof FinallyTag ) {
+					((FinallyTag) currentParent).add(mt); 
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -265,6 +283,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMap.lastElement().addMap(mt);
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(mt);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(mt); 
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -318,6 +338,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				currentMap.lastElement().addParam(pt);
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(pt);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(pt); 
 			} else {
 				currentDocument.addParam(pt);
 			}
@@ -406,6 +428,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				}
 				if ( currentParent instanceof BlockTag) {
 					((BlockTag) currentParent).add(ft);
+				} else if ( currentParent instanceof FinallyTag ) {
+					((FinallyTag) currentParent).add(ft); 
 				} else {
 					currentMap.lastElement().addField(ft);
 				}
@@ -460,6 +484,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.BLOCK) ) {
 			currentNode.pop();
+		} else if ( tag.equals(Tags.FINALLY)) {
+		    currentNode.pop();
 		}
 
 	}

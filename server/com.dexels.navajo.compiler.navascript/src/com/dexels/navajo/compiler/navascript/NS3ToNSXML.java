@@ -22,6 +22,7 @@ import com.dexels.navajo.document.navascript.tags.DefineTag;
 import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
+import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
@@ -46,7 +47,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/ProcessAutoReassignOfficial.ns");
+		String fileContent = read("/Users/arjenschoneveld/Finally.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -1069,6 +1070,26 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private FinallyTag parseFinally(NS3Compatible parent, XMLElement xe) throws Exception {
+		FinallyTag ft = new FinallyTag(navascript);
+		
+		Vector<XMLElement> children = xe.getChildren();
+	    		
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("TopLevelStatement")) {
+				List<NS3Compatible> innerBodyElements = parseInnerBody(ft, child);
+				for ( NS3Compatible ib : innerBodyElements ) {
+					addChildTag(ft, ib);
+				}
+			}
+
+		}
+		return ft;
+	}
+
 	private void addDefine(DefineTag dt) {
 		if ( myDefines == null ) {
 			myDefines = new DefinesTag(navascript);
@@ -1107,6 +1128,12 @@ public class NS3ToNSXML implements EventHandler {
 
 		//currentMessage = mt;
 
+		if ( child instanceof FinallyTag ) {
+			if ( parent instanceof NavascriptTag) {
+				((NavascriptTag) parent).addFinally((FinallyTag) child);
+			}
+		}
+		
 		if ( child instanceof BlockTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addBlock((BlockTag) child);
@@ -1119,6 +1146,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).addBlock((BlockTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((BlockTag) child);
 			}
 		}
 
@@ -1134,6 +1164,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((ParamTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((ParamTag) child);
 			}
 		}
 
@@ -1174,6 +1207,9 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((MessageTag) child);
 			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((MessageTag) child);
+			}
 		}
 
 		if ( child instanceof MapTag ) {
@@ -1188,6 +1224,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((MapTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((MapTag) child);
 			}
 		}
 
@@ -1204,6 +1243,9 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((IncludeTag) child);
 			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((IncludeTag) child);
+			}
 		}
 
 		if ( child instanceof BreakTag ) {
@@ -1218,6 +1260,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((BreakTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((BreakTag) child);
 			}
 		}
 
@@ -1256,6 +1301,9 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("Define") ) {
 			DefineTag dt = parseDefine(parent, xe);
 			addDefine(dt);
+		} else if ( name.equals("Finally")) {
+			FinallyTag ft = parseFinally(parent, xe);
+			addChildTag(parent, ft);
 		} else {
 			Vector<XMLElement> children = xe.getChildren();
 			for ( XMLElement x : children ) {
