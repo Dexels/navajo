@@ -40,6 +40,7 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 
 	@Override
 	public boolean isField(String adapter, String m) {
+		
 		try {
 			if (  mapMetaData.getMapDefinition(adapter) == null ) {
 				logger.warn("Could not find adapter: " + adapter);

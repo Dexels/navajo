@@ -18,6 +18,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 	private NavascriptTag myScript;
 	private boolean oldSkool = false;
+	private boolean isSetter = false;
 
 	public FieldTag(MapTag map, String condition, String name) {
 		super(map.getNavascript(), name, condition);
@@ -59,11 +60,10 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		// Check for condition
 		Map<String,String> map = getAttributes();
 		String adapterName = ((MapTag) getParent()).getAdapterName();
-		boolean hasOnlyValueAttribute = ( map.size() == 1 && map.get("value") != null);
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
 		}
-		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
+		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !isSetter && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
 			sb.append(NS3Constants.ADAPTER_OPERATION + getName());
 			sb.append(NS3Constants.PARAMETERS_START);
 			Map<String,String> parameters = new HashMap<>();
@@ -136,6 +136,15 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 			}
 			w.write((NS3Constants.EOL_DELIMITER + "\n\n").getBytes());
 		}
+	}
+
+	
+	public boolean isSetter() {
+		return isSetter;
+	}
+
+	public void setSetter(boolean isSetter) {
+		this.isSetter = isSetter;
 	}
 
 	@Override

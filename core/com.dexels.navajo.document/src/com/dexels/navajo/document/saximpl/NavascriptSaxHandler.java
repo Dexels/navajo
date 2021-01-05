@@ -83,10 +83,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.equals(Tags.FINALLY)) {
 			FinallyTag ft = new FinallyTag(currentDocument);
 			currentDocument.addFinally(ft);
-			
+
 			currentNode.push(ft);
 		}
-		
+
 		if (tag.equals(Tags.DEFINES)) {
 			DefinesTag dt = new DefinesTag(currentDocument);
 			currentDocument.addDefines(dt);
@@ -209,7 +209,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(mt);
 			} else if ( currentParent instanceof FinallyTag ) {
-					((FinallyTag) currentParent).add(mt); 
+				((FinallyTag) currentParent).add(mt); 
 			} else {
 				currentDocument.addMessage(mt);
 			} 
@@ -246,7 +246,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof BlockTag ) {
 				((BlockTag) currentParent).add(mt);
 			} else if ( currentParent instanceof FinallyTag ) {
-					((FinallyTag) currentParent).add(mt); 
+				((FinallyTag) currentParent).add(mt); 
 			} else {
 				currentDocument.addMap(mt);
 			}
@@ -298,7 +298,15 @@ public class NavascriptSaxHandler extends SaxHandler {
 			String condition = h.get(Attributes.CONDITION);
 			ValueTag vt = new ValueTag(currentDocument);
 			vt.setCondition(condition);
-			((ExpressionTag) currentParent).addValueTag(vt);
+			if ( currentParent instanceof FieldTag ) { // This FieldTag will be a normal "setter" field.
+				ExpressionTag et = new ExpressionTag(currentDocument);
+				et.addValueTag(vt);
+				((FieldTag) currentParent).setOldSkool(true);
+				((FieldTag) currentParent).setSetter(true);
+				((FieldTag) currentParent).addExpression(et);
+			} else {
+				((ExpressionTag) currentParent).addValueTag(vt);
+			}
 			currentNode.push(vt);
 		}
 
@@ -486,7 +494,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if ( tag.equals(Tags.BLOCK) ) {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.FINALLY)) {
-		    currentNode.pop();
+			currentNode.pop();
 		}
 
 	}
@@ -510,7 +518,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			cn.addComment(cb);
 		}
 	}
-	
+
 	@Override
 	public void text(Reader r) throws Exception {
 
