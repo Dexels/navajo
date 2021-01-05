@@ -5,14 +5,11 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
 import java.util.Vector;
 
 import com.dexels.navajo.compiler.navascript.parser.EventHandler;
 import com.dexels.navajo.compiler.navascript.parser.navascript;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
@@ -63,6 +60,7 @@ public class NS3ToNSXML implements EventHandler {
 		String result = xmlString.toString();
 
 		XMLElement xe = new CaseSensitiveXMLElement(true);
+
 		xe.parseString(result);
 
 		parseXML(navascript, xe, 0);
@@ -803,7 +801,7 @@ public class NS3ToNSXML implements EventHandler {
 				System.err.println("In parseConditionalBlock: " + currentFragment.consumedFragment());
 
 			}
-			
+
 			if (name.equals("InnerBody") ) {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(bt, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
@@ -812,7 +810,7 @@ public class NS3ToNSXML implements EventHandler {
 				}
 			}
 		}
-		
+
 		return bt;
 
 	}
@@ -831,7 +829,7 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("MessageMode")) {
 				p.setMode(content+"_"); // Add _ to prevent ignore messages from not being rendered.
 			}
-			
+
 			if ( name.equals("MessageType")) {
 				p.setType(content);
 			}
@@ -839,7 +837,7 @@ public class NS3ToNSXML implements EventHandler {
 			parseMessageArguments(p, child);
 		}
 	}
-	
+
 	private MessageTag parseMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
@@ -876,7 +874,7 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("MessageArguments")) {
 				parseMessageArguments(msgTag, child);
 			}
-			
+
 			if (name.equals("InnerBody") ) {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(msgTag, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
@@ -1072,9 +1070,9 @@ public class NS3ToNSXML implements EventHandler {
 
 	private FinallyTag parseFinally(NS3Compatible parent, XMLElement xe) throws Exception {
 		FinallyTag ft = new FinallyTag(navascript);
-		
+
 		Vector<XMLElement> children = xe.getChildren();
-	    		
+
 		for ( XMLElement child : children ) {
 
 			String name = child.getName();
@@ -1133,7 +1131,7 @@ public class NS3ToNSXML implements EventHandler {
 				((NavascriptTag) parent).addFinally((FinallyTag) child);
 			}
 		}
-		
+
 		if ( child instanceof BlockTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addBlock((BlockTag) child);
@@ -1428,10 +1426,26 @@ public class NS3ToNSXML implements EventHandler {
 		}
 	}
 
+	public String formatComment(String content) {
+
+		StringBuffer result = new StringBuffer();
+
+		String strip = content.replaceAll("//", "").replaceAll("\\/\\*", "").replaceAll("\\*\\/", "");
+
+		result.append("<!--");
+		result.append(strip);
+		result.append("-->");
+
+		return result.toString();
+	}
+
 	public void writeOutput(String content)
 	{
-
-		xmlString.write(content);
+		if ( content.indexOf("//") != -1 || content.indexOf("/*") != -1 ) {
+			xmlString.write(formatComment(content));
+		} else {
+			xmlString.write(content);
+		}
 
 	}
 

@@ -38,9 +38,9 @@ VarArguments ::=  VarArgument ( "," VarArgument )*
 
 VarArgument ::= ( VarType | VarMode )
 
-VarType ::= "type" ":" MessageType
+VarType ::= "type" ( ":" | "=" ) MessageType
 
-VarMode ::= "mode" ":" MessageMode
+VarMode ::= "mode" ( ":" | "=" ) MessageMode
 
 ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELSE ( Expression | StringConstant ) | ( Expression | StringConstant ) )
 
@@ -56,21 +56,21 @@ Option ::= ( Conditional )?  OPTION ("name" | "value" | "selected" )  (  "=" Str
 
 PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection | PropertyCardinality )
 
-PropertyType ::= "type" ":" PropertyTypeValue
+PropertyType ::= "type" ( ":" | "=" ) PropertyTypeValue
 
-PropertySubType ::= "subtype" ":" Identifier
+PropertySubType ::= "subtype" ( ":" | "=" ) Identifier
 
-PropertyCardinality ::= "cardinality" ":" PropertyCardinalityValue
+PropertyCardinality ::= "cardinality" ( ":" | "=" ) PropertyCardinalityValue
 
 PropertyDescription ::= "description" LiteralOrExpression
 
-PropertyLength ::= "length" ":" IntegerLiteral
-
-PropertyDirection ::= "direction" ":" PropertyDirectionValue 
+PropertyLength ::= "length" ( ":" | "=" ) IntegerLiteral
+ 
+PropertyDirection ::= "direction" ( ":" | "=" ) ( PropertyDirectionValue | Expression )
 
 PropertyArguments ::= PropertyArgument ( "," PropertyArgument )*
 
-MessageArgument ::= ( "type" ":" MessageType ) | ("mode" ":" MessageMode ) 
+MessageArgument ::= ( "type" ( ":" | "=" ) MessageType ) | ("mode" ( ":" | "=" ) MessageMode ) 
 
 MessageArguments ::= MessageArgument ( "," MessageArgument )*
 
@@ -275,24 +275,7 @@ SARTRE ::= ( "FORALL" | "EXISTS" )
 
 NULL ::= "null"
 
-Keyword  ::= 'break'
-           | 'filter'
-           | 'if'
-           | 'true'
-           | 'false'
-           | 'error'
-           | 'null'
-           | ':name'
-           | ':value'
-           | 'then'
-           | 'else'
-           | 'var'
-           | 'AND'
-           | 'OR'
-           | 'EXISTS'
-           | 'FORALL'
-           | 'conditionDescription'
-           | 'TODAY'
+Keyword  ::= TODAY | IF |  THEN | ELSE | AND | OR | TRUE | FALSE | SARTRE | NULL | PropertyDirectionValue
 
 WhiteSpace
          ::= ' '
@@ -302,7 +285,7 @@ WhiteSpace
 Comment  ::= TraditionalComment
            | EndOfLineComment
 TraditionalComment
-         ::= '/*' CHARACTER*  '*/'
+         ::= '/*' ( CHARACTER | WhiteSpace )* '*/'
 EndOfLineComment
          ::= '//' CHARACTER*
 

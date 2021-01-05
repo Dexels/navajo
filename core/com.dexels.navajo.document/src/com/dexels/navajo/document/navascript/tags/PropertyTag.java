@@ -106,7 +106,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		}
 		for ( String k : map.keySet() ) {
 			if ( !"value".equals(k) && !"name".equals(k) ) {
-				sb.append(k + ":" + map.get(k));
+				sb.append(k + ( "description".equals(k) ? "=" : ":" ) + map.get(k));
 				index++;
 				if ( index <= mapSize ) {
 					sb.append(NS3Constants.PARAMETERS_SEP);
