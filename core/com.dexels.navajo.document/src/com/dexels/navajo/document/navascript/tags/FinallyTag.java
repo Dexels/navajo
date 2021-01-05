@@ -50,5 +50,10 @@ public class FinallyTag extends BaseNode implements NS3Compatible {
 	public String getTagName() {
 		return Tags.FINALLY;
 	}
+	
+	@Override
+	public void addComment(CommentBlock cb) {
+		myChildren.add(cb);
+	}
 
 }

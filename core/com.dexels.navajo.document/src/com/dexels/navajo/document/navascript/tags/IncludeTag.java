@@ -30,5 +30,10 @@ public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 	public void setCondition(String consumedFragment) throws Exception {
 		throw new Exception("Condition not supported for include yet.");
 	}
+	
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 
 }

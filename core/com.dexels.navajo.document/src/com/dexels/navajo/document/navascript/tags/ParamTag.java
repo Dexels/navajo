@@ -96,5 +96,10 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	public void setMode(String mode) {
 		super.setMode(mode);
 	}
+	
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 
 }

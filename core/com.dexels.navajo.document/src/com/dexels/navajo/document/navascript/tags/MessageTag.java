@@ -166,5 +166,10 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		}
 
 	}
+	
+	@Override
+	public void addComment(CommentBlock cb) {
+		super.addComment(cb);
+	}
 
 }

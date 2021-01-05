@@ -77,6 +77,11 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 		this.condition = condition;
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		myChildren.add(cb);
+	}
+
 
 
 }

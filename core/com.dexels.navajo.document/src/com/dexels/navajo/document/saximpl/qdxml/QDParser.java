@@ -143,6 +143,7 @@ public class QDParser {
 				// the <!-- .... --> looking for the -->.
 			} else if (mode == COMMENT) {
 				if (c == '>' && sb.toString().endsWith("--")) {
+					doc.addComment(sb.toString());
 					sb.setLength(0);
 					mode = popMode(st);
 				} else

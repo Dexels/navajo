@@ -151,5 +151,9 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		}
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 
 }

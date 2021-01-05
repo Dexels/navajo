@@ -56,4 +56,8 @@ public class ValueTag extends BaseNode implements NS3Compatible {
 		this.value = value;
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 }

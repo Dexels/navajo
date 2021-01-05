@@ -60,4 +60,8 @@ public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatibl
 		w.write((NS3Utils.generateIndent(indent) + sb.toString()).getBytes());
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 }

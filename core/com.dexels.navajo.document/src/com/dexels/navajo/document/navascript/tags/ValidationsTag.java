@@ -38,5 +38,10 @@ public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compati
 		}
 		w.write("}\n\n".getBytes());
 	}
+	
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 
 }

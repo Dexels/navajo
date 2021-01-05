@@ -18,6 +18,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
+import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 
@@ -90,6 +91,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	public void addBlock(BlockTag bt) {
 		children.add(bt);
+	}
+
+	public void addComment(CommentBlock cb) {
+		children.add(cb);
 	}
 
 }

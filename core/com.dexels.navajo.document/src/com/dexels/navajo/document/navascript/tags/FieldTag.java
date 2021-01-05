@@ -138,4 +138,8 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		}
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 }

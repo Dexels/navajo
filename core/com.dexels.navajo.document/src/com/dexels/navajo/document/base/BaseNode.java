@@ -55,7 +55,6 @@ protected Navajo myDocRoot;
     return myDocRoot;
   }
 
-
   public void setRootDoc(Navajo n) {
     myDocRoot = n;
   }

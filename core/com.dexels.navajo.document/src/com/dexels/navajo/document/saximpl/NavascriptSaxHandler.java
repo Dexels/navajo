@@ -29,6 +29,7 @@ import com.dexels.navajo.document.navascript.tags.Attributes;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
+import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.DefineTag;
 import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
@@ -37,6 +38,7 @@ import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
+import com.dexels.navajo.document.navascript.tags.NS3Compatible;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
@@ -95,7 +97,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.equals(Tags.DEFINE)) {
 			DefineTag dt = new DefineTag(currentDocument);
 			String name = h.get("name");
-			System.err.println("Found define: " + name + ", currentDefines: " + currentDefines);
 			dt.setName(name);
 			if ( currentDefines != null ) {
 				currentDefines.addDefine(dt);
@@ -184,7 +185,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).addBlock(bt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(bt);
-			} 
+			} else if ( currentParent instanceof NavascriptTag ) {
+				((NavascriptTag) currentParent).addBlock(bt);
+			}
 			currentNode.push(bt);
 			return;
 		}
@@ -229,7 +232,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 				}
 			}
 			mt.setCondition(condition);
-			System.err.println("Adding map with ref: " + ref + " to " + currentParent);
 			if ( currentParent instanceof PropertyTag ) { // selection property.
 				((PropertyTag) currentParent).addMap(mt);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
@@ -237,7 +239,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 			} else if ( currentParent instanceof MapTag && currentMap.size() > 0) {
 				currentMap.lastElement().addMap(mt);
 			} else if ( currentParent instanceof FieldTag && currentField.size() > 0){
-				System.err.println("HERE!");
 				currentField.lastElement().addMap(mt);
 			} else if ( currentParent instanceof ParamTag ) {
 				((ParamTag) currentParent).addMap(mt);
@@ -500,6 +501,16 @@ public class NavascriptSaxHandler extends SaxHandler {
 		logger.info("End parsing of Navascript filed");
 	}
 
+	@Override
+	public void addComment(String c) {
+		CommentBlock cb = new CommentBlock();
+		cb.setComment(c);
+		if ( currentNode != null && currentNode.size() > 0 ) {
+			NS3Compatible cn = (NS3Compatible) currentNode.lastElement();
+			cn.addComment(cb);
+		}
+	}
+	
 	@Override
 	public void text(Reader r) throws Exception {
 

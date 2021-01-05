@@ -87,5 +87,9 @@ public class DefineTag extends BaseNode implements NS3Compatible {
 		this.expression = expression;
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 	
 }

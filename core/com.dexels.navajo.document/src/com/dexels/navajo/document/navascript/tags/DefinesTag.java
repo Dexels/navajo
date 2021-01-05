@@ -44,4 +44,8 @@ public class DefinesTag extends BaseNode implements NS3Compatible {
 		myDefines.add(dt);
 	}
 
+	@Override
+	public void addComment(CommentBlock cb) {
+		
+	}
 }

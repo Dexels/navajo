@@ -593,6 +593,12 @@ public  class SaxHandler implements DocHandler {
 	public QDParser getParser() {
 		return myParser;
 	}
+
+	@Override
+	public void addComment(String c) {
+		// TODO Auto-generated method stub
+		
+	}
     
 
 }
