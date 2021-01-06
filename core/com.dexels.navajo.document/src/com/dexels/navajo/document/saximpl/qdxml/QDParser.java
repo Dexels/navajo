@@ -133,7 +133,7 @@ public class QDParser {
 			} else if (mode == CDATA) {
 				if (c == '>' && sb.toString().endsWith("]]")) {
 					sb.setLength(sb.length() - 2);
-					logger.info("Warning: ignoring cdata!");
+					doc.addCData(sb.toString());
 					sb.setLength(0);
 					mode = popMode(st);
 				} else

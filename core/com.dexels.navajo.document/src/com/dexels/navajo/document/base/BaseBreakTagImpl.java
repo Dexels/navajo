@@ -12,6 +12,7 @@ public class BaseBreakTagImpl extends BaseNode implements Break {
 	private String condition;
 	private String id;
 	private String description;
+	private String error;
 
 	public BaseBreakTagImpl(Navajo n) {
 		super(n);
@@ -66,7 +67,18 @@ public class BaseBreakTagImpl extends BaseNode implements Break {
 		if ( description != null && !description.equals("") )  {
 			m.put("conditionDescription", description);
 		}
+		if ( error != null && !error.equals("") )  {
+			m.put("error", error);
+		}
 		return m;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 
 	@Override

@@ -18,4 +18,5 @@ public interface DocHandler {
   public void text(Reader r) throws Exception;
   public String quoteStarted(int quoteCharacter, Reader r, String attributeName,String tagName, StringBuilder buffer) throws IOException ;
   public QDParser getParser();
+  public void addCData(String string);
 }

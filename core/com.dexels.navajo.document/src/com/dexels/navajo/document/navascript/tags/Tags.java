@@ -28,5 +28,6 @@ public class Tags {
 	public static String DEFINES = "defines";	
 	public static String BLOCK = "block";	
 	public static String FINALLY = "finally";	
+	public static String SYNCHRONIZED = "synchronized";	
 	
 }

@@ -4,7 +4,7 @@ Validations ::= VALIDATIONS "{" Checks "}"
 
 Finally ::= FINALLY "{" TopLevelStatement* "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized
 
 Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
 
@@ -24,7 +24,7 @@ CheckAttribute ::= ("code" LiteralOrExpression) | ("description" LiteralOrExpres
 
 LiteralOrExpression ::= ( "=" StringConstant | "=" Expression )? 
 
-Break ::= ( Conditional )?  BREAK ( "(" BreakParameters ")" )? ";"
+Break ::= ( Conditional )?  BREAK ( "(" BreakParameters? ")" )? ";"
 
 BreakParameter ::= ( "code" LiteralOrExpression | "description" LiteralOrExpression | "error" LiteralOrExpression ) 
 
@@ -47,6 +47,20 @@ ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELS
 AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
  
 ConditionalEmptyMessage ::= Conditional "{" InnerBody* "}"
+
+Synchronized ::= SYNCHRONIZED "(" SynchronizedArguments ")" "{" TopLevelStatement* "}"
+
+SynchronizedArguments ::= SynchronizedArgument ( "," SynchronizedArgument )*
+
+SynchronizedArgument ::= ( SContext | SKey | STimeout | SBreakOnNoLock )
+
+SContext ::= CONTEXT ( ":" |  "=" ) SContextType 
+
+SKey ::= KEY LiteralOrExpression
+
+STimeout ::= TIMEOUT ( ":" |  "=" ) Expression
+
+SBreakOnNoLock ::= BREAKONNOLOCK ( ":" |  "=" ) Expression
 
 Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) )
 
@@ -169,6 +183,16 @@ CHECK ::= "check"
 
 BREAK ::= "break"
 
+SYNCHRONIZED ::= "synchronized"
+
+CONTEXT ::= "context"
+
+KEY ::= "key"
+
+TIMEOUT ::= "timeout"
+
+BREAKONNOLOCK ::= "breakOnNoLock"
+
 TODAY ::= "TODAY"
 
 VAR ::= "var"
@@ -269,7 +293,9 @@ MessageType ::= "array" | "simple" | "arrayelement"
 
 MessageMode ::= "ignore" | "overwrite" 
 
-PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "integer" | "timestamp" | "binary" | "selection" | "memo" | "money" | "percentage" | "password" )
+SContextType ::= ( "user" | "service" )
+
+PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "list" | "integer" | "timestamp" | "binary" | "selection" | "memo" | "money" | "percentage" | "password" )
 
 SARTRE ::= ( "FORALL" | "EXISTS" )
 
@@ -285,9 +311,9 @@ WhiteSpace
 Comment  ::= TraditionalComment
            | EndOfLineComment
 TraditionalComment
-         ::= '/*' ( CHARACTER | WhiteSpace )* '*/'
+         ::= '/*' ( CHARACTER | "'" | WhiteSpace )* '*/'
 EndOfLineComment
-         ::= '//' CHARACTER*
+         ::= '//' ( CHARACTER | "'" ) *
 
 SourceCharacter ::= .
 

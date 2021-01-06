@@ -1,5 +1,7 @@
 package com.dexels.navajo.compiler.navascript;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,5 +56,44 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 			logger.error(e.getLocalizedMessage(), e);
 			return false;
 		}
+	}
+	
+	public MapDefinition getAdapter(String adapter) throws Exception{
+		
+		return mapMetaData.getMapDefinition(adapter);
+	
+	}
+	
+	public void describeAdapter(String adapter) throws Exception {
+	
+		MapDefinition md = mapMetaData.getMapDefinition(adapter);
+
+		Set<String> methods = md.getMethodDefinitions();		
+		
+		System.err.println("Adapter " + adapter + " methods:");
+		
+		for ( String s : methods ) {
+			System.err.println("\t" + s);
+		}
+		
+		Set<String> values = md.getValueDefinitions();
+		
+		System.err.println("Adapter " + adapter + " fields:");
+	
+		for ( String s : values ) {
+			System.err.println("\t" + s);
+		}
+		
+	}
+	
+	public static void main (String [] args) throws Exception {
+		
+		MapDefinitionInterrogatorImpl m = new MapDefinitionInterrogatorImpl();
+		
+		String adapter = "sqlquery";
+		String field = "query";
+		
+		m.describeAdapter(adapter);
+		
 	}
 }

@@ -207,4 +207,8 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		super.addComment(cb);
 	}
 
+	public void addSynchronized(SynchronizedTag st) {
+		super.addSynchronized(st);
+	}
+
 }

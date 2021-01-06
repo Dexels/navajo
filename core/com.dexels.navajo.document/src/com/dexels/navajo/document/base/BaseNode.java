@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public abstract class BaseNode implements java.io.Serializable{
   /**

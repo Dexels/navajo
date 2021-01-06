@@ -172,4 +172,8 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		super.addComment(cb);
 	}
 
+	public void addSynchronized(SynchronizedTag st) {
+		super.addSyncronized(st);	
+	}
+
 }

@@ -30,7 +30,7 @@ public class NSXMLToNS3 {
 	 */
 	public static void main(String [] args)  throws Exception {
 		
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ValueTag2.xml");
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/CData.xml");
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
 		navascript.setMapChecker(new MapDefinitionInterrogatorImpl());
 		

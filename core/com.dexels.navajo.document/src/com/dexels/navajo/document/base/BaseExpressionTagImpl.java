@@ -2,11 +2,12 @@
 This file is part of the Navajo Project. 
 It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ */
 package com.dexels.navajo.document.base;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,37 +21,43 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 	 * 
 	 */
 	private static final long serialVersionUID = 8407258788821157361L;
-	
+
 	String condition;
 	String value;
 	String constant;
-	
+
 	public BaseExpressionTagImpl(Navajo n) {
 		super(n);
 	}
-	
+
 	public BaseExpressionTagImpl(Navajo n, String condition, String value) {
 		super(n);
 		this.condition = condition;
 		this.value = value;
 	}
-	
+
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String,String> attr = new HashMap<>();
 		if ( condition != null  && !"".equals(condition)) {
 			attr.put("condition", condition);
 		}
-		if ( value != null  && !"".equals(value)) {
+
+		if ( value != null  && !"".equals(value) && value.indexOf("<") == -1 ) {
 			attr.put("value", value);
 		}
+		
 		return attr;
 	}
 
 	@Override
 	public List<? extends BaseNode> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BaseNode> c = new ArrayList<>();
+		if ( value.indexOf("<") != -1 ) { // It contains < or > chars.
+			BaseValueImpl bv = new BaseValueImpl(super.getRootDoc(), value);
+			c.add(bv);
+		}
+		return c;
 	}
 
 	@Override
@@ -94,23 +101,23 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 	public String getConstant() {
 		return constant;
 	}
-	
+
 	@Override
 	public void setConstant(String c) {
 		constant = c;
 	}
-	
+
 	@Override
 	public boolean hasTextNode() {
 		return ( constant != null );
 	}
-	
+
 	@Override
 	public void writeText(Writer w) throws IOException  {
 		if ( constant != null ) {
 			w.write(constant); 
 		}
 	}
-	
+
 
 }

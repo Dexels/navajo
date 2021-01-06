@@ -82,6 +82,9 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 		myChildren.add(cb);
 	}
 
+	public void addSynchronized(SynchronizedTag st) {
+		myChildren.add(st);
+	}
 
 
 }

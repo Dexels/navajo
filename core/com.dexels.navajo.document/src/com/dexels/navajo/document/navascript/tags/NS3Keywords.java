@@ -21,8 +21,9 @@ public class NS3Keywords {
 	public static String LENGTH = "length";
 	public static String DIRECTION = "direcion";
 	public static String BREAK_CONDITION = "condition";
-	public static String BREAK_CONDITIONID = "conditionId";
-	public static String BREAK_CONDITIONDESCRIPTION = "conditionDescription";
+	public static String BREAK_CONDITIONID = "code";
+	public static String BREAK_CONDITIONDESCRIPTION = "description";
+	public static String BREAK_ERROR = "error";
 	public static String CHECK_CODE = "code";
 	public static String CHECK_ID = "id";
 	public static String CHECK_DESCRIPTION = "description";

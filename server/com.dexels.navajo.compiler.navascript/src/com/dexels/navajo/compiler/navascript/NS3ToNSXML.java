@@ -27,6 +27,7 @@ import com.dexels.navajo.document.navascript.tags.NS3Compatible;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
+import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
 
 public class NS3ToNSXML implements EventHandler {
@@ -44,7 +45,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Finally.ns");
+		String fileContent = read("/Users/arjenschoneveld/CData.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -247,7 +248,6 @@ public class NS3ToNSXML implements EventHandler {
 			String name = child.getName();
 
 			if ( name.equals("Expression")) {
-				System.err.println("In parseExpression. Found Expression");
 				consumeContent(ef, child);
 			} 
 
@@ -572,12 +572,7 @@ public class NS3ToNSXML implements EventHandler {
 
 			if ( name.equals("Map")) {
 				MapTag mt = parseMap(parent, child);
-				if ( parent instanceof MessageTag ) {
-					((MessageTag) parent).addMap(mt);
-				}
-				if ( parent instanceof MapTag ) {
-					((MapTag) parent).addMap(mt);
-				}
+				bodyElts.add(mt);
 			}
 
 			if ( name.equals("Var")) {
@@ -598,6 +593,11 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("Message")) {
 				MessageTag pt = parseMessage(parent, child);
 				bodyElts.add(pt);
+			}
+
+			if ( name.equals("Synchronized")) {
+				SynchronizedTag st = parseSynchronizedBlock(parent, child);
+				bodyElts.add(st);
 			}
 
 			if ( name.equals("ConditionalEmptyMessage")) {
@@ -813,6 +813,92 @@ public class NS3ToNSXML implements EventHandler {
 
 		return bt;
 
+	}
+
+	private void parseSynchronizedArguments(String key, SynchronizedTag p, XMLElement currentXML) {
+
+		currentXML.setAttribute("PROCESSED", "true");
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			//System.err.println("In parseSynchronizedArguments: " + name + "[" + content + "]");
+
+			if ( name.equals("SContextType")) {
+				p.setContext(content);
+			}
+
+			if ( name.equals("SKey")) {
+				key = "key";
+			}
+
+			if ( name.equals("STimeout") ) {
+				key = "timeout";
+			}
+
+			if ( name.equals("SBreakOnNoLock") ) {
+				key = "breakOnNoLock";
+			}
+
+			if ( name.equals("LiteralOrExpression") || name.equals("Expression") ) {
+				String c = null;
+				if ( name.equals("Expression")) {
+					ExpressionFragment ef = new ExpressionFragment();
+					consumeContent(ef, child);
+					c = ef.consumedFragment();
+				} else {
+					if ( isLiteral(child)) {
+						c = parseStringConstant(child);
+					} else {
+						c =  parseExpression(child);
+					}
+				}
+				if ( key != null ) {
+					if ( key.equals("key")) {
+						p.setKey(c);
+					}
+					if ( key.equals("timeout")) {
+						p.setTimeout(c);
+					}
+					if ( key.equals("breakOnNoLock") ) {
+						p.setBreakOnNoLock(c);
+					}
+				}
+				key = null;
+			}
+
+			parseSynchronizedArguments(key, p, child);
+		}
+	}
+
+	private SynchronizedTag parseSynchronizedBlock(NS3Compatible parent, XMLElement xe) throws Exception {
+
+		SynchronizedTag st = new SynchronizedTag(navascript);
+
+		Vector<XMLElement> children = xe.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("SynchronizedArguments")) {
+				parseSynchronizedArguments(null, st, child);
+			}
+
+			if ( name.equals("TopLevelStatement")) {
+				List<NS3Compatible> innerBodyElements = parseInnerBody(st, child);
+				for ( NS3Compatible ib : innerBodyElements ) {
+					addChildTag(st, ib);
+				}
+			}
+
+		}
+
+		return st;
 	}
 
 	private void parseMessageArguments(MessageTag p, XMLElement currentXML) {
@@ -1148,7 +1234,29 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((BlockTag) child);
 			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((BlockTag) child);
+			}
 		}
+
+		if ( child instanceof SynchronizedTag ) {
+			if ( parent instanceof NavascriptTag) {
+				((NavascriptTag) parent).addSynchronized((SynchronizedTag) child);
+			}
+			if ( parent instanceof MessageTag) {
+				((MessageTag) parent).addSynchronized((SynchronizedTag) child);
+			}
+			if ( parent instanceof MapTag) {
+				((MapTag) parent).addSynchronized((SynchronizedTag) child);
+			}
+			if ( parent instanceof BlockTag) {
+				((BlockTag) parent).add((SynchronizedTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((SynchronizedTag) child);
+			}
+		}
+
 
 		if ( child instanceof ParamTag ) {
 			if ( parent instanceof NavascriptTag) {
@@ -1165,6 +1273,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((ParamTag) child);
+			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((ParamTag) child);
 			}
 		}
 
@@ -1208,6 +1319,9 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((MessageTag) child);
 			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((MessageTag) child);
+			}
 		}
 
 		if ( child instanceof MapTag ) {
@@ -1225,6 +1339,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((MapTag) child);
+			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((MapTag) child);
 			}
 		}
 
@@ -1244,6 +1361,9 @@ public class NS3ToNSXML implements EventHandler {
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((IncludeTag) child);
 			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((IncludeTag) child);
+			}
 		}
 
 		if ( child instanceof BreakTag ) {
@@ -1261,6 +1381,9 @@ public class NS3ToNSXML implements EventHandler {
 			}
 			if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((BreakTag) child);
+			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((BreakTag) child);
 			}
 		}
 
@@ -1287,6 +1410,9 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("ConditionalEmptyMessage")) {
 			BlockTag mt = parseConditionalBlock(parent, xe, true);
 			addChildTag(parent, mt);
+		} else if ( name.equals("Synchronized")) {
+			SynchronizedTag st = parseSynchronizedBlock(parent, xe);
+			addChildTag(parent, st);
 		} else if ( name.equals("Map") ) {
 			MapTag mt = parseMap(parent, xe);
 			addChildTag(parent, mt);

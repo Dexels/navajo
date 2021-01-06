@@ -599,6 +599,12 @@ public  class SaxHandler implements DocHandler {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void addCData(String string) {
+		// TODO Auto-generated method stub
+		
+	}
     
 
 }

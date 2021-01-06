@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Validations;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
+import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
@@ -94,6 +95,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	public void addComment(CommentBlock cb) {
 		myChildren.add(cb);
+	}
+
+	public void addSynchronized(SynchronizedTag st) {
+		myChildren.add(st);
 	}
 
 }

@@ -43,6 +43,7 @@ import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
 import com.dexels.navajo.document.navascript.tags.SelectionTag;
+import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 import com.dexels.navajo.document.navascript.tags.Tags;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
 import com.dexels.navajo.document.navascript.tags.ValueTag;
@@ -79,7 +80,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 		}
 
 		BaseNode currentParent = currentNode.lastElement();
-
+		
 		if (tag.equals(Tags.FINALLY)) {
 			FinallyTag ft = new FinallyTag(currentDocument);
 			currentDocument.addFinally(ft);
@@ -114,6 +115,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(it);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(it);
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(it);
 			} else {
 				currentDocument.addInclude(it);
 			} 
@@ -167,13 +170,39 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(bt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(bt);
-			} else {
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(bt);
+			} else if ( currentParent instanceof NavascriptTag ){
 				currentDocument.addBreak(bt);
-			} 
+			} else {
+				throw new Exception("Did not expect break tag under this parent: " + currentParent.getTagName());
+			}
 			currentNode.push(bt);
 			return;
 		}
 
+		if (tag.equals(Tags.SYNCHRONIZED)) {
+			SynchronizedTag st = new SynchronizedTag(currentDocument);
+			st.setContext(h.get(Attributes.CONTEXT));
+			st.setKey(h.get(Attributes.KEY));
+			st.setTimeout(h.get(Attributes.TIMEOUT));
+			st.setBreakOnNoLock(h.get(Attributes.BREAKON_NOLOCK));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addSynchronized(st);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addSynchronized(st);
+			} else if ( currentParent instanceof BlockTag) {
+				((BlockTag) currentParent).addSynchronized(st);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(st);
+			} else if ( currentParent instanceof NavascriptTag ) {
+				((NavascriptTag) currentParent).addSynchronized(st);
+			} else {
+				throw new Exception("Did not excpect synchronized tag under this parent: " + currentParent.getTagName());
+			}
+			currentNode.push(st);
+		}
+		
 		if (tag.equals(Tags.BLOCK)) {
 			BlockTag bt = new BlockTag(currentDocument);
 			bt.setCondition(h.get(Attributes.CONDITION));
@@ -187,6 +216,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((FinallyTag) currentParent).add(bt);
 			} else if ( currentParent instanceof NavascriptTag ) {
 				((NavascriptTag) currentParent).addBlock(bt);
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(bt);
+			} else {
+				throw new Exception("Did not expect block tag under this parent: " + currentParent.getTagName());
 			}
 			currentNode.push(bt);
 			return;
@@ -194,7 +227,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
 			MessageTag mt = new MessageTag(currentDocument, h.get(Attributes.NAME),  h.get(Attributes.TYPE));
-			MessageTag parent = ( currentMessage.size() > 0 ? currentMessage.lastElement() : null);
 			mt.setCondition(h.get(Attributes.CONDITION));
 			mt.setOrderBy(h.get(Attributes.ORDERBY));
 			boolean isAntiMsg = tag.equals(Tags.ANTIMESSAGE);
@@ -210,9 +242,13 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(mt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(mt); 
-			} else {
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(mt);
+			} else if ( currentParent instanceof NavascriptTag ){
 				currentDocument.addMessage(mt);
-			} 
+			} else {
+				throw new Exception("Did not expect message tag under this parent: " + currentParent.getTagName());
+			}
 			currentMessage.push(mt);
 			currentNode.push(mt);
 			return;
@@ -247,8 +283,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(mt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(mt); 
-			} else {
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(mt);
+			} else if ( currentParent instanceof NavascriptTag ){
 				currentDocument.addMap(mt);
+			} else {
+				throw new Exception("Did not expect map tag under this parent: " + currentParent.getTagName());
 			}
 			currentMap.push(mt);
 			currentNode.push(mt);
@@ -286,8 +326,18 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(mt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(mt); 
-			} else {
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(mt); 
+			} else if (currentParent instanceof NavascriptTag ) {
 				currentDocument.addMap(mt);
+			} else {
+				StringBuffer sb = new StringBuffer();
+				sb.append("Did not expect map[" + name + "] tag under this parent: " + currentParent.getTagName() + 
+						", currentMessage: " + currentMessage.size());
+				if ( currentParent instanceof MessageTag ) {
+					sb.append("\nParent is a message with name: " + ((MessageTag) currentParent).getName());
+				}
+				throw new Exception(sb.toString());
 			}
 			currentMap.push(mt);
 			currentNode.push(mt);
@@ -340,6 +390,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if (tag.equals(Tags.PARAM)) {
 			ParamTag pt = new ParamTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.NAME));
 			String mode = h.get(Attributes.MODE);
+			String value = h.get(Attributes.VALUE);
+			if ( value != null && !"".equals(value)) { // String Constant as value.
+				ExpressionTag et = new ExpressionTag(currentDocument);
+				et.setConstant(value);
+				pt.addExpression(et);
+			}
 			pt.setMode(mode);
 			if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
 				currentMessage.lastElement().addParam(pt);
@@ -349,8 +405,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((BlockTag) currentParent).add(pt);
 			} else if ( currentParent instanceof FinallyTag ) {
 				((FinallyTag) currentParent).add(pt); 
-			} else {
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(pt);
+			} else if ( currentParent instanceof NavascriptTag ){
 				currentDocument.addParam(pt);
+			} else {
+				throw new Exception("Did not expect param tag under this parent: " + currentParent.getTagName());
 			}
 			currentNode.push(pt);
 		}
@@ -452,9 +512,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 	@Override
 	public void endElement(String tag) throws Exception {
 
-
-
-		if (currentMap.size() > 0 && tag.endsWith("." + currentMap.lastElement().getTagName())) {
+		if (currentMap.size() > 0 && tag.endsWith(currentMap.lastElement().getTagName())) {
 			currentMap.pop();
 			currentNode.pop();
 		} else if (tag.equals(Tags.MESSAGE) || tag.equals(Tags.ANTIMESSAGE)) {
@@ -472,7 +530,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if (tag.equals(Tags.FIELD)) {
 			currentField.pop();
 			currentNode.pop();
-		} else if ( currentField.size() > 0 && tag.endsWith("." + currentField.lastElement().getName())) {
+		} else if ( currentField.size() > 0 && tag.endsWith(currentField.lastElement().getName())) {
 			currentField.pop();
 			currentNode.pop();
 		} else if (tag.equals(Tags.INCLUDE)) {
@@ -495,6 +553,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.FINALLY)) {
 			currentNode.pop();
+		} else if ( tag.equals(Tags.SYNCHRONIZED) ) {
+			currentNode.pop();
 		}
 
 	}
@@ -516,6 +576,22 @@ public class NavascriptSaxHandler extends SaxHandler {
 		if ( currentNode != null && currentNode.size() > 0 ) {
 			NS3Compatible cn = (NS3Compatible) currentNode.lastElement();
 			cn.addComment(cb);
+		}
+	}
+	
+	@Override
+	public void addCData(String s) {
+		if ( currentNode != null && currentNode.size() > 0 ) {
+			NS3Compatible cn = (NS3Compatible) currentNode.lastElement();
+			if ( cn instanceof ValueTag ) {
+				((ValueTag) cn).setValue(s);
+			}
+			if ( cn instanceof ExpressionTag ) {
+				((ExpressionTag) cn).setValue(s);
+			}
+			if ( cn instanceof FieldTag ) {
+				((FieldTag) cn).setValue(s);
+			}
 		}
 	}
 

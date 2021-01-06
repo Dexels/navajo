@@ -65,6 +65,11 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		return bt;
 	}
 
+	public SynchronizedTag addSynchronizedTag(SynchronizedTag st) {
+		super.addSynchronized(st);
+		return st;
+	}
+	
 	public FinallyTag addFinallyTag(FinallyTag ft) {
 		super.addFinally(ft);
 		return ft;

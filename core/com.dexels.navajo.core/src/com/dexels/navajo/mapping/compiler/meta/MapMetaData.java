@@ -72,11 +72,13 @@ public class MapMetaData {
 			try {
 				ServiceLoader<ExtensionDefinition> loader = ServiceLoader.load(ExtensionDefinition.class,myClassLoader);
 				iter = loader.iterator();
+				
 //				ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
 //						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					
+					System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
+
 					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
 
 					XMLElement config = new CaseSensitiveXMLElement();
