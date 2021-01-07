@@ -63,6 +63,9 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	@Override
 	public Message addMessage(Message m) {
+		if ( getType().equals(MSG_TYPE_ARRAY)) {
+			m.setType(MSG_TYPE_ARRAY_ELEMENT);
+		}
 		children.add(m);
 		return m;
 	}

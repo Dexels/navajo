@@ -32,13 +32,17 @@ BreakParameters ::= BreakParameter ( "," BreakParameter )?
 
 Conditional ::= IF Expression THEN
 
-Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? ("=" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}"  )
+Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? ("=" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}" | "[" VarArray? "]" | "{" Var* "}"  )
+
+VarArray ::= VarArrayElement ("," VarArrayElement)*
+
+VarArrayElement ::= "{" Var* "}"
 
 VarArguments ::=  VarArgument ( "," VarArgument )*
 
 VarArgument ::= ( VarType | VarMode )
 
-VarType ::= "type" ( ":" | "=" ) MessageType
+VarType ::= "type" ( ":" | "=" ) ( MessageType | PropertyTypeValue )
 
 VarMode ::= "mode" ( ":" | "=" ) MessageMode
 
@@ -62,7 +66,11 @@ STimeout ::= TIMEOUT ( ":" |  "=" ) Expression
 
 SBreakOnNoLock ::= BREAKONNOLOCK ( ":" |  "=" ) Expression
 
-Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) )
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) | "[" MessageArray "]" )
+
+MessageArray ::= MessageArrayElement ("," MessageArrayElement)*
+
+MessageArrayElement ::= "{" InnerBody* "}"
 
 Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | "=" StringConstant ";" |  "=" ConditionalExpressions ";" | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
 

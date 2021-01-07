@@ -391,6 +391,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			ParamTag pt = new ParamTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.NAME));
 			String mode = h.get(Attributes.MODE);
 			String value = h.get(Attributes.VALUE);
+			pt.setType(h.get(Attributes.TYPE));
 			if ( value != null && !"".equals(value)) { // String Constant as value.
 				ExpressionTag et = new ExpressionTag(currentDocument);
 				et.setConstant(value);
@@ -409,7 +410,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((SynchronizedTag) currentParent).add(pt);
 			} else if ( currentParent instanceof NavascriptTag ){
 				currentDocument.addParam(pt);
-			} else {
+			} else if ( currentParent instanceof ParamTag ){
+				((ParamTag) currentParent).addParam(pt);
+			}
+			else {
 				throw new Exception("Did not expect param tag under this parent: " + currentParent.getTagName());
 			}
 			currentNode.push(pt);
@@ -561,12 +565,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	@Override
 	public void startDocument() throws Exception {
-		logger.info("Start parsing of Navascript filed");
+		logger.debug("Start parsing of Navascript filed");
 	}
 
 	@Override
 	public void endDocument() throws Exception {
-		logger.info("End parsing of Navascript filed");
+		logger.debug("End parsing of Navascript filed");
 	}
 
 	@Override

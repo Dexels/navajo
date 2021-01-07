@@ -12,13 +12,16 @@ import java.util.Map;
 
 import com.dexels.navajo.document.ExpressionTag;
 import com.dexels.navajo.document.MapAdapter;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.navascript.tags.ParamTag;
 
 public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 
 	BaseMapTagImpl myMap;
+	List<BaseParamTagImpl> myParam = new ArrayList<>();
 	
 	/**
 	 * 
@@ -28,6 +31,7 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	String condition;
 	String comment;
 	String mode;
+	String type;
 	
 	public BaseParamTagImpl(Navajo n) {
 		super(n);
@@ -67,6 +71,14 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 		condition = s;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -80,12 +92,19 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 		return myMap;
 	}
 	
+	public boolean hasParamChildren() {
+		return myParam.size() > 0;
+	}
+	
 	@Override
 	public List<? extends BaseNode> getChildren() {
 		if ( myMap != null ) {
 			List<BaseMapTagImpl> map = new ArrayList<>();
 			map.add(myMap);
 			return map;
+		}
+		if ( myParam.size() > 0 ) {
+			return myParam;
 		}
 		List<BaseExpressionTagImpl> expressions = new ArrayList<>();
 		for ( ExpressionTag et: this.myExpressions) {
@@ -109,6 +128,9 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 		if ( mode != null && !"".equals(mode) ) {
 			m.put(Param.PARAM_MODE, mode);
 		}
+		if ( type != null && !"".equals(type) ) {
+			m.put(Param.PARAM_TYPE, type);
+		}
 		return m;
 	}
 
@@ -118,5 +140,12 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 
 	public String getMode() {
 		return mode;
+	}
+
+	public void addParam(ParamTag pt) {
+		if ( Message.MSG_TYPE_ARRAY.equals(getType())) {
+			pt.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+		}
+		myParam.add(pt);
 	}
 }

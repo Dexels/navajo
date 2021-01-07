@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.document.base.BaseParamTagImpl;
@@ -39,9 +40,31 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		super.addMap(mt);
 	}
 
+	public void addParamTag(ParamTag pt) throws Exception {
+		if ( pt.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT) && getType().equals(Message.MSG_TYPE_ARRAY)) {
+			super.addParam(pt);
+		} else if ( getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT) && ( pt.getType() == null || !"".equals(getType()) ) ) {
+			super.addParam(pt);
+		} else {
+			throw new Exception("This param type: " + pt.getType() + " is no expected under a param of type " + getType());
+		}
+
+
+	}
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		Map<String,String> map = getAttributes();
+
+		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));
+		boolean hasArrayElements = ( getChildren().size() > 0 && getChildren().get(0) instanceof ParamTag 
+				&&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((ParamTag) getChildren().get(0)).getType()));
+
+		boolean hasSubParam = ( getChildren().size() > 0 && getChildren().get(0) instanceof ParamTag 
+				&&  !Message.MSG_TYPE_ARRAY_ELEMENT.equals(((ParamTag) getChildren().get(0)).getType()));
+
+		//System.err.println(getName() + ", isArrayElement: " + isArrayElement + ", hasArrayElements: " + hasArrayElements + ", hasSubParam: " + hasSubParam);
+
 		StringBuffer sb = new StringBuffer();
 		int origIndent = indent;
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
@@ -49,43 +72,77 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 			indent = 0;
 			sb.append(conditionStr);
 		}
-		sb.append(NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName());
+		if ( !isArrayElement  ) {
+			sb.append(NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName());
+		}
 		// Check for attributes
-		int index = 1;
-		int mapSize = 0;
-		for ( String k : map.keySet() ) {
-			if ( !"condition".equals(k) && !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
-				mapSize++;
-			}
-		}
-		if ( mapSize > 1 ) {
-			sb.append(NS3Constants.PARAMETERS_START);
-		}
-		for ( String k : map.keySet() ) {
-			if ( !"condition".equals(k) && !"value".equals(k) && !"name".equals(k) && !"direction".equals(k) ) {
-				sb.append(k + ":" + map.get(k));
-				index++;
-				if ( index <= mapSize ) {
-					sb.append(NS3Constants.PARAMETERS_SEP);
+		if ( !isArrayElement ) {
+			int index = 0;
+			StringBuffer attributes = new StringBuffer();
+			if ( getMode() != null && !"".equals(getMode())) {
+				if ( index > 0 ) {
+					w.write(",".getBytes());
 				}
+				String ob = "mode:"+getMode().replaceAll("_", "");
+				attributes.append(ob);
+				index++;
+			}
+			if ( getType() != null && !hasArrayElements && !"simple".equals(getType()) && !"".equals(getType())) {
+				if ( index > 0 ) {
+					w.write(",".getBytes());
+				}
+				String ob = "type:"+getType();
+				attributes.append(ob);
+				index++;
+			}
+			if ( index > 0 ) {
+				sb.append(NS3Constants.PARAMETERS_START);
+				sb.append(attributes.toString());
+				sb.append(NS3Constants.PARAMETERS_END);
 			}
 		}
-		if ( mapSize > 1 ) {
-			sb.append(NS3Constants.PARAMETERS_END);
-		}
-		
+
+		boolean hasParam = hasParamChildren(); // It has a param array element
+		MapTag ref = (MapTag) getMap(); // It has a mapped ref.
+
 		if ( NS3Utils.hasExpressionWithConstant( this) ) {
 			sb.append(" = ");
-		} else if ( getMap() == null ) {
+		} else if ( !hasParam && ref == null ) {
 			sb.append(" = ");
 		}
-		
-		MapTag ref = (MapTag) getMap(); // It has a mapped ref.
+
 		if ( ref != null ) {
 			sb.append(" {\n");
 			w.write(sb.toString().getBytes()); // write current buffer.
 			ref.formatNS3(indent+1, w);
 			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
+		} else if (hasArrayElements) {
+			sb.append(" [\n");
+			w.write(sb.toString().getBytes()); // write current buffer.
+			int size = getChildren().size();
+			int count = 0;
+			for ( BaseNode p : getChildren() ) {
+				((NS3Compatible) p).formatNS3(indent+1, w);
+				if ( hasArrayElements && count < size - 1 ) {
+					w.write(",".getBytes());
+				}
+				count++;
+			}
+			w.write( ("\n" + NS3Utils.generateIndent(indent) + "]\n").getBytes());
+		} else if ( isArrayElement || hasSubParam ) {
+			if ( isArrayElement ) {
+				sb.append("\n" + NS3Utils.generateIndent(indent) + "{\n" ) ;
+			} else {
+				sb.append(" {\n" ) ;
+			}
+			w.write(sb.toString().getBytes()); // write current buffer.
+			for ( BaseNode p : getChildren() ) {
+				((NS3Compatible) p).formatNS3(indent+1, w);
+			}
+			w.write((NS3Utils.generateIndent(indent) + "}").getBytes()) ;
+			if ( hasSubParam && !isArrayElement ) {
+				w.write("\n".getBytes());
+			}
 		} else {
 			w.write(sb.toString().getBytes()); // write current buffer.
 			NS3Utils.writeConditionalExpressions(origIndent, w, getChildren());
@@ -96,10 +153,10 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	public void setMode(String mode) {
 		super.setMode(mode);
 	}
-	
+
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+
 	}
 
 }

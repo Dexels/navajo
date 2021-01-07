@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PushbackReader;
 import java.util.Map;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseMessageTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
@@ -109,64 +110,90 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		int size = getChildren().size();
+		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));
+		boolean hasArrayElements = ( getChildren().size() > 0 && getChildren().get(0) instanceof MessageTag 
+				 &&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((MessageTag) getChildren().get(0)).getType()));
 		String msgName = NS3Utils.removeParentAddressing(ignoredMessageLevel, getName());
 		Map<String,String> map = getAttributes();
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
 			w.write(conditionStr.getBytes());
-			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
-			w.write(start.getBytes());
-		} else {
+			if ( !isArrayElement ) {
+				String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
+				w.write(start.getBytes());
+			}
+		} else if ( !isArrayElement ){
 			String start = NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
 			w.write(start.getBytes());
 		}
-		int index = 0;
-		if ( hasParameters() ) {
-			w.write(NS3Constants.PARAMETERS_START.getBytes());
-		}
-		if ( getOrderBy() != null && !"".equals(getOrderBy())) {
-			String ob = "orderby=" + getOrderBy() + " ";
-			w.write(ob.getBytes());
-			index++;
-		}
-		if ( getMode() != null && !"".equals(getMode())) {
-			if ( index > 0 ) {
-				w.write(",".getBytes());
+		if ( !isArrayElement ) {
+			int index = 0;
+			StringBuffer attributes = new StringBuffer();
+			if ( getOrderBy() != null && !"".equals(getOrderBy())) {
+				String ob = "orderby=" + getOrderBy() + " ";
+				attributes.append(ob);
+				index++;
 			}
-			String ob = "mode:"+getMode().replaceAll("_", "");
-			w.write(ob.getBytes());
-			index++;
-		}
-		if ( getType() != null && !"simple".equals(getType()) && !"".equals(getType())) {
-			if ( index > 0 ) {
-				w.write(",".getBytes());
+			if ( getMode() != null && !"".equals(getMode())) {
+				if ( index > 0 ) {
+					w.write(",".getBytes());
+				}
+				String ob = "mode:"+getMode().replaceAll("_", "");
+				attributes.append(ob);
+				index++;
 			}
-			String ob = "type:"+getType();
-			w.write(ob.getBytes());
-			index++;
-		}
-		if ( index > 0 ) {
-			w.write(NS3Constants.PARAMETERS_END.getBytes());
+			if ( getType() != null && !hasArrayElements && !"simple".equals(getType()) && !"".equals(getType())) {
+				if ( index > 0 ) {
+					w.write(",".getBytes());
+				}
+				String ob = "type:"+getType();
+				attributes.append(ob);
+				index++;
+			}
+			if ( index > 0 ) {
+				w.write(NS3Constants.PARAMETERS_START.getBytes());
+				w.write(attributes.toString().getBytes());
+				w.write(NS3Constants.PARAMETERS_END.getBytes());
+			}
 		}
 		if ( size > 0 ) {
-			String openBlock = " {\n\n";
+			String openBlock = null;
+			if ( isArrayElement ) {
+				openBlock = "\n" + NS3Utils.generateIndent(indent) + "{\n" ;
+			} else if ( hasArrayElements ) {
+				openBlock = "[\n";
+			} else {
+				openBlock = "{\n\n";
+			}
 			w.write(openBlock.getBytes());
 		} else {
 			w.write((NS3Constants.EOL_DELIMITER + "\n").getBytes());
 		}
 		// Loop over children
+		int count = 0;
 		for ( BaseNode n : getChildren() ) {
 			if ( n instanceof NS3Compatible ) {
 				((NS3Compatible) n).formatNS3(indent + 1, w);
 			}
+			if ( hasArrayElements && count < getChildren().size() - 1 ) {
+				w.write(",".getBytes());
+			}
+			count++;
 		}
 		if ( size > 0 ) {
-			String end = NS3Utils.generateIndent(indent) + "}\n\n";
+			String end = null;
+			if ( isArrayElement ) {
+				end = NS3Utils.generateIndent(indent) + "}" ;
+			} else if ( hasArrayElements ) {
+				end = "\n" + NS3Utils.generateIndent(indent) + "]\n\n";
+			} else {
+				end = NS3Utils.generateIndent(indent) + "}\n\n";
+			}
 			w.write(end.getBytes());
 		}
 
 	}
-	
+
 	@Override
 	public void addComment(CommentBlock cb) {
 		super.addComment(cb);

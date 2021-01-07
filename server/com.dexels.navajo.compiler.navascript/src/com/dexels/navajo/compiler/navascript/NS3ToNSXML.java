@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import com.dexels.navajo.compiler.navascript.parser.EventHandler;
 import com.dexels.navajo.compiler.navascript.parser.navascript;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
@@ -45,7 +46,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/CData.ns");
+		String fileContent = read("/Users/arjenschoneveld/ParamArray.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -158,6 +159,28 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private ParamTag parseVarArrayElement(ParamTag parent, XMLElement currentXML) throws Exception {
+
+		ParamTag paramElt = new ParamTag(navascript);
+
+		paramElt.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("Var")) {
+				ParamTag pt = parseVar(paramElt, child);
+				paramElt.addParam(pt);
+			}
+
+		}
+
+		return paramElt;
+	}
+
 	private ParamTag parseVar(NS3Compatible parent, XMLElement currentXML) throws Exception {
 		// Conditional -> VarName -> "=" OR ":" -> ConditionalExpressions
 
@@ -202,6 +225,19 @@ public class NS3ToNSXML implements EventHandler {
 			if  ( name.equals("MappedArrayMessage") ) {
 				MapTag mt = parsedMappedArrayMessage(parent, child);
 				paramTag.addMap(mt);
+			}
+
+			if ( name.equals("VarArray")) {
+				paramTag.setType(Message.MSG_TYPE_ARRAY);
+				Vector<XMLElement> paramChildren = child.getChildren();
+				for ( XMLElement paramChild : paramChildren ) {
+
+					if ( paramChild.getName().equals("VarArrayElement")) {
+						ParamTag paramElt = parseVarArrayElement(paramTag, paramChild);
+						paramElt.setName(paramTag.getName());
+						paramTag.addParam(paramElt);
+					}
+				}
 			}
 
 		}
@@ -965,6 +1001,23 @@ public class NS3ToNSXML implements EventHandler {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(msgTag, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
 					addChildTag(msgTag, ib);
+				}
+			}
+			
+			if ( name.equals("MessageArray") ) {
+				msgTag.setType(Message.MSG_TYPE_ARRAY);
+				Vector<XMLElement> messageChildren = child.getChildren();
+				int count = 0;
+				for ( XMLElement messageChild : messageChildren ) {
+
+					if ( messageChild.getName().equals("MessageArrayElement")) {
+						MessageTag messageElt = parseMessage(parent, messageChild);
+						messageElt.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+						messageElt.setName(msgTag.getName());
+						messageElt.setIndex(count);
+						msgTag.addMessage(messageElt);
+						count++;
+					}
 				}
 			}
 

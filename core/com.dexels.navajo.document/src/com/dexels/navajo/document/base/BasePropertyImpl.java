@@ -1391,7 +1391,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final String getType() {
+	public String getType() {
 		if (this.type == null || "".equals(this.type)) {
 			return STRING_PROPERTY;
 		} else {
@@ -1400,7 +1400,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void setType(String t) {
+	public void setType(String t) {
 	    String old = type;
 		type = t;
 		firePropertyChanged(PROPERTY_TYPE, old, type);
