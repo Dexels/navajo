@@ -91,7 +91,7 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 		MapDefinitionInterrogatorImpl m = new MapDefinitionInterrogatorImpl();
 		
 		String adapter = "sqlquery";
-		String field = "query";
+		String field = "doUpdate";
 		
 		m.describeAdapter(adapter);
 		

@@ -33,12 +33,7 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
-		if ( getCondition() != null && !"".equals(getCondition()) ) {
-			String condition = getCondition();
-			condition = condition.replaceAll("&gt;", ">");
-			condition = condition.replaceAll("&lt;", "<");
-			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
-		} 
+		sb.append(NS3Utils.formatConditional(getCondition()));
 		sb.append(NS3Constants.OPEN_BLOCK);
 		sb.append("\n");
 		w.write(sb.toString().getBytes());

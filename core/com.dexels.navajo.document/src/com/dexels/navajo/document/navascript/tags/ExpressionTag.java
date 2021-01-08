@@ -39,9 +39,7 @@ public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatibl
 			if ( condition == null && getValueTag() != null && getValueTag().getCondition() != null ) {
 				condition = getValueTag().getCondition();
 			}
-			condition = condition.replaceAll("&gt;", ">");
-			condition = condition.replaceAll("&lt;", "<");
-			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
+			sb.append(NS3Utils.formatConditional(condition));
 		} 
 		if ( getConstant() != null ) {
 			sb.append(NS3Utils.formatStringLiteral(getConstant()));

@@ -60,9 +60,8 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		// Check for condition
 		Map<String,String> map = getAttributes();
 		String adapterName = ((MapTag) getParent()).getAdapterName();
-		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			sb.append(NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
-		}
+		sb.append(NS3Utils.formatConditional(map.get("condition")));
+		
 		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !isSetter && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
 			sb.append(NS3Constants.ADAPTER_OPERATION + getName());
 			AttributeAssignments aa = new AttributeAssignments();

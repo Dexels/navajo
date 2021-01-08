@@ -30,7 +30,7 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
-		sb.append("synchronized ");
+		sb.append(Tags.SYNCHRONIZED + " ");
 		// Format attributes
 		AttributeAssignments aa = new AttributeAssignments();
 		aa.addMap(getAttributes());
@@ -64,7 +64,7 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 			map.put(Attributes.TIMEOUT, timeout+"");
 		}
 		if (  breakOnNoLock != null && !"".equals(breakOnNoLock) ) {
-			map.put("breakOnNoLock", "true");
+			map.put(Attributes.BREAKON_NOLOCK, "true");
 		}
 		return map;
 	}

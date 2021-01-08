@@ -9,10 +9,8 @@ public class NSXMLToNS3 {
 
 	public static void main(String [] args)  throws Exception {
 		
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ParamArray.xml");
-		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis);
-		navascript.setMapChecker(new MapDefinitionInterrogatorImpl());
-		
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessAutoReassignOfficial.xml");
+		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, new MapDefinitionInterrogatorImpl());
 		navascript.formatNS3(0, System.out);
 		//navascript.write(System.err);
 	}

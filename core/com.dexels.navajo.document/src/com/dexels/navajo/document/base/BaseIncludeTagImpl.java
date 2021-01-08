@@ -15,7 +15,7 @@ import com.dexels.navajo.document.Navajo;
 public class BaseIncludeTagImpl extends BaseNode implements Include {
 
 	String script;
-	protected boolean condition;
+	String condition;
 	
 	public BaseIncludeTagImpl(Navajo n, String s) {
 		super(n);
@@ -51,6 +51,14 @@ public class BaseIncludeTagImpl extends BaseNode implements Include {
 	@Override
 	public void setScript(String s) {
 		script = s;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 
 }

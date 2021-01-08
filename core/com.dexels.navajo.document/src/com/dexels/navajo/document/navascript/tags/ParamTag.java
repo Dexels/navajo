@@ -63,17 +63,12 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		boolean hasSubParam = ( getChildren().size() > 0 && getChildren().get(0) instanceof ParamTag 
 				&&  !Message.MSG_TYPE_ARRAY_ELEMENT.equals(((ParamTag) getChildren().get(0)).getType()));
 
-		//System.err.println(getName() + ", isArrayElement: " + isArrayElement + ", hasArrayElements: " + hasArrayElements + ", hasSubParam: " + hasSubParam);
-
 		StringBuffer sb = new StringBuffer();
 		int origIndent = indent;
-		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
-			indent = 0;
-			sb.append(conditionStr);
-		}
+		sb.append(NS3Utils.generateIndent(indent));
+		sb.append(NS3Utils.formatConditional(map.get("condition")));
 		if ( !isArrayElement  ) {
-			sb.append(NS3Utils.generateIndent(indent) + NS3Keywords.VAR + " " + getName());
+			sb.append(NS3Keywords.VAR + " " + getName());
 		}
 		// Check for attributes
 		if ( !isArrayElement ) {

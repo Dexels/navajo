@@ -22,13 +22,7 @@ public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
-		
-		if ( getCondition() != null && !"".equals(getCondition()) ) {
-			String condition = getCondition();
-			condition = condition.replaceAll("&gt;", ">");
-			condition = condition.replaceAll("&lt;", "<");
-			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
-		} 
+		sb.append(NS3Utils.formatConditional(getCondition()));
 		
 		AttributeAssignments aa = new AttributeAssignments();
 		aa.add(NS3Keywords.BREAK_CONDITIONID, getConditionId())
@@ -36,7 +30,7 @@ public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 		  .add(NS3Keywords.BREAK_ERROR, getError());
 		
 		sb.append(NS3Keywords.BREAK);
-		sb.append(aa.format(false));
+		sb.append(aa.format(true));
 		
 		sb.append(NS3Constants.EOL_DELIMITER + "\n");
 		w.write(sb.toString().getBytes());

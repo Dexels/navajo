@@ -78,12 +78,10 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		Map<String,String> map = getAttributes();
 		String propertyName = getName();
 		String value = map.get("value");
-
-		if ( condition != null && !"".equals(condition)) {
-			sb.append(NS3Utils.generateIndent(indent));
-			sb.append(NS3Constants.CONDITION_IF + condition.replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
-		}
-		sb.append(NS3Utils.generateIndent(indent) + ( isPartOfMappedSelection ?  NS3Keywords.OPTION + " " + getName(): NS3Keywords.PROPERTY + " \"" + propertyName + "\"") );
+		
+		sb.append(NS3Utils.generateIndent(indent));
+		sb.append(NS3Utils.formatConditional(condition));
+		sb.append( ( isPartOfMappedSelection ?  NS3Keywords.OPTION + " " + getName(): NS3Keywords.PROPERTY + " \"" + propertyName + "\"") );
 
 		// Format attributes
 		AttributeAssignments aa = new AttributeAssignments();

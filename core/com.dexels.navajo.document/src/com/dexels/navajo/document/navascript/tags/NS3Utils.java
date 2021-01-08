@@ -40,6 +40,20 @@ public class NS3Utils {
 		return result;
 	}
 	
+	public static String formatConditional(String condition) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		if ( condition != null && !"".equals(condition) ) {
+			condition = condition.replaceAll("&gt;", ">");
+			condition = condition.replaceAll("&lt;", "<");
+			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
+		} 
+		
+		return sb.toString();
+		
+	}
+	
 	public static String formatStringLiteral(String s) {
 	
 		s = s.trim();

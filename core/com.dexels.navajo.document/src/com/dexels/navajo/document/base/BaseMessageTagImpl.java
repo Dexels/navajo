@@ -52,6 +52,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 		return c;
 	}
 
+	public void removeLastChild() {
+		children.remove(children.size() - 1);
+	}
+	
 	@Override
 	public void addMap(MapAdapter m) {
 		children.add(m);

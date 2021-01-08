@@ -138,32 +138,17 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
-		sb.append("\n");
 		Map<String,String> map = getAttributes();
-		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			sb.append(NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN);
-		}
+		sb.append(NS3Utils.formatConditional(map.get("condition")));
+				
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
+			
 			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object:\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
 		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
 			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
-
-			sb.append(NS3Constants.PARAMETERS_START);
-			Map<String,String> parameters = new HashMap<>();
-			for ( String k : map.keySet() ) {
-				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
-					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
-				}
-			}
-			int index = 0;
-			for ( String k : parameters.keySet() ) {
-				index++;
-				sb.append(k + "=" + parameters.get(k));
-				if ( index < parameters.size() ) {
-					sb.append(NS3Constants.PARAMETERS_SEP);
-				}
-			}
-			sb.append(NS3Constants.PARAMETERS_END);
+			AttributeAssignments aa = new AttributeAssignments();
+			aa.addMap(map, "condition", "ref", "object");
+			sb.append(aa.format(false));
 		} else {
 			int index = 0;
 			if ( isMappedMessage() ) {

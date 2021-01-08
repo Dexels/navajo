@@ -23,12 +23,11 @@ public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
-		String r = NS3Utils.generateIndent(indent) + NS3Keywords.INCLUDE + " \"" + getScript() + "\"" + NS3Constants.EOL_DELIMITER + "\n";
-		w.write(r.getBytes());
-	}
-
-	public void setCondition(String consumedFragment) throws Exception {
-		throw new Exception("Condition not supported for include yet.");
+		StringBuffer sb = new StringBuffer();
+		sb.append(NS3Utils.generateIndent(indent));
+		sb.append(NS3Utils.formatConditional(getCondition()));
+		sb.append(NS3Keywords.INCLUDE + " \"" + getScript() + "\"" + NS3Constants.EOL_DELIMITER + "\n");
+		w.write(sb.toString().getBytes());
 	}
 	
 	@Override

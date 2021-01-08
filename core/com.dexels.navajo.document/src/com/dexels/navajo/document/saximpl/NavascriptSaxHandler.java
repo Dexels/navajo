@@ -13,6 +13,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -36,6 +37,7 @@ import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
+import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
 import com.dexels.navajo.document.navascript.tags.NS3Compatible;
@@ -62,7 +64,8 @@ public class NavascriptSaxHandler extends SaxHandler {
 	private Stack<FieldTag> currentField = new Stack<>();
 	private Stack<BaseNode> currentNode = new Stack<>();
 	private ValidationsTag validationsBlock;
-
+	private MapDefinitionInterrogator mapChecker;
+	
 	private static final Logger logger = LoggerFactory.getLogger(NavascriptSaxHandler.class);
 
 	public Navascript getNavascript() {
@@ -70,6 +73,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 	}
 
 
+	public void setMapChecker(MapDefinitionInterrogator mapDefinitionInterrogator) {
+		mapChecker = mapDefinitionInterrogator;
+	}
+	
 	@Override
 	public final void startElement(String tag, Map<String,String> h) throws Exception {
 
@@ -78,6 +85,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(currentDocument);
 			return;
 		}
+		
 
 		BaseNode currentParent = currentNode.lastElement();
 		
@@ -107,6 +115,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		if (tag.equals(Tags.INCLUDE)) {
 			IncludeTag it = new IncludeTag(currentDocument, (h.get("script")));
+			it.setCondition(h.get("condition"));
 			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
 				currentMap.lastElement().addInclude(it);
 			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
@@ -457,7 +466,11 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		if (currentMap.size() > 0 && tag.startsWith(currentMap.lastElement().getAdapterName()+".")) {  // navajomap.callwebservice
 			String fieldName = tag.split("\\.")[1];
-			if ( currentParent instanceof MessageTag && h.get(Attributes.VALUE) == null ) { // Mapped field if it is a getter (no value field specified and no expression under the tag)
+			String adapterName = tag.split("\\.")[0];
+			
+			boolean isField = mapChecker.isField(adapterName, fieldName);
+
+			if ( currentParent instanceof MessageTag && isField && h.get(Attributes.VALUE) == null ) { // Mapped field if it is a getter (no value field specified and no expression under the tag)
 				// map ref on message
 				MapTag mt = new MapTag(currentDocument, fieldName, h.get(Attributes.FILTER), currentMap.lastElement(), false);
 				Map<String,String> attributeMap = new HashMap<>();
@@ -501,12 +514,16 @@ public class NavascriptSaxHandler extends SaxHandler {
 					ExpressionTag et = new ExpressionTag(currentDocument, h.get(Attributes.CONDITION), h.get(Attributes.VALUE));
 					ft.addExpression(et);
 				}
-				if ( currentParent instanceof BlockTag) {
+				if ( currentParent instanceof MessageTag ) {
+					((MessageTag) currentParent).addField(ft);
+				} else if ( currentParent instanceof BlockTag) {
 					((BlockTag) currentParent).add(ft);
 				} else if ( currentParent instanceof FinallyTag ) {
 					((FinallyTag) currentParent).add(ft); 
+				} else if ( currentParent instanceof MapTag ){
+					((MapTag) currentParent).addField(ft); 
 				} else {
-					currentMap.lastElement().addField(ft);
+					throw new Exception("Cannot place tag " + tag + " (setter/operation) under this tag: " + currentParent);
 				}
 				currentField.push(ft);
 				currentNode.push(ft);
@@ -517,7 +534,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	@Override
 	public void endElement(String tag) throws Exception {
-
+		
 		if (currentMap.size() > 0 && tag.endsWith(currentMap.lastElement().getTagName())) {
 			currentMap.pop();
 			currentNode.pop();
@@ -619,6 +636,19 @@ public class NavascriptSaxHandler extends SaxHandler {
 			((ValueTag) n).setValue(text);
 		} else if ( n instanceof DefineTag ) {
 			((DefineTag) n).setExpression(text);
+		} else {
+			logger.info("Cannot place text under node, it must be a field tag. Correct");
+			currentNode.pop();
+			FieldTag ft = new FieldTag(currentMap.lastElement(), null, ((MapTag) n).getRefAttribute());
+			ft.setConstant(text);
+			BaseNode p = currentNode.lastElement();
+			if ( p instanceof MessageTag ) {
+				MessageTag mt = (MessageTag) p;
+				mt.removeLastChild();
+				mt.addField(ft);
+			}
+			currentNode.push(ft);
+			currentField.push(ft);
 		}
 	}
 
@@ -638,19 +668,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 			prevRead = read;
 		}
 		out.flush();
-	}
-
-	public static void main(String [] args) throws Exception {
-
-		FileInputStream fis = new FileInputStream(new File("/Users/arjenschoneveld/ProcessCountMatchEvents.xml"));
-		Navascript ns = NavajoFactory.getInstance().createNavaScript(fis);
-		fis.close();
-
-		// Print parsed Navascript:
-		//FileWriter fw = new FileWriter(new File("/Users/arjenschoneveld/output.xml")); 
-		ns.write(System.err);
-		//fw.close();
-
 	}
 
 }

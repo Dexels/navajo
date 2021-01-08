@@ -6,6 +6,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 package com.dexels.navajo.document;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 
 /**
  * <p>
@@ -389,6 +391,9 @@ public abstract class NavajoFactory {
 	 */
 	public abstract Navascript createNavaScript(java.io.InputStream stream);
 
+	
+	public abstract Navascript createNavaScript(FileInputStream fis, MapDefinitionInterrogator mapDefinitionInterrogatorImpl);
+	
 	/**
 	 * Create a NavaScript object from a given Object
 	 * 
@@ -812,5 +817,6 @@ public abstract class NavajoFactory {
 
 	public abstract Operation createOperation(Navajo n, String method,
 			String service, String validationService, String entityName, Message extra);
+
 
 }

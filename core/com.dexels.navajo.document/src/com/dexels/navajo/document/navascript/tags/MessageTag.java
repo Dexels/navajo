@@ -114,18 +114,11 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 				&&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((MessageTag) getChildren().get(0)).getType()));
 		String msgName = getName();
 		Map<String,String> map = getAttributes();
-		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
-			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
-			w.write(conditionStr.getBytes());
-			if ( !isArrayElement ) {
-				String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
-				w.write(start.getBytes());
-			}
-		} else if ( !isArrayElement ){
-			String start = NS3Utils.generateIndent(indent) + ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
-			w.write(start.getBytes());
-		}
+		w.write(NS3Utils.generateIndent(indent).getBytes());
+		w.write(NS3Utils.formatConditional(map.get("condition")).getBytes());
 		if ( !isArrayElement ) {
+			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
+			w.write(start.getBytes());
 			AttributeAssignments aa = new AttributeAssignments();
 			aa.addMap(getAttributes(), "name", "condition", ( hasArrayElements || "simple".equals(getType()) ? "type" : ""));
 			w.write(aa.format(true).getBytes());
@@ -137,7 +130,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 			} else if ( hasArrayElements ) {
 				openBlock = " [\n";
 			} else {
-				openBlock = " {\n\n";
+				openBlock = " {\n";
 			}
 			w.write(openBlock.getBytes());
 		} else {

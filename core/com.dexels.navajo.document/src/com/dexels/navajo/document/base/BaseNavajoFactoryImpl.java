@@ -5,6 +5,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document.base;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -28,6 +29,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
+import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
+import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.saximpl.NavascriptSaxHandler;
 import com.dexels.navajo.document.saximpl.SaxHandler;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
@@ -314,6 +317,23 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		oi.setEntityName(entityName);
 		oi.setExtraMessage(extra);
 		return oi;
+	}
+
+	@Override
+	public Navascript createNavaScript(FileInputStream fis, MapDefinitionInterrogator mapDefinitionInterrogator) {
+		try {
+			QDParser parser = new QDParser();
+			NavascriptSaxHandler sax = new NavascriptSaxHandler(parser);
+			sax.setMapChecker(mapDefinitionInterrogator);
+			try(Reader isr = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
+				parser.parse(sax, isr);
+			}
+			NavascriptTag nt =  (NavascriptTag) sax.getNavascript();
+			nt.setMapChecker(mapDefinitionInterrogator);
+			return nt;
+		} catch (Exception e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
 	}
 
 }
