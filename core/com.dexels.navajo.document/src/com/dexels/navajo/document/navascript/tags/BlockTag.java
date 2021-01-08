@@ -39,7 +39,8 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 			condition = condition.replaceAll("&lt;", "<");
 			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
 		} 
-		sb.append("{\n");
+		sb.append(NS3Constants.OPEN_BLOCK);
+		sb.append("\n");
 		w.write(sb.toString().getBytes());
 		// Loop over children
 		for ( BaseNode n : getChildren() ) {
@@ -48,7 +49,7 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 			}
 		}
 
-		w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
+		w.write((NS3Utils.generateIndent(indent) + NS3Constants.CLOSE_BLOCK + "\n").getBytes());
 
 	}
 

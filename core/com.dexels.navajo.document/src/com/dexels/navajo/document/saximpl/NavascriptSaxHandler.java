@@ -426,8 +426,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 			String description = h.get(Attributes.DESCRIPTION);
 			String length = h.get(Attributes.LENGTH);
 			String cardinality = h.get(Attributes.CARDINALITY);
+			String condition = h.get(Attributes.CONDITION);
 			int iLen = ( length != null ? Integer.parseInt(length) : 0 );
 			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, iLen, description, direction);
+			pt.setCondition(condition);
 			MessageTag parent = ( currentMessage.size() > 0 ? currentMessage.lastElement() : null);
 
 			if ( cardinality != null ) {

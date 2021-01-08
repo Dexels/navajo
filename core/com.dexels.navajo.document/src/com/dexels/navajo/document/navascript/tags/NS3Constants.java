@@ -14,9 +14,13 @@ public class NS3Constants {
 	public static String PARAMETERS_SEP = ", ";
 	public static String EXPRESSION_ASSIGNMENT = "=";
 	public static String LITERAL_ASSIGNMENT = "=";
-	public static String ATTRIBUTE_ASSIGNMENT = ":";
+	public static String ATTRIBUTE_ASSIGNMENT = "=";
 	public static String FIELD_SETTER_GETTER = "$";
 	public static String ADAPTER_OPERATION = ".";
 	public static String DOUBLE_QUOTE = "\"";
+	public static String OPEN_BLOCK = "{";
+	public static String CLOSE_BLOCK = "}";
+	public static String OPEN_LIST = "[";
+	public static String CLOSE_LIST = "]";
 	
 }

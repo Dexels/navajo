@@ -30,24 +30,14 @@ public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 			sb.append(NS3Constants.CONDITION_IF + condition + NS3Constants.CONDITION_THEN);
 		} 
 		
-		sb.append(NS3Keywords.BREAK + NS3Constants.PARAMETERS_START);
-		int index = 0;
-		if ( getConditionId() != null ) {
-			if ( index > 0 ) sb.append(",");
-			sb.append(NS3Keywords.BREAK_CONDITIONID+"="+getConditionId());
-			index++;
-		}
-		if ( getConditionDescription() != null ) {
-			if ( index > 0 ) sb.append(",");
-			sb.append(NS3Keywords.BREAK_CONDITIONDESCRIPTION+"="+getConditionDescription());
-			index++;
-		}
-		if ( getError() != null ) {
-			if ( index > 0 ) sb.append(",");
-			sb.append(NS3Keywords.BREAK_ERROR+"="+getError());
-			index++;
-		}
-		sb.append(NS3Constants.PARAMETERS_END);
+		AttributeAssignments aa = new AttributeAssignments();
+		aa.add(NS3Keywords.BREAK_CONDITIONID, getConditionId())
+		  .add(NS3Keywords.BREAK_CONDITIONDESCRIPTION, getConditionDescription())
+		  .add(NS3Keywords.BREAK_ERROR, getError());
+		
+		sb.append(NS3Keywords.BREAK);
+		sb.append(aa.format(false));
+		
 		sb.append(NS3Constants.EOL_DELIMITER + "\n");
 		w.write(sb.toString().getBytes());
 	}

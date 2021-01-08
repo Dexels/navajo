@@ -31,18 +31,11 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
 		sb.append("synchronized ");
-		sb.append(NS3Constants.PARAMETERS_START);
-		Map<String,String> parameters = getAttributes();
-		int index = 0;
-		for ( String k : parameters.keySet() ) {
-			index++;
-			sb.append(k + "=" + parameters.get(k));
-			if ( index < parameters.size() ) {
-				sb.append(NS3Constants.PARAMETERS_SEP);
-			}
-		}
-		sb.append(NS3Constants.PARAMETERS_END);
-		sb.append("{\n");
+		// Format attributes
+		AttributeAssignments aa = new AttributeAssignments();
+		aa.addMap(getAttributes());
+		sb.append(aa.format(false));
+		sb.append(" {\n");
 		w.write(sb.toString().getBytes());
 		// Loop over children
 		for ( BaseNode n : getChildren() ) {
@@ -50,7 +43,6 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 				((NS3Compatible) n).formatNS3(indent + 1, w);
 			}
 		}
-
 		w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
 	}
 

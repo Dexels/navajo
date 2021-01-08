@@ -77,29 +77,10 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 		}
 		// Check for attributes
 		if ( !isArrayElement ) {
-			int index = 0;
-			StringBuffer attributes = new StringBuffer();
-			if ( getMode() != null && !"".equals(getMode())) {
-				if ( index > 0 ) {
-					w.write(",".getBytes());
-				}
-				String ob = "mode:"+getMode().replaceAll("_", "");
-				attributes.append(ob);
-				index++;
-			}
-			if ( getType() != null && !hasArrayElements && !"simple".equals(getType()) && !"".equals(getType())) {
-				if ( index > 0 ) {
-					w.write(",".getBytes());
-				}
-				String ob = "type:"+getType();
-				attributes.append(ob);
-				index++;
-			}
-			if ( index > 0 ) {
-				sb.append(NS3Constants.PARAMETERS_START);
-				sb.append(attributes.toString());
-				sb.append(NS3Constants.PARAMETERS_END);
-			}
+			AttributeAssignments aa = new AttributeAssignments();
+			aa.addMap(getAttributes(), "name", "condition", ( hasArrayElements || "simple".equals(getType()) ? "type" : ""));
+			sb.append(" ");
+			sb.append(aa.format(true));
 		}
 
 		boolean hasParam = hasParamChildren(); // It has a param array element

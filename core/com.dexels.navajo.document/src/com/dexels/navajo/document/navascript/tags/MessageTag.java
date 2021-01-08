@@ -18,7 +18,6 @@ import com.dexels.navajo.document.base.BaseNode;
 public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	private NavascriptTag myScript;
-	private int ignoredMessageLevel = 0;
 
 	public MessageTag(NavascriptTag n) {
 		super(n);
@@ -112,8 +111,8 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		int size = getChildren().size();
 		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));
 		boolean hasArrayElements = ( getChildren().size() > 0 && getChildren().get(0) instanceof MessageTag 
-				 &&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((MessageTag) getChildren().get(0)).getType()));
-		String msgName = NS3Utils.removeParentAddressing(ignoredMessageLevel, getName());
+				&&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((MessageTag) getChildren().get(0)).getType()));
+		String msgName = getName();
 		Map<String,String> map = getAttributes();
 		if ( map.get("condition") != null && !"".equals(map.get("condition"))) {
 			String conditionStr = NS3Utils.generateIndent(indent) + NS3Constants.CONDITION_IF + map.get("condition").replaceAll("&gt;", ">").replaceAll("&lt;", "<") + NS3Constants.CONDITION_THEN;
@@ -127,43 +126,18 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 			w.write(start.getBytes());
 		}
 		if ( !isArrayElement ) {
-			int index = 0;
-			StringBuffer attributes = new StringBuffer();
-			if ( getOrderBy() != null && !"".equals(getOrderBy())) {
-				String ob = "orderby=" + getOrderBy() + " ";
-				attributes.append(ob);
-				index++;
-			}
-			if ( getMode() != null && !"".equals(getMode())) {
-				if ( index > 0 ) {
-					w.write(",".getBytes());
-				}
-				String ob = "mode:"+getMode().replaceAll("_", "");
-				attributes.append(ob);
-				index++;
-			}
-			if ( getType() != null && !hasArrayElements && !"simple".equals(getType()) && !"".equals(getType())) {
-				if ( index > 0 ) {
-					w.write(",".getBytes());
-				}
-				String ob = "type:"+getType();
-				attributes.append(ob);
-				index++;
-			}
-			if ( index > 0 ) {
-				w.write(NS3Constants.PARAMETERS_START.getBytes());
-				w.write(attributes.toString().getBytes());
-				w.write(NS3Constants.PARAMETERS_END.getBytes());
-			}
+			AttributeAssignments aa = new AttributeAssignments();
+			aa.addMap(getAttributes(), "name", "condition", ( hasArrayElements || "simple".equals(getType()) ? "type" : ""));
+			w.write(aa.format(true).getBytes());
 		}
 		if ( size > 0 ) {
 			String openBlock = null;
 			if ( isArrayElement ) {
-				openBlock = "\n" + NS3Utils.generateIndent(indent) + "{\n" ;
+				openBlock = "\n" + NS3Utils.generateIndent(indent) + " {\n" ;
 			} else if ( hasArrayElements ) {
-				openBlock = "[\n";
+				openBlock = " [\n";
 			} else {
-				openBlock = "{\n\n";
+				openBlock = " {\n\n";
 			}
 			w.write(openBlock.getBytes());
 		} else {

@@ -65,35 +65,14 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		}
 		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !isSetter && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
 			sb.append(NS3Constants.ADAPTER_OPERATION + getName());
-			sb.append(NS3Constants.PARAMETERS_START);
-			Map<String,String> parameters = new HashMap<>();
-			for ( String k : map.keySet() ) {
-				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
-					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
-				}
-			}
-			int index = 0;
-			for ( String k : parameters.keySet() ) {
-				index++;
-				sb.append(k + "=" + parameters.get(k));
-				if ( index < parameters.size() ) {
-					sb.append(NS3Constants.PARAMETERS_SEP);
-				}
-			}
-			sb.append(NS3Constants.PARAMETERS_END);
+			AttributeAssignments aa = new AttributeAssignments();
+			aa.addMap(map, "condition", "ref", "object");
+			sb.append(aa.format(false));
 			sb.append(NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
 		} else if ( getChildren() != null && getChildren().get(0) instanceof MapTag ) { // <map ref=<array message> >
 
 			sb.append("$"+getName());
-//			sb.append(NS3Constants.PARAMETERS_START);
-//			Map<String,String> parameters = new HashMap<>();
-//			for ( String k : map.keySet() ) {
-//				if ( !"condition".equals(k) && !"ref".equals(k) && !"object".equals(k) ) {
-//					parameters.put(k, NS3Constants.EXPRESSION_START + map.get(k) + NS3Constants.EXPRESSION_END);
-//				}
-//			}
-//			sb.append(NS3Constants.PARAMETERS_END);
 			sb.append(" {\n");
 			w.write(sb.toString().getBytes());
 			((MapTag) getChildren().get(0)).setMappedMessage(true); // Mark map as a mapped message
