@@ -82,7 +82,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		} else { // standard "setter" field
 			if ( getConstant() != null ) { // setter with a constant string literal
 				sb.append("$"+getName() + " = ");
-				sb.append(NS3Utils.formatStringLiteral(getConstant()));
+				sb.append(NS3Utils.formatStringLiteral(indent, getConstant()));
 				w.write(sb.toString().getBytes());
 			} else if ( getChildren() == null ) { // it must have a value attribute.
 				sb.append("$"+getName() + " = ");

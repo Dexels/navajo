@@ -54,9 +54,29 @@ public class NS3Utils {
 		
 	}
 	
-	public static String formatStringLiteral(String s) {
+	public static String removeTrailingWhiteSpaces(int length, String s) {
+		StringBuffer sb = new StringBuffer();
+		
+		String [] lines = s.split("\n");
+		sb.append(lines[0] + "\n");
+		for ( int j = 1; j < lines.length; j++ ) { // replace length space for all lines after the first
+			String line = lines[j];
+			for ( int i = 0; i < length; i++ ) { 
+				line = line.replaceFirst(" ", "");
+			}
+			sb.append(line);
+			if ( j < lines.length - 1 ) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
+	
+	public static String formatStringLiteral(int indent, String s) {
 	
 		s = s.trim();
+		s = removeTrailingWhiteSpaces(generateIndent(indent+1).length(), s);
+		s = s.replaceAll("\n", "\n" + generateIndent(indent+1));
 		int newLineAt = s.length() - 1;
 		if ( s.charAt(newLineAt) == '\n')  {
 			s = s.substring(0, newLineAt);
@@ -93,9 +113,9 @@ public class NS3Utils {
 
 	public static void main(String [] args) throws Exception {
 
-		String test = "../../../Aap";
+		String test = "   Aap\n  Noot\n            Mies\n     Vuur\n";
 		
-		System.err.println(NS3Utils.removeParentAddressing(2,test));
+		System.err.println(NS3Utils.removeTrailingWhiteSpaces(4, test));
 		
 	}
 }

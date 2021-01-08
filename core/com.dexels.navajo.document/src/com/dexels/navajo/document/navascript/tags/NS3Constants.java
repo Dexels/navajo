@@ -3,7 +3,7 @@ package com.dexels.navajo.document.navascript.tags;
 public class NS3Constants {
 
 	public static String EOL_DELIMITER = ";";
-	public static String INDENT_STEP = "\t";
+	public static String INDENT_STEP = "    ";
 	public static String CONDITION_IF = "if ";
 	public static String CONDITION_THEN = " then ";
 	public static String CONDITION_ELSE = "else ";

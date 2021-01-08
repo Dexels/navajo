@@ -139,27 +139,26 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
+		sb.append(NS3Utils.generateIndent(indent));
 		sb.append(NS3Utils.formatConditional(map.get("condition")));
 				
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
-			
-			sb.append(NS3Utils.generateIndent(indent) + "map" + NS3Constants.PARAMETERS_START + "object:\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+			sb.append( "map" + NS3Constants.PARAMETERS_START + "object:\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
 		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
-			sb.append(NS3Utils.generateIndent(indent) + "map." + getAdapterName());
+			sb.append("map." + getAdapterName());
 			AttributeAssignments aa = new AttributeAssignments();
 			aa.addMap(map, "condition", "ref", "object");
 			sb.append(aa.format(false));
 		} else {
 			int index = 0;
 			if ( isMappedMessage() ) {
-				sb.append(NS3Utils.generateIndent(indent));
 				if ( getRefAttribute().indexOf("[") == -1 ) {
 					sb.append("[" + getRefAttribute() + "] ");
 				} else {
 					sb.append(getRefAttribute());
 				}
 			} else {
-				sb.append(NS3Utils.generateIndent(indent) + "$" + getRefAttribute() + " ");
+				sb.append("$" + getRefAttribute() + " ");
 			}
 			if ( getFilter() != null && !"".equals(getFilter())) {
 				sb.append(NS3Constants.PARAMETERS_START);

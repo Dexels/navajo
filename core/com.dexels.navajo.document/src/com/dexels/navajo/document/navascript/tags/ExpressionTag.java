@@ -42,7 +42,7 @@ public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatibl
 			sb.append(NS3Utils.formatConditional(condition));
 		} 
 		if ( getConstant() != null ) {
-			sb.append(NS3Utils.formatStringLiteral(getConstant()));
+			sb.append(NS3Utils.formatStringLiteral(indent, getConstant()));
 		} else
 		if ( getValueTag() != null ) {
 			String value = getValueTag().getValue();
