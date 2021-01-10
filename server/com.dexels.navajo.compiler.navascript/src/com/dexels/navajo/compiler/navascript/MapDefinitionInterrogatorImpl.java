@@ -19,7 +19,7 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 	
 	public MapDefinitionInterrogatorImpl() throws ClassNotFoundException, KeywordException {
 		
-		mapMetaData = MapMetaData.getInstance();
+		mapMetaData = MapMetaData.getInstance(MapDefinitionInterrogatorImpl.class.getClassLoader());
 		
 	}
 
