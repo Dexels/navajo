@@ -1,7 +1,0 @@
-|>single(count=15)
-->set(id=[@index])
-->$filterPartial
-->tml(messageName='Blem',isArray=true)
-
-filterPartial = ->filter([id]%3!=0)
-					->filter([id]%2!=0)

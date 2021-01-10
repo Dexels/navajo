@@ -1,8 +1,0 @@
-<reactive array="Organization">
-	<source.sql resource="dummy">
-		<param name="query">select * from ORGANIZATION WHERE ROWNUM &lt;=40</param>
-		<stream messageName="Club">
-			<param.eval name="isArray">true</param.eval>
-		</stream>
-	</source.sql>
-</reactive>

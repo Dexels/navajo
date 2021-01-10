@@ -1,7 +1,0 @@
-<reactive>
-	<source.eventstream classpath="tml.xml">
-		<flatten/>
-		<streamtoimmutable path="Member"/>
-		<stream messageName="Person" isArray.eval="true"/>
-	</source.eventstream>
-</reactive>
