@@ -1,4 +1,0 @@
-=>(methods='baaap')
-single()
-	->set(aap='noot')
-	->tml(messageName='Bla', isArray=true)

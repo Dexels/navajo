@@ -1,4 +1,0 @@
-single()
-	->set(ClubIdentifier='BBFW63X')
-	->tmlstream(messageName='Club', isArray=false)
-	->callLocal(service='club/ProcessQueryClub',debug=true)

@@ -24,8 +24,6 @@
         <module>com.dexels.navajo.listeners.continuations</module>
         <module>com.dexels.navajo.adapters.stream</module>
         <module>com.dexels.navajo.listeners.stream</module>
-        <module>com.dexels.navajo.reactive</module>
-        <module>com.dexels.navajo.reactive.subscriber</module>
         <module>com.dexels.navajo.queuemanager</module>
         <module>com.dexels.navajo.adapters</module>
         <module>com.dexels.navajo.adapters.resource</module>
@@ -53,7 +51,6 @@
         <module>com.dexels.navajo.entity</module>
         <module>com.dexels.navajo.instance.factory</module>
         <module>com.dexels.navajo.server.feature</module>
-        <module>com.dexels.navajo.reactive.feature</module>
     </modules>
     
 </project>
