@@ -1,7 +1,0 @@
-single()
-	->set(name='outer')
-	->join( ->single()
-			->set(name='inner')
-			->reduce(saveall(sum=0),set(sum=[@sum]+[id]))
-		)
-	->tml(messageName='Test',isArray=false)

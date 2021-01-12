@@ -1,3 +1,0 @@
-|>single(count=5,debug=true)
-	->set(number=[@index])
-	->pipe(service='pipeinput',debug=true)

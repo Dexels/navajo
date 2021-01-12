@@ -1,3 +1,0 @@
-|>single(count=6)
-	->set(name='Joe'+[@index],BankAccount/balance=[@index])
-	->csv(delimiter=',',[name],ToString([BankAccount/balance]))

@@ -18,9 +18,6 @@
    <feature id="com.dexels.navajo.core.feature">
       <category name="Navajo Core"/>
    </feature>
-   <feature id="com.dexels.navajo.reactive.feature">
-      <category name="Navajo Optional Packages"/>
-   </feature>
    <feature url="features/com.dexels.navajo.streams.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.streams.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
@@ -29,6 +26,5 @@
    </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
-   <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
    <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
 </site>
