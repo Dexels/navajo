@@ -26,6 +26,5 @@
    </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
-   <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
    <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
 </site>
