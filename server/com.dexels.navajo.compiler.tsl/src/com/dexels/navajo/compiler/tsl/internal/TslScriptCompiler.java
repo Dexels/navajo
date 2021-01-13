@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.compiler.tsl.internal;
@@ -24,19 +24,30 @@ import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslScriptCompiler extends ScriptCompiler {
+
     private static final Logger logger = LoggerFactory.getLogger(TslScriptCompiler.class);
-	private static final String SCRIPT_PATH = "scripts";
+
+    private static final String SCRIPT_PATH = "scripts";
     private static final String SCRIPT_EXTENSION = ".xml";
 
     private ClassLoader classLoader = null;
     private TslCompiler compiler;
-    
-    String[] standardPackages = new String[] { "com.dexels.navajo.document", "com.dexels.navajo.document.types",
-            "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping",
-            "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta",
-            "com.dexels.navajo.parser", "com.dexels.navajo.loader", "org.osgi.framework",
-            "com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional",
-            "com.dexels.navajo.server.resource;resolution:=optional" };
+
+    String[] standardPackages = new String[] {
+            "com.dexels.navajo.document",
+            "com.dexels.navajo.document.types",
+            "com.dexels.navajo.enterprise.entity;resolution:=optional",
+            "com.dexels.navajo.enterprise.entity.impl;resolution:=optional",
+            "com.dexels.navajo.loader",
+            "com.dexels.navajo.mapping",
+            "com.dexels.navajo.mapping.compiler.meta",
+            "com.dexels.navajo.parser",
+            "com.dexels.navajo.script.api",
+            "com.dexels.navajo.server",
+            "com.dexels.navajo.server.enterprise.tribe",
+            "com.dexels.navajo.server.resource;resolution:=optional",
+            "org.osgi.framework"
+    };
 
     public void activate() {
         logger.debug("Activating TSL compiler");
@@ -47,7 +58,7 @@ public class TslScriptCompiler extends ScriptCompiler {
         logger.debug("Deactivating TSL compiler");
     }
 
- 
+
     @Override
     public Set<String> compileScript(File scriptPath, String script, String packagePath, List<Dependency> dependencies,
             String tenant, boolean hasTenantSpecificFile, boolean forceTenant) throws CompilationException, SkipCompilationException {
@@ -95,12 +106,12 @@ public class TslScriptCompiler extends ScriptCompiler {
         return true;
     }
 
-    
+
     @Override
     public String getScriptExtension() {
         return SCRIPT_EXTENSION;
     }
-    
+
     @Override
     public String getRelativeScriptPath() {
         return SCRIPT_PATH;
