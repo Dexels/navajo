@@ -28,7 +28,6 @@
         <module>com.dexels.navajo.article</module>
         <module>com.dexels.navajo.authentication.api</module>
         <module>com.dexels.navajo.compiler.tsl</module>
-        <module>com.dexels.navajo.entity</module>
         <module>com.dexels.navajo.instance.factory</module>
         <module>com.dexels.navajo.listeners</module>
         <module>com.dexels.navajo.listeners.continuations</module>
