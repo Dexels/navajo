@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.entity.resourceresolver">
-  <implementation class="com.dexels.navajo.entity.listener.EntityUiResolver"/>
-  <property name="osgi.http.whiteboard.resource.prefix" type="String" value="/entityApi"/>
-  <property name="osgi.http.whiteboard.resource.pattern" type="String" value="/entityApi"/>
-  <service>
-     <provide interface="java.lang.Object"/>
-  </service>
-</scr:component>
