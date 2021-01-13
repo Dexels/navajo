@@ -77,7 +77,6 @@
         <setEntry value="com.dexels.navajo.document.stream@default:default"/>
         <setEntry value="com.dexels.navajo.document@default:default"/>
         <setEntry value="com.dexels.navajo.elasticsearch@default:default"/>
-        <setEntry value="com.dexels.navajo.entity@default:default"/>
         <setEntry value="com.dexels.navajo.example.adapter@default:default"/>
         <setEntry value="com.dexels.navajo.example.listener@default:default"/>
         <setEntry value="com.dexels.navajo.fileuploadservlet@default:default"/>
