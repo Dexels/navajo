@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.dependency;
@@ -70,13 +70,13 @@ public class TslPreCompiler {
         	if (is != null) {
         		try {
 					is.close();
-				} catch (IOException e) { 
+				} catch (IOException e) {
         			logger.error("Error: ", e);
 				}
         	}
-        	
+
         }
-        
+
 
         getAllDependencies(script.getAbsolutePath(), scriptTenant, scriptFolder, deps, tslDoc);
     }
@@ -352,8 +352,8 @@ public class TslPreCompiler {
                     // Unable to resolve param
                     logger.debug("Unable to resolve param {} in script {}", navajoScript, scriptFile);
                 }
-                
-               
+
+
 
             } else if (navajoScript.startsWith("[/")) {
                 // The navajo script is retrieved from the Indoc or database
@@ -367,7 +367,7 @@ public class TslPreCompiler {
         // Entity map
         xPath = XPathFactory.newInstance().newXPath();
 
-        nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);
+        nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.enterprise.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); ++i) {
             Element expression = (Element) nodes.item(i);
@@ -448,7 +448,7 @@ public class TslPreCompiler {
                 return;
             }
         }
-        
+
         String navajoScriptFilePartial = scriptFolder + File.separator + cleanScript;
 
         // Check if exists

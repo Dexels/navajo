@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.compiler;
@@ -35,13 +35,13 @@ import com.dexels.navajo.server.NavajoIOConfig;
 
 /**
  * Interface for TSL compiling service
- * 
+ *
  * @author cbrouwer
  *
  */
 public abstract class ScriptCompiler {
     private static final Logger logger = LoggerFactory.getLogger(ScriptCompiler.class);
-    
+
     protected ExpressionEvaluator expressionEvaluator;
     protected NavajoIOConfig navajoIOConfig = null;
 
@@ -60,9 +60,9 @@ public abstract class ScriptCompiler {
             packagePath = "";
             scriptName = script;
         }
-        
+
         Set<String> packages = compileScript(scriptPath, scriptName, packagePath, dependencies, tenant, hasTenantSpecificFile, forceTenant);
-        
+
         // Before generating OSGi stuff, check forceTenant
         if (forceTenant) {
             scriptName += "_" + tenant;
@@ -79,7 +79,7 @@ public abstract class ScriptCompiler {
                 scriptString = packagePath + "/" + (script + "_" + tenant).replaceAll("_", "|");
             }
         }
-        
+
         Set<String> dependentResources = processDependencies(dependencies);
         generateFactoryClass(scriptName, packagePath, dependentResources);
 
@@ -99,7 +99,7 @@ public abstract class ScriptCompiler {
                 final AdapterFieldDependency adapterFieldDep = (AdapterFieldDependency) d;
                 logger.info("ID: {}. It's an aadapter field. with multiple: {} type {}", adapterFieldDep.getId(),
                         adapterFieldDep.hasMultipleDependencies(), adapterFieldDep.getClass());
-                
+
                 Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null,Optional.empty(),Optional.empty());
                 if (op != null && op.value instanceof String) {
                     logger.debug("Succeeded evaluation of id: {}", ((String) op.value));
@@ -118,7 +118,7 @@ public abstract class ScriptCompiler {
         }
         return dependentResources;
     }
-    
+
     private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
 
         String javaPackagePath = packagePath.replaceAll("/", ".");
@@ -165,13 +165,13 @@ public abstract class ScriptCompiler {
         w.close();
 
     }
-    
+
     private void generateManifest(String fullScript, String version, String packagePath, String script, Set<String> packages) throws IOException {
     	String description = fullScript.replace('/',  '.');
     	String symbolicName = "navajo.script." + description;
         PrintWriter w = new PrintWriter(
                 navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
-        
+
         // properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
         w.print("Manifest-Version: 1.0\r\n");
         w.print("Bundle-SymbolicName: " + symbolicName + "\r\n");
@@ -222,11 +222,11 @@ public abstract class ScriptCompiler {
         w.flush();
         w.close();
     }
-    
+
     private String getRelative(File base, File path) {
     	return base.toURI().relativize(path.toURI()).getPath();
     }
-    
+
     private String formatCompilationDate() {
         return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     }
@@ -274,7 +274,7 @@ public abstract class ScriptCompiler {
         XMLElement provide = new CaseSensitiveXMLElement("provide");
         service.addChild(provide);
         provide.setAttribute("interface", CompiledScriptFactory.class.getName());
-        
+
 
         addProperty("navajo.scriptName", "String", symbolicName, xe);
         addProperty("navajo.compileddate", "String",  compiledDate, xe);
@@ -302,10 +302,10 @@ public abstract class ScriptCompiler {
         xe.write(w);
         w.flush();
         w.close();
-        
+
         return compiledDate;
     }
-    
+
     private void addResourceField(String res, PrintWriter ww) {
         ww.println("private Object _" + res + ";");
     }
@@ -326,7 +326,7 @@ public abstract class ScriptCompiler {
             return null;
         }
     }
-    
+
     private String getTentantSpecificDependency(List<Dependency> dependencies) {
         for (Dependency d : dependencies) {
             if (d instanceof IncludeDependency) {
@@ -362,12 +362,12 @@ public abstract class ScriptCompiler {
 
         XMLElement implementation = new CaseSensitiveXMLElement("implementation");
         xe.addChild(implementation);
-        implementation.setAttribute("class", "com.dexels.navajo.entity.Entity");
+        implementation.setAttribute("class", "com.dexels.navajo.enterprise.entity.Entity");
         XMLElement service = new CaseSensitiveXMLElement("service");
         xe.addChild(service);
         XMLElement provide = new CaseSensitiveXMLElement("provide");
         service.addChild(provide);
-        provide.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+        provide.setAttribute("interface", "com.dexels.navajo.enterprise.entity.Entity");
 
         addProperty("entity.name", "String", entityName, xe);
         addProperty("service.name", "String", fullName, xe);
@@ -378,7 +378,7 @@ public abstract class ScriptCompiler {
         refMan.setAttribute("unbind", "clearEntityManager");
         refMan.setAttribute("policy", "dynamic");
         refMan.setAttribute("cardinality", "1..1");
-        refMan.setAttribute("interface", "com.dexels.navajo.entity.EntityManager");
+        refMan.setAttribute("interface", "com.dexels.navajo.enterprise.entity.EntityManager");
         refMan.setAttribute("name", "EntityManager");
         xe.addChild(refMan);
 
@@ -401,7 +401,7 @@ public abstract class ScriptCompiler {
                 depref.setAttribute("name", "SuperEntity" + i);
                 depref.setAttribute("policy", "static");
                 depref.setAttribute("cardinality", "1..1");
-                depref.setAttribute("interface", "com.dexels.navajo.entity.Entity");
+                depref.setAttribute("interface", "com.dexels.navajo.enterprise.entity.Entity");
                 depref.setAttribute("target", "(entity.name=" + extendedEntity + ")");
                 depref.setAttribute("bind", "addSuperEntity");
                 depref.setAttribute("unbind", "removeSuperEntity");
@@ -467,17 +467,17 @@ public abstract class ScriptCompiler {
      *         ScriptCompiler can handle
      */
     public abstract String getScriptExtension();
-    
+
     /**
      * @return Returns the relative script path, i.e. "scripts" or "scalascripts"
      */
     public abstract String getRelativeScriptPath();
-    
+
     /**
      * @return Returns the required OSGi bundles
      */
     public abstract Set<String> getRequiredBundles();
-    
+
     /**
      * @return Returns whether this compiler supports TSL style depdenencies
      */

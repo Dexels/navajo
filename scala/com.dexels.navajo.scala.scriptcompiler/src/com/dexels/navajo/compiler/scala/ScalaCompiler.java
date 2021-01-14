@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.compiler.scala;
@@ -31,37 +31,50 @@ import scala.tools.nsc.reporters.ConsoleReporter;
 import scala.tools.reflect.ReflectGlobal;
 
 public class ScalaCompiler extends ScriptCompiler {
-	private static final String SCRIPT_PATH = "scripts";
-    private static final String SCRIPTEXTENSION = ".scala";
-    
-    private ClassLoader navajoScriptClassLoader;
-    private File commonDir;
-    
-    Set<String> whitelist = new HashSet<>();
-    
-    String[] standardPackages = new String[] {"com.dexels.navajo.document", "com.dexels.navajo.document.types",
-            "com.dexels.navajo.script.api", "com.dexels.navajo.server", "com.dexels.navajo.mapping", "com.dexels.navajo.expression.api",
-            "com.dexels.navajo.server.enterprise.tribe", "com.dexels.navajo.mapping.compiler.meta",
-            "com.dexels.navajo.parser", "com.dexels.navajo.loader", "org.osgi.framework",
-            "com.dexels.navajo.entity;resolution:=optional", "com.dexels.navajo.entity.impl;resolution:=optional",
-            "com.dexels.navajo.server.resource;resolution:=optional" };
-    String[] standardReqBundles = new String[] { "org.scala-lang.scala-library;bundle-version=\"2.11.2\"",
-    		 "com.dexels.navajo.mongo",
-    		 "com.dexels.navajo.adapters",
-    		 "com.dexels.navajo.enterprise.adapters",
-    		 "com.dexels.replication.api",
-    		 "com.dexels.immutable.api",
-    		 "com.sportlink.adapters",
-    		 "com.dexels.navajo.enterprise.pubsub",
-             "com.dexels.navajo.function",
-    		 "com.sportlink.financial.adapters"};
-    
 
     private static final Logger logger = LoggerFactory.getLogger(ScalaCompiler.class);
 
+	private static final String SCRIPT_PATH = "scripts";
+	private static final String SCRIPTEXTENSION = ".scala";
+
+    private ClassLoader navajoScriptClassLoader;
+    private File commonDir;
+
+    Set<String> whitelist = new HashSet<>();
+
+    String[] standardPackages = new String[] {
+            "com.dexels.navajo.document",
+            "com.dexels.navajo.document.types",
+            "com.dexels.navajo.enterprise.entity;resolution:=optional",
+            "com.dexels.navajo.enterprise.entity.impl;resolution:=optional",
+            "com.dexels.navajo.expression.api",
+            "com.dexels.navajo.loader",
+            "com.dexels.navajo.mapping",
+            "com.dexels.navajo.mapping.compiler.meta",
+            "com.dexels.navajo.parser",
+            "com.dexels.navajo.script.api",
+            "com.dexels.navajo.server",
+            "com.dexels.navajo.server.enterprise.tribe",
+            "com.dexels.navajo.server.resource;resolution:=optional",
+            "org.osgi.framework"
+    };
+
+    String[] standardReqBundles = new String[] {
+            "com.dexels.immutable.api",
+            "com.dexels.navajo.adapters",
+            "com.dexels.navajo.function",
+            "com.dexels.navajo.mongo",
+            "com.dexels.navajo.enterprise.adapters",
+            "com.dexels.navajo.enterprise.pubsub",
+            "com.dexels.replication.api",
+            "com.sportlink.adapters",
+            "com.sportlink.financial.adapters",
+            "org.scala-lang.scala-library;bundle-version=\"2.11.2\""
+    };
+
     public void activate(Map<String, Object> osgisettings) {
        if (osgisettings.containsKey("whitelist")) {
-           
+
            String whitelistString = (String) osgisettings.get("whitelist");
            String[] splitted  = whitelistString.split(",");
            for (String anImport : splitted) {
@@ -71,37 +84,37 @@ public class ScalaCompiler extends ScriptCompiler {
                whitelist.add(anImport);
            }
        }
-       
+
     }
-    
-    
+
+
     @Override
     protected Set<String> compileScript(File scriptFile, String script, String packagePath, List<Dependency> dependencies, String tenant,
             boolean hasTenantSpecificFile, boolean forceTenant) throws CompilationException {
     	final Set<String> packages = new HashSet<>();
-    	
+
         for (String pkg : standardPackages) {
             packages.add(pkg);
         }
-        
+
         PackageReportingClassLoader prc = new PackageReportingClassLoader(navajoScriptClassLoader);
         prc.addPackageListener(name -> {
 		    if (whitelist.contains(name)) {
 		        packages.add(name);
 		    }
 		});
-        
+
 
         File targetDir = new File(navajoIOConfig.getCompiledScriptPath(), packagePath + File.separator + script);
         targetDir.mkdirs();
-        
+
         Settings settings = new Settings();
         settings.outputDirs().setSingleOutput(targetDir.getAbsolutePath()) ;
         ConsoleReporter reporter = new ConsoleReporter(settings);
 
         ReflectGlobal g = new ReflectGlobal(settings, reporter, prc);
         Global.Run compiler = g.new Run();
-        
+
         ListBuffer<String> files = new ListBuffer<>();
         String file = scriptFile.getAbsolutePath();
 

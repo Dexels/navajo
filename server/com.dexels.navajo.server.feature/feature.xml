@@ -78,13 +78,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.entity"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.listeners.continuations"
          download-size="0"
          install-size="0"
@@ -107,6 +100,13 @@
 
    <plugin
          id="com.dexels.navajo.compiler.tsl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.adapters.stream"
          download-size="0"
          install-size="0"
          version="0.0.0"
