@@ -80,26 +80,31 @@ public class MapMetaData {
 //						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
-
-					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
-
-					XMLElement config = new CaseSensitiveXMLElement();
-					config.parseFromReader(br);
-					br.close();
-					
-				
-					if ( config.getName().equals("adapterdef")) {
-						Vector<XMLElement> allmaps = config.getElementsByTagName("map");
-						for ( int i = 0; i < allmaps.size(); i++ ) {
-							XMLElement map = allmaps.get(i);
-							addMapDefinition(map);
-						}
-					}
+					readExtentionDefinition(ed);
 					
 				}
 			} catch (IOException e) {
 				logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
+			}
+		}
+	}
+
+	public void readExtentionDefinition(ExtensionDefinition ed) throws IOException, ClassNotFoundException, KeywordException {
+		
+		System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
+
+		XMLElement config = new CaseSensitiveXMLElement();
+		config.parseFromReader(br);
+		br.close();
+		
+
+		if ( config.getName().equals("adapterdef")) {
+			Vector<XMLElement> allmaps = config.getElementsByTagName("map");
+			for ( int i = 0; i < allmaps.size(); i++ ) {
+				XMLElement map = allmaps.get(i);
+				addMapDefinition(map);
 			}
 		}
 	}

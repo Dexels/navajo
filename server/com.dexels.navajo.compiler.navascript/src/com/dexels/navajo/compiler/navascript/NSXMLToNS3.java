@@ -10,6 +10,12 @@ import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 public class NSXMLToNS3 {
 
 	public static void main(String [] args)  throws Exception {
+
+		MapDefinitionInterrogatorImpl mdii = new MapDefinitionInterrogatorImpl();
+		mdii.addExtentionDefinition("com.dexels.navajo.adapter.StandardAdapterLibrary");
+		mdii.addExtentionDefinition("com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary");
+		mdii.addExtentionDefinition("com.dexels.navajo.mongo.adapter.MongoAdapterLibrary");
+		mdii.addExtentionDefinition("com.dexels.sportlink.adapters.SportlinkAdapterDefinitions");
 		
 		String argstate = "";
 		String inputFile = null;
@@ -17,7 +23,7 @@ public class NSXMLToNS3 {
 		
 		if (args.length == 0)
 	    {
-	      System.out.println("Usage: java xmltons [-d] -i input [-o output]");
+	      System.out.println("Usage: java xmltons [-d] -i input [-o output] [-c config]");
 	      System.out.println();
 	      System.out.println();
 	      System.out.println("  input : a navascript or tsl script file");
@@ -45,7 +51,7 @@ public class NSXMLToNS3 {
 		}
 		
 		FileInputStream fis = new FileInputStream(inputFile);
-		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, new MapDefinitionInterrogatorImpl());
+		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
 		
 		OutputStream os = System.out;
 		

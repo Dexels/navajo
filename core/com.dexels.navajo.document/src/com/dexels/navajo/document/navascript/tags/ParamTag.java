@@ -53,7 +53,7 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		Map<String,String> map = getAttributes();
 
 		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));

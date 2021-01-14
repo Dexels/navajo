@@ -73,7 +73,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
 		String propertyName = getName();

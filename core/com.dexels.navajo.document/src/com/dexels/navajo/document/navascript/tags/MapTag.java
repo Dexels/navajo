@@ -136,7 +136,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		Map<String,String> map = getAttributes();
 		sb.append(NS3Utils.generateIndent(indent));

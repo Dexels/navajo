@@ -107,7 +107,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		int size = getChildren().size();
 		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));
 		boolean hasArrayElements = ( getChildren().size() > 0 && getChildren().get(0) instanceof MessageTag 

@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 public interface NS3Compatible {
 	
-	public void formatNS3(int indent, OutputStream w) throws IOException;
+	public void formatNS3(int indent, OutputStream w) throws Exception;
 	
 	public void addComment(CommentBlock cb);
 	

@@ -30,7 +30,7 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
 		sb.append(NS3Utils.formatConditional(getCondition()));

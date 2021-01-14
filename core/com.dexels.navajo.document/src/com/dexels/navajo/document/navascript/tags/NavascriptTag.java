@@ -88,7 +88,7 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	}
 
 	@Override
-	public void formatNS3(int indent, OutputStream w) throws IOException {
+	public void formatNS3(int indent, OutputStream w) throws Exception {
 		for ( BaseNode c : getChildren() ) {
 			if ( c instanceof NS3Compatible ) {
 				((NS3Compatible) c).formatNS3(indent, w);
