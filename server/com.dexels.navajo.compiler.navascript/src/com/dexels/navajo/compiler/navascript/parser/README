@@ -1,2 +1,10 @@
 Generate navascript.java class using REX with following arguments:
 -ll 1 -backtrack -java -tree  -main
+
+Parser code (navascript.java) generated using this website: https://bottlecaps.de/rex/
+
+After generating code make sure to add correct package name:
+
+package com.dexels.navajo.compiler.navascript.parser
+
+and remove EventHandler interface in generated code, since we are using an extracted version 
