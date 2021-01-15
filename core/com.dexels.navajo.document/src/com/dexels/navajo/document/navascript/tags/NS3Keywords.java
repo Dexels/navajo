@@ -14,6 +14,9 @@ public class NS3Keywords {
 	public static String CHECK = "check";
 	public static String VAR = "var";
 	public static String DEFINE = "define";
+	public static String DEBUG = "print";
+	public static String LOG = "log";
+
 	
 	// Attributes
 	public static String FILTER = "filter";

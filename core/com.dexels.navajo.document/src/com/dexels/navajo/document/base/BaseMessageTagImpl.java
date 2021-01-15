@@ -19,6 +19,7 @@ import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
+import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
@@ -107,6 +108,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 
 	public void addSyncronized(SynchronizedTag st) {
 		children.add(st);
+	}
+
+	public void addDebug(DebugTag dt) {
+		children.add(dt);
 	}
 
 }

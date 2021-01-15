@@ -4,11 +4,15 @@ Validations ::= VALIDATIONS "{" Checks "}"
 
 Finally ::= FINALLY "{" TopLevelStatement* "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized | Print | Log
 
 Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
 
 Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
+
+Print ::= Conditional? PRINT "(" Expression ")" ";"
+
+Log ::= Conditional? LOG "(" Expression ")" ";"
 
 InnerBody ::=  Property | MethodOrSetter | TopLevelStatement
 
@@ -174,6 +178,10 @@ DOUBLE_QUOTE ::= '"'
 INCLUDE ::= "include"
 
 MESSAGE ::= "message"
+
+PRINT ::= "print"
+
+LOG ::= "log"
 
 ANTIMESSAGE ::= "antimessage"
 

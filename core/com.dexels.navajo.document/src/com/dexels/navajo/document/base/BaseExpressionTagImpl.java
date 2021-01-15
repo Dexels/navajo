@@ -53,7 +53,7 @@ public class BaseExpressionTagImpl extends BaseNode implements ExpressionTag {
 	@Override
 	public List<? extends BaseNode> getChildren() {
 		List<BaseNode> c = new ArrayList<>();
-		if ( value.indexOf("<") != -1 ) { // It contains < or > chars.
+		if ( value != null && value.indexOf("<") != -1 ) { // It contains < or > chars.
 			BaseValueImpl bv = new BaseValueImpl(super.getRootDoc(), value);
 			c.add(bv);
 		}

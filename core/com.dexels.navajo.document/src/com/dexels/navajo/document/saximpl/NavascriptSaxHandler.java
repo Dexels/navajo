@@ -31,12 +31,14 @@ import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
+import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.DefineTag;
 import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
+import com.dexels.navajo.document.navascript.tags.LogTag;
 import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
@@ -113,6 +115,54 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(dt);
 		}
 
+		if ( tag.equals(Tags.DEBUG)) {
+			DebugTag dt = new DebugTag(currentDocument, h.get("value"));
+			dt.setCondition(h.get("condition"));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addDebug(dt);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addDebug(dt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(dt);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(dt);
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(dt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).addDebug(dt);
+			} else if ( currentParent instanceof NavascriptTag ) {
+				currentDocument.addDebug(dt);
+			} else {
+				throw new Exception("Did not expect debug tag under this parent: " + currentParent.getTagName());
+			}
+			currentNode.push(dt);
+			return;
+		}
+		
+		if ( tag.equals(Tags.LOG)) {
+			LogTag dt = new LogTag(currentDocument, h.get("value"));
+			dt.setCondition(h.get("condition"));
+			if ( currentParent instanceof MapTag && currentMap.size() > 0) {
+				currentMap.lastElement().addDebug(dt);
+			} else if ( currentParent instanceof MessageTag && currentMessage.size() > 0 ) {
+				currentMessage.lastElement().addDebug(dt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).add(dt);
+			} else if ( currentParent instanceof FinallyTag ) {
+				((FinallyTag) currentParent).add(dt);
+			} else if ( currentParent instanceof SynchronizedTag ) {
+				((SynchronizedTag) currentParent).add(dt);
+			} else if ( currentParent instanceof BlockTag ) {
+				((BlockTag) currentParent).addDebug(dt);
+			} else if ( currentParent instanceof NavascriptTag ) {
+				currentDocument.addDebug(dt);
+			} else {
+				throw new Exception("Did not expect log tag under this parent: " + currentParent.getTagName());
+			}
+			currentNode.push(dt);
+			return;
+		}
+		
 		if (tag.equals(Tags.INCLUDE)) {
 			IncludeTag it = new IncludeTag(currentDocument, (h.get("script")));
 			it.setCondition(h.get("condition"));
@@ -126,9 +176,11 @@ public class NavascriptSaxHandler extends SaxHandler {
 				((FinallyTag) currentParent).add(it);
 			} else if ( currentParent instanceof SynchronizedTag ) {
 				((SynchronizedTag) currentParent).add(it);
-			} else {
+			} else if ( currentParent instanceof NavascriptTag ) {
 				currentDocument.addInclude(it);
-			} 
+			} else {
+				
+			}
 			currentNode.push(it);
 			return;
 		}
@@ -577,6 +629,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if ( tag.equals(Tags.FINALLY)) {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.SYNCHRONIZED) ) {
+			currentNode.pop();
+		} else if ( tag.equals(Tags.DEBUG)) {
+			currentNode.pop();
+		} else if ( tag.equals(Tags.LOG)) {
 			currentNode.pop();
 		}
 

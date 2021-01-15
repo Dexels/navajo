@@ -102,4 +102,8 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		super.addComment(cb);
 	}
 
+	public void addDebug(DebugTag dt) {
+		super.addDebug(dt);
+	}
+
 }

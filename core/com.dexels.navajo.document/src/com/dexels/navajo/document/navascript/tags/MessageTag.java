@@ -170,4 +170,8 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		super.addSyncronized(st);	
 	}
 
+	public void addDebug(DebugTag dt) {
+		super.addDebug(dt);
+	}
+
 }

@@ -209,4 +209,8 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		super.addSynchronized(st);
 	}
 
+	public void addDebug(DebugTag dt) {
+		super.addDebug(dt);
+	}
+
 }

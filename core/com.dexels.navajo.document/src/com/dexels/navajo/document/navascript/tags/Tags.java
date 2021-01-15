@@ -29,5 +29,7 @@ public class Tags {
 	public static String BLOCK = "block";	
 	public static String FINALLY = "finally";	
 	public static String SYNCHRONIZED = "synchronized";	
+	public static String DEBUG = "debug";
+	public static String LOG = "log";
 	
 }

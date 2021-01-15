@@ -16,12 +16,14 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.BreakTag;
 import com.dexels.navajo.document.navascript.tags.CheckTag;
+import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.DefineTag;
 import com.dexels.navajo.document.navascript.tags.DefinesTag;
 import com.dexels.navajo.document.navascript.tags.ExpressionTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
+import com.dexels.navajo.document.navascript.tags.LogTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
 import com.dexels.navajo.document.navascript.tags.NS3Compatible;
@@ -46,7 +48,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/ParamArray.ns");
+		String fileContent = read("/Users/arjenschoneveld/Mies.ns");
 
 		t.initialize();
 		t.parseNavascript(fileContent);
@@ -595,6 +597,16 @@ public class NS3ToNSXML implements EventHandler {
 			String name = child.getName();
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
 
+			if ( name.equals("Print") ) {
+				DebugTag pt = parsePrint(parent, child);
+				bodyElts.add(pt);
+			}
+
+			if ( name.equals("Log") ) {
+				LogTag pt = parseLog(parent, child);
+				bodyElts.add(pt);
+			}
+
 			if ( name.equals("Property") ) {
 				PropertyTag pt = parseProperty(parent, child);
 				bodyElts.add(pt);
@@ -1003,7 +1015,7 @@ public class NS3ToNSXML implements EventHandler {
 					addChildTag(msgTag, ib);
 				}
 			}
-			
+
 			if ( name.equals("MessageArray") ) {
 				msgTag.setType(Message.MSG_TYPE_ARRAY);
 				Vector<XMLElement> messageChildren = child.getChildren();
@@ -1055,6 +1067,64 @@ public class NS3ToNSXML implements EventHandler {
 		//Include
 
 		return it;
+	}
+
+	private DebugTag parsePrint(NS3Compatible parent, XMLElement currentXML) throws Exception {
+
+		currentXML.setAttribute("PROCESSED", "true");
+
+		DebugTag dt = new DebugTag(navascript);
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("Conditional")) {
+				ConditionFragment currentFragment = new ConditionFragment();
+				consumeContent(currentFragment, child);
+				dt.setCondition(currentFragment.consumedFragment());
+			}
+
+			if ( name.equals("Expression")) {
+				ExpressionFragment ef = new ExpressionFragment();
+				consumeContent(ef, child);
+				dt.setValue(ef.consumedFragment());
+			}
+		}
+
+		return dt;
+
+	}
+
+	private LogTag parseLog(NS3Compatible parent, XMLElement currentXML) throws Exception {
+
+		currentXML.setAttribute("PROCESSED", "true");
+
+		LogTag dt = new LogTag(navascript);
+
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("Conditional")) {
+				ConditionFragment currentFragment = new ConditionFragment();
+				consumeContent(currentFragment, child);
+				dt.setCondition(currentFragment.consumedFragment());
+			}
+
+			if ( name.equals("Expression")) {
+				ExpressionFragment ef = new ExpressionFragment();
+				consumeContent(ef, child);
+				dt.setValue(ef.consumedFragment());
+			}
+		}
+
+		return dt;
+
 	}
 
 	private void parseBreakParameters(BreakTag p, XMLElement currentXML) {
@@ -1292,6 +1362,27 @@ public class NS3ToNSXML implements EventHandler {
 			}
 		}
 
+		if ( child instanceof DebugTag ) {
+			if ( parent instanceof NavascriptTag) {
+				((NavascriptTag) parent).addDebug((DebugTag) child);
+			}
+			if ( parent instanceof MessageTag) {
+				((MessageTag) parent).addDebug((DebugTag) child);
+			}
+			if ( parent instanceof MapTag) {
+				((MapTag) parent).addDebug((DebugTag) child);
+			}
+			if ( parent instanceof BlockTag) {
+				((BlockTag) parent).addDebug((DebugTag) child);
+			}
+			if ( parent instanceof FinallyTag) {
+				((FinallyTag) parent).add((DebugTag) child);
+			}
+			if ( parent instanceof SynchronizedTag) {
+				((SynchronizedTag) parent).add((DebugTag) child);
+			}
+		}
+
 		if ( child instanceof SynchronizedTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addSynchronized((SynchronizedTag) child);
@@ -1478,6 +1569,12 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("Define") ) {
 			DefineTag dt = parseDefine(parent, xe);
 			addDefine(dt);
+		} else if ( name.equals("Print") ) {
+			DebugTag dt = parsePrint(parent, xe);
+			addChildTag(parent, dt);
+		} else if ( name.equals("Log")) {
+			LogTag dt = parseLog(parent, xe);
+			addChildTag(parent, dt);
 		} else if ( name.equals("Finally")) {
 			FinallyTag ft = parseFinally(parent, xe);
 			addChildTag(parent, ft);

@@ -20,6 +20,7 @@ import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Validations;
 import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
+import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
@@ -99,6 +100,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	public void addSynchronized(SynchronizedTag st) {
 		myChildren.add(st);
+	}
+
+	public void addDebug(DebugTag dt) {
+		myChildren.add(dt);
 	}
 
 }

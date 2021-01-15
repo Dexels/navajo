@@ -82,5 +82,9 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 		myChildren.add(st);
 	}
 
+	public void addDebug(DebugTag child) {
+		myChildren.add(child);
+	}
+
 
 }
