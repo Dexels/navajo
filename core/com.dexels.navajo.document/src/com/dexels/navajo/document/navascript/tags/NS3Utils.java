@@ -16,6 +16,18 @@ public class NS3Utils {
 		return sb.toString();
 	}
 
+	public static boolean checkForDeclaredField(NavascriptTag myScript, MapTag map, String name) throws Exception {
+		String adapterName = map.getAdapterName();
+		String objectName = map.getObject();
+		boolean isMapped = map.isMappedMessage() || map.isMappedSelection();
+		if ( adapterName != null ) {
+			return myScript.getMapChecker().isField(adapterName, name);
+		} else if ( objectName != null ) {
+			return myScript.getMapChecker().isDeclaredField(objectName, name);
+		}
+		return false;
+	}
+	
 	public static boolean hasExpressionWithConstant(BaseNode n) {
 				
 		if ( n.getChildren().size() > 1 || n.getChildren().size() == 0) {

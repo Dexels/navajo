@@ -6,5 +6,10 @@ public interface MapDefinitionInterrogator {
 	
 	public boolean isField(String adapter, String m) throws Exception;
 
+	public boolean isDeclaredField(String className, String m) throws Exception;
+
+	public boolean isValidClass(String className);
+	
+	public boolean isValidAdapter(String adapter);
 	
 }

@@ -16,24 +16,24 @@ public class NSXMLToNS3 {
 		mdii.addExtentionDefinition("com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary");
 		mdii.addExtentionDefinition("com.dexels.navajo.mongo.adapter.MongoAdapterLibrary");
 		mdii.addExtentionDefinition("com.dexels.sportlink.adapters.SportlinkAdapterDefinitions");
-		
+
 		String argstate = "";
 		String inputFile = null;
 		String outputFile = null;
-		
+
 		if (args.length == 0)
-	    {
-	      System.out.println("Usage: java xmltons [-d] -i input [-o output] [-c config]");
-	      System.out.println();
-	      System.out.println();
-	      System.out.println("  input : a navascript or tsl script file");
-	      System.out.println("  output: a navascript 3 file");
-	      System.out.println("  Option:");
-	      System.out.println("    -d     debug");
-	    }
-		
+		{
+			System.out.println("Usage: java xmltons [-d] -i input [-o output] [-c config]");
+			System.out.println();
+			System.out.println();
+			System.out.println("  input : a navascript or tsl script file");
+			System.out.println("  output: a navascript 3 file");
+			System.out.println("  Option:");
+			System.out.println("    -d     debug");
+		}
+
 		for ( String arg : args ) {
-		
+
 			if ( arg.equals("-i") ) {
 				argstate = "readinput";
 			} else if ( arg.equals("-o")) {
@@ -44,24 +44,28 @@ public class NSXMLToNS3 {
 				outputFile = arg;
 			}
 		}
-		
+
 		if ( inputFile == null) {
 			System.out.println("No filename supplied");
 			return;
 		}
-		
+
 		FileInputStream fis = new FileInputStream(inputFile);
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
-		
+
 		OutputStream os = System.out;
-		
+
 		if ( outputFile != null ) {
 			os = new FileOutputStream(outputFile);
 		}
-		
-		navascript.formatNS3(0, os);
-		os.close();
-		
+
+		try {
+			navascript.formatNS3(0, os);
+			os.close();
+		} catch (Exception e) {
+			System.err.println("Error transpiling " + inputFile + ": " + e.getMessage());
+		}
+
 	}
 }
 

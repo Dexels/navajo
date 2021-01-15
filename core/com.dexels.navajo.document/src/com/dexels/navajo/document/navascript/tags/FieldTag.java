@@ -51,7 +51,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		super.addMap(m);
 		return m;
 	}
-
+	
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws Exception {
 		
@@ -63,6 +63,9 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		sb.append(NS3Utils.formatConditional(map.get("condition")));
 		
 		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !isSetter && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
+			if (!myScript.getMapChecker().isMethod(adapterName, getName())) {
+				throw new Exception("Could not find method " + getName() + " of adapter " + adapterName);
+			}
 			sb.append(NS3Constants.ADAPTER_OPERATION + getName());
 			AttributeAssignments aa = new AttributeAssignments();
 			aa.addMap(map, "condition", "ref", "object");
@@ -70,7 +73,9 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 			sb.append(NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
 		} else if ( getChildren() != null && getChildren().get(0) instanceof MapTag ) { // <map ref=<array message> >
-
+			if (!NS3Utils.checkForDeclaredField(myScript, (MapTag) getParent(), getName())) {
+				throw new Exception("Could not find ref field " + getName() + " of adapter " + adapterName);
+			}
 			sb.append("$"+getName());
 			sb.append(" {\n");
 			w.write(sb.toString().getBytes());
@@ -80,6 +85,9 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
 
 		} else { // standard "setter" field
+			if (!NS3Utils.checkForDeclaredField(myScript, (MapTag) getParent(), getName())) {
+				throw new Exception("Could not find setter field " + getName() + " of adapter " + adapterName);
+			}
 			if ( getConstant() != null ) { // setter with a constant string literal
 				sb.append("$"+getName() + " = ");
 				sb.append(NS3Utils.formatStringLiteral(indent, getConstant()));

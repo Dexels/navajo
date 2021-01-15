@@ -144,7 +144,13 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 				
 		if ( isOldStyleMap && ( getRefAttribute() == null || "".equals(getRefAttribute())) ) {
 			sb.append( "map" + NS3Constants.PARAMETERS_START + "object:\"" + getObject() + "\" " + NS3Constants.PARAMETERS_END );
+			if (!myScript.getMapChecker().isValidClass(getObject())) {
+				throw new Exception("Adapter class not found: " + getObject());
+			}
 		} else if ( ( field == null || "".equals(field) ) && getAdapterName() != null && !"".equals(getAdapterName())) {
+			if (!myScript.getMapChecker().isValidAdapter(getAdapterName())) {
+				throw new Exception("Adapter not found: " + getAdapterName());
+			}
 			sb.append("map." + getAdapterName());
 			AttributeAssignments aa = new AttributeAssignments();
 			aa.addMap(map, "condition", "ref", "object");
@@ -158,6 +164,14 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 					sb.append(getRefAttribute());
 				}
 			} else {
+				if ( super.getParent() != null ) {
+					MapTag parent = (MapTag) super.getParent();
+					if ( !NS3Utils.checkForDeclaredField(myScript, parent, getRefAttribute())) {
+						throw new Exception("Ref field not found: " + getRefAttribute() + " for adapter: " + parent.getAdapterName());
+					}
+				} else {
+					throw new Exception("Could not find parent map for ref field: " + getRefAttribute());
+				}
 				sb.append("$" + getRefAttribute() + " ");
 			}
 			if ( getFilter() != null && !"".equals(getFilter())) {

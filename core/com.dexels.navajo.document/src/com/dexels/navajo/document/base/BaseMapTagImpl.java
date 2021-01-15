@@ -113,6 +113,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		this.parent = m;
 	}
 
+	public MapAdapter getParent() {
+		return parent;
+	}
+	
 	@Override
 	public String getTagName() {
 		if ( oldStyleMap ) {

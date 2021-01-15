@@ -15,27 +15,25 @@ import com.dexels.sportlink.adapters.SportlinkAdapterDefinitions;
 
 import navajo.ExtensionDefinition;
 
-import com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary;
-
 @SuppressWarnings("unused")
 public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator {
 
 	private static final Logger logger = LoggerFactory.getLogger(MapDefinitionInterrogatorImpl.class);
-			
+
 	MapMetaData mapMetaData = null;
-	
+
 	public MapDefinitionInterrogatorImpl() throws Exception {
 		mapMetaData = MapMetaData.getInstance();
 	}
 
 	public void addExtentionDefinition(String extension) throws Exception {
-		
+
 		Class<ExtensionDefinition> c = (Class<ExtensionDefinition>) Class.forName(extension);
 		ExtensionDefinition ed = c.getDeclaredConstructor().newInstance();
 		mapMetaData.readExtentionDefinition(ed);
-		
+
 	}
-	
+
 	@Override
 	public boolean isMethod(String adapter, String m) throws Exception {
 		try {
@@ -50,14 +48,32 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 		}
 	}
 
+	private boolean isRegularField(String adapter, String m) throws Exception {
+		if (  mapMetaData.getMapDefinition(adapter) == null ) {
+			throw new Exception("Could not find adapter: " + adapter);
+		} 
+		String className = mapMetaData.getMapDefinition(adapter).getObjectName();
+		Class c = Class.forName(className);
+		return c.getDeclaredField(m) != null;
+	}
+
+	@Override
+	public boolean isDeclaredField(String className, String m) throws Exception {
+		Class c = Class.forName(className);
+		return c.getDeclaredField(m) != null;
+	}
+
 	@Override
 	public boolean isField(String adapter, String m) throws Exception {
-		
-		
+
 		try {
 			if (  mapMetaData.getMapDefinition(adapter) == null ) {
+				// Try regular field
+				if ( isRegularField(adapter, m) ) {
+					return true;
+				}
 				throw new Exception("Could not find adapter: " + adapter);
-			}
+			} 
 			boolean b = ( mapMetaData.getMapDefinition(adapter).getValueDefinition(m) != null);
 			return b;
 		} catch (ClassNotFoundException e) {
@@ -66,43 +82,62 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 			throw new Exception(e);
 		}
 	}
-	
+
 	public MapDefinition getAdapter(String adapter) throws Exception{
-		
+
 		return mapMetaData.getMapDefinition(adapter);
-	
+
 	}
-	
+
 	public void describeAdapter(String adapter) throws Exception {
-	
+
 		MapDefinition md = mapMetaData.getMapDefinition(adapter);
 
 		Set<String> methods = md.getMethodDefinitions();		
-		
+
 		System.err.println("Adapter " + adapter + " methods:");
-		
+
 		for ( String s : methods ) {
 			System.err.println("\t" + s);
 		}
-		
+
 		Set<String> values = md.getValueDefinitions();
-		
+
 		System.err.println("Adapter " + adapter + " fields:");
-	
+
 		for ( String s : values ) {
 			System.err.println("\t" + s);
 		}
-		
+
 	}
-	
+
 	public static void main (String [] args) throws Exception {
-		
+
 		MapDefinitionInterrogatorImpl m = new MapDefinitionInterrogatorImpl();
-		
+
 		String adapter = "sqlquery";
 		String field = "doUpdate";
-		
+
 		m.describeAdapter(adapter);
-		
+
+	}
+
+	@Override
+	public boolean isValidClass(String className) {
+		try {
+			Class c = Class.forName(className);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isValidAdapter(String adapter)  {
+		try {
+			return ( mapMetaData.getMapDefinition(adapter) != null ) ;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
