@@ -1,12 +1,21 @@
 package com.dexels.navajo.compiler.navascript;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.navascript.parser.EventHandler;
 import com.dexels.navajo.compiler.navascript.parser.navascript;
@@ -45,17 +54,27 @@ public class NS3ToNSXML implements EventHandler {
 
 	public StringWriter xmlString = new StringWriter();
 
+	private static final Logger logger = LoggerFactory.getLogger(NS3ToNSXML.class);
+	
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/Mies.ns");
+		String fileContent = read("/Users/arjenschoneveld/ProcessAutoReassignOfficial.ns");
 
 		t.initialize();
-		t.parseNavascript(fileContent);
-
+		
+		BufferedReader bisr = new BufferedReader(new InputStreamReader(t.parseNavascript(fileContent)));
+		
+		String line = null;
+		while ( ( line = bisr.readLine()) != null ) {
+			System.out.println(line);
+		}
+		
+		bisr.close();
+		
 	}
 
-	public void parseNavascript(String fileContent) throws Exception {
+	public InputStream parseNavascript(String fileContent) throws Exception {
 
 		navascript parser = new navascript(fileContent, this);
 		input = fileContent;
@@ -69,7 +88,21 @@ public class NS3ToNSXML implements EventHandler {
 
 		parseXML(navascript, xe, 0);
 
-		navascript.write(System.err);
+		PipedInputStream in = new PipedInputStream();
+		PipedOutputStream out = new PipedOutputStream(in);
+		
+		new Thread() {
+			public void run() {
+				navascript.write(out);
+				try {
+					out.close();
+				} catch (IOException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+			}
+		}.start();
+		
+		return in;
 	}
 
 	private void consumeContent(NavascriptFragment fragment, XMLElement xe) {
@@ -426,13 +459,11 @@ public class NS3ToNSXML implements EventHandler {
 			} 
 
 			if ( name.equals("MappedArrayFieldSelection")) {
-				System.err.println("Found MappedArrayFieldSelection");
 				MapTag maf = parseMappedArrayField(parent, child);
 				pt.addMap(maf);
 			}
 
 			if ( name.equals("MappedArrayMessageSelection")) {
-				System.err.println("Found MappedArrayMessageSelection");
 				MapTag maf = parsedMappedArrayMessage(parent, child);
 				pt.addMap(maf);
 			}
@@ -846,14 +877,11 @@ public class NS3ToNSXML implements EventHandler {
 				ConditionFragment currentFragment = new ConditionFragment();
 				consumeContent(currentFragment, child);
 				bt.setCondition(currentFragment.consumedFragment());
-				System.err.println("In parseConditionalBlock: " + currentFragment.consumedFragment());
-
 			}
 
 			if (name.equals("InnerBody") ) {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(bt, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
-					System.err.println("Adding " + ib + " to BlockTag");
 					addChildTag(bt, ib);
 				}
 			}
@@ -873,8 +901,6 @@ public class NS3ToNSXML implements EventHandler {
 
 			String name = child.getName();
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
-
-			//System.err.println("In parseSynchronizedArguments: " + name + "[" + content + "]");
 
 			if ( name.equals("SContextType")) {
 				p.setContext(content);
@@ -1316,7 +1342,6 @@ public class NS3ToNSXML implements EventHandler {
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
 
 			if ( name.equals("Identifier") ) {
-				System.err.println("Identifier: " + content);
 				dt.setName(content);
 			}
 
@@ -1333,71 +1358,63 @@ public class NS3ToNSXML implements EventHandler {
 
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
 
-		//currentMessage = mt;
-
 		if ( child instanceof FinallyTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addFinally((FinallyTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof BlockTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addBlock((BlockTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addBlock((BlockTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addBlock((BlockTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).addBlock((BlockTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((BlockTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((BlockTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof DebugTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addDebug((DebugTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addDebug((DebugTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addDebug((DebugTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).addDebug((DebugTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((DebugTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((DebugTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof SynchronizedTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addSynchronized((SynchronizedTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addSynchronized((SynchronizedTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addSynchronized((SynchronizedTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((SynchronizedTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((SynchronizedTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
@@ -1405,129 +1422,114 @@ public class NS3ToNSXML implements EventHandler {
 		if ( child instanceof ParamTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addParam((ParamTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addParam((ParamTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addParam((ParamTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((ParamTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((ParamTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((ParamTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof PropertyTag ) {
 			if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addProperty((PropertyTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addProperty((PropertyTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((PropertyTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof FieldTag ) {
 			if ( parent instanceof MapTag) {
 				((MapTag) parent).addField((FieldTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addField((FieldTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((FieldTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof MessageTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addMessage((MessageTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addMessage((MessageTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addMessage((MessageTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((MessageTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((MessageTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((MessageTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof MapTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addMap((MapTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addMap((MapTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addMap((MapTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((MapTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((MapTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((MapTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof IncludeTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addInclude((IncludeTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addInclude((IncludeTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addInclude((IncludeTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((IncludeTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((IncludeTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((IncludeTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 
 		if ( child instanceof BreakTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addBreak((BreakTag) child);
-			}
-			if ( parent instanceof MessageTag) {
+			} else if ( parent instanceof MessageTag) {
 				((MessageTag) parent).addBreak((BreakTag) child);
-			}
-			if ( parent instanceof MapTag) {
+			} else if ( parent instanceof MapTag) {
 				((MapTag) parent).addBreak((BreakTag) child);
-			}
-			if ( parent instanceof BlockTag) {
+			} else if ( parent instanceof BlockTag) {
 				((BlockTag) parent).add((BreakTag) child);
-			}
-			if ( parent instanceof FinallyTag) {
+			} else if ( parent instanceof FinallyTag) {
 				((FinallyTag) parent).add((BreakTag) child);
-			}
-			if ( parent instanceof SynchronizedTag) {
+			} else if ( parent instanceof SynchronizedTag) {
 				((SynchronizedTag) parent).add((BreakTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
 			}
 		}
 

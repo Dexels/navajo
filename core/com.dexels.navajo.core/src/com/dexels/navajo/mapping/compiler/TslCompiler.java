@@ -3543,7 +3543,7 @@ public class TslCompiler {
 
 		final String extension = ".xml";
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
-
+		String ns3ScriptPath =  scriptPath + "/" + packagePath + "/" + script + ".ns";
 
 		List<String> inheritedScripts = new ArrayList<>();
 		List<String> extendEntities = new ArrayList<>();
@@ -3551,6 +3551,11 @@ public class TslCompiler {
 
 		try {
 
+			
+//			if (new File(ns3ScriptPath).exists() ) {
+//				NS3ToNSXML ns3toxml = new NS3ToNSXML();
+//			}
+				
 			// Check for metascript.
 			if (MapMetaData.isMetaScript(fullScriptPath)) {
 				scriptType = "navascript";

@@ -89,3 +89,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.compiler.tsl
 Require-Bundle: com.dexels.navajo.document
+Export-Package: com.dexels.navajo.compiler.navascript
