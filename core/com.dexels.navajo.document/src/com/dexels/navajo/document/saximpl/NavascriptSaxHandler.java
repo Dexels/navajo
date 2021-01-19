@@ -42,6 +42,8 @@ import com.dexels.navajo.document.navascript.tags.LogTag;
 import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
+import com.dexels.navajo.document.navascript.tags.MethodTag;
+import com.dexels.navajo.document.navascript.tags.MethodsTag;
 import com.dexels.navajo.document.navascript.tags.NS3Compatible;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
@@ -61,6 +63,7 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 	private NavascriptTag currentDocument=null;
 	private DefinesTag currentDefines = null;
+	private MethodsTag currentMethods = null;
 	private Stack<MapTag> currentMap = new Stack<>();
 	private Stack<MessageTag> currentMessage = new Stack<>();
 	private Stack<FieldTag> currentField = new Stack<>();
@@ -98,6 +101,24 @@ public class NavascriptSaxHandler extends SaxHandler {
 			currentNode.push(ft);
 		}
 
+		if (tag.equals(Tags.METHODS)) {
+			MethodsTag mt = new MethodsTag(currentDocument);
+			currentDocument.addMethods(mt);
+			currentNode.push(mt);
+			currentMethods = mt;
+		}
+		
+		if (tag.equals(Tags.METHOD)) {
+			MethodTag m = new MethodTag(currentDocument);
+			m.setScriptName(h.get("name"));
+			if ( currentMethods == null ) {
+				logger.error("Missing methods tag for this method " + h.get("name"));
+				return;
+			}
+			currentNode.push(m);
+			currentMethods.addMethod(m);
+		}
+		
 		if (tag.equals(Tags.DEFINES)) {
 			DefinesTag dt = new DefinesTag(currentDocument);
 			currentDocument.addDefines(dt);
@@ -633,6 +654,10 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if ( tag.equals(Tags.DEBUG)) {
 			currentNode.pop();
 		} else if ( tag.equals(Tags.LOG)) {
+			currentNode.pop();
+		} else if ( tag.equals(Tags.METHODS)) {
+			currentNode.pop();
+		} else if ( tag.equals(Tags.METHOD)) {
 			currentNode.pop();
 		}
 

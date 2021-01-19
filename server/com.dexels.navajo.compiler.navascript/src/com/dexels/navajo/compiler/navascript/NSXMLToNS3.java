@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
+import com.dexels.navajo.mapping.compiler.meta.MapDefinitionInterrogatorImpl;
 
 public class NSXMLToNS3 {
 
@@ -16,6 +17,7 @@ public class NSXMLToNS3 {
 		mdii.addExtentionDefinition("com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary");
 		mdii.addExtentionDefinition("com.dexels.navajo.mongo.adapter.MongoAdapterLibrary");
 		mdii.addExtentionDefinition("com.dexels.sportlink.adapters.SportlinkAdapterDefinitions");
+		mdii.addExtentionDefinition("com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary");
 
 		String argstate = "";
 		String inputFile = null;

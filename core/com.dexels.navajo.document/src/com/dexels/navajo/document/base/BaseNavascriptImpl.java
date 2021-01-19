@@ -22,6 +22,7 @@ import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.FinallyTag;
+import com.dexels.navajo.document.navascript.tags.MethodsTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
@@ -104,6 +105,10 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	public void addDebug(DebugTag dt) {
 		myChildren.add(dt);
+	}
+
+	public void addMethods(MethodsTag mt) {
+		myChildren.add(mt);
 	}
 
 }

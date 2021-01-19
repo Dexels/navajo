@@ -1,18 +1,11 @@
-package com.dexels.navajo.compiler.navascript;
+package com.dexels.navajo.mapping.compiler.meta;
 
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.StandardAdapterLibrary;
 import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
-import com.dexels.navajo.mapping.compiler.meta.KeywordException;
-import com.dexels.navajo.mapping.compiler.meta.MapDefinition;
-import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
-import com.dexels.navajo.mongo.adapter.MongoAdapterLibrary;
-import com.dexels.sportlink.adapters.SportlinkAdapterDefinitions;
-
 import navajo.ExtensionDefinition;
 
 @SuppressWarnings("unused")

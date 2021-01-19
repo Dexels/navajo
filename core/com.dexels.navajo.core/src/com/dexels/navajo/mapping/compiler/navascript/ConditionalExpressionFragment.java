@@ -1,4 +1,5 @@
-package com.dexels.navajo.compiler.navascript;
+package com.dexels.navajo.mapping.compiler.navascript;
+
 
 public class ConditionalExpressionFragment extends NavascriptFragment {
 

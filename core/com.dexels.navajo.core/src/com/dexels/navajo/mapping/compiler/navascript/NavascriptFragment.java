@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler.navascript;
+package com.dexels.navajo.mapping.compiler.navascript;
 
 import java.util.ArrayList;
 import java.util.List;

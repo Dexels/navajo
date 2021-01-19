@@ -1,6 +1,10 @@
-Navascript  ::= Validations? TopLevelStatement* Finally? EOF
+Navascript  ::= Validations? Methods? TopLevelStatement* Finally? EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
+
+Methods ::= METHODS "{" DefinedMethod* "}"
+
+DefinedMethod ::= DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";" 
 
 Finally ::= FINALLY "{" TopLevelStatement* "}"
 
@@ -192,6 +196,8 @@ OPTION ::= "option"
 DEFINE ::= "define"
 
 VALIDATIONS ::= "validations"
+
+METHODS ::= "methods"
 
 FINALLY ::= "finally"
 

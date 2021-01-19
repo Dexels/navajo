@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.FileInputStreamReader;
 import com.dexels.navajo.server.InputStreamReader;
@@ -52,15 +53,22 @@ public class TslPreCompiler {
 
 
         try {
-            // Check for metascript.
-            if (MapMetaData.isMetaScript(script.getAbsolutePath())) {
+        	if ( script.getAbsolutePath().endsWith(".ns")) { // Check for NS3 type script
+        		NS3ToNSXML ns3toxml = new NS3ToNSXML();
+    			ns3toxml.initialize();
+    			String content = ns3toxml.read(script.getAbsolutePath());
+    			InputStream metais = ns3toxml.parseNavascript(content);
+    			MapMetaData mmd = MapMetaData.getInstance();
+    			String intermed = mmd.parse(script.getAbsolutePath(), metais);
+    			metais.close();
+    			is = new ByteArrayInputStream(intermed.getBytes());
+        	} else if (MapMetaData.isMetaScript(script.getAbsolutePath())) { // Check for navascript type script
                 MapMetaData mmd = MapMetaData.getInstance();
                 InputStream metais = inputStreamReader.getResource(script.getAbsolutePath());
-
                 String intermed = mmd.parse(script.getAbsolutePath(), metais);
                 metais.close();
                 is = new ByteArrayInputStream(intermed.getBytes());
-            } else {
+            } else { // Normal tsl type script
                 is = inputStreamReader.getResource(script.getAbsolutePath());
             }
             tslDoc = XMLDocumentUtils.createDocument(is, false);
@@ -110,6 +118,7 @@ public class TslPreCompiler {
                     // Thus continue with next method
                     continue;
                 }
+          
             }
 
             String methodScriptFile = scriptFolder + File.separator + methodScript + ".xml";

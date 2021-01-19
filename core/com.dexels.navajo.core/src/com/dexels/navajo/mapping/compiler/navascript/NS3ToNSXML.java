@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler.navascript;
+package com.dexels.navajo.mapping.compiler.navascript;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,8 +17,6 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.navascript.parser.EventHandler;
-import com.dexels.navajo.compiler.navascript.parser.navascript;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -35,12 +33,16 @@ import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.LogTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.MessageTag;
+import com.dexels.navajo.document.navascript.tags.MethodTag;
+import com.dexels.navajo.document.navascript.tags.MethodsTag;
 import com.dexels.navajo.document.navascript.tags.NS3Compatible;
 import com.dexels.navajo.document.navascript.tags.NavascriptTag;
 import com.dexels.navajo.document.navascript.tags.ParamTag;
 import com.dexels.navajo.document.navascript.tags.PropertyTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 import com.dexels.navajo.document.navascript.tags.ValidationsTag;
+import com.dexels.navajo.mapping.compiler.navascript.parser.EventHandler;
+import com.dexels.navajo.mapping.compiler.navascript.parser.navascript;
 
 public class NS3ToNSXML implements EventHandler {
 
@@ -55,23 +57,23 @@ public class NS3ToNSXML implements EventHandler {
 	public StringWriter xmlString = new StringWriter();
 
 	private static final Logger logger = LoggerFactory.getLogger(NS3ToNSXML.class);
-	
+
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = read("/Users/arjenschoneveld/ProcessAutoReassignOfficial.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/Mies.ns");
 
 		t.initialize();
-		
+
 		BufferedReader bisr = new BufferedReader(new InputStreamReader(t.parseNavascript(fileContent)));
-		
+
 		String line = null;
 		while ( ( line = bisr.readLine()) != null ) {
 			System.out.println(line);
 		}
-		
+
 		bisr.close();
-		
+
 	}
 
 	public InputStream parseNavascript(String fileContent) throws Exception {
@@ -90,7 +92,7 @@ public class NS3ToNSXML implements EventHandler {
 
 		PipedInputStream in = new PipedInputStream();
 		PipedOutputStream out = new PipedOutputStream(in);
-		
+
 		new Thread() {
 			public void run() {
 				navascript.write(out);
@@ -101,7 +103,7 @@ public class NS3ToNSXML implements EventHandler {
 				}
 			}
 		}.start();
-		
+
 		return in;
 	}
 
@@ -1312,6 +1314,7 @@ public class NS3ToNSXML implements EventHandler {
 
 			String name = child.getName();
 
+
 			if ( name.equals("TopLevelStatement")) {
 				List<NS3Compatible> innerBodyElements = parseInnerBody(ft, child);
 				for ( NS3Compatible ib : innerBodyElements ) {
@@ -1321,6 +1324,37 @@ public class NS3ToNSXML implements EventHandler {
 
 		}
 		return ft;
+	}
+
+	private MethodsTag parseMethods(NS3Compatible parent, XMLElement xe) throws Exception {
+
+		MethodsTag mt = new MethodsTag(navascript);
+
+		Vector<XMLElement> children = xe.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("DefinedMethod")) {
+
+				for ( XMLElement c : child.getChildren() ) {
+
+					String cn = c.getName();
+					String content = ( c.getContent() != null && !"".equals(c.getContent()) ?  c.getContent() : null );
+
+					if ( cn.equals("ScriptIdentifier")) {
+						MethodTag m = new MethodTag(navascript);
+						m.setScriptName(content);
+						mt.addMethod(m);
+					}
+					
+				}
+			}
+		}
+
+		return mt;
+
 	}
 
 	private void addDefine(DefineTag dt) {
@@ -1357,6 +1391,14 @@ public class NS3ToNSXML implements EventHandler {
 
 
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
+
+		if ( child instanceof MethodsTag ) {
+			if ( parent instanceof NavascriptTag) {
+				((NavascriptTag) parent).addMethods((MethodsTag) child);
+			} else {
+				logger.error("Cannot add {} under {} tag", child.getTagName(), parent.getTagName());
+			}	
+		}
 
 		if ( child instanceof FinallyTag ) {
 			if ( parent instanceof NavascriptTag) {
@@ -1580,6 +1622,9 @@ public class NS3ToNSXML implements EventHandler {
 		} else if ( name.equals("Finally")) {
 			FinallyTag ft = parseFinally(parent, xe);
 			addChildTag(parent, ft);
+		} else if ( name.equals("Methods")) {
+			MethodsTag mt = parseMethods(parent, xe);
+			addChildTag(parent, mt);
 		} else {
 			Vector<XMLElement> children = xe.getChildren();
 			for ( XMLElement x : children ) {
@@ -1596,7 +1641,7 @@ public class NS3ToNSXML implements EventHandler {
 		out = new OutputStreamWriter(System.out, "UTF-8");
 	}
 
-	private static String read(String input) throws Exception
+	public String read(String input) throws Exception
 	{
 		if (input.startsWith("{") && input.endsWith("}"))
 		{

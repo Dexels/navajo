@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler.navascript.parser;
+package com.dexels.navajo.mapping.compiler.navascript.parser;
 
 public interface EventHandler
 {

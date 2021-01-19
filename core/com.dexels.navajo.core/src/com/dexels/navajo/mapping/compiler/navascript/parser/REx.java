@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler.navascript.parser;
+package com.dexels.navajo.mapping.compiler.navascript.parser;
 
 import java.io.File;
 import java.io.FileInputStream;

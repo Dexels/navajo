@@ -5,6 +5,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.mapping.compiler;
 
+import java.io.BufferedReader;
+
 /**
  * <p>Title: Navajo Product Project</p>"
  * <p>Description: This is the official source for the Navajo server</p>
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -80,6 +83,7 @@ import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.KeywordException;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MetaCompileException;
+import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.CompilationException;
@@ -3548,16 +3552,24 @@ public class TslCompiler {
 		List<String> inheritedScripts = new ArrayList<>();
 		List<String> extendEntities = new ArrayList<>();
 		InputStream is = null;
+		boolean isNavascript = false;
 
 		try {
 
 			
-//			if (new File(ns3ScriptPath).exists() ) {
-//				NS3ToNSXML ns3toxml = new NS3ToNSXML();
-//			}
-				
-			// Check for metascript.
-			if (MapMetaData.isMetaScript(fullScriptPath)) {
+			if (new File(ns3ScriptPath).exists() ) {
+				NS3ToNSXML ns3toxml = new NS3ToNSXML();
+				ns3toxml.initialize();
+				scriptType = "navascript";
+				String content = ns3toxml.read(ns3ScriptPath);
+				InputStream metais = ns3toxml.parseNavascript(content);
+				MapMetaData mmd = MapMetaData.getInstance();
+				String intermed = mmd.parse(fullScriptPath, metais);
+				metais.close();
+				System.err.println("Result after NS transpilation: " + intermed);
+				is = new ByteArrayInputStream(intermed.getBytes());
+				isNavascript = true;
+			} else if (MapMetaData.isMetaScript(fullScriptPath)) { // Check for metascript.
 				scriptType = "navascript";
 				MapMetaData mmd = MapMetaData.getInstance();
 				InputStream metais = navajoIOConfig.getScript(packagePath + "/"
@@ -3570,19 +3582,20 @@ public class TslCompiler {
 				is = navajoIOConfig.getScript(packagePath + "/" + script,
 						tenant,extension);
 			}
-
-			InputStream sis = navajoIOConfig.getScript(packagePath + "/"
-					+ script, tenant,extension);
-			logger.debug("Getting script: {}/{}", packagePath, script);
-			if (ScriptInheritance.containsInject(sis)) {
-				// Inheritance preprocessor before compiling.
-				InputStream ais = null;
-				ais = ScriptInheritance.inherit(is, scriptPath,
-						inheritedScripts);
-				is.close();
-				is = ais;
+			
+			if ( !isNavascript ) { // NS3 does NOT support inheritance at this moment.
+				InputStream sis = navajoIOConfig.getScript(packagePath + "/" + script, tenant,extension);
+				logger.debug("Getting script: {}/{}", packagePath, script);
+				if (ScriptInheritance.containsInject(sis)) {
+					// Inheritance preprocessor before compiling.
+					InputStream ais = null;
+					ais = ScriptInheritance.inherit(is, scriptPath,
+							inheritedScripts);
+					is.close();
+					is = ais;
+				}
+				sis.close();
 			}
-			sis.close();
 
 			for (int i = 0; i < inheritedScripts.size(); i++) {
 			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
@@ -3593,6 +3606,8 @@ public class TslCompiler {
 						"INHERIT" + inheritedScripts.get(i));
 			}
 
+			System.err.println("About to compile. inputstream status: " + is.available());
+			
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant, forceTenant);
 

@@ -31,5 +31,7 @@ public class Tags {
 	public static String SYNCHRONIZED = "synchronized";	
 	public static String DEBUG = "debug";
 	public static String LOG = "log";
-	
+	public static String METHODS = "methods";
+	public static String METHOD = "method";
+
 }
