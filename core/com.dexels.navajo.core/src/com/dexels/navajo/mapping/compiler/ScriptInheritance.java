@@ -6,6 +6,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 package com.dexels.navajo.mapping.compiler;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -292,7 +293,11 @@ public class ScriptInheritance {
 				XMLElement result = null;
 				if ( script != null ) {
 					// Recursively do inheritance for inherited scripts...
-					BufferedReader br = new BufferedReader(new InputStreamReader(inherit(new FileInputStream(scriptPath + script + ".xml"), scriptPath, inheritedScripts),"UTF-8"));
+					File f = new File(scriptPath + script + ".xml");
+					if ( !f.exists() ) {
+						f = new File(scriptPath + script + ".ns");
+					}
+					BufferedReader br = new BufferedReader(new InputStreamReader(inherit(new FileInputStream(f), scriptPath, inheritedScripts),"UTF-8"));
 					XMLElement superScript = new CaseSensitiveXMLElement();
 					superScript.parseFromReader(br);
 					br.close();

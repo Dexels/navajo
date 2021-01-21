@@ -2909,6 +2909,29 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	private String fetchScriptFileName(String scriptName) {
+
+		// Check for xml based script
+		File f1 = new File(scriptName + ".xml");
+		if ( f1.exists() ) {
+			return scriptName + ".xml";
+		}
+
+		// Check navascript3 based script
+		File f2 = new File(scriptName + ".ns");
+		if ( f2.exists() ) {
+			return scriptName + ".ns";
+		}
+
+		// Check for scala script
+		File f3 = new File(scriptName + ".scala");
+		if ( f3.exists() ) {
+			return scriptName + ".scala";
+		}
+
+		return null;
+	}
+	  
 	/**
 	 * Resolve include nodes in the script: <include
 	 * script="[name of script to be included]"/>
@@ -2945,17 +2968,25 @@ public class TslCompiler {
 		String fileName = script + "_" + tenant;
 
 		Document includeDoc = null;
-		File includedFile = new File(scriptPath + "/" + fileName + ".xml");
-
-		if (includedFile.exists()) {
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(
-					includedFile), false);
-		} else {
+		String includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+		File includedFile = null;
+		
+		if (includeFileName != null) {
+			includedFile = new File(includeFileName);
+			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includeFileName), false);
+		} else { // no tenant specific include found. Try non-tenant include instead.
 			fileName = script;
-			includedFile = new File(scriptPath + "/" + fileName + ".xml");
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+			includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+			if ( includeFileName != null ) {
+				includedFile = new File(includeFileName);
+				includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+			}
 		}
 
+		if ( includedFile == null ) {
+			logger.error("Could not file include file: {}", script);
+			throw new UserException("Could not find include file for script: " +script);
+		}
 		// Add dependency.
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( Long.valueOf(\""
@@ -3598,7 +3629,7 @@ public class TslCompiler {
 			}
 
 			for (int i = 0; i < inheritedScripts.size(); i++) {
-			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
+			    File inheritedFile = new File(fetchScriptFileName(scriptPath + "/" + inheritedScripts .get(i)));
 				addDependency(
 						"dependentObjects.add( new InheritDependency( Long.valueOf(\""
 								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
