@@ -2979,7 +2979,19 @@ public class TslCompiler {
 			includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
 			if ( includeFileName != null ) {
 				includedFile = new File(includeFileName);
-				includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+				if ( includeFileName.endsWith(".ns")) { // It's an NS3 based script
+					NS3ToNSXML nstoxml = new NS3ToNSXML();
+					nstoxml.initialize();
+					try {
+						String content = nstoxml.read(includeFileName);
+						String tslResult = MapMetaData.getInstance().parse(scriptPath + "/" + fileName + ".ns", nstoxml.parseNavascript(content));
+						includeDoc = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tslResult.getBytes()), false);
+					} catch (Exception e) {
+						throw new UserException(e.getLocalizedMessage(), e);
+					}
+				} else { // It's an XML based script
+					includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+				}
 			}
 		}
 
@@ -3597,7 +3609,6 @@ public class TslCompiler {
 				MapMetaData mmd = MapMetaData.getInstance();
 				String intermed = mmd.parse(fullScriptPath, metais);
 				metais.close();
-				System.err.println("Result after NS transpilation: " + intermed);
 				is = new ByteArrayInputStream(intermed.getBytes());
 				isNavascript = true;
 			} else if (MapMetaData.isMetaScript(fullScriptPath)) { // Check for metascript.
@@ -3636,8 +3647,6 @@ public class TslCompiler {
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
-
-			System.err.println("About to compile. inputstream status: " + is.available());
 			
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant, forceTenant);
