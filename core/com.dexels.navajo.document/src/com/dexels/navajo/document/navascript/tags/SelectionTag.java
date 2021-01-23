@@ -23,8 +23,17 @@ public class SelectionTag extends BaseSelectionImpl implements NS3Compatible {
 	public void formatNS3(int indent, OutputStream w) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
-		sb.append(Tags.OPTION + " (" + Attributes.NAME + ":" + getName() + ", " + Attributes.VALUE + ":" + 
-										getValue() + ", " + Attributes.SELECTED + ":" + isSelected() + ")\n");
+		sb.append("{\n");
+//		sb.append(Tags.OPTION + " (" + Attributes.NAME + ":" + getName() + ", " + Attributes.VALUE + ":" + 
+//										getValue() + ", " + Attributes.SELECTED + ":" + isSelected() + ")\n");
+		sb.append(NS3Utils.generateIndent(indent+1));
+		sb.append(Tags.OPTION + " " + Attributes.NAME + " = " + "'" + getName() + "'" + ";\n");
+		sb.append(NS3Utils.generateIndent(indent+1));
+		sb.append(Tags.OPTION + " " + Attributes.VALUE + " = " + "'" + getValue() + "'" + ";\n");
+		sb.append(NS3Utils.generateIndent(indent+1));
+		sb.append(Tags.OPTION + " " + Attributes.SELECTED + " = " + isSelected() + ";\n");
+		sb.append(NS3Utils.generateIndent(indent));
+		sb.append("}");
 		w.write(sb.toString().getBytes());
 	}
 

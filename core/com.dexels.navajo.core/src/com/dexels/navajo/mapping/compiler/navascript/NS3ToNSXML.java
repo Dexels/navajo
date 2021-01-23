@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/Mies.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/Loop.ns");
 
 		t.initialize();
 
@@ -407,7 +408,80 @@ public class NS3ToNSXML implements EventHandler {
 		}
 	}
 
-	private PropertyTag parseProperty(NS3Compatible parent, XMLElement currentXML) throws Exception {
+	private void parseOptionElement(ParamTag ft, XMLElement currentXML) {
+			
+		Vector<XMLElement> children = currentXML.getChildren();
+		
+		ParamTag pt = null;
+		
+		for ( XMLElement child : children ) {
+			
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("TOKEN") && ( content.equals("name") || content.equals("value") || content.equals("selected") ) ) {
+				pt = new ParamTag(navascript);
+				pt.setName(content);
+				ft.addParam(pt);
+			} 
+			
+			if ( name.equals("ConditionalExpressions") ) {
+				List<ExpressionTag> expressions = parseConditionalExpressions(pt, child);
+				for ( ExpressionTag et : expressions ) {
+					pt.addExpression(et);
+				}
+			}
+		}
+			
+	}
+	
+	// Option
+	private void parseSelectionArrayElement(ParamTag ft, XMLElement currentXML) throws Exception {
+
+		Vector<XMLElement> children = currentXML.getChildren();
+		
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+
+			if ( name.equals("Option") ) {
+				parseOptionElement(ft, child);
+			} else {
+				parseSelectionArrayElement(ft, child);
+			}
+
+		}
+
+	}
+	
+	private void parseSelectionArrayElements(ParamTag paramtag, MapTag selectionMap, XMLElement currentXML) throws Exception {
+	
+		Vector<XMLElement> children = currentXML.getChildren();
+
+		for ( XMLElement child : children ) {
+			
+			String name = child.getName();
+			
+			if ( name.equals("SelectionArrayElement")) {
+				ParamTag pt = new ParamTag(navascript);
+				pt.setType(Message.MSG_TYPE_ARRAY_ELEMENT);
+				pt.setName(paramtag.getName());
+				paramtag.addParam(pt);
+				
+				parseSelectionArrayElement(pt, child);
+			}
+		}
+			
+	}
+	
+	private String randomParamName(String base) {
+	
+		Random r = new Random(System.currentTimeMillis());
+		
+		return base + r.nextInt();
+	}
+	
+	private NS3Compatible parseProperty(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		currentXML.setAttribute("PROCESSED", "true");
 
@@ -468,6 +542,78 @@ public class NS3ToNSXML implements EventHandler {
 			if ( name.equals("MappedArrayMessageSelection")) {
 				MapTag maf = parsedMappedArrayMessage(parent, child);
 				pt.addMap(maf);
+			}
+			
+			// There is an array of selection options defined for this selection property.
+			// Use SelectionMap in combination with a param array message to support this construction in navascript XML.
+			if ( name.equals("SelectionArray")) {  
+				// Create param array
+				ParamTag paramtag = new ParamTag(navascript);
+				paramtag.setType(Message.MSG_TYPE_ARRAY);
+				paramtag.setName(randomParamName( pt.getName() + "_selections"));
+				navascript.addParam(paramtag);
+				// Create com.dexels.navajo.adapter.SelectionMap
+				MapTag mt = new MapTag(navascript);
+				mt.setObject("com.dexels.navajo.adapter.SelectionMap");
+				mt.setOldStyleMap(true);
+
+				FieldTag fieldOptions = new FieldTag(mt);
+				fieldOptions.setFieldName("options");
+				fieldOptions.setOldSkool(true);
+				MapTag mappedOptions = new MapTag(navascript);
+				fieldOptions.addMap(mappedOptions);
+				mappedOptions.setOldStyleMap(true);
+				mappedOptions.setRefAttribute("[/@" + paramtag.getName() + "]");
+				// Add name, value, selected
+				FieldTag nameField = new FieldTag(mappedOptions);
+				nameField.setOldSkool(true);
+				nameField.setFieldName("optionName");
+				mappedOptions.addField(nameField);
+				nameField.addExpression(null, "[name]");
+				
+				FieldTag valueField = new FieldTag(mappedOptions);
+				valueField.setOldSkool(true);
+				valueField.setFieldName("optionValue");
+				mappedOptions.addField(valueField);
+				valueField.addExpression(null, "[value]");
+				
+				FieldTag selectedField = new FieldTag(mappedOptions);
+				selectedField.setOldSkool(true);
+				selectedField.setFieldName("optionSelected");
+				mappedOptions.addField(selectedField);
+				selectedField.addExpression(null, "[selected]");
+				
+				// add options field to map
+				mt.addField(fieldOptions);
+				
+				// add property to selectionmap
+				mt.addProperty(pt);
+				MapTag refOptions = new MapTag(navascript);
+				refOptions.setOldStyleMap(true);
+				refOptions.setRefAttribute("options");
+				pt.addMap(refOptions);
+				
+				PropertyTag nameProp = new PropertyTag(navascript);
+				nameProp.setName("name");
+				nameProp.addExpression(null, "$optionName");
+				refOptions.addProperty(nameProp);
+				
+				
+				PropertyTag valueProp = new PropertyTag(navascript);
+				valueProp.setName("value");
+				valueProp.addExpression(null, "$optionValue");
+				refOptions.addProperty(valueProp);
+				
+				PropertyTag selectedProp = new PropertyTag(navascript);
+				selectedProp.setName("selected");
+				selectedProp.addExpression(null, "$optionSelected");
+				refOptions.addProperty(selectedProp);
+				
+				// Fetch the array elements to construct a param array message to store them.
+				parseSelectionArrayElements(paramtag, mt, child);
+				
+				// Return the map instead of the property.
+				return mt;
 			}
 		}
 
@@ -641,13 +787,13 @@ public class NS3ToNSXML implements EventHandler {
 			}
 
 			if ( name.equals("Property") ) {
-				PropertyTag pt = parseProperty(parent, child);
+				NS3Compatible pt = parseProperty(parent, child);
 				bodyElts.add(pt);
 			}
 
 			if ( name.equals("Option") ) {
 				// Find type of option: name, value or selected
-				PropertyTag pt = parseProperty(parent, child);
+				NS3Compatible pt = parseProperty(parent, child);
 				bodyElts.add(pt);
 			}
 
@@ -694,10 +840,77 @@ public class NS3ToNSXML implements EventHandler {
 				FieldTag ft = parseMethodOrSetter((MapTag) parent, child);
 				bodyElts.add(ft);
 			} 
+			
+			if (name.equals("Loop")) {
+				System.err.println("Encountered Loop");
+				MapTag mt = parseLoop(parent, child);
+				bodyElts.add(mt);
+			}
 
 		}
 
 		return bodyElts;
+	}
+
+	private MapTag parseLoop(NS3Compatible parent, XMLElement currentXML) throws Exception {
+		
+		MapTag mt = new MapTag(navascript);
+		mt.setName("arraymessage");
+		
+		FieldTag emptyMaps = new FieldTag(mt);
+		emptyMaps.setOldSkool(true);
+		emptyMaps.setFieldName("emptyMaps");
+		
+		mt.addField(emptyMaps);
+		
+		MapTag ref = new MapTag(navascript);
+		ref.setOldStyleMap(true);
+		emptyMaps.addMap(ref);
+		
+		Vector<XMLElement> children = currentXML.getChildren();
+		boolean hasFilter = false;
+		
+		for ( XMLElement child : children ) {
+			
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+
+			if ( name.equals("Conditional")) {
+				ConditionFragment currentFragment = new ConditionFragment();
+				consumeContent(currentFragment, child);
+				mt.setCondition(currentFragment.consumedFragment());
+			}
+			
+			if ( name.equals("MsgIdentifier") ) {
+				ref.setRefAttribute("[" + content + "]");
+			}
+			
+
+			if ( name.equals("MappableIdentifier")) {
+				String fieldRef = parseMappableIdentifier(child);
+				ref.setRefAttribute(fieldRef);
+			}
+
+			if ( name.equals("TOKEN") && content.equals("filter") ) {
+				hasFilter = true;
+			}
+
+			if ( hasFilter && name.equals("Expression") ) {
+				ExpressionFragment ef = new ExpressionFragment();
+				consumeContent(ef, child);
+				ref.setFilter(ef.consumedFragment());
+			}
+
+			if (name.equals("InnerBody") || name.equals("InnerBodySelection") ) {
+				List<NS3Compatible> innerBodyElements = parseInnerBody(ref, child);
+				for ( NS3Compatible ib : innerBodyElements ) {
+					addChildTag(ref, ib);
+				}
+			}
+			
+		}
+		
+		return mt;
 	}
 
 	private void parseMapOrMethodArguments(NS3Compatible parent, XMLElement currentXML) {
@@ -1597,6 +1810,9 @@ public class NS3ToNSXML implements EventHandler {
 			addChildTag(parent, mt);
 		} else if ( name.equals("ConditionalEmptyMessage")) {
 			BlockTag mt = parseConditionalBlock(parent, xe, true);
+			addChildTag(parent, mt);
+		} else if (name.equals("Loop")) {
+			MapTag mt = parseLoop(parent, xe);
 			addChildTag(parent, mt);
 		} else if ( name.equals("Synchronized")) {
 			SynchronizedTag st = parseSynchronizedBlock(parent, xe);

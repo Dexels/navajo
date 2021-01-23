@@ -20,7 +20,7 @@ public class Tester {
 		mdii.addExtentionDefinition("com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary");
 
 
-		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessAuthenticate.xml");
+		FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/Selection.xml");
 		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
 
 		OutputStream os = System.out;

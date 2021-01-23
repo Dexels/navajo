@@ -99,12 +99,20 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			}
 		}
 		if ( getChildren().size() > 0 && getChildren().get(0) instanceof SelectionTag) {
-			sb.append(" {\n");
+			sb.append(" [\n");
 			w.write(sb.toString().getBytes());
+			int size = getChildren().size();
+			int count = 0;
 			for ( BaseNode b : getChildren() ) {
 				((NS3Compatible) b).formatNS3(indent+1, w);
+				if ( count < size - 1) {
+					w.write(",\n".getBytes());
+				} else {
+					w.write("\n".getBytes());
+				}
+				count++;
 			}
-			w.write((NS3Utils.generateIndent(indent) + "}\n").getBytes());
+			w.write((NS3Utils.generateIndent(indent) + "]\n").getBytes());
 			return;
 		} else if ( value != null ) {
 			sb.append(" = ");
