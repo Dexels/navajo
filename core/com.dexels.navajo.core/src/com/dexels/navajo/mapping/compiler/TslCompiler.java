@@ -1715,6 +1715,9 @@ public class TslCompiler {
 				throw new IllegalStateException("Unexpected null mapNode");
 			}
 			String ref = mapNode.getAttribute("ref");
+			if ( ref != null && !"".equals(ref)) {
+				ref = ref.replaceAll("\\$", ""); // replace $ for refs.
+			}
 			String filter = mapNode.getAttribute("filter");
 
 			String mappableArrayName = "mappableObject" + (objectCounter++);
