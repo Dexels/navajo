@@ -85,7 +85,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 
 		// Format attributes
 		AttributeAssignments aa = new AttributeAssignments();
-		aa.addMap(map, "condition", "value", "name");
+		aa.addMap(map, "condition", "value", "name", "description");
 		if ( map.get("description") != null ) {
 			aa.add("description", NS3Constants.DOUBLE_QUOTE + map.get("description") + NS3Constants.DOUBLE_QUOTE);
 		}
@@ -114,7 +114,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 			}
 			w.write((NS3Utils.generateIndent(indent) + "]\n").getBytes());
 			return;
-		} else if ( value != null ) {
+		} else if ( value != null && !value.equals("") ) {
 			sb.append(" = ");
 			sb.append(NS3Constants.DOUBLE_QUOTE + value + NS3Constants.DOUBLE_QUOTE + NS3Constants.EOL_DELIMITER + "\n");
 			w.write(sb.toString().getBytes());
