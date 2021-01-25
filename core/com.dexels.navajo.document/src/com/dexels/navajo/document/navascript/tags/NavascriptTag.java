@@ -17,7 +17,16 @@ import com.dexels.navajo.document.base.BaseNode;
 public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
 	MapDefinitionInterrogator mapChecker;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public NavascriptTag() {
 		super(NavajoFactory.getInstance());
 	}
@@ -32,63 +41,74 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
 	public DefinesTag addDefines(DefinesTag defines) {
 		super.addDefines(defines);
+		defines.addParent(this);
 		return defines;
 	}
 
 	public BreakTag addBreak(String condition, String id, String description) {
 		BreakTag bt = new BreakTag(this, condition, id, description);
 		super.addBreak(bt);
+		bt.addParent(this);
 		return bt;
 	}
 
 	public MapTag addMap(String condition, String object) {
 		MapTag m = new MapTag(this, object, condition);
 		super.addMap(m);
+		m.addParent(this);
 		return m;
 	}
 
 	public MessageTag addMessage(String name, String type) {
 		MessageTag m = new MessageTag(this, name, type);
 		super.addMessage(m);
+		m.addParent(this);
 		return m;
 	}
 
 	public ParamTag addParam(String condition, String value) {
 		ParamTag pt = new ParamTag(this, condition, value);
 		super.addParam(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
 	// add <block/>
 	public BlockTag addBlockTag(BlockTag bt) {
 		super.addBlock(bt);
+		bt.addParent(this);
 		return bt;
 	}
 
 	public SynchronizedTag addSynchronizedTag(SynchronizedTag st) {
 		super.addSynchronized(st);
+		st.addParent(this);
 		return st;
 	}
 	
 	public FinallyTag addFinallyTag(FinallyTag ft) {
 		super.addFinally(ft);
+		ft.addParent(this);
 		return ft;
 	}
 	
 	public MethodsTag addMethodsTag(MethodsTag mt) {
 		super.addMethods(mt);
+		mt.addParent(this);
 		return mt;
 	}
 
 	public IncludeTag addInclude(String script) {
 		IncludeTag it = new IncludeTag(this, script);
 		super.addInclude(it);
+		it.addParent(this);
 		return it;
 	}
 
 	public ValidationsTag addValidations() {
 		ValidationsTag vt = new ValidationsTag(this);
 		super.addValidations(vt);
+		vt.addParent(this);
 		return vt;
 	}
 
@@ -105,10 +125,12 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	@Override
 	public void addComment(CommentBlock cb) {
 		super.addComment(cb);
+		cb.addParent(this);
 	}
 
 	public void addDebug(DebugTag dt) {
 		super.addDebug(dt);
+		dt.addParent(this);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,17 +13,28 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 
 	List<BaseNode> myChildren = new ArrayList<>();
 	String condition = null;
-
+	NS3Compatible parent;
+	
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+	
+	public void addParent(NS3Compatible p) {
+		parent = p;
+		
+	}
 	public BlockTag(Navajo n) {
 		super(n);
 	}
 
 	public void add(NS3Compatible node) {
+		node.addParent(this);
 		myChildren.add((BaseNode) node);
 	}
 
 	// add <block/>
 	public BlockTag addBlock(BlockTag bt) {
+		bt.addParent(this);
 		myChildren.add(bt);
 		return bt;
 	}
@@ -75,14 +85,17 @@ public class BlockTag extends BaseNode implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
+		cb.addParent(this);
 		myChildren.add(cb);
 	}
 
 	public void addSynchronized(SynchronizedTag st) {
+		st.addParent(this);
 		myChildren.add(st);
 	}
 
 	public void addDebug(DebugTag child) {
+		child.addParent(this);
 		myChildren.add(child);
 	}
 

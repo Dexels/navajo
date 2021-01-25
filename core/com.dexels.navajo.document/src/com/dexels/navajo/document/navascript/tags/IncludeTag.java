@@ -13,6 +13,16 @@ import com.dexels.navajo.document.base.BaseIncludeTagImpl;
 
 public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public IncludeTag(Navajo n,String s) {
 		super(n, s);
 	}
@@ -32,7 +42,7 @@ public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 	
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 
 }

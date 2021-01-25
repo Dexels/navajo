@@ -11,6 +11,16 @@ import com.dexels.navajo.document.base.BaseNode;
 public class CommentBlock extends BaseNode implements NS3Compatible {
 
 	String comment;
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+
+	}
 	
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws IOException {
@@ -40,12 +50,12 @@ public class CommentBlock extends BaseNode implements NS3Compatible {
 		return null;
 	}
 
-	
+
 	@Override
 	public String getTagName() {
 		return null;
 	}
-	
+
 	@Override
 	public void printElement(final Writer sw, int indent) throws IOException {
 		// nop
@@ -58,10 +68,10 @@ public class CommentBlock extends BaseNode implements NS3Compatible {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 
 }

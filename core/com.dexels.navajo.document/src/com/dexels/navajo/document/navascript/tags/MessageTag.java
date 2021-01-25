@@ -18,7 +18,16 @@ import com.dexels.navajo.document.base.BaseNode;
 public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	private NavascriptTag myScript;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public MessageTag(NavascriptTag n) {
 		super(n);
 		myScript = n;
@@ -36,24 +45,28 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public ParamTag addParam(String condition, String value) {
 		ParamTag pt = new ParamTag(myScript, condition, value);
 		super.addParam(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
 	public FieldTag addField(MapTag parent, String condition, String name) {
 		FieldTag pt = new FieldTag(parent, condition, name);
 		super.addField(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
 	public PropertyTag addProperty(String condition, String name, String type, String value, int length, String description, String dir) {
 		PropertyTag pt = new PropertyTag(myScript, name, type, value, length, description, dir);
 		super.addProperty(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
 	public PropertyTag addProperty(String condition, String name, String type, String value) {
 		PropertyTag pt = new PropertyTag(myScript, name, type, value, 0, "", "out");
 		super.addProperty(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
@@ -61,6 +74,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public PropertyTag addProperty(String condition, String name, String type) {
 		PropertyTag pt = new PropertyTag(myScript, name, type, null, 0, "", "out");
 		super.addProperty(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
@@ -68,6 +82,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public MapTag addMap(String filter, String field, MapTag refParent, boolean oldStyleMap) {
 		MapTag m = new MapTag(myScript, field, filter, refParent ,oldStyleMap);
 		super.addMap(m);
+		m.addParent(this);
 		return m;
 	}
 
@@ -75,6 +90,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public MessageTag addMessage(String name, String type) {
 		MessageTag m = new MessageTag(myScript, name, type);
 		super.addMessage(m);
+		m.addParent(this);
 		return m;
 	}
 
@@ -82,6 +98,7 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public IncludeTag addInclude(String script) {
 		IncludeTag it = new IncludeTag(myScript, script);
 		super.addInclude(it);
+		it.addParent(this);
 		return it;
 	}
 
@@ -89,12 +106,14 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public BreakTag addBreak(String condition, String id, String description) {
 		BreakTag bt = new BreakTag(myScript, condition, id, description);
 		super.addBreak(bt);
+		bt.addParent(this);
 		return bt;
 	}
 
 	// add <block/>
 	public BlockTag addBlockTag(BlockTag bt) {
 		super.addBlock(bt);
+		bt.addParent(this);
 		return bt;
 	}
 
@@ -164,14 +183,17 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	@Override
 	public void addComment(CommentBlock cb) {
 		super.addComment(cb);
+		cb.addParent(this);
 	}
 
 	public void addSynchronized(SynchronizedTag st) {
 		super.addSyncronized(st);	
+		st.addParent(this);
 	}
 
 	public void addDebug(DebugTag dt) {
 		super.addDebug(dt);
+		dt.addParent(this);
 	}
 
 }

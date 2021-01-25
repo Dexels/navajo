@@ -12,7 +12,16 @@ import com.dexels.navajo.document.base.BaseNode;
 public class FinallyTag extends BaseNode implements NS3Compatible {
 
 	List<BaseNode> myChildren = new ArrayList<>();
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public FinallyTag(Navajo n) {
 		super(n);
 	}

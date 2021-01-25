@@ -17,12 +17,22 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 	String key = null;
 	String timeout = null;
 	String breakOnNoLock = null;
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
 	
 	public SynchronizedTag(Navajo n) {
 		super(n);
 	}
 	
 	public void add(NS3Compatible node) {
+		node.addParent(this);
 		myChildren.add((BaseNode) node);
 	}
 	
@@ -49,6 +59,7 @@ public class SynchronizedTag extends BaseNode implements NS3Compatible {
 	@Override
 	public void addComment(CommentBlock cb) {
 		myChildren.add((BaseNode) cb);
+		cb.addParent(this);
 	}
 
 	@Override

@@ -19,6 +19,15 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 	private NavascriptTag myScript;
 	private boolean oldSkool = false;
 	private boolean isSetter = false;
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
 
 	public FieldTag(MapTag map, String condition, String name) {
 		super(map.getNavascript(), name, condition);
@@ -40,28 +49,29 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 	public FieldTag addExpression(String condition, String value) {
 		ExpressionTag pt = new ExpressionTag(myScript, condition, value);
+		pt.addParent(this);
 		super.addExpression(pt);
 		return this;
 	}
 
 	// add <map>
 	public MapTag addMap(String filter, String field, MapTag refParent, boolean oldStyleMap) {
-		System.err.println("adding map " + field + " to " + getName());
 		MapTag m = new MapTag(myScript, field, filter, refParent, oldStyleMap);
+		m.addParent(this);
 		super.addMap(m);
 		return m;
 	}
-	
+
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws Exception {
-		
+
 		StringBuffer sb =  new StringBuffer();
 		sb.append(NS3Utils.generateIndent(indent));
 		// Check for condition
 		Map<String,String> map = getAttributes();
 		String adapterName = ((MapTag) getParent()).getAdapterName();
 		sb.append(NS3Utils.formatConditional(map.get("condition")));
-		
+
 		if (  ( getChildren() == null || getChildren().size() == 0 ) && getConstant() == null && !isSetter && !myScript.getMapChecker().isField(adapterName, getName())  ) { // No expressions defined, it is an "operation" not a "setter".
 			if (!myScript.getMapChecker().isMethod(adapterName, getName())) {
 				throw new Exception("Could not find method " + getName() + " of adapter " + adapterName);
@@ -124,7 +134,7 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		}
 	}
 
-	
+
 	public boolean isSetter() {
 		return isSetter;
 	}
@@ -135,6 +145,6 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 }

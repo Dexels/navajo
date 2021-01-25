@@ -11,6 +11,15 @@ import com.dexels.navajo.document.base.BaseNode;
 public class MethodTag extends BaseNode implements NS3Compatible {
 
 	String scriptName;
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
 	
 	public MethodTag(Navajo n) {
 		super(n);
@@ -29,6 +38,7 @@ public class MethodTag extends BaseNode implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
+		cb.addParent(this);
 	}
 
 	@Override

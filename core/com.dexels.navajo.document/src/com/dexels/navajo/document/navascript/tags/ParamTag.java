@@ -19,7 +19,16 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 
 	private static final long serialVersionUID = -1401899712855487877L;
 	private Navajo myScript;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public ParamTag(Navajo n) {
 		super(n);
 		myScript = n;
@@ -33,18 +42,22 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 	public ParamTag addExpression(String condition, String value) {
 		ExpressionTag pt = new ExpressionTag(myScript, condition, value);
 		super.addExpression(pt);
+		pt.addParent(this);
 		return this;
 	}
 
 	public void addMap(MapTag mt) {
+		mt.addParent(this);
 		super.addMap(mt);
 	}
 
 	public void addParamTag(ParamTag pt) throws Exception {
 		if ( pt.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT) && getType().equals(Message.MSG_TYPE_ARRAY)) {
 			super.addParam(pt);
+			pt.addParent(this);
 		} else if ( getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT) && ( pt.getType() == null || !"".equals(getType()) ) ) {
 			super.addParam(pt);
+			pt.addParent(this);
 		} else {
 			throw new Exception("This param type: " + pt.getType() + " is no expected under a param of type " + getType());
 		}
@@ -132,7 +145,7 @@ public class ParamTag extends BaseParamTagImpl implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-
+		cb.addParent(this);
 	}
 
 }

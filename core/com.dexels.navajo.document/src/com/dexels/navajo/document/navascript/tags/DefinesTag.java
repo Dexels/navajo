@@ -13,6 +13,16 @@ public class DefinesTag extends BaseNode implements NS3Compatible {
 
 	Navajo myNavajo;
 	List<DefineTag> myDefines = new ArrayList<>();
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+
+	}
 	
 	public DefinesTag(Navajo n) {
 		myNavajo = n;
@@ -41,11 +51,12 @@ public class DefinesTag extends BaseNode implements NS3Compatible {
 	}
 
 	public void addDefine(DefineTag dt) {
+		dt.addParent(this);
 		myDefines.add(dt);
 	}
 
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 }

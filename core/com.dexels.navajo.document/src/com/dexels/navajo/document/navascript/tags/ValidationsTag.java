@@ -15,6 +15,15 @@ import com.dexels.navajo.document.base.BaseValidationsTagImpl;
 public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compatible {
 
 	private Navajo myNavajo;
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
 	
 	public ValidationsTag(Navajo n) {
 		super(n);
@@ -24,6 +33,7 @@ public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compati
 	public CheckTag addCheck(String code, String description, String condition) {
 		CheckTag ct = new CheckTag(myNavajo, code, description, condition);
 		super.addCheck(ct);
+		ct.addParent(this);
 		return ct;
 	}
 
@@ -41,7 +51,7 @@ public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compati
 	
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 
 }

@@ -1,4 +1,4 @@
-Navascript  ::= Validations? Methods? TopLevelStatement* Finally? EOF
+Navascript  ::= Validations? TopLevelStatement* Finally? EOF
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
@@ -8,7 +8,7 @@ DefinedMethod ::= DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
 
 Finally ::= FINALLY "{" TopLevelStatement* "}"
 
-TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized | Print | Log | Loop
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized | Print | Log | Loop | Methods
 
 Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
 
@@ -130,8 +130,6 @@ MappedArrayMessageSelection ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expressio
 
 MappableIdentifier ::= "$" ( ParentMsg )* Identifier ( Arguments )? 
 
-DatePattern ::= IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral "#" IntegerLiteral 
-
 ExpressionLiteral ::= "`" ( Expression )* "`" 
 
 FunctionLiteral ::= Identifier Arguments
@@ -140,7 +138,7 @@ ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
 
 Arguments ::= "(" ( Expression ( "," Expression )*) ? ")" 
 
-Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DatePattern | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
+Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DATE_PATTERN | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
 
 Expression ::= "#" DefinedExpression | OrExpression
 
@@ -181,7 +179,7 @@ LETTER ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
 
 DIGIT ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-SYMBOL ::= " " | "\n" | "\t" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | "{" | "}" | "[" | "]" | ":" | ";" | "\" | "/" | "|" | "<" | ">" | "\'" | "," | "." | "?" | "§" | "±" | "~" | "`"
+SYMBOL ::= " " | "\n" | "\t" | "!" | "@" | "$" | "#" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | "{" | "}" | "[" | "]" | ":" | ";" | "\" | "/" | "|" | "<" | ">" | "\'" | "," | "." | "?" | "§" | "±" | "~" | "`"
 
 DOUBLE_QUOTE ::= '"' 
 
@@ -265,6 +263,8 @@ FALSE ::= "false"
 
 CHARACTER ::= LETTER | DIGIT | SYMBOL
 
+DATE_PATTERN ::= (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) 
+
 Identifier ::= IDENTIFIER_DEF - Keyword
 
 IDENTIFIER_DEF ::= ( LETTER | "_" ) ( LETTER | DIGIT | "_" )*
@@ -341,9 +341,9 @@ WhiteSpace
 Comment  ::= TraditionalComment
            | EndOfLineComment
 TraditionalComment
-         ::= '/*' ( CHARACTER | "'" | WhiteSpace )* '*/'
+         ::= '/*' ( CHARACTER | "'" | WhiteSpace | '"' )* '*/'
 EndOfLineComment
-         ::= '//' ( CHARACTER | "'" ) *
+         ::= '//' ( CHARACTER | "'" | '"' ) *
 
 SourceCharacter ::= .
 

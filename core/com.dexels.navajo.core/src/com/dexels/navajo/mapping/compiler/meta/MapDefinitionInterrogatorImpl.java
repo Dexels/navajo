@@ -43,7 +43,7 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 
 	private boolean isRegularField(String adapter, String m) throws Exception {
 		if (  mapMetaData.getMapDefinition(adapter) == null ) {
-			throw new Exception("Could not find adapter: " + adapter);
+			throw new Exception("Could not find adapter: " + adapter + " for field " + m);
 		} 
 		String className = mapMetaData.getMapDefinition(adapter).getObjectName();
 		Class c = Class.forName(className);
@@ -51,9 +51,13 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 	}
 
 	@Override
-	public boolean isDeclaredField(String className, String m) throws Exception {
-		Class c = Class.forName(className);
-		return c.getDeclaredField(m) != null;
+	public boolean isDeclaredField(String className, String m)  {
+		try {
+			Class c = Class.forName(className);
+			return c.getDeclaredField(m) != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -67,8 +71,10 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 				}
 				throw new Exception("Could not find adapter: " + adapter);
 			} 
-			boolean b = ( mapMetaData.getMapDefinition(adapter).getValueDefinition(m) != null);
-			return b;
+			String objectName = mapMetaData.getMapDefinition(adapter).getObjectName();
+			boolean isDefinedField = ( mapMetaData.getMapDefinition(adapter).getValueDefinition(m) != null);
+			boolean isDeclaredField = isDeclaredField(objectName, m);
+			return isDefinedField || isDeclaredField;
 		} catch (ClassNotFoundException e) {
 			throw new Exception(e);
 		} catch (KeywordException e) {

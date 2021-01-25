@@ -17,7 +17,17 @@ public class DebugTag extends BaseNode implements NS3Compatible {
 	
 	String condition = null;
 	String value = null;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+
+	}
+	
 	public DebugTag(Navajo n, String value) {
 		super(n);
 		this.value = value;
@@ -42,7 +52,7 @@ public class DebugTag extends BaseNode implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-
+		cb.addParent(this);
 	}
 
 	@Override

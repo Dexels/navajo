@@ -718,7 +718,12 @@ public class NavascriptSaxHandler extends SaxHandler {
 		} else if ( n instanceof DefineTag ) {
 			((DefineTag) n).setExpression(text);
 		} else {
-			logger.info("Cannot place text under node, it must be a field tag. Correct");
+			logger.info("Cannot place text under node, it must be a field tag. Correct.");
+			if ( currentNode.lastElement() instanceof MapTag ) {
+				currentMap.pop(); 
+			} else {
+				throw new Exception("Expected a MapTag to be corrected for a FieldTag not a " + currentNode.lastElement() + " tag.");
+			}
 			currentNode.pop();
 			FieldTag ft = new FieldTag(currentMap.lastElement(), null, ((MapTag) n).getRefAttribute());
 			ft.setConstant(text);

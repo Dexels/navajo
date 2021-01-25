@@ -9,7 +9,17 @@ import com.dexels.navajo.document.base.BaseBreakTagImpl;
 public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 
 	private static final long serialVersionUID = 3907539607911418826L;
-
+    NS3Compatible parent;
+	
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+	
+	public void addParent(NS3Compatible p) {
+		parent = p;
+		
+	}
+	
 	public BreakTag(Navajo n, String condition, String id, String description) {
 		super(n, condition, id, description);
 	}
@@ -38,7 +48,7 @@ public class BreakTag extends BaseBreakTagImpl implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 
 }

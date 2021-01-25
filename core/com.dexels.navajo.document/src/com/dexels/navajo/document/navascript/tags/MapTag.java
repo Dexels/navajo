@@ -26,7 +26,16 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	private boolean isMappedSelection = false;
 	private boolean isMappedMessage = false;
 	private String field = null;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public boolean isMappedMessage() {
 		return isMappedMessage;
 	}
@@ -79,6 +88,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public ParamTag addParam(String condition, String value) {
 		ParamTag pt = new ParamTag(myScript, condition, value);
 		super.addParam(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
@@ -86,19 +96,23 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public FieldTag addField(String condition, String name) {
 		FieldTag pt = new FieldTag(this, condition, name);
 		super.addParam(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
 	// add <message>
 	public MessageTag addMessage(String name, String type) {
+		System.err.println("In addMessage for MapTag: " + name);
 		MessageTag m = new MessageTag(myScript, name, type);
 		super.addMessage(m);
+		m.addParent(this);
 		return m;
 	}
 
 	// add <block>
 	public BlockTag addBlockTag(BlockTag bt) {
 		super.addBlock(bt);
+		bt.addParent(this);
 		return bt;
 	}
 	
@@ -107,6 +121,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		MapTag m = new MapTag(myScript, object, condition);
 		m.setParent(this);
 		super.addMap(m);
+		m.addParent(this);
 		return m;
 	}
 
@@ -114,6 +129,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public PropertyTag addProperty(String condition, String name, String type) {
 		PropertyTag pt = new PropertyTag(myScript, name, type, null, 0, "", "out");
 		super.addProperty(pt);
+		pt.addParent(this);
 		return pt;
 	}
 
@@ -121,6 +137,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public BreakTag addBreak(String condition, String id, String description) {
 		BreakTag bt = new BreakTag(myScript, condition, id, description);
 		super.addBreak(bt);
+		bt.addParent(this);
 		return bt;
 	}
 
@@ -128,6 +145,7 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	public IncludeTag addInclude(String script) {
 		IncludeTag it = new IncludeTag(myScript, script);
 		super.addInclude(it);
+		it.addParent(this);
 		return it;
 	}
 
@@ -203,14 +221,17 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 	@Override
 	public void addComment(CommentBlock cb) {
 		super.addComment(cb);
+		cb.addParent(this);
 	}
 
 	public void addSynchronized(SynchronizedTag st) {
 		super.addSynchronized(st);
+		st.addParent(this);
 	}
 
 	public void addDebug(DebugTag dt) {
 		super.addDebug(dt);
+		dt.addParent(this);
 	}
 
 }

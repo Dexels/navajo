@@ -22,7 +22,8 @@ public class NS3Utils {
 		boolean isMapped = map.isMappedMessage() || map.isMappedSelection();
 		if ( adapterName != null ) {
 			return myScript.getMapChecker().isField(adapterName, name);
-		} else if ( objectName != null ) {
+		} 
+		if ( objectName != null ) {
 			return myScript.getMapChecker().isDeclaredField(objectName, name);
 		}
 		return false;

@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/Loop.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/ProcessQueryFacilityOccupation.ns");
 
 		t.initialize();
 
@@ -197,6 +197,20 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private MapTag findClosestMapTag(NS3Compatible tag, String methodOrSetter) throws Exception {
+	
+		if ( tag instanceof MapTag ) {
+			return (MapTag) tag;
+		}
+				
+		if ( tag.getParentTag() == null ) {
+			throw new Exception("Could not find map for: " + methodOrSetter);
+		} else {
+			return findClosestMapTag(tag.getParentTag(), methodOrSetter);
+		}
+		
+	}
+	
 	private ParamTag parseVarArrayElement(ParamTag parent, XMLElement currentXML) throws Exception {
 
 		ParamTag paramElt = new ParamTag(navascript);
@@ -225,7 +239,8 @@ public class NS3ToNSXML implements EventHandler {
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		ParamTag paramTag = new ParamTag(navascript);
-
+		paramTag.addParent(parent);
+		
 		currentXML.setAttribute("PROCESSED", "true");
 
 		for ( XMLElement child : children ) {
@@ -486,7 +501,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		PropertyTag pt = new PropertyTag(navascript);
-
+		pt.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -693,7 +709,8 @@ public class NS3ToNSXML implements EventHandler {
 	private MapTag parsedMappedArrayMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		MapTag mapTag = new MapTag(navascript);
-
+		mapTag.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		mapTag.setOldStyleMap(true);
@@ -738,6 +755,7 @@ public class NS3ToNSXML implements EventHandler {
 
 		FieldTag ft = new FieldTag(parent);
 		ft.setParent(parent);
+		ft.addParent(parent);
 
 		Vector<XMLElement> children = currentXML.getChildren();
 
@@ -837,12 +855,12 @@ public class NS3ToNSXML implements EventHandler {
 			}
 
 			if (name.equals("MethodOrSetter")) {
-				FieldTag ft = parseMethodOrSetter((MapTag) parent, child);
+				MapTag parentMap = findClosestMapTag(parent, "");
+				FieldTag ft = parseMethodOrSetter(parentMap, child);
 				bodyElts.add(ft);
 			} 
 			
 			if (name.equals("Loop")) {
-				System.err.println("Encountered Loop");
 				MapTag mt = parseLoop(parent, child);
 				bodyElts.add(mt);
 			}
@@ -854,16 +872,21 @@ public class NS3ToNSXML implements EventHandler {
 
 	private MapTag parseLoop(NS3Compatible parent, XMLElement currentXML) throws Exception {
 		
+		// Define arraymessage adapter
 		MapTag mt = new MapTag(navascript);
 		mt.setName("arraymessage");
+		mt.addParent(parent);
 		
+		// Create field emptyMaps to map array message or array field to
 		FieldTag emptyMaps = new FieldTag(mt);
 		emptyMaps.setOldSkool(true);
 		emptyMaps.setFieldName("emptyMaps");
-		
+		emptyMaps.addParent(mt);
 		mt.addField(emptyMaps);
 		
+		// Define map for mapped array message of array field
 		MapTag ref = new MapTag(navascript);
+		ref.addParent(emptyMaps);
 		ref.setOldStyleMap(true);
 		emptyMaps.addMap(ref);
 		
@@ -952,7 +975,7 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		MapTag mapTag = new MapTag(navascript);
-
+		mapTag.addParent(parent);
 
 		Vector<XMLElement> children = currentXML.getChildren();
 
@@ -1034,6 +1057,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		MapTag ft = new MapTag(navascript);
+		ft.addParent(parent);
+		
 		if ( parent != null && parent instanceof MapTag ) {
 			ft.setParent((MapTag) parent);
 		}
@@ -1081,7 +1106,8 @@ public class NS3ToNSXML implements EventHandler {
 	private BlockTag parseConditionalBlock(NS3Compatible parent, XMLElement currentXML, boolean isEmptyMessage) throws Exception {
 
 		BlockTag bt = new BlockTag(navascript);
-
+		bt.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1167,7 +1193,8 @@ public class NS3ToNSXML implements EventHandler {
 	private SynchronizedTag parseSynchronizedBlock(NS3Compatible parent, XMLElement xe) throws Exception {
 
 		SynchronizedTag st = new SynchronizedTag(navascript);
-
+		st.addParent(parent);
+		
 		Vector<XMLElement> children = xe.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1220,6 +1247,7 @@ public class NS3ToNSXML implements EventHandler {
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		MessageTag msgTag = new MessageTag(navascript);
+		msgTag.addParent(parent);
 
 		for ( XMLElement child : children ) {
 			String name = child.getName();
@@ -1286,7 +1314,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		IncludeTag it = new IncludeTag(navascript);
-
+		it.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1315,7 +1344,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		DebugTag dt = new DebugTag(navascript);
-
+		dt.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1344,7 +1374,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		LogTag dt = new LogTag(navascript);
-
+		dt.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1417,7 +1448,8 @@ public class NS3ToNSXML implements EventHandler {
 		currentXML.setAttribute("PROCESSED", "true");
 
 		BreakTag bt = new BreakTag(navascript);
-
+		bt.addParent(parent);
+		
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1492,7 +1524,8 @@ public class NS3ToNSXML implements EventHandler {
 	private ValidationsTag parseValidations(NS3Compatible parent, XMLElement xe) {
 
 		ValidationsTag vt = new ValidationsTag(navascript);
-
+		vt.addParent(parent);
+		
 		Vector<XMLElement> children = xe.getChildren();
 
 		CheckTag ct = null;
@@ -1520,7 +1553,8 @@ public class NS3ToNSXML implements EventHandler {
 
 	private FinallyTag parseFinally(NS3Compatible parent, XMLElement xe) throws Exception {
 		FinallyTag ft = new FinallyTag(navascript);
-
+		ft.addParent(parent);
+		
 		Vector<XMLElement> children = xe.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1542,7 +1576,8 @@ public class NS3ToNSXML implements EventHandler {
 	private MethodsTag parseMethods(NS3Compatible parent, XMLElement xe) throws Exception {
 
 		MethodsTag mt = new MethodsTag(navascript);
-
+		mt.addParent(parent);
+		
 		Vector<XMLElement> children = xe.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1580,7 +1615,8 @@ public class NS3ToNSXML implements EventHandler {
 
 	private DefineTag parseDefine(NS3Compatible parent, XMLElement xe) {
 		DefineTag dt = new DefineTag(navascript);
-
+		dt.addParent(parent);
+		
 		Vector<XMLElement> children = xe.getChildren();
 
 		for ( XMLElement child : children ) {
@@ -1604,7 +1640,9 @@ public class NS3ToNSXML implements EventHandler {
 
 
 	private void addChildTag(NS3Compatible parent, NS3Compatible child) {
-
+		
+		child.addParent(parent);
+		
 		if ( child instanceof MethodsTag ) {
 			if ( parent instanceof NavascriptTag) {
 				((NavascriptTag) parent).addMethods((MethodsTag) child);

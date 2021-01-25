@@ -10,5 +10,8 @@ public interface NS3Compatible {
 
 	public String getTagName();
 	
-			
+	public NS3Compatible getParentTag();
+	
+	public void addParent(NS3Compatible parent);
+	
 }

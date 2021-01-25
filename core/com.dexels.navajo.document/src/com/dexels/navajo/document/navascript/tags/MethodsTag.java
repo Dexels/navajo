@@ -11,6 +11,15 @@ import com.dexels.navajo.document.base.BaseNode;
 public class MethodsTag extends BaseNode implements NS3Compatible {
 
 	List<BaseNode> myChildren = new ArrayList<>();
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
 	
 	public MethodsTag(Navajo n) {
 		super(n);
@@ -31,8 +40,7 @@ public class MethodsTag extends BaseNode implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-		// TODO Auto-generated method stub
-
+		cb.addParent(this);
 	}
 
 	@Override
@@ -52,5 +60,6 @@ public class MethodsTag extends BaseNode implements NS3Compatible {
 
 	public void addMethod(MethodTag m) {
 		myChildren.add(m);
+		m.addParent(this);
 	}
 }

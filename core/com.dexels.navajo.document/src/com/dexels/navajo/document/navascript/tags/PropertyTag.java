@@ -20,7 +20,16 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 
 	NavascriptTag myScript;
 	private boolean isPartOfMappedSelection = false;
+	NS3Compatible parent;
 
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+	}
+	
 	public boolean isPartOfMappedSelection() {
 		return isPartOfMappedSelection;
 	}
@@ -42,12 +51,14 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 	public PropertyTag addExpression(String condition, String value) {
 		ExpressionTag pt = new ExpressionTag(myScript, condition, value);
 		super.addExpression(pt);
+		pt.addParent(this);
 		return this;
 	}
 
 	public SelectionTag addSelection(String name, String value, boolean selected) {
 		SelectionTag st = new SelectionTag(myScript, name, value, selected);
 		super.addSelection(st);
+		st.addParent(this);
 		return st;
 	}
 
@@ -56,12 +67,14 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 		MapTag m = new MapTag(myScript, field, filter, refParent ,oldStyleMap);
 		addMap(m);
 		m.setMappedSelection(true);
+		m.addParent(this);
 		return m;
 	}
 
 	public void addMap(MapTag mt) {
 		super.addSelectionMap(mt);
 		mt.setMappedSelection(true);
+		mt.addParent(this);
 	}
 
 	public String getCondition() {
@@ -137,7 +150,7 @@ public class PropertyTag extends BasePropertyImpl implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-
+		cb.addParent(this);
 	}
 
 }

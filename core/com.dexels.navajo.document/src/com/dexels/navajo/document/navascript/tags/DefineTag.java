@@ -20,7 +20,16 @@ public class DefineTag extends BaseNode implements NS3Compatible {
 	String name;
 	String expression;
 	Navajo myNavajo;
-	
+	NS3Compatible parent;
+
+	public NS3Compatible getParentTag() {
+		return parent;
+	}
+
+	public void addParent(NS3Compatible p) {
+		parent = p;
+
+	}
 	
 	public DefineTag(Navajo n) {
 		myNavajo = n;
@@ -89,7 +98,7 @@ public class DefineTag extends BaseNode implements NS3Compatible {
 
 	@Override
 	public void addComment(CommentBlock cb) {
-		
+		cb.addParent(this);
 	}
 	
 }
