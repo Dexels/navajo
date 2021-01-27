@@ -5,7 +5,6 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  */
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 

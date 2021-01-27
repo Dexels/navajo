@@ -14,6 +14,11 @@ import com.dexels.navajo.document.base.BaseValidationsTagImpl;
 
 public class ValidationsTag extends BaseValidationsTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2506546607464526652L;
+	
 	private Navajo myNavajo;
 	NS3Compatible parent;
 

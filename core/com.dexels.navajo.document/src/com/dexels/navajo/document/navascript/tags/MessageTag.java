@@ -5,9 +5,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  */
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PushbackReader;
 import java.util.Map;
 
 import com.dexels.navajo.document.Message;
@@ -17,6 +15,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4906077507607805284L;
+	
 	private NavascriptTag myScript;
 	NS3Compatible parent;
 
@@ -119,10 +122,6 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	protected Navajo getNavajo() {
 		return myScript;
-	}
-
-	private boolean hasParameters() {
-		return  ( getOrderBy() != null && !"".equals(getOrderBy() )) || ( getMode() != null && !"".equals(getMode())) || ( getType() != null && !"simple".equals(getType()) && !"".equals(getType()));
 	}
 
 	@Override

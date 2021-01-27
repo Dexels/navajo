@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.navascript.tags;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -68,24 +67,4 @@ public class AttributeAssignments {
 		return sb.toString();
 	}
 
-	public static void main(String [] args) {
-
-		AttributeAssignment a1 = new AttributeAssignment("type","string");
-		AttributeAssignment a2 = new AttributeAssignment("condition", null);
-		AttributeAssignment a3 = new AttributeAssignment("value","aap");
-
-		AttributeAssignments aa = new AttributeAssignments();
-		//aa.add(a1).add(a2).add(a3);
-
-		Map<String,String> map = new HashMap<>();
-		map.put("value", "noot");
-		map.put("type", "string");
-		map.put("direction", "in");
-		map.put("condition", "true");
-		
-		aa.addMap(map, "value", "condition");
-		
-		System.err.println(aa.format(false));
-
-	}
 }

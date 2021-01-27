@@ -11,6 +11,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class DefinesTag extends BaseNode implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 198025834121652631L;
+	
 	Navajo myNavajo;
 	List<DefineTag> myDefines = new ArrayList<>();
 	NS3Compatible parent;

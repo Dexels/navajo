@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class FinallyTag extends BaseNode implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4585743981082505865L;
+	
 	List<BaseNode> myChildren = new ArrayList<>();
 	NS3Compatible parent;
 

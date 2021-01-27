@@ -10,6 +10,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class MethodsTag extends BaseNode implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9180723975859157836L;
+	
 	List<BaseNode> myChildren = new ArrayList<>();
 	NS3Compatible parent;
 

@@ -1,6 +1,5 @@
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +11,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class SynchronizedTag extends BaseNode implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6213336590496337490L;
+	
 	List<BaseNode> myChildren = new ArrayList<>();
 	String context = null;
 	String key = null;

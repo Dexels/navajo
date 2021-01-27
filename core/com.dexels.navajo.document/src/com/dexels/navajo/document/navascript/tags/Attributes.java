@@ -7,23 +7,23 @@ package com.dexels.navajo.document.navascript.tags;
 
 public class Attributes {
 
-	public static String NAME = "name";
-	public static String VALUE = "value";
-	public static String TYPE = "type";
-	public static String CONDITION = "condition";
-	public static String FILTER = "filter";
-	public static String DIRECTION = "direction";
-	public static String DESCRIPTION = "description";
-	public static String LENGTH = "length";
-	public static String CARDINALITY = "cardinality";
-	public static String OBJECT = "object";
-	public static String REF = "ref";
-	public static String SELECTED = "selected";
-	public static String ORDERBY = "orderby";
-	public static String MODE = "mode";
-	public static String CONTEXT = "context";
-	public static String KEY = "key";
-	public static String TIMEOUT = "timeout";
-	public static String BREAKON_NOLOCK = "breakOnNoLock";
+	public static final String NAME = "name";
+	public static final String VALUE = "value";
+	public static final String TYPE = "type";
+	public static final String CONDITION = "condition";
+	public static final String FILTER = "filter";
+	public static final String DIRECTION = "direction";
+	public static final String DESCRIPTION = "description";
+	public static final String LENGTH = "length";
+	public static final String CARDINALITY = "cardinality";
+	public static final String OBJECT = "object";
+	public static final String REF = "ref";
+	public static final String SELECTED = "selected";
+	public static final String ORDERBY = "orderby";
+	public static final String MODE = "mode";
+	public static final String CONTEXT = "context";
+	public static final String KEY = "key";
+	public static final String TIMEOUT = "timeout";
+	public static final String BREAKON_NOLOCK = "breakOnNoLock";
 	
 }

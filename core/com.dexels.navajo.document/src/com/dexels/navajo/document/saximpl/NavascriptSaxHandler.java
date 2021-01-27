@@ -5,22 +5,18 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  */
 package com.dexels.navajo.document.saximpl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.base.BaseCheckTagImpl;
 import com.dexels.navajo.document.base.BaseExpressionTagImpl;
@@ -512,7 +508,6 @@ public class NavascriptSaxHandler extends SaxHandler {
 			int iLen = ( length != null ? Integer.parseInt(length) : 0 );
 			PropertyTag pt = new PropertyTag(currentDocument, name, type, val, iLen, description, direction);
 			pt.setCondition(condition);
-			MessageTag parent = ( currentMessage.size() > 0 ? currentMessage.lastElement() : null);
 
 			if ( cardinality != null ) {
 				pt.setCardinality(cardinality);

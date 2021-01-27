@@ -19,7 +19,6 @@ public class NS3Utils {
 	public static boolean checkForDeclaredField(NavascriptTag myScript, MapTag map, String name) throws Exception {
 		String adapterName = map.getAdapterName();
 		String objectName = map.getObject();
-		boolean isMapped = map.isMappedMessage() || map.isMappedSelection();
 		if ( adapterName != null ) {
 			return myScript.getMapChecker().isField(adapterName, name);
 		} 

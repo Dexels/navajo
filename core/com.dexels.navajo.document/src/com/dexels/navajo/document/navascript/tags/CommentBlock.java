@@ -10,6 +10,11 @@ import com.dexels.navajo.document.base.BaseNode;
 
 public class CommentBlock extends BaseNode implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5386721806384667258L;
+	
 	String comment;
 	NS3Compatible parent;
 

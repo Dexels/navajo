@@ -5,19 +5,20 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  */
 package com.dexels.navajo.document.navascript.tags;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseFieldTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
 
 public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8510574656272451020L;
+	
 	private NavascriptTag myScript;
-	private boolean oldSkool = false;
 	private boolean isSetter = false;
 	NS3Compatible parent;
 
@@ -39,7 +40,6 @@ public class FieldTag extends BaseFieldTagImpl implements NS3Compatible {
 		super(map.getNavascript(), name, condition, oldSkool);
 		this.setParent(map);
 		myScript = map.getNavascript();
-		this.oldSkool = oldSkool;
 	}
 
 	public FieldTag(MapTag map) {

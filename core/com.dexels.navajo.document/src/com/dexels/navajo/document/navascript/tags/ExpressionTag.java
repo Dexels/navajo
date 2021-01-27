@@ -13,6 +13,11 @@ import com.dexels.navajo.document.base.BaseExpressionTagImpl;
 
 public class ExpressionTag extends BaseExpressionTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 447851281259252679L;
+	
 	private ValueTag myValueTag;
 	NS3Compatible parent;
 

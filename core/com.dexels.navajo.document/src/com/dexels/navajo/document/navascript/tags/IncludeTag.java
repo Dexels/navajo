@@ -13,6 +13,11 @@ import com.dexels.navajo.document.base.BaseIncludeTagImpl;
 
 public class IncludeTag extends BaseIncludeTagImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7248526682626795323L;
+	
 	NS3Compatible parent;
 
 	public NS3Compatible getParentTag() {

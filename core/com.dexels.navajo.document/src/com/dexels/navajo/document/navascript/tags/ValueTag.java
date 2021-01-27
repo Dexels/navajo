@@ -8,6 +8,11 @@ import com.dexels.navajo.document.base.BaseValueImpl;
 
 public class ValueTag extends BaseValueImpl implements NS3Compatible {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -412169432394366024L;
+	
 	NS3Compatible parent;
 
 	public NS3Compatible getParentTag() {
