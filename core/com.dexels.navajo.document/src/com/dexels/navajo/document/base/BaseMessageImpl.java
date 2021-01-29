@@ -1720,7 +1720,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void maskMessage(Message mask, String method) {
-        if (isArrayMessage() && !mask.isArrayMessage()) {
+        if (isArrayMessage() != mask.isArrayMessage()) {
             // No need to check any properties or submessages
             if (this.getParentMessage() != null) {
                 this.getParentMessage().removeMessage(this);
@@ -1787,6 +1787,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
 
             if (maskMessage == null) {
+                removeMessage(m);
+                continue;
+            }
+
+            if (m.isArrayMessage() != maskMessage.isArrayMessage()) {
                 removeMessage(m);
                 continue;
             }
