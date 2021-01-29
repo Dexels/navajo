@@ -1680,7 +1680,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 // check if the existing sub message is of the same type (array/simple) as the
                 // incoming message, if not, we cannot use it
                 if (existingSubMessage.isArrayMessage() != incomingSubMessage.isArrayMessage()) {
-                    existingSubMessage = null;
+                    throw new NavajoException("Incompatible message types in merge: " + existingSubMessage.getFullMessageName() + " (" + existingSubMessage.getType() +  "), " + incomingSubMessage.getFullMessageName() + " (" + incomingSubMessage.getType() +  ")");
                 }
             }
             if (existingSubMessage == null) {
