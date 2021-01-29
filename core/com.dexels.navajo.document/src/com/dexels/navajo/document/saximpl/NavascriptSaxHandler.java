@@ -83,6 +83,9 @@ public class NavascriptSaxHandler extends SaxHandler {
 
 		if (tag.equals(Tags.NAVASCRIPT) || tag.equals("tsl")) {
 			currentDocument =  new NavascriptTag();
+			currentDocument.setAuthor(h.get("author"));
+			currentDocument.setNotes(h.get("notes"));
+			currentDocument.setId(h.get("id"));
 			currentNode.push(currentDocument);
 			return;
 		}

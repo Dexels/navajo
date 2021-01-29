@@ -17,7 +17,10 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	 * 
 	 */
 	private static final long serialVersionUID = 1648795731441833541L;
-	
+	String author;
+	String id;
+	String notes;
+
 	MapDefinitionInterrogator mapChecker;
 	NS3Compatible parent;
 
@@ -28,9 +31,33 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	public void addParent(NS3Compatible p) {
 		parent = p;
 	}
-	
+
 	public NavascriptTag() {
 		super(NavajoFactory.getInstance());
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public void setMapChecker(MapDefinitionInterrogator m) {
@@ -87,13 +114,13 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		st.addParent(this);
 		return st;
 	}
-	
+
 	public FinallyTag addFinallyTag(FinallyTag ft) {
 		super.addFinally(ft);
 		ft.addParent(this);
 		return ft;
 	}
-	
+
 	public MethodsTag addMethodsTag(MethodsTag mt) {
 		super.addMethods(mt);
 		mt.addParent(this);
@@ -116,6 +143,14 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("/*\n");
+		if ( id != null) sb.append("   id      : " + id + "\n");
+		if ( author != null) sb.append("   author  : " + author + "\n");
+		if ( notes != null) sb.append("   notes   : " + notes + "\n");
+		sb.append("   Copyright(c) 2021 Dexels BV\n");
+		sb.append("*/\n\n");
+		w.write(sb.toString().getBytes());
 		for ( BaseNode c : getChildren() ) {
 			if ( c instanceof NS3Compatible ) {
 				((NS3Compatible) c).formatNS3(indent, w);

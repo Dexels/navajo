@@ -52,20 +52,23 @@ public class NSXMLToNS3 {
 			return;
 		}
 
-		FileInputStream fis = new FileInputStream(inputFile);
-		NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
-
-		OutputStream os = System.out;
-
-		if ( outputFile != null ) {
-			os = new FileOutputStream(outputFile);
-		}
-
 		try {
+
+			FileInputStream fis = new FileInputStream(inputFile);
+			NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
+
+			OutputStream os = System.out;
+
+			if ( outputFile != null ) {
+				os = new FileOutputStream(outputFile);
+			}
+
+
 			navascript.formatNS3(0, os);
 			os.close();
 		} catch (Exception e) {
 			System.err.println("Error transpiling " + inputFile + ": " + e.getMessage());
+			System.exit(-1);
 		}
 
 	}
