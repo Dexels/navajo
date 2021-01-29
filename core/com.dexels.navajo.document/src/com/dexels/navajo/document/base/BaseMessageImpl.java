@@ -1636,6 +1636,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void merge(Message incoming, boolean preferThis, boolean applySubType) {
+        if (isArrayMessage() != incoming.isArrayMessage()) {
+            throw new NavajoException("Incompatible message types in merge: " + getFullMessageName() + " (" + getType() +  "), " + incoming.getFullMessageName() + " (" + incoming.getType() +  ")");
+        }
         if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
             // Perform merge for all my children with the definition message
             for (Message child : this.getElements()) {
