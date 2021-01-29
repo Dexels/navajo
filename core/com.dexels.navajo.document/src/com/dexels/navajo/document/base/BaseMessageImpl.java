@@ -1671,37 +1671,31 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
 
         }
-        List<Message> subMessages = incoming.getAllMessages();
-        for (int i = 0; i < subMessages.size(); i++) {
-            String newMsgName = subMessages.get(i).getName();
-            Message existing = this.getMessage(newMsgName);
-            if (existing == null) {
-                // if we dont have this message ourselves and incoming message has it marked as
-                // nullable, then we should NOT add it (because we explicitly allow the message
+        List<Message> incomingSubMessages = incoming.getAllMessages();
+        for (int i = 0; i < incomingSubMessages.size(); i++) {
+            Message incomingSubMessage = incomingSubMessages.get(i);
+            // check if we have a sub message with the same name
+            Message existingSubMessage = getMessage(incomingSubMessage.getName());
+            if (existingSubMessage != null) {
+                // check if the existing sub message is of the same type (array/simple) as the
+                // incoming message, if not, we cannot use it
+                if (existingSubMessage.isArrayMessage() != incomingSubMessage.isArrayMessage()) {
+                    existingSubMessage = null;
+                }
+            }
+            if (existingSubMessage == null) {
+                // if we don't have the sub message ourselves and if the incoming sub message is marked
+                // as nullable, then we should NOT add it (because we explicitly allow the message
                 // to not exist)
-                String nullableString = subMessages.get(i).getSubType("nullable");
+                String nullableString = incomingSubMessage.getSubType("nullable");
                 boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString);
                 if (nullable && applySubType) {
                     continue;
-                }
-                try {
-                    Message newMsg = subMessages.get(i).copy();
-                    Message otherMessage = null;
-                    if (preferThis) {
-                        otherMessage = getMessage(newMsg.getName());
-                    }
-                    if (!preferThis || otherMessage == null) {
-                        this.addMessage(newMsg);
-                    }
-                    if (otherMessage != null && otherMessage.getMethod().equals("")) {
-                        otherMessage.setMethod(newMsg.getMethod());
-                    }
-
-                } catch (NavajoException e) {
-                    logger.error("Navajo Exception on merge: {}", e);
+                } else {
+                    addMessage(incomingSubMessage.copy());
                 }
             } else {
-                existing.merge(subMessages.get(i), preferThis);
+                existingSubMessage.merge(incomingSubMessage, preferThis);
             }
         }
 
