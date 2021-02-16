@@ -1,11 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <adapterdef>
-
 
     <map>
         <tagname>monkey</tagname>
         <object>com.dexels.navajo.example.adapter.MonkeyAdapter</object>
-        <values>
-        </values>
+        <values />
     </map>
 
 </adapterdef>
