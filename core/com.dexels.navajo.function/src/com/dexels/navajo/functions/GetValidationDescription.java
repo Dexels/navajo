@@ -56,7 +56,7 @@ public class GetValidationDescription extends FunctionInterface {
             tenant = (String) tenantO;
         }
         
-        String locale =  DEFAULT_LOCALE;
+        String locale = getDefaultLocale();
         if (getOperands().size() > 2) {
             Object localeO = getOperand(2);
             if (!(localeO instanceof String)) {
@@ -65,6 +65,10 @@ public class GetValidationDescription extends FunctionInterface {
             }
             locale = (String) localeO;
         }
+        if (locale == null) {
+            // If still null, default to NL?
+            locale = DEFAULT_LOCALE;
+        }
         
         ResourceBundleStore rb = getResourceBundleService();
         if (rb == null) {
@@ -72,6 +76,10 @@ public class GetValidationDescription extends FunctionInterface {
         }
         return rb.getValidationDescription(key,tenant, locale);
 
+    }
+    
+    private String getDefaultLocale() {
+        return getAccess().getInDoc().getHeader().getHeaderAttribute("locale");
     }
 
     private ResourceBundleStore getResourceBundleService() {
