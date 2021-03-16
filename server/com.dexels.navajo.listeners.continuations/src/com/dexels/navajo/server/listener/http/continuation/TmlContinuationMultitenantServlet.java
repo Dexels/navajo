@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server.listener.http.continuation;
@@ -24,10 +24,11 @@ import com.dexels.navajo.script.api.TmlScheduler;
 public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		SchedulableServlet {
 
-	private static final long serialVersionUID = -8645365233991777113L;
+    private static final long serialVersionUID = -8645365233991777113L;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TmlContinuationMultitenantServlet.class);
+	private static final long MAX_REQUEST_TIMEOUT = 100_000_000L;
+
+	private static final Logger logger = LoggerFactory.getLogger(TmlContinuationMultitenantServlet.class);
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
@@ -78,7 +79,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
     public void activate() {
 
         logger.info("Continuation servlet component activated");
-        requestTimeout = NavajoRequestConfig.getRequestTimeout(10_000_000L);
+        requestTimeout = NavajoRequestConfig.getRequestTimeout(MAX_REQUEST_TIMEOUT);
         logger.info("Using timeout in continuation: {}", requestTimeout);
     }
 
