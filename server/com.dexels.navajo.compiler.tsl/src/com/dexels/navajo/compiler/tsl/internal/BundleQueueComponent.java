@@ -65,26 +65,38 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     @Override
     public void enqueueScript(final String script, final String path) {
         executor.execute(() -> {
-		    List<String> failures = new ArrayList<>();
-		    List<String> success = new ArrayList<>();
-		    List<String> skipped = new ArrayList<>();
-		    logger.info("Eagerly compiling: {}", script);
-		    try {
-		        bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles);
-		        bundleCreator.installBundle(script, failures, success, skipped, true);
-		        if (!skipped.isEmpty()) {
-		            logger.info("Script compilation skipped: {}", script);
-		        }
-		        if (!failures.isEmpty()) {
-		            logger.info("Script compilation failed: {}", script);
-		        }
-		        checkOnDemandScriptDependencies(script);
-		        enqueueDependentScripts(script);
-
-		    } catch (Throwable e) {
-		        logger.error("Error: ", e);
-		    }
+		    compileScript(script, path);
 		});
+    }
+    
+    /* (non-Javadoc)
+     * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#compileScript(java .lang.String) */
+    @Override
+    public boolean compileScript(final String script, final String path) {
+        boolean compilationSuccess = true;
+        List<String> failures = new ArrayList<>();
+        List<String> success = new ArrayList<>();
+        List<String> skipped = new ArrayList<>();
+        logger.info("Eagerly compiling: {}", script);
+        try {
+            bundleCreator.createBundle(script, failures, success, skipped, true, keepIntermediateFiles);
+            bundleCreator.installBundle(script, failures, success, skipped, true);
+            if (!skipped.isEmpty()) {
+                compilationSuccess = false;
+                logger.info("Script compilation skipped: {}", script);
+            }
+            if (!failures.isEmpty()) {
+                compilationSuccess = false;
+                logger.info("Script compilation failed: {}", script);
+            }
+            checkOnDemandScriptDependencies(script);
+            enqueueDependentScripts(script);
+
+        } catch (Throwable e) {
+            compilationSuccess = false;
+            logger.error("Error: ", e);
+        }
+        return compilationSuccess;
     }
 
     public void enqueueDeleteScript(final String script) {
