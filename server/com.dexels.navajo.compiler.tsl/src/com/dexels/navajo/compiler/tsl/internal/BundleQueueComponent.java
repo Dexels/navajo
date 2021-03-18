@@ -72,7 +72,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     /* (non-Javadoc)
      * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#compileScript(java .lang.String) */
     @Override
-    public boolean compileScript(final String script, final String path) {
+    public synchronized boolean compileScript(final String script, final String path) {
         boolean compilationSuccess = true;
         List<String> failures = new ArrayList<>();
         List<String> success = new ArrayList<>();
