@@ -138,6 +138,7 @@ workflows:
               only:
                 - master
                 - test
+                - sendratosports
 
       - build_n_test:
           context:
@@ -147,4 +148,5 @@ workflows:
               ignore:
                 - master
                 - test
+                - sendratosports
 
