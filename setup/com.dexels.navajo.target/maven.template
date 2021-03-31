@@ -3,7 +3,7 @@
 <target name="Navajo Target Platform: ##DEXELSBASEVERSION####DEXELSBASESUFFIX##" sequenceNumber="##SEQUENCE##">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://p2.dexels.com/eclipse/equinox_4.16/"/>
+            <repository location="https://p2.dexels.com/eclipse/equinox_4.16"/>
             <unit id="org.eclipse.equinox.core.feature.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.equinox.core.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
