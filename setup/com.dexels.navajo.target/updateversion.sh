@@ -40,7 +40,7 @@ DEXELS_BASE="${DEXELS_BASE_PREFIX}.${DEXELS_BASE_BUILD}"
 SEQUENCEVERSION=$(( 2800 + $DEXELS_BASE_BUILD ))
 
 
-echo "dexels-base version: '$DEXELS_BASE'"
+echo "dexels-base version: '$DEXELS_BASE$SUFFIX'"
 echo "sequence version:    '$SEQUENCEVERSION'"
 
 
@@ -50,6 +50,6 @@ cat maven.template | \
     sed "s/##SEQUENCE##/${SEQUENCEVERSION}/g" \
     > maven.target
 
-echo "$DEXELS_BASE"     > DEXELS_BASE
-echo "$SEQUENCEVERSION" > SEQUENCE
+echo "$DEXELS_BASE$SUFFIX" > DEXELS_BASE
+echo "$SEQUENCEVERSION"    > SEQUENCE
 
