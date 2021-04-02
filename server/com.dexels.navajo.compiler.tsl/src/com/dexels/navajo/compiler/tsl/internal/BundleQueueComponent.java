@@ -89,7 +89,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 compilationSuccess = false;
                 logger.info("Script compilation failed: {}", script);
             }
-            checkOnDemandScriptDependencies(script);
+            ensureScriptDependencies(script);
             enqueueDependentScripts(script);
 
         } catch (Throwable e) {
@@ -192,8 +192,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         }
     }
 
-    // check whether dependencies of the current script are satisfied, and if not create them on demand
-    private void checkOnDemandScriptDependencies(String script) {
+	// ensure that dependencies of the current script are satisfied. If dependencies
+	// are not satisfied, create them
+    private void ensureScriptDependencies(String script) {
         String rpcName = script;
         String bareScript = script.substring(script.lastIndexOf('/') + 1);
         if (bareScript.indexOf('_') >= 0) {
@@ -209,10 +210,12 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         for (Dependency dependency : dependencies) {
             String depScript = dependency.getDependee();
             try {
+				// do an on demand call to the bundle creator, we only need the script to be
+				// compiled, if it wasn't there yet
                 bundleCreator.getOnDemandScriptService(depScript, null);
-                checkOnDemandScriptDependencies(depScript);
+                ensureScriptDependencies(depScript);
             } catch (CompilationException e) {
-                logger.info("Failed to recompile {} after a change in {}: {}", depScript, script, e);
+                logger.info("Failed to compile {} after a change in {}: {}", depScript, script, e);
             }
         }
     }
@@ -229,10 +232,10 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         // re-compile, so that they have the correct version. This goes recursive, to allow
         // handling includes within includes within includes etc. Use a History set to prevent
         // a loop somewhere.
-        // Use a set to prevent duplicates due to tenent-specific dependencies
+        // Use a set to prevent duplicates due to tenant-specific dependencies
         Set<String> dependentScripts = new HashSet<>();
         for (Dependency dep : dependencies) {
-            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
+            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY || dep.getType() == Dependency.ENTITY_DEPENDENCY) {
                 dependentScripts.add(dep.getScript());
             }
 
