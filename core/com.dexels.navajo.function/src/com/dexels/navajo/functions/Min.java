@@ -67,7 +67,7 @@ public String usage() {
 
     private Object min( Object a, Object b )
     {
-        if ( a != null && ( a instanceof Date || a instanceof ClockTime ) )
+        if ( a instanceof Date || a instanceof ClockTime )
         {
             if( b == null )
             {
@@ -93,7 +93,7 @@ public String usage() {
         }
         else
         {
-            if ( b != null && ( b instanceof Date || b instanceof ClockTime ) )
+            if ( b instanceof Date || b instanceof ClockTime )
             {
                 if( a == null )
                 {

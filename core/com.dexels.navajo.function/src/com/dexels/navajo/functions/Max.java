@@ -66,7 +66,7 @@ public final class Max extends FunctionInterface {
     
     private Object max( Object a, Object b )
     {
-        if ( a != null && ( a instanceof Date || a instanceof ClockTime ) )
+        if ( a instanceof Date || a instanceof ClockTime )
         {
             if( b == null )
             {
@@ -93,7 +93,7 @@ public final class Max extends FunctionInterface {
         }
         else
         {
-            if ( b != null && ( b instanceof Date || b instanceof ClockTime ) )
+            if ( b instanceof Date || b instanceof ClockTime )
             {
                 if( a == null )
                 {
