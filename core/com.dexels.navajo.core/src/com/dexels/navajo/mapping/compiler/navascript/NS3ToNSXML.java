@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/ProcessQuerySchedule.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/Test.ns");
 
 		t.initialize();
 

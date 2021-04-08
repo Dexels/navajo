@@ -295,13 +295,19 @@ IntegerLiteral ::= "0" | ( ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
 
-StringLiteral ::= "'" ( CHARACTER | WhiteSpace | '"' )* "'" 
+StringLiteral ::= "'" StringCharacters? "'"
+
+StringCharacters ::= StringCharacter+
+
+StringCharacter ::= InputCharacter - ( "'" | '\' ) | EscapeSequence
 
 TmlLiteral ::= "'" ( MsgIdentifier )* "'" 
 
 ExistsTmlIdentifier ::= "?" TmlIdentifier
 
-StringConstant ::= DOUBLE_QUOTE ( CHARACTER | WhiteSpace | "'" )* DOUBLE_QUOTE 
+StringConstant ::= DOUBLE_QUOTE StringConstantCharacter* DOUBLE_QUOTE 
+
+StringConstantCharacter ::= InputCharacter - ( '"' | '\' ) | EscapeSequence
 
 ScriptIdentifier ::= Identifier ( "/" Identifier )*
 
@@ -349,6 +355,43 @@ SourceCharacter ::= .
 
 LineContinuation ::= '\' LineTerminatorSequence
 
+InputCharacter ::= UnicodeInputCharacter
+
+UnicodeInputCharacter ::= UnicodeEscape | RawInputCharacter
+
+UnicodeEscape ::= '\' UnicodeMarker HexDigit HexDigit HexDigit HexDigit
+
+UnicodeMarker ::= 'u'+
+
+HexDigit ::= '0'
+           | '1'
+           | '2'
+           | '3'
+           | '4'
+           | '5'
+           | '6'
+           | '7'
+           | '8'
+           | '9'
+           | 'a'
+           | 'b'
+           | 'c'
+           | 'd'
+           | 'e'
+           | 'f'
+           | 'A'
+           | 'B'
+           | 'C'
+           | 'D'
+           | 'E'
+           | 'F'
+
+RawInputCharacter
+         ::= [#x0001-#xD7FF]
+           | [#xE000-#xFFFD]
+           | [#x10000-#x10FFFF]
+
+
 LineTerminatorSequence
          ::= #x000D #x000A
            | #x000A
@@ -361,3 +404,37 @@ LineTerminator
            | #x000D
            | #x2028
            | #x2029
+           
+EscapeSequence
+         ::= BackSlash 'b'
+           | BackSlash 't'
+           | BackSlash 'n'
+           | BackSlash 'f'
+           | BackSlash 'r'
+           | BackSlash '"'
+           | BackSlash "'"
+           | BackSlash BackSlash
+           | OctalEscape
+           
+BackSlash
+         ::= '\' ( UnicodeMarker '005' [cC] )?
+         
+OctalDigit ::= '0'
+           | '1'
+           | '2'
+           | '3'
+           | '4'
+           | '5'
+           | '6'
+           | '7'
+
+OctalEscape
+         ::= '\' OctalDigit
+           | '\' OctalDigit OctalDigit
+           | '\' ZeroToThree OctalDigit OctalDigit
+           
+ZeroToThree
+         ::= '0'
+           | '1'
+           | '2'
+           | '3'
