@@ -1,7 +1,6 @@
 package com.dexels.navajo.compiler.navascript;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import com.dexels.navajo.document.NavajoFactory;
