@@ -1678,6 +1678,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (incoming.getSubType() != null && (this.getSubType() == null || this.getSubType().equals(""))) {
             this.setSubType(incoming.getSubType());
         }
+        if (incoming.getExtends() != null && (this.getExtends() == null || this.getExtends().equals(""))) {
+            this.setExtends(incoming.getExtends());
+        }
 
         // Check if message with incoming name exists.
         if (!getName().equals(incoming.getName())) {
