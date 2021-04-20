@@ -39,11 +39,21 @@ public class MessageMapTest {
 				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
 				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
 				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
-				c.addProperty(p1);
-				c.addProperty(p1a);
-				c.addProperty(p2);
-				c.addProperty(p3);
-				c.addProperty(p4);
+                c.addProperty(p1);
+                c.addProperty(p1a);
+                c.addProperty(p2);
+                c.addProperty(p3);
+                c.addProperty(p4);
+				if( i % 4 == 0 )
+				{
+				    Property p5 = NavajoFactory.getInstance().createProperty(n, "City", Property.STRING_PROPERTY, "Amsterdam", 0, "", "out");
+	                c.addProperty(p5);
+				}
+				else
+				{
+                    Property p5 = NavajoFactory.getInstance().createProperty(n, "City", Property.STRING_PROPERTY, "Leiden", 0, "", "out");
+                    c.addProperty(p5);
+				}
 			} else {
 				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
 				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Desktop", 0, "", "out");
@@ -51,13 +61,25 @@ public class MessageMapTest {
 				String d3 = "2012-01-" + ( (i+1) < 10 ? "0" + (i+1) : (i+1) );
 				Property p3 = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY,d3, 0, "", "out");
 				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
-				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", true));
 				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
-				c.addProperty(p1);
-				c.addProperty(p1a);
-				c.addProperty(p2);
-				c.addProperty(p3);
-				c.addProperty(p4);
+                c.addProperty(p1);
+                c.addProperty(p1a);
+                c.addProperty(p2);
+                c.addProperty(p3);
+                c.addProperty(p4);
+				if(  i % 4 == 1 )
+				{
+	                Property p5 = NavajoFactory.getInstance().createProperty(n, "City", Property.STRING_PROPERTY, "Leiden", 0, "", "out");
+	                c.addProperty(p5);
+				}
+				else
+				{
+				    // Undo the double selected for the 4x + 3 rows
+				    p4.setSelected( "Man" );
+                    Property p5 = NavajoFactory.getInstance().createProperty(n, "City", Property.STRING_PROPERTY, "Hoorn", 0, "", "out");
+                    c.addProperty(p5);
+				}
 			}
 		}
 		n.write(System.err);
@@ -109,7 +131,14 @@ public class MessageMapTest {
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-02"), result[1].getMin("Date"));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-09"), result[0].getMax("Date"));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-10"), result[1].getMax("Date"));
-		
+		assertEquals( "Amsterdam", result[0].getFirst( "City" ) );
+        assertEquals( "Leiden", result[1].getFirst( "City" ) );
+        assertEquals( "Amsterdam;Leiden;Amsterdam;Leiden;Amsterdam", result[0].getConcatenated( "City" ) );
+        assertEquals( "Leiden;Hoorn;Leiden;Hoorn;Leiden", result[1].getConcatenated( "City" ) );
+        assertEquals( "Vrouw", result[0].getFirst( "Gender" ).toString() );
+        assertEquals( "Man,Vrouw", result[1].getFirst( "Gender" ).toString() );
+        assertEquals( "Vrouw;Vrouw;Vrouw;Vrouw;Vrouw", result[0].getConcatenated( "Gender" ) );
+		assertEquals( "Man;Vrouw;Man;Man;Vrouw;Man;Man;Vrouw", result[1].getConcatenated( "Gender" ) );
 		
 	}
 	

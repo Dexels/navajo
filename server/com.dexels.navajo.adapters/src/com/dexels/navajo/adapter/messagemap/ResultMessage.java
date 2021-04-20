@@ -123,7 +123,25 @@ public class ResultMessage implements Mappable {
 			return null;
 		}
 	}
-	
+
+    public String getConcatenated(String name) throws UserException {
+        Aggregate agg = getAggregate(name);
+        if ( agg != null ) {
+            return agg.getConcatenated();
+        } else {
+            return null;
+        }
+    }
+
+    public Object getFirst(String name) throws UserException  {
+        Aggregate agg = getAggregate(name);
+        if ( agg != null ) {
+            return agg.getFirst();
+        } else {
+            return null;
+        }
+    }
+
 	public void setMessage(Message definitionMessage, Message m, String suppressProperties) {
 		this.msg = m;
 		this.definitionMessage = definitionMessage;
