@@ -133,10 +133,10 @@ public class ResultMessage implements Mappable {
         }
     }
 
-    public Object getFirst(String name) throws UserException  {
+    public Object getAny(String name) throws UserException  {
         Aggregate agg = getAggregate(name);
         if ( agg != null ) {
-            return agg.getFirst();
+            return agg.getAny();
         } else {
             return null;
         }

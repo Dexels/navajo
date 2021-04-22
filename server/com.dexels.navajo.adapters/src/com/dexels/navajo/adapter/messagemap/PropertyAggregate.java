@@ -24,7 +24,7 @@ public class PropertyAggregate {
 		public Date minDate = null;
 		public Date maxDate = null;
 		public int count = 0;
-		public Object first = null;
+		public Object any = null;
 		public String concatenated = null;
 		public String type;
 		
@@ -48,8 +48,8 @@ public class PropertyAggregate {
             return concatenated;
         }
 
-        public Object getFirst() {
-            return first;
+        public Object getAny() {
+            return any;
         }
 
 		public Object getMin() {
@@ -75,7 +75,8 @@ public class PropertyAggregate {
 		public void addProperty(Property myProp) {
 		    if( count == 0 )
 		    {
-		        first = myProp.getTypedValue();
+		        // ensure we take only one value. Hence take the "first". But we don't order so no guarantee which we take, hence any
+		        any = myProp.getTypedValue();
 		    }
 			count++;
 			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) || myProp.getType().equals(Property.MONEY_PROPERTY) ) ) {
