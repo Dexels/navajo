@@ -131,12 +131,12 @@ public class MessageMapTest {
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-02"), result[1].getMin("Date"));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-09"), result[0].getMax("Date"));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-10"), result[1].getMax("Date"));
-		assertEquals( "Amsterdam", result[0].getFirst( "City" ) );
-        assertEquals( "Leiden", result[1].getFirst( "City" ) );
+		assertEquals( "Amsterdam", result[0].getAny( "City" ) );
+        assertEquals( "Leiden", result[1].getAny( "City" ) );
         assertEquals( "Amsterdam;Leiden;Amsterdam;Leiden;Amsterdam", result[0].getConcatenated( "City" ) );
         assertEquals( "Leiden;Hoorn;Leiden;Hoorn;Leiden", result[1].getConcatenated( "City" ) );
-        assertEquals( "Vrouw", result[0].getFirst( "Gender" ).toString() );
-        assertEquals( "Man,Vrouw", result[1].getFirst( "Gender" ).toString() );
+        assertEquals( "Vrouw", result[0].getAny( "Gender" ).toString() );
+        assertEquals( "Man,Vrouw", result[1].getAny( "Gender" ).toString() );
         assertEquals( "Vrouw;Vrouw;Vrouw;Vrouw;Vrouw", result[0].getConcatenated( "Gender" ) );
 		assertEquals( "Man;Vrouw;Man;Man;Vrouw;Man;Man;Vrouw", result[1].getConcatenated( "Gender" ) );
 		
