@@ -11,5 +11,5 @@
 		<relativePath>../../setup/com.dexels.navajo.super</relativePath>
 	</parent>
 
-	<version>4.2.3-SNAPSHOT</version>
+	<version>4.2.3</version>
 </project>
