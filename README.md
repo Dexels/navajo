@@ -1,5 +1,5 @@
-# Navajo
+# Navajo Service-oriented Applications
 
-Navajo/Tipi Service Oriented Applications
+See the [Navajo](https://github.com/Dexels/navajo/wiki), [Tipi](https://github.com/Dexels/tipi/wiki), and [Enterprise](https://github.com/Dexels/enterprise/wiki) wikis for more information.
 
-See the [Navajo Wiki](https://github.com/Dexels/navajo/wiki) for more information.
+Build status: [![CircleCI](https://circleci.com/gh/Dexels/navajo.svg?style=svg)](https://circleci.com/gh/Dexels/navajo)
