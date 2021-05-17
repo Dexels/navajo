@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -189,12 +190,18 @@ public class ResourceComponent implements HttpResource {
 
 	@Override
 	public String expiringURL(String tenant, String bucket, String id, long expire) {
-		long unixTimestamp = Instant.now().getEpochSecond()+expire;
-		long exp = unixTimestamp+expire;
-		String totalURL = assemblePublicURL(tenant,bucket, id)+"?expires="+exp+"&sig="+sign(resolveBucket(tenant, bucket), id,exp);
-	    //logger.debug("Assembled public url {} to {} in {} lasting {} seconds into the future", totalURL, id, bucket, expire);
+		return makeExpiringURL(tenant, bucket, id, Instant.now().getEpochSecond() + expire);
+	}
 
-		return totalURL;
+	@Override
+	public String expiringURL(String tenant, String bucket, String id, Date expire) {
+		return makeExpiringURL(tenant, bucket, id, expire.getTime() / 1000);
+	}
+
+	private String makeExpiringURL(String tenant, String bucket, String id, long ttlInSeconds) {
+		return assemblePublicURL(tenant,bucket, id)
+				+ "?expires=" + ttlInSeconds
+				+ "&sig=" + sign(resolveBucket(tenant, bucket), id, ttlInSeconds);
 	}
 
 	private String sign(String bucket, String id, long expirationTime) {
