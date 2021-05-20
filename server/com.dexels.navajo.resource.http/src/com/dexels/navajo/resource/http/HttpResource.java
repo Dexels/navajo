@@ -6,6 +6,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 package com.dexels.navajo.resource.http;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 
 import org.reactivestreams.Publisher;
@@ -58,5 +59,6 @@ public interface HttpResource {
 	
 	public String getURL();
 	public String expiringURL(String tenant, String bucket, String id, long expiration);
+	public String expiringURL(String tenant, String bucket, String id, Date expire);
 	public Binary lazyBinary(String tenant, String bucket, String id, long expire) throws IOException;
 }
