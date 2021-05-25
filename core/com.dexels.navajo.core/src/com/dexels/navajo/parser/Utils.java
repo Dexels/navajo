@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.parser;
@@ -92,7 +92,7 @@ public final class Utils extends Exception {
 	public static final <T extends Comparable<T>> boolean compare(T a, T b, String c) {
 
 		int compareResult = a.compareTo(b);
-		
+
 		if (c.equals(">"))
 			return compareResult > 0;
 		else if (c.equals("<"))
@@ -146,6 +146,8 @@ public final class Utils extends Exception {
 	public static final double getDoubleValue(Object o) {
 		if (o instanceof Integer)
 			return ((Integer) o).intValue();
+        else if (o instanceof Long)
+            return ((Long) o).longValue();
 		else if (o instanceof Double)
 			return ((Double) o).doubleValue();
 		else if (o instanceof Money)
@@ -353,7 +355,7 @@ public final class Utils extends Exception {
 
 	/**
 	 * Fix money==null issue
-	 * 
+	 *
 	 * @param a
 	 * @return
 	 */
