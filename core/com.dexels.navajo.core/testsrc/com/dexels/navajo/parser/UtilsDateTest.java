@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-public class UtilsTest {
+public class UtilsDateTest {
 
     @Test
     public void testSubtractDatesWith24HoursDifference() throws Exception {
@@ -80,7 +80,7 @@ public class UtilsTest {
         b.set(2009, 2, 30, 0, 0, 0);
         b.set(Calendar.MILLISECOND, 0);
 
-        int result = (Integer) com.dexels.navajo.parser.Utils.subtract(a.getTime(), b.getTime());
+        int result = (Integer) Utils.subtract(a.getTime(), b.getTime());
 
         assertEquals(-28, result);
     }
