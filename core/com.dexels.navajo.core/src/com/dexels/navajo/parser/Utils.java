@@ -190,44 +190,59 @@ public final class Utils extends Exception {
 
 	/**
 	 * Generic method to subtract two objects.
-	 *
-	 * @param a
-	 * @param b
-	 * @return
-	 * @throws TMLExpressionException
 	 */
 	public static final Object subtract(Object a, Object b) {
-		if ((a instanceof Integer) && (b instanceof Integer))
-			return Integer.valueOf(((Integer) a).intValue() - ((Integer) b).intValue());
-		else if ((a instanceof String) || (b instanceof String)) {
+
+        if (a instanceof Integer) {
+            int inta = (Integer) a;
+            if (b instanceof Integer) {
+                return inta - (Integer) b;
+            } else if (b instanceof Long) {
+                return inta - (Long) b;
+            } else if (b instanceof Double) {
+                return inta - (Double) b;
+            }
+        } else if (a instanceof Long) {
+            long longa = (Long) a;
+            if (b instanceof Integer) {
+                return longa - (Integer) b;
+            } else if (b instanceof Long) {
+                return longa - (Long) b;
+            } else if (b instanceof Double) {
+                return longa - (Double) b;
+            }
+        } else if (a instanceof Double) {
+            double doublea = (Double) a;
+            if (b instanceof Integer) {
+                return doublea - (Integer) b;
+            } else if (b instanceof Long) {
+                return doublea - (Long) b;
+            } else if (b instanceof Double) {
+                return doublea - (Double) b;
+            }
+		} else if ((a instanceof String) || (b instanceof String)) {
 			throw new TMLExpressionException("Subtraction not defined for Strings");
-		} else if (a instanceof Double && b instanceof Integer) {
-			return Double.valueOf(((Double) a).doubleValue() - ((Integer) b).intValue());
-		} else if (a instanceof Integer && b instanceof Double) {
-			return Double.valueOf(((Integer) a).intValue() - ((Double) b).doubleValue());
-		} else if (a instanceof Double && b instanceof Double) {
-			return Double.valueOf(((Double) a).doubleValue() - ((Double) b).doubleValue());
 		} else if ((a instanceof Money || b instanceof Money)) {
 			if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
 			if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+
 			Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
 			Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
-			return new Money(arg1.doubleValue() - arg2.doubleValue());
-		}
 
-		else if ((a instanceof Percentage || b instanceof Percentage)) {
+			return new Money(arg1.doubleValue() - arg2.doubleValue());
+		} else if ((a instanceof Percentage || b instanceof Percentage)) {
 			if (!(a instanceof Percentage || a instanceof Integer || a instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + a.getClass());
 			if (!(b instanceof Percentage || b instanceof Integer || b instanceof Double))
 				throw new TMLExpressionException("Invalid argument for operation: " + b.getClass());
+
 			Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
 			Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
-			return new Percentage(arg1.doubleValue() - arg2.doubleValue());
-		}
 
-		if (a instanceof Date && b instanceof Date) {
+			return new Percentage(arg1.doubleValue() - arg2.doubleValue());
+		} else if (a instanceof Date && b instanceof Date) {
 			// Correct dates for daylight savings time.
 			Calendar ca = Calendar.getInstance();
 			ca.setTime((Date) a);
@@ -238,38 +253,37 @@ public final class Utils extends Exception {
 			cb.add(Calendar.MILLISECOND, cb.get(Calendar.DST_OFFSET));
 
 			return Integer.valueOf((int) ((ca.getTimeInMillis() - cb.getTimeInMillis()) / (double) MILLIS_IN_DAY));
-		}
-
-		if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
+		} else if ((a instanceof DatePattern || a instanceof Date) && (b instanceof DatePattern || b instanceof Date)) {
 			DatePattern dp1 = null;
 			DatePattern dp2 = null;
 
-			if (a instanceof Date)
+			if (a instanceof Date) {
 				dp1 = DatePattern.parseDatePattern((Date) a);
-			else
+			} else {
 				dp1 = (DatePattern) a;
-			if (b instanceof Date)
+			}
+
+			if (b instanceof Date) {
 				dp2 = DatePattern.parseDatePattern((Date) b);
-			else
+			} else {
 				dp2 = (DatePattern) b;
+			}
+
 			dp1.subtract(dp2);
 			return dp1.getDate();
-		}
-
-		if ((a instanceof ClockTime || a instanceof Date || a instanceof StopwatchTime)
+		} else if ((a instanceof ClockTime || a instanceof Date || a instanceof StopwatchTime)
 				&& (b instanceof ClockTime || b instanceof Date || b instanceof StopwatchTime)) {
 			long myMillis = (a instanceof ClockTime ? ((ClockTime) a).dateValue().getTime()
 					: (a instanceof Date ? ((Date) a).getTime() : ((StopwatchTime) a).getMillis()));
 			long otherMillis = (b instanceof ClockTime ? ((ClockTime) b).dateValue().getTime()
 					: (b instanceof Date ? ((Date) b).getTime() : ((StopwatchTime) b).getMillis()));
+
 			return new StopwatchTime((int) (myMillis - otherMillis));
+		} else if (a == null || b == null) {
+			return null;
 		}
 
-		if (a == null || b == null) {
-			return null;
-		} else {
-			throw new TMLExpressionException("Unknown  for subtract");
-		}
+		throw new TMLExpressionException("Unknown  for subtract");
 	}
 
 	/**
