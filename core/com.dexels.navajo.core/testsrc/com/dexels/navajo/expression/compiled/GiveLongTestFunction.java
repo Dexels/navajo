@@ -15,7 +15,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-public class AddTestFunction extends FunctionInterface {
+public class GiveLongTestFunction extends FunctionInterface {
 
     @Override
     public String remarks() {
@@ -25,11 +25,26 @@ public class AddTestFunction extends FunctionInterface {
     @Override
     public Object evaluate() throws TMLExpressionException {
 
-        return "monkey";
+        Object o = operand(0).value;
+        if (o == null) {
+            return 0L;
+        }
+
+        if (o instanceof Integer) {
+            return ((Integer)o).longValue();
+        } else if (o instanceof Long) {
+            return o;
+        } else if (o instanceof Float) {
+            return ((Float)o).longValue();
+        } else if (o instanceof Double) {
+            return ((Double)o).longValue();
+        } else {
+            throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
+        }
     }
 
     public Map<String, Operand> namedOperands() {
-        return this.getNamedParameters();
+        return getNamedParameters();
     }
 
 }
