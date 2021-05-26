@@ -56,7 +56,7 @@ public class UtilsLongTest {
         Double a = 15.0;
         Long b = 10L;
 
-        double result = (Double) Utils.add(a, b, "ToDouble(15) + ToLong(10)");
+        double result = (Double) Utils.add(a, b, "15.0 + ToLong(10)");
 
         assertEquals(25.0, result, 0.000001);
     }
@@ -67,7 +67,7 @@ public class UtilsLongTest {
         Long a = 15L;
         Double b = 10.0;
 
-        double result = (Double) Utils.add(a, b, "ToLong(15) + ToDouble(10)");
+        double result = (Double) Utils.add(a, b, "ToLong(15) + 10.0");
 
         assertEquals(25.0, result, 0.000001);
     }
@@ -79,7 +79,7 @@ public class UtilsLongTest {
         Long a = 15L;
         Long b = 10L;
 
-        long result = (Long) Utils.subtract(a, b);
+        long result = (Long) Utils.subtract(a, b, "ToLong(15) - ToLong(10)");
 
         assertEquals(5L, result);
     }
@@ -90,7 +90,7 @@ public class UtilsLongTest {
         Integer a = 15;
         Long b = 10L;
 
-        long result = (Long) Utils.subtract(a, b);
+        long result = (Long) Utils.subtract(a, b, "15 - ToLong(10)");
 
         assertEquals(5L, result);
     }
@@ -101,7 +101,7 @@ public class UtilsLongTest {
         Long a = 15L;
         Integer b = 10;
 
-        long result = (Long) Utils.subtract(a, b);
+        long result = (Long) Utils.subtract(a, b, "ToLong(15) - 10");
 
         assertEquals(5L, result);
     }
@@ -112,7 +112,7 @@ public class UtilsLongTest {
         Double a = 15.0;
         Long b = 10L;
 
-        double result = (Double) Utils.subtract(a, b);
+        double result = (Double) Utils.subtract(a, b, "15.0 - ToLong(10)");
 
         assertEquals(5.0, result, 0.000001);
     }
@@ -123,7 +123,7 @@ public class UtilsLongTest {
         Long a = 15L;
         Double b = 10.0;
 
-        double result = (Double) Utils.subtract(a, b);
+        double result = (Double) Utils.subtract(a, b, "ToLong(15) - 10.0");
 
         assertEquals(5.0, result, 0.000001);
     }

@@ -43,14 +43,14 @@ final class ASTSubtractNode extends SimpleNode {
         Object b = bo.value;
 
         if (!(a instanceof ArrayList || b instanceof ArrayList)) {
-            return Operand.ofDynamic(Utils.subtract(a, b));
+            return Operand.ofDynamic(Utils.subtract(a, b, expression));
         } else if ((a instanceof ArrayList) && !(b instanceof ArrayList)) {
             ArrayList list = (ArrayList) a;
             ArrayList result = new ArrayList();
 
             for (int i = 0; i < list.size(); i++) {
                 Object val = list.get(i);
-                Object rel = Utils.subtract(val, b);
+                Object rel = Utils.subtract(val, b, expression);
                 result.add(rel);
             }
 
@@ -61,7 +61,7 @@ final class ASTSubtractNode extends SimpleNode {
 
             for (int i = 0; i < list.size(); i++) {
                 Object val = list.get(i);
-                Object rel = Utils.subtract(a, val);
+                Object rel = Utils.subtract(a, val, expression);
                 result.add(rel);
             }
 
@@ -73,14 +73,14 @@ final class ASTSubtractNode extends SimpleNode {
             if (list1.size() != list2.size()) {
                 throw new TMLExpressionException(
                         "Can only subtract lists of equals length. Lengths found: " + list1.size()
-                                + " and" + list2.size() + " expression: " + expression);
+                                + " and " + list2.size() + " expression: " + expression);
             }
 
             ArrayList result = new ArrayList();
             for (int i = 0; i < list1.size(); i++) {
                 Object val1 = list1.get(i);
                 Object val2 = list2.get(i);
-                Object rel = Utils.subtract(val1, val2);
+                Object rel = Utils.subtract(val1, val2, expression);
                 result.add(rel);
             }
 

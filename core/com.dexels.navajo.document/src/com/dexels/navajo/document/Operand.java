@@ -1,8 +1,12 @@
 /*
-This file is part of the Navajo Project.
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.document;
 
 import java.util.Date;
@@ -17,173 +21,178 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.types.TypeUtils;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-
 public class Operand {
 
-  public final String type;
-  public final String option;
-  public final Object value;
+    public static final Operand FALSE = new Operand(false, Property.BOOLEAN_PROPERTY);
 
-  /**
-   * Store a new Operand.
-   * An operand is an internal Navajo representation of a value object.
-   * Value contains the Java representation.
-   * Type describes the Navajo type of the object.
-   *
-   * @param value
-   * @param type
-   * @param option
-   */
-  public Operand(Object value, String type, String option) {
-	  if(value instanceof Operand) {
-		  throw new NavajoException("Should not embed Operands in other Operands");
-	  }
-      this.value = value;
-      this.type = type;
-      this.option = option;
-  }
+    public static final Operand TRUE = new Operand(true, Property.BOOLEAN_PROPERTY);
 
-  public Operand(Object value, String type) {
-	  this(value,type,null);
-  }
+    public static final Operand NULL = new Operand(null, "object");
 
-  public static final Operand FALSE = new Operand(false,Property.BOOLEAN_PROPERTY);
-  public static final Operand TRUE = new Operand(true,Property.BOOLEAN_PROPERTY);
-  public static final Operand NULL = new Operand(null,"object");
-  public static Operand ofBoolean(boolean b) {
-	  return b ? TRUE : FALSE;
-  }
+    public final String type;
 
-  public static Operand ofString(String string) {
-	  return new Operand(string,Property.STRING_PROPERTY);
-  }
+    public final String option;
 
-  public static Operand ofInteger(Integer value) {
-	  return new Operand(value,Property.INTEGER_PROPERTY);
-  }
+    public final Object value;
 
-  public static Operand ofLong(Long value) {
-      return new Operand(value, Property.LONG_PROPERTY);
-  }
+    /**
+     * Store a new Operand. An operand is an internal Navajo representation of a
+     * value object. Value contains the Java representation. Type describes the
+     * Navajo type of the object.
+     */
+    public Operand(Object value, String type, String option) {
 
-  public static Operand ofFloat(Double value) {
-	  return new Operand(value,Property.FLOAT_PROPERTY);
-  }
+        if (value instanceof Operand) {
+            throw new NavajoException("Should not embed Operands in other Operands");
+        }
 
-public static Operand ofDatePattern(DatePattern value) {
-	return new Operand(value,Property.DATE_PATTERN_PROPERTY);
-}
+        this.value = value;
+        this.type = type;
+        this.option = option;
+    }
 
-public static Operand ofDynamic(Object o) {
-	if(o==null) {
-		return NULL;
-	}
-	return new Operand(o,TypeUtils.determineNavajoType(o));
-}
+    public Operand(Object value, String type) {
+        this(value, type, null);
+    }
 
-public static Operand ofDynamic(Object o, String defaultType) {
-	if(o==null) {
-		return NULL;
-	}
-	return new Operand(o,TypeUtils.determineNavajoType(o, defaultType));
-}
+    public static Operand ofBoolean(boolean b) {
+        return b ? TRUE : FALSE;
+    }
 
-public static Operand ofList(List<? extends Object> result) {
-	return new Operand(result,Property.LIST_PROPERTY);
-}
+    public static Operand ofString(String string) {
+        return new Operand(string, Property.STRING_PROPERTY);
+    }
 
-public static Operand ofLong(long longValue) {
-	return new Operand(longValue,Property.LONG_PROPERTY);
-}
+    public static Operand ofInteger(Integer value) {
+        return new Operand(value, Property.INTEGER_PROPERTY);
+    }
 
-public static Operand nullOperand(String type) {
-	return new Operand(null,type);
-}
+    public static Operand ofLong(Long value) {
+        return new Operand(value, Property.LONG_PROPERTY);
+    }
 
-public static Operand ofCustom(Object value, String type) {
-	return new Operand(value,type);
-}
+    public static Operand ofFloat(Double value) {
+        return new Operand(value, Property.FLOAT_PROPERTY);
+    }
 
-public static Operand ofDate(Date value) {
-	return new Operand(value,Property.DATE_PROPERTY);
-}
+    public static Operand ofDatePattern(DatePattern value) {
+        return new Operand(value, Property.DATE_PATTERN_PROPERTY);
+    }
 
-public static Operand ofMoney(Money value) {
-	return new Operand(value,Property.MONEY_PROPERTY);
-}
+    public static Operand ofDynamic(Object o) {
 
-public static Operand ofPercentage(Percentage value) {
-	return  new Operand(value,Property.PERCENTAGE_PROPERTY);
-}
+        if (o == null) {
+            return NULL;
+        }
 
-public boolean booleanValue() {
-	if(value instanceof Boolean) {
-		return (boolean) value;
-	}
-	throw new ClassCastException("Operand does not have the required boolean type but: "+type+" value: "+value);
-}
+        return new Operand(o, TypeUtils.determineNavajoType(o));
+    }
 
-public String stringValue() {
-	if(value instanceof String) {
-		return (String) value;
-	}
-	throw new ClassCastException("Operand does not have the required string type but: "+type);
-}
+    public static Operand ofDynamic(Object o, String defaultType) {
 
-public int integerValue() {
-	if(value instanceof Integer) {
-		return (Integer) value;
-	}
-	throw new ClassCastException("Operand does not have the required integer type but: "+type);
-}
+        if (o == null) {
+            return NULL;
+        }
 
-public ImmutableMessage immutableMessageValue() {
-	if(value instanceof ImmutableMessage) {
-		return (ImmutableMessage) value;
-	}
-	throw new ClassCastException("Operand does not have the required immutablemessage type but: "+type);
-}
+        return new Operand(o, TypeUtils.determineNavajoType(o, defaultType));
+    }
 
+    public static Operand ofList(List<? extends Object> result) {
+        return new Operand(result, Property.LIST_PROPERTY);
+    }
 
-public static Operand ofBinary(Binary o) {
-	return new Operand(o,Property.BINARY_PROPERTY);
-}
+    public static Operand ofLong(long longValue) {
+        return new Operand(longValue, Property.LONG_PROPERTY);
+    }
 
-public static Operand ofStopwatchTime(StopwatchTime stopwatchTime) {
-	return new Operand(stopwatchTime,Property.STOPWATCHTIME_PROPERTY);
-}
+    public static Operand nullOperand(String type) {
+        return new Operand(null, type);
+    }
 
-public static Operand ofClockTime(ClockTime clockTime) {
-	return new Operand(clockTime,Property.CLOCKTIME_PROPERTY);
-}
+    public static Operand ofCustom(Object value, String type) {
+        return new Operand(value, type);
+    }
 
-public static Operand ofMessage(Message message) {
-	return new Operand(message,"message");
-}
+    public static Operand ofDate(Date value) {
+        return new Operand(value, Property.DATE_PROPERTY);
+    }
 
-public static Operand ofNavajo(Navajo createTestNavajo) {
-	return new Operand(createTestNavajo,"navajo");
-}
+    public static Operand ofMoney(Money value) {
+        return new Operand(value, Property.MONEY_PROPERTY);
+    }
 
-public static Operand ofSelectionList(List<Selection> allSelectedSelections) {
-	return new Operand(allSelectedSelections,Property.SELECTION_PROPERTY);
-}
+    public static Operand ofPercentage(Percentage value) {
+        return new Operand(value, Property.PERCENTAGE_PROPERTY);
+    }
 
-public static Operand ofProperty(Property property) {
-	return new Operand(property,"property");
-}
+    public boolean booleanValue() {
 
-public static Operand ofImmutable(ImmutableMessage rm) {
-	return new Operand(rm,"immutable");
-}
+        if (value instanceof Boolean) {
+            return (boolean) value;
+        }
 
+        throw new ClassCastException("Operand does not have the required boolean type but: " + type
+                + " value: " + value);
+    }
+
+    public String stringValue() {
+
+        if (value instanceof String) {
+            return (String) value;
+        }
+
+        throw new ClassCastException("Operand does not have the required string type but: " + type);
+    }
+
+    public int integerValue() {
+
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+
+        throw new ClassCastException("Operand does not have the required integer type but: " + type);
+    }
+
+    public ImmutableMessage immutableMessageValue() {
+
+        if (value instanceof ImmutableMessage) {
+            return (ImmutableMessage) value;
+        }
+
+        throw new ClassCastException(
+                "Operand does not have the required immutablemessage type but: " + type);
+    }
+
+    public static Operand ofBinary(Binary o) {
+        return new Operand(o, Property.BINARY_PROPERTY);
+    }
+
+    public static Operand ofStopwatchTime(StopwatchTime stopwatchTime) {
+        return new Operand(stopwatchTime, Property.STOPWATCHTIME_PROPERTY);
+    }
+
+    public static Operand ofClockTime(ClockTime clockTime) {
+        return new Operand(clockTime, Property.CLOCKTIME_PROPERTY);
+    }
+
+    public static Operand ofMessage(Message message) {
+        return new Operand(message, "message");
+    }
+
+    public static Operand ofNavajo(Navajo createTestNavajo) {
+        return new Operand(createTestNavajo, "navajo");
+    }
+
+    public static Operand ofSelectionList(List<Selection> allSelectedSelections) {
+        return new Operand(allSelectedSelections, Property.SELECTION_PROPERTY);
+    }
+
+    public static Operand ofProperty(Property property) {
+        return new Operand(property, "property");
+    }
+
+    public static Operand ofImmutable(ImmutableMessage rm) {
+        return new Operand(rm, "immutable");
+    }
 
 }

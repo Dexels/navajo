@@ -24,7 +24,7 @@ public class UtilsDateTest {
         Calendar b = Calendar.getInstance();
         b.add(Calendar.DAY_OF_YEAR, 1);
 
-        Object result = Utils.subtract(a.getTime(), b.getTime());
+        Object result = Utils.subtract(a.getTime(), b.getTime(), "");
 
         assertEquals("-1", result.toString());
     }
@@ -37,7 +37,7 @@ public class UtilsDateTest {
         b.add(Calendar.DAY_OF_YEAR, 1);
         b.add(Calendar.HOUR_OF_DAY, -3);
 
-        Object result = Utils.subtract(a.getTime(), b.getTime());
+        Object result = Utils.subtract(a.getTime(), b.getTime(), "");
 
         assertEquals("0", result.toString());
     }
@@ -50,7 +50,7 @@ public class UtilsDateTest {
         b.add(Calendar.DAY_OF_YEAR, 1);
         b.add(Calendar.HOUR_OF_DAY, 3);
 
-        Object result = Utils.subtract(a.getTime(), b.getTime());
+        Object result = Utils.subtract(a.getTime(), b.getTime(), "");
 
         assertEquals("-1", result.toString());
     }
@@ -65,7 +65,7 @@ public class UtilsDateTest {
         b.set(2009, 0, 28, 0, 0, 0);
         b.set(Calendar.MILLISECOND, 0);
 
-        int result = (Integer) Utils.subtract(a.getTime(), b.getTime());
+        int result = (Integer) Utils.subtract(a.getTime(), b.getTime(), "");
 
         assertEquals(-26, result);
     }
@@ -80,7 +80,7 @@ public class UtilsDateTest {
         b.set(2009, 2, 30, 0, 0, 0);
         b.set(Calendar.MILLISECOND, 0);
 
-        int result = (Integer) Utils.subtract(a.getTime(), b.getTime());
+        int result = (Integer) Utils.subtract(a.getTime(), b.getTime(), "");
 
         assertEquals(-28, result);
     }
