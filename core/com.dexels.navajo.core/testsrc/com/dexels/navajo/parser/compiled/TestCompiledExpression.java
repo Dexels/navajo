@@ -30,6 +30,7 @@ import com.dexels.navajo.expression.api.FunctionDefinition;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 import com.dexels.navajo.expression.compiled.AddTestFunction;
+import com.dexels.navajo.expression.compiled.GiveLongTestFunction;
 import com.dexels.navajo.expression.compiled.ParameterNamesFunction;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.Expression;
@@ -511,6 +512,106 @@ public class TestCompiledExpression {
         Assert.assertFalse((boolean) result.value);
         result = Expression.evaluate(" TODAY >= TODAY ", null, null, null);
         Assert.assertTrue((boolean) result.value);
+    }
+
+    @Test
+    public void testAddWithLongs() {
+
+        FunctionInterface helperFunction = new GiveLongTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(helperFunction.getClass().getName(),
+                "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ToLong", fd);
+
+        Operand result;
+        result = Expression.evaluate("ToLong(1) + ToLong(1)", null, null, null);
+        Assert.assertEquals(2L, (long) result.value);
+
+        result = Expression.evaluate("1 + ToLong(1)", null, null, null);
+        Assert.assertEquals(2L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(1) + 1", null, null, null);
+        Assert.assertEquals(2L, (long) result.value);
+
+        result = Expression.evaluate("1.0 + ToLong(1)", null, null, null);
+        Assert.assertEquals(2L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(1) + 1.0", null, null, null);
+        Assert.assertEquals(2L, (long) result.value);
+    }
+
+    @Test
+    public void testSubtractWithLongs() {
+
+        FunctionInterface helperFunction = new GiveLongTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(helperFunction.getClass().getName(),
+                "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ToLong", fd);
+
+        Operand result;
+        result = Expression.evaluate("ToLong(2) - ToLong(1)", null, null, null);
+        Assert.assertEquals(1L, (long) result.value);
+
+        result = Expression.evaluate("2 - ToLong(1)", null, null, null);
+        Assert.assertEquals(1L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(2) - 1", null, null, null);
+        Assert.assertEquals(1L, (long) result.value);
+
+        result = Expression.evaluate("2.0 - ToLong(1)", null, null, null);
+        Assert.assertEquals(1L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(2) - 1.0", null, null, null);
+        Assert.assertEquals(1L, (long) result.value);
+    }
+
+    @Test
+    public void testMultiplyWithLongs() {
+
+        FunctionInterface helperFunction = new GiveLongTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(helperFunction.getClass().getName(),
+                "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ToLong", fd);
+
+        Operand result;
+        result = Expression.evaluate("ToLong(3) * ToLong(1)", null, null, null);
+        Assert.assertEquals(3L, (long) result.value);
+
+        result = Expression.evaluate("3 * ToLong(1)", null, null, null);
+        Assert.assertEquals(3L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(3) * 1", null, null, null);
+        Assert.assertEquals(3L, (long) result.value);
+
+        result = Expression.evaluate("3.0 * ToLong(1)", null, null, null);
+        Assert.assertEquals(3L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(3) * 1.0", null, null, null);
+        Assert.assertEquals(3L, (long) result.value);
+    }
+
+    @Test
+    public void testDivideWithLongs() {
+
+        FunctionInterface helperFunction = new GiveLongTestFunction();
+        FunctionDefinition fd = new FunctionDefinition(helperFunction.getClass().getName(),
+                "description", "input", "result");
+        FunctionFactoryFactory.getInstance().addExplicitFunctionDefinition("ToLong", fd);
+
+        Operand result;
+        result = Expression.evaluate("ToLong(8) / ToLong(2)", null, null, null);
+        Assert.assertEquals(4L, (long) result.value);
+
+        result = Expression.evaluate("8 / ToLong(2)", null, null, null);
+        Assert.assertEquals(4L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(8) / 2", null, null, null);
+        Assert.assertEquals(4L, (long) result.value);
+
+        result = Expression.evaluate("8.0 / ToLong(2)", null, null, null);
+        Assert.assertEquals(4L, (long) result.value);
+
+        result = Expression.evaluate("ToLong(8) / 2.0", null, null, null);
+        Assert.assertEquals(4L, (long) result.value);
     }
 
     // Missing testMoneyComparison, testPercentageComparison and testClockTimeComparison,
