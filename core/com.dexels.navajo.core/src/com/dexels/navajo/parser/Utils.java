@@ -167,40 +167,17 @@ public final class Utils extends Exception {
      */
     public static final Object subtract(Object a, Object b, String expression) {
 
-        if (a instanceof Integer) {
-            int inta = (Integer) a;
-            if (b instanceof Integer) {
-                return inta - (Integer) b;
-            } else if (b instanceof Long) {
-                return inta - (Long) b;
-            } else if (b instanceof Double) {
-                return inta - (Double) b;
-            }
-        } else if (a instanceof Long) {
-            long longa = (Long) a;
-            if (b instanceof Integer) {
-                return longa - (Integer) b;
-            } else if (b instanceof Long) {
-                return longa - (Long) b;
-            } else if (b instanceof Double) {
-                return longa - (Double) b;
-            }
-        } else if (a instanceof Double) {
-            double doublea = (Double) a;
-            if (b instanceof Integer) {
-                return doublea - (Integer) b;
-            } else if (b instanceof Long) {
-                return doublea - (Long) b;
-            } else if (b instanceof Double) {
-                return doublea - (Double) b;
-            }
-        } else if ((a instanceof String) || (b instanceof String)) {
+        if (a == null || b == null) {
+            return null;
+        }
+
+        if ((a instanceof String) || (b instanceof String)) {
             throw new TMLExpressionException("Subtraction not defined for Strings");
-        } else if ((a instanceof Money || b instanceof Money)) {
-            if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
+        } else if ((a instanceof Money) || (b instanceof Money)) {
+            if (!(a instanceof Money || a instanceof Integer || a instanceof Long || a instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()
                         + ", expression: " + expression);
-            if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
+            if (!(b instanceof Money || b instanceof Integer || b instanceof Long || b instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()
                         + ", expression: " + expression);
 
@@ -208,11 +185,11 @@ public final class Utils extends Exception {
             Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
 
             return new Money(arg1.doubleValue() - arg2.doubleValue());
-        } else if ((a instanceof Percentage || b instanceof Percentage)) {
-            if (!(a instanceof Percentage || a instanceof Integer || a instanceof Double))
+        } else if ((a instanceof Percentage) || (b instanceof Percentage)) {
+            if (!(a instanceof Percentage || a instanceof Integer || a instanceof Long || a instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()
                         + ", expression: " + expression);
-            if (!(b instanceof Percentage || b instanceof Integer || b instanceof Double))
+            if (!(b instanceof Percentage || b instanceof Integer || b instanceof Long || b instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()
                 + ", expression: " + expression);
 
@@ -259,8 +236,33 @@ public final class Utils extends Exception {
                     : (b instanceof Date ? ((Date) b).getTime() : ((StopwatchTime) b).getMillis()));
 
             return new StopwatchTime((int) (myMillis - otherMillis));
-        } else if (a == null || b == null) {
-            return null;
+        } else if (a instanceof Integer) {
+            int inta = (Integer) a;
+            if (b instanceof Integer) {
+                return inta - (Integer) b;
+            } else if (b instanceof Long) {
+                return inta - (Long) b;
+            } else if (b instanceof Double) {
+                return inta - (Double) b;
+            }
+        } else if (a instanceof Long) {
+            long longa = (Long) a;
+            if (b instanceof Integer) {
+                return longa - (Integer) b;
+            } else if (b instanceof Long) {
+                return longa - (Long) b;
+            } else if (b instanceof Double) {
+                return longa - (Double) b;
+            }
+        } else if (a instanceof Double) {
+            double doublea = (Double) a;
+            if (b instanceof Integer) {
+                return doublea - (Integer) b;
+            } else if (b instanceof Long) {
+                return doublea - (Long) b;
+            } else if (b instanceof Double) {
+                return doublea - (Double) b;
+            }
         }
 
         throw new TMLExpressionException("Subtraction: Unknown type. " + " expression: " + expression);
@@ -279,34 +281,7 @@ public final class Utils extends Exception {
             return a;
         }
 
-        if (a instanceof Integer) {
-            int inta = (Integer) a;
-            if (b instanceof Integer) {
-                return inta + (Integer) b;
-            } else if (b instanceof Long) {
-                return inta + (Long) b;
-            } else if (b instanceof Double) {
-                return inta + (Double) b;
-            }
-        } else if (a instanceof Long) {
-            long longa = (Long) a;
-            if (b instanceof Integer) {
-                return longa + (Integer) b;
-            } else if (b instanceof Long) {
-                return longa + (Long) b;
-            } else if (b instanceof Double) {
-                return longa + (Double) b;
-            }
-        } else if (a instanceof Double) {
-            double doublea = (Double) a;
-            if (b instanceof Integer) {
-                return doublea + (Integer) b;
-            } else if (b instanceof Long) {
-                return doublea + (Long) b;
-            } else if (b instanceof Double) {
-                return doublea + (Double) b;
-            }
-        } else if ((a instanceof String) || (b instanceof String)) {
+        if ((a instanceof String) || (b instanceof String)) {
             String sA = Utils.getStringValue(a);
             String sB = Utils.getStringValue(b);
 
@@ -330,24 +305,26 @@ public final class Utils extends Exception {
 
             dp1.add(dp2);
             return dp1.getDate();
-        } else if ((a instanceof Money || b instanceof Money)) {
-            if (!(a instanceof Money || a instanceof Integer || a instanceof Double))
+        } else if ((a instanceof Money) || (b instanceof Money)) {
+            if (!(a instanceof Money || a instanceof Integer || a instanceof Long || a instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()
                         + ", expression: " + expression);
-            if (!(b instanceof Money || b instanceof Integer || b instanceof Double))
+            if (!(b instanceof Money || b instanceof Integer || b instanceof Long || b instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()
                         + ", expression: " + expression);
+
             Money arg1 = (a instanceof Money ? (Money) a : new Money(a));
             Money arg2 = (b instanceof Money ? (Money) b : new Money(b));
 
             return new Money(arg1.doubleValue() + arg2.doubleValue());
-        } else if ((a instanceof Percentage || b instanceof Percentage)) {
-            if (!(a instanceof Percentage || a instanceof Integer || a instanceof Double))
+        } else if ((a instanceof Percentage) || (b instanceof Percentage)) {
+            if (!(a instanceof Percentage || a instanceof Integer || a instanceof Long || a instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + a.getClass()
                         + ", expression: " + expression);
-            if (!(b instanceof Percentage || b instanceof Integer || b instanceof Double))
+            if (!(b instanceof Percentage || b instanceof Integer || b instanceof Long || b instanceof Double))
                 throw new TMLExpressionException("Invalid argument for operation: " + b.getClass()
                         + ", expression: " + expression);
+
             Percentage arg1 = (a instanceof Percentage ? (Percentage) a : new Percentage(a));
             Percentage arg2 = (b instanceof Percentage ? (Percentage) b : new Percentage(b));
 
@@ -375,6 +352,33 @@ public final class Utils extends Exception {
             Boolean bb = (Boolean) b;
 
             return Integer.valueOf((ba.booleanValue() ? 1 : 0) + (bb.booleanValue() ? 1 : 0));
+        } else if (a instanceof Integer) {
+            int inta = (Integer) a;
+            if (b instanceof Integer) {
+                return inta + (Integer) b;
+            } else if (b instanceof Long) {
+                return inta + (Long) b;
+            } else if (b instanceof Double) {
+                return inta + (Double) b;
+            }
+        } else if (a instanceof Long) {
+            long longa = (Long) a;
+            if (b instanceof Integer) {
+                return longa + (Integer) b;
+            } else if (b instanceof Long) {
+                return longa + (Long) b;
+            } else if (b instanceof Double) {
+                return longa + (Double) b;
+            }
+        } else if (a instanceof Double) {
+            double doublea = (Double) a;
+            if (b instanceof Integer) {
+                return doublea + (Integer) b;
+            } else if (b instanceof Long) {
+                return doublea + (Long) b;
+            } else if (b instanceof Double) {
+                return doublea + (Double) b;
+            }
         }
 
         throw new TMLExpressionException("Addition: Unknown type. " + " expression: " + expression);
