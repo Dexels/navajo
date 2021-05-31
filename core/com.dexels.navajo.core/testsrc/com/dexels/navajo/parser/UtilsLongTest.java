@@ -74,6 +74,7 @@ public class UtilsLongTest {
 
     // SUBTRACT
 
+    @Test
     public void testSubtractTwoLongs() {
 
         Long a = 15L;
