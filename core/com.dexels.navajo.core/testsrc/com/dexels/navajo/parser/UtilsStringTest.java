@@ -25,7 +25,7 @@ public class UtilsStringTest {
         String a = "bla";
         String b = "bli";
 
-        String result = (String) Utils.add(a, b, "\"bla\" + \"bli\"");
+        String result = (String) Utils.add(a, b, "'bla' + 'bli'");
 
         assertEquals("blabli", result);
     }
@@ -36,7 +36,7 @@ public class UtilsStringTest {
         Integer a = 15;
         String b = "bla";
 
-        String result = (String) Utils.add(a, b, "15 + \"bla\"");
+        String result = (String) Utils.add(a, b, "15 + 'bla'");
 
         assertEquals("15bla", result);
     }
@@ -47,7 +47,7 @@ public class UtilsStringTest {
         String a = "bla";
         Integer b = 10;
 
-        String result = (String) Utils.add(a, b, "\"bla\" + 10");
+        String result = (String) Utils.add(a, b, "'bla' + 10");
 
         assertEquals("bla10", result);
     }
@@ -58,7 +58,7 @@ public class UtilsStringTest {
         Long a = 15L;
         String b = "bla";
 
-        String result = (String) Utils.add(a, b, "ToLong(15) + \"bla\"");
+        String result = (String) Utils.add(a, b, "ToLong(15) + 'bla'");
 
         assertEquals("15bla", result);
     }
@@ -69,7 +69,7 @@ public class UtilsStringTest {
         String a = "bla";
         Long b = 10L;
 
-        String result = (String) Utils.add(a, b, "\"bla\" + ToLong(10)");
+        String result = (String) Utils.add(a, b, "'bla' + ToLong(10)");
 
         assertEquals("bla10", result);
     }
@@ -80,7 +80,7 @@ public class UtilsStringTest {
         Double a = 15.0;
         String b = "bla";
 
-        String result = (String) Utils.add(a, b, "15.0 + \"bla\"");
+        String result = (String) Utils.add(a, b, "15.0 + 'bla'");
 
         assertEquals("15.0bla", result);
     }
@@ -91,7 +91,7 @@ public class UtilsStringTest {
         String a = "bla";
         Double b = 10.0;
 
-        String result = (String) Utils.add(a, b, "\"bla\" + 10.0");
+        String result = (String) Utils.add(a, b, "'bla' + 10.0");
 
         assertEquals("bla10.0", result);
     }
@@ -104,7 +104,7 @@ public class UtilsStringTest {
         String a = "bla";
         String b = "bli";
 
-        Utils.subtract(a, b, "\"bla\" - \"bli\"");
+        Utils.subtract(a, b, "'bla' - 'bli'");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -113,7 +113,7 @@ public class UtilsStringTest {
         Integer a = 15;
         String b = "bla";
 
-        Utils.subtract(a, b, "15 - \"bla\"");
+        Utils.subtract(a, b, "15 - 'bla'");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -122,7 +122,7 @@ public class UtilsStringTest {
         String a = "bla";
         Integer b = 10;
 
-        Utils.subtract(a, b, "\"bla\" - 10");
+        Utils.subtract(a, b, "'bla' - 10");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -131,7 +131,7 @@ public class UtilsStringTest {
         Long a = 15L;
         String b = "bla";
 
-        Utils.subtract(a, b, "ToLong(15) - \"bla\"");
+        Utils.subtract(a, b, "ToLong(15) - 'bla'");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -140,7 +140,7 @@ public class UtilsStringTest {
         String a = "bla";
         Long b = 10L;
 
-        Utils.subtract(a, b, "\"bla\" - ToLong(10)");
+        Utils.subtract(a, b, "'bla' - ToLong(10)");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -149,7 +149,7 @@ public class UtilsStringTest {
         Double a = 15.0;
         String b = "bla";
 
-        Utils.subtract(a, b, "15.0 - \"bla\"");
+        Utils.subtract(a, b, "15.0 - 'bla'");
     }
 
     @Test(expected = TMLExpressionException.class)
@@ -158,7 +158,7 @@ public class UtilsStringTest {
         String a = "bla";
         Double b = 10.0;
 
-        Utils.subtract(a, b, "\"bla\" - 10.0");
+        Utils.subtract(a, b, "'bla' - 10.0");
     }
 
 }
