@@ -1,14 +1,19 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.document;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,15 +24,6 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
-
-/**
- * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels BV</p>
- * @author Arjen Schoneveld
- * @version 1.0
- */
 
 public interface Property extends java.io.Serializable, Comparable<Property>, Cloneable {
 
@@ -50,7 +46,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
 
   public static final String ANY_PROPERTY = "any";
 
-  
+
   public static final String STRING_PROPERTY = "string";
   public static final String INTEGER_PROPERTY = "integer";
   public static final String LONG_PROPERTY = "long";
@@ -92,12 +88,12 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
       TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY, LIST_PROPERTY
   };
 
-  
+
   // maybe DATE_PATTERN_PROPERTY?
   public static final String[] STRING_DATA_TYPES = new String[] {
 	  STRING_PROPERTY,MEMO_PROPERTY,PASSWORD_PROPERTY
   };
-  
+
   //Binary data properties.
   //I am not sure what to do with these. Not supported by the studio
   /*
@@ -134,7 +130,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String DATE_FORMAT2 = "yyyy-MM-dd";
   public static final String DATE_FORMAT3 = "dd-MM-yyyy";
   public static final String DATE_FORMAT4 = "yyyy-MM-dd HH:mm:ss:SS";
-  
+
   public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
   public boolean isEqual(Property o);
@@ -264,64 +260,64 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * Example: key="true,auto,optional", if key has true as value the underlying property is marked as a 'key'.
    * The auto option defines that a property is automatically created by an insert operation, i.e. it should
    * not be passed when inserting a new entity.
-   * 
+   *
    * @param key
    */
   public void setKey(String key);
-  
-  
+
+
   /**
    * Return the key attribute of a property.
-   * 
+   *
    * @return
    */
   public String getKey();
-  
+
   /**
    * Sets the extends attribute to extend a property from another entity.
-   * 
+   *
    * @param s
    */
   public void setExtends(String s);
-  
+
   public String getExtends();
-  
+
   /**
    * Set the bind attribute to bind this property to another property (from another entity)
-   * 
+   *
    * @param s
    */
   public void setBind(String s);
-  
+
   public String getBind();
-  
-  
+
+
   /**
    * Set the method attribute to indicate whether this property is relevant for request, response, or both
-   * 
+   *
    * @param s: "request", "response", ""
    */
   public void setMethod(String s);
-  
+
   public String getMethod();
-  
-  
+
+
   /**
    * Sets the reference attribute for a property. Reference can be used to indicate that this property value can be used
    * to find a specific entity that is specified by the reference value.
-   * 
+   *
    * @param ref
    * @return
    */
   public void setReference(String ref);
-  
+
   /**
    * Get the reference attribute for a property.
-   * 
+   *
    * @return
    */
   public String getReference();
-  
+
   /**
    * Adds a single subtype pair. Syntax key=value
    * @param extra
@@ -329,21 +325,21 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public void addSubType(String extra);
 
   /**
-   * Adds or changes a single subtype pair. 
+   * Adds or changes a single subtype pair.
    * @param key
    * @param value
    */
   public void addSubType(String key, String value);
-  
+
   /**
 	 * Gets all subtypes in a map
 	 * This map is a copy, so there is no point in modifying.
-	 * 
+	 *
 	 * @return
 	 */
-  
+
   public Map<String,String> getSubTypes();
-	
+
   /**
    * Also gets the type of a property (see PROPERTY_* constants).
    * However, this type is based on the type returned by the expression.
@@ -367,7 +363,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
     /**
      * Get the value of a (string, integer, float, boolean, date, clocktime, money,
      * coordinate or memo) property.
-     * 
+     *
      * @return String representation of this Property's value object
      */
   public String getValue();
@@ -375,7 +371,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
     /**
      * Get the typed value (String, Integer, Double, Boolean, Date, Money,
      * ClockTime, Coordinate byte [])
-     * 
+     *
      * @return Object value
      */
   public Object getTypedValue();
@@ -408,21 +404,22 @@ public String toString();
    */
   public void setValue(String value);
 
-  public void setValue(java.util.Date value);
+  public void setValue(Date value);
 
   public void setValue(Integer value);
 
+  public void setValue(Long value);
+
   public void setValue(Double value);
+
+  public void setValue(Float value);
 
   public void setValue(Boolean value);
 
   public void setValue(int value);
 
-  public void setLongValue(long value);
-
   public void setValue(long value);
 
-  
   public void setValue(double value);
 
   public void setValue(float value);
@@ -435,16 +432,16 @@ public String toString();
 
   public void setValue(Money m);
 
-    public void setValue(Coordinate c);
+  public void setValue(Coordinate c);
 
   public void setValue(Percentage value);
 
   public void setValue(ClockTime ct);
-  
+
   public void setValue(NavajoExpression ne);
 
   public void setValue(StopwatchTime swt);
-  
+
   public void setValue(Selection [] l);
 
   /**
@@ -483,7 +480,7 @@ public String toString();
 
   public void setSelected(Selection s, boolean selected);
 
-  
+
   /**
    * Get the length attribute of a (string, integer or float) property. The length defines
    * the maximum number of posititions a property value may have.
@@ -609,7 +606,7 @@ public String toString();
    * @param Object value
    */
   public void setAnyValue(Object o);
-  
+
   /**
    * Looks for the appropriate setter for this object, and sets it.
    *  From now on, I think this is the safest accessor, if you are unsure about the type
@@ -619,9 +616,9 @@ public String toString();
    * @param Boolean internal if the setValue is internal, no tipi event will be fired for "onValueChanged"
    */
   public void setAnyValue(Object o, Boolean internal);
-  
+
   public void setUnCheckedStringAsValue(String s);
-  
+
 /**
  * Clones the Property, only it ignores the value
  * @return
