@@ -12,35 +12,27 @@ package com.dexels.navajo.functions;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-public final class Round extends FunctionInterface {
+public final class Floor extends FunctionInterface {
 
     @Override
     public String remarks() {
-        return "With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37";
+        return "Return the floor value of the given number.";
     }
 
     @Override
     public String usage() {
-        return "Round(float, integer).";
+        return "Floor(number), where number is of type double";
     }
 
     @Override
     public final Object evaluate() throws TMLExpressionException {
 
-        Object a = getOperands().get(0);
-        Object b = getOperands().get(1);
-
         try {
-            Double value = (Double) a;
-            Integer digits = (Integer) b;
-
-            value = (int) Math.signum(value) * ((int) (0.5 + Math.abs(value) * Math.pow(10.0, digits)))
-                    / Math.pow(10.0, digits);
-
-            return Double.valueOf(value);
+            Object op = getOperands().get(0);
+            return Math.floor((Double) op);
         } catch (Exception e) {
             throw new TMLExpressionException(this,
-                    "Illegal type specified in Round() function: " + e.getMessage());
+                    "Illegal type specified in Ceil() function: " + e.getMessage());
         }
     }
 
