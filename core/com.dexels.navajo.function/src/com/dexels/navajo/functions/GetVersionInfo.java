@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 /**
@@ -8,7 +8,7 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
  * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
- * @author 
+ * @author
  * @version $Id$.
  *
  * DISCLAIMER
@@ -46,28 +46,29 @@ public final class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public final Object evaluate() throws TMLExpressionException {
-		Object o = getOperand(0);
+
+	    Object o = getOperand(0);
 		String packageName = o+"";
+
 		try {
-			
-			Class<AbstractVersion> c = null;
+			Class<?> c = null;
 			if (DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ==null) {
-				c = (Class<AbstractVersion>) Class.forName(packageName+".Version");
+				c = Class.forName(packageName+".Version");
 			} else {
-				c = (Class<AbstractVersion>) Class.forName(packageName+".Version",true,DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
+				c = Class.forName(packageName+".Version",true,DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 			}
-//			return "DUMMY FUNCTION, FIX ME!";
-			AbstractVersion v = c.newInstance();
+			AbstractVersion v = (AbstractVersion) c.getDeclaredConstructor().newInstance();
+
 			return v.toString();
 		} catch (Exception e) {
 			throw new TMLExpressionException(this, "Could not find version object for package: " + packageName);
 		}
 	}
-	
+
 	public static void main(String [] args) throws Exception {
+
 		GetVersionInfo v = new GetVersionInfo();
 		v.reset();
 		v.insertStringOperand("navajo");

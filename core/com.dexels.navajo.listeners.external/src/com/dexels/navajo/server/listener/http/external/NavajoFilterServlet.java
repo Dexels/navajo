@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.server.listener.http.external;
@@ -26,10 +26,10 @@ import com.dexels.navajo.server.listener.http.wrapper.identity.IdentityRequestWr
 public class NavajoFilterServlet extends TmlStandardServlet {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7843782840626326460L;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoFilterServlet.class);
 
@@ -47,7 +47,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
-			} 
+			}
 			logger.info("Instance determined from request: "+instance);
 			Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
 			Navajo result = localClient.call(instance, input);
@@ -60,7 +60,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			logger.error("Servlet call failed dramatically", e);
 		}
 	}
-	
+
 	public void addLocalClient(LocalClient localClient, Map<String,Object> settings) {
 		String name = (String) settings.get("instance");
 		if (name==null) {
@@ -68,10 +68,10 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		} else {
 			this.localClients.put(name, localClient);
 		}
-		
+
 	}
-	
-	
+
+
 
 	public void removeLocalClient(LocalClient localClient, Map<String,Object> settings) {
 		String name = (String) settings.get("instance");
@@ -117,6 +117,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 
 	protected LocalClient getLocalClient(final HttpServletRequest req)
 			throws ServletException {
+
 		LocalClient tempClient = localClient;
 		if (localClient == null) {
 			tempClient = (LocalClient) req.getServletContext()
@@ -126,11 +127,10 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		final LocalClient lc = tempClient;
 		if (lc == null) {
 			logger.error("No localclient found");
-//				resp.sendError(500,
-//						"No local client registered in servlet context");
 			throw new ServletException("No local client registered in servlet context");
 		}
-		return lc;
+
+        return lc;
 	}
 
 
@@ -138,30 +138,19 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		return localClient;
 	}
 
-//	public void setLocalClient(LocalClient localClient) {
-//		this.localClient = localClient;
-//	}
-//
-//	public void clearLocalClient(LocalClient localClient) {
-//		this.localClient = null;
-//	}
-
-	@SuppressWarnings("unchecked")
 	private NavajoRequestWrapper getRequestWrapper(String inFilter) {
+
 		if(requestWrapper!=null) {
 			return this.requestWrapper;
 		}
+
 		try {
-			Class<? extends NavajoRequestWrapper> rwrapperClass = (Class<? extends NavajoRequestWrapper>) Class
-					.forName(inFilter);
-			return rwrapperClass.newInstance();
-		} catch (ClassNotFoundException e) {
-			logger.error("Error: ", e);
-		} catch (InstantiationException e) {
-			logger.error("Error: ", e);
-		} catch (IllegalAccessException e) {
+			Class<?> rwrapperClass = Class.forName(inFilter);
+			return (NavajoRequestWrapper) rwrapperClass.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
+
 		return null;
 	}
 
@@ -175,11 +164,10 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 
 	public void setResponseWrapper(NavajoResponseWrapper nrw) {
 		this.responseWrapper = nrw;
-		
 	}
 
 	public void clearResponseWrapper(NavajoResponseWrapper nrw) {
-		this.responseWrapper = null;		
+		this.responseWrapper = null;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class PropertyAggregate {
 	
@@ -23,6 +24,8 @@ public class PropertyAggregate {
 		public Date minDate = null;
 		public Date maxDate = null;
 		public int count = 0;
+		public Object any = null;
+		public String concatenated = null;
 		public String type;
 		
 		public double getAvg() {
@@ -41,6 +44,14 @@ public class PropertyAggregate {
 			return type;
 		}
 		
+        public String getConcatenated() {
+            return concatenated;
+        }
+
+        public Object getAny() {
+            return any;
+        }
+
 		public Object getMin() {
 			if ( minDate != null ) {
 				return minDate;
@@ -62,6 +73,11 @@ public class PropertyAggregate {
 		}
 		
 		public void addProperty(Property myProp) {
+		    if( count == 0 )
+		    {
+		        // ensure we take only one value. Hence take the "first". But we don't order so no guarantee which we take, hence any
+		        any = myProp.getTypedValue();
+		    }
 			count++;
 			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) || myProp.getType().equals(Property.MONEY_PROPERTY) ) ) {
 				Double value = Double.valueOf(myProp.getTypedValue()+"");
@@ -90,6 +106,25 @@ public class PropertyAggregate {
 					}
 				}
 			}
+			StringBuilder sb = new StringBuilder();
+            if( concatenated != null )
+            {
+                sb.append( concatenated ).append( ";" );
+            }
+			if( myProp.getType().equals( Property.SELECTION_PROPERTY ) )
+			{
+			    for( Selection s : myProp.getAllSelectedSelections() )
+			    {
+			        sb.append( s.getValue() ).append( ";" );
+			    }
+			    // Remove the trailing ';'
+		        sb.delete( sb.length() - 1, sb.length() );
+			}
+			else
+			{
+			    sb.append( myProp.getValue() );
+			}
+			concatenated = sb.toString();
 		}
 		
 		public Aggregate(String type) {
