@@ -1,12 +1,12 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
-/*
- * Created on May 23, 2005
+ * This file is part of the Navajo Project.
  *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
  */
+
 package com.dexels.navajo.functions;
 
 import org.osgi.framework.BundleContext;
@@ -20,13 +20,11 @@ import com.dexels.resourcebundle.ResourceBundleStore;
 
 import navajofunctions.Version;
 
-/**
- * @author cbrouwer
- *
- */
 public class GetValidationDescription extends FunctionInterface {
-    private static final String DEFAULT_LOCALE = "nl";
+
     private final static Logger logger = LoggerFactory.getLogger(GetValidationDescription.class);
+
+    private static final String DEFAULT_LOCALE = "nl";
 
     @Override
     public String remarks() {
@@ -35,8 +33,8 @@ public class GetValidationDescription extends FunctionInterface {
 
     @Override
     public Object evaluate() throws TMLExpressionException {
-        Object o = getOperand(0);
 
+        Object o = getOperands().get(0);
         String key = null;
         if (o instanceof Integer) {
             key = ((Integer) o).toString();
@@ -45,42 +43,53 @@ public class GetValidationDescription extends FunctionInterface {
         } else {
             throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
         }
-        
-        String tenant =  getAccess().getTenant();
+
+        String tenant = getAccess().getTenant();
         if (getOperands().size() > 1) {
-            Object tenantO = getOperand(1);
+            Object tenantO = getOperands().get(1);
             if (!(tenantO instanceof String)) {
-                throw new TMLExpressionException(this, "Invalid operand: " + tenantO.getClass().getName());
-           
+                throw new TMLExpressionException(this,
+                        "Invalid operand: " + tenantO.getClass().getName());
+
             }
+
             tenant = (String) tenantO;
         }
-        
-        String locale =  DEFAULT_LOCALE;
+
+        String locale = getDefaultLocale();
         if (getOperands().size() > 2) {
-            Object localeO = getOperand(2);
+            Object localeO = getOperands().get(2);
             if (!(localeO instanceof String)) {
-                throw new TMLExpressionException(this, "Invalid operand: " + localeO.getClass().getName());
-           
+                throw new TMLExpressionException(this,
+                        "Invalid operand: " + localeO.getClass().getName());
+
             }
+
             locale = (String) localeO;
         }
-        
+
+        if (locale == null) {
+            locale = DEFAULT_LOCALE;
+        }
+
         ResourceBundleStore rb = getResourceBundleService();
         if (rb == null) {
             return null;
         }
-        return rb.getValidationDescription(key,tenant, locale);
 
+        return rb.getValidationDescription(key, tenant, locale);
+    }
+
+    private String getDefaultLocale() {
+        return getAccess().getInDoc().getHeader().getHeaderAttribute("locale");
     }
 
     private ResourceBundleStore getResourceBundleService() {
-        BundleContext context = Version.getDefaultBundleContext();
-        ServiceReference<ResourceBundleStore> servicereference;
 
         try {
-
-            servicereference = context.getServiceReference(ResourceBundleStore.class);
+            BundleContext context = Version.getDefaultBundleContext();
+            ServiceReference<ResourceBundleStore> servicereference =
+                    context.getServiceReference(ResourceBundleStore.class);
 
             if (servicereference != null) {
                 ResourceBundleStore rbs = context.getService(servicereference);
@@ -93,12 +102,8 @@ public class GetValidationDescription extends FunctionInterface {
         } catch (Throwable t) {
             logger.error("Exception in retrieving ResourceBundleStore!", t);
         }
+
         return null;
-
-    }
-
-    public static void main(String[] args) throws Exception {
-
     }
 
 }
