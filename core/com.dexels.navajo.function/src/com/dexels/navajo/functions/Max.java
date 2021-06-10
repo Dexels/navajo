@@ -5,6 +5,15 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.functions;
 
+import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.parser.Utils;
 
 /**
  * Title:        Navajo
@@ -14,15 +23,6 @@ package com.dexels.navajo.functions;
  * @author Arjen Schoneveld en Martin Bergman
  * @version $Id$
  */
-
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import com.dexels.navajo.expression.api.FunctionInterface;
-import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.parser.Utils;
 
 public final class Max extends FunctionInterface {
 
@@ -64,17 +64,24 @@ public final class Max extends FunctionInterface {
             throw new TMLExpressionException("Invalid number of arguments for Max()");
     }
     
-    private Object max(Object a, Object b)
+    private Object max( Object a, Object b )
     {
-        if (a instanceof Date)
+        if ( a instanceof Date || a instanceof ClockTime )
         {
-            if (!(b instanceof Date))
+            if( b == null )
             {
-                throw new TMLExpressionException("Cannot compare a date with a non-date");
+                return a;
+            }
+            else if ( !( b instanceof Date || b instanceof ClockTime ) )
+            {
+                throw new TMLExpressionException( "Cannot compare a date/clocktime with a non-date/clocktime" );
             }
             else
             {
-                if (((Date) a).compareTo((Date) b) > 0)
+                Date aValue = a instanceof ClockTime ?  ( (ClockTime) a).dateValue() : (Date) a;
+                Date bValue = b instanceof ClockTime ?  ( (ClockTime) b).dateValue() : (Date) b;
+
+                if ( aValue.compareTo( bValue ) > 0 )
                 {
                     return a;
                 }
@@ -86,20 +93,27 @@ public final class Max extends FunctionInterface {
         }
         else
         {
-            if ((b instanceof Date))
+            if ( b instanceof Date || b instanceof ClockTime )
             {
-                throw new TMLExpressionException("Cannot compare a date with a non-date");
+                if( a == null )
+                {
+                    return b;
+                }
+                else
+                {
+                    throw new TMLExpressionException( "Cannot compare a date/clocktime with a non-date/clocktime" );
+                }
             }
             else
             {
-                double value1 = Utils.getDoubleValue(a);
-                double value2 = Utils.getDoubleValue(b);
-                double max = (value1 > value2) ? value1 : value2;
+                double value1 = Utils.getDoubleValue( a );
+                double value2 = Utils.getDoubleValue( b );
+                double max = ( value1 > value2 ) ? value1 : value2;
 
-                if (a instanceof Double || b instanceof Double)
-                    return Double.valueOf(max);
+                if ( a instanceof Double || b instanceof Double )
+                    return Double.valueOf( max );
                 else
-                    return Integer.valueOf((int) max);
+                    return Integer.valueOf( (int) max );
                 
             }
         }

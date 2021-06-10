@@ -5,10 +5,15 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.functions;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.expression.api.FunctionInterface;
+import com.dexels.navajo.expression.api.TMLExpressionException;
+import com.dexels.navajo.parser.Utils;
 
 /**
  * Title:        Navajo
@@ -18,13 +23,6 @@ import java.util.Date;
  * @author Arjen Schoneveld en Martin Bergman
  * @version $Id$
  */
-
-import java.util.List;
-
-import com.dexels.navajo.expression.api.FunctionInterface;
-import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.parser.Utils;
-
 
 public final class Min extends FunctionInterface {
 
@@ -66,17 +64,24 @@ public String usage() {
         } else
             throw new TMLExpressionException("Invalid number of arguments for Max()");
     }
-    private Object min(Object a, Object b)
+
+    private Object min( Object a, Object b )
     {
-        if (a instanceof Date)
+        if ( a instanceof Date || a instanceof ClockTime )
         {
-            if (!(b instanceof Date))
+            if( b == null )
             {
-                throw new TMLExpressionException("Cannot compare a date with a non-date");
+                return a;
+            }
+            else if ( !( b instanceof Date || b instanceof ClockTime ) )
+            {
+                throw new TMLExpressionException( "Cannot compare a date/clocktime with a non-date/clocktime" );
             }
             else
             {
-                if (((Date) a).compareTo((Date) b) < 0)
+                Date aValue = a instanceof ClockTime ?  ( (ClockTime) a).dateValue() : (Date) a;
+                Date bValue = b instanceof ClockTime ?  ( (ClockTime) b).dateValue() : (Date) b;
+                if ( aValue.compareTo( bValue ) < 0 )
                 {
                     return a;
                 }
@@ -88,9 +93,16 @@ public String usage() {
         }
         else
         {
-            if ((b instanceof Date))
+            if ( b instanceof Date || b instanceof ClockTime )
             {
-                throw new TMLExpressionException("Cannot compare a date with a non-date");
+                if( a == null )
+                {
+                    return b;
+                }
+                else
+                {
+                    throw new TMLExpressionException( "Cannot compare a date/clocktime with a non-date/clocktime" );
+                }
             }
             else
             {

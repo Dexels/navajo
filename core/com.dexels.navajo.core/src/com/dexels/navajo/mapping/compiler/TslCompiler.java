@@ -1853,11 +1853,10 @@ public class TslCompiler {
 					.get(localContextClass);
 
 			if (dependentFields == null
-					&& HasDependentResources.class
-							.isAssignableFrom(localContextClass)) {
+					&& HasDependentResources.class.isAssignableFrom(localContextClass)) {
 				try {
 					HasDependentResources hr = (HasDependentResources) localContextClass
-							.newInstance();
+					        .getDeclaredConstructor().newInstance();
 					dependentFields = hr.getDependentResourceFields();
 				} catch (Throwable t) {
 					logger.error("Dependency detection problem:", t);
