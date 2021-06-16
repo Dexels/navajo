@@ -1,8 +1,12 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.server.enterprise.statistics;
 
 import java.util.ArrayList;
@@ -21,66 +25,72 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class MetricsManager implements Mappable {
 
-	private static final Map<String,HasMetrics> registeredModules = new HashMap<String,HasMetrics>();
-	
-	public static void addModule(String moduleName, HasMetrics hm) {
-		registeredModules.put(moduleName, hm);
-	}
-	
-	public Map<String,String> getModuleMetrics(String name) throws Exception {
-		if ( registeredModules.get(name) == null ) {
-			throw new Exception("Could not find metrics for module: " + name);
-		}
-		return registeredModules.get(name).getMetrics();
-	}
-	
-	public Iterator<ModuleMetrics> getModules() {
-		List<ModuleMetrics> allMetrics = new ArrayList<ModuleMetrics>();
-		for ( String s: registeredModules.keySet() ) {
-			allMetrics.add(new ModuleMetrics(s, registeredModules.get(s)));
-		}
-		return allMetrics.iterator();
-	}
-	
-	
-	public static String getStatus() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("NavajoInstance : " + TribeManagerFactory.getInstance().getMyUniqueId() + "\n");
-		Set<String> allModules = registeredModules.keySet();
-		for ( String mod : allModules) {
-			sb.append("\t Module : " + mod + "\n");
-			List<String> keys = new ArrayList<String>();
-			Set<String> metrics = registeredModules.get(mod).getMetrics().keySet();
-			keys.add("_implementation");
-			for ( String metric : metrics ) {
-				keys.add(metric);
-			}
-			Collections.sort(keys);
-			for ( String key : keys ) {
-				if ( key.equals("_implementation")) {
-					sb.append("\t\t" + key + " : " + registeredModules.get(mod).getClass().getName() + "\n");
-				} else {
-					sb.append("\t\t" + key + " : " + registeredModules.get(mod).getMetrics().get(key) + "\n");
-				}
-			}
-		}
-		sb.append("\n");
-		return sb.toString();
-	}
+    private static final Map<String, HasMetrics> registeredModules = new HashMap<String, HasMetrics>();
 
-	public static void removeModule(String module) {
-		registeredModules.remove(module);
-	}
+    public static void addModule(String moduleName, HasMetrics hm) {
+        registeredModules.put(moduleName, hm);
+    }
 
-	@Override
-	public void load(Access access) throws MappableException, UserException {
-	}
+    public Map<String, String> getModuleMetrics(String name) throws Exception {
 
-	@Override
-	public void store() throws MappableException, UserException {
-	}
+        if (registeredModules.get(name) == null) {
+            throw new Exception("Could not find metrics for module: " + name);
+        }
 
-	@Override
-	public void kill() {
-	}
+        return registeredModules.get(name).getMetrics();
+    }
+
+    public Iterator<ModuleMetrics> getModules() {
+
+        List<ModuleMetrics> allMetrics = new ArrayList<ModuleMetrics>();
+        for (String name : registeredModules.keySet()) {
+            allMetrics.add(new ModuleMetrics(name, registeredModules.get(name)));
+        }
+
+        return allMetrics.iterator();
+    }
+
+    public static String getStatus() {
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("NavajoInstance : " + TribeManagerFactory.getInstance().getMyUniqueId() + "\n");
+
+        for (String name : registeredModules.keySet()) {
+            sb.append("\t Module : " + name + "\n");
+            List<String> keys = new ArrayList<String>();
+            Set<String> metrics = registeredModules.get(name).getMetrics().keySet();
+            keys.add("_implementation");
+            for (String metric : metrics) {
+                keys.add(metric);
+            }
+
+            Collections.sort(keys);
+            for (String key : keys) {
+                if (key.equals("_implementation")) {
+                    sb.append("\t\t" + key + " : " + registeredModules.get(name).getClass().getName()
+                            + "\n");
+                } else {
+                    sb.append("\t\t" + key + " : "
+                            + registeredModules.get(name).getMetrics().get(key) + "\n");
+                }
+            }
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
+    public static void removeModule(String module) {
+        registeredModules.remove(module);
+    }
+
+    @Override
+    public void load(Access access) throws MappableException, UserException {}
+
+    @Override
+    public void store() throws MappableException, UserException {}
+
+    @Override
+    public void kill() {}
+
 }
