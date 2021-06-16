@@ -11,6 +11,12 @@ package com.dexels.navajo.functions.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,6 +88,39 @@ public class TestMathFunctions {
     }
 
     @Test
+    public void testMinNumberList() {
+
+        FunctionInterface min = fff.getInstance(cl, "Min");
+        min.reset();
+
+        List<Object> numbers = new ArrayList<>();
+        numbers.add(Math.PI);
+        numbers.add(3);
+        numbers.add(5L);
+        min.insertListOperand(numbers);
+        double actual = (Double) min.evaluateWithTypeChecking();
+
+        assertEquals(3.0, actual, 0.000001);
+    }
+
+    @Test
+    public void testMinDateList() throws ParseException {
+
+        FunctionInterface min = fff.getInstance(cl, "Min");
+        min.reset();
+
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        List<Date> dates = new ArrayList<>();
+        dates.add(parser.parse("2017-11-10"));
+        dates.add(parser.parse("2015-11-10"));
+        dates.add(parser.parse("2019-10-11"));
+        min.insertListOperand(dates);
+        Date actual = (Date) min.evaluateWithTypeChecking();
+
+        assertEquals(parser.parse("2015-11-10"), actual);
+    }
+
+    @Test
     public void testMax() {
 
         FunctionInterface max = fff.getInstance(cl, "Max");
@@ -92,6 +131,39 @@ public class TestMathFunctions {
         int actual = (Integer) max.evaluateWithTypeChecking();
 
         assertEquals(20, actual);
+    }
+
+    @Test
+    public void testMaxNumberList() {
+
+        FunctionInterface max = fff.getInstance(cl, "Max");
+        max.reset();
+
+        List<Object> numbers = new ArrayList<>();
+        numbers.add(Math.PI);
+        numbers.add(3);
+        numbers.add(5L);
+        max.insertListOperand(numbers);
+        double actual = (Double) max.evaluateWithTypeChecking();
+
+        assertEquals(5.0, actual, 0.000001);
+    }
+
+    @Test
+    public void testMaxDateList() throws ParseException {
+
+        FunctionInterface max = fff.getInstance(cl, "Max");
+        max.reset();
+
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        List<Date> dates = new ArrayList<>();
+        dates.add(parser.parse("2017-11-10"));
+        dates.add(parser.parse("2015-11-10"));
+        dates.add(parser.parse("2019-10-11"));
+        max.insertListOperand(dates);
+        Date actual = (Date) max.evaluateWithTypeChecking();
+
+        assertEquals(parser.parse("2019-10-11"), actual);
     }
 
     @Test
@@ -137,5 +209,6 @@ public class TestMathFunctions {
         floor.insertStringOperand("1.1");
         floor.evaluate();
     }
+
 
 }
