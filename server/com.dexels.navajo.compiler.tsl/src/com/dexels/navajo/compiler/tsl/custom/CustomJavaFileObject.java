@@ -45,7 +45,6 @@ public class CustomJavaFileObject implements JavaFileObject {
 
 			IOUtils.copy(is, baos);
 			byte[] data = baos.toByteArray();
-			setContents(data);
 			File generated = File.createTempFile("compile", ".java");
 			File parent = generated.getParentFile();
 			File current = parent;
@@ -61,6 +60,11 @@ public class CustomJavaFileObject implements JavaFileObject {
 			fos.close();
 			this.name = tmp.getAbsolutePath();
 			this.lazyURL = Paths.get(tmp.getAbsolutePath()).toUri();
+			// Only need to save the byte array if we do not have a lazyURL
+			if( this.lazyURL == null )
+			{
+	            setContents(data);
+			}
 		}
 	}
 
