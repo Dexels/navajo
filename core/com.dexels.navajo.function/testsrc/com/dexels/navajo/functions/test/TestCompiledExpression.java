@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.functions.test;
 
 import java.util.ArrayList;
@@ -26,8 +31,8 @@ import com.dexels.navajo.runtime.config.RuntimeConfig;
 public class TestCompiledExpression {
 
 	private Navajo input;
-	
-	
+
+
 
 	@Before
 	public void setup() {
@@ -53,7 +58,7 @@ public class TestCompiledExpression {
 		System.err.println(": "+o);
 		Assert.assertEquals("BLE", o.value);
 	}
-	
+
 	@Test
 	public void testFunctionParamTypeError() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
@@ -67,9 +72,9 @@ public class TestCompiledExpression {
 			Assert.assertEquals("Don't expect problems to appear when STRICT_TYPECHECK is false", 0,problems.size());
 //			Assert.fail("Failed test, ony valid when STRICT_TYPECHECK. Set env for unit tests.");
 		}
-		
+
 	}
-	
+
 	@Test
 	public void testNestedFunctionType() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
@@ -80,7 +85,7 @@ public class TestCompiledExpression {
 		Assert.assertEquals("string", o.returnType().get());
 		System.err.println("immutable: "+o.isLiteral());
 	}
-	
+
 	@Test
 	public void testImmutablilityPropagation() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
@@ -105,7 +110,7 @@ public class TestCompiledExpression {
 		System.err.println("immutable: "+o.isLiteral());
 		Assert.assertTrue(o.isLiteral());
 	}
-		
+
 	@Test
 	public void testFunctionType() {
 		ExpressionCache ce = ExpressionCache.getInstance();
@@ -113,7 +118,7 @@ public class TestCompiledExpression {
 		ContextExpression cx = ce.parse(problems,"ToUpper([whatever])",name->FunctionClassification.DEFAULT);
 		Assert.assertEquals(Property.STRING_PROPERTY, cx.returnType().get());
 	}
-	
+
 	@Test
 	public void testFunctionEvaluation() {
 		List<String> problems = new ArrayList<>();
@@ -124,15 +129,15 @@ public class TestCompiledExpression {
 		Assert.assertEquals(0, problems.size());
 		Operand result =  cemb.apply(input,Optional.empty(),Optional.empty());
 		System.err.println("Result: "+result.type+" value: "+result.value);
-		
+
 	}
-	
+
 
 	@Test
 	public void testForall() throws TMLExpressionException {
 		List<String> problems = new ArrayList<>();
 		ExpressionCache ce = ExpressionCache.getInstance();
-		String extBackup ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
+//		String extBackup ="FORALL( '/TestArrayMessageMessage', `! ?[Delete] OR ! [Delete] OR [/__globals__/ApplicationInstance] != 'TENANT' OR ! StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
 
 		String ext ="FORALL( '/Msg', `!StringFunction( 'matches', [ChargeCodeId], '.*[-]+7[0-9][A-z]*$' )` )";
 //		String expression = "FORALL( '/Charges' , `! ?[Delete] OR ! [Delete]  OR [/__globals__/ApplicationInstance] != 'SOMETENANT' OR [SomeProperty] == 'SOMESTRING' `)";
@@ -144,7 +149,7 @@ public class TestCompiledExpression {
 		Operand result =  cx.apply(input,Optional.empty(),Optional.empty());
 		System.err.println("Result: "+result.type+" value: "+result.value);
 //		Operand result = Expression.evaluate(expression, testDoc,null,topMessage);
-		
+
 	}
 
 }

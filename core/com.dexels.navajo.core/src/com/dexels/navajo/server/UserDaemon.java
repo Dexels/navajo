@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.server;
 
 import java.util.HashMap;
@@ -14,9 +19,9 @@ import com.dexels.navajo.util.AuditLog;
 /**
  * This class can be used to create user defined services that must be started
  * upon engine start.
- * 
+ *
  * @author arjen
- * 
+ *
  */
 public class UserDaemon extends GenericThread {
 
@@ -38,7 +43,7 @@ public class UserDaemon extends GenericThread {
 					+ ": already got service with this name.");
 		}
 	}
-	
+
 	@Override
 	public void kill() {
 		super.kill();
@@ -66,20 +71,17 @@ public class UserDaemon extends GenericThread {
 				Property className = m.getProperty("ClassName");
 				Property sleepTime = m.getProperty("SleepTime");
 				if (className == null) {
-					throw new RuntimeException(
-							"Property ClassName missing in daemons.xml");
+					throw new RuntimeException("Property ClassName missing in daemons.xml");
 				}
 				if (sleepTime == null) {
-					throw new RuntimeException(
-							"Property SleepTime missing in daemons.xml");
+					throw new RuntimeException("Property SleepTime missing in daemons.xml");
 				}
 				// Make sure to intialize instance!
 				ClassLoader cl = DispatcherFactory.getInstance()
 						.getNavajoConfig().getClassloader();
 				try {
-					Class<? extends UserDaemon> c = (Class<? extends UserDaemon>) Class
-							.forName(className.getValue(), true, cl);
-					UserDaemon ud = c.newInstance();
+					Class<?> c = Class.forName(className.getValue(), true, cl);
+					UserDaemon ud = (UserDaemon) c.getDeclaredConstructor().newInstance();
 					ud.setSleepTime(Integer.parseInt(sleepTime.getValue()));
 					startService(ud);
 				} catch (Exception e) {

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.reactive.transformer.flatten">
-   <implementation class="com.dexels.navajo.reactive.transformer.other.FlattenEventStreamFactory"/>
-   <property name="name" type="String" value="flatten"/>
-   <service>
-      <provide interface="com.dexels.navajo.reactive.api.ReactiveTransformerFactory"/>
-   </service>
-</scr:component>

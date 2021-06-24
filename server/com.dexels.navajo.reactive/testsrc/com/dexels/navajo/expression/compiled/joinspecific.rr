@@ -1,9 +1,0 @@
-|>single()
-	->set(somestring='blob')
-	->join(
-		    |>single()
-			->set(sub='subprop'),
-		set(moved=[sub],constant='iamconstant',tryagain=[@somestring]),
-		set(someint=3)
-	)
-	->tml(messageName='Test',isArray=false)

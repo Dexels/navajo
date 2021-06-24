@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.NavajoException;
@@ -42,12 +47,19 @@ public class GetPropertyAttribute extends FunctionInterface {
 		return "Gets the type of property as a string";
 	}
 
-	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.expression.api.TMLExpressionException {
-
-
-		Property p = (getCurrentMessage() != null ? getCurrentMessage().getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+	public Object getAttribute(Object operand, String attribute) throws com.dexels.navajo.expression.api.TMLExpressionException {
+	    Property p = null;
+	    if( operand instanceof Property )
+	    {
+	        p = (Property) operand;
+	    }
+	    else
+	    {
+	        String propertyName = operand.toString();
+	        p = (getCurrentMessage() != null ? getCurrentMessage().getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+	    }
 		if (p == null) {
-			throw new TMLExpressionException(this, "Property " + propertyName + " not found");
+			throw new TMLExpressionException(this, "Property " + operand.toString() + " not found");
 		}
 		if ( attribute.equals("direction") ) {
 			return p.getDirection();
@@ -70,10 +82,10 @@ public class GetPropertyAttribute extends FunctionInterface {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
-		String propertyName = getStringOperand(0);
+		Object operand = getOperands().get(0);
 		String attribute = getStringOperand(1);
 
-		return getAttribute(propertyName, attribute);
+		return getAttribute(operand, attribute);
 	}
 
 	@Override

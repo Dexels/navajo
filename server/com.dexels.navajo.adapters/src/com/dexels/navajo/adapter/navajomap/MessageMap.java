@@ -1,11 +1,18 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.adapter.navajomap;
 
 import java.util.Date;
 import java.util.List;
 
+import com.dexels.navajo.adapter.OptionMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
@@ -39,6 +46,7 @@ public class MessageMap implements Mappable {
     public MessageMap message;
     public MessageMap[] messages;
     public String messagePointer;
+    public String selectionPointer;
     public Object property;
 
     private Message msg;
@@ -187,6 +195,38 @@ public class MessageMap implements Mappable {
         } else
             propertDoesNotExistException(fullName);
         return null;
+    }
+    
+    public void setSelectionPointer(String selectionPointer) {
+        this.selectionPointer = selectionPointer;
+    }
+    
+    public String getSelectionPointer() {
+        return selectionPointer;
+    }
+    
+    public OptionMap[] getSelections() throws UserException {
+
+        if (selectionPointer == null) {
+            throw new UserException(-1, "Set selectionPointer first.");
+        }
+        Property p = getPropertyObject(selectionPointer);
+        if (!p.getType().equals(Property.SELECTION_PROPERTY)) {
+            throw new UserException(-1, "selections only supported for selection properties");
+        }
+
+        List<Selection> all = p.getAllSelections();
+        OptionMap[] om = new OptionMap[all.size()];
+        for (int i = 0; i < all.size(); i++) {
+            Selection s = all.get(i);
+            om[i] = new OptionMap();
+            om[i].setOptionName(s.getName());
+            om[i].setOptionValue(s.getValue());
+            om[i].setOptionSelected(s.isSelected());
+
+        }
+
+        return om;
     }
 
     public void setMessagePointer(String s) {

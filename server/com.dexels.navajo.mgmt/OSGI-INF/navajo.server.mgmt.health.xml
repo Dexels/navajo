@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.server.mgmt.health" activate="activate" configuration-policy="optional">
    <implementation class="com.dexels.navajo.mgmt.status.NavajoServerHealth"/>
+   <service>
+      <provide interface="com.dexels.server.mgmt.api.ServerHealthCheck"/>
+   </service>
    <reference bind="setDispatcherInterface" cardinality="0..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcherInterface"/>
    <reference bind="setJavaCompiler" cardinality="0..1" interface="com.dexels.navajo.compiler.JavaCompiler" name="JavaCompiler" policy="dynamic" unbind="clearJavaCompiler"/>
    <reference bind="setNavajoConfig" cardinality="0..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
    <reference bind="setTribeManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManagerInterface" policy="dynamic" unbind="clearTribeManagerInterface"/>
    <reference bind="setWorkflowManagerInterface" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface" name="WorkFlowManagerInterface" policy="dynamic" unbind="clearWorkflowManagerInterface"/>
    <reference bind="setPriorityTmlScheduler" cardinality="0..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler"  policy="dynamic" unbind="clearPriorityTmlScheduler"/>
-   <reference bind="setEntityManager" cardinality="0..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager"  policy="dynamic" unbind="clearEntityManager"/>
-
-   <service>
-      <provide interface="com.dexels.server.mgmt.api.ServerHealthCheck"/>
-   </service>
 </scr:component>

@@ -1,6 +1,13 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.resource.http.adapter;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,10 +85,11 @@ public class BinaryStoreAdapter implements Mappable {
 		return HttpResourceFactory.getInstance().getHttpResource(resource).expiringURL(access.getTenant(), bucket, binaryHash,expiration);
 	}
 
-//	public String temporaryURL(Binary binary, String resource, String bucket, long expiration) throws IOException {
-//		return temporaryURL(binary.getHexDigest(), resource, bucket, expiration);
-//	}
-//
+	public String temporaryURL(String binaryHash, String resource, String bucket, Date expirationDate) throws IOException {
+		return HttpResourceFactory.getInstance().getHttpResource(resource)
+				.expiringURL(access.getTenant(), bucket, binaryHash, expirationDate);
+	}
+
 	public void setExpiration(Object expiration) {
 		logger.debug("Setting expiration: "+expiration);
 		if(expiration instanceof Long) {
@@ -93,7 +101,12 @@ public class BinaryStoreAdapter implements Mappable {
 			this.expiration = (Integer)expiration;
 			return;
 		}
+
 		logger.info("Error setting expiration: Weird type: "+expiration.getClass());
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
 	public void setBinary(Binary binary) {
@@ -113,6 +126,7 @@ public class BinaryStoreAdapter implements Mappable {
 	}
 
 	private long expiration;
+	private Date expirationDate;
 	private Binary binary;
 	private String binaryHash;
 	private String resource;
@@ -120,13 +134,14 @@ public class BinaryStoreAdapter implements Mappable {
 	private String putResult;
     private int deleteResult = -1;
 
-
-
 	public String getTemporaryURL() throws IOException {
 		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
+		if (expirationDate != null) {
+			return temporaryURL(hash, resource, bucket, expirationDate);
+		}
+
 		return temporaryURL(hash, resource, bucket, expiration);
 	}
-
 
 	public String getPutResult() throws IOException {
 	    if (this.putResult == null) {

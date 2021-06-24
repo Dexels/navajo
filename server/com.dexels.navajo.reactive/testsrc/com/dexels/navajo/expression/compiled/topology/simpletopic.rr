@@ -1,3 +1,0 @@
-|>topic('sportlinkkernel-ACTIVITYATTRIBUTE')
-    ->filter([activityid] > 20)
-    ->sink('FILTERED')

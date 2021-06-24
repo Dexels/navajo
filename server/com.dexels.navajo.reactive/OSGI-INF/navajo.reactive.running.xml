@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.reactive.running">
-   <implementation class="com.dexels.navajo.reactive.RunningReactiveScriptsImpl"/>
-   <service>
-      <provide interface="com.dexels.navajo.document.stream.api.RunningReactiveScripts"/>
-   </service>
-</scr:component>

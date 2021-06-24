@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.adapter.sqlmap;
 
 import java.io.InputStream;
@@ -61,7 +66,7 @@ public class SQLMapHelper {
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
-			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) { 
+			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier) || SQLMapConstants.ORACLEDB.equals(dbIdentifier)) { 
 				if (debug) {
 					Access.writeToConsole(access, "Had to do something in order to not get the cast error from a null value, because it concerns " + dbIdentifier + "\n");
 				}

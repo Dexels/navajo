@@ -1,3 +1,0 @@
-|>input()
-	->set(multipliedbytwo=[number]*2)
-	->log()

@@ -1,5 +1,0 @@
-|>tmlinput()
-	->streamtoimmutable()
-	->set(multipliedbytwo=[Integer]*2)
-	->log()
-	->tml(messageName='Doubled',isArray=true)
