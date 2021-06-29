@@ -28,7 +28,7 @@ import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.CompilationException;
 
 public class BundleQueueComponent implements EventHandler, BundleQueue {
-	private static final String SCALA_FOLDER = "scala" + File.separator;
+    private static final String SCALA_FOLDER = "scala" + File.separator;
     private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
     private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala", ".ns");
     private BundleCreator bundleCreator = null;
@@ -65,8 +65,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     @Override
     public void enqueueScript(final String script, final String path) {
         executor.execute(() -> {
-		    compileScript(script, path);
-		});
+            compileScript(script, path);
+        });
     }
     
     /* (non-Javadoc)
@@ -89,8 +89,10 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 compilationSuccess = false;
                 logger.info("Script compilation failed: {}", script);
             }
-            ensureScriptDependencies(script);
-            enqueueDependentScripts(script);
+            if (compilationSuccess) {
+                ensureScriptDependencies(script);
+                enqueueDependentScripts(script);
+            }
 
         } catch (Throwable e) {
             compilationSuccess = false;
@@ -101,14 +103,14 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
     public void enqueueDeleteScript(final String script) {
         executor.execute(() -> {
-		    // String tenant = script.
-		    logger.info("Uninstalling: {}", script);
-		    try {
-		        bundleCreator.uninstallBundle(script);
-		    } catch (Throwable e) {
-		        logger.error("Error: ", e);
-		    }
-		});
+            // String tenant = script.
+            logger.info("Uninstalling: {}", script);
+            try {
+                bundleCreator.uninstallBundle(script);
+            } catch (Throwable e) {
+                logger.error("Error: ", e);
+            }
+        });
     }
 
     /**
@@ -192,8 +194,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         }
     }
 
-	// ensure that dependencies of the current script are satisfied. If dependencies
-	// are not satisfied, create them
+    // ensure that dependencies of the current script are satisfied. If dependencies
+    // are not satisfied, create them
     private void ensureScriptDependencies(String script) {
         String rpcName = script;
         String bareScript = script.substring(script.lastIndexOf('/') + 1);
@@ -210,8 +212,8 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         for (Dependency dependency : dependencies) {
             String depScript = dependency.getDependee();
             try {
-				// do an on demand call to the bundle creator, we only need the script to be
-				// compiled, if it wasn't there yet
+                // do an on demand call to the bundle creator, we only need the script to be
+                // compiled, if it wasn't there yet
                 bundleCreator.getOnDemandScriptService(depScript, null);
                 ensureScriptDependencies(depScript);
             } catch (CompilationException e) {
