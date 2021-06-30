@@ -2,7 +2,7 @@ Automatic-Module-Name: com.dexels.navajo.core
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 5.3.66
+Bundle-Version: 5.3.67.qualifier
 Bundle-Activator: navajocore.Version
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
