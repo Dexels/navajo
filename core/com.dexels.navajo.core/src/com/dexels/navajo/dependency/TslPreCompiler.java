@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.script.api.UserException;
@@ -266,6 +267,19 @@ public class TslPreCompiler {
 
         for (int i = 0; i < messages.getLength(); i++) {
             Element n = (Element) messages.item(i);
+            
+            String subType = n.getAttribute("subtype");
+            
+            if (subType != null && !subType.equals("")) {
+                String[] subTypeElements = subType.split(",");
+                for (String subTypeElement: subTypeElements) {
+                    if (subTypeElement.startsWith("interface=")) {
+                        for (String iface: subTypeElement.replace("interface=", "").split(";")) {
+                            addSuperEntityDependency(scriptFile, scriptTenant, scriptFolder, deps, tslDoc, n, iface);
+                        }
+                    }
+                }
+            }
 
             String extendsAttr = n.getAttribute("extends");
             if (extendsAttr == null || extendsAttr.equals("") || !extendsAttr.startsWith("navajo://")) {
@@ -274,65 +288,69 @@ public class TslPreCompiler {
 
             String ext = extendsAttr.substring(9);
             // Entity versioning stuff
-            String version = "0";
-            if (ext.indexOf('.') != -1) {
-                version = ext.substring(ext.indexOf('.') + 1, ext.indexOf('?') == -1 ? ext.length() : ext.indexOf('?'));
-            }
-            String rep = "." + version;
-            ext = ext.replace(rep, "");
-
             String[] superEntities = ext.split(",");
             for (String superEntity : superEntities) {
-                if (superEntity.indexOf('?') > -1) {
-                    superEntity = superEntity.split("\\?")[0];
-                }
-
-                if (scriptTenant != null) {
-                    // trying tenant-specific variant first
-                    String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + superEntity + "_" + scriptTenant);
-
-                    // Check if exists
-                    if (operationScriptFile != null) {
-                        deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-
-                        // No need to try any other tenant-specific includes
-                        // since we are tenant-specific in the first place
-                        // Thus continue with next entity
-                        continue;
-                    }
-                }
-
-                String superScriptFile = fetchScriptFileName(scriptFolder + File.separator + "entity" + File.separator + superEntity);
-
-                // Check if exists
-                boolean isBroken = false;
-                if (superScriptFile == null) {
-                    isBroken = true;
-                    superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".broken";
-                }
-
-                deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
-
-                // Going to check for tenant-specific include-variants
-                if (scriptTenant == null) {
-                    File scriptFolderFile = new File(superScriptFile).getParentFile();
-                    if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
-                        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
-                        Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-                        for (File f : files) {
-                            deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-                        }
-                        // NS3
-                        AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.ns");
-                        Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
-                        for (File f : filesNS3) {
-                            deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-                        }
-                    }
-                }
+                addSuperEntityDependency(scriptFile, scriptTenant, scriptFolder, deps, tslDoc, n, superEntity);
+                
             }
         }
 
+    }
+    
+    private void addSuperEntityDependency(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc, Element n, String superEntity) {
+        String version = "0";
+        if (superEntity.indexOf(".") != -1) {
+            version = superEntity.substring(superEntity.indexOf(".") + 1, superEntity.indexOf("?") == -1 ? superEntity.length() : superEntity.indexOf("?"));
+        }
+        String replace = "." + version;
+        superEntity = superEntity.replace(replace, "");
+        
+        if (superEntity.indexOf('?') > 0) {
+            superEntity = superEntity.split("\\?")[0];
+        }
+        if (scriptTenant != null) {
+            // trying tenant-specific variant first
+            String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + superEntity + "_" + scriptTenant);
+
+            // Check if exists
+            if (operationScriptFile != null) {
+                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+
+                // No need to try any other tenant-specific includes
+                // since we are tenant-specific in the first place
+                // Thus continue with next entity
+                return;
+            }
+        }
+
+        String superScriptFile = fetchScriptFileName(scriptFolder + File.separator + "entity" + File.separator + superEntity);
+
+        // Check if exists
+        boolean isBroken = false;
+        if (superScriptFile == null) {
+            isBroken = true;
+            superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".broken";
+        }
+
+        deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+        // Going to check for tenant-specific include-variants
+        if (scriptTenant == null) {
+            File scriptFolderFile = new File(superScriptFile).getParentFile();
+            if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+                AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
+                Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                for (File f : files) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+                // NS3
+                AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.ns");
+                Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                for (File f : filesNS3) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+            }
+        }
     }
 
     private void findIncludeDependencies(String fullScriptPath, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException {
