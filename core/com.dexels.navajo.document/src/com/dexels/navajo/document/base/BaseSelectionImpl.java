@@ -1,8 +1,12 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.document.base;
 
 import java.util.HashMap;
@@ -18,161 +22,158 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-/**
- * <p>Title: ShellApplet</p>
- * <p>Description: </p>
- * <p>Part of the Navajo mini client, based on the NanoXML parser</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels </p>
- * <p>$Id$</p>
- * @author Frank Lyaruu
- * @version $Revision$
- */
-public class BaseSelectionImpl extends BaseNode implements Selection{
+public class BaseSelectionImpl extends BaseNode implements Selection {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(BaseSelectionImpl.class);
-	private static final long serialVersionUID = 1548716501966033367L;
-protected String name ="";
-  protected String value ="-1";
-  protected boolean isSelected = false;
-  private Property myProperty = null;
+    private static final long serialVersionUID = 1548716501966033367L;
 
-  public BaseSelectionImpl(Navajo n, String name, String value, boolean isSelected) {
-    super(n);
-    this.name = name;
-    this.value = value;
-    this.isSelected = isSelected;
-  }
-  public BaseSelectionImpl(Navajo n) {
-    super(n);
-  }
+    private static final Logger logger = LoggerFactory.getLogger(BaseSelectionImpl.class);
 
-  @Override
-public final String getName() {
-    return ( this.name );
-  }
-  @Override
-public final void setName( String newName ) {
-    this.name = newName;
-  }
+    protected String name = "";
 
-  @Override
-public final String getValue() {
-    return ( this.value );
-  }
-  @Override
-public final void setValue( String newVal ) {
-    this.value = newVal;
-  }
+    protected String value = "-1";
 
-  @Override
-public final boolean isSelected() {
-    return ( this.isSelected );
-  }
-  
-  @Override
-public final void setSelected( boolean selected ) {
-	  isSelected = selected;
-  }
+    protected boolean isSelected = false;
 
-  @Override
-public final String toString() {
-    if (getName() != null)
-      return getName().trim();
-    else
-      return "";
-  }
+    private Property myProperty = null;
 
-  public final Selection copy(Navajo n) {
-      BaseSelectionImpl cp = (BaseSelectionImpl)NavajoFactory.getInstance().createSelection(n,getName(),getValue(),isSelected());
-    cp.setRootDoc(n);
-    return cp;
-  }
-  public final Property getParent() {
-    return myProperty;
-  }
+    public BaseSelectionImpl(Navajo n, String name, String value, boolean isSelected) {
 
-  public final void setParent(Property m) {
-    myProperty = m;
-  }
-
-  public final String getPath() {
-    if (myProperty!=null) {
-      try {
-        return myProperty.getFullPropertyName() + "/" + getName();
-      }
-      catch (NavajoException ex) {
-    	  logger.error("Error: ", ex);
-    	  return null;
-      }
-    } else {
-      return "/"+getName();
+        super(n);
+        this.name = name;
+        this.value = value;
+        this.isSelected = isSelected;
     }
-  }
 
+    public BaseSelectionImpl(Navajo n) {
+        super(n);
+    }
 
     @Override
-    public final boolean equals(Object o)
-    {
-    	boolean superEquals = super.equals(o);
-    	boolean newEquals = this.newEquals(o);
-//    	if (superEquals != newEquals)
-//    	{
-//	        Object oValue = o instanceof Selection ? ((Selection) o).getValue() : null;
-//    	}
-        return superEquals;
-
+    public final String getName() {
+        return name;
     }
 
-    // Suggested imeplemention for equals (replace the above logging version by this when ok)
-    public final boolean newEquals(Object o)
-    {
-    	return o instanceof Selection ? this.compareTo((Selection) o ) == 0 : false;
+    @Override
+    public final void setName(String name) {
+        this.name = name;
     }
 
-  
-  @Override
-public final int compareTo(Selection o) {
- 
-    if (o.getValue() == null && getValue() == null) {
-      return 0;
+    @Override
+    public final String getValue() {
+        return value;
     }
 
-    if (o.getValue() != null && getValue() == null) {
-      return -1;
+    @Override
+    public final void setValue(String value) {
+        this.value = value;
     }
 
-    if (o.getValue() == null && getValue() != null) {
-      return 1;
+    @Override
+    public final boolean isSelected() {
+        return isSelected;
     }
 
-    return (getValue().compareTo(o.getValue()));
+    @Override
+    public final void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
 
-  }
-@Override
-public Map<String,String> getAttributes() {
-    Map<String,String> m = new HashMap<>();
-    m.put("name", name);
-    m.put("value", value);
-    m.put("selected", isSelected?"1":"0");
-    return m;
-}
-@Override
-public List<? extends BaseNode> getChildren() {
-    return null;
-}
-@Override
-public final String getTagName() {
-    return Selection.SELECTION_DEFINITION;
-}
-@Override
-public Object getRef() {
-    throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
-}
+    @Override
+    public final String toString() {
 
+        if (getName() != null) {
+            return getName().trim();
+        } else {
+            return "";
+        }
+    }
+
+    public final Selection copy(Navajo n) {
+
+        BaseSelectionImpl cp = (BaseSelectionImpl) NavajoFactory.getInstance().createSelection(n,
+                getName(), getValue(), isSelected());
+        cp.setRootDoc(n);
+
+        return cp;
+    }
+
+    public final Property getParent() {
+        return myProperty;
+    }
+
+    public final void setParent(Property m) {
+        myProperty = m;
+    }
+
+    public final String getPath() {
+
+        if (myProperty != null) {
+            try {
+                return myProperty.getFullPropertyName() + "/" + getName();
+            } catch (NavajoException exc) {
+                logger.error("Error: ", exc);
+                return null;
+            }
+        } else {
+            return "/" + getName();
+        }
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    // Suggested implemention for equals (replace the above logging version by this when ok)
+    public final boolean newEquals(Object o) {
+        return (o instanceof Selection)
+                ? (compareTo((Selection) o) == 0)
+                : false;
+    }
+
+    @Override
+    public final int compareTo(Selection o) {
+
+        if (o.getValue() == null && getValue() == null) {
+            return 0;
+        }
+
+        if (o.getValue() != null && getValue() == null) {
+            return -1;
+        }
+
+        if (o.getValue() == null && getValue() != null) {
+            return 1;
+        }
+
+        return (getValue().compareTo(o.getValue()));
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+
+        Map<String, String> m = new HashMap<>();
+        m.put("name", name);
+        m.put("value", value);
+        m.put("selected", isSelected ? "1" : "0");
+
+        return m;
+    }
+
+    @Override
+    public List<? extends BaseNode> getChildren() {
+        return null;
+    }
+
+    @Override
+    public final String getTagName() {
+        return Selection.SELECTION_DEFINITION;
+    }
+
+    @Override
+    public Object getRef() {
+        throw new UnsupportedOperationException(
+                "getRef not possible on base type. Override it if you need it");
+    }
 
 }
-
-// EOF $RCSfile$ //

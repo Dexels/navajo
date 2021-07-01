@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document.base;
@@ -154,7 +154,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     /**
      * For internal use only, sets the initial message name.
-     * 
+     *
      * @param name
      */
     protected final void setNameInitially(String name) {
@@ -163,7 +163,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     /**
      * Changes the name of a message.
-     * 
+     *
      * @param name
      */
     @Override
@@ -286,13 +286,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (messageMap == null) {
             messageMap = new TreeMap<>();
         }
-        
-        
+
+
         int counterIndex = 0;
         int counterIgnoreMode = 0; //how many times got into ignore mode
         boolean isIgnore = false;
-        
-        
+
+
 
         m.setParent(this);
 
@@ -304,8 +304,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return foundMsg;
         }
 
-        
-        
+
+
         if (getMessage(name) != null && (overwrite || Message.MSG_MODE_IGNORE.equals(getMode()))) {
             removeChildMessage(foundMsg);
         }
@@ -316,17 +316,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (getType().equals(MSG_TYPE_ARRAY)) {
             if(Message.MSG_MODE_IGNORE.equals(m.getMode())) {
                 isIgnore = true;
-                counterIgnoreMode++; 
+                counterIgnoreMode++;
             }
-            
+
             if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
                 if (messageList.size() > 0) {
-                    counterIndex = messageList.size() - counterIgnoreMode; 
+                    counterIndex = messageList.size() - counterIgnoreMode;
                 }
                 m.setIndex(counterIndex);
             }
-            
-            
+
+
             ((BaseMessageImpl) m).setNameInitially(getName());
         } else {
             messageMap.put(name, m);
@@ -336,18 +336,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (getType().equals(MSG_TYPE_ARRAY) && Message.MSG_MODE_IGNORE.equals(getMode())) {
             messageList.clear();
         }
-        
-        
-       
+
+
+
        //isIgnore boolean will be true only if the element enters the ignore mode check, and it wont be added to the messageList
        if (isIgnore == false) {
             messageList.add(m);
         }
-       
+
        //updates the index of the messages in an array. If has ignore modes will sub the counter from the initial index value
-        
-        
-        
+
+
+
        return m;
     }
 
@@ -418,7 +418,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     /**
      * LEAVE THIS METHOD (SEE COMMENT ABOVE)
-     * 
+     *
      * @param q
      */
     // private void initPropertyFromDefinition(Property q) {
@@ -791,7 +791,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     /**
      * Add a collection of properties to a message. Properties that already exist
      * are overwritten.
-     * 
+     *
      * @param m
      * @param properties
      */
@@ -805,7 +805,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     /**
      * Merges messsage with another message. Properties and submessages are merged.
      * Properties of other message have precedence.
-     * 
+     *
      * @param origMsg
      * @param mergeThisMsg
      */
@@ -1662,9 +1662,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void merge(Message incoming, boolean preferThis, boolean applySubType) {
+
         if (isArrayMessage() != incoming.isArrayMessage()) {
-            throw new NavajoException("Incompatible message types in merge: " + getFullMessageName() + " (" + getType() +  "), " + incoming.getFullMessageName() + " (" + incoming.getType() +  ")");
+            throw new NavajoException("Incompatible message types in merge: " + getFullMessageName()
+                    + " (" + getType() + "), " + incoming.getFullMessageName() + " ("
+                    + incoming.getType() + ")");
         }
+
         if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
             // Perform merge for all my children with the definition message
             for (Message child : this.getElements()) {
@@ -1712,9 +1716,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
                 // check if the existing sub message is of the same type (array/simple) as the
                 // incoming message, if not, we cannot use it
                 if (existingSubMessage.isArrayMessage() != incomingSubMessage.isArrayMessage()) {
-                    throw new NavajoException("Incompatible message types in merge: " + existingSubMessage.getFullMessageName() + " (" + existingSubMessage.getType() +  "), " + incomingSubMessage.getFullMessageName() + " (" + incomingSubMessage.getType() +  ")");
+                    throw new NavajoException("Incompatible message types in merge: "
+                            + existingSubMessage.getFullMessageName() + " ("
+                            + existingSubMessage.getType() + "), "
+                            + incomingSubMessage.getFullMessageName() + " ("
+                            + incomingSubMessage.getType() + ")");
                 }
             }
+
             if (existingSubMessage == null) {
                 // if we don't have the sub message ourselves and if the incoming sub message is marked
                 // as nullable, then we should NOT add it (because we explicitly allow the message
@@ -2005,6 +2014,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         p.setAnyValue(value);
     }
 
+    @Override
     public String getSubType() {
         return subType;
     }

@@ -67,6 +67,12 @@
 		<input>any,boolean|empty</input>
 		<result>boolean</result>
 	</function>
+	<function name="Ceil" class="com.dexels.navajo.functions.Ceil">
+		<description>Return the ceil value of the given double
+		</description>
+		<input>float</input>
+		<result>float</result>
+	</function>
 	<function name="CheckEmail" class="com.dexels.navajo.functions.CheckEmail">
 		<description>This functions checks the syntactic validity of email
 			adressess
@@ -279,6 +285,12 @@
 		<description>Finds an array element that has a property with a matching value. If no message is supplied, currentMessage will be used</description>
 		<input>string,any,message|empty</input>
 		<result>message</result>
+	</function>
+	<function name="Floor" class="com.dexels.navajo.functions.Floor">
+		<description>Return the floor value of the given double
+		</description>
+		<input>float</input>
+		<result>float</result>
 	</function>
 	<function name="ForAll" class="com.dexels.navajo.functions.ForAll">
 		<description>Evaluates a condition (expression evaluating to a
