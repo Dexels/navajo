@@ -45,9 +45,9 @@ public class AsyncClientImpl implements ManualAsyncClient {
 
     private static final int MAX_RESULT_SIZE = 64 * 1024 * 1024; // 64 MB
 
-    private static final int MAX_IDLE_TIMEOUT = 90;
+    private static final int MAX_IDLE_TIMEOUT = 120;
 
-    private static final int MAX_TIMEOUT = 120;
+    private static final int MAX_TIMEOUT = 150;
 
     static {
         AsyncClientFactory.setInstance(AsyncClientImpl.class);
