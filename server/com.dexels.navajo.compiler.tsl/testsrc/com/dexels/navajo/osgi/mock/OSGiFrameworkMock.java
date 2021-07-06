@@ -5,8 +5,6 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.osgi.mock;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -16,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipFile;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -100,16 +99,14 @@ public class OSGiFrameworkMock {
     {
         ServiceReferenceMock<CompiledScriptFactory> serviceReference = new ServiceReferenceMock<>( CompiledScriptFactory.class, bundle );
         serviceReferences.add( serviceReference );
-        // Find the DS file and parse it for the properties
-        // TODO: Do not use the intermediate file like here, instead extract it from the JAR
-        File dsFile = Paths.get( URI.create( location.replaceAll( "\\.jar", ".xml" ) ) ).toFile();
-
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         builderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
-        try( FileInputStream source = new FileInputStream( dsFile ) )
+        // Find the DS file in the jar and parse it for the properties
+        try( ZipFile jarFile = new ZipFile( Paths.get( URI.create( location ) ).toFile() ) )
         {
+            InputStream source = jarFile.getInputStream( jarFile.getEntry( "OSGI-INF/script.xml" ) );
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
             document.normalize();
