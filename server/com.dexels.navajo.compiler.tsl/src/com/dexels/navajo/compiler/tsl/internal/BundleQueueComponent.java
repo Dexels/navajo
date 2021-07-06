@@ -190,6 +190,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
             	continue;
             }
             enqueueDeleteScript(scriptName);
+            enqueueDependentScripts( scriptName );
         }
     }
 
