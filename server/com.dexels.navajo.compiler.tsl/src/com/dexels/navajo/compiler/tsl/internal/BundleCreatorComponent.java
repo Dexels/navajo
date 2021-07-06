@@ -554,7 +554,6 @@ public class BundleCreatorComponent implements BundleCreator {
 
         FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
         FileUtils.copyFile(manifestFile, metainfManifest);
-        FileUtils.copyFile(dsFile, osgiinfScript);
         if (entityFile.exists()) {
             FileUtils.copyFile(entityFile, entityOsgiiScript);
         }

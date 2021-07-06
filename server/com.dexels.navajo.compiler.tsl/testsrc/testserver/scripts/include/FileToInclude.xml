@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navascript author="Marte Koning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/schemas/navascript.xsd">
+    <message name="FileToInclude">
+        <property name="VersionNr">
+            <expression value="'1.0'"/>
+        </property>
+    </message>
+</navascript>

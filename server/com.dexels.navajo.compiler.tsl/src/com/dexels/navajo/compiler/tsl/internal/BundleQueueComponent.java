@@ -37,7 +37,20 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
     
     private boolean keepIntermediateFiles = true;
 
+    // For testing purposes we need to be able to force synchronisation
+    private boolean forceSync = false;
+
     private static final Logger logger = LoggerFactory.getLogger(BundleQueueComponent.class);
+
+    public BundleQueueComponent()
+    {
+    }
+
+    // Only the test(s) should be able to access this
+    protected BundleQueueComponent( boolean forceSync )
+    {
+        this.forceSync = forceSync;
+    }
 
     public void setBundleCreator(BundleCreator bundleCreator) {
         this.bundleCreator = bundleCreator;
@@ -64,9 +77,16 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
      * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java .lang.String) */
     @Override
     public void enqueueScript(final String script, final String path) {
-        executor.execute(() -> {
-            compileScript(script, path);
-        });
+        if( forceSync )
+        {
+            compileScript( script, path );
+        }
+        else
+        {
+            executor.execute(() -> {
+                compileScript( script, path );
+            });
+        }
     }
     
     /* (non-Javadoc)
@@ -96,21 +116,33 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
         } catch (Throwable e) {
             compilationSuccess = false;
+            bundleCreator.uninstallBundle( script );
             logger.error("Error: ", e);
         }
         return compilationSuccess;
     }
 
     public void enqueueDeleteScript(final String script) {
-        executor.execute(() -> {
-            // String tenant = script.
-            logger.info("Uninstalling: {}", script);
-            try {
-                bundleCreator.uninstallBundle(script);
-            } catch (Throwable e) {
-                logger.error("Error: ", e);
-            }
-        });
+        if( forceSync )
+        {
+            uninstallScript( script );
+        }
+        else
+        {
+            executor.execute(() -> {
+                uninstallScript( script );
+            });
+        }
+    }
+
+    private void uninstallScript(final String script) {
+        // String tenant = script.
+        logger.info("Uninstalling: {}", script);
+        try {
+            bundleCreator.uninstallBundle(script);
+        } catch (Throwable e) {
+            logger.error("Error: ", e);
+        }
     }
 
     /**
@@ -159,6 +191,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
             	continue;
             }
             enqueueDeleteScript(scriptName);
+            enqueueDependentScripts( scriptName );
         }
     }
 
