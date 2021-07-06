@@ -116,6 +116,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
         } catch (Throwable e) {
             compilationSuccess = false;
+            bundleCreator.uninstallBundle( script );
             logger.error("Error: ", e);
         }
         return compilationSuccess;
