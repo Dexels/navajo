@@ -8,9 +8,11 @@
             <value name="binaryHash" type="string" required="false" direction="in"/>
             <value name="binary" type="binary" required="false" direction="in"/>
             <value name="expiration" type="long" required="false" direction="in"/>
+            <value name="expirationDate" type="date" required="false" direction="in"/>
             <value name="putResult" type="string" required="false" direction="out"/>
             <value name="headResult" type="integer" required="false" direction="out"/>
             <value name="deleteResult" type="integer" required="false" direction="out"/>
+            <value name="temporaryURL" type="string" required="false" direction="out"/>
         </values>
         <methods>
             <method name="put">
@@ -23,10 +25,9 @@
             </method>
             <method name="getURL">
                 <param name="binaryHash"  field="binaryHash" type="string" required="true"/>
-                <param name="expiration" type="integer" required="true" />
-                <param name="url" field="temporaryURL" type="string" required="false"/>
+                <param name="expiration" field="expiration" type="integer" required="false" />
+                <param name="expirationDate" field="expirationDate" type="date" required="false" />
             </method>
         </methods>
     </map>
-    
-    </adapterdef>
+</adapterdef>

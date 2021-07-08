@@ -1,8 +1,12 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
-No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
-*/
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of
+ * this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.  No part of the Navajo
+ * Project, including this file, may be copied, modified, propagated, or distributed except
+ * according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.client.async.jetty.impl;
 
 import java.io.ByteArrayOutputStream;
@@ -35,16 +39,19 @@ import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
 
-
 public class AsyncClientImpl implements ManualAsyncClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(AsyncClientImpl.class);
+
+    private static final int MAX_RESULT_SIZE = 64 * 1024 * 1024; // 64 MB
+
+    private static final int MAX_IDLE_TIMEOUT = 120;
+
+    private static final int MAX_TIMEOUT = 150;
 
     static {
         AsyncClientFactory.setInstance(AsyncClientImpl.class);
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(AsyncClientImpl.class);
-
-    private static final int MAX_RESULT_SIZE = 64 * 1024 * 1024;  // 64 MB
 
     private HttpClient httpClient;
 
@@ -105,19 +112,21 @@ public class AsyncClientImpl implements ManualAsyncClient {
     }
 
     @Override
-    public void callService(Navajo input, String service, final NavajoResponseHandler continuation) throws IOException {
+    public void callService(Navajo input, String service, NavajoResponseHandler continuation)
+            throws IOException {
 
         if (input == null) {
             input = NavajoFactory.getInstance().createNavajo();
         } else {
             input = input.copy();
         }
-        input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
+        input.addHeader(
+                NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
         callService(server, input, continuation, null);
     }
 
     @Override
-    public Navajo callService(final Navajo input, final String service) throws IOException {
+    public Navajo callService(Navajo input, String service) throws IOException {
 
         final Object semaphore = new Object();
         final Set<Navajo> result = new HashSet<>();
@@ -164,15 +173,17 @@ public class AsyncClientImpl implements ManualAsyncClient {
         }
 
         if (nrh.getCaughtException() != null) {
-            throw new IOException("Error calling remote navajo: " + server, nrh.getCaughtException());
+            throw new IOException("Error calling remote navajo: " + server,
+                    nrh.getCaughtException());
         }
 
         return result.iterator().next();
     }
 
     @Override
-    public void callService(String url, String username, String password, Navajo input, String service,
-            final NavajoResponseHandler continuation, Integer timeout) throws IOException {
+    public void callService(String url, String username, String password, Navajo input,
+            String service, NavajoResponseHandler continuation, Integer timeout)
+            throws IOException {
 
         logger.info("Calling remote navajo async for url: {} ", url);
 
@@ -181,14 +192,16 @@ public class AsyncClientImpl implements ManualAsyncClient {
         } else {
             input = input.copy();
         }
-        input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
+        input.addHeader(
+                NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
         callService(url, input, continuation, timeout);
     }
 
     // Only used from Rhino
     @Override
-    public void callService(Access inputAccess, Navajo input, final String service, final TmlRunnable onSuccess,
-            final TmlRunnable onFail, final NavajoResponseCallback navajoResponseCallback) throws IOException {
+    public void callService(Access inputAccess, Navajo input, String service,
+            TmlRunnable onSuccess, TmlRunnable onFail,
+            NavajoResponseCallback navajoResponseCallback) throws IOException {
 
         final Access currentAccess = inputAccess.cloneWithoutNavajos();
 
@@ -249,8 +262,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
         callService(currentAccess.getRequestUrl(), input, nrh, null);
     }
 
-    private void callService(final String url, Navajo input, final NavajoResponseHandler continuation, Integer timeout)
-            throws IOException {
+    private void callService(final String url, Navajo input, NavajoResponseHandler continuation,
+            Integer timeout) throws IOException {
 
         logger.info("Calling service: {} at {} ", input.getHeader().getRPCName(), url);
 
@@ -259,56 +272,58 @@ public class AsyncClientImpl implements ManualAsyncClient {
         final byte[] byteArray = baos.toByteArray();
 
         httpClient
-            .newRequest(url)
-            .method(HttpMethod.POST)
-            .header("Accept-Encoding", null)
-            .timeout(40, TimeUnit.SECONDS)
-            .idleTimeout(20, TimeUnit.SECONDS)
-            .content(new BytesContentProvider(byteArray), "text/xml; charset=utf-8")
-            .onRequestFailure((request, throwable) -> {
-                logger.error("Request failed: HTTP call to: " + url + " failed: {}", throwable);
-                if (continuation != null) {
-                    try {
-                        continuation.onFail(throwable);
-                    } catch (IOException exc) {
-                        logger.error("Error: ", exc);
-                    }
-                }
-                if (closeAfterUse) {
-                    close();
-                }
-            }).onResponseFailure((response, throwable) -> {
-                logger.error("Response failed: HTTP call to: " + url + " failed: {}", throwable);
-                if (continuation != null) {
-                    try {
-                        continuation.onFail(throwable);
-                    } catch (IOException exc) {
-                        logger.error("Error: ", exc);
-                    }
-                }
-                if (closeAfterUse) {
-                    close();
-                }
-            }).send(new BufferingResponseListener(MAX_RESULT_SIZE) {
-
-                @Override
-                public void onComplete(Result result) {
-                    try {
-                        Navajo response = NavajoFactory.getInstance().createNavajo(getContentAsInputStream());
-                        if (continuation != null) {
-                            continuation.onResponse(response);
+                .newRequest(url)
+                .method(HttpMethod.POST)
+                .header("Accept-Encoding", null)
+                .timeout(MAX_TIMEOUT, TimeUnit.SECONDS)
+                .idleTimeout(MAX_IDLE_TIMEOUT, TimeUnit.SECONDS)
+                .content(new BytesContentProvider(byteArray), "text/xml; charset=utf-8")
+                .onRequestFailure((request, throwable) -> {
+                    logger.error("Request failed: HTTP call to: " + url + " failed: {}", throwable);
+                    if (continuation != null) {
+                        try {
+                            continuation.onFail(throwable);
+                        } catch (IOException exc) {
+                            logger.error("Error: ", exc);
                         }
-                    } catch (UnsupportedOperationException exc) {
-                        logger.error("Error: ", exc);
-                    } finally {
-                        if (closeAfterUse) {
-                            close();
-                        }
-                        setActualCalls(getActualCalls() - 1);
                     }
-                }
+                    if (closeAfterUse) {
+                        close();
+                    }
+                }).onResponseFailure((response, throwable) -> {
+                    logger.error("Response failed: HTTP call to: " + url + " failed: {}",
+                            throwable);
+                    if (continuation != null) {
+                        try {
+                            continuation.onFail(throwable);
+                        } catch (IOException exc) {
+                            logger.error("Error: ", exc);
+                        }
+                    }
+                    if (closeAfterUse) {
+                        close();
+                    }
+                }).send(new BufferingResponseListener(MAX_RESULT_SIZE) {
 
-            });
+                    @Override
+                    public void onComplete(Result result) {
+                        try {
+                            Navajo response = NavajoFactory.getInstance()
+                                    .createNavajo(getContentAsInputStream());
+                            if (continuation != null) {
+                                continuation.onResponse(response);
+                            }
+                        } catch (UnsupportedOperationException exc) {
+                            logger.error("Error: ", exc);
+                        } finally {
+                            if (closeAfterUse) {
+                                close();
+                            }
+                            setActualCalls(getActualCalls() - 1);
+                        }
+                    }
+
+                });
     }
 
     @Override
@@ -389,7 +404,8 @@ public class AsyncClientImpl implements ManualAsyncClient {
     }
 
     @Override
-    public void setClientCertificate(String algorithm, String keyStoreType, InputStream source, char[] password)
-            throws IOException {}
+    public void setClientCertificate(String algorithm, String keyStoreType, InputStream source,
+            char[] password) throws IOException {
+    }
 
 }
