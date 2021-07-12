@@ -1,0 +1,7 @@
+<article aantalregels="@aantalregels">
+    <service name="club/InitUpdateClub"/>
+    <setvalue service="club/InitUpdateClub" element="Club/ClubIdentifier" value="BBFW63X"/>
+    <service input="club/InitUpdateClub" name="club/ProcessQueryClub"/>
+    <!-- <table columnWidths="60,25,45,200,0,60" columnLabels="Datum,Tijd,Scheidsrechter,Wedstrijd,Id,Info" columns="datum,aanvangstijd,scheidsrechters,wedstrijd,wedstrijdcode,meer" customLayout="UnsortableTableLayout" service="clubsites/nl/scheidsrechtersaanstellingen" article="wedstrijddetails" link="meer" key="wedstrijdcode" path="aanstellingen"/>
+ -->
+</article>

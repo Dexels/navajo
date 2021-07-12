@@ -1,0 +1,98 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" cpuload="-1.0" authorisationTime="1" queueId="null" serverTime="180" threadCount="0" processingTime="178" accessId="1361553579893-5" queueTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="club/ProcessSearchClubs" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Club" type="array">
+      <message index="0" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBKZ369" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="FC 't Hoekje/Toyota Oldenzaal" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoekje/Toyota O'zaal" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEKJ" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="OLDENZAAL" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="OLDENZAAL" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-OOST" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Oost" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio 1 zaal" type="string"/>
+      </message>
+      <message index="1" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBJT90S" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="FC Hoensbroek" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="FC Hoensbroek" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOENS" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="HOENSBROEK" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="HEERLEN" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-ZUID2" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Zuid II" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio 5 veld" type="string"/>
+      </message>
+      <message index="2" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBJB70Y" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="Hoedekenskerke SV" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoedekenskerke" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOED" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="GOES" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="GOES" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-ZUID1" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Zuid I" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  3 veld" type="string"/>
+      </message>
+      <message index="3" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="LZZG95M" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="Hoekpolder, rsv" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoekpolder" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEKP" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="'S-GRAVENHAGE" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="S GRAVENHAGE" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-WEST2" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district West II" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  2 veld" type="string"/>
+      </message>
+      <message index="4" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBKW46V" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="Hoeve Vooruit" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoeve Vooruit" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEVEV" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="HAAKSBERGEN" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="HAAKSBERGEN" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-OOST" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Oost" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  7 veld" type="string"/>
+      </message>
+      <message index="5" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBBZ79T" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="Hoevelaken" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoevelaken" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEVEL" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="HOEVELAKEN" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="NIJKERK" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-OOST" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Oost" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  2 veld" type="string"/>
+      </message>
+      <message index="6" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBJF49A" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="Hoeven" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoeven" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEV" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="HOEVEN" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="HALDERBERGE" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-ZUID1" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Zuid I" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  7 veld" type="string"/>
+      </message>
+      <message index="7" name="Club" type="array_element">
+         <property description="ver_cd" direction="out" name="ClubIdentifier" value="BBHW14X" type="string"/>
+         <property description="ver_nm" direction="out" name="ClubName" value="HSV Hoek" type="string"/>
+         <property description="korte_nm" direction="out" name="ClubShortName" value="Hoek" type="string"/>
+         <property description="zoek_nm" direction="out" name="ClubSearchName" value="HOEK" type="string"/>
+         <property description="City" direction="out" name="ClubCity" value="HOEK" type="string"/>
+         <property description="Community" direction="out" name="ClubCommunity" value="TERNEUZEN" type="string"/>
+         <property description="distr_cd" direction="out" name="DistrictId" value="KNVB-DISTRICT-ZUID1" type="string"/>
+         <property description="distr_nm" direction="out" name="RegionCode" value="KNVB district Zuid I" type="string"/>
+         <property description="region_nm" direction="out" name="RegionFieldName" value="Regio  4 veld" type="string"/>
+      </message>
+   </message>
+   <methods/>
+</tml>

@@ -1,0 +1,78 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" cpuload="-1.0" authorisationTime="487" queueId="null" serverTime="549" threadCount="0" processingTime="8" accessId="1361548813914-1" queueTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="clubsites/nl/init" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="parameters" type="simple">
+      <property direction="in" name="aantalregels" value="" type="integer"/>
+      <property direction="in" name="aantaldagen" value="" type="integer"/>
+      <property direction="in" name="achternaam" value="" type="string"/>
+      <property direction="in" name="alleenopenstaandefacturen" value="" type="string"/>
+      <property direction="in" name="commissiecode" value="" type="integer"/>
+      <property direction="in" name="competitiesoort" value="" type="string"/>
+      <property direction="in" name="deelnemersoort" value="" type="string"/>
+      <property direction="in" name="eigenwedstrijden" value="" type="string"/>
+      <property direction="in" name="factuurcode" value="" type="string"/>
+      <property direction="in" name="geslacht" value="" type="string"/>
+      <property direction="in" name="kalendernaam" value="" type="string"/>
+      <property direction="in" name="leeftijdscategorie" value="" type="string"/>
+      <property direction="in" name="lokaleteamcode" value="" type="integer"/>
+      <property direction="in" name="meertekst" value="" type="string"/>
+      <property direction="in" name="poulecode" value="" type="integer"/>
+      <property direction="in" name="periodenummer" value="" type="integer"/>
+      <property direction="in" name="relatiecode" value="" type="string"/>
+      <property direction="in" name="spelsoort" value="" type="string"/>
+      <property direction="in" name="sorteervolgorde" value="" type="string"/>
+      <property direction="in" name="teamcode" value="" type="integer"/>
+      <property direction="in" name="teamsoort" value="bond" type="string"/>
+      <property direction="in" name="trainingid" value="" type="integer"/>
+      <property direction="in" name="vrijwilligerstaakcode" value="" type="string"/>
+      <property direction="in" name="thuis" value="" type="string"/>
+      <property direction="in" name="uit" value="" type="string"/>
+      <property direction="in" name="weekoffset" value="" type="integer"/>
+      <property direction="in" name="wedstrijdcode" value="" type="string"/>
+   </message>
+   <methods>
+      <method name="clubsites/nl/aanmeldenconceptlid"/>
+      <method name="clubsites/nl/afgelast"/>
+      <method name="clubsites/nl/bestuur"/>
+      <method name="clubsites/nl/clubgegevens"/>
+      <method name="clubsites/nl/clubprogramma"/>
+      <method name="clubsites/nl/commissiedetails"/>
+      <method name="clubsites/nl/commissieoverzicht"/>
+      <method name="clubsites/nl/opleidingoverzicht"/>
+      <method name="clubsites/nl/opleidingdetails"/>
+      <method name="clubsites/nl/periodestand"/>
+      <method name="clubsites/nl/programmaoverzicht"/>
+      <method name="clubsites/nl/programmaoverzicht2"/>
+      <method name="clubsites/nl/pouleprogramma"/>
+      <method name="clubsites/nl/pouleuitslagen"/>
+      <method name="clubsites/nl/scheidsrechtersaanstellingen"/>
+      <method name="clubsites/nl/stand"/>
+      <method name="clubsites/nl/teamgegevens"/>
+      <method name="clubsites/nl/teamindeling"/>
+      <method name="clubsites/nl/teamoverzicht"/>
+      <method name="clubsites/nl/teamprogramma"/>
+      <method name="clubsites/nl/teamuitslagen"/>
+      <method name="clubsites/nl/uitslagenoverzicht"/>
+      <method name="clubsites/nl/verenigingsactiviteiten"/>
+      <method name="clubsites/nl/verjaardagen"/>
+      <method name="clubsites/nl/vrijwilligers"/>
+      <method name="clubsites/nl/vrijwilligersrooster"/>
+      <method name="clubsites/nl/vrijwilligerssaldi"/>
+      <method name="clubsites/nl/vrijwilligerstakenoverzicht"/>
+      <method name="clubsites/nl/wedstrijddeelnemers"/>
+      <method name="clubsites/nl/wedstrijddetails"/>
+      <method name="clubsites/nl/wedstrijdhistorie"/>
+      <method name="clubsites/nl/wedstrijdofficials"/>
+      <method name="clubsites/nl/adresboek"/>
+      <method name="clubsites/nl/mijnactiviteiten"/>
+      <method name="clubsites/nl/mijncommissies"/>
+      <method name="clubsites/nl/mijndiplomas"/>
+      <method name="clubsites/nl/mijngegevens"/>
+      <method name="clubsites/nl/mijnfacturen"/>
+      <method name="clubsites/nl/mijnfactuurdetails"/>
+      <method name="clubsites/nl/mijnteams"/>
+   </methods>
+</tml>

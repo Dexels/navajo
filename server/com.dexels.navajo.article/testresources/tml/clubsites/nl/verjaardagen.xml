@@ -1,0 +1,116 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" cpuload="-1.0" authorisationTime="2" queueId="null" serverTime="60065" threadCount="0" processingTime="60060" accessId="1362043481856-136" queueTime="0">
+      <transaction rpc_usr="@BBFW06E" rpc_name="clubsites/nl/verjaardagen" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Club" type="simple">
+      <property direction="out" name="ClubIdentifier" value="BBFW06E" type="string"/>
+   </message>
+   <message name="Params" type="simple">
+      <property direction="out" name="NumberOfDays" value="7" type="integer"/>
+   </message>
+   <message name="verjaardagen" orderby="volgorde" type="array">
+      <message index="0" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 1" type="string"/>
+         <property direction="out" name="datum" value="1963-02-28 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130228" type="string"/>
+         <property direction="out" name="geboortedag" value="28/02/1963" type="string"/>
+         <property direction="out" name="verjaardag" value="28 feb" type="string"/>
+         <property direction="out" name="leeftijd" value="50" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="1" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 2" type="string"/>
+         <property direction="out" name="datum" value="2001-02-28 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130228" type="string"/>
+         <property direction="out" name="geboortedag" value="28/02/2001" type="string"/>
+         <property direction="out" name="verjaardag" value="28 feb" type="string"/>
+         <property direction="out" name="leeftijd" value="12" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="2" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 3" type="string"/>
+         <property direction="out" name="datum" value="1996-03-01 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130301" type="string"/>
+         <property direction="out" name="geboortedag" value="01/03/1996" type="string"/>
+         <property direction="out" name="verjaardag" value="01 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="16" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="3" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 4" type="string"/>
+         <property direction="out" name="datum" value="2002-03-02 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130302" type="string"/>
+         <property direction="out" name="geboortedag" value="02/03/2002" type="string"/>
+         <property direction="out" name="verjaardag" value="02 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="10" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="4" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 5" type="string"/>
+         <property direction="out" name="datum" value="2000-03-02 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130302" type="string"/>
+         <property direction="out" name="geboortedag" value="02/03/2000" type="string"/>
+         <property direction="out" name="verjaardag" value="02 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="12" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="5" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 6" type="string"/>
+         <property direction="out" name="datum" value="1979-03-02 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130302" type="string"/>
+         <property direction="out" name="geboortedag" value="02/03/1979" type="string"/>
+         <property direction="out" name="verjaardag" value="02 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="33" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="6" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 7" type="string"/>
+         <property direction="out" name="datum" value="1980-03-02 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130302" type="string"/>
+         <property direction="out" name="geboortedag" value="02/03/1980" type="string"/>
+         <property direction="out" name="verjaardag" value="02 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="32" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="7" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 8" type="string"/>
+         <property direction="out" name="datum" value="1996-03-03 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130303" type="string"/>
+         <property direction="out" name="geboortedag" value="03/03/1996" type="string"/>
+         <property direction="out" name="verjaardag" value="03 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="16" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="8" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 9" type="string"/>
+         <property direction="out" name="datum" value="2003-03-03 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130303" type="string"/>
+         <property direction="out" name="geboortedag" value="03/03/2003" type="string"/>
+         <property direction="out" name="verjaardag" value="03 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="9" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="9" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 10" type="string"/>
+         <property direction="out" name="datum" value="2002-03-03 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130303" type="string"/>
+         <property direction="out" name="geboortedag" value="03/03/2002" type="string"/>
+         <property direction="out" name="verjaardag" value="03 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="10" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+      <message index="10" name="verjaardagen" type="array_element">
+         <property direction="out" name="volledigenaam" value="Person 11" type="string"/>
+         <property direction="out" name="datum" value="1997-03-03 00:00:00.00" type="date"/>
+         <property direction="out" name="volgorde" value="20130303" type="string"/>
+         <property direction="out" name="geboortedag" value="03/03/1997" type="string"/>
+         <property direction="out" name="verjaardag" value="03 mrt" type="string"/>
+         <property direction="out" name="leeftijd" value="15" type="integer"/>
+         <property direction="out" name="email" value="pieter.schoneveld@sportlink.com" type="string"/>
+      </message>
+
+   </message>
+   <methods/>
+</tml>
