@@ -18,6 +18,7 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -38,12 +39,15 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.MessageMappable;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.comparatormanager.ComparatorManager;
 import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
@@ -72,8 +76,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     protected transient Map<String, Message> messageMap = null;
 
-    private transient List<Message> messageList = null;
+    protected transient List<Message> messageList = null;
 
+    private List<Serializable> children = new ArrayList<>();
+    
     private BaseMessageImpl myParent = null;
 
     private MessageMappable myStringMap = null;
@@ -96,6 +102,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private Map<String, String> subtypeMap;
 
+    private BaseMapTagImpl ref;
+    
+    private boolean isAntiMessage = false;
+
+	private String myCondition;
+    
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -107,7 +119,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         myType = Message.MSG_TYPE_SIMPLE;
     }
 
-    @Override
+	@Override
     public final String getType() {
         return myType;
     }
@@ -137,6 +149,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setCondition(String condition) {
+    	 myCondition = condition;
     }
 
     /**
@@ -266,7 +279,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Message addMessage(Message m, boolean overwrite) {
+    public  Message addMessage(Message m, boolean overwrite) {
         if (messageList == null) {
             messageList = new ArrayList<>();
         }
@@ -367,7 +380,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final void addProperty(Property q) {
+    public void addProperty(Property q) {
         addProperty(q, false);
     }
 
@@ -1281,7 +1294,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Map<String, String> getAttributes() {
+    public  Map<String, String> getAttributes() {
         Map<String, String> m = new HashMap<>();
         m.put("name", myName);
         if (!"".equals(orderBy)) {
@@ -1300,6 +1313,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (myMode != null && !myMode.equals("")) {
             m.put("mode", myMode);
         }
+        if (myCondition != null && !myCondition.equals("")) {
+            m.put("condition", myCondition);
+        }
         if (myExtends != null && !myExtends.equals("")) {
             m.put(Message.MSG_EXTENDS, myExtends);
         }
@@ -1316,8 +1332,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final List<BaseNode> getChildren() {
+    public List<BaseNode> getChildren() {
         ArrayList<BaseNode> al = new ArrayList<>();
+        
+        if (ref != null ) {  // If a  <map ref=> construction is used, message can only have 1 child.
+        	al.add(ref); 
+        	return al;
+        }
+        
         if (propertyList == null) {
 
         } else {
@@ -1353,9 +1375,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public String getTagName() {
-        return Message.MSG_DEFINITION;
-    }
+	public String getTagName() {
+		if ( isAntiMessage() ) {
+			return "anti" + Message.MSG_DEFINITION;
+		} else {
+			return Message.MSG_DEFINITION;
+		}
+	}
 
     public final int getChildCount() {
         return getAllProperties().size() + (messageList != null ? messageList.size() : 0);
@@ -2028,6 +2054,33 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public void addMapRef(MapAdapter m) {
+		this.ref = (BaseMapTagImpl) m;
+	}
+
+	@Override
+	public void addParam(Param p) {
+		children.add(p);
+	}
+
+	@Override
+	public void addMap(MapAdapter m) {
+	}
+
+	@Override
+	public boolean isAntiMessage() {
+		return isAntiMessage;
+	}
+	
+	public void setAntiMessage(boolean b) {
+		isAntiMessage = b;
+	}
+
+	public void addBreak(Break b) {
+		// Not supported here.
 	}
 
 }

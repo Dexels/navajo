@@ -30,7 +30,6 @@ public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	
 	@Override
 	public InputStream getDefinitionAsStream() {
-		logger.info("Processing extension: StandardAdapterFunctionLibrary");
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/functions/adapterfunctions.xml");
 	}
 

@@ -42,6 +42,7 @@ Import-Package: com.dexels.navajo.compiler,
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajo.compiler.tsl.xml,
  OSGI-INF/navajo.compiler.tsl.java.xml,
+ OSGI-INF/navajo.compiler.navascript.xml,
  OSGI-INF/navajo.compiler.java.xml,
  OSGI-INF/navajo.compiler.bundlecreator.xml,
  OSGI-INF/navajo.repository.listener.xml,

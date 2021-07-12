@@ -42,18 +42,26 @@ import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
 import com.dexels.navajo.document.base.BaseTransactionImpl;
 import com.dexels.navajo.document.saximpl.qdxml.DocHandler;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 import com.dexels.navajo.document.types.Binary;
 
-public final class SaxHandler implements DocHandler {
+public  class SaxHandler implements DocHandler {
 
     private Navajo currentDocument=null;
     private final Deque<Message> messageStack = new LinkedList<Message>();
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
     private Method currentMethod = null;
+    private final QDParser myParser;
     
 	private static final Logger logger = LoggerFactory
 			.getLogger(SaxHandler.class);
+	
+	
+	public SaxHandler(QDParser parser) {
+		myParser = parser;
+	}
+	
     public void reset() {
         currentDocument = null;
         messageStack.clear();
@@ -63,7 +71,7 @@ public final class SaxHandler implements DocHandler {
 
       
     @Override
-	public final void startElement(String tag, Map<String,String> h) throws Exception {
+	public  void startElement(String tag, Map<String,String> h) throws Exception {
 //        logger.info("starting element: "+tag+" attrs: "+h);
 //        currentTag = tag;
         
@@ -499,7 +507,7 @@ public final class SaxHandler implements DocHandler {
     }
 
     @Override
-	public final void endElement(String tag) throws Exception {
+	public void endElement(String tag) throws Exception {
         if (tag.equals("tml")) {
          }
         if (tag.equals("message")) {
@@ -526,19 +534,19 @@ public final class SaxHandler implements DocHandler {
   
 
     @Override
-	public final void startDocument() throws Exception {
+	public void startDocument() throws Exception {
           reset();
     }
 
 
     @Override
-	public final void endDocument() throws Exception {
+	public void endDocument() throws Exception {
         
     }
 
 
     @Override
-	public final void text(Reader r) throws Exception {
+	public void text(Reader r) throws Exception {
         if (currentProperty==null) {
             return;
 //            throw new IllegalArgumentException("Huh?");
@@ -571,17 +579,32 @@ public final class SaxHandler implements DocHandler {
         attributeBuffer.delete(0, attributeBuffer.length());
         while ((c = r.read()) != -1) {
             if (c==quoteCharacter) {
-//                String s = sb.toString();
-//                logger.info(">> "+s);
                 return attributeBuffer.toString();
             } else {
-//                logger.info("parsing char:"+(char)c);
             	attributeBuffer.append((char)c);
 //                return sb.toString();
             }
         }        
         throw new EOFException("Non terminated quote!");
     }
+
+
+	@Override
+	public QDParser getParser() {
+		return myParser;
+	}
+
+	@Override
+	public void addComment(String c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addCData(String string) {
+		// TODO Auto-generated method stub
+		
+	}
     
 
 }

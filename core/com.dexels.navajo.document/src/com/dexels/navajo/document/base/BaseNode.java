@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public abstract class BaseNode implements java.io.Serializable{
   /**
@@ -55,7 +56,6 @@ protected Navajo myDocRoot;
     return myDocRoot;
   }
 
-
   public void setRootDoc(Navajo n) {
     myDocRoot = n;
   }
@@ -70,8 +70,9 @@ protected Navajo myDocRoot;
 	 if(!isOpen) {
 		 return;
 	 }
+	 final boolean hasText = hasTextNode();
 	 printBody(sw, indent);
-	 printCloseTag(sw, indent);
+	 printCloseTag(sw, (!hasText ? indent : 0));
  }
  
 public void printCloseTag(final Writer sw, int indent) throws IOException {
@@ -146,7 +147,11 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 		 writeElement( sw, "/>\n");
 		 return false;
 	 }
-	 writeElement( sw, ">\n");
+     if ( hasText ) {
+    	 writeElement( sw, ">");
+	 } else {
+		 writeElement( sw, ">\n");
+	 }
 	return true;
 }
  

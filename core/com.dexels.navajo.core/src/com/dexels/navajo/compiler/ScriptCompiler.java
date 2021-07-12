@@ -50,6 +50,7 @@ public abstract class ScriptCompiler {
         List<Dependency> dependencies = new ArrayList<>();
         File scriptsMap = new File(navajoIOConfig.getRootPath(), getRelativeScriptPath());
         String script = getRelative(scriptsMap, scriptPath);
+        System.err.println("In ScriptCompiler.script = " + script);
         script = script.substring(0, script.indexOf(getScriptExtension()));
         String scriptName = null;
         String packagePath = null;

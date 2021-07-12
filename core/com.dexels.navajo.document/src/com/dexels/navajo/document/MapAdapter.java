@@ -5,6 +5,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.document;
 
+import com.dexels.navajo.document.navascript.tags.MapTag;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -14,7 +16,7 @@ package com.dexels.navajo.document;
  * @version $Id$
  */
 
-public interface MapTag {
+public interface MapAdapter extends java.io.Serializable {
 
   /**
    * Public constants for the map node.
@@ -25,11 +27,17 @@ public interface MapTag {
   public static final String MAP_REF = "ref";
   public static final String MAP_FILTER = "filter";
 
-  public void addField(FieldTag f);
+  public void addField(Field f);
 
-  public void addParam(ParamTag p);
+  public void addParam(Param p);
 
+  public void setParent(MapAdapter m);
+  
   public void addMessage(Message m);
+  
+  public void addMap(MapAdapter m);
+  
+  public void addProperty(Property p);  // in case of a ref map, properties can be added
 
   public String getObject();
 
@@ -48,5 +56,10 @@ public interface MapTag {
   public void setFilter(String s);
 
   public Object getRef();
+  
+  public void addAttributeNameValue(String name, String expression);
+
+  public void addBreak(Break b);
+ 
 
 }

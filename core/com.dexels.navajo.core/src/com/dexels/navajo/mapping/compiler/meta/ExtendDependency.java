@@ -32,6 +32,11 @@ public class ExtendDependency extends Dependency {
 		File f = new File(scriptPath, id + ".xml");
 		if ( f.exists() ) {
 			return f.lastModified();
+		}
+		
+		f = new File(scriptPath, id + ".ns");
+		if ( f.exists() ) {
+			return f.lastModified();
 		} else {
 			return -1;
 		}
