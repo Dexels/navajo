@@ -89,7 +89,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
                 compilationSuccess = false;
                 logger.info("Script compilation failed: {}", script);
             }
-            if (compilationSuccess) {
+            if (compilationSuccess || !skipped.isEmpty()) {
                 ensureScriptDependencies(script);
                 enqueueDependentScripts(script);
             }
