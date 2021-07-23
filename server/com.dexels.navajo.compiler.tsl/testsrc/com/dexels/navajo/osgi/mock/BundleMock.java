@@ -29,6 +29,7 @@ import org.osgi.framework.Version;
 public class BundleMock implements Bundle
 {
     private long id = -1;
+    private long lastModified;
     private String location = null;
     private String myName = null;
     private BundleContextMock bundleContext = null;
@@ -36,6 +37,7 @@ public class BundleMock implements Bundle
     public BundleMock( long id, String location, BundleContextMock bundleContext )
     {
         this.id = id;
+        this.lastModified = System.currentTimeMillis();
         this.location = location;
         this.bundleContext = bundleContext;
         // Get a first approximation of the name. This will be overwritten if the DS file could be parsed
@@ -199,7 +201,7 @@ public class BundleMock implements Bundle
     @Override
     public long getLastModified()
     {
-        throw new UnsupportedOperationException( "getLastModified unsupported in BundleMock" );
+        return lastModified;
     }
 
     @Override

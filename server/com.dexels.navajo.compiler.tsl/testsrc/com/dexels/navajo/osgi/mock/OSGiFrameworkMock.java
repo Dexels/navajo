@@ -121,7 +121,10 @@ public class OSGiFrameworkMock {
             String symbolicName = component.getAttribute( "name" );
             if( symbolicName != null )
             {
+                String oldSymbolicName = bundle.getSymbolicName();
                 bundle.setSymbolicName( symbolicName );
+                installedBundlesBySymbolicName.remove( oldSymbolicName );
+                installedBundlesBySymbolicName.put( symbolicName, bundle );
             }
             
             NodeList nodes = component.getChildNodes();
