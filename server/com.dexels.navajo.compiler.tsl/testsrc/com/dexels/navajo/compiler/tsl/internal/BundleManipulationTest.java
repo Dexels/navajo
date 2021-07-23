@@ -240,6 +240,7 @@ public class BundleManipulationTest {
         System.out.println( "Starting " + testName.getMethodName() );
 
         bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "TenantSpecificFileToInclude_KNVB.xml" ) );
+        assertNull( frameworkMock.getBundleByName( "include.TenantSpecificFileToInclude" ) );
         assertNotNull( frameworkMock.getBundleByName( "include.TenantSpecificFileToInclude_KNVB" ) );
     }
 
@@ -345,10 +346,21 @@ public class BundleManipulationTest {
     {
         System.out.println( "Starting " + testName.getMethodName() );
 
-        bundleQueue.handleEvent( createModifyEventForFiles( SCRIPTS_ROOT + "SpecificFileWithOtherSpecificInclude.xml" ) );
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "SpecificFileWithOtherSpecificInclude_KNKV.xml" ) );
         assertNull( frameworkMock.getBundleByName( "SpecificFileWithOtherSpecificInclude" ) );
         assertNull( frameworkMock.getBundleByName( "SpecificFileWithOtherSpecificInclude_KNKV" ) );
         assertNull( frameworkMock.getBundleByName( "SpecificFileWithOtherSpecificInclude_KNVB" ) );
+    }
+
+    @Test
+    public void testSpecificScriptWithSameSpecificInclude()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "SpecificFileWithSameSpecificInclude_KNVB.xml" ) );
+        assertNull( frameworkMock.getBundleByName( "SpecificFileWithSameSpecificInclude" ) );
+        assertNull( frameworkMock.getBundleByName( "SpecificFileWithSameSpecificInclude_KNKV" ) );
+        assertNotNull( frameworkMock.getBundleByName( "SpecificFileWithSameSpecificInclude_KNVB" ) );
     }
 
     // test include loop
@@ -382,7 +394,161 @@ public class BundleManipulationTest {
         assertNull( frameworkMock.getBundleByName( "ThirdFileIncludesMainFile" ) );
     }
 
+    // test updates
+    @Test
+    public void testBundleCreationWithIncludeThenUpdateSpecificInclude()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithInclude" ) );
+        Bundle specificMainFile = frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" );
+        assertNotNull( specificMainFile );
+        long originalSpecificMainFileId = specificMainFile.getBundleId();
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude" ) );
+        Bundle specificInclude = frameworkMock.getBundleByName( "include.FileToInclude_KNVB" );
+        assertNotNull( specificInclude );
+        long originalSpecificIncludeId = specificInclude.getBundleId();
+
+        System.out.println( "Second phase " + testName.getMethodName() );
+        bundleQueue.handleEvent( createModifyEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "FileToInclude_KNVB.xml" ) );
+        // refetch all bundles, they should still exist
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithInclude" ) );
+        specificMainFile = frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" );
+        assertNotNull( specificMainFile );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude" ) );
+        specificInclude = frameworkMock.getBundleByName( "include.FileToInclude_KNVB" );
+        assertNotNull( specificInclude );
+
+        // require that certain bundles changed. We cannot require that bundles stay the same due to how it's implemented
+        assertNotEquals( specificMainFile.getBundleId(), originalSpecificMainFileId );
+        assertNotEquals( specificInclude.getBundleId(), originalSpecificIncludeId );
+    }
+
+    @Test
+    public void testBundleCreationWithIncludeThenUpdateGenericInclude()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
+        Bundle genericMainFile = frameworkMock.getBundleByName( "MainFileWithInclude" );
+        assertNotNull( genericMainFile );
+        long originalGenericMainFileId = genericMainFile.getBundleId();
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" ) );
+        Bundle genericInclude = frameworkMock.getBundleByName( "include.FileToInclude" );
+        assertNotNull( genericInclude );
+        long originalGenericIncludeId = genericInclude.getBundleId();
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude_KNVB" ) );
+
+        System.out.println( "Second phase " + testName.getMethodName() );
+        bundleQueue.handleEvent( createModifyEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
+
+        // refetch all bundles, they should still exist
+        genericMainFile = frameworkMock.getBundleByName( "MainFileWithInclude" );
+        assertNotNull( genericMainFile );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" ) );
+        genericInclude = frameworkMock.getBundleByName( "include.FileToInclude" );
+        assertNotNull( genericInclude );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude_KNVB" ) );
+
+        // require that certain bundles changed. We cannot require that bundles stay the same due to how it's implemented
+        assertNotEquals( genericMainFile.getBundleId(), originalGenericMainFileId );
+        assertNotEquals( genericInclude.getBundleId(), originalGenericIncludeId );
+    }
+
+    @Test
+    public void testBundleCreationWithIncludeThenUpdateMainFile()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
+        Bundle genericMainFile = frameworkMock.getBundleByName( "MainFileWithInclude" );
+        assertNotNull( genericMainFile );
+        long originalGenericMainFileId = genericMainFile.getBundleId();
+        Bundle specificMainFile = frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" );
+        assertNotNull( specificMainFile );
+        long originalSpecificMainFileId = specificMainFile.getBundleId();
+        Bundle genericInclude = frameworkMock.getBundleByName( "include.FileToInclude" );
+        assertNotNull( genericInclude );
+        long originalGenericIncludeId = genericInclude.getBundleId();
+        Bundle specificInclude = frameworkMock.getBundleByName( "include.FileToInclude_KNVB" );
+        assertNotNull( specificInclude );
+        long originalSpecificIncludeId = specificInclude.getBundleId();
+
+        System.out.println( "Second phase " + testName.getMethodName() );
+        bundleQueue.handleEvent( createModifyEventForFiles( SCRIPTS_ROOT + "MainFileWithInclude.xml" ) );
+
+        // refetch all bundles, they should still exist
+        genericMainFile = frameworkMock.getBundleByName( "MainFileWithInclude" );
+        assertNotNull( genericMainFile );
+        specificMainFile = frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" );
+        assertNotNull( specificMainFile );
+        genericInclude = frameworkMock.getBundleByName( "include.FileToInclude" );
+        assertNotNull( genericInclude );
+        specificInclude = frameworkMock.getBundleByName( "include.FileToInclude_KNVB" );
+        assertNotNull( specificInclude );
+
+        // require that the MainFile bundles changed, and the include bundles didn't change
+        assertNotEquals( genericMainFile.getBundleId(), originalGenericMainFileId );
+        assertNotEquals( specificMainFile.getBundleId(), originalSpecificMainFileId );
+        assertEquals( genericInclude.getBundleId(), originalGenericIncludeId );
+        assertEquals( specificInclude.getBundleId(), originalSpecificIncludeId );
+    }
+
     // test includeOnly tag
+    @Test
+    public void testBundleCreationWithIncludeUsingIncludeOnly()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithIncludeUsingIncludeOnly.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToIncludeUsingIncludeOnly.xml" ) );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly" ) );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly_KNVB" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly_KNVB" ) );
+    }
+
+    @Test
+    public void testBundleCreationWithIncludeThenDeleteGenericIncludeUsingIncludeOnly()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithIncludeUsingIncludeOnly.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToIncludeUsingIncludeOnly.xml" ) );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly" ) );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly_KNVB" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly_KNVB" ) );
+
+        bundleQueue.handleEvent( deleteFilesAndcreateDeleteEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "FileToIncludeUsingIncludeOnly.xml" ) );
+        assertNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly" ) );
+        // TODO: This part of the system doesn't work yet but this file should also be cleaned up. See #596
+//        assertNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly_KNVB" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly_KNVB" ) );
+    }
+
+    @Test
+    public void testBundleCreationWithIncludeThenDeleteSpecificIncludeUsingIncludeOnly()
+    {
+        System.out.println( "Starting " + testName.getMethodName() );
+
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithIncludeUsingIncludeOnly.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToIncludeUsingIncludeOnly.xml" ) );
+        Bundle mainFile = frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly" );
+        assertNotNull( mainFile );
+        assertNotNull( frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly_KNVB" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly_KNVB" ) );
+        long originalId = mainFile.getBundleId();
+
+        bundleQueue.handleEvent( deleteFilesAndcreateDeleteEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "FileToIncludeUsingIncludeOnly_KNVB.xml" ) );
+        // fetch again
+        mainFile = frameworkMock.getBundleByName( "MainFileWithIncludeUsingIncludeOnly" );
+        assertNotNull( mainFile );
+        assertNotEquals( mainFile.getBundleId(), originalId );
+        assertNull( frameworkMock.getBundleByName( "MainFileWithInclude_KNVBUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToIncludeUsingIncludeOnly_KNVB" ) );
+    }
 
     // test double layered includes
     @Test
@@ -390,10 +556,14 @@ public class BundleManipulationTest {
     {
         System.out.println( "Starting " + testName.getMethodName() );
 
-        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithDoubleInclude.xml" ) );
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithDoubleInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "IncludeWithInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
         assertNotNull( frameworkMock.getBundleByName( "MainFileWithDoubleInclude" ) );
         // TODO: If second or further layer of the include is the first layer with tenantspecific versions, it does need to compile tenant specific versions. See #600
 //        assertNotNull( frameworkMock.getBundleByName( "MainFileWithDoubleInclude_KNVB" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.IncludeWithInclude" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.IncludeWithInclude_KNVB" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude_KNVB" ) );
     }
 
     @Test
@@ -401,14 +571,24 @@ public class BundleManipulationTest {
     {
         System.out.println( "Starting " + testName.getMethodName() );
 
-        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithDoubleInclude.xml" ) );
+        bundleQueue.handleEvent( createAddEventForFiles( SCRIPTS_ROOT + "MainFileWithDoubleInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "IncludeWithInclude.xml", SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
         assertNotNull( frameworkMock.getBundleByName( "MainFileWithDoubleInclude" ) );
         // TODO: If second or further layer of the include is the first layer with tenantspecific versions, it does need to compile tenant specific versions. See #600
 //        assertNotNull( frameworkMock.getBundleByName( "MainFileWithDoubleInclude_KNVB" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.IncludeWithInclude" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.IncludeWithInclude_KNVB" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude_KNVB" ) );
 
         bundleQueue.handleEvent( deleteFilesAndcreateDeleteEventForFiles( SCRIPTS_ROOT + "include" + File.separator + "FileToInclude.xml" ) );
         assertNull( frameworkMock.getBundleByName( "MainFileWithInclude" ) );
+        // Note that due to a combination of #596 and #600 this test currently passes. It is expected to fail if only #600 is fixed.
         assertNull( frameworkMock.getBundleByName( "MainFileWithInclude_KNVB" ) );
         assertNull( frameworkMock.getBundleByName( "include.IncludeWithInclude" ) );
+        // TODO: This part of the system doesn't work yet but this file should also be cleaned up. See #596
+//        assertNull( frameworkMock.getBundleByName( "include.IncludeWithInclude_KNVB" ) );
+        assertNull( frameworkMock.getBundleByName( "include.FileToInclude" ) );
+        assertNotNull( frameworkMock.getBundleByName( "include.FileToInclude_KNVB" ) );
     }
+    // further tests with double layered includes do not make sense as long as #600 is not fixed
 }
