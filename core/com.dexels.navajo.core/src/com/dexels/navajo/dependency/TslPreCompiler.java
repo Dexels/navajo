@@ -301,6 +301,10 @@ public class TslPreCompiler {
             }
 
             String includeScriptFile = scriptFolder + File.separator + includedScript + ".xml";
+            if( includeScriptFile.equals( fullScriptPath ) )
+            {
+                throw new UserException( -1, "Cannot include myself!" );
+            }
 
             // Check if exists
             boolean isBroken = false;
