@@ -39,7 +39,12 @@ public class IncludeDependency extends Dependency {
 	public final static long getScriptTimeStamp(String id) {
 		// Try to find included script.
 		String scriptPath =  DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-		return getFileTimeStamp(new File(scriptPath, id + ".xml"));
+		File f = new File(scriptPath, id + ".xml");
+		if ( f.exists() ) {
+			return getFileTimeStamp(f);
+		}
+		f = new File(scriptPath, id + ".ns");
+		return getFileTimeStamp(f);
 	}
 	
 	public final static long getFileTimeStamp(File f) {

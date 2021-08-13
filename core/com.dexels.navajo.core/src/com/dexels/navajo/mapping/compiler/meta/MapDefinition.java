@@ -35,6 +35,19 @@ public class MapDefinition {
 	protected HashMap<String, ValueDefinition> values = new HashMap<String, ValueDefinition>();
 	protected HashMap<String, MethodDefinition> methods = new HashMap<String, MethodDefinition>();
 	
+	
+	public String getTagName() {
+		return tagName;
+	}
+
+	public String getObjectName() {
+		return objectName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
 	public Set<String> getValueDefinitions() {
 		return values.keySet();
 	}

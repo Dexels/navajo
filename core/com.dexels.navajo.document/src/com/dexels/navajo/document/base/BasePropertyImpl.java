@@ -37,6 +37,7 @@ import com.dexels.immutable.api.customtypes.CoordinateType;
 import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -46,6 +47,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.PropertyTypeChecker;
 import com.dexels.navajo.document.PropertyTypeException;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.BinaryDigest;
 import com.dexels.navajo.document.types.ClockTime;
@@ -130,6 +132,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String reference = null;
 	protected String bind = null;
 	protected String method = "";
+	protected String condition = null;
 	protected String myExtends = null;
 	protected int length = -1;
 	private Map<String,String> subtypeMap = null;
@@ -146,7 +149,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private transient List<PropertyChangeListener> myPropertyDataListeners;
 	protected String subType = null;
 	private transient Object tipiProperty = null;
-
+	   
+	protected List<ExpressionTag> myExpressions = new ArrayList<>();
+	private BaseMapTagImpl selectionMap = null;
+	
+	public BasePropertyImpl(Navajo n) {
+		super(n);
+	}
+	
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
 		isListType = false;
@@ -1377,7 +1387,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final String getType() {
+	public String getType() {
 		if (this.type == null || "".equals(this.type)) {
 			return STRING_PROPERTY;
 		} else {
@@ -1386,16 +1396,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public final void setType(String t) {
+	public void setType(String t) {
 	    String old = type;
 		type = t;
 		firePropertyChanged(PROPERTY_TYPE, old, type);
 	}
 
 	@Override
-	public final String toString() {
-
-
+	public String toString() {
+		
 		if (getType().equals(Property.DATE_PROPERTY)) {
 			return (this.getTypedValue() != null) ? dateFormat3.get().format((Date) this.getTypedValue()) : "";
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
@@ -1937,8 +1946,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	@Override
-	public void addExpression(ExpressionTag e) {
-		throw new java.lang.UnsupportedOperationException("Method addExpression() not yet implemented.");
+	public Property addExpression(ExpressionTag e) {
+		myExpressions.add(e);
+		return this;
+	}
+
+	public void addSelectionMap(MapTag m) {
+		// COULD BE A SELECTION...
+		selectionMap = m;
 	}
 
 	@Override
@@ -1971,7 +1986,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (direction != null) {
 			m.put(PROPERTY_DIRECTION, direction);
 		}
-
+		if (condition != null && !condition.equals("") ) {
+			m.put(PROPERTY_CONDITION, condition);
+		}
 		if (description != null && !description.equals("") ) {
 			m.put(PROPERTY_DESCRIPTION, description);
 		}
@@ -1999,7 +2016,19 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public List<? extends BaseNode> getChildren() {
-		return selectionList;
+		if ( myExpressions != null && myExpressions.size() > 0 ) {
+			List<BaseNode> c = new ArrayList<>();
+			for ( ExpressionTag et : myExpressions ) {
+				c.add((BaseExpressionTagImpl) et);
+			}
+			return c;
+		} else if ( selectionMap != null ) {
+			List<BaseNode> c = new ArrayList<>();
+			c.add(selectionMap);
+			return c;
+		} else {
+			return selectionList;
+		}
 	}
 
 	@Override

@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class NavajoTesterHelper {
-    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala",".rr");
+    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala",".rr", ".ns");
 
     private static final Logger logger = LoggerFactory.getLogger(NavajoTesterHelper.class);
     private NavajoConfigInterface navajoConfig;

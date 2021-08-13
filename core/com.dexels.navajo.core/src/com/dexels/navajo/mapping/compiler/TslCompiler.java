@@ -5,6 +5,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.mapping.compiler;
 
+import java.io.BufferedReader;
+
 /**
  * <p>Title: Navajo Product Project</p>"
  * <p>Description: This is the official source for the Navajo server</p>
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -80,6 +83,7 @@ import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.KeywordException;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MetaCompileException;
+import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.CompilationException;
@@ -1711,6 +1715,9 @@ public class TslCompiler {
 				throw new IllegalStateException("Unexpected null mapNode");
 			}
 			String ref = mapNode.getAttribute("ref");
+			if ( ref != null && !"".equals(ref)) {
+				ref = ref.replaceAll("\\$", ""); // replace $ for refs.
+			}
 			String filter = mapNode.getAttribute("filter");
 
 			String mappableArrayName = "mappableObject" + (objectCounter++);
@@ -2904,6 +2911,29 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	private String fetchScriptFileName(String scriptName) {
+
+		// Check for xml based script
+		File f1 = new File(scriptName + ".xml");
+		if ( f1.exists() ) {
+			return scriptName + ".xml";
+		}
+
+		// Check navascript3 based script
+		File f2 = new File(scriptName + ".ns");
+		if ( f2.exists() ) {
+			return scriptName + ".ns";
+		}
+
+		// Check for scala script
+		File f3 = new File(scriptName + ".scala");
+		if ( f3.exists() ) {
+			return scriptName + ".scala";
+		}
+
+		return null;
+	}
+	  
 	/**
 	 * Resolve include nodes in the script: <include
 	 * script="[name of script to be included]"/>
@@ -2940,17 +2970,37 @@ public class TslCompiler {
 		String fileName = script + "_" + tenant;
 
 		Document includeDoc = null;
-		File includedFile = new File(scriptPath + "/" + fileName + ".xml");
-
-		if (includedFile.exists()) {
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(
-					includedFile), false);
-		} else {
+		String includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+		File includedFile = null;
+		
+		if (includeFileName != null) {
+			includedFile = new File(includeFileName);
+			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includeFileName), false);
+		} else { // no tenant specific include found. Try non-tenant include instead.
 			fileName = script;
-			includedFile = new File(scriptPath + "/" + fileName + ".xml");
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+			includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+			if ( includeFileName != null ) {
+				includedFile = new File(includeFileName);
+				if ( includeFileName.endsWith(".ns")) { // It's an NS3 based script
+					NS3ToNSXML nstoxml = new NS3ToNSXML();
+					nstoxml.initialize();
+					try {
+						String content = nstoxml.read(includeFileName);
+						String tslResult = MapMetaData.getInstance().parse(scriptPath + "/" + fileName + ".ns", nstoxml.parseNavascript(content));
+						includeDoc = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tslResult.getBytes()), false);
+					} catch (Exception e) {
+						throw new UserException(e.getLocalizedMessage(), e);
+					}
+				} else { // It's an XML based script
+					includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+				}
+			}
 		}
 
+		if ( includedFile == null ) {
+			logger.error("Could not file include file: {}", script);
+			throw new UserException("Could not find include file for script: " +script);
+		}
 		// Add dependency.
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( Long.valueOf(\""
@@ -3542,16 +3592,28 @@ public class TslCompiler {
 
 		final String extension = ".xml";
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
-
+		String ns3ScriptPath =  scriptPath + "/" + packagePath + "/" + script + ".ns";
 
 		List<String> inheritedScripts = new ArrayList<>();
 		List<String> extendEntities = new ArrayList<>();
 		InputStream is = null;
+		boolean isNavascript = false;
 
 		try {
 
-			// Check for metascript.
-			if (MapMetaData.isMetaScript(fullScriptPath)) {
+			
+			if (new File(ns3ScriptPath).exists() ) {
+				NS3ToNSXML ns3toxml = new NS3ToNSXML();
+				ns3toxml.initialize();
+				scriptType = "navascript";
+				String content = ns3toxml.read(ns3ScriptPath);
+				InputStream metais = ns3toxml.parseNavascript(content);
+				MapMetaData mmd = MapMetaData.getInstance();
+				String intermed = mmd.parse(fullScriptPath, metais);
+				metais.close();
+				is = new ByteArrayInputStream(intermed.getBytes());
+				isNavascript = true;
+			} else if (MapMetaData.isMetaScript(fullScriptPath)) { // Check for metascript.
 				scriptType = "navascript";
 				MapMetaData mmd = MapMetaData.getInstance();
 				InputStream metais = navajoIOConfig.getScript(packagePath + "/"
@@ -3564,29 +3626,30 @@ public class TslCompiler {
 				is = navajoIOConfig.getScript(packagePath + "/" + script,
 						tenant,extension);
 			}
-
-			InputStream sis = navajoIOConfig.getScript(packagePath + "/"
-					+ script, tenant,extension);
-			logger.debug("Getting script: {}/{}", packagePath, script);
-			if (ScriptInheritance.containsInject(sis)) {
-				// Inheritance preprocessor before compiling.
-				InputStream ais = null;
-				ais = ScriptInheritance.inherit(is, scriptPath,
-						inheritedScripts);
-				is.close();
-				is = ais;
+			
+			if ( !isNavascript ) { // NS3 does NOT support inheritance at this moment.
+				InputStream sis = navajoIOConfig.getScript(packagePath + "/" + script, tenant,extension);
+				logger.debug("Getting script: {}/{}", packagePath, script);
+				if (ScriptInheritance.containsInject(sis)) {
+					// Inheritance preprocessor before compiling.
+					InputStream ais = null;
+					ais = ScriptInheritance.inherit(is, scriptPath,
+							inheritedScripts);
+					is.close();
+					is = ais;
+				}
+				sis.close();
 			}
-			sis.close();
 
 			for (int i = 0; i < inheritedScripts.size(); i++) {
-			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
+			    File inheritedFile = new File(fetchScriptFileName(scriptPath + "/" + inheritedScripts .get(i)));
 				addDependency(
 						"dependentObjects.add( new InheritDependency( Long.valueOf(\""
 								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
-
+			
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant, forceTenant);
 

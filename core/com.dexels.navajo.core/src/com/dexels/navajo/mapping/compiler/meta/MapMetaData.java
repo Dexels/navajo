@@ -50,51 +50,61 @@ public class MapMetaData {
 	private static final Logger logger = LoggerFactory
 			.getLogger(MapMetaData.class);
 	
-	private MapMetaData() {
+	ClassLoader myClassLoader = null;
+	
+	private MapMetaData(ClassLoader cl) {
 		// Create empty MapDefinition.
 		MapDefinition empty = new MapDefinition(this);
 		empty.tagName = "__empty__";
 		empty.objectName = "null";
 		maps.put("__empty__", empty);
+		myClassLoader = cl;
 	}
 	
 	private void readConfig() throws ClassNotFoundException, KeywordException {
 
 		synchronized (instance) {
 
-			ClassLoader myClassLoader = null;
+			
 			if ( DispatcherFactory.getInstance() != null ) {
 				myClassLoader = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-			} else {
+			} else if ( myClassLoader == null){
 				myClassLoader = getClass().getClassLoader();
 			}
 			Iterator<?> iter = null;
 			try {
 				ServiceLoader<ExtensionDefinition> loader = ServiceLoader.load(ExtensionDefinition.class,myClassLoader);
 				iter = loader.iterator();
+				
 //				ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
 //						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					
-					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
-
-					XMLElement config = new CaseSensitiveXMLElement();
-					config.parseFromReader(br);
-					br.close();
-					
-				
-					if ( config.getName().equals("adapterdef")) {
-						Vector<XMLElement> allmaps = config.getElementsByTagName("map");
-						for ( int i = 0; i < allmaps.size(); i++ ) {
-							XMLElement map = allmaps.get(i);
-							addMapDefinition(map);
-						}
-					}
+					readExtentionDefinition(ed);
 					
 				}
 			} catch (IOException e) {
 				logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
+			}
+		}
+	}
+
+	public void readExtentionDefinition(ExtensionDefinition ed) throws IOException, ClassNotFoundException, KeywordException {
+		
+		System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
+
+		XMLElement config = new CaseSensitiveXMLElement();
+		config.parseFromReader(br);
+		br.close();
+		
+
+		if ( config.getName().equals("adapterdef")) {
+			Vector<XMLElement> allmaps = config.getElementsByTagName("map");
+			for ( int i = 0; i < allmaps.size(); i++ ) {
+				XMLElement map = allmaps.get(i);
+				addMapDefinition(map);
 			}
 		}
 	}
@@ -109,7 +119,18 @@ public class MapMetaData {
 		if ( instance != null ) {
 			return instance;
 		} else {
-			instance = new MapMetaData();
+			instance = new MapMetaData(MapMetaData.class.getClassLoader());
+            // Read map definitions from config file.
+			instance.readConfig();
+		}
+		return instance;
+	}
+	
+	public static synchronized MapMetaData getInstance(ClassLoader cl) throws ClassNotFoundException, KeywordException {
+		if ( instance != null ) {
+			return instance;
+		} else {
+			instance = new MapMetaData(cl);
             // Read map definitions from config file.
 			instance.readConfig();
 		}

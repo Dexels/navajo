@@ -30,7 +30,7 @@ import com.dexels.navajo.script.api.CompilationException;
 public class BundleQueueComponent implements EventHandler, BundleQueue {
     private static final String SCALA_FOLDER = "scala" + File.separator;
     private static final String SCRIPTS_FOLDER = "scripts" + File.separator;
-    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala");
+    private static final List<String> SUPPORTED_EXTENSIONS = Arrays.asList(".xml", ".scala", ".ns");
     private BundleCreator bundleCreator = null;
     private ExecutorService executor;
     private DependencyAnalyzer depanalyzer;

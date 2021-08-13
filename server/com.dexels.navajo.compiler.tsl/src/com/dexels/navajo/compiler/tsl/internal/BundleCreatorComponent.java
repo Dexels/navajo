@@ -77,6 +77,14 @@ public class BundleCreatorComponent implements BundleCreator {
         compilers.remove(sc.getScriptExtension());
     }
     
+    public void setNavascriptScriptCompiler(ScriptCompiler sc) {
+        compilers.put(sc.getScriptExtension(), sc);
+    }
+    
+    public void removeNavascriptScriptCompiler(ScriptCompiler sc) {
+        compilers.remove(sc.getScriptExtension());
+    }
+    
     public void setScalaScriptCompiler(ScriptCompiler sc) {
         compilers.put(sc.getScriptExtension(), sc);
     }
@@ -174,6 +182,9 @@ public class BundleCreatorComponent implements BundleCreator {
     	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
     	for (ScriptCompiler compiler : compilers.values()) {
+    		
+    		System.err.println("Checking compiler " + compiler + " to compile service " + rpcName);
+    		
     		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
     	     File f = new File(scriptFolder, rpcName + compiler.getScriptExtension());
     	     
@@ -203,6 +214,10 @@ public class BundleCreatorComponent implements BundleCreator {
     	     for (Map.Entry<String, File> entry : tenantSpecificFiles.entrySet())
     	     {
     	    	 createBundleForScript(entry.getKey(), rpcName, entry.getValue(),  tenantsToIgnore, false, failures, success, skipped, keepIntermediate);
+    	     }
+    	     
+    	     if ( matchedScript ) {
+    	    	 break;
     	     }
 
              

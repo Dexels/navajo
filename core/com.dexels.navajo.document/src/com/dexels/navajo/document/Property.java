@@ -35,6 +35,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
     public static final String PROPERTY_CARDINALITY = "cardinality";
     public static final String PROPERTY_TYPE = "type";
     public static final String PROPERTY_DIRECTION = "direction";
+    public static final String PROPERTY_CONDITION = "condition";
     public static final String PROPERTY_MIMETYPE = "mimetype";
     public static final String PROPERTY_SUBTYPE = "subtype";
     public static final String PROPERTY_KEY = "key";
@@ -190,7 +191,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
      */
     public List<Selection> getAllSelectedSelections();
 
-    public void addExpression(ExpressionTag e);
+    public Property addExpression(ExpressionTag e);
 
     /**
      * Add a selection option to a "selection" property. If the option name already exists, replace
