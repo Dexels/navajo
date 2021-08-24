@@ -489,6 +489,10 @@ public class TslPreCompiler {
                     return null;
                 }
                 result.addAll(getParamValue(tslDoc, scriptString));
+            } else if (scriptString.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                continue;
             } else {
                 String cleanScript = scriptString.replace("'", "");
                 result.add(cleanScript);
