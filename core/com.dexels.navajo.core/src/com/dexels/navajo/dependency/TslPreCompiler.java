@@ -181,8 +181,8 @@ public class TslPreCompiler {
         for (int i = 0; i < operations.getLength(); i++) {
             Element n = (Element) operations.item(i);
 
-            String operationScript = n.getAttribute("service");
-            String operationValidationScript = n.getAttribute("validationService");
+            String operationScript = n.getAttribute("service").equals("") ? null : n.getAttribute("service");
+            String operationValidationScript = n.getAttribute("validationService").equals("") ? null : n.getAttribute("validationService"); 
             if(operationScript!=null && !"".equals(operationScript)) {
                 if (scriptTenant != null) {
                     // trying tenant-specific variant first
