@@ -25,6 +25,7 @@ public class Dependency {
     private String dependeeFile;
     private int linenr;
     private boolean isBroken = false;
+    private boolean needsRecompile = false;
     
     public Dependency() {
         // JSON serialisation likes to have a constructor...
@@ -35,11 +36,16 @@ public class Dependency {
     }
     
     public Dependency(String scriptFile, String dependeeFile, int type, int linenr, boolean broken) {
+        this(scriptFile, dependeeFile, type, linenr, broken, false);
+    }
+    
+    public Dependency(String scriptFile, String dependeeFile, int type, int linenr, boolean broken, boolean needsRecompile) {
         this.scriptFile = scriptFile;
         this.dependeeFile = dependeeFile;
         this.type = type;
         this.linenr = linenr;
         this.isBroken = broken;
+        this.needsRecompile = needsRecompile;
     }
 
     public int getType() {
@@ -76,6 +82,14 @@ public class Dependency {
 
     public void setBroken(boolean isBroken) {
         this.isBroken = isBroken;
+    }
+
+    public boolean needsRecompile() {
+        return needsRecompile;
+    }
+
+    public void setNeedsRecompile(boolean needsRecompile) {
+        this.needsRecompile = needsRecompile;
     }
 
     public String getScript() {

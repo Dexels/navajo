@@ -237,7 +237,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
         // Use a set to prevent duplicates due to tenant-specific dependencies
         Set<String> dependentScripts = new HashSet<>();
         for (Dependency dep : dependencies) {
-            if (dep.getType() == Dependency.INCLUDE_DEPENDENCY || dep.getType() == Dependency.ENTITY_DEPENDENCY) {
+            if (dep.needsRecompile()) {
                 dependentScripts.add(dep.getScript());
             }
 

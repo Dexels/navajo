@@ -29,7 +29,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.mapping.compiler.meta.ExtendDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.script.api.UserException;
@@ -332,7 +331,7 @@ public class TslPreCompiler {
             superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".broken";
         }
 
-        deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+        deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken, true));
 
         // Going to check for tenant-specific include-variants
         if (scriptTenant == null) {
@@ -341,13 +340,13 @@ public class TslPreCompiler {
                 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
-                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n), false, true));
                 }
                 // NS3
                 AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.ns");
                 Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
                 for (File f : filesNS3) {
-                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n), false, true));
                 }
             }
         }
@@ -369,7 +368,7 @@ public class TslPreCompiler {
                 // Check if exists
                 if ( includeScriptFile != null) {
                 	
-                    deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
+                    deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), false, true));
 
                     // No need to try any other tenant-specific includes since
                     // we are tenant-specific in the first place
@@ -387,7 +386,7 @@ public class TslPreCompiler {
                 includeScriptFile = scriptFolder + File.separator + includedScript + ".broken";
             }
             
-            deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken));
+            deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken, true));
 
             // Going to check for tenant-specific include-variants
             if (scriptTenant == null) {
@@ -396,13 +395,13 @@ public class TslPreCompiler {
                     AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(includedScript) + "_*.xml");
                     Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                     for (File f : files) {
-                        deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
+                        deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n), false, true));
                     }
                     // NS3
                     AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(includedScript) + "_*.xml");
                     Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
                     for (File f : filesNS3) {
-                        deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
+                        deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n), false, true));
                     }
                 }
             }
