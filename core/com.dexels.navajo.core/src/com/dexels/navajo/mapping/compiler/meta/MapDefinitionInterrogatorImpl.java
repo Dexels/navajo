@@ -1,12 +1,10 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
-import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 import navajo.ExtensionDefinition;
 
