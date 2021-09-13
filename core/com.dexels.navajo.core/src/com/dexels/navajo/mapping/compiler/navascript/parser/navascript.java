@@ -1,5 +1,6 @@
-// This file was generated on Thu Apr 8, 2021 16:59 (UTC+03) by REx v5.52 which is Copyright (c) 1979-2020 by Gunther Rademacher <grd@gmx.net>
-// REx command line: navascript.ebnf -ll 1 -backtrack -java -tree -main
+// This file was generated on Mon Sep 13, 2021 21:31 (UTC+02) by REx v5.53 which is Copyright (c) 1979-2021 by Gunther Rademacher <grd@gmx.net>
+// REx command line: navascript.ebnf -backtrack -tree -main -ll 1 -name com.dexels.navajo.mapping.compiler.navascript.parser.navascript -java
+
 package com.dexels.navajo.mapping.compiler.navascript.parser;
 
 import java.io.IOException;
@@ -2654,9 +2655,12 @@ public class navascript
       break;
     default:
       consume(81);                  // '['
-      lookahead1W(44);              // WhiteSpace | Comment | '{'
-      whitespace();
-      parse_MessageArray();
+      lookahead1W(57);              // WhiteSpace | Comment | ']' | '{'
+      if (l1 == 99)                 // '{'
+      {
+        whitespace();
+        parse_MessageArray();
+      }
       consume(82);                  // ']'
     }
     eventHandler.endNonterminal("Message", e0);
@@ -2749,8 +2753,11 @@ public class navascript
       break;
     default:
       consumeT(81);                 // '['
-      lookahead1W(44);              // WhiteSpace | Comment | '{'
-      try_MessageArray();
+      lookahead1W(57);              // WhiteSpace | Comment | ']' | '{'
+      if (l1 == 99)                 // '{'
+      {
+        try_MessageArray();
+      }
       consumeT(82);                 // ']'
     }
   }

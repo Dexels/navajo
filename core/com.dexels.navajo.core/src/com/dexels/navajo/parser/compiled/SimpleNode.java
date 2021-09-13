@@ -95,7 +95,7 @@ public abstract class SimpleNode implements Node {
      out its children. */
 
     public void dump(String prefix) {
-    	System.err.println("Node: "+this.getClass().getName());
+    	//System.err.println("Node: "+this.getClass().getName());
         if (children != null) {
             for (int i = 0; i < children.length; ++i) {
                 SimpleNode n = (SimpleNode) children[i];

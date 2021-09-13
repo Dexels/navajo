@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/Test.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/EmptyArray.ns");
 
 		t.initialize();
 
@@ -85,7 +85,7 @@ public class NS3ToNSXML implements EventHandler {
 
 		String result = xmlString.toString();
 
-		System.err.println(result);
+		//System.err.println(result);
 
 		XMLElement xe = new CaseSensitiveXMLElement(true);
 
@@ -1256,6 +1256,10 @@ public class NS3ToNSXML implements EventHandler {
 
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
 
+			if ( name.equals("TOKEN") && content.equals("[") ) {
+				msgTag.setType(Message.MSG_TYPE_ARRAY);
+			}
+			
 			if ( name.equals("Conditional") ) {
 				ConditionFragment currentFragment = new ConditionFragment();
 				consumeContent(currentFragment, child);
