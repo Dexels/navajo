@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   build_test_n_deploy:
     docker:
@@ -128,7 +129,7 @@ jobs:
 
 workflows:
   version: 2
-  workflow:
+  main:
     jobs:
       - build_test_n_deploy:
           context:
