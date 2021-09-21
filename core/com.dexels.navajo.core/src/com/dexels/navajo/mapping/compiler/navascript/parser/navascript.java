@@ -1,5 +1,5 @@
-// This file was generated on Mon Sep 13, 2021 21:31 (UTC+02) by REx v5.53 which is Copyright (c) 1979-2021 by Gunther Rademacher <grd@gmx.net>
-// REx command line: navascript.ebnf -backtrack -tree -main -ll 1 -name com.dexels.navajo.mapping.compiler.navascript.parser.navascript -java
+// This file was generated on Tue Sep 21, 2021 15:50 (UTC+02) by REx v5.53 which is Copyright (c) 1979-2021 by Gunther Rademacher <grd@gmx.net>
+// REx command line: navascript.ebnf -ll 1 -backtrack -java -tree -main -name com.dexels.navajo.mapping.compiler.navascript.parser.navascript
 
 package com.dexels.navajo.mapping.compiler.navascript.parser;
 
@@ -4123,7 +4123,17 @@ public class navascript
             }
             catch (ParseException p3A)
             {
-              lk = -4;
+              try
+              {
+                b0 = b0A; e0 = e0A; l1 = l1A; if (l1 == 0) {end = e0A;} else {
+                b1 = b1A; e1 = e1A; end = e1A; }
+                try_MappedMessage();
+                lk = -4;
+              }
+              catch (ParseException p4A)
+              {
+                lk = -5;
+              }
             }
           }
         }
@@ -4157,6 +4167,10 @@ public class navascript
       consume(79);                  // ';'
       break;
     case -4:
+      whitespace();
+      parse_MappedMessage();
+      break;
+    case -5:
       consume(99);                  // '{'
       lookahead1W(33);              // WhiteSpace | Comment | '$'
       whitespace();
@@ -4210,7 +4224,7 @@ public class navascript
           lookahead1W(38);          // WhiteSpace | Comment | ';'
           consumeT(79);             // ';'
           memoize(10, e0A, -1);
-          lk = -5;
+          lk = -6;
         }
         catch (ParseException p1A)
         {
@@ -4227,7 +4241,7 @@ public class navascript
             lookahead1W(38);        // WhiteSpace | Comment | ';'
             consumeT(79);           // ';'
             memoize(10, e0A, -2);
-            lk = -5;
+            lk = -6;
           }
           catch (ParseException p2A)
           {
@@ -4249,14 +4263,25 @@ public class navascript
               lookahead1W(45);      // WhiteSpace | Comment | '}'
               consumeT(100);        // '}'
               memoize(10, e0A, -3);
-              lk = -5;
+              lk = -6;
             }
             catch (ParseException p3A)
             {
-              lk = -4;
-              b0 = b0A; e0 = e0A; l1 = l1A; if (l1 == 0) {end = e0A;} else {
-              b1 = b1A; e1 = e1A; end = e1A; }
-              memoize(10, e0A, -4);
+              try
+              {
+                b0 = b0A; e0 = e0A; l1 = l1A; if (l1 == 0) {end = e0A;} else {
+                b1 = b1A; e1 = e1A; end = e1A; }
+                try_MappedMessage();
+                memoize(10, e0A, -4);
+                lk = -6;
+              }
+              catch (ParseException p4A)
+              {
+                lk = -5;
+                b0 = b0A; e0 = e0A; l1 = l1A; if (l1 == 0) {end = e0A;} else {
+                b1 = b1A; e1 = e1A; end = e1A; }
+                memoize(10, e0A, -5);
+              }
             }
           }
         }
@@ -4286,13 +4311,16 @@ public class navascript
       consumeT(79);                 // ';'
       break;
     case -4:
+      try_MappedMessage();
+      break;
+    case -5:
       consumeT(99);                 // '{'
       lookahead1W(33);              // WhiteSpace | Comment | '$'
       try_MappedArrayField();
       lookahead1W(45);              // WhiteSpace | Comment | '}'
       consumeT(100);                // '}'
       break;
-    case -5:
+    case -6:
       break;
     default:
       if (l1 == 74)                 // '('
@@ -4604,6 +4632,43 @@ public class navascript
       consumeT(75);                 // ')'
     }
     lookahead1W(44);                // WhiteSpace | Comment | '{'
+    consumeT(99);                   // '{'
+    for (;;)
+    {
+      lookahead1W(80);              // INCLUDE | MESSAGE | PRINT | LOG | ANTIMESSAGE | PROPERTY | DEFINE | METHODS |
+                                    // BREAK | SYNCHRONIZED | VAR | IF | LOOP | WhiteSpace | Comment | '$' | '.' |
+                                    // 'map' | 'map.' | '}'
+      if (l1 == 100)                // '}'
+      {
+        break;
+      }
+      try_InnerBody();
+    }
+    consumeT(100);                  // '}'
+  }
+
+  private void parse_MappedMessage()
+  {
+    eventHandler.startNonterminal("MappedMessage", e0);
+    consume(99);                    // '{'
+    for (;;)
+    {
+      lookahead1W(80);              // INCLUDE | MESSAGE | PRINT | LOG | ANTIMESSAGE | PROPERTY | DEFINE | METHODS |
+                                    // BREAK | SYNCHRONIZED | VAR | IF | LOOP | WhiteSpace | Comment | '$' | '.' |
+                                    // 'map' | 'map.' | '}'
+      if (l1 == 100)                // '}'
+      {
+        break;
+      }
+      whitespace();
+      parse_InnerBody();
+    }
+    consume(100);                   // '}'
+    eventHandler.endNonterminal("MappedMessage", e0);
+  }
+
+  private void try_MappedMessage()
+  {
     consumeT(99);                   // '{'
     for (;;)
     {

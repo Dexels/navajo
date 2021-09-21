@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/fail2.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/ProcessQuerySchedule.ns");
 
 		t.initialize();
 
@@ -692,7 +692,12 @@ public class NS3ToNSXML implements EventHandler {
 				MapTag maf = parseMappedArrayField((MapTag) parent.getParent(), child);
 				parent.addMap(maf);
 			}
-
+ 
+			if ( name.equals("MappedMessage") ) {  // map ref="[/@]"
+				MapTag mt = parseMappedMessage(parent, child);
+				parent.addMap(mt);
+			}
+			
 			if  ( name.equals("MappedArrayMessage") ) {
 				MapTag mt = parsedMappedArrayMessage(parent, child);
 				parent.addMap(mt);
@@ -708,6 +713,33 @@ public class NS3ToNSXML implements EventHandler {
 
 	}
 
+	private MapTag parseMappedMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
+		
+		MapTag mapTag = new MapTag(myNavascript);
+		mapTag.setOldStyleMap(true);
+		mapTag.setName("map");
+		mapTag.setRefAttribute("[/@]");
+		
+		Vector<XMLElement> children = currentXML.getChildren();
+		
+		for ( XMLElement child : children ) {
+
+			String name = child.getName();
+			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
+						
+			if (name.equals("InnerBody") ) {
+				List<NS3Compatible> innerBodyElements = parseInnerBody(mapTag, child);
+				for ( NS3Compatible ib : innerBodyElements ) {
+					addChildTag(mapTag, ib);
+				}
+			}
+			
+
+		}
+		
+		return mapTag;
+	}
+	
 	private MapTag parsedMappedArrayMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
 		MapTag mapTag = new MapTag(myNavascript);
@@ -795,7 +827,7 @@ public class NS3ToNSXML implements EventHandler {
 
 			String name = child.getName();
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
-
+			
 			if ( name.equals("Print") ) {
 				DebugTag pt = parsePrint(parent, child);
 				bodyElts.add(pt);
