@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/EmptyArray.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/fail2.ns");
 
 		t.initialize();
 
@@ -273,7 +273,7 @@ public class NS3ToNSXML implements EventHandler {
 			}
 
 			if ( name.equals("MappedArrayField")) { // <map ref="$"
-				MapTag maf = parseMappedArrayField((MapTag) parent, child);
+				MapTag maf = parseMappedArrayField(findClosestMapTag(parent,""), child);
 				paramTag.addMap(maf);
 			}
 
@@ -1244,12 +1244,14 @@ public class NS3ToNSXML implements EventHandler {
 
 	private MessageTag parseMessage(NS3Compatible parent, XMLElement currentXML) throws Exception {
 
+		
 		currentXML.setAttribute("PROCESSED", "true");
 
 		Vector<XMLElement> children = currentXML.getChildren();
 
 		MessageTag msgTag = new MessageTag(myNavascript);
 		msgTag.addParent(parent);
+		
 
 		for ( XMLElement child : children ) {
 			String name = child.getName();
@@ -1272,7 +1274,7 @@ public class NS3ToNSXML implements EventHandler {
 			}
 
 			if ( name.equals("MappedArrayField")) { // <map ref="$"
-				MapTag maf = parseMappedArrayField((MapTag) parent, child);
+				MapTag maf = parseMappedArrayField(findClosestMapTag( parent, ""), child);
 				msgTag.addMap(maf);
 			}
 
