@@ -1,8 +1,9 @@
 version: 2.1
+
 jobs:
   build_test_n_deploy:
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: cimg/openjdk:11.0
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASS
@@ -20,7 +21,7 @@ jobs:
           name: Run maven install in setup/com.dexels.navajo.target
           command: |
             cd setup/com.dexels.navajo.target
-            mvn -s ../../.circleci/conf/settings.xml -B install
+            /opt/apache-maven/bin/mvn -s ../../.circleci/conf/settings.xml -B install
             cd ../..
       - save_cache:
           paths:
@@ -31,7 +32,7 @@ jobs:
       - run:
           name: Run maven install
           ## TODO check whether -Denvironment=release has to become -Denvironment=test for test branch?
-          command: mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
+          command: /opt/apache-maven/bin/mvn -B -s .circleci/conf/settings.xml install -DskipTests=true -Denvironment=release
 
       # Just for debug inspection purposes
       - run:
@@ -114,7 +115,7 @@ jobs:
           name: Run maven install in setup/com.dexels.navajo.target
           command: |
             cd setup/com.dexels.navajo.target
-            mvn -s ../../.circleci/conf/settings.xml -B install
+            /opt/apache-maven/bin/mvn -s ../../.circleci/conf/settings.xml -B install
             cd ../..
       - save_cache:
           paths:
@@ -124,11 +125,11 @@ jobs:
       # Build; tests are skipped for now
       - run:
           name: Run maven package
-          command: mvn  -B  package  -Denvironment=release
+          command: /opt/apache-maven/bin/mvn  -B  package  -Denvironment=release
 
 workflows:
   version: 2
-  workflow:
+  main:
     jobs:
       - build_test_n_deploy:
           context:

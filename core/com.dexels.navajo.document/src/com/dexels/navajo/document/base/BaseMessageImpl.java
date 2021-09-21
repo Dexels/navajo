@@ -1682,6 +1682,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (incoming.getSubType() != null && (this.getSubType() == null || this.getSubType().equals(""))) {
             this.setSubType(incoming.getSubType());
         }
+        if (incoming.getExtends() != null && (this.getExtends() == null || this.getExtends().equals(""))) {
+            this.setExtends(incoming.getExtends());
+        }
 
         // Check if message with incoming name exists.
         if (!getName().equals(incoming.getName())) {
@@ -1793,14 +1796,20 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             if (!matchMethod) {
                 removeProperty(p);
             } else if (!p.getType().equals(m_p.getType()) && !m_p.getType().equals(Property.SELECTION_PROPERTY)) {
-                if (p.getValue() != null) {
+                boolean notNull = false;
+            	if (p.getValue() != null) {
+            		notNull = true;
                     logger.debug("Overriding property type for {} - {} to {}", p.getFullPropertyName(), p.getType(),
                             m_p.getType());
                 }
                 p.setType(m_p.getType());
+                if (notNull && p.getTypedValue() == null) {
+                	logger.error("Overriding type of property {} to {} causes original value {} to become null", p.getFullPropertyName(), m_p.getType(), p.getValue());
+                }
+                
             }
         }
-
+        
         // If we are an array message, mask all submessages with definition message in
         // mask
         if (isArrayMessage() && mask.isArrayMessage()) {
