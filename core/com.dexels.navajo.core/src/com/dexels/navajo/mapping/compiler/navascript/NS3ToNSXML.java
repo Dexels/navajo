@@ -85,7 +85,7 @@ public class NS3ToNSXML implements EventHandler {
 
 		String result = xmlString.toString();
 
-		System.err.println(result);
+		//System.err.println(result);
 
 		XMLElement xe = new CaseSensitiveXMLElement(true);
 
@@ -1839,7 +1839,9 @@ public class NS3ToNSXML implements EventHandler {
 		String name = xe.getName();
 		String content = ( xe.getContent() != null && !"".equals(xe.getContent()) ?  xe.getContent() : null );
 
-		if ( name.equals("Validations")) {
+		if ( name.equals("HeaderDefinitions")) {
+			parseHeaderDefinitions(xe);
+		} else if ( name.equals("Validations")) {
 			ValidationsTag vt = parseValidations(parent, xe);
 			myNavascript.addValidations(vt);
 		} else if ( name.equals("Var") ) {
@@ -1890,6 +1892,54 @@ public class NS3ToNSXML implements EventHandler {
 			}
 		}
 
+	}
+
+	private String getHeaderDefinitionValue(XMLElement xe) {
+		
+		String value = "";
+		
+		Vector<XMLElement> children = xe.getChildren();
+	
+		for ( XMLElement child : children ) {
+			
+			if ( child.getName().equals("TOKEN") && "true".equals(child.getContent())) {
+				return "true";
+			}
+			
+			if ( child.getName().equals("TOKEN") && "request".equals(child.getContent())) {
+				return "request";
+			}
+			
+			if ( child.getName().equals("TOKEN") && "response".equals(child.getContent())) {
+				return "response";
+			}
+			
+			if ( child.getName().equals("Identifier")) {
+				return child.getContent();
+			}
+		}
+		
+		return value;
+	}
+	
+	private void parseHeaderDefinitions(XMLElement xe) {
+		Vector<XMLElement> children = xe.getChildren();
+
+		for ( XMLElement child : children ) {
+
+			if ( child.getName().equals("DebugDefinition")) {
+				myNavascript.setDebug(getHeaderDefinitionValue(child));
+			}
+
+			if ( child.getName().equals("AuthorDefinition")) {
+				myNavascript.setAuthor(getHeaderDefinitionValue(child));
+			}
+			
+			if ( child.getName().equals("IdDefinition")) {
+				myNavascript.setId(getHeaderDefinitionValue(child));
+			}
+		
+		}
 	}
 
 	public void initialize() throws UnsupportedEncodingException {
@@ -2000,7 +2050,7 @@ public class NS3ToNSXML implements EventHandler {
 				delayedTag = null;
 				writeOutput(sb.toString());
 			}
-			
+
 			writeOutput(input.subSequence(begin, end)
 					.toString()
 					.replace("&", "&amp;")

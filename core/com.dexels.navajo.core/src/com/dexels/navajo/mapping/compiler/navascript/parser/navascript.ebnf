@@ -1,4 +1,14 @@
-Navascript  ::= Validations? TopLevelStatement* Finally? EOF
+Navascript  ::= HeaderDefinitions* Validations? TopLevelStatement* Finally? EOF
+
+HeaderDefinitions ::= ( DebugDefinition | AuthorDefinition | IdDefinition | NotesDefinition )
+
+DebugDefinition ::= "@debug" "=" ("true"  | "request" | "response" ) ";"
+
+AuthorDefinition ::= "@author" "=" Identifier ";"
+
+IdDefinition ::= "@id" "=" Identifier ";"
+
+NotesDefinition ::= "@notes" "=" Identifier ";"
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
