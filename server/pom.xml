@@ -25,7 +25,6 @@
         <module>com.dexels.navajo.adapters.eventemitter</module>
         <module>com.dexels.navajo.adapters.resource</module>
         <module>com.dexels.navajo.adapters.stream</module>
-        <module>com.dexels.navajo.article</module>
         <module>com.dexels.navajo.authentication.api</module>
         <module>com.dexels.navajo.compiler.navascript</module>
         <module>com.dexels.navajo.compiler.tsl</module>
