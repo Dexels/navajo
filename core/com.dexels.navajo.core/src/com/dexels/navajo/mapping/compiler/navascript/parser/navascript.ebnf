@@ -1,14 +1,6 @@
-Navascript  ::= HeaderDefinitions* Validations? TopLevelStatement* Finally? EOF
+Navascript  ::= DebugDefinition? Validations? TopLevelStatement* Finally? EOF
 
-HeaderDefinitions ::= ( DebugDefinition | AuthorDefinition | IdDefinition | NotesDefinition )
-
-DebugDefinition ::= "@debug" "=" ("true"  | "request" | "response" ) ";"
-
-AuthorDefinition ::= "@author" "=" Identifier ";"
-
-IdDefinition ::= "@id" "=" Identifier ";"
-
-NotesDefinition ::= "@notes" "=" Identifier ";"
+DebugDefinition ::= DEBUG "=" ( TRUE  | REQUEST | RESPONSE ) ";"
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
@@ -269,9 +261,15 @@ FILTER ::= "filter"
 
 LOOP ::= "loop"
 
+DEBUG ::= "@debug"
+
 TRUE ::= "true"
 
 FALSE ::= "false"
+
+REQUEST ::= "request"
+
+RESPONSE ::= "response"
 
 CHARACTER ::= LETTER | DIGIT | SYMBOL
 

@@ -62,7 +62,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/ProcessQuerySchedule.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/setobjectfield.ns");
 
 		t.initialize();
 
@@ -1877,7 +1877,7 @@ public class NS3ToNSXML implements EventHandler {
 		String name = xe.getName();
 		String content = ( xe.getContent() != null && !"".equals(xe.getContent()) ?  xe.getContent() : null );
 
-		if ( name.equals("HeaderDefinitions")) {
+		if ( name.equals("DebugDefinition")) {
 			parseHeaderDefinitions(xe);
 		} else if ( name.equals("Validations")) {
 			ValidationsTag vt = parseValidations(parent, xe);
@@ -1961,23 +1961,9 @@ public class NS3ToNSXML implements EventHandler {
 	}
 	
 	private void parseHeaderDefinitions(XMLElement xe) {
-		Vector<XMLElement> children = xe.getChildren();
-
-		for ( XMLElement child : children ) {
-
-			if ( child.getName().equals("DebugDefinition")) {
-				myNavascript.setDebug(getHeaderDefinitionValue(child));
-			}
-
-			if ( child.getName().equals("AuthorDefinition")) {
-				myNavascript.setAuthor(getHeaderDefinitionValue(child));
-			}
-			
-			if ( child.getName().equals("IdDefinition")) {
-				myNavascript.setId(getHeaderDefinitionValue(child));
-			}
 		
-		}
+		myNavascript.setDebug(getHeaderDefinitionValue(xe));
+		
 	}
 
 	public void initialize() throws UnsupportedEncodingException {
