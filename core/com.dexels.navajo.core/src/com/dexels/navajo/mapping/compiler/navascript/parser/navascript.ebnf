@@ -1,4 +1,6 @@
-Navascript  ::= Validations? TopLevelStatement* Finally? EOF
+Navascript  ::= DebugDefinition? Validations? TopLevelStatement* Finally? EOF
+
+DebugDefinition ::= DEBUG "=" ( TRUE  | REQUEST | RESPONSE ) ";"
 
 Validations ::= VALIDATIONS "{" Checks "}"
 
@@ -114,7 +116,7 @@ Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |
 
 MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
 
-SetterField ::= ( Conditional )?  "$" FieldName ("=" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | "{" MappedArrayField "}" ) 
+SetterField ::= ( Conditional )?  "$" FieldName ("=" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | MappedMessage | "{" MappedArrayField "}" ) 
 
 AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments? ")" ";"
 
@@ -123,6 +125,8 @@ Loop ::= Conditional? LOOP ( MappableIdentifier | "[" MsgIdentifier "]" )  ("(" 
 MappedArrayField ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
 
 MappedArrayMessage ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappedMessage ::= "{" InnerBody* "}"
 
 MappedArrayFieldSelection ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBodySelection* "}"
 
@@ -257,9 +261,15 @@ FILTER ::= "filter"
 
 LOOP ::= "loop"
 
+DEBUG ::= "@debug"
+
 TRUE ::= "true"
 
 FALSE ::= "false"
+
+REQUEST ::= "request"
+
+RESPONSE ::= "response"
 
 CHARACTER ::= LETTER | DIGIT | SYMBOL
 

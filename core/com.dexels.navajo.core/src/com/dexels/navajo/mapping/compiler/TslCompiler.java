@@ -2484,9 +2484,14 @@ public class TslCompiler {
 					+ className + ")");
 			Class result = bc.getService(sr.iterator().next());
 			return result;
-		} catch (InvalidSyntaxException e) {
-			logger.error("Adapter resolution error: ", e);
-			return null;
+		} catch (Exception e) {
+			// Try normal class loader
+			try {
+				return Class.forName(className, false, loader);
+			} catch (Exception e2) {
+				logger.error("Adapter resolution error: ", e);
+				return null;
+			}
 		}
 
 	}

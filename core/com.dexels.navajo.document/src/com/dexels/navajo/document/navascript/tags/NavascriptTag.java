@@ -6,6 +6,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 package com.dexels.navajo.document.navascript.tags;
 
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.base.BaseNavascriptImpl;
@@ -18,6 +20,7 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 	 */
 	private static final long serialVersionUID = 1648795731441833541L;
 	String author;
+	String debug;
 	String id;
 	String notes;
 
@@ -34,6 +37,14 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 
 	public NavascriptTag() {
 		super(NavajoFactory.getInstance());
+	}
+
+	public String getDebug() {
+		return debug;
+	}
+
+	public void setDebug(String debug) {
+		this.debug = debug;
 	}
 
 	public String getAuthor() {
@@ -139,6 +150,21 @@ public class NavascriptTag extends BaseNavascriptImpl implements NS3Compatible {
 		super.addValidations(vt);
 		vt.addParent(this);
 		return vt;
+	}
+
+	@Override
+	public Map<String, String> getAttributes() {
+		Map<String, String> m = new HashMap<>();
+		if ( author != null ) {
+			m.put("author", getAuthor());
+		}
+		if ( id != null ) {
+			m.put("id", getId());
+		}
+		if ( debug != null ) {
+			m.put("debug", getDebug());
+		}
+		return m;
 	}
 
 	@Override
