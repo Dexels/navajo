@@ -65,6 +65,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
@@ -756,6 +757,14 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	// method for implementing loop $field | [/Array] [filter] construct
+	public String loopNode(int ident, Element n, String className,
+			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
+		
+	
+		 return null;
+	}
+	
 	//method for implementing if-condition --b
 	public String blockNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
@@ -811,7 +820,7 @@ public class TslCompiler {
 		String scopeMsg = n.getAttribute("scope");
 		String method = n.getAttribute("method");
 		String subType = n.getAttribute("subtype");
-
+		
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
 		condition = (condition == null) ? "" : condition;
@@ -898,7 +907,7 @@ public class TslCompiler {
 						contextClass = Class.forName(className, false, loader);
 					}
 				} catch (Exception e) {
-					throw new MappingException("Could not find field: " + className + "/" + mapPath, e);
+					throw new MappingException("Error line " + nextElt.getAttribute("linenr") + ": Could not find field: " + className + "/" + mapPath, e);
 				}
 
 				addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -908,7 +917,11 @@ public class TslCompiler {
 					isArrayAttr = forceArray;
 					type = Message.MSG_TYPE_ARRAY;
 				} else {
-					isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+					try {
+						isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+					} catch (Exception e) {
+						throw new MappingException("Error line " + nextElt.getAttribute("linenr") + ": " + e.getMessage());
+					}
 					isIterator = MappingUtils
 							.isIteratorAttribute(contextClass, ref);
 
@@ -946,6 +959,13 @@ public class TslCompiler {
 					+ messageName + "\", \"\", count, \"" + type + "\", \""
 					+ mode + "\", " + orderbyExpression + ");\n");
 			result.append("");
+		} else if ( n.getNodeName().equals("loop" )) {
+			// create a message array of size 1 as placeholder.
+			result.append(printIdent(ident)
+					+ messageList
+					+ " = new Message[1];\n");
+			result.append("");
+		 
 		} else { // must be parammessage.
 
 			result.append(printIdent(ident)
@@ -1005,6 +1025,8 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "currentOutMsg.setMethod(\"" + method + "\");\n");
 
+		} else if (n.getNodeName().equals("loop")) {
+			// do nothing.
 		} else { // must be parammessage.
 			result.append(printIdent(ident + 2)
 					+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1095,6 +1117,8 @@ public class TslCompiler {
 						+ ");\n");
 				result.append(printIdent(ident + 4)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do nothing.
 			} else { // parammessage.
 				result.append(printIdent(ident + 4)
 						+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1127,6 +1151,8 @@ public class TslCompiler {
 						+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 				result.append(printIdent(ident + 2)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do  nothing.
 			} else {
 				result.append(printIdent(ident)
 						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -1333,6 +1359,8 @@ public class TslCompiler {
 						+ ");\n");
 				result.append(printIdent(ident + 4)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do nothing.
 			} else { // parammessage.
 				result.append(printIdent(ident + 4)
 						+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1372,6 +1400,8 @@ public class TslCompiler {
 						+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 				result.append(printIdent(ident + 2)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop") ) {
+				// do nothing.
 			} else {
 				result.append(printIdent(ident)
 						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -1388,6 +1418,10 @@ public class TslCompiler {
 					+ "}\n} // EOF Array map result from contextMap \n");
 		} else if (isSubMapped) { // Not an array
 
+			if ( n.getNodeName().equals("loop")) {
+				throw new MappingException("Can only loop over arrays");
+			}
+			
 			if (mapPath == null) {
 				result.append(printIdent(ident + 2)
 						+ "treeNodeStack.push(currentMap);\n");
@@ -1490,6 +1524,11 @@ public class TslCompiler {
 					+ "MappingUtils.callStoreMethod(currentMap.myObject);\n"
 					+ "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 		} else { // Just some new tags under the "message" tag.
+			
+			if ( n.getNodeName().equals("loop")) {
+				throw new MappingException("Can only loop over arrays");
+			}
+			
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				result.append(compile(ident + 2, children.item(i), className,
@@ -1502,6 +1541,8 @@ public class TslCompiler {
 					+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 			result.append(printIdent(ident)
 					+ "access.setCurrentOutMessage(currentOutMsg);\n");
+		} else if ( n.getNodeName().equals("loop")) {
+			// do nothing.
 		} else {
 			result.append(printIdent(ident)
 					+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -3066,7 +3107,7 @@ public class TslCompiler {
 					objectName));
 		}
 
-		else if (n.getNodeName().equals("message")
+		else if (n.getNodeName().equals("message") || n.getNodeName().equals("loop") 
 				|| (n.getNodeName().equals("param") && (((Element) n)
 						.getAttribute("type").equals("array") || ((Element) n)
 						.getAttribute("type").equals("array_element")))) {
@@ -3080,8 +3121,11 @@ public class TslCompiler {
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-			methodBuffer.append(messageNode(ident, (Element) n, className,
-					objectName, deps, tenant));
+			
+			String code = messageNode(ident, (Element) n, className,
+					objectName, deps, tenant);
+			
+			methodBuffer.append(code);
 			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
 			methodBuffer.append("}\n");
