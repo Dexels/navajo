@@ -63,7 +63,7 @@ public class NS3ToNSXML implements EventHandler {
 	public static void main(String [] args) throws Exception {
 		NS3ToNSXML t = new NS3ToNSXML();
 
-		String fileContent = t.read("/Users/arjenschoneveld/setobjectfield.ns");
+		String fileContent = t.read("/Users/arjenschoneveld/Loop.ns");
 
 		t.initialize();
 

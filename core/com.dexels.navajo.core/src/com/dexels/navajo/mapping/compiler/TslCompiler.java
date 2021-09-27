@@ -988,6 +988,31 @@ public class TslCompiler {
 			if (subType != null && !subType.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setSubType(\"" + subType + "\");\n");
+				
+				String[] subTypeElements = subType.split(",");
+				for (String subTypeElement: subTypeElements) {
+				    if (subTypeElement.startsWith("interface=")) {
+				        for (String iface: subTypeElement.replace("interface=", "").split(";")) {
+		                    String version = "0";
+		                    if (iface.indexOf(".") != -1) {
+		                        version = iface.substring(iface.indexOf(".") + 1, iface.indexOf("?") == -1 ? iface.length() : iface.indexOf("?"));
+		                    }
+		                    String replace = "." + version;
+		                    iface = iface.replace(replace, "");
+		                    
+		                    String options = null;
+		                    if (iface.indexOf('?') > 0) {
+		                        options = iface.split("\\?")[1];
+		                        iface = iface.split("\\?")[0];
+		                    }
+		                    addDependency(
+	                                "dependentObjects.add( new ExtendDependency( Long.valueOf(\""
+	                                        + ExtendDependency.getScriptTimeStamp(iface)
+	                                        + "\"), \"" + iface + "\"));\n", "EXTEND" + iface);
+		                    deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(iface),iface ));
+		                }
+				    }
+				}
 			}
 			if (extendsMsg != null && !extendsMsg.equals("")) {
 				result.append(printIdent(ident + 2)
