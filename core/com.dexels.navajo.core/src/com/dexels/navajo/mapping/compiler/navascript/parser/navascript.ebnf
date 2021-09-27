@@ -76,7 +76,7 @@ STimeout ::= TIMEOUT ( ":" |  "=" ) Expression
 
 SBreakOnNoLock ::= BREAKONNOLOCK ( ":" |  "=" ) Expression
 
-Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) | "[" MessageArray "]" )
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) | "[" MessageArray? "]" )
 
 MessageArray ::= MessageArrayElement ("," MessageArrayElement)*
 

@@ -91,7 +91,7 @@ public class MapMetaData {
 
 	public void readExtentionDefinition(ExtensionDefinition ed) throws IOException, ClassNotFoundException, KeywordException {
 		
-		System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
+		//System.err.println("In MapMetaData. ExtensionDefinition: " + ed);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream(),StandardCharsets.UTF_8));
 

@@ -1283,6 +1283,10 @@ public class NS3ToNSXML implements EventHandler {
 
 			String content = ( child.getContent() != null && !"".equals(child.getContent()) ?  child.getContent() : null );
 
+			if ( name.equals("TOKEN") && content.equals("[") ) {
+				msgTag.setType(Message.MSG_TYPE_ARRAY);
+			}
+			
 			if ( name.equals("Conditional") ) {
 				ConditionFragment currentFragment = new ConditionFragment();
 				consumeContent(currentFragment, child);
