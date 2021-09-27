@@ -6,20 +6,20 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 package com.dexels.navajo.document.navascript.tags;
 
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.base.BaseMessageTagImpl;
 import com.dexels.navajo.document.base.BaseNode;
 
-public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
+public class LoopTag extends BaseMessageTagImpl implements NS3Compatible {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4906077507607805284L;
-	
+
 	private NavascriptTag myScript;
 	NS3Compatible parent;
 
@@ -30,13 +30,13 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	public void addParent(NS3Compatible p) {
 		parent = p;
 	}
-	
-	public MessageTag(NavascriptTag n) {
+
+	public LoopTag(NavascriptTag n) {
 		super(n);
 		myScript = n;
 	}
 
-	public MessageTag(NavascriptTag n, String name, String type) {
+	public LoopTag(NavascriptTag n, String name, String type) {
 		super(n, name);
 		if ( type != null ) {
 			super.setType(type);
@@ -44,6 +44,16 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		myScript = n;
 	}
 
+	@Override
+	public String getTagName() {
+		return "loop";
+	}
+
+	@Override
+	public  Map<String, String> getAttributes() {
+		return new HashMap<String,String>();
+	}
+	
 	// add <param>
 	public ParamTag addParam(String condition, String value) {
 		ParamTag pt = new ParamTag(myScript, condition, value);
@@ -90,8 +100,8 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	}
 
 	// add <message>
-	public MessageTag addMessage(String name, String type) {
-		MessageTag m = new MessageTag(myScript, name, type);
+	public LoopTag addMessage(String name, String type) {
+		LoopTag m = new LoopTag(myScript, name, type);
 		super.addMessage(m);
 		m.addParent(this);
 		return m;
@@ -119,13 +129,6 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 		bt.addParent(this);
 		return bt;
 	}
-	
-	// add <loop/>
-	public LoopTag addLoopTag(LoopTag bt) {
-		super.addLoop(bt);
-		bt.addParent(this);
-		return bt;
-	}
 
 	protected Navajo getNavajo() {
 		return myScript;
@@ -134,20 +137,11 @@ public class MessageTag extends BaseMessageTagImpl implements NS3Compatible {
 	@Override
 	public void formatNS3(int indent, OutputStream w) throws Exception {
 		int size = getChildren().size();
-		boolean isArrayElement = ( getType() != null && getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT));
-		boolean hasArrayElements = ( getChildren().size() > 0 && getChildren().get(0) instanceof MessageTag 
-				&&  Message.MSG_TYPE_ARRAY_ELEMENT.equals(((MessageTag) getChildren().get(0)).getType()));
-		String msgName = getName();
+		boolean isArrayElement = true;
+		boolean hasArrayElements = false;
 		Map<String,String> map = getAttributes();
 		w.write(NS3Utils.generateIndent(indent).getBytes());
 		w.write(NS3Utils.formatConditional(map.get("condition")).getBytes());
-		if ( !isArrayElement ) {
-			String start = ( isAntiMessage() ? "anti" : "") + "message \"" + msgName + "\" "; 
-			w.write(start.getBytes());
-			AttributeAssignments aa = new AttributeAssignments();
-			aa.addMap(getAttributes(), "name", "condition", ( hasArrayElements || "simple".equals(getType()) ? "type" : ""));
-			w.write(aa.format(true).getBytes());
-		}
 		if ( size > 0 ) {
 			String openBlock = null;
 			if ( isArrayElement ) {

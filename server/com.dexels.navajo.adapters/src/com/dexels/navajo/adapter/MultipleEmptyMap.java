@@ -39,6 +39,7 @@ public void kill() {
   }
 
   public void setEmptyMaps(com.dexels.navajo.adapter.EmptyMap [] emptyMaps) {
+	  System.err.println("In setEmptyMaps: " + emptyMaps.length);
     this.emptyMaps = emptyMaps;
   }
 
