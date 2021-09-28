@@ -305,6 +305,7 @@ public class MapDefinition {
 				md.generateCode(child, ( map != null ? map : out ), filename );
 			} else if (!( 
 					    child.getName().equals("message") || 
+					    child.getName().equals("loop") || 
 					    child.getName().equals("antimessage") || 
 					    child.getName().equals("defines") || 
 					    child.getName().equals("define") || 

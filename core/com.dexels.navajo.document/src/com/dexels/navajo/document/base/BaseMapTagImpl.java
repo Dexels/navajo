@@ -22,6 +22,7 @@ import com.dexels.navajo.document.navascript.tags.BlockTag;
 import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
+import com.dexels.navajo.document.navascript.tags.LoopTag;
 import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
@@ -232,6 +233,10 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 
 	public void addDebug(DebugTag dt) {
 		children.add(dt);
+	}
+
+	public void addLoop(LoopTag bt) {
+		children.add(bt);
 	}
 
 }

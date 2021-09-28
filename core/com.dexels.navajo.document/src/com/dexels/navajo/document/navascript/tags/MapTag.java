@@ -113,6 +113,13 @@ public class MapTag extends BaseMapTagImpl implements NS3Compatible {
 		return bt;
 	}
 	
+	// add <loop>
+	public LoopTag addLoopTag(LoopTag bt) {
+		super.addLoop(bt);
+		bt.addParent(this);
+		return bt;
+	}
+	
 	// add <map>
 	public MapTag addMap(String condition, String object) {
 		MapTag m = new MapTag(myScript, object, condition);

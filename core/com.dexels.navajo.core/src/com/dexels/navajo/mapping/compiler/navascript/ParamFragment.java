@@ -35,7 +35,7 @@ public class ParamFragment extends NavascriptFragment {
 	}
 
 	public void finalize() {
-		System.err.println("Finalize ParamFragment: " + getName() + ", condition: " + getCondition());
+		//System.err.println("Finalize ParamFragment: " + getName() + ", condition: " + getCondition());
 	}
 
 }
