@@ -5,8 +5,6 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.mapping.compiler;
 
-import java.io.BufferedReader;
-
 /**
  * <p>Title: Navajo Product Project</p>"
  * <p>Description: This is the official source for the Navajo server</p>
@@ -32,7 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -55,7 +52,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +61,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
@@ -1208,12 +1203,14 @@ public class TslCompiler {
 			String lengthName = "length" + (lengthCounter++);
 
 			String mappableArrayName = "mappableObject" + (objectCounter++);
+			String mappableArrayElementName = "mappableObject" + (objectCounter++);
 
 			boolean isDomainObjectMapper = false;
 
 			contextClassStack.push(contextClass);
 			String subClassName = null;
 			NodeList children = nextElt.getChildNodes();
+			String iterableType = MappingUtils.getIterableType(contextClass, ref);
 			try {
 				subClassName = MappingUtils.getFieldType(contextClass, ref);
 				contextClass = Class.forName(subClassName, false, loader);
@@ -1298,14 +1295,14 @@ public class TslCompiler {
 
 			String mappableArrayDefinition = (isIterator ? "java.util.Iterator<"
 					+ subClassName + "> " + mappableArrayName + " = null;\n"
-					: "Object [] " + mappableArrayName + " = null;\n");
+					: iterableType + " " + mappableArrayName + " = null;\n");
 			variableClipboard.add(mappableArrayDefinition);
 
-			if (!isIterator) {
-				result.append(printIdent(ident + 2) + "int " + lengthName
-						+ " = " + "(" + mappableArrayName + " == null ? 0 : "
-						+ mappableArrayName + ".length);\n");
-			}
+//			if (!isIterator) {
+//				result.append(printIdent(ident + 2) + "int " + lengthName
+//						+ " = " + "(" + mappableArrayName + " == null ? 0 : "
+//						+ mappableArrayName + ".length);\n");
+//			}
 
 			String startIndexVar = "startIndex" + (startIndexCounter++);
 
@@ -1337,11 +1334,14 @@ public class TslCompiler {
 					+ ";\n");
 
 			if (!isIterator) {
-				result.append(printIdent(ident + 2) + "for (int i"
-						+ (ident + 2) + " = " + startElementVar + "; i"
-						+ (ident + 2) + " < " + lengthName + "; i"
-						+ (ident + 2) + " = i" + (ident + 2) + "+"
-						+ offsetElementVar + ") {\n if (!kill) {\n");
+				
+				String forLoop = "for ( " + subClassName + " " + mappableArrayElementName + " : " + mappableArrayName + ") {\n if (!kill) {\n";
+//				result.append(printIdent(ident + 2) + "for (int i"
+//						+ (ident + 2) + " = " + startElementVar + "; i"
+//						+ (ident + 2) + " < " + lengthName + "; i"
+//						+ (ident + 2) + " = i" + (ident + 2) + "+"
+//						+ offsetElementVar + ") {\n if (!kill) {\n");
+				result.append(printIdent(ident + 2) + forLoop);
 			} else {
 				result.append(printIdent(ident + 2) + "while ("
 						+ mappableArrayName + ".hasNext() ) {\n if (!kill) {\n");
@@ -1351,10 +1351,12 @@ public class TslCompiler {
 					+ "treeNodeStack.push(currentMap);\n");
 
 			if (!isIterator) {
-				result.append(printIdent(ident + 4)
-						+ "currentMap = new MappableTreeNode(access, currentMap, "
-						+ mappableArrayName + "[i" + (ident + 2)
-						+ "], true);\n");
+//				result.append(printIdent(ident + 4)
+//						+ "currentMap = new MappableTreeNode(access, currentMap, "
+//						+ mappableArrayName + "[i" + (ident + 2)
+//						+ "], true);\n");
+				result.append(printIdent(ident + 4) + "currentMap = new MappableTreeNode(access, currentMap, " 
+						+ mappableArrayElementName + ", true);\n");
 			} else {
 				result.append(printIdent(ident + 4)
 						+ "currentMap = new MappableTreeNode(access, currentMap, "
@@ -3647,7 +3649,7 @@ public class TslCompiler {
 			result.append("}\n\n");
 
 			result.append("}//EOF");
-
+			
 			fo.write(result.toString());
 			fo.close();
 		} catch (SkipCompilationException e) {
