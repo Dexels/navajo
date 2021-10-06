@@ -646,6 +646,9 @@ public final class MappingUtils {
                 type = type.substring(2, type.length() - 1);
                 return type;
             }
+            if (type.equals("java.util.Iterator")) {
+                return ((Class<?>) getTypeForField(field, c, true)).getName();
+            }
             if ( isArrayAttribute(c, field) ) {
             	return  ((Class<?>) getTypeForField(field, c, true)).getName();
             }
