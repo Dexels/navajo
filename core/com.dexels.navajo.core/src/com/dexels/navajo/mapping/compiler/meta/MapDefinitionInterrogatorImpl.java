@@ -19,7 +19,7 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 		mapMetaData = MapMetaData.getInstance();
 	}
 
-	public void addExtentionDefinition(String extension) throws Exception {
+	public void addExtensionDefinition(String extension) throws Exception {
 
 		Class<ExtensionDefinition> c = (Class<ExtensionDefinition>) Class.forName(extension);
 		ExtensionDefinition ed = c.getDeclaredConstructor().newInstance();

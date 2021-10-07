@@ -13,11 +13,10 @@ public class Tester {
 
 		try {
 			MapDefinitionInterrogatorImpl mdii = new MapDefinitionInterrogatorImpl();
-			mdii.addExtentionDefinition("com.dexels.navajo.adapter.StandardAdapterLibrary");
-			mdii.addExtentionDefinition("com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary");
-			mdii.addExtentionDefinition("com.dexels.navajo.mongo.adapter.MongoAdapterLibrary");
-			mdii.addExtentionDefinition("com.dexels.sportlink.adapters.SportlinkAdapterDefinitions");
-			mdii.addExtentionDefinition("com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary");
+			mdii.addExtensionDefinition("com.dexels.navajo.adapter.StandardAdapterLibrary");
+			mdii.addExtensionDefinition("com.dexels.navajo.adapter.core.NavajoEnterpriseCoreAdapterLibrary");
+			mdii.addExtensionDefinition("com.dexels.navajo.mongo.adapter.MongoAdapterLibrary");
+			mdii.addExtensionDefinition("com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary");
 
 
 			FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessQuerySchedule.xml");
