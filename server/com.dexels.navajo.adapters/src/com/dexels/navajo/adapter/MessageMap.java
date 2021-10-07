@@ -86,6 +86,8 @@ public class MessageMap implements Mappable {
 	private Message msg1pointer = null;
 	private Message msg2pointer = null;
 	
+	private ResultMessage [] resultMessage;
+	
 	@Override
 	public void kill() {
 	}
