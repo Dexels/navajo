@@ -50,6 +50,19 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 		return c.getDeclaredField(m) != null;
 	}
 
+	public boolean hasDeclaredGetter(String className, String m)  {
+
+		String getter = "get" + (""+m.charAt(0)).toUpperCase() + m.substring(1);
+
+		try {
+			Class c = Class.forName(className);
+			return c.getDeclaredMethod(getter, null) != null;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+
 	@Override
 	public boolean isDeclaredField(String className, String m)  {
 		try {
@@ -74,7 +87,8 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 			String objectName = mapMetaData.getMapDefinition(adapter).getObjectName();
 			boolean isDefinedField = ( mapMetaData.getMapDefinition(adapter).getValueDefinition(m) != null);
 			boolean isDeclaredField = isDeclaredField(objectName, m);
-			return isDefinedField || isDeclaredField;
+			boolean hasGetter = hasDeclaredGetter(objectName, m);
+			return isDefinedField || isDeclaredField || hasGetter;
 		} catch (ClassNotFoundException e) {
 			throw new Exception(e);
 		} catch (KeywordException e) {
@@ -107,17 +121,6 @@ public class MapDefinitionInterrogatorImpl implements MapDefinitionInterrogator 
 		for ( String s : values ) {
 			System.err.println("\t" + s);
 		}
-
-	}
-
-	public static void main (String [] args) throws Exception {
-
-		MapDefinitionInterrogatorImpl m = new MapDefinitionInterrogatorImpl();
-
-		String adapter = "sqlquery";
-		String field = "doUpdate";
-
-		m.describeAdapter(adapter);
 
 	}
 

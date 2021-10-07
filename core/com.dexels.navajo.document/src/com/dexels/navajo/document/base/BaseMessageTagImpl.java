@@ -22,6 +22,7 @@ import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.FieldTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
+import com.dexels.navajo.document.navascript.tags.LoopTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public class BaseMessageTagImpl extends BaseMessageImpl {
@@ -111,6 +112,10 @@ public class BaseMessageTagImpl extends BaseMessageImpl {
 	}
 
 	public void addDebug(DebugTag dt) {
+		children.add(dt);
+	}
+	
+	public void addLoop(LoopTag dt) {
 		children.add(dt);
 	}
 

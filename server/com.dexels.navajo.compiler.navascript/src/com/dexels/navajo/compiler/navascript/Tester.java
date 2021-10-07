@@ -19,15 +19,17 @@ public class Tester {
 			mdii.addExtensionDefinition("com.dexels.navajo.resource.http.bundle.ResourceAdapterLibrary");
 
 
-			FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/ProcessQuerySchedule.xml");
+			FileInputStream fis = new FileInputStream("/Users/arjenschoneveld/EmptyArray.xml");
 			NavascriptTag navascript = (NavascriptTag)  NavajoFactory.getInstance().createNavaScript(fis, mdii);
 
-			OutputStream os = System.out;
+			navascript.write(System.err);
+			
+			OutputStream os = System.err;
 			navascript.formatNS3(0, os);
 			os.close();
 			
 		} catch (Exception e) {
-			System.err.print(e.getLocalizedMessage());
+			System.err.print(e);
 			System.exit(-1);
 		}
 

@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.7.55.qualifier
+Bundle-Version: 2.7.56.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Navajo-Name: Adapters
@@ -28,6 +28,7 @@ Export-Package: com.dexels.navajo.adapter,
    com.dexels.navajo.mapping,
    com.dexels.navajo.document.types,
    org.slf4j",
+ com.dexels.navajo.adapter.test,
  com.dexels.navajo.adapter.xmlmap;
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,

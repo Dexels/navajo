@@ -5,6 +5,10 @@
 		<object>com.dexels.navajo.adapter.TestAdapter</object>
 	</map>
 	<map>
+		<tagname>house</tagname>
+		<object>com.dexels.navajo.adapter.test.House</object>
+	</map>
+	<map>
 		<tagname>asynctest</tagname>
 		<object>com.dexels.navajo.mapping.AsyncTest</object>
 	</map>

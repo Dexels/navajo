@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -643,14 +644,33 @@ public final class MappingUtils {
             String type = determineTypeForField(field, c);
             if (type.startsWith("[L")) { // We have an array determine member type.
                 type = type.substring(2, type.length() - 1);
+                return type;
             }
             if (type.equals("java.util.Iterator")) {
                 return ((Class<?>) getTypeForField(field, c, true)).getName();
+            }
+            if ( isArrayAttribute(c, field) ) {
+            	return  ((Class<?>) getTypeForField(field, c, true)).getName();
             }
             return type;
         } catch (Exception nsfe) {
             throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
         }
+    }
+    
+    public static final String getIterableType(Class c, String field) throws UserException {
+    	 try {
+    		 String type = determineTypeForField(field, c);
+             if (type.startsWith("[L")) { // We have an array determine member type.
+                return getFieldType(c, field) + " []";
+             }
+             
+             type =  getTypeForField(field, c, false).getTypeName();
+             return type + "<" + getFieldType(c, field) + ">";
+          
+         } catch (Exception nsfe) {
+             throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+         }
     }
 
     public static final Map getAllFields(Class c) {
@@ -718,8 +738,24 @@ public final class MappingUtils {
         return ((Class<?>) getTypeForField(name, c, true)).getName();
     }
 
+    /**
+     * Checks whether a "field" is either an array or type Iterable
+     * 
+     * @param c
+     * @param field
+     * @return
+     * @throws MappingException
+     */
     public static final boolean isArrayAttribute(Class c, String field) throws MappingException {
-        return determineTypeForField(field, c).startsWith("[L");
+    	if ( determineTypeForField(field, c).startsWith("[L") ) {
+    		return true;
+    	}
+    	Type t = getTypeForField(field, c, false);    	
+    	if ( t instanceof Class ) {
+    		return isIterableClass((Class) t);
+    	} else {
+    		return false;
+    	}
     }
 
     public static final boolean isIteratorAttribute(Class c, String field) {
@@ -737,7 +773,7 @@ public final class MappingUtils {
         }
 
         try {
-            if (c.getField(name).getType().equals(Iterator.class) && fetchGenericType) {
+            if ( ( c.getField(name).getType().equals(Iterator.class) || isIterableClass(c.getField(name).getType()) ) && fetchGenericType) {
                 ParameterizedType pt = (ParameterizedType) c.getField(name).getGenericType();
                 return (pt.getActualTypeArguments()[0]);
             } else {
@@ -745,7 +781,8 @@ public final class MappingUtils {
             }
         } catch (Exception e) {
             try {
-                if (c.getDeclaredField(name).getType().equals(Iterator.class) && fetchGenericType) {
+                if (( c.getDeclaredField(name).getType().equals(Iterator.class) ||
+                		isIterableClass(c.getDeclaredField(name).getType()) ) && fetchGenericType) {
                     ParameterizedType pt = (ParameterizedType) c.getDeclaredField(name).getGenericType();
                     return (pt.getActualTypeArguments()[0]);
                 } else {
@@ -759,7 +796,7 @@ public final class MappingUtils {
                 for (int j = 0; j < methods.length; j++) {
                     if (methods[j].getName().equals(getMethod)) {
                         Method m = methods[j];
-                        if (m.getReturnType().equals(Iterator.class) && fetchGenericType) {
+                        if ((m.getReturnType().equals(Iterator.class) || isIterableClass(m.getReturnType()) ) && fetchGenericType) {
                             ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
                             return (pt.getActualTypeArguments()[0]);
                         } else {
@@ -777,6 +814,24 @@ public final class MappingUtils {
         }
     }
 
+    public static boolean isIterableClass(Class<?> clazz) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        computeClassHierarchy( clazz, classes );
+        return classes.contains( Iterable.class );
+    }
+    
+    private static void computeClassHierarchy(Class<?> clazz, List<Class<?>> classes) {
+        for ( Class current = clazz; current != null; current = current.getSuperclass() ) {
+          if ( classes.contains( current ) ) {
+            return;
+          }
+          classes.add( current );
+          for ( Class currentInterface : current.getInterfaces() ) {
+            computeClassHierarchy( currentInterface, classes );
+          }
+        }
+      }
+    
     public static final String createPackageName(String packagePath) throws Exception {
 
         if (packagePath.length() > 0 && packagePath.charAt(0) == '/') {
