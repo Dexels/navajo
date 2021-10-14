@@ -6,4 +6,4 @@ Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: com.dexels.navajo.runtime.config;version="1.0.1"
+Export-Package: com.dexels.navajo.runtime.config;version="2.0.0"
