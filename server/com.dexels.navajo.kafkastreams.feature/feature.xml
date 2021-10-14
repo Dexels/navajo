@@ -116,27 +116,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.mongodb.driver-async"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mongodb.driver-reactivestreams"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mongodb.mongo-java-driver"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="lz4-java"
          download-size="0"
          install-size="0"
@@ -152,6 +131,27 @@
 
    <plugin
          id="com.dexels.kafka.webapi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.mongodb.driver-core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.mongodb.driver-reactivestreams"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.mongodb.driver-sync"
          download-size="0"
          install-size="0"
          version="0.0.0"
