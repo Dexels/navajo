@@ -78,16 +78,16 @@ public class DependencyAnalyzer {
             // set correct
             for (Dependency dep : myDependencies) {
                 if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
-                    if( includeDependenciesFound.contains( dep.getDependee() ) )
+                    if( ! includeDependenciesFound.contains( dep.getDependee() ) )
                     {
-                        logger.error( "Loop detected in include dependencies related to: " + scriptFile.getAbsolutePath() );
-                        return;
+                        includeDependenciesFound.add( dep.getDependee() );
+                        addDependencies( dep.getDependee(), new File( dep.getDependeeFile() ), includeDependenciesFound );
                     }
                     else
                     {
-                        includeDependenciesFound.add( dep.getDependee() );
+                        logger.error( "Loop detected in include dependencies related to: " + scriptFile.getAbsolutePath() );
+                        // Continue with next dependency
                     }
-                    addDependencies( dep.getDependee(), new File( dep.getDependeeFile() ), includeDependenciesFound );
                 }
             }
         } finally {

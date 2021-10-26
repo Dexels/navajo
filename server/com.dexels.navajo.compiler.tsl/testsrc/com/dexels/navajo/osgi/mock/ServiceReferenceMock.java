@@ -91,7 +91,7 @@ public class ServiceReferenceMock<S> implements ServiceReference<S> {
         }
         else
         {
-            return -1;
+            throw new UnsupportedOperationException( "compareTo a non-ServiceReferenceMock is not supported" );
         }
     }
 
