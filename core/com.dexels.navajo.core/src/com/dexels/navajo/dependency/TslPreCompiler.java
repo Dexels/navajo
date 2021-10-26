@@ -387,6 +387,11 @@ public class TslPreCompiler {
                 includeScriptFile = scriptFolder + File.separator + includedScript + ".broken";
             }
             
+            if( includeScriptFile.equals( fullScriptPath ) )
+            {
+                throw new UserException( -1, "Cannot include myself!" );
+            }
+
             deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
@@ -502,6 +507,10 @@ public class TslPreCompiler {
                     return null;
                 }
                 result.addAll(getParamValue(tslDoc, scriptString));
+            } else if (scriptString.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                continue;
             } else {
                 String cleanScript = scriptString.replace("'", "");
                 result.add(cleanScript);
