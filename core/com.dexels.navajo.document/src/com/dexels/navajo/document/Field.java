@@ -1,11 +1,9 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document;
-
-import java.io.Serializable;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -34,12 +32,12 @@ public interface Field extends Property {
 	public void setComment(String s);
 
 	public void setParent(MapAdapter p);
-	
+
 	public String getCondition();
 
 	public void setCondition(String s);
 
 	public Object getRef();
-	
+
 
 }

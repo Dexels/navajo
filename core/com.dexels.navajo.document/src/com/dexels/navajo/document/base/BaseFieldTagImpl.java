@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document.base;
@@ -16,12 +16,11 @@ import com.dexels.navajo.document.ExpressionTag;
 import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Property;
 
 public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 9083129086534100907L;
 
@@ -31,16 +30,16 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	private boolean oldSkool;
 	List<BaseMapTagImpl> children = new ArrayList<>();
 	Map<String,String> attributes = new HashMap<>();
-	
+
 	public BaseFieldTagImpl(Navajo n) {
 		super(n);
 	}
-	
+
 	public BaseFieldTagImpl(Navajo n, String name, String condition) {
 		super(n, condition, name);
 		fieldName = name;
 	}
-	
+
 	public BaseFieldTagImpl(Navajo n, String name, String condition, boolean oldSkool) {
 		super(n, condition, name);
 		this.oldSkool = oldSkool;
@@ -50,11 +49,11 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	public void setParent(MapAdapter p) {
 		this.parent = p;
 	}
-	
+
 	public MapAdapter getParent() {
 		return parent;
 	}
-	
+
 	public void addMap(BaseMapTagImpl m) {
 		children.add(m);
 	}
@@ -71,14 +70,14 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	public void setConstant(String c) {
 		constant = c;
 	}
-	
+
 	public String getConstant() {
 		return constant;
 	}
-	
+
 	@Override
 	public List<? extends BaseNode> getChildren() {
-		
+
 		if ( this.myExpressions.size() > 1 || ( oldSkool && myExpressions.size() > 0 ) ) {
 			List<BaseExpressionTagImpl> expressions = new ArrayList<>();
 			for ( ExpressionTag et: this.myExpressions) {
@@ -121,7 +120,7 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	public void addAttributeNameValue(String name, String expression) {
 		attributes.put(name, expression);
 	}
-	
+
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
@@ -134,11 +133,11 @@ public class BaseFieldTagImpl extends BaseParamTagImpl implements Field {
 	public boolean hasTextNode() {
 		return ( constant != null );
 	}
-	
+
 	@Override
 	public void writeText(Writer w) throws IOException  {
 		if ( constant != null ) {
-			w.write(constant); 
+			w.write(constant);
 		}
 	}
 }
