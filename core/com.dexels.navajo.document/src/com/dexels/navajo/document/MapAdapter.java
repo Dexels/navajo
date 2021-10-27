@@ -1,11 +1,9 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document;
-
-import com.dexels.navajo.document.navascript.tags.MapTag;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -32,11 +30,11 @@ public interface MapAdapter extends java.io.Serializable {
   public void addParam(Param p);
 
   public void setParent(MapAdapter m);
-  
+
   public void addMessage(Message m);
-  
+
   public void addMap(MapAdapter m);
-  
+
   public void addProperty(Property p);  // in case of a ref map, properties can be added
 
   public String getObject();
@@ -56,10 +54,10 @@ public interface MapAdapter extends java.io.Serializable {
   public void setFilter(String s);
 
   public Object getRef();
-  
+
   public void addAttributeNameValue(String name, String expression);
 
   public void addBreak(Break b);
- 
+
 
 }

@@ -1,17 +1,15 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document.base;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Param;
@@ -20,23 +18,20 @@ import com.dexels.navajo.document.navascript.tags.ParamTag;
 
 public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 
+    private static final long serialVersionUID = 2611502074984039311L;
+
 	BaseMapTagImpl myMap;
 	List<BaseParamTagImpl> myParam = new ArrayList<>();
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2611502074984039311L;
-	
+
 	String condition;
 	String comment;
 	String mode;
 	String type;
-	
+
 	public BaseParamTagImpl(Navajo n) {
 		super(n);
 	}
-	
+
 	public BaseParamTagImpl(Navajo n, String name) {
 		super(n, name);
 	}
@@ -83,19 +78,19 @@ public class BaseParamTagImpl extends BasePropertyImpl implements Param {
 	public String toString() {
 		return getName();
 	}
-	
+
 	public void addMap(BaseMapTagImpl m) {
 		myMap = m;
 	}
-	
+
 	public BaseMapTagImpl getMap() {
 		return myMap;
 	}
-	
+
 	public boolean hasParamChildren() {
 		return myParam.size() > 0;
 	}
-	
+
 	@Override
 	public List<? extends BaseNode> getChildren() {
 		if ( myMap != null ) {

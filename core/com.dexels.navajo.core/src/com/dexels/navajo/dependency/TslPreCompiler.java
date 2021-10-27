@@ -51,7 +51,7 @@ public class TslPreCompiler {
         Document tslDoc = null;
         InputStream is = null;
 
-        
+
         try {
         	if ( script.getAbsolutePath().endsWith(".ns")) { // Check for NS3 type script
         		NS3ToNSXML ns3toxml = new NS3ToNSXML();
@@ -97,7 +97,7 @@ public class TslPreCompiler {
     }
 
     private String fetchScriptFileName(String scriptName) {
-    
+
     	// Check for xml based script
     	File f1 = new File(scriptName + ".xml");
     	if ( f1.exists() ) {
@@ -109,16 +109,16 @@ public class TslPreCompiler {
     	if ( f2.exists() ) {
     		return scriptName + ".ns";
     	}
-    	
+
     	// Check for scala script
     	File f3 = new File(scriptName + ".scala");
     	if ( f3.exists() ) {
     		return scriptName + ".scala";
     	}
-    	
+
     	return null;
     }
-    
+
     private void findMethodDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
         NodeList methods = tslDoc.getElementsByTagName("method");
         for (int i = 0; i < methods.getLength(); i++) {
@@ -131,7 +131,7 @@ public class TslPreCompiler {
             if (scriptTenant != null) {
                 // trying tenant-specific variant first
             	String methodScriptFile = fetchScriptFileName(scriptFolder + File.separator + methodScript);
-            	
+
                 // Check if exists
                 if ( methodScriptFile != null ) {
                     deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n)));
@@ -141,7 +141,7 @@ public class TslPreCompiler {
                     // Thus continue with next method
                     continue;
                 }
-          
+
             }
 
             String methodScriptFile = fetchScriptFileName(scriptFolder + File.separator + methodScript);
@@ -182,7 +182,7 @@ public class TslPreCompiler {
             Element n = (Element) operations.item(i);
 
             String operationScript = n.getAttribute("service").equals("") ? null : n.getAttribute("service");
-            String operationValidationScript = n.getAttribute("validationService").equals("") ? null : n.getAttribute("validationService"); 
+            String operationValidationScript = n.getAttribute("validationService").equals("") ? null : n.getAttribute("validationService");
             if(operationScript!=null && !"".equals(operationScript)) {
                 if (scriptTenant != null) {
                     // trying tenant-specific variant first
@@ -200,10 +200,10 @@ public class TslPreCompiler {
                 }
 
                 String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + operationScript);
-                
-                String operationValidationScriptFile = ( operationValidationScript != null ? 
+
+                String operationValidationScriptFile = ( operationValidationScript != null ?
                 		 fetchScriptFileName(scriptFolder + File.separator + operationValidationScript ) : null );
-                
+
                 // Check if exists
                 boolean isBroken = false;
                 if (operationScriptFile == null) {
@@ -235,9 +235,9 @@ public class TslPreCompiler {
                 if (operationValidationScriptFile == null) {
                     isBroken = true;
                 }
-                
+
                 if (operationValidationScript != null ) {
-             
+
                     deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
                     // Going to check for tenant-specific include-variants
@@ -266,9 +266,9 @@ public class TslPreCompiler {
 
         for (int i = 0; i < messages.getLength(); i++) {
             Element n = (Element) messages.item(i);
-            
+
             String subType = n.getAttribute("subtype");
-            
+
             if (subType != null && !subType.equals("")) {
                 String[] subTypeElements = subType.split(",");
                 for (String subTypeElement: subTypeElements) {
@@ -295,7 +295,7 @@ public class TslPreCompiler {
         }
 
     }
-    
+
     private void addSuperEntityDependency(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc, Element n, String superEntity) {
         String version = "0";
         if (superEntity.indexOf(".") != -1) {
@@ -303,7 +303,7 @@ public class TslPreCompiler {
         }
         String replace = "." + version;
         superEntity = superEntity.replace(replace, "");
-        
+
         if (superEntity.indexOf('?') > 0) {
             superEntity = superEntity.split("\\?")[0];
         }
@@ -367,7 +367,7 @@ public class TslPreCompiler {
 
                 // Check if exists
                 if ( includeScriptFile != null) {
-                	
+
                     deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), false, true));
 
                     // No need to try any other tenant-specific includes since
@@ -385,7 +385,12 @@ public class TslPreCompiler {
                 isBroken = true;
                 includeScriptFile = scriptFolder + File.separator + includedScript + ".broken";
             }
-            
+
+            if( includeScriptFile.equals( fullScriptPath ) )
+            {
+                throw new UserException( -1, "Cannot include myself!" );
+            }
+
             deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken, true));
 
             // Going to check for tenant-specific include-variants
@@ -501,6 +506,10 @@ public class TslPreCompiler {
                     return null;
                 }
                 result.addAll(getParamValue(tslDoc, scriptString));
+            } else if (scriptString.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                continue;
             } else {
                 String cleanScript = scriptString.replace("'", "");
                 result.add(cleanScript);

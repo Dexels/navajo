@@ -37,7 +37,6 @@ import com.dexels.immutable.api.customtypes.CoordinateType;
 import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -152,7 +151,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	protected List<ExpressionTag> myExpressions = new ArrayList<>();
 	private BaseMapTagImpl selectionMap = null;
-	
+
 	public BasePropertyImpl(Navajo n) {
 		super(n);
 	}

@@ -117,7 +117,7 @@ public class MergePDFsFromDatasource extends FunctionInterface {
 						+ ") AND objectType  = '" + objectType +"'";
 
 		JDBCMappable sql = null;
-		ArrayList result = new ArrayList();
+		ArrayList<Object> result = new ArrayList<>();
 
 		try {
 			sql = JDBCFactory.getJDBCMap(getAccess());

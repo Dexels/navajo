@@ -755,11 +755,11 @@ public class TslCompiler {
 	// method for implementing loop $field | [/Array] [filter] construct
 	public String loopNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
-		
-	
+
+
 		 return null;
 	}
-	
+
 	//method for implementing if-condition --b
 	public String blockNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
@@ -815,7 +815,7 @@ public class TslCompiler {
 		String scopeMsg = n.getAttribute("scope");
 		String method = n.getAttribute("method");
 		String subType = n.getAttribute("subtype");
-		
+
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
 		condition = (condition == null) ? "" : condition;
@@ -960,7 +960,7 @@ public class TslCompiler {
 					+ messageList
 					+ " = new Message[1];\n");
 			result.append("");
-		 
+
 		} else { // must be parammessage.
 
 			result.append(printIdent(ident)
@@ -983,7 +983,7 @@ public class TslCompiler {
 			if (subType != null && !subType.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setSubType(\"" + subType + "\");\n");
-				
+
 				String[] subTypeElements = subType.split(",");
 				for (String subTypeElement: subTypeElements) {
 				    if (subTypeElement.startsWith("interface=")) {
@@ -994,7 +994,7 @@ public class TslCompiler {
 		                    }
 		                    String replace = "." + version;
 		                    iface = iface.replace(replace, "");
-		                    
+
 		                    String options = null;
 		                    if (iface.indexOf('?') > 0) {
 		                        options = iface.split("\\?")[1];
@@ -1334,7 +1334,7 @@ public class TslCompiler {
 					+ ";\n");
 
 			if (!isIterator) {
-				
+
 				String forLoop = "for ( " + subClassName + " " + mappableArrayElementName + " : " + mappableArrayName + ") {\n if (!kill) {\n";
 //				result.append(printIdent(ident + 2) + "for (int i"
 //						+ (ident + 2) + " = " + startElementVar + "; i"
@@ -1355,7 +1355,7 @@ public class TslCompiler {
 //						+ "currentMap = new MappableTreeNode(access, currentMap, "
 //						+ mappableArrayName + "[i" + (ident + 2)
 //						+ "], true);\n");
-				result.append(printIdent(ident + 4) + "currentMap = new MappableTreeNode(access, currentMap, " 
+				result.append(printIdent(ident + 4) + "currentMap = new MappableTreeNode(access, currentMap, "
 						+ mappableArrayElementName + ", true);\n");
 			} else {
 				result.append(printIdent(ident + 4)
@@ -1448,7 +1448,7 @@ public class TslCompiler {
 			if ( n.getNodeName().equals("loop")) {
 				throw new MappingException("Can only loop over arrays");
 			}
-			
+
 			if (mapPath == null) {
 				result.append(printIdent(ident + 2)
 						+ "treeNodeStack.push(currentMap);\n");
@@ -1551,11 +1551,11 @@ public class TslCompiler {
 					+ "MappingUtils.callStoreMethod(currentMap.myObject);\n"
 					+ "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 		} else { // Just some new tags under the "message" tag.
-			
+
 			if ( n.getNodeName().equals("loop")) {
 				throw new MappingException("Can only loop over arrays");
 			}
-			
+
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				result.append(compile(ident + 2, children.item(i), className,
@@ -3006,7 +3006,7 @@ public class TslCompiler {
 
 		return null;
 	}
-	  
+
 	/**
 	 * Resolve include nodes in the script: <include
 	 * script="[name of script to be included]"/>
@@ -3045,7 +3045,7 @@ public class TslCompiler {
 		Document includeDoc = null;
 		String includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
 		File includedFile = null;
-		
+
 		if (includeFileName != null) {
 			includedFile = new File(includeFileName);
 			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includeFileName), false);
@@ -3139,7 +3139,7 @@ public class TslCompiler {
 					objectName));
 		}
 
-		else if (n.getNodeName().equals("message") || n.getNodeName().equals("loop") 
+		else if (n.getNodeName().equals("message") || n.getNodeName().equals("loop")
 				|| (n.getNodeName().equals("param") && (((Element) n)
 						.getAttribute("type").equals("array") || ((Element) n)
 						.getAttribute("type").equals("array_element")))) {
@@ -3153,10 +3153,10 @@ public class TslCompiler {
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-			
+
 			String code = messageNode(ident, (Element) n, className,
 					objectName, deps, tenant);
-			
+
 			methodBuffer.append(code);
 			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
@@ -3649,7 +3649,7 @@ public class TslCompiler {
 			result.append("}\n\n");
 
 			result.append("}//EOF");
-			
+
 			fo.write(result.toString());
 			fo.close();
 		} catch (SkipCompilationException e) {
@@ -3677,7 +3677,7 @@ public class TslCompiler {
 
 		try {
 
-			
+
 			if (new File(ns3ScriptPath).exists() ) {
 				NS3ToNSXML ns3toxml = new NS3ToNSXML();
 				ns3toxml.initialize();
@@ -3702,7 +3702,7 @@ public class TslCompiler {
 				is = navajoIOConfig.getScript(packagePath + "/" + script,
 						tenant,extension);
 			}
-			
+
 			if ( !isNavascript ) { // NS3 does NOT support inheritance at this moment.
 				InputStream sis = navajoIOConfig.getScript(packagePath + "/" + script, tenant,extension);
 				logger.debug("Getting script: {}/{}", packagePath, script);
@@ -3725,7 +3725,7 @@ public class TslCompiler {
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
-			
+
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant, forceTenant);
 

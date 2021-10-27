@@ -5,7 +5,6 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.server.listener.http;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import javax.servlet.ServletContext;

@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document.base;
@@ -23,7 +23,6 @@ import com.dexels.navajo.document.navascript.tags.CommentBlock;
 import com.dexels.navajo.document.navascript.tags.DebugTag;
 import com.dexels.navajo.document.navascript.tags.IncludeTag;
 import com.dexels.navajo.document.navascript.tags.LoopTag;
-import com.dexels.navajo.document.navascript.tags.MapTag;
 import com.dexels.navajo.document.navascript.tags.SynchronizedTag;
 
 public class BaseMapTagImpl extends BaseNode implements MapAdapter {
@@ -36,7 +35,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	String condition;
 	String filter;
 	boolean oldStyleMap;
-	
+
 	public void setOldStyleMap(boolean oldStyleMap) {
 		this.oldStyleMap = oldStyleMap;
 	}
@@ -44,27 +43,27 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public BaseMapTagImpl(Navajo n) {
 		super(n);
 	}
-	
+
 	public BaseMapTagImpl(Navajo n, String name, String condition) {
 		super(n);
 		this.name = name;
 		this.condition = condition;
 	}
-	
+
 	public BaseMapTagImpl(Navajo n, String name, String condition, boolean oldStyleMap) {
 		super(n);
 		this.name = name;
 		this.condition = condition;
 		this.oldStyleMap = oldStyleMap;
 	}
-	
+
 	public BaseMapTagImpl(Navajo n, String ref, String filter, MapAdapter parent) {
 		super(n);
 		this.ref = ref;
 		this.filter = filter;
 		this.parent = parent;
 	}
-	
+
 	public BaseMapTagImpl(Navajo n, String ref, String filter, MapAdapter parent, boolean oldStyleMap) {
 		super(n);
 		this.ref = ref;
@@ -72,7 +71,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		this.parent = parent;
 		this.oldStyleMap = oldStyleMap;
 	}
-	
+
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String,String> attr = new HashMap<>();
@@ -102,15 +101,15 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 		}
 		return c;
 	}
-	
+
 	public void setName(String s) {
 		this.name = s;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setParent(MapAdapter m) {
 		this.parent = m;
 	}
@@ -118,7 +117,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public MapAdapter getParent() {
 		return parent;
 	}
-	
+
 	@Override
 	public String getTagName() {
 		if ( oldStyleMap ) {
@@ -127,7 +126,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 			return parent.getObject() + "." + ref;
 		} else {
 			return "map."+name;
-		} 
+		}
 	}
 
 	@Override
@@ -145,7 +144,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public void addMessage(Message m) {
 		children.add(m);
 	}
-	
+
 	@Override
 	public void addMap(MapAdapter m) {
 		children.add(m);
@@ -200,7 +199,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public void addProperty(Property p) {
 		children.add(p);
 	}
-	
+
 	public void addAttributes(Map<String,String> attr) {
 		attributes.putAll(attr);
 	}
@@ -209,7 +208,7 @@ public class BaseMapTagImpl extends BaseNode implements MapAdapter {
 	public void addAttributeNameValue(String name, String expression) {
 		attributes.put(name, expression);
 	}
-	
+
 	@Override
 	public void addBreak(Break b) {
 		children.add(b);
