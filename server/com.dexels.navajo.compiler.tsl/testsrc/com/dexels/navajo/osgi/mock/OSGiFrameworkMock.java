@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.osgi.mock;
@@ -33,19 +33,19 @@ import com.dexels.navajo.script.api.CompiledScriptFactory;
 
 /**
  * Central class for the mocking of the OSGi framework.
- * Should be shared by all OSGi related mocking classes in one test 
+ * Should be shared by all OSGi related mocking classes in one test
  *
  */
 public class OSGiFrameworkMock {
-    
+
     private long highestUsedId = 0;
-    
+
     private Map<String, Bundle> installedBundlesBySymbolicName = new HashMap<>();
     private List<ServiceReferenceMock<?>> serviceReferences = new ArrayList<>();
-    
+
     /**
      * Mimics the installing of a bundle. Ignores the inputStream
-     * 
+     *
      * @param location The string describing the location of the jar file (an URI is assumed)
      * @param input    Mostly ignored, is closed as part of the implementation
      * @return         The created Bundle object
@@ -67,7 +67,7 @@ public class OSGiFrameworkMock {
 
     /**
      * Mimics the installing of a bundle using the various Mock classes
-     *  
+     *
      * @param location The string describing the location of the jar file (an URI is assumed)
      * @return         The created Bundle object
      * @throws BundleException
@@ -78,9 +78,9 @@ public class OSGiFrameworkMock {
         BundleMock bundle = new BundleMock( myId, location, new BundleContextMock( this ) );
         Bundle newBundle = bundle;
         ((BundleContextMock) newBundle.getBundleContext()).setBundle( newBundle );
-        
+
         installedBundlesBySymbolicName.put( newBundle.getSymbolicName(), newBundle );
-        
+
         parseDSFileAndAddServiceReference( location, bundle );
 
         return newBundle;
@@ -88,10 +88,10 @@ public class OSGiFrameworkMock {
 
     /**
      * Helper function to parse the generated DS file and create the necessary ServiceReference object, which is then registered in this class
-     * Only supports ServiceReference to CompiledScriptFactory 
-     * 
+     * Only supports ServiceReference to CompiledScriptFactory
+     *
      * If something goes wrong trying to access the DS file, the service reference is still created but will not contain any properties
-     * 
+     *
      * @param location The string describing the location of the jar file
      * @param bundle   The bundle for which to create the service reference
      */
@@ -110,7 +110,7 @@ public class OSGiFrameworkMock {
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document document = builder.parse(source);
             document.normalize();
-            
+
             NodeList components = document.getElementsByTagName( "scr:component" );
             if ( components == null || components.getLength() != 1
                     || !( components.item(0) instanceof Element ) )
@@ -126,9 +126,9 @@ public class OSGiFrameworkMock {
                 installedBundlesBySymbolicName.remove( oldSymbolicName );
                 installedBundlesBySymbolicName.put( symbolicName, bundle );
             }
-            
+
             NodeList nodes = component.getChildNodes();
-            
+
             for ( int i = 0; i < nodes.getLength(); i++ )
             {
                 Node n = nodes.item(i);
@@ -141,14 +141,14 @@ public class OSGiFrameworkMock {
                     }
                 }
             }
-            
+
         }
         catch ( Exception e )
         {
             // then we don't do properties :(
             e.printStackTrace();
         }
-        
+
     }
 
     /**
@@ -203,7 +203,7 @@ public class OSGiFrameworkMock {
 
     /**
      * Main entry method for tests to verify whether a bundle is there or not
-     * 
+     *
      * @param symbolicName The name under which a bundle is known ( path/scriptName or path/scriptName_tenant )
      * @return The bundle if found, else null
      */
@@ -211,10 +211,11 @@ public class OSGiFrameworkMock {
     {
         return installedBundlesBySymbolicName.get( symbolicName );
     }
-    
+
     /**
      * Helper method to retrieve a servicereference based on class and filter
      */
+    @SuppressWarnings("unchecked")
     public <S> Collection<ServiceReference<S>> getServiceReferences( Class<S> clazz, Filter filter )
     {
         Collection<ServiceReference<S>> result = new ArrayList<>();
@@ -255,7 +256,7 @@ public class OSGiFrameworkMock {
 
     /**
      * Mimics uninstalling a bundle
-     * 
+     *
      * @param bundle The bundle to uninstall
      */
     public void uninstallBundle( Bundle bundle )
