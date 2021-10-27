@@ -37,7 +37,6 @@ import com.dexels.immutable.api.customtypes.CoordinateType;
 import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -149,14 +148,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private transient List<PropertyChangeListener> myPropertyDataListeners;
 	protected String subType = null;
 	private transient Object tipiProperty = null;
-	   
+
 	protected List<ExpressionTag> myExpressions = new ArrayList<>();
 	private BaseMapTagImpl selectionMap = null;
-	
+
 	public BasePropertyImpl(Navajo n) {
 		super(n);
 	}
-	
+
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
 		isListType = false;
@@ -1404,7 +1403,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	@Override
 	public String toString() {
-		
+
 		if (getType().equals(Property.DATE_PROPERTY)) {
 			return (this.getTypedValue() != null) ? dateFormat3.get().format((Date) this.getTypedValue()) : "";
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {

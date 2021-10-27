@@ -1,6 +1,6 @@
 /*
-This file is part of the Navajo Project. 
-It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
 No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
 */
 package com.dexels.navajo.document.base;
@@ -13,7 +13,6 @@ import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.Include;
 import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Param;
@@ -37,7 +36,7 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	public void addDefines(BaseNode defines) {
 		myChildren.add(defines);
 	}
-	
+
 	@Override
 	public Param addParam(Param p) {
 		myChildren.add(p);
@@ -49,12 +48,12 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 		myChildren.add(map);
 		return map;
 	}
-	
+
 	@Override
 	public void addBreak(Break b) {
 		myChildren.add(b);
 	}
-	
+
 	@Override
 	public Message addMessage(Message map) {
 		myChildren.add(map);
@@ -68,7 +67,7 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 
 	@Override
 	public final List<BaseNode> getChildren() {
-		
+
 		List<BaseNode> children = new ArrayList<>();
 		for ( Serializable s : myChildren ) {
 			if ( s instanceof BaseNode ) {
@@ -82,7 +81,7 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	public void addInclude(Include inc) {
 		myChildren.add(inc);
 	}
-	
+
 	@Override
 	public void addValidations(Validations val) {
 		myChildren.add(val);
@@ -111,7 +110,7 @@ public class BaseNavascriptImpl extends BaseNavajoImpl implements Navascript {
 	public void addMethods(MethodsTag mt) {
 		myChildren.add(mt);
 	}
-	
+
 	public void addLoop(LoopTag lt) {
 		myChildren.add(lt);
 	}
