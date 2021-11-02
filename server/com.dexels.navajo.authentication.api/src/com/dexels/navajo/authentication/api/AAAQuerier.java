@@ -42,7 +42,7 @@ public interface AAAQuerier {
     /**
      * Skips authentication 
      */
-    public void authorize(Access access, Integer userid) throws AuthorizationException;
+    public void authorize(Access access, String username) throws AuthorizationException;
 
     
     /**
@@ -53,11 +53,10 @@ public interface AAAQuerier {
 
     public void resetCachedUserCredential(String tenant, String username);
     
-    public Integer getUserId(Access a);
+    public String getUsername(Access a);
 
-    
     public boolean isFirstUseAccount(Access access);
-    
+
     public int getDaysUntilExpiration(Access access);
 
 

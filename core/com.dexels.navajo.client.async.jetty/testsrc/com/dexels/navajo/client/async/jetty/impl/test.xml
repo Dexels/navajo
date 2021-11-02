@@ -88,7 +88,6 @@
       <property length="10" name="PERSONID" type="string" value="NJL33T2" direction="out"/>
       <property length="10" name="DOMAIN" type="string" value="KNKV-UNION" direction="out"/>
       <property length="10" name="APPLICATION" type="string" value="legacy" direction="out"/>
-      <property length="10" name="USERID" type="integer" value="862" direction="out"/>
       <property length="10" name="USERNAME" type="string" value="ROOT" direction="out"/>
       <property length="10" name="TENANT" type="string" value="KNKV" direction="out"/>
       <property length="10" name="UNIONID" type="string" value="KNKV" direction="out"/>

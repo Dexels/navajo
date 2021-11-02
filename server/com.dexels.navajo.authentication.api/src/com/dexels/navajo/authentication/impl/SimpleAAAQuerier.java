@@ -5,7 +5,8 @@ No part of the Navajo Project, including this file, may be copied, modified, pro
 */
 package com.dexels.navajo.authentication.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
@@ -16,19 +17,8 @@ import com.dexels.navajo.script.api.AuthorizationException;
 
 public class SimpleAAAQuerier implements AAAQuerier {
 
-	private class User {
-		public final String username;
-		public final int userID;
+	private final List<String> usernames = new ArrayList<>();
 
-		User(String username, String password, int userID) {
-			this.username = username;
-			this.userID = userID;
-		}
-	}
-
-	private final Map<String,User> usersByUserName = new HashMap<>();
-
-	private final Map<Integer,User> usersByUserId = new HashMap<>();
 
 	@Override
 	public AuthenticationResult authenticateUsernamePassword(Access access) {
@@ -38,19 +28,16 @@ public class SimpleAAAQuerier implements AAAQuerier {
 	}
 
 	public void activate(Map<String,Object> settings) {
-		usersByUserId.clear();
-		usersByUserName.clear();
-		settings.entrySet()
-			.stream()
-			.filter(e->e.getKey().startsWith("user."))
-			.map(e->{
-				String username = e.getKey().substring("user.".length());
-				String[] parts = ((String)e.getValue()).split(",");
-				return new User(username,parts[1],Integer.parseInt(parts[0]));
-			}).forEach(user->{
-				usersByUserId.put(user.userID, user);
-				usersByUserName.put(user.username, user);
-			});
+	    usernames.clear();
+	    settings.entrySet()
+           .stream()
+           .filter(e->e.getKey().startsWith("user."))
+           .map(e->{
+               String username = e.getKey().substring("user.".length());
+               return username;
+           }).forEach(username->{
+               usernames.add(username);
+           });
 	}
 
 	/**
@@ -58,8 +45,7 @@ public class SimpleAAAQuerier implements AAAQuerier {
      */
     public void process(Access access) throws AuthorizationException {
     	String requestedUser = access.getRpcUser();
-    	User u = usersByUserName.get(requestedUser);
-    	if(u==null) {
+    	if(!usernames.contains(requestedUser)) {
     		throw new AuthorizationException(true, false, requestedUser, "Unknown user: "+requestedUser);
     	}
     }
@@ -67,7 +53,7 @@ public class SimpleAAAQuerier implements AAAQuerier {
     /**
      * Skips authentication
      */
-    public void authorize(Access access, Integer userid) throws AuthorizationException {
+    public void authorize(Access access, String username) throws AuthorizationException {
 
     }
 
@@ -81,12 +67,8 @@ public class SimpleAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public Integer getUserId(Access a) {
-		User u = this.usersByUserName.get(a.getRpcUser());
-		if(u==null) {
-			return -1;
-		}
-		return u.userID;
+	public String getUsername(Access a) {
+		return a.getRpcUser();
 	}
 
 	@Override

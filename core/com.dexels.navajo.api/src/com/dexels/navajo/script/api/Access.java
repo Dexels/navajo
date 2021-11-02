@@ -83,8 +83,6 @@ public final class Access implements java.io.Serializable, Mappable {
     public static final int EXIT_SCRIPT_NOT_FOUND = 6;
     public static final int EXIT_AUTH_EXECPTION = 21;
     
-    public static final String LEGACY_APPLICATION = "legacy";
-    
     @SuppressWarnings("unused")
     private static final String VERSION = "$Id$";
 
@@ -95,7 +93,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public double cpuload = -1.0;
     public String accessID = "";
     public String parentAccessId = "";
-    public int userID;
+    public String username;
     public int serviceID;
     public String rpcName = "";
     public String rpcPwd = "";
@@ -103,7 +101,7 @@ public final class Access implements java.io.Serializable, Mappable {
     public String userAgent;
     public String ipAddress;
     public String hostName;
-    public String application = LEGACY_APPLICATION;
+    public String application;
     public String organization;
     public String clientDescription;
     public boolean betaUser = false;
@@ -171,7 +169,7 @@ public final class Access implements java.io.Serializable, Mappable {
     // commit the data and finalise the network connection.
     private transient TmlRunnable originalRunnable;
   
-    public Access(int userID, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress, String hostName, Object certificate,
+    public Access(String username, int serviceID, String rpcUser, String rpcName, String userAgent, String ipAddress, String hostName, Object certificate,
             boolean betaUser, String accessID) {
 
         this();
@@ -183,7 +181,7 @@ public final class Access implements java.io.Serializable, Mappable {
                 this.accessID = created.getTime() + "-" + accessCount;
             }
         }
-        this.userID = userID;
+        this.username = username;
         this.serviceID = serviceID;
         this.rpcName = rpcName;
         this.rpcUser = rpcUser;
@@ -413,7 +411,7 @@ public final class Access implements java.io.Serializable, Mappable {
         a.threadCount = threadCount;
         a.cpuload = cpuload;
         a.accessID = accessID;
-        a.userID = userID;
+        a.username = username;
         a.serviceID = serviceID;
         a.rpcName = this.rpcName;
         a.rpcPwd = this.rpcPwd;

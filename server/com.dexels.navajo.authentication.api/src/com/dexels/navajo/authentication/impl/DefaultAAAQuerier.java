@@ -26,14 +26,14 @@ public class DefaultAAAQuerier implements AAAQuerier {
 
 	@Override
 	public void process(Access access) throws AuthorizationException {
-		logger.info("Processing using default authenticator using userid: {}  ",access.userID);
+		logger.info("Processing using default authenticator using username: {}  ",access.username);
 		
 
 	}
 
     @Override
-    public void authorize(Access access, Integer userid) throws AuthorizationException {
-		logger.info("Authorizing using default authenticator using userid: {} and from accessid: {}",userid,access.userID);
+    public void authorize(Access access, String username) throws AuthorizationException {
+		logger.info("Authorizing using default authenticator using username: {} and from accessid: {}", username, access.username);
     }
 
 	@Override
@@ -47,7 +47,7 @@ public class DefaultAAAQuerier implements AAAQuerier {
 	}
 
 	@Override
-	public Integer getUserId(Access a) {
+	public String getUsername(Access a) {
 		return null;
 	}
 

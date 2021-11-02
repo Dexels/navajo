@@ -712,7 +712,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 return outMessage;
             }
 
-            access = new Access(1, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
+            access = new Access("", 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
             access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
@@ -813,11 +813,11 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 access.setDebugAll(true);
             }
 
-            if ((access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOTGRANTED.
+            if ((access.username.isEmpty()) || (access.serviceID == -1)) { // ACCESS NOTGRANTED.
 
                 String errorMessage = "";
 
-                if (access.userID == -1) {
+                if (access.username.isEmpty()) {
                     errorMessage = "Cannot authenticate user: " + rpcUser;
                 } else {
                     errorMessage = "Cannot authorise use of: " + rpcName;
