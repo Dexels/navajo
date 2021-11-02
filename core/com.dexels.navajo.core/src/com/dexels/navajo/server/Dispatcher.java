@@ -712,7 +712,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 return outMessage;
             }
 
-            access = new Access("", 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
+            access = new Access(rpcUser, 1, rpcUser, rpcName, "", "", "", userCertificate, false, null);
             access.setTenant(instance);
             access.rpcPwd = rpcPassword;
             access.setInDoc(inMessage);
