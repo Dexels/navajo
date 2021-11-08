@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.authentication.api.AuthenticationType;
 import com.dexels.navajo.tester.js.NavajoTesterHelper;
 import com.dexels.navajo.tester.js.model.NavajoFileSystemEntry;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -54,8 +53,6 @@ public class NavajoTesterServlet extends HttpServlet {
         } else if (query.equals("useaaa")) {
             response.setContentType("application/json");
 //            JsonNode node = helper.getApplicationListContent();
-            AuthenticationType authType = helper.authenticationType();
-            result = mapper.writeValueAsString(mapper.createObjectNode().put("type", authType.name()));
             
         } else {
             logger.warn("Unsupported request: {}", query);

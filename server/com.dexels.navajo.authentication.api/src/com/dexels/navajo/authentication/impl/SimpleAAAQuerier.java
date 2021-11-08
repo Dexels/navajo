@@ -10,22 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
-import com.dexels.navajo.authentication.api.AuthenticationResult;
-import com.dexels.navajo.authentication.api.AuthenticationType;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public class SimpleAAAQuerier implements AAAQuerier {
 
 	private final List<String> usernames = new ArrayList<>();
-
-
-	@Override
-	public AuthenticationResult authenticateUsernamePassword(Access access) {
-		String userName = access.getRpcUser();
-		System.err.println("UserName: "+userName);
-		return AuthenticationResult.AUTHENTICATION_OK;
-	}
 
 	public void activate(Map<String,Object> settings) {
 	    usernames.clear();
@@ -49,41 +39,5 @@ public class SimpleAAAQuerier implements AAAQuerier {
     		throw new AuthorizationException(true, false, requestedUser, "Unknown user: "+requestedUser);
     	}
     }
-
-    /**
-     * Skips authentication
-     */
-    public void authorize(Access access, String username) throws AuthorizationException {
-
-    }
-
-
-	@Override
-	public void reset() {
-	}
-
-	@Override
-	public void resetCachedUserCredential(String tenant, String username) {
-	}
-
-	@Override
-	public String getUsername(Access a) {
-		return a.getRpcUser();
-	}
-
-	@Override
-	public boolean isFirstUseAccount(Access access) {
-		return false;
-	}
-
-	@Override
-	public int getDaysUntilExpiration(Access access) {
-		return 0;
-	}
-
-	@Override
-	public AuthenticationType type() {
-		return AuthenticationType.PASSWORD;
-	}
 
 }

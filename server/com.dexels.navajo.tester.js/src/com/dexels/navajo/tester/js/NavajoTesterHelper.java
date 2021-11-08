@@ -176,9 +176,5 @@ public class NavajoTesterHelper {
     	return result;
     }
 
-    public AuthenticationType authenticationType() {
-    	return this.aaaQuerier.type();
-    }
-
    
 }

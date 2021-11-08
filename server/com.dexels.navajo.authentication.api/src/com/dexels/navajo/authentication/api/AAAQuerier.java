@@ -22,43 +22,10 @@ import com.dexels.navajo.script.api.AuthorizationException;
  */
 
 public interface AAAQuerier {
-    public static final String UNKNOWN_USER = "Unknown user";
-    public static final String INVALID_PASSWORD = "Invalid password";
-    public static final String ACCOUNT_BLOCKED = "Account blocked";
-    public static final String ACCOUNT_INACTIVE = "Account not active";
 
-    public static final String FAILED_LOGIN_TOPIC = "aaa/failedlogin";
-    
-    
-    public AuthenticationResult authenticateUsernamePassword(Access access);
-    
-    public AuthenticationType type();
-    
     /**
      * Perform the full authentication and authorization stack
      */
     public void process(Access access) throws AuthorizationException;
-    
-    /**
-     * Skips authentication 
-     */
-    public void authorize(Access access, String username) throws AuthorizationException;
-
-    
-    /**
-     * Reset AAA module, i.e. re-load all configuration data.
-     *
-     */
-    public void reset();
-
-    public void resetCachedUserCredential(String tenant, String username);
-    
-    public String getUsername(Access a);
-
-    public boolean isFirstUseAccount(Access access);
-
-    public int getDaysUntilExpiration(Access access);
-
-
 
 }

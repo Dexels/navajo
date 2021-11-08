@@ -9,62 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.authentication.api.AAAQuerier;
-import com.dexels.navajo.authentication.api.AuthenticationResult;
-import com.dexels.navajo.authentication.api.AuthenticationType;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 
 public class DefaultAAAQuerier implements AAAQuerier {
 
-	
 	private static final Logger logger = LoggerFactory.getLogger(DefaultAAAQuerier.class);
 
 	@Override
-	public AuthenticationResult authenticateUsernamePassword(Access access) {
-		return AuthenticationResult.AUTHENTICATION_OK;
-	}
-
-	@Override
 	public void process(Access access) throws AuthorizationException {
-		logger.info("Processing using default authenticator using username: {}  ",access.username);
-		
-
+		logger.info("Processing using default authenticator using username: {}", access.username);
 	}
-
-    @Override
-    public void authorize(Access access, String username) throws AuthorizationException {
-		logger.info("Authorizing using default authenticator using username: {} and from accessid: {}", username, access.username);
-    }
-
-	@Override
-	public void reset() {
-
-	}
-
-	@Override
-	public void resetCachedUserCredential(String tenant, String username) {
-
-	}
-
-	@Override
-	public String getUsername(Access a) {
-		return null;
-	}
-
-	@Override
-	public boolean isFirstUseAccount(Access access) {
-		return false;
-	}
-
-	@Override
-	public int getDaysUntilExpiration(Access access) {
-		return 0;
-	}
-
-	@Override
-	public AuthenticationType type() {
-		return AuthenticationType.NONE;
-	}
-
 
 }
