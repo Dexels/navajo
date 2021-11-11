@@ -753,7 +753,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                     outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
                     AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                             + ", message=" + ex.getMessage(), Level.WARNING);
-                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+                    access.setExitCode(Access.EXIT_AUTH_EXCEPTION);
                     return outMessage;
                 } /*catch (SystemException se) { //
                     logger.error("SystemException on authenticateUser  {} for {}: ", rpcUser, rpcName, se);
@@ -765,7 +765,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
                 }*/ catch (Throwable t) {
                     logger.error("Unexpected exception on authenticateUser  {} for {}: ", rpcUser, rpcName, t);
                     outMessage = generateErrorMessage(access, t.getMessage(), SystemException.NOT_AUTHORISED, 1, new Exception("NOT AUTHORISED"));
-                    access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+                    access.setExitCode(Access.EXIT_AUTH_EXCEPTION);
                     access.setException(t);
                     return outMessage;
                 }
@@ -925,7 +925,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
             AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser
                     + ", message=" + aee.getMessage() + ")", Level.WARNING);
             myException = aee;
-            access.setExitCode(Access.EXIT_AUTH_EXECPTION);
+            access.setExitCode(Access.EXIT_AUTH_EXCEPTION);
             return outMessage;
         } catch (UserException ue) {
             try {
@@ -1036,7 +1036,7 @@ public class Dispatcher implements DispatcherMXBean, DispatcherInterface {
 
                 // Call after web service event...
                 access.setAfterServiceTime(0);
-                if (access.getExitCode() != Access.EXIT_AUTH_EXECPTION) {
+                if (access.getExitCode() != Access.EXIT_AUTH_EXCEPTION) {
                     long astart = System.currentTimeMillis();
                     if (WebserviceListenerFactory.getInstance() != null) {
                         WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
