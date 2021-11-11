@@ -71,6 +71,7 @@ public Object evaluate() throws com.dexels.navajo.expression.api.TMLExpressionEx
 
 @Override
 public String usage() {
+    // TODO: it seems weird that these functions are mixed together. Depending on the arguments there is a complete different usage.
     return "GetMessage(Message,int index). Returns array message element Built for tipi. OR: GetMessage('MessagePath') will retrieve the message from the current navajo (Used for scripts)";
   }
 
