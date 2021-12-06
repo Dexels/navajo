@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Navajo Target Platform: 3.3.998-sendratosports" sequenceNumber="3798">
+<target name="Navajo Target Platform: 3.3.1000-sendratosports" sequenceNumber="3800">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <repository location="https://p2.dexels.com/eclipse/equinox_4.16"/>
@@ -11,8 +11,8 @@
             <unit id="org.eclipse.equinox.server.p2.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://p2.dexels.com/eclipse/3rdparty_3.3.998-sendratosports"/>
-            <unit id="dexels-navajo-target.feature.group" version="3.3.998" />
+            <repository location="https://p2.dexels.com/eclipse/3rdparty_3.3.1000-sendratosports"/>
+            <unit id="dexels-navajo-target.feature.group" version="3.3.1000" />
         </location>
     </locations>
 </target>
