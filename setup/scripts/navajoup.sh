@@ -15,7 +15,7 @@ version=${artifactArray[1]}
 
 
 #Check if this new version already exists
-STATUS=`curl  -s -w "%{http_code}" "http://repo.dexels.com/nexus/content/repositories/thirdparty/$urlGroupId/$artifactId/$version/$artifactId-$version.jar" -o /dev/null`
+STATUS=`curl  -s -w "%{http_code}" "https://repo.dexels.com/nexus/content/repositories/thirdparty/$urlGroupId/$artifactId/$version/$artifactId-$version.jar" -o /dev/null`
 if [ $STATUS -eq "200" ]
 then
     echo "$artifactId version $version already exists - exiting!"
@@ -23,6 +23,6 @@ then
 fi
 
 #mvn deploy:deploy-file -Durl=file://${current}/repo/ -Dfile=$1 -DgroupId=$groupId -DartifactId=$artifactId -Dpackaging=jar -Dversion=$version
-mvn deploy:deploy-file -DrepositoryId=dexels -Durl=http://repo.dexels.com/nexus/content/repositories/thirdparty -DgroupId=$groupId -DartifactId=$artifactId -Dversion=$version -Dfile=$1 -Dpackaging=jar
+mvn deploy:deploy-file -DrepositoryId=dexels -Durl=https://repo.dexels.com/nexus/content/repositories/thirdparty -DgroupId=$groupId -DartifactId=$artifactId -Dversion=$version -Dfile=$1 -Dpackaging=jar
 
 

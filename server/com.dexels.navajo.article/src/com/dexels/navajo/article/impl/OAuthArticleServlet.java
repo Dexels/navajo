@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
@@ -26,12 +31,15 @@ import com.dexels.oauth.api.exception.TokenStoreException;
 
 @Deprecated
 public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
-    private static final String ACCESS_PREFIX = "article/";
+
+    private static final long serialVersionUID = 1199676363102046960L;
 
     private static final Logger logger = LoggerFactory.getLogger(OAuthArticleServlet.class);
 
-    private static final long serialVersionUID = 1199676363102046960L;
+    private static final String ACCESS_PREFIX = "article/";
+
     private static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
+
     private TokenStore tokenStore;
     private ClientStore clientStore;
     private TmlScheduler tmlScheduler;
@@ -39,19 +47,21 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
 	private long requestTimeout;
 
     public void activate() {
+
         logger.info("Activating OAuthArticleServlet");
-		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(5*60*1000L);
-		logger.info("Using timeout in continuation: {}",this.requestTimeout);
-    } 
+        requestTimeout = NavajoRequestConfig.getRequestTimeout(5 * 60 * 1000L); // 5 minutes
+        logger.info("Using timeout in continuation: {}", requestTimeout);
+    }
+
     public void deactivate() {
         logger.info("DeActivating OAuthArticleServlet");
     }
-    
- 
-    @Override
-    protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp) throws APIException {
-        String token = getToken(req);
 
+    @Override
+    protected void doServiceImpl(HttpServletRequest req, HttpServletResponse resp)
+            throws APIException {
+
+        String token = getToken(req);
         OAuthToken oauthToken = null;
         Client client = null;
 
@@ -63,14 +73,16 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
         }
 
         String username = client.getUsername();
-        if (oauthToken != null && oauthToken.getUsername() != null && !oauthToken.getUsername().equals("")) {
+        if (oauthToken != null && oauthToken.getUsername() != null
+                && !oauthToken.getUsername().equals("")) {
             username = oauthToken.getUsername();
         }
         String pathInfo = req.getPathInfo();
         String instance = client.getInstance();
 
         if (pathInfo == null) {
-            throw new APIException("Pathinfo is null, we cannot find an article then", null, APIErrorCode.ArticleNotFound);
+            throw new APIException("Pathinfo is null, we cannot find an article then", null,
+                    APIErrorCode.ArticleNotFound);
         }
         String articleName = determineArticleFromRequest(req);
         File article = getContext().resolveArticle(articleName);
@@ -84,29 +96,29 @@ public class OAuthArticleServlet extends ArticleBaseServlet implements Servlet {
                 ip = req.getRemoteAddr();
             }
 
-            Access a = new Access(-1, -1, username, ACCESS_PREFIX + articleName, "", "", "", null, false, null);
-            a.setTenant(instance);
-            a.rpcPwd = token;
-            a.created = new Date();
-            a.ipAddress = ip;
-            a.setClientDescription("Article");
-            a.setClientToken("Client id: " + client.getId());
-            
-            
-            
-            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article, pathInfo, req.getParameterMap(),
-                    instance, oauthToken);
-            runtime.setAccess(a);
-            
+            Access access = new Access(-1, -1, username, ACCESS_PREFIX + articleName, "", "", "",
+                    null, false, null);
+            access.setTenant(instance);
+            access.rpcPwd = token;
+            access.created = new Date();
+            access.ipAddress = ip;
+            access.setClientDescription("Article");
+            access.setClientToken("Client id: " + client.getId());
+
+            ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, "", username, article,
+                    pathInfo, req.getParameterMap(), instance, oauthToken);
+            runtime.setAccess(access);
             runtime.setUsername(username);
-            ArticleTmlRunnable articleRunnable = new ArticleTmlRunnable(req, resp, client, runtime, getContext(), requestTimeout);
-            tmlScheduler.submit(articleRunnable, false);
+
+            ArticleTmlRunnable runner = new ArticleTmlRunnable(req, resp, client, runtime,
+                    getContext(), requestTimeout);
+            if (!runner.isAborted()) {
+                tmlScheduler.submit(runner, false);
+            }
         } catch (Throwable e) {
             throw new APIException(e.getMessage(), e, APIErrorCode.InternalError);
         }
     }
-
-    
 
     public void setTmlScheduler(TmlScheduler scheduler) {
         this.tmlScheduler = scheduler;

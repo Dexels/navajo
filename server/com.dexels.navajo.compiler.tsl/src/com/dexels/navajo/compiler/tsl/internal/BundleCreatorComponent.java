@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.compiler.tsl.internal;
 
 import java.io.File;
@@ -69,6 +74,14 @@ public class BundleCreatorComponent implements BundleCreator {
     }
     
     public void removeTslScriptCompiler(ScriptCompiler sc) {
+        compilers.remove(sc.getScriptExtension());
+    }
+    
+    public void setNavascriptScriptCompiler(ScriptCompiler sc) {
+        compilers.put(sc.getScriptExtension(), sc);
+    }
+    
+    public void removeNavascriptScriptCompiler(ScriptCompiler sc) {
         compilers.remove(sc.getScriptExtension());
     }
     
@@ -169,6 +182,9 @@ public class BundleCreatorComponent implements BundleCreator {
     	boolean matchedScript = false;
     	removeOldCompiledScriptFiles(rpcName);
     	for (ScriptCompiler compiler : compilers.values()) {
+    		
+    		System.err.println("Checking compiler " + compiler + " to compile service " + rpcName);
+    		
     		 File scriptFolder = new File(navajoIOConfig.getRootPath(), compiler.getRelativeScriptPath());
     	     File f = new File(scriptFolder, rpcName + compiler.getScriptExtension());
     	     
@@ -198,6 +214,10 @@ public class BundleCreatorComponent implements BundleCreator {
     	     for (Map.Entry<String, File> entry : tenantSpecificFiles.entrySet())
     	     {
     	    	 createBundleForScript(entry.getKey(), rpcName, entry.getValue(),  tenantsToIgnore, false, failures, success, skipped, keepIntermediate);
+    	     }
+    	     
+    	     if ( matchedScript ) {
+    	    	 break;
     	     }
 
              
@@ -549,7 +569,6 @@ public class BundleCreatorComponent implements BundleCreator {
 
         FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
         FileUtils.copyFile(manifestFile, metainfManifest);
-        FileUtils.copyFile(dsFile, osgiinfScript);
         if (entityFile.exists()) {
             FileUtils.copyFile(entityFile, entityOsgiiScript);
         }

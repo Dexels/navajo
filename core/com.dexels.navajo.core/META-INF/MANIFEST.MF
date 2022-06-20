@@ -1,18 +1,18 @@
+Automatic-Module-Name: com.dexels.navajo.core
 Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-ManifestVersion: 2
-Bundle-Version: 5.3.59.qualifier
-Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
-Navajo-Name: Core
-Eclipse-ExtensibleAPI: true
+Bundle-Version: 5.3.68.qualifier
 Bundle-Activator: navajocore.Version
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.compiler;uses:="com.dexels.navajo.script.api",
  com.dexels.navajo.dependency;uses:="org.w3c.dom,com.dexels.navajo.server",
  com.dexels.navajo.enterprise.scheduler.tribe;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.script.api",
  com.dexels.navajo.events,
  com.dexels.navajo.events.types,
- com.dexels.navajo.functions.util;uses:="navajo,com.dexels.navajo.document.nanoimpl,com.dexels.navajo.parser",
+ com.dexels.navajo.functions.util,
  com.dexels.navajo.legacy.compiler,
  com.dexels.navajo.loader;version="1.0.0";uses:="org.dexels.utils.scriptloader",
  com.dexels.navajo.mapping,
@@ -101,17 +101,18 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  navajocore;uses:="org.osgi.framework,navajoextension",
  navajoextension;uses:="org.osgi.framework,navajo,com.dexels.navajo.version"
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.immutable.api;version="1.0.0",
+Import-Package: com.dexels.immutable.api;version="1.0.0",
  com.dexels.immutable.factory;version="1.2.0",
  com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.base;version="2.2.1",
  com.dexels.navajo.document.comparator;version="2.2.1",
  com.dexels.navajo.document.comparatormanager,
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.document.navascript.tags,
  com.dexels.navajo.document.stream;version="3.0.5",
  com.dexels.navajo.document.stream.api,
  com.dexels.navajo.document.types;version="2.2.0",
@@ -121,12 +122,15 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  com.dexels.navajo.repository.api,
  com.dexels.navajo.repository.api.diff;version="2.0.0",
  com.dexels.navajo.repository.api.util,
+ com.dexels.navajo.runtime.config;resolution:=optional,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.version,
+ com.dexels.prometheus.api;version="3.0.0",
  com.dexels.replication.api;version="9.1.0",
  com.dexels.replication.factory;version="1.1.0",
  com.dexels.resourcebundle;version="2.0.2",
  com.google.common.cache;version="20.0.0",
+ io.prometheus.client;version="0.8.1",
  io.reactivex;version="2.1.2";resolution:=optional,
  io.reactivex.functions;version="2.1.2";resolution:=optional,
  javax.imageio,
@@ -143,6 +147,7 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  navajo,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",
+ org.hamcrest;resolution:=optional,
  org.junit;resolution:=optional,
  org.junit.rules;resolution:=optional,
  org.junit.runner;resolution:=optional,
@@ -156,6 +161,6 @@ Import-Package: com.dexels.config.runtime;resolution:=optional,
  org.slf4j,
  org.w3c.dom
 Service-Component: OSGI-INF/*.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ActivationPolicy: lazy
-Automatic-Module-Name: com.dexels.navajo.core
+Eclipse-ExtensibleAPI: true
+Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
+Navajo-Name: Core

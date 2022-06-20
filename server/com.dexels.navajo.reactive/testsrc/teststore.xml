@@ -1,6 +1,0 @@
-<source.single count.eval="4" debug.eval="true">
-	<saveall count.eval="0"/>
-	<saveall count.eval="[/@count]+1"/>
-	<store name="subm"/>
-	<stream messageName="Bla" isArray.eval="true"/>
-</source.single>

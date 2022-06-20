@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document.base;
 
 import java.beans.PropertyChangeEvent;
@@ -131,11 +136,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     }
 
     @Override
-    public void addMap(com.dexels.navajo.document.MapTag map) {
-        throw new java.lang.UnsupportedOperationException("Method addMap() not yet implemented.");
-    }
-
-    @Override
     public Message addMessage(Message m) {
         if (m == null) {
             throw new NullPointerException("Can not add null message to Navajo object");
@@ -208,19 +208,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
             logger.error("Error: ", e);
         }
         return sw.toString();
-    }
-
-    @Override
-    public String persistenceKey() {
-        Navajo copy = this.copy();
-        copy.removeHeader();
-        StringWriter sw = new StringWriter();
-        try {
-            copy.write(sw);
-        } catch (NavajoException e) {
-            logger.error("Error: ", e);
-        }
-        return sw.toString().hashCode() + "";
     }
 
     @Override

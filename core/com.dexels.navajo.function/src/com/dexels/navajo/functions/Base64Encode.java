@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -24,26 +29,27 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-@Deprecated
 public class Base64Encode extends FunctionInterface {
 
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(Base64Encode.class);
 	
 	@Override
 	public String remarks() {
-		return "Get a Base64 representation of a given string or binary(deprecated).";
+		return "Get a Base64 representation of a given string or binary";
 	}
 
 	@Override
@@ -56,38 +62,21 @@ public class Base64Encode extends FunctionInterface {
 		return true;
 	}
 
-    
-    // I think this function does not work when you pass a Binary into it.
-    // It is a bit pointless anyway, it is more like a 'clone' then.
-
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object o = operand(0).value;
 		String data = null;
 		if ( o instanceof Binary ) {
 			Binary b = (Binary) o;
-            // HUH?! Why?! Making a string out of 'random' binary data is stupid
-            //
-			data = new String(b.getData());
+			data = Base64.getEncoder().encodeToString(b.getData());
 		} else if ( o instanceof String ) {
-			data = (String) o;
+			data = Base64.getEncoder().encodeToString(((String)o).getBytes(StandardCharsets.UTF_8));
+		} else if ( o instanceof Property && ((Property)o).getType() == Property.BINARY_PROPERTY ) {
+			data = ((Property)o).getValue();
 		} else {
 			throw new TMLExpressionException("Can not Base64Encode null data");
 		}
-//		sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
-//		String encoded = enc.encode(data.getBytes());
-//		
-		Binary b;
-		try {
-			final StringReader reader = new StringReader(data);
-			b = new Binary(reader);
-			b.setMimeType("application/octet-stream");
-			return b;
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-			return null;
-		}
 		
+		return data;
 	}
-
 }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tsl compiler for Navajo
 Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-Bundle-Version: 6.0.13.qualifier
+Bundle-Version: 6.0.16.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.dependency,
@@ -32,6 +32,7 @@ Import-Package: com.dexels.navajo.compiler,
  org.apache.commons.lang3;version="3.7.0",
  org.apache.commons.lang3.text;version="3.7.0",
  org.junit;resolution:=optional,
+ org.junit.rules;resolution:=optional,
  org.osgi.framework;version="1.6.0",
  org.osgi.framework.wiring;version="1.0.0",
  org.osgi.service.cm;version="1.3.0",
@@ -42,6 +43,7 @@ Import-Package: com.dexels.navajo.compiler,
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajo.compiler.tsl.xml,
  OSGI-INF/navajo.compiler.tsl.java.xml,
+ OSGI-INF/navajo.compiler.navascript.xml,
  OSGI-INF/navajo.compiler.java.xml,
  OSGI-INF/navajo.compiler.bundlecreator.xml,
  OSGI-INF/navajo.repository.listener.xml,
@@ -62,6 +64,6 @@ Export-Package: com.dexels.navajo.compiler.tsl,com.dexels.navajo.compi
  pl",com.dexels.osgicompiler,com.dexels.osgicompiler.internal;uses:="j
  avax.tools,com.dexels.osgicompiler,org.osgi.framework",navajotsl;uses
  :="org.osgi.framework"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: com.dexels.navajo.compiler.tsl

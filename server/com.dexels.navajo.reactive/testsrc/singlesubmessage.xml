@@ -1,6 +1,0 @@
-<source.single debug:="true">
-	<set aap.noot="mies" />
-	<set wim.zus:="1+1"/>
-	<set jet="teun"/>
-	<set other:="[aap/noot]"/>
-</source.single>

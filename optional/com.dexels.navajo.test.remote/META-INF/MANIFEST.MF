@@ -16,4 +16,4 @@ Import-Package: com.dexels.navajo.client,
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
  navajoqueuemanager
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

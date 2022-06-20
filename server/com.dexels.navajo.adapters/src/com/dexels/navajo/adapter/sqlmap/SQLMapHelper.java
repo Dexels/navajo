@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.adapter.sqlmap;
 
 import java.io.InputStream;
@@ -12,6 +17,9 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
@@ -30,6 +38,7 @@ import com.dexels.navajo.script.api.UserException;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SQLMapHelper {
 	
+    private static final Logger logger = LoggerFactory.getLogger(SQLMapHelper.class);
 	/**
 	 * Set the parameters for the statement
 	 * @param statement
@@ -61,7 +70,7 @@ public class SQLMapHelper {
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
-			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) { 
+			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier) || SQLMapConstants.ORACLEDB.equals(dbIdentifier)) { 
 				if (debug) {
 					Access.writeToConsole(access, "Had to do something in order to not get the cast error from a null value, because it concerns " + dbIdentifier + "\n");
 				}
@@ -77,6 +86,8 @@ public class SQLMapHelper {
 			statement.setString(idx + 1, (String) param);
 		} else if (param instanceof Integer) {
 			statement.setInt(idx + 1, ((Integer) param).intValue());
+        } else if (param instanceof Long) {
+            statement.setLong(idx + 1, ((Long) param).longValue());
 		} else if (param instanceof Double) {
 			statement.setDouble(idx + 1, ((Double) param).doubleValue());
 		} else if (param instanceof Percentage) {
@@ -261,6 +272,11 @@ public class SQLMapHelper {
 			int scale = meta.getScale(columnIndex);
 
 			if (scale <= 0) {
+			    if( meta.getPrecision( columnIndex ) >= 19 ) // java max int takes 19 digits
+			    {
+			        // Note that if we want to support such high precision, also getSimplefiedType (see below) needs to change
+			        logger.warn( "getColumnValue: Retrieving value with great precision ( " + meta.getPrecision( columnIndex ) + " ), possible truncation taking place" );
+			    }
 	            int tmpValueNumeric = rs.getInt(columnIndex);
 	            if (!rs.wasNull()) {
 	                value = Integer.valueOf(tmpValueNumeric);

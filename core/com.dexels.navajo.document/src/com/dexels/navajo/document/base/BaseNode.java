@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document.base;
 /**
  * <p>Title: ShellApplet</p>
@@ -24,21 +29,20 @@ import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
 
-public abstract class BaseNode implements java.io.Serializable{
-  /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8900993539784890274L;
+public abstract class BaseNode implements java.io.Serializable {
 
-protected Navajo myDocRoot;
-  
+    private static final long serialVersionUID = -8900993539784890274L;
+
+  protected Navajo myDocRoot;
+
   public static final String XML_ESCAPE_DELIMITERS = "&'<>\"";
 
   public abstract Map<String,String> getAttributes();
   public abstract List<? extends BaseNode> getChildren();
   public abstract String getTagName();
   private static final int INDENT = 3;
-   public BaseNode(){
+
+  public BaseNode(){
     myDocRoot = null;
   }
 
@@ -50,7 +54,6 @@ protected Navajo myDocRoot;
     return myDocRoot;
   }
 
-
   public void setRootDoc(Navajo n) {
     myDocRoot = n;
   }
@@ -58,17 +61,18 @@ protected Navajo myDocRoot;
  public final void writeElement(final Writer sw, String value ) throws IOException {
     sw.write(value);
   }
- 
+
 
  public void printElement(final Writer sw, int indent) throws IOException {
 	 final boolean isOpen = printStartTag(sw, indent,false);
 	 if(!isOpen) {
 		 return;
 	 }
+	 final boolean hasText = hasTextNode();
 	 printBody(sw, indent);
-	 printCloseTag(sw, indent);
+	 printCloseTag(sw, (!hasText ? indent : 0));
  }
- 
+
 public void printCloseTag(final Writer sw, int indent) throws IOException {
 	String tagName = getTagName();
 	 for (int a = 0; a < indent; a++) {
@@ -141,10 +145,14 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 		 writeElement( sw, "/>\n");
 		 return false;
 	 }
-	 writeElement( sw, ">\n");
+     if ( hasText ) {
+    	 writeElement( sw, ">");
+	 } else {
+		 writeElement( sw, ">\n");
+	 }
 	return true;
 }
- 
+
  public final void printElementJSON(final Writer sw, boolean arrayElement) throws IOException {
 		String tagName = getTagName();
 		if ("tml".equals(tagName)) {
@@ -248,13 +256,13 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 	}
 
 	/**
-	 * @param sw The writer to write to 
+	 * @param sw The writer to write to
 	 */
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
 		getAttributes();
 		getChildren();
 	}
- 
+
 
  public void write(final Writer w) {
 	 try {
@@ -264,7 +272,7 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
 	 }
  }
 
- 
+
     public void write(final OutputStream stream) {
         try {
             OutputStreamWriter osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
@@ -273,19 +281,19 @@ public boolean printStartTag(final Writer sw, int indent,boolean forceDualTags) 
         } catch (IOException e) {
             throw new NavajoExceptionImpl(e);
         }
-    } 
-   
+    }
+
   public boolean hasTextNode() {
       return false;
   }
-  
+
   /**
- * @param w the writer to write to 
- * @throws IOException 
+ * @param w the writer to write to
+ * @throws IOException
  */
 public void writeText(Writer w) throws IOException  {
-      // default impl. Only used for properties. 
-       
+      // default impl. Only used for properties.
+
   }
 
   /**
@@ -293,18 +301,18 @@ public void writeText(Writer w) throws IOException  {
    * characters &amp;, &quot;, &apos;, &lt; and &gt;
    */
   private static final String xmlEscape(String s) {
-    
+
     boolean contains = false;
     for ( int i = 0; i < XML_ESCAPE_DELIMITERS.length(); i++ ) {
         if ( s.indexOf( XML_ESCAPE_DELIMITERS.charAt(i) ) != -1 ) {
             contains = true;
         }
     }
-    
+
     if ( ! contains ) {
         return s;
     }
-    
+
       if (s.length() == 0) {
           return s;
       }
@@ -447,6 +455,6 @@ public void writeText(Writer w) throws IOException  {
 
       return result;
   }
-  
+
 
 }

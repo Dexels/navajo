@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.server.listener.http.continuation;
 
 import java.io.IOException;
@@ -24,51 +29,54 @@ import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 
 public class TmlContinuationRunner extends TmlStandardRunner {
-    private final static Logger logger = LoggerFactory.getLogger(TmlContinuationRunner.class);
 
-	private final Continuation continuation;
+    private static final Logger logger = LoggerFactory.getLogger(TmlContinuationRunner.class);
+
 	private static boolean clearThreadLocal;
 
-	public TmlContinuationRunner(AsyncRequest request, LocalClient lc, long timeout) {
-		super(request,lc);
-		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
-		continuation.setTimeout(timeout);
-		continuation.addContinuationListener(new ContinuationListener() {
-			
-			@Override
-			public void onTimeout(Continuation continuation) {
-				abort("timeout after: "+timeout);
-			}
-			
-			@Override
-			public void onComplete(Continuation arg0) {}
-		});
-		if (continuation.isExpired()) {
-            logger.warn("Expired continuation!");
-            abort("Internal server error");
-        }
-        if (!continuation.isInitial()) {
-            logger.warn("Non-initial continuation!");
-            abort("Internal server error");
-        }
-	}
-	
-	@Override
-	public void abort(String reason) {
-		super.abort(reason);
-		try {
-			logger.warn("Aborting: {}. Generating outdoc and resuming", reason);
-			setResponseNavajo(getLocalClient().generateAbortMessage(reason));
-			
-		} catch (FatalException e) {
-			logger.error("Error: ", e);
-		}
-		continuation.complete();
-		getRequest().fail(new ServletException(reason));
-		
-	}
+    private final Continuation continuation;
 
-	
+    public TmlContinuationRunner(AsyncRequest request, LocalClient lc, long timeout) {
+
+        super(request, lc);
+
+        continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
+
+        if (continuation.isExpired()) {
+            logger.error("Expired continuation at request start!");
+            abort("Internal server error");
+        } else if (!continuation.isInitial()) {
+            logger.error("Non-initial continuation at request start! Dispatcher type {}",
+                    request.getHttpRequest().getDispatcherType());
+            abort("Internal server error");
+        } else {
+            continuation.setTimeout(timeout);
+            continuation.addContinuationListener(new ContinuationListener() {
+
+                @Override
+                public void onTimeout(Continuation continuation) {
+                    abort("timeout after: " + timeout);
+                }
+
+                @Override
+                public void onComplete(Continuation continuation) {}
+            });
+        }
+    }
+
+    @Override
+    public void abort(String reason) {
+
+        super.abort(reason);
+        try {
+            logger.warn("Aborting: {}. Generating outdoc and resuming", reason);
+            setResponseNavajo(getLocalClient().generateAbortMessage(reason));
+        } catch (FatalException e) {
+            logger.error("Error: ", e);
+        }
+        continuation.complete();
+        getRequest().fail(new ServletException(reason));
+    }
 
 	@Override
 	public void endTransaction() throws IOException {
@@ -95,7 +103,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super.endTransaction();
 	}
 
-	
+
 	  /**
 	   * Handle a request.
 	   *
@@ -153,7 +161,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	public void suspendContinuation() {
 		continuation.suspend();
 	}
-	
+
     public void suspendContinuation(HttpServletResponse resp) {
         continuation.suspend(resp);
     }
@@ -176,7 +184,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				} else {
 					logger.warn("No global manager found for instance: " + instance);
 				}
-				
+
 			} else {
 				logger.debug("Not using instance based GlobalManager: No instance found in request");
 			}
@@ -186,11 +194,11 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			getRequest().fail(e);
 		}
 	}
-	
+
 	public static boolean clearThreadLocal() {
 	    return clearThreadLocal;
 	}
-	
+
 	private static void clearThreadLocal(boolean clear) {
 	    clearThreadLocal = clear;
     }

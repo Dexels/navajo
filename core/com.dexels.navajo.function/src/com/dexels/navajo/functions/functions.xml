@@ -30,7 +30,7 @@
 	</function>
 	<function name="Base64Encode" class="com.dexels.navajo.functions.Base64Encode">
 		<description>Get a Base64 representation of a given string or
-			binary(deprecated).
+			binary.
 		</description>
 		<input />
 		<result />
@@ -66,6 +66,12 @@
 		</description>
 		<input>any,boolean|empty</input>
 		<result>boolean</result>
+	</function>
+	<function name="Ceil" class="com.dexels.navajo.functions.Ceil">
+		<description>Return the ceil value of the given double
+		</description>
+		<input>float</input>
+		<result>float</result>
 	</function>
 	<function name="CheckEmail" class="com.dexels.navajo.functions.CheckEmail">
 		<description>This functions checks the syntactic validity of email
@@ -279,6 +285,12 @@
 		<description>Finds an array element that has a property with a matching value. If no message is supplied, currentMessage will be used</description>
 		<input>string,any,message|empty</input>
 		<result>message</result>
+	</function>
+	<function name="Floor" class="com.dexels.navajo.functions.Floor">
+		<description>Return the floor value of the given double
+		</description>
+		<input>float</input>
+		<result>float</result>
 	</function>
 	<function name="ForAll" class="com.dexels.navajo.functions.ForAll">
 		<description>Evaluates a condition (expression evaluating to a
@@ -577,13 +589,6 @@
 	<function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
 		<description>IsNumeric(string|integer|float)</description>
 		<input>string|integer|float</input>
-		<result>boolean</result>
-	</function>
-	<function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
-		<description>Function to check whether a service with optionally
-			service key values is cached
-		</description>
-		<input>string,string</input>
 		<result>boolean</result>
 	</function>
     <function name="IsValidXMLFile" class="com.dexels.navajo.functions.IsValidXMLFile">

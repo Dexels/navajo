@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
@@ -23,25 +28,27 @@ import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 
 /**
- * MessageMap is used to manipulate/join Messages.
+ * MessageMap is used to manipulate/join Messages. It tries to mimic typical SQL behaviour.
+ *
+ * Inner or outer join (outer join is always a left outer join):
  * 
- * <map>
- *   <field name="joinMessage1"><expression value="'Message1'"/></field>
- *   <field name="joinMessage2"><expression value="'Message2'"/></field>
- *   <field name="joinProperties"><expression value="'Property1,Property2'"/></field>
+ * <map.joinmessage>
+ *   <joinmessage.join joinType="[inner|outer]" message1="'/Message1'" message2="'/Message2'" joinCondition="'Property1,Property2'" ignoreSource="true"/>
  *   <message name="ResultMessage">
- *      <map ref="joinedMessage" filter="[some filter conditions]"/>
+ *      <map ref="resultMessage" filter="[some filter conditions]"/> <!-- Automatically outputs all properties found in both joined messages if inner join or Message1 with possibly empty properties for Message2 if outer join and not found -->
  *   </message>
- * </map>
+ * </map.joinmessage>
+ *
+ * or the groupBy option:
  * 
- * new style:
- * 
- * <map.joinmap>
- *   <joinmap.join joinType="[inner|outer]" message1="Message1" message2="Message2" joinCondition="'Property1,Property2'" removeMessageSources="true"/>
+ * <map.joinmessage>
+ *   <joinmessage.join joinType="'outer'" message1="'/Message1'" joinCondition="'Property1,Property2'" ignoreSource="true" groupBy="'Property1,Property2'"/>
  *   <message name="ResultMessage">
- *      <map ref="joinedMessage" filter="[some filter conditions]"/>
+ *      <map ref="resultMessage" filter="[some filter conditions]"/> <!-- Only outputs all properties in the groupBy list. All other properties can be rebuilt using $count, $avg, $sum, $min, $max, $any, $concatenated -->
  *   </message>
- * </map.joinmap>
+ * </map.joinmessage>
+ *
+ * It is possible to supply a list of properties to suppress in the (automatic) output, to use a NavajoExpression as joinCondition (instead of a list of properties) and to removeDuplicates in the result
  * 
  * @author arjen
  *

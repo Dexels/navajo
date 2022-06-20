@@ -557,7 +557,7 @@ function callScript(script, addToRecentScripts)
 
 $(document).on('click', '.script', function() {
 	var script = $(this).attr("id");
-	callScript(script, true);
+	callScript.call(this, script, true);
 });
 
 $(document).on('click', '.folder', function() {
@@ -571,7 +571,7 @@ $(document).on('click', '.refreshscripts', function() {
 
 $(document).on('click', '.birttitle', function() {
 	var script = $(this).attr("id");
-	callScript(script, false);
+	callScript.call(this, script, false);
 });
 
 

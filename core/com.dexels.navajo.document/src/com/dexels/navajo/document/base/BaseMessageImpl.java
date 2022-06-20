@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document.base;
 
 /**
@@ -13,6 +18,7 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -33,12 +39,15 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Break;
 import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.MessageMappable;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.comparatormanager.ComparatorManager;
 import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
@@ -67,8 +76,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     protected transient Map<String, Message> messageMap = null;
 
-    private transient List<Message> messageList = null;
+    protected transient List<Message> messageList = null;
 
+    private List<Serializable> children = new ArrayList<>();
+    
     private BaseMessageImpl myParent = null;
 
     private MessageMappable myStringMap = null;
@@ -91,6 +102,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     private Map<String, String> subtypeMap;
 
+    private BaseMapTagImpl ref;
+    
+    private boolean isAntiMessage = false;
+
+	private String myCondition;
+    
     public BaseMessageImpl(Navajo n) {
         super(n);
         myType = Message.MSG_TYPE_SIMPLE;
@@ -102,7 +119,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         myType = Message.MSG_TYPE_SIMPLE;
     }
 
-    @Override
+	@Override
     public final String getType() {
         return myType;
     }
@@ -132,11 +149,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public final void setCondition(String condition) {
+    	 myCondition = condition;
     }
 
     /**
      * For internal use only, sets the initial message name.
-     * 
+     *
      * @param name
      */
     protected final void setNameInitially(String name) {
@@ -145,7 +163,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     /**
      * Changes the name of a message.
-     * 
+     *
      * @param name
      */
     @Override
@@ -261,20 +279,20 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Message addMessage(Message m, boolean overwrite) {
+    public  Message addMessage(Message m, boolean overwrite) {
         if (messageList == null) {
             messageList = new ArrayList<>();
         }
         if (messageMap == null) {
             messageMap = new TreeMap<>();
         }
-        
-        
+
+
         int counterIndex = 0;
         int counterIgnoreMode = 0; //how many times got into ignore mode
         boolean isIgnore = false;
-        
-        
+
+
 
         m.setParent(this);
 
@@ -286,8 +304,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             return foundMsg;
         }
 
-        
-        
+
+
         if (getMessage(name) != null && (overwrite || Message.MSG_MODE_IGNORE.equals(getMode()))) {
             removeChildMessage(foundMsg);
         }
@@ -298,17 +316,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (getType().equals(MSG_TYPE_ARRAY)) {
             if(Message.MSG_MODE_IGNORE.equals(m.getMode())) {
                 isIgnore = true;
-                counterIgnoreMode++; 
+                counterIgnoreMode++;
             }
-            
+
             if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
                 if (messageList.size() > 0) {
-                    counterIndex = messageList.size() - counterIgnoreMode; 
+                    counterIndex = messageList.size() - counterIgnoreMode;
                 }
                 m.setIndex(counterIndex);
             }
-            
-            
+
+
             ((BaseMessageImpl) m).setNameInitially(getName());
         } else {
             messageMap.put(name, m);
@@ -318,18 +336,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (getType().equals(MSG_TYPE_ARRAY) && Message.MSG_MODE_IGNORE.equals(getMode())) {
             messageList.clear();
         }
-        
-        
-       
+
+
+
        //isIgnore boolean will be true only if the element enters the ignore mode check, and it wont be added to the messageList
        if (isIgnore == false) {
             messageList.add(m);
         }
-       
+
        //updates the index of the messages in an array. If has ignore modes will sub the counter from the initial index value
-        
-        
-        
+
+
+
        return m;
     }
 
@@ -362,7 +380,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final void addProperty(Property q) {
+    public void addProperty(Property q) {
         addProperty(q, false);
     }
 
@@ -400,7 +418,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     /**
      * LEAVE THIS METHOD (SEE COMMENT ABOVE)
-     * 
+     *
      * @param q
      */
     // private void initPropertyFromDefinition(Property q) {
@@ -773,7 +791,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     /**
      * Add a collection of properties to a message. Properties that already exist
      * are overwritten.
-     * 
+     *
      * @param m
      * @param properties
      */
@@ -787,7 +805,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     /**
      * Merges messsage with another message. Properties and submessages are merged.
      * Properties of other message have precedence.
-     * 
+     *
      * @param origMsg
      * @param mergeThisMsg
      */
@@ -1276,7 +1294,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final Map<String, String> getAttributes() {
+    public  Map<String, String> getAttributes() {
         Map<String, String> m = new HashMap<>();
         m.put("name", myName);
         if (!"".equals(orderBy)) {
@@ -1295,6 +1313,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         if (myMode != null && !myMode.equals("")) {
             m.put("mode", myMode);
         }
+        if (myCondition != null && !myCondition.equals("")) {
+            m.put("condition", myCondition);
+        }
         if (myExtends != null && !myExtends.equals("")) {
             m.put(Message.MSG_EXTENDS, myExtends);
         }
@@ -1311,8 +1332,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public final List<BaseNode> getChildren() {
+    public List<BaseNode> getChildren() {
         ArrayList<BaseNode> al = new ArrayList<>();
+        
+        if (ref != null ) {  // If a  <map ref=> construction is used, message can only have 1 child.
+        	al.add(ref); 
+        	return al;
+        }
+        
         if (propertyList == null) {
 
         } else {
@@ -1348,9 +1375,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
     }
 
     @Override
-    public String getTagName() {
-        return Message.MSG_DEFINITION;
-    }
+	public String getTagName() {
+		if ( isAntiMessage() ) {
+			return "anti" + Message.MSG_DEFINITION;
+		} else {
+			return Message.MSG_DEFINITION;
+		}
+	}
 
     public final int getChildCount() {
         return getAllProperties().size() + (messageList != null ? messageList.size() : 0);
@@ -1631,6 +1662,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void merge(Message incoming, boolean preferThis, boolean applySubType) {
+
+        if (isArrayMessage() != incoming.isArrayMessage()) {
+            throw new NavajoException("Incompatible message types in merge: " + getFullMessageName()
+                    + " (" + getType() + "), " + incoming.getFullMessageName() + " ("
+                    + incoming.getType() + ")");
+        }
+
         if (this.isArrayMessage() && incoming.isArrayMessage() && incoming.getDefinitionMessage() != null) {
             // Perform merge for all my children with the definition message
             for (Message child : this.getElements()) {
@@ -1666,37 +1704,36 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
 
         }
-        List<Message> subMessages = incoming.getAllMessages();
-        for (int i = 0; i < subMessages.size(); i++) {
-            String newMsgName = subMessages.get(i).getName();
-            Message existing = this.getMessage(newMsgName);
-            if (existing == null) {
-                // if we dont have this message ourselves and incoming message has it marked as
-                // nullable, then we should NOT add it (because we explicitly allow the message
+        List<Message> incomingSubMessages = incoming.getAllMessages();
+        for (int i = 0; i < incomingSubMessages.size(); i++) {
+            Message incomingSubMessage = incomingSubMessages.get(i);
+            // check if we have a sub message with the same name
+            Message existingSubMessage = getMessage(incomingSubMessage.getName());
+            if (existingSubMessage != null) {
+                // check if the existing sub message is of the same type (array/simple) as the
+                // incoming message, if not, we cannot use it
+                if (existingSubMessage.isArrayMessage() != incomingSubMessage.isArrayMessage()) {
+                    throw new NavajoException("Incompatible message types in merge: "
+                            + existingSubMessage.getFullMessageName() + " ("
+                            + existingSubMessage.getType() + "), "
+                            + incomingSubMessage.getFullMessageName() + " ("
+                            + incomingSubMessage.getType() + ")");
+                }
+            }
+
+            if (existingSubMessage == null) {
+                // if we don't have the sub message ourselves and if the incoming sub message is marked
+                // as nullable, then we should NOT add it (because we explicitly allow the message
                 // to not exist)
-                String nullableString = subMessages.get(i).getSubType("nullable");
+                String nullableString = incomingSubMessage.getSubType("nullable");
                 boolean nullable = nullableString != null && Boolean.parseBoolean(nullableString);
                 if (nullable && applySubType) {
                     continue;
-                }
-                try {
-                    Message newMsg = subMessages.get(i).copy();
-                    Message otherMessage = null;
-                    if (preferThis) {
-                        otherMessage = getMessage(newMsg.getName());
-                    }
-                    if (!preferThis || otherMessage == null) {
-                        this.addMessage(newMsg);
-                    }
-                    if (otherMessage != null && otherMessage.getMethod().equals("")) {
-                        otherMessage.setMethod(newMsg.getMethod());
-                    }
-
-                } catch (NavajoException e) {
-                    logger.error("Navajo Exception on merge: {}", e);
+                } else {
+                    addMessage(incomingSubMessage.copy());
                 }
             } else {
-                existing.merge(subMessages.get(i), preferThis);
+                existingSubMessage.merge(incomingSubMessage, preferThis);
             }
         }
 
@@ -1718,7 +1755,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
     @Override
     public void maskMessage(Message mask, String method) {
-        if (isArrayMessage() && !mask.isArrayMessage()) {
+        if (isArrayMessage() != mask.isArrayMessage()) {
             // No need to check any properties or submessages
             if (this.getParentMessage() != null) {
                 this.getParentMessage().removeMessage(this);
@@ -1785,6 +1822,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
             }
 
             if (maskMessage == null) {
+                removeMessage(m);
+                continue;
+            }
+
+            if (m.isArrayMessage() != maskMessage.isArrayMessage()) {
                 removeMessage(m);
                 continue;
             }
@@ -1963,6 +2005,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
         p.setAnyValue(value);
     }
 
+    @Override
     public String getSubType() {
         return subType;
     }
@@ -2011,6 +2054,33 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public void addMapRef(MapAdapter m) {
+		this.ref = (BaseMapTagImpl) m;
+	}
+
+	@Override
+	public void addParam(Param p) {
+		children.add(p);
+	}
+
+	@Override
+	public void addMap(MapAdapter m) {
+	}
+
+	@Override
+	public boolean isAntiMessage() {
+		return isAntiMessage;
+	}
+	
+	public void setAntiMessage(boolean b) {
+		isAntiMessage = b;
+	}
+
+	public void addBreak(Break b) {
+		// Not supported here.
 	}
 
 }

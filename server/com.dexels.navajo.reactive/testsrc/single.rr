@@ -1,4 +1,0 @@
-single(count=5,debug=TRUE)->
-	set(aap="noot",mies="wim",zus=1+2",jet=[@index])->
-	set(upper=[mies])->
-	stream(messageName="Bla", isArray=true)

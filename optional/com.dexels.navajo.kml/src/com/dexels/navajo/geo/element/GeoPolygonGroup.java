@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.geo.element;
 
 import java.io.IOException;
@@ -25,10 +30,10 @@ public class GeoPolygonGroup extends GeoElement {
 	Map<GeoPoint, Set<GeoPolygon>> invOwnershipMap = new HashMap<GeoPoint, Set<GeoPolygon>>();
 
 	private int reverseStack = 0;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(GeoPolygonGroup.class);
-		
+
 	public GeoPolygonGroup(List<GeoPolygon> a, String name) throws GeoException {
 		myName = name;
 		myPolygons.addAll(a);
@@ -92,7 +97,6 @@ public class GeoPolygonGroup extends GeoElement {
 	}
 
 	private void normalize() throws GeoException {
-		long currentTime = System.currentTimeMillis();
 		for (GeoPolygon g : myPolygons) {
 			if (!g.isClockwise()) {
 				// don't know whats wrong here
@@ -128,27 +132,17 @@ public class GeoPolygonGroup extends GeoElement {
 					}
 				}
 			}
-//			System.err.println("Distinct points found");
 			currentPoints.clear();
 			currentPoints.addAll(newPoints);
 			for (GeoPoint geoPoint2 : newPoints) {
 				addOwnership(geoPoint2, g);
 			}
-			// polyCount++;
 		}
 
-//		System.err.println("Starting outline");
 		createOutlinePoly();
-		long currentTime2 = System.currentTimeMillis();
-//		System.err.println("Normalize took: " + (currentTime2 - currentTime));
-		// dumpMe("polyGroupComplete.kml");
-
-		// System.err.println("Distinct points: " + allDistinctPoints.size());
-
 	}
 
 	private List<GeoPolygon> createOutlinePoly() throws GeoException {
-		// dumpMe("debu_baInit.kml");
 		List<GeoPolygon> polys = new LinkedList<GeoPolygon>(myPolygons);
 		boolean complete = false;
 		System.err.println("# of poly's: " + polys.size());
@@ -281,7 +275,7 @@ public class GeoPolygonGroup extends GeoElement {
 				logger.error("Geo exception: "+g.getMessage()+" continuing",g);
 				return null;
 			}
-			
+
 
 			reverseStack--;
 			return join;

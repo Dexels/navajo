@@ -527,10 +527,12 @@
             <xs:attribute name="condition" type="xs:string"/>
             <!-- Generated optional setters as attributes -->
             <xs:attribute name="sendThrough" type="xs:string"/>
+            <xs:attribute name="copyInputMessages" type="xs:string"/>
             <xs:attribute name="server" type="xs:string"/>
             <xs:attribute name="username" type="xs:string"/>
             <xs:attribute name="password" type="xs:string"/>
             <xs:attribute name="useCurrentOutDoc" type="xs:string"/>
+            <xs:attribute name="useCurrentMessages" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <!-- -->

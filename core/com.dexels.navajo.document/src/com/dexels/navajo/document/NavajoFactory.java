@@ -1,6 +1,12 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -17,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
 
 /**
  * <p>
@@ -382,8 +389,11 @@ public abstract class NavajoFactory {
 	 *            InputStream
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript(java.io.InputStream stream);
+	public abstract Navascript createNavaScript(java.io.InputStream stream);
 
+	
+	public abstract Navascript createNavaScript(FileInputStream fis, MapDefinitionInterrogator mapDefinitionInterrogatorImpl);
+	
 	/**
 	 * Create a NavaScript object from a given Object
 	 * 
@@ -391,14 +401,14 @@ public abstract class NavajoFactory {
 	 *            Object
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript(Object representation);
+	public abstract Navascript createNavaScript(Object representation);
 
 	/**
 	 * Create an empty NavaScriptObject
 	 * 
 	 * @return Navajo
 	 */
-	public abstract Navajo createNavaScript();
+	public abstract Navascript createNavaScript();
 
 	/**
 	 * Create an Header object for a given Navajo
@@ -558,8 +568,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return FieldTag
 	 */
-	public abstract FieldTag createField(Navajo tb, String condition,
-			String name);
+	public abstract Field createField(Navajo tb, String condition, String name);
 
 	/**
 	 * Create a ParamTag object
@@ -573,7 +582,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return ParamTag
 	 */
-	public abstract ParamTag createParam(Navajo tb, String condition,
+	public abstract Param createParam(Navajo tb, String condition,
 			String name);
 
 	/**
@@ -588,8 +597,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapObject(Navajo tb, String object,
-			String condition);
+	public abstract MapAdapter createMapObject(Navajo tb, String object, String condition);
 
 	/**
 	 * Create a MapTag reference
@@ -605,8 +613,7 @@ public abstract class NavajoFactory {
 	 * @throws NavajoException
 	 * @return MapTag
 	 */
-	public abstract MapTag createMapRef(Navajo tb, String ref,
-			String condition, String filter);
+	public abstract MapAdapter createMapRef(Navajo tb, String ref, String condition, String filter, MapAdapter parent);
 
 	/**
 	 * Create a Selection object
@@ -810,5 +817,6 @@ public abstract class NavajoFactory {
 
 	public abstract Operation createOperation(Navajo n, String method,
 			String service, String validationService, String entityName, Message extra);
+
 
 }

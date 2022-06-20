@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.client.async;
 
 import java.io.IOException;
@@ -9,6 +14,7 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.TmlRunnable;
 
+
 public interface ManualAsyncClient extends AsyncClient {
 
 	public void callService(String url, String username,
@@ -18,6 +24,8 @@ public interface ManualAsyncClient extends AsyncClient {
 	public void callService(Access inputAccess, Navajo input,
 			String service, TmlRunnable onSuccess, TmlRunnable onFail,
 			NavajoResponseCallback navajoResponseCallback) throws IOException;
+
+    public void close();
 
 	public String getServer();
 
@@ -31,25 +39,15 @@ public interface ManualAsyncClient extends AsyncClient {
 
 	public void setPassword(String password);
 
-	public void close();
-	
-	public void setCloseAfterUse(boolean closeAfterUse);
-	
 	@Override
 	public boolean useHttps();
+
 	@Override
 	public void setHttps(boolean useHttps);
 
-	/**
-	 * set the SSL socket factory to use whenever an HTTPS call is made.
-	 * @param algorithm, the algorithm to use, for example: SunX509
-	 * @param type Type of the keystore, for example PKCS12 or JKS
-	 * @param source InputStream of the client certificate, supply null to reset the socketfactory to default
-	 * @param password the keystore password
-	 */
+    public void setCloseAfterUse(boolean closeAfterUse);
 
 	@Override
 	public void setClientCertificate(String algorithm, String type, InputStream is, char[] password) throws IOException;
-
 
 }

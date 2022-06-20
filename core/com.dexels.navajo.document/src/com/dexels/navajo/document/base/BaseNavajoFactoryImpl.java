@@ -1,5 +1,11 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document.base;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -7,21 +13,25 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
 import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.FieldTag;
+import com.dexels.navajo.document.Field;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.MapAdapter;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Navascript;
 import com.dexels.navajo.document.Operation;
-import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Param;
 import com.dexels.navajo.document.Point;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
+import com.dexels.navajo.document.navascript.tags.MapDefinitionInterrogator;
+import com.dexels.navajo.document.navascript.tags.NavascriptTag;
+import com.dexels.navajo.document.saximpl.NavascriptSaxHandler;
 import com.dexels.navajo.document.saximpl.SaxHandler;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
@@ -73,6 +83,10 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 
 	public Property createProperty(Navajo n, String name) {
 		return new BasePropertyImpl(n, name);
+	}
+	
+	public Param createParam(Navajo n, String name) {
+		return new BaseParamTagImpl(n, name);
 	}
 
 	@Override
@@ -190,51 +204,61 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	}
 
 	@Override
-	public  Navajo createNavaScript(java.io.InputStream stream) {
+	public  Navascript createNavaScript(java.io.InputStream stream) {
+		try {
+			QDParser parser = new QDParser();
+			NavascriptSaxHandler sax = new NavascriptSaxHandler(parser);
+			try(Reader isr = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+				parser.parse(sax, isr);
+			}
+			return sax.getNavascript();
+		} catch (Exception e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
+	}
+
+	@Override
+	public Navascript createNavaScript(Object representation) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
 	@Override
-	public Navajo createNavaScript(Object representation) {
-		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
-	}
-
-	@Override
-	public Navajo createNavaScript() {
-		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
+	public Navascript createNavaScript() {
+		return new BaseNavascriptImpl(this);
 	}
 
 	@Override
 	public ExpressionTag createExpression(Navajo tb, String condition, String value) {
-		throw new java.lang.UnsupportedOperationException("Method createExpression() not yet implemented.");
+		return new BaseExpressionTagImpl(tb, condition, value);
 	}
 
 	@Override
-	public FieldTag createField(Navajo tb, String condition, String name) {
-		throw new java.lang.UnsupportedOperationException("Method createExpression() not yet implemented.");
+	public Field createField(Navajo tb, String condition, String name) {
+		return new BaseFieldTagImpl(tb, name, condition);
 	}
 
 	@Override
-	public MapTag createMapObject(Navajo tb, String object, String condition) {
-		throw new java.lang.UnsupportedOperationException("Method createMapObject() not yet implemented.");
+	public MapAdapter createMapObject(Navajo tb, String object, String condition) {
+		return new BaseMapTagImpl(tb, object, condition);
 	}
 
 	@Override
-	public MapTag createMapRef(Navajo tb, String ref, String condition, String filter) {
-		throw new java.lang.UnsupportedOperationException("Method createMapRef() not yet implemented.");
+	public MapAdapter createMapRef(Navajo tb, String ref, String condition, String filter, MapAdapter parent) {
+		return new BaseMapTagImpl(tb, ref, filter, parent);
 	}
 
 	@Override
-	public ParamTag createParam(Navajo tb, String condition, String name) {
-		throw new java.lang.UnsupportedOperationException("Method createParam() not yet implemented.");
+	public Param createParam(Navajo tb, String condition, String name) {
+		return new BaseParamTagImpl(tb, condition, name);
 	}
 
 	@Override
 	public Navajo createNavajo(InputStream stream) {
 		try {
-			SaxHandler sax = new SaxHandler();
+			QDParser parser = new QDParser();
+			SaxHandler sax = new SaxHandler(parser);
 			try(Reader isr = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-				QDParser.parse(sax, isr);
+				parser.parse(sax, isr);
 			}
 			return sax.getNavajo();
 		} catch (Exception e) {
@@ -245,8 +269,9 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	@Override
 	public Navajo createNavajo(Reader r) {
 		try {
-			SaxHandler sax = new SaxHandler();
-			QDParser.parse(sax, r);
+			QDParser parser = new QDParser();
+			SaxHandler sax = new SaxHandler(parser);
+			parser.parse(sax, r);
 			return sax.getNavajo();
 		} catch (Exception e) {
 			throw NavajoFactory.getInstance().createNavajoException(e);
@@ -292,6 +317,23 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		oi.setEntityName(entityName);
 		oi.setExtraMessage(extra);
 		return oi;
+	}
+
+	@Override
+	public Navascript createNavaScript(FileInputStream fis, MapDefinitionInterrogator mapDefinitionInterrogator) {
+		try {
+			QDParser parser = new QDParser();
+			NavascriptSaxHandler sax = new NavascriptSaxHandler(parser);
+			sax.setMapChecker(mapDefinitionInterrogator);
+			try(Reader isr = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
+				parser.parse(sax, isr);
+			}
+			NavascriptTag nt =  (NavascriptTag) sax.getNavascript();
+			nt.setMapChecker(mapDefinitionInterrogator);
+			return nt;
+		} catch (Exception e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
 	}
 
 }

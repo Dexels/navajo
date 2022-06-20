@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.client.stream;
 
 import java.io.ByteArrayOutputStream;
@@ -12,13 +17,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.stream.jetty.JettyClient;
 import com.dexels.navajo.client.stream.jetty.NavajoReactiveJettyClient;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.stream.StreamDocument;
 import com.dexels.navajo.document.stream.events.NavajoStreamEvent;
 import com.dexels.navajo.document.stream.xml.XML;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 import io.reactivex.Flowable;
 

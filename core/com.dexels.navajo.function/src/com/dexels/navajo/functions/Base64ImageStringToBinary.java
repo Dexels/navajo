@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -24,9 +29,9 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +39,9 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.expression.api.FunctionInterface;
 import com.dexels.navajo.expression.api.TMLExpressionException;
 
-import java.nio.charset.StandardCharsets;
-
 public class Base64ImageStringToBinary extends FunctionInterface {
 
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Base64ImageStringToBinary.class);
 	
 	@Override
@@ -63,28 +67,22 @@ public class Base64ImageStringToBinary extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		String data = getStringOperand(0);
 		Binary b;
-		try {
-			String partSeparator = ",";
-			String dataSeperator = ":";
-			
-			if (data.contains(partSeparator)) {
-				String encodedImg = data.split(partSeparator)[1];						
-				String mimeType = data.split(dataSeperator)[1].split(";")[0];
-						
-				byte[] decodedValue = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));  // Basic Base64 decoding
-				String parsedData = new String(decodedValue, StandardCharsets.UTF_8);
-				
-				final StringReader reader = new StringReader(parsedData);
-				b = new Binary(reader);
-				b.setMimeType(mimeType);
-				return b;
-			}	
-			return null;
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-			return null;
-		}
+		String partSeparator = ",";
 		
+		if (data.contains(partSeparator)) {
+			String encodedImg = data.split(partSeparator)[1];						
+					
+			byte[] decodedValue = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8)); // Basic Base64 decoding
+			b = new Binary(decodedValue);
+			return b;
+		} else if (data != null && !data.contains(partSeparator)) {
+			// Might be just the base64 string without id part
+			byte[] decodedValue = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8)); // Basic Base64 decoding
+			b = new Binary(decodedValue);
+			return b;
+		}
+
+		return null;
 	}
 
 }

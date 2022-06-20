@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document;
 
 import java.beans.PropertyChangeListener;
@@ -266,6 +271,8 @@ public interface Message
    */
   public void setArraySize(int c);
 
+  public void addParam(Param p);
+  
   /**
    * Add a property to a message. If a property with the specified name already exists,
    * replace it with the new one.
@@ -301,6 +308,14 @@ public interface Message
    * @return Message
    */
   public Message addMessage(Message m, boolean overwrite);
+  
+  /**
+   * Add a <map ref=> tag to map an adapter on a message.
+   */
+  public void addMapRef(MapAdapter m);
+  
+  public void addMap(MapAdapter m);
+  
   
   /**
    * Replaces a message with messsage m. The location of the message in the XML will NOT change.
@@ -636,5 +651,6 @@ public interface Message
 	public boolean isInternal();
 	
 
+	public boolean isAntiMessage();
 
 }

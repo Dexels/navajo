@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.server.listener.http.continuation;
 
 import java.io.IOException;
@@ -19,10 +24,11 @@ import com.dexels.navajo.script.api.TmlScheduler;
 public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		SchedulableServlet {
 
-	private static final long serialVersionUID = -8645365233991777113L;
+    private static final long serialVersionUID = -8645365233991777113L;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TmlContinuationMultitenantServlet.class);
+	private static final long MAX_REQUEST_TIMEOUT = 100_000_000L;
+
+	private static final Logger logger = LoggerFactory.getLogger(TmlContinuationMultitenantServlet.class);
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
@@ -30,15 +36,10 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 
 	private LocalClient localClient;
 	private TmlScheduler tmlScheduler;
-
-
-
 	private HttpServlet reactiveHttpServlet;
-
 	private ReactiveScriptRunner reactiveScriptEnvironment;
-
 	private long requestTimeout;
-	
+
     public void setReactiveScriptEnvironment(ReactiveScriptRunner env) {
 		this.reactiveScriptEnvironment = env;
 }
@@ -54,7 +55,7 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	public void clearReactiveServlet(HttpServlet servlet) {
 		this.reactiveHttpServlet = null;
 	}
-	
+
 	public LocalClient getLocalClient() {
 		return localClient;
 	}
@@ -75,42 +76,44 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		this.tmlScheduler = null;
 	}
 
-	public void activate() {
-		logger.info("Continuation servlet component activated");
-		this.requestTimeout = NavajoRequestConfig.getRequestTimeout(10000000L);
-		logger.info("Using timeout in continuation: {}",this.requestTimeout);
-		
-	}
+    public void activate() {
+
+        logger.info("Continuation servlet component activated");
+        requestTimeout = NavajoRequestConfig.getRequestTimeout(MAX_REQUEST_TIMEOUT);
+        logger.info("Using timeout in continuation: {}", requestTimeout);
+    }
 
 	public void deactivate() {
 		logger.info("Continuation servlet component deactivated");
 	}
 
-	@Override
-	protected void service(final HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			if(useReactiveEndpoint(req)) {
-				reactiveHttpServlet.service(req, resp);
-				return;
-			}			
-			String instance = determineTenantFromRequest(req);
-			LocalClient localClient = getLocalClient();
-			if ( localClient == null ) {
-				localClient = getLocalClient(req);
-			} 
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance,requestTimeout);
-			
-			if(instantiateRunnable!=null) {
-				getTmlScheduler().submit(instantiateRunnable, false);
-			}
-		} catch (Throwable e) {
-			if(e instanceof ServletException) {
-				throw (ServletException)e;
-			}
-			logger.error("Servlet call failed dramatically", e);
-		}
-	}
+    @Override
+    protected void service(final HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        try {
+            if (useReactiveEndpoint(req)) {
+                reactiveHttpServlet.service(req, resp);
+                return;
+            }
+            String instance = determineTenantFromRequest(req);
+            LocalClient localClient = getLocalClient();
+            if (localClient == null) {
+                localClient = getLocalClient(req);
+            }
+            TmlRunnable runner = TmlRunnableBuilder.prepareRunnable(req, resp, localClient,
+                    instance, requestTimeout);
+
+            if (runner != null) {
+                getTmlScheduler().submit(runner, false);
+            }
+        } catch (Throwable e) {
+            if (e instanceof ServletException) {
+                throw (ServletException) e;
+            }
+            logger.error("Servlet call failed dramatically", e);
+        }
+    }
 
 	private boolean useReactiveEndpoint(final HttpServletRequest req) {
 		String serviceHeader = req.getHeader("X-Navajo-Service");

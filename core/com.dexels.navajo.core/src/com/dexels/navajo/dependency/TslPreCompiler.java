@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.dependency;
 
 import java.io.ByteArrayInputStream;
@@ -25,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.FileInputStreamReader;
 import com.dexels.navajo.server.InputStreamReader;
@@ -47,15 +53,22 @@ public class TslPreCompiler {
 
 
         try {
-            // Check for metascript.
-            if (MapMetaData.isMetaScript(script.getAbsolutePath())) {
+        	if ( script.getAbsolutePath().endsWith(".ns")) { // Check for NS3 type script
+        		NS3ToNSXML ns3toxml = new NS3ToNSXML();
+    			ns3toxml.initialize();
+    			String content = ns3toxml.read(script.getAbsolutePath());
+    			InputStream metais = ns3toxml.parseNavascript(content);
+    			MapMetaData mmd = MapMetaData.getInstance();
+    			String intermed = mmd.parse(script.getAbsolutePath(), metais);
+    			metais.close();
+    			is = new ByteArrayInputStream(intermed.getBytes());
+        	} else if (MapMetaData.isMetaScript(script.getAbsolutePath())) { // Check for navascript type script
                 MapMetaData mmd = MapMetaData.getInstance();
                 InputStream metais = inputStreamReader.getResource(script.getAbsolutePath());
-
                 String intermed = mmd.parse(script.getAbsolutePath(), metais);
                 metais.close();
                 is = new ByteArrayInputStream(intermed.getBytes());
-            } else {
+            } else { // Normal tsl type script
                 is = inputStreamReader.getResource(script.getAbsolutePath());
             }
             tslDoc = XMLDocumentUtils.createDocument(is, false);
@@ -65,13 +78,13 @@ public class TslPreCompiler {
         	if (is != null) {
         		try {
 					is.close();
-				} catch (IOException e) { 
+				} catch (IOException e) {
         			logger.error("Error: ", e);
 				}
         	}
-        	
+
         }
-        
+
 
         getAllDependencies(script.getAbsolutePath(), scriptTenant, scriptFolder, deps, tslDoc);
     }
@@ -81,6 +94,29 @@ public class TslPreCompiler {
         findMapDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findMethodDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
         findEntityDependencies(scriptFile, scriptTenant, scriptFolder, deps, tslDoc);
+    }
+
+    private String fetchScriptFileName(String scriptName) {
+
+    	// Check for xml based script
+    	File f1 = new File(scriptName + ".xml");
+    	if ( f1.exists() ) {
+    		return scriptName + ".xml";
+    	}
+
+    	// Check navascript3 based script
+    	File f2 = new File(scriptName + ".ns");
+    	if ( f2.exists() ) {
+    		return scriptName + ".ns";
+    	}
+
+    	// Check for scala script
+    	File f3 = new File(scriptName + ".scala");
+    	if ( f3.exists() ) {
+    		return scriptName + ".scala";
+    	}
+
+    	return null;
     }
 
     private void findMethodDependencies(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) {
@@ -94,10 +130,10 @@ public class TslPreCompiler {
 
             if (scriptTenant != null) {
                 // trying tenant-specific variant first
-                String methodScriptFile = scriptFolder + File.separator + methodScript + ".xml";
+            	String methodScriptFile = fetchScriptFileName(scriptFolder + File.separator + methodScript);
 
                 // Check if exists
-                if (new File(methodScriptFile).exists()) {
+                if ( methodScriptFile != null ) {
                     deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n)));
 
                     // No need to try any other tenant-specific includes since
@@ -105,14 +141,16 @@ public class TslPreCompiler {
                     // Thus continue with next method
                     continue;
                 }
+
             }
 
-            String methodScriptFile = scriptFolder + File.separator + methodScript + ".xml";
+            String methodScriptFile = fetchScriptFileName(scriptFolder + File.separator + methodScript);
 
             // Check if exists
             boolean isBroken = false;
-            if (!new File(methodScriptFile).exists()) {
+            if (methodScriptFile == null) {
                 isBroken = true;
+                methodScriptFile = scriptFolder + File.separator + methodScript + ".unknown";
             }
             deps.add(new Dependency(scriptFile, methodScriptFile, Dependency.METHOD_DEPENDENCY, getLineNr(n), isBroken));
 
@@ -122,6 +160,12 @@ public class TslPreCompiler {
                 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(methodScript) + "_*.xml");
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.METHOD_DEPENDENCY, getLineNr(n)));
+                }
+                // Check NS3
+                AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(methodScript) + "_*.ns");
+                Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                for (File f : filesNS3) {
                     deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.METHOD_DEPENDENCY, getLineNr(n)));
                 }
             }
@@ -137,15 +181,15 @@ public class TslPreCompiler {
         for (int i = 0; i < operations.getLength(); i++) {
             Element n = (Element) operations.item(i);
 
-            String operationScript = n.getAttribute("service");
-            String operationValidationScript = n.getAttribute("validationService");
+            String operationScript = n.getAttribute("service").equals("") ? null : n.getAttribute("service");
+            String operationValidationScript = n.getAttribute("validationService").equals("") ? null : n.getAttribute("validationService");
             if(operationScript!=null && !"".equals(operationScript)) {
                 if (scriptTenant != null) {
                     // trying tenant-specific variant first
-                    String operationScriptFile = scriptFolder + File.separator + operationScript + "_" + scriptTenant + ".xml";
+                    String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + operationScript + "_" + scriptTenant);
 
                     // Check if exists
-                    if (new File(operationScriptFile).exists()) {
+                    if (new File(operationScriptFile).exists() ) {
                         deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
 
                         // No need to try any other tenant-specific includes since
@@ -155,15 +199,16 @@ public class TslPreCompiler {
                     }
                 }
 
-                String operationScriptFile = scriptFolder + File.separator + operationScript + ".xml";
-                String operationValidationScriptFile = null;
-                if (operationValidationScript != null && !"".equals(operationValidationScript)) {
-                    operationValidationScriptFile = scriptFolder + File.separator + operationValidationScript + ".xml";
-                }
+                String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + operationScript);
+
+                String operationValidationScriptFile = ( operationValidationScript != null ?
+                		 fetchScriptFileName(scriptFolder + File.separator + operationValidationScript ) : null );
+
                 // Check if exists
                 boolean isBroken = false;
-                if (!new File(operationScriptFile).exists()) {
+                if (operationScriptFile == null) {
                     isBroken = true;
+                    operationScriptFile = scriptFolder + File.separator + operationScript + ".broken";
                 }
 
                 deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
@@ -177,15 +222,21 @@ public class TslPreCompiler {
                         for (File f : files) {
                             deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
                         }
+                        // NS3
+                        AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(operationScript) + "_*.ns");
+                        Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                        for (File f : filesNS3) {
+                            deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                        }
                     }
 
                 }
                 // Handle validation service
-                if (operationValidationScriptFile != null) {
-                    isBroken = false;
-                    if (!new File(operationValidationScriptFile).exists()) {
-                        isBroken = true;
-                    }
+                if (operationValidationScriptFile == null) {
+                    isBroken = true;
+                }
+
+                if (operationValidationScript != null ) {
 
                     deps.add(new Dependency(scriptFile, operationValidationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
 
@@ -196,6 +247,12 @@ public class TslPreCompiler {
                             AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.xml");
                             Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                             for (File f : files) {
+                                deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                            }
+                            // NS3
+                            AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(operationValidationScript) + "_*.ns");
+                            Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                            for (File f : filesNS3) {
                                 deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
                             }
                         }
@@ -210,6 +267,19 @@ public class TslPreCompiler {
         for (int i = 0; i < messages.getLength(); i++) {
             Element n = (Element) messages.item(i);
 
+            String subType = n.getAttribute("subtype");
+
+            if (subType != null && !subType.equals("")) {
+                String[] subTypeElements = subType.split(",");
+                for (String subTypeElement: subTypeElements) {
+                    if (subTypeElement.startsWith("interface=")) {
+                        for (String iface: subTypeElement.replace("interface=", "").split(";")) {
+                            addSuperEntityDependency(scriptFile, scriptTenant, scriptFolder, deps, tslDoc, n, iface);
+                        }
+                    }
+                }
+            }
+
             String extendsAttr = n.getAttribute("extends");
             if (extendsAttr == null || extendsAttr.equals("") || !extendsAttr.startsWith("navajo://")) {
                 continue;
@@ -217,58 +287,69 @@ public class TslPreCompiler {
 
             String ext = extendsAttr.substring(9);
             // Entity versioning stuff
-            String version = "0";
-            if (ext.indexOf('.') != -1) {
-                version = ext.substring(ext.indexOf('.') + 1, ext.indexOf('?') == -1 ? ext.length() : ext.indexOf('?'));
-            }
-            String rep = "." + version;
-            ext = ext.replace(rep, "");
-
             String[] superEntities = ext.split(",");
             for (String superEntity : superEntities) {
-                if (superEntity.indexOf('?') > -1) {
-                    superEntity = superEntity.split("\\?")[0];
-                }
+                addSuperEntityDependency(scriptFile, scriptTenant, scriptFolder, deps, tslDoc, n, superEntity);
 
-                if (scriptTenant != null) {
-                    // trying tenant-specific variant first
-                    String operationScriptFile = scriptFolder + File.separator + superEntity + "_" + scriptTenant + ".xml";
-
-                    // Check if exists
-                    if (new File(operationScriptFile).exists()) {
-                        deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-
-                        // No need to try any other tenant-specific includes
-                        // since we are tenant-specific in the first place
-                        // Thus continue with next entity
-                        continue;
-                    }
-                }
-
-                String superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".xml";
-
-                // Check if exists
-                boolean isBroken = false;
-                if (!new File(superScriptFile).exists()) {
-                    isBroken = true;
-                }
-
-                deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
-
-                // Going to check for tenant-specific include-variants
-                if (scriptTenant == null) {
-                    File scriptFolderFile = new File(superScriptFile).getParentFile();
-                    if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
-                        AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
-                        Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
-                        for (File f : files) {
-                            deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
-                        }
-                    }
-                }
             }
         }
 
+    }
+
+    private void addSuperEntityDependency(String scriptFile, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc, Element n, String superEntity) {
+        String version = "0";
+        if (superEntity.indexOf(".") != -1) {
+            version = superEntity.substring(superEntity.indexOf(".") + 1, superEntity.indexOf("?") == -1 ? superEntity.length() : superEntity.indexOf("?"));
+        }
+        String replace = "." + version;
+        superEntity = superEntity.replace(replace, "");
+
+        if (superEntity.indexOf('?') > 0) {
+            superEntity = superEntity.split("\\?")[0];
+        }
+        if (scriptTenant != null) {
+            // trying tenant-specific variant first
+            String operationScriptFile = fetchScriptFileName(scriptFolder + File.separator + superEntity + "_" + scriptTenant);
+
+            // Check if exists
+            if (operationScriptFile != null) {
+                deps.add(new Dependency(scriptFile, operationScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+
+                // No need to try any other tenant-specific includes
+                // since we are tenant-specific in the first place
+                // Thus continue with next entity
+                return;
+            }
+        }
+
+        String superScriptFile = fetchScriptFileName(scriptFolder + File.separator + "entity" + File.separator + superEntity);
+
+        // Check if exists
+        boolean isBroken = false;
+        if (superScriptFile == null) {
+            isBroken = true;
+            superScriptFile = scriptFolder + File.separator + "entity" + File.separator + superEntity + ".broken";
+        }
+
+        deps.add(new Dependency(scriptFile, superScriptFile, Dependency.ENTITY_DEPENDENCY, getLineNr(n), isBroken));
+
+        // Going to check for tenant-specific include-variants
+        if (scriptTenant == null) {
+            File scriptFolderFile = new File(superScriptFile).getParentFile();
+            if (scriptFolderFile.exists() && scriptFolderFile.isDirectory()) {
+                AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.xml");
+                Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
+                for (File f : files) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+                // NS3
+                AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(superEntity) + "_*.ns");
+                Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                for (File f : filesNS3) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), Dependency.ENTITY_DEPENDENCY, getLineNr(n)));
+                }
+            }
+        }
     }
 
     private void findIncludeDependencies(String fullScriptPath, String scriptTenant, String scriptFolder, List<Dependency> deps, Document tslDoc) throws UserException {
@@ -282,10 +363,11 @@ public class TslPreCompiler {
 
             if (scriptTenant != null) {
                 // trying tenant-specific variant first
-                String includeScriptFile = scriptFolder + File.separator + includedScript + "_" + scriptTenant + ".xml";
+                String includeScriptFile = fetchScriptFileName(scriptFolder + File.separator + includedScript + "_" + scriptTenant);
 
                 // Check if exists
-                if (new File(includeScriptFile).exists()) {
+                if ( includeScriptFile != null) {
+
                     deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
 
                     // No need to try any other tenant-specific includes since
@@ -295,13 +377,20 @@ public class TslPreCompiler {
                 }
             }
 
-            String includeScriptFile = scriptFolder + File.separator + includedScript + ".xml";
+            String includeScriptFile = fetchScriptFileName(scriptFolder + File.separator + includedScript);
 
             // Check if exists
             boolean isBroken = false;
-            if (!new File(includeScriptFile).exists()) {
+            if (includeScriptFile == null) {
                 isBroken = true;
+                includeScriptFile = scriptFolder + File.separator + includedScript + ".broken";
             }
+
+            if( includeScriptFile.equals( fullScriptPath ) )
+            {
+                throw new UserException( -1, "Cannot include myself!" );
+            }
+
             deps.add(new Dependency(fullScriptPath, includeScriptFile, Dependency.INCLUDE_DEPENDENCY, getLineNr(n), isBroken));
 
             // Going to check for tenant-specific include-variants
@@ -311,6 +400,12 @@ public class TslPreCompiler {
                     AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(includedScript) + "_*.xml");
                     Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                     for (File f : files) {
+                        deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
+                    }
+                    // NS3
+                    AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(includedScript) + "_*.xml");
+                    Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                    for (File f : filesNS3) {
                         deps.add(new Dependency(fullScriptPath, f.getAbsolutePath(), Dependency.INCLUDE_DEPENDENCY, getLineNr(n)));
                     }
                 }
@@ -347,8 +442,8 @@ public class TslPreCompiler {
                     // Unable to resolve param
                     logger.debug("Unable to resolve param {} in script {}", navajoScript, scriptFile);
                 }
-                
-               
+
+
 
             } else if (navajoScript.startsWith("[/")) {
                 // The navajo script is retrieved from the Indoc or database
@@ -362,7 +457,7 @@ public class TslPreCompiler {
         // Entity map
         xPath = XPathFactory.newInstance().newXPath();
 
-        nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);
+        nodes = (NodeList) xPath.evaluate("//map[@object='com.dexels.navajo.enterprise.entity.adapters.EntityMap']/field[@name='name']/expression", tslDoc.getDocumentElement(), XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); ++i) {
             Element expression = (Element) nodes.item(i);
@@ -411,6 +506,10 @@ public class TslPreCompiler {
                     return null;
                 }
                 result.addAll(getParamValue(tslDoc, scriptString));
+            } else if (scriptString.startsWith("[/")) {
+                // The navajo script is retrieved from the Indoc or database
+                // result - not supported
+                continue;
             } else {
                 String cleanScript = scriptString.replace("'", "");
                 result.add(cleanScript);
@@ -431,10 +530,10 @@ public class TslPreCompiler {
         }
         if (scriptTenant != null) {
             // trying tenant-specific variant first
-            String navajoScriptFile = scriptFolder + File.separator + cleanScript + "_" + scriptTenant + ".xml";
+            String navajoScriptFile = fetchScriptFileName(scriptFolder + File.separator + cleanScript + "_" + scriptTenant);
 
             // Check if exists
-            if (new File(navajoScriptFile).exists()) {
+            if (navajoScriptFile != null) {
                 deps.add(new Dependency(scriptFile, navajoScriptFile, type, linenr));
 
                 // No need to try any other tenant-specific includes since we
@@ -443,13 +542,13 @@ public class TslPreCompiler {
                 return;
             }
         }
-        
+
         String navajoScriptFilePartial = scriptFolder + File.separator + cleanScript;
 
         // Check if exists
         boolean isBroken = true;
-        String navajoScriptFile = navajoScriptFilePartial + ".xml";
-        if (new File(navajoScriptFile).exists() || isExpression) {
+        String navajoScriptFile = fetchScriptFileName(navajoScriptFilePartial);
+        if (navajoScriptFile != null || isExpression) {
             isBroken = false;
         }
         if (isBroken) {
@@ -457,6 +556,8 @@ public class TslPreCompiler {
             navajoScriptFile = navajoScriptFilePartial + ".scala";
             if (new File(navajoScriptFile).exists()) {
                 isBroken = false;
+            } else {
+            	navajoScriptFile = navajoScriptFilePartial + ".unknown";
             }
         }
 
@@ -469,6 +570,12 @@ public class TslPreCompiler {
                 AbstractFileFilter fileFilter = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
                 Collection<File> files = FileUtils.listFiles(scriptFolderFile, fileFilter, null);
                 for (File f : files) {
+                    deps.add(new Dependency(scriptFile, f.getAbsolutePath(), type, linenr));
+                }
+                // NS3
+                AbstractFileFilter fileFilterNS3 = new WildcardFileFilter(FilenameUtils.getName(cleanScript) + "_*.xml");
+                Collection<File> filesNS3 = FileUtils.listFiles(scriptFolderFile, fileFilterNS3, null);
+                for (File f : filesNS3) {
                     deps.add(new Dependency(scriptFile, f.getAbsolutePath(), type, linenr));
                 }
             }

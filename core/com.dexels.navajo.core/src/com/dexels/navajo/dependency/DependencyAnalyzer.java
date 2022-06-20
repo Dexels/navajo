@@ -1,10 +1,17 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.dependency;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +51,10 @@ public class DependencyAnalyzer {
     }
 
     public void addDependencies(String script, File scriptFile) {
+        addDependencies( script, scriptFile, new HashSet<>() );
+    }
+
+    private void addDependencies(String script, File scriptFile, Set<String> includeDependenciesFound) {
 
         Thread t = Thread.currentThread();
         ClassLoader cl = t.getContextClassLoader();
@@ -67,7 +78,16 @@ public class DependencyAnalyzer {
             // set correct
             for (Dependency dep : myDependencies) {
                 if (dep.getType() == Dependency.INCLUDE_DEPENDENCY) {
-                    addDependencies(dep.getDependee(), new File(dep.getDependeeFile()));
+                    if( ! includeDependenciesFound.contains( dep.getDependee() ) )
+                    {
+                        includeDependenciesFound.add( dep.getDependee() );
+                        addDependencies( dep.getDependee(), new File( dep.getDependeeFile() ), includeDependenciesFound );
+                    }
+                    else
+                    {
+                        logger.error( "Loop detected in include dependencies related to: " + scriptFile.getAbsolutePath() );
+                        // Continue with next dependency
+                    }
                 }
             }
         } finally {

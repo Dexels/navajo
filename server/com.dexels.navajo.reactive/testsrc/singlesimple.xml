@@ -1,9 +1,0 @@
-<reactive>
-	<source.single count.eval="50">
-		<msg.single.msg>
-			
-			<set mies.eval="[index]"/>
-		</msg.single.msg>
-		<msg.stream.event messageName="Bla" isArray.eval="true"/>
-	</source.single>
-</reactive>

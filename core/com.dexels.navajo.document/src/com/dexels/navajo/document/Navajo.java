@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.document;
 
 /**
@@ -13,9 +18,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import com.dexels.navajo.persistence.Persistable;
-
-public interface Navajo extends Persistable {
+public interface Navajo  {
 
     /**
      * Public constants.
@@ -240,8 +243,6 @@ public interface Navajo extends Persistable {
      */
     public Message addMessage(Message message);
 
-    public void addMap(MapTag map);
-
     /**
      * Add a message to the Navajo document. If the message name already exists,
      * replace the old one.
@@ -268,15 +269,6 @@ public interface Navajo extends Persistable {
      * Delete a message from a specified message.
      */
     public void removeMessage(String message);
-
-    /**
-     * Return the persisetence key
-     * 
-     * @return String persistence key
-     */
-
-    @Override
-    public String persistenceKey();
 
     /**
      * Retun the Message buffer object

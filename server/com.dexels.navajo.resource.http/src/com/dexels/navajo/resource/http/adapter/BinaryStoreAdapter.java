@@ -1,6 +1,12 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.resource.http.adapter;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +22,7 @@ import com.dexels.navajo.script.api.UserException;
 public class BinaryStoreAdapter implements Mappable {
 
 	private Access access;
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(BinaryStoreAdapter.class);
 
 
@@ -25,36 +31,38 @@ public class BinaryStoreAdapter implements Mappable {
 		this.access = access;
 	}
 
-	public String storeBinary(Binary b, String resource, String bucket, boolean force) throws IOException {
+	public String storeBinary(Binary b, String resource, String bucket, boolean force)
+	        throws IOException {
+
 		String hexDigest = b.getHexDigest();
 		String tenant = access.getTenant();
 		ReactiveReply result = HttpResourceFactory.getInstance().getHttpResource(resource)
-			.put(tenant,bucket, hexDigest,b)
-			.filter(reply->{ 
-				boolean doInsert = reply.status()!=404 || force;
-				logger.debug("Result of insert: "+reply.status());
+			.put(tenant, bucket, hexDigest, b)
+			.filter(reply -> {
+				boolean doInsert = (reply.status() != 404) || force;
+				logger.debug("Result of insert: " + reply.status());
 				return doInsert;
 			})
-//			.flatMap(status->HttpResourceFactory.getInstance().getHttpResource(resource).put(bucket, hexDigest, b).toMaybe())
 			.toSingle()
 			.blockingGet();
-		
-		logger.info("Stored binary with status: {}",result.status());
-		if(result.status()>=400) {
+
+		logger.info("Stored binary with status: {}", result.status());
+		if (result.status() >= 400) {
 			throw new IOException("Error inserting binary into resource: "+resource+" bucket: "+bucket+" status: "+result.status()+" headers: "+result.responseHeaders());
 		}
+
 		return hexDigest;
 	}
-	
+
 	public boolean headBinary(String hexDigest, String resource, String bucket) throws IOException {
 		String tenant = access.getTenant();
 		ReactiveReply result = HttpResourceFactory.getInstance().getHttpResource(resource)
 			.head(tenant,bucket, hexDigest)
 //			.filter(reply->reply.status()!=404 || force)
 			.blockingGet();
-		
+
 		logger.info("HEAD binary with status: {} headers: {}",result.status(),"\n -> headers: "+result.responseHeaders());
-		
+
 		if(result.status()>=400) {
 			return false;
 		}
@@ -67,7 +75,7 @@ public class BinaryStoreAdapter implements Mappable {
 			.delete(tenant,bucket, hexDigest)
 //			.filter(reply->reply.status()!=404 || force)
 			.blockingGet();
-		
+
 		logger.info("Deleted binary with status: {}",result.status());
 		return result;
 	}
@@ -76,10 +84,11 @@ public class BinaryStoreAdapter implements Mappable {
 		return HttpResourceFactory.getInstance().getHttpResource(resource).expiringURL(access.getTenant(), bucket, binaryHash,expiration);
 	}
 
-//	public String temporaryURL(Binary binary, String resource, String bucket, long expiration) throws IOException {
-//		return temporaryURL(binary.getHexDigest(), resource, bucket, expiration);
-//	}
-//	
+	public String temporaryURL(String binaryHash, String resource, String bucket, Date expirationDate) throws IOException {
+		return HttpResourceFactory.getInstance().getHttpResource(resource)
+				.expiringURL(access.getTenant(), bucket, binaryHash, expirationDate);
+	}
+
 	public void setExpiration(Object expiration) {
 		logger.debug("Setting expiration: "+expiration);
 		if(expiration instanceof Long) {
@@ -91,7 +100,12 @@ public class BinaryStoreAdapter implements Mappable {
 			this.expiration = (Integer)expiration;
 			return;
 		}
+
 		logger.info("Error setting expiration: Weird type: "+expiration.getClass());
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
 	public void setBinary(Binary binary) {
@@ -111,6 +125,7 @@ public class BinaryStoreAdapter implements Mappable {
 	}
 
 	private long expiration;
+	private Date expirationDate;
 	private Binary binary;
 	private String binaryHash;
 	private String resource;
@@ -118,46 +133,47 @@ public class BinaryStoreAdapter implements Mappable {
 	private String putResult;
     private int deleteResult = -1;
 
-
-	
 	public String getTemporaryURL() throws IOException {
 		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
+		if (expirationDate != null) {
+			return temporaryURL(hash, resource, bucket, expirationDate);
+		}
+
 		return temporaryURL(hash, resource, bucket, expiration);
 	}
-	
 
 	public String getPutResult() throws IOException {
 	    if (this.putResult == null) {
 	        setPutBinary(true);
         }
 	    return putResult;
-		
+
 	}
 
 	public void setPutBinary(boolean ignore) throws IOException {
 	    this.putResult = storeBinary(this.binary, this.resource,this.bucket, false);
     }
-	
+
 	public int getDeleteResult() throws IOException {
 	    if (this.deleteResult < 0) {
 	        setDeleteBinary(true);
 	    }
 	    return this.deleteResult;
-        
+
 	}
-	
+
 	public void setDeleteBinary(boolean ignore) throws IOException {
         String hash = binaryHash != null ? binaryHash : binary.getHexDigest();
         ReactiveReply reply = deleteBinary(hash, this.resource, this.bucket, false);
         this.deleteResult = reply.status();
     }
 
-	
+
 	public boolean getHeadResult() throws IOException {
 		String hash = binaryHash!=null ? binaryHash : binary.getHexDigest();
 		return headBinary(hash,  this.resource,this.bucket);
 	}
-	
+
 	@Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub

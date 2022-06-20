@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.client.async.jetty.impl;
 
 import java.io.StringWriter;
@@ -7,7 +12,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.BinaryOpenerFactory;
@@ -15,6 +19,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.runtime.config.TestConfig;
 
 public class ITAsyncClient {
 

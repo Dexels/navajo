@@ -1,3 +1,11 @@
+/*
+ * This file is part of the Navajo Project.
+ *
+ * It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and
+ * at https://www.gnu.org/licenses/agpl-3.0.txt. No part of the Navajo Project, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained in the COPYING file.
+ */
+
 package com.dexels.navajo.example.listener;
 
 import java.io.IOException;
@@ -17,62 +25,52 @@ import com.dexels.navajo.script.api.LocalClient;
 
 public class ExampleServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 7798880709165548039L;
-	
+    private static final long serialVersionUID = 7798880709165548039L;
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ExampleServlet.class);
-	private LocalClient myClient = null;
-	private boolean isActive = false;
-	
-	
-	
-	@SuppressWarnings("unused")
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String serviceName = req.getParameter("service");
-		if(serviceName==null) {
-			resp.sendError(500, "No service parameter supplied");
-		}
-		if(isActive) {
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-			Header h = NavajoFactory.getInstance().createHeader(n, serviceName, "demo", "demo", -1);
-			n.addHeader(h);
-			logger.info("Calling service: "+serviceName);
-			try {
-				long time = System.currentTimeMillis();
-				Navajo response = myClient.call(n);
-				long diff = System.currentTimeMillis() - time;
-				resp.setContentType("text/plain");
-				resp.getWriter().write("Service: "+serviceName+" took: "+diff+" millis.");
-			} catch (FatalException e) {
-				resp.sendError(500, "Error calling service: "+URLEncoder.encode(serviceName,"UTF-8"));
-			}
-		} else {
-			logger.info("Not active!");
-		}
-	}
+    private static final Logger logger = LoggerFactory.getLogger(ExampleServlet.class);
 
-	public void activate() {
-		logger.info("Example servlet activated");
-		isActive = true;
-	}
-	
-	public void deactivate() {
-		logger.info("Goodbye!");
-		isActive = false;
-	}
-	
-	public void setClient(LocalClient lc) {
-		this.myClient = lc;
-	}
+    private LocalClient localClient;
 
-	/**
-	 * @param lc the client to clear 
-	 */
-	public void clearClient(LocalClient lc) {
-		this.myClient = null;
-	}
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String serviceName = req.getParameter("service");
+        if (serviceName == null) {
+            resp.sendError(500, "No service parameter supplied");
+            return;
+        }
+
+        Navajo n = NavajoFactory.getInstance().createNavajo();
+        Header h = NavajoFactory.getInstance().createHeader(n, serviceName, "demo", "demo", -1);
+        n.addHeader(h);
+
+        logger.info("Calling service: " + serviceName);
+        try {
+            long time = System.currentTimeMillis();
+            localClient.call(n);
+            long diff = System.currentTimeMillis() - time;
+            resp.setContentType("text/plain");
+            resp.getWriter().write("Service: " + serviceName + " took: " + diff + " millis.");
+        } catch (FatalException e) {
+            resp.sendError(500, "Error calling service: " + URLEncoder.encode(serviceName, "UTF-8"));
+        }
+    }
+
+    public void activate() {
+        logger.info("Example servlet activated.");
+    }
+
+    public void deactivate() {
+        logger.info("Example servlet deactivated.");
+    }
+
+    public void setClient(LocalClient localClient) {
+        this.localClient = localClient;
+    }
+
+    public void clearClient(LocalClient localClient) {
+        this.localClient = null;
+    }
 
 }

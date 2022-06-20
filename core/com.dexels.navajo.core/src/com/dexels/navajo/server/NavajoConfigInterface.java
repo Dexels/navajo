@@ -1,7 +1,11 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.server;
 
 import com.dexels.navajo.mapping.AsyncStore;
-import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -18,7 +22,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public String getInstanceGroup();
 	
 	// Available modules.
-	public PersistenceManager getPersistenceManager();
 	public SharedStoreInterface getSharedStore();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public ClassLoader getClassloader();

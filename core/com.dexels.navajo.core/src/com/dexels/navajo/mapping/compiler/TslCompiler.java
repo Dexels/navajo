@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project.
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt.
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.mapping.compiler;
 
 /**
@@ -47,7 +52,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,9 +66,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.expression.api.TMLExpressionException;
-import com.dexels.navajo.legacy.compiler.JavaCompiler;
-import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericMultipleDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
@@ -78,6 +79,7 @@ import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.KeywordException;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MetaCompileException;
+import com.dexels.navajo.mapping.compiler.navascript.NS3ToNSXML;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.compiled.ParseException;
 import com.dexels.navajo.script.api.CompilationException;
@@ -147,7 +149,7 @@ public class TslCompiler {
 		return this.navajoIOConfig;
 	}
 
-	
+
 	private String replaceQuotesValue(String str) {
 	    StringBuilder result = new StringBuilder(str.length());
         for (int i = 0; i < str.length(); i++) {
@@ -175,14 +177,14 @@ public class TslCompiler {
         }
         return "\"" + result.toString() + "\"";
 	}
-	
+
 	private String replaceQuotes(String str) {
 		if (str.length() > 0 && str.charAt(0) == '#') {
 			str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 			return str;
 		}
 		return replaceQuotesValue(str);
-		
+
 	}
 
 	private String removeNewLines(String str) {
@@ -249,7 +251,7 @@ public class TslCompiler {
 	/**
 	 * VERY NASTY METHOD. IT TRIES ALL KINDS OF TRICKS TO TRY TO AVOID CALLING
 	 * THE EXPRESSION.EVALUATE() METHOD IN THE GENERATED JAVA.
-	 * 
+	 *
 	 * @param ident
 	 * @param clause
 	 * @param className
@@ -265,8 +267,8 @@ public class TslCompiler {
 		StringBuilder functionNameBuffer = new StringBuilder();
 		String functionName = "";
 		String call = "";
-		
-		
+
+
 
 		// Try if clause contains only a (Navajo) function and a mappable
 		// attribute call.
@@ -303,7 +305,7 @@ public class TslCompiler {
 				if (name.toString().contains("..")) {
 				    // We cannot optimize these yet
 				    continue;
-				    
+
 				}
 				i++;
 
@@ -506,7 +508,7 @@ public class TslCompiler {
 
 	/**
 	 * Extract the value from an expression node.
-	 * 
+	 *
 	 * @param exprElmnt
 	 * @return
 	 * @throws Exception
@@ -630,7 +632,7 @@ public class TslCompiler {
                 String debug = e.getAttribute("debug");
                 String scopes = e.getAttribute("scopes");
                 String description = e.getAttribute("description");
-                
+
                 result.append(printIdent(ident) + "if (true) {\n");
 
                 String operationString = "com.dexels.navajo.document.Operation o = " + "NavajoFactory.getInstance().createOperation(access.getOutputDoc(), "
@@ -689,7 +691,7 @@ public class TslCompiler {
                 if (description != null && !description.equals("")) {
                     result.append(printIdent(ident + 2) + "o.setDescription(\"" + description + "\");\n");
                 }
-                
+
                 result.append(printIdent(ident + 2) + "access.getOutputDoc().addOperation(o);\n");
                 result.append(printIdent(ident) + "}\n");
             }
@@ -750,16 +752,24 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	// method for implementing loop $field | [/Array] [filter] construct
+	public String loopNode(int ident, Element n, String className,
+			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
+
+
+		 return null;
+	}
+
 	//method for implementing if-condition --b
 	public String blockNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException, MappingException{
-				
+
 		StringBuilder result = new StringBuilder();
 
 		String condition = n.getAttribute("condition");
 
 		condition = (condition == null) ? "" : condition;
-		
+
 		boolean conditionClause = false;
 
 		if (!condition.equals("")) {
@@ -779,16 +789,16 @@ public class TslCompiler {
 					result.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
 				}
 			}
-		
+
 			if (conditionClause) {
 				ident -= 2;
 				result.append(printIdent(ident) + "} // EOF message condition \n");
 			}
-	
+
 			return result.toString();
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String messageNode(int ident, Element n, String className,
 			String objectName, List<Dependency> deps, String tenant) throws MappingException, ClassNotFoundException, UserException, IOException, MetaCompileException, ParseException {
@@ -805,7 +815,7 @@ public class TslCompiler {
 		String scopeMsg = n.getAttribute("scope");
 		String method = n.getAttribute("method");
 		String subType = n.getAttribute("subtype");
-		
+
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
 		condition = (condition == null) ? "" : condition;
@@ -843,12 +853,12 @@ public class TslCompiler {
 		// Check if <message> is mapped to an object attribute:
 		if (nextElt != null && nextElt.getNodeName().equals("map")
 				&& nextElt.getAttribute("ref") != null && !nextElt.getAttribute("ref").equals("") ) {
-			
-			String refOriginal = null; 
+
+			String refOriginal = null;
 			isSubMapped = true;
 			isMappedMessage = false;
 			refOriginal = nextElt.getAttribute("ref");
-			
+
 			// Check if ref contains [ char, if it does, an array message of a selection property is mapped.
 			if ( refOriginal.length() > 0 && refOriginal.charAt(0) == '[' ) {
 				refOriginal = refOriginal.replaceAll("\\[", "");
@@ -870,7 +880,7 @@ public class TslCompiler {
 				ref = refOriginal;
 			}
 
-			forceArray = type.equals(Message.MSG_TYPE_ARRAY); 
+			forceArray = type.equals(Message.MSG_TYPE_ARRAY);
 			filter = nextElt.getAttribute("filter");
 			if (filter != null) {
 				filter = filter.replace('\r', ' ');
@@ -892,7 +902,7 @@ public class TslCompiler {
 						contextClass = Class.forName(className, false, loader);
 					}
 				} catch (Exception e) {
-					throw new MappingException("Could not find field: " + className + "/" + mapPath, e);
+					throw new MappingException("Error line " + nextElt.getAttribute("linenr") + ": Could not find field: " + className + "/" + mapPath, e);
 				}
 
 				addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -902,7 +912,11 @@ public class TslCompiler {
 					isArrayAttr = forceArray;
 					type = Message.MSG_TYPE_ARRAY;
 				} else {
-					isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+					try {
+						isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+					} catch (Exception e) {
+						throw new MappingException("Error line " + nextElt.getAttribute("linenr") + ": " + e.getMessage());
+					}
 					isIterator = MappingUtils
 							.isIteratorAttribute(contextClass, ref);
 
@@ -914,7 +928,7 @@ public class TslCompiler {
 					}
 				}
 			}
-			
+
 		}
 		// Create the message(s). Multiple messages are created if count > 1.
 		result.append(printIdent(ident)
@@ -940,6 +954,13 @@ public class TslCompiler {
 					+ messageName + "\", \"\", count, \"" + type + "\", \""
 					+ mode + "\", " + orderbyExpression + ");\n");
 			result.append("");
+		} else if ( n.getNodeName().equals("loop" )) {
+			// create a message array of size 1 as placeholder.
+			result.append(printIdent(ident)
+					+ messageList
+					+ " = new Message[1];\n");
+			result.append("");
+
 		} else { // must be parammessage.
 
 			result.append(printIdent(ident)
@@ -958,16 +979,41 @@ public class TslCompiler {
 					+ "outMsgStack.push(currentOutMsg);\n");
 			result.append(printIdent(ident + 2) + "currentOutMsg = "
 					+ messageList + "[messageCount" + (ident) + "];\n");
-			
+
 			if (subType != null && !subType.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setSubType(\"" + subType + "\");\n");
+
+				String[] subTypeElements = subType.split(",");
+				for (String subTypeElement: subTypeElements) {
+				    if (subTypeElement.startsWith("interface=")) {
+				        for (String iface: subTypeElement.replace("interface=", "").split(";")) {
+		                    String version = "0";
+		                    if (iface.indexOf(".") != -1) {
+		                        version = iface.substring(iface.indexOf(".") + 1, iface.indexOf("?") == -1 ? iface.length() : iface.indexOf("?"));
+		                    }
+		                    String replace = "." + version;
+		                    iface = iface.replace(replace, "");
+
+		                    String options = null;
+		                    if (iface.indexOf('?') > 0) {
+		                        options = iface.split("\\?")[1];
+		                        iface = iface.split("\\?")[0];
+		                    }
+		                    addDependency(
+	                                "dependentObjects.add( new ExtendDependency( Long.valueOf(\""
+	                                        + ExtendDependency.getScriptTimeStamp(iface)
+	                                        + "\"), \"" + iface + "\"));\n", "EXTEND" + iface);
+		                    deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(iface),iface ));
+		                }
+				    }
+				}
 			}
 			if (extendsMsg != null && !extendsMsg.equals("")) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
-				
-				
+
+
 				if (extendsMsg.startsWith("navajo://")) {
 				    String ext = extendsMsg.substring(9);
                     String version = "0";
@@ -985,12 +1031,12 @@ public class TslCompiler {
 		        				"dependentObjects.add( new ExtendDependency( Long.valueOf(\""
 		        						+ ExtendDependency.getScriptTimeStamp(superEntity)
 		        						+ "\"), \"" + superEntity + "\"));\n", "EXTEND" + superEntity);
-		                
+
 		                deps.add(new ExtendDependency(ExtendDependency.getScriptTimeStamp(superEntity),superEntity ));
 		            }
 				}
-					
-				
+
+
 			}
 			if (scopeMsg != null) {
 				result.append(printIdent(ident + 2)
@@ -998,7 +1044,9 @@ public class TslCompiler {
 			}
 			result.append(printIdent(ident + 2)
 					+ "currentOutMsg.setMethod(\"" + method + "\");\n");
-			
+
+		} else if (n.getNodeName().equals("loop")) {
+			// do nothing.
 		} else { // must be parammessage.
 			result.append(printIdent(ident + 2)
 					+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1010,9 +1058,9 @@ public class TslCompiler {
 				+ "access.setCurrentOutMessage(currentOutMsg);\n");
 
 		if (isSubMapped && isMappedMessage ) {
-			
+
 			boolean isParam = false;
-			
+
 			result.append(printIdent(ident + 2)
 					+ "// Map message(s) to message\n");
 			String messageListName = "messages" + ident;
@@ -1022,7 +1070,7 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \""
 					+ ref + "\");\n");
-			
+
 			result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
 			result.append(printIdent(ident + 4)
 					+ messageListName
@@ -1035,7 +1083,7 @@ public class TslCompiler {
 					+ " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \""
 					+ ref + "\");\n");
 			String loopCounterName = "j" + subObjectCounter++;
-			
+
 			variableClipboard.add("int " + loopCounterName + ";\n");
 
 			result.append(printIdent(ident + 2) + "for (" + loopCounterName
@@ -1068,7 +1116,7 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "currentSelection = (Selection) " + messageListName
 					+ ".get(" + loopCounterName + ");\n");
-			
+
 			// If filter is specified, evaluate filter first:
 			if (!filter.equals("")) {
 				result.append(printIdent(ident + 4)
@@ -1089,6 +1137,8 @@ public class TslCompiler {
 						+ ");\n");
 				result.append(printIdent(ident + 4)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do nothing.
 			} else { // parammessage.
 				result.append(printIdent(ident + 4)
 						+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1096,10 +1146,10 @@ public class TslCompiler {
 						+ "currentParamMsg = MappingUtils.getMessageObject(\""
 						+ MappingUtils.getBaseMessageName(messageName)
 						+ "\", currentParamMsg, true, access.getInDoc(), false, \"\", "
-						+  "-1" 
+						+  "-1"
 						+ ");\n");
 			}
-			
+
 			result.append(printIdent(ident) + "try {\n");
 			ident = ident + 2;
 
@@ -1121,6 +1171,8 @@ public class TslCompiler {
 						+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 				result.append(printIdent(ident + 2)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do  nothing.
 			} else {
 				result.append(printIdent(ident)
 						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -1305,7 +1357,7 @@ public class TslCompiler {
 			}
 			result.append(printIdent(ident + 4)
 			            + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
-			
+
 
 			// If filter is specified, evaluate filter first:
 			if (filter != null && !filter.equals("")) {
@@ -1327,6 +1379,8 @@ public class TslCompiler {
 						+ ");\n");
 				result.append(printIdent(ident + 4)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop")) {
+				// do nothing.
 			} else { // parammessage.
 				result.append(printIdent(ident + 4)
 						+ "paramMsgStack.push(currentParamMsg);\n");
@@ -1366,6 +1420,8 @@ public class TslCompiler {
 						+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 				result.append(printIdent(ident + 2)
 						+ "access.setCurrentOutMessage(currentOutMsg);\n");
+			} else if ( n.getNodeName().equals("loop") ) {
+				// do nothing.
 			} else {
 				result.append(printIdent(ident)
 						+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -1381,6 +1437,10 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2)
 					+ "}\n} // EOF Array map result from contextMap \n");
 		} else if (isSubMapped) { // Not an array
+
+			if ( n.getNodeName().equals("loop")) {
+				throw new MappingException("Can only loop over arrays");
+			}
 
 			if (mapPath == null) {
 				result.append(printIdent(ident + 2)
@@ -1405,7 +1465,7 @@ public class TslCompiler {
 				}
 				result.append(printIdent(ident + 4)
                         + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
-				
+
 
 			} else {
 				String localObjectName = "mappableObject" + (objectCounter++);
@@ -1434,7 +1494,7 @@ public class TslCompiler {
 				}
 				result.append(printIdent(ident + 4)
                         + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
-				
+
 			}
 
 			result.append(printIdent(ident + 2)
@@ -1484,6 +1544,11 @@ public class TslCompiler {
 					+ "MappingUtils.callStoreMethod(currentMap.myObject);\n"
 					+ "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 		} else { // Just some new tags under the "message" tag.
+
+			if ( n.getNodeName().equals("loop")) {
+				throw new MappingException("Can only loop over arrays");
+			}
+
 			NodeList children = n.getChildNodes();
 			for (int i = 0; i < children.getLength(); i++) {
 				result.append(compile(ident + 2, children.item(i), className,
@@ -1496,6 +1561,8 @@ public class TslCompiler {
 					+ "currentOutMsg = (Message) outMsgStack.pop();\n");
 			result.append(printIdent(ident)
 					+ "access.setCurrentOutMessage(currentOutMsg);\n");
+		} else if ( n.getNodeName().equals("loop")) {
+			// do nothing.
 		} else {
 			result.append(printIdent(ident)
 					+ "currentParamMsg = (Message) paramMsgStack.pop();\n");
@@ -1531,7 +1598,7 @@ public class TslCompiler {
 		String extendsProp = n.getAttribute("extends");
 		String bindProp = n.getAttribute("bind");
 		String methodProp = n.getAttribute("method");
-		
+
 		value = (value == null) || (value.equals("")) ? "" : value;
 		type = (type == null) ? "" : type;
 		subtype = (subtype == null) ? "" : subtype;
@@ -1540,7 +1607,7 @@ public class TslCompiler {
 				: cardinality;
 		condition = (condition == null) ? "" : condition;
 		methodProp = (methodProp == null) ? "" : methodProp;
-		
+
 		boolean conditionClause = false;
 		if (!condition.equals("")) {
 			conditionClause = true;
@@ -1682,7 +1749,7 @@ public class TslCompiler {
 						+ bindProp + "\");\n");
 			}
 			result.append(printIdent(ident) + "p.setMethod(\""+ methodProp + "\");\n");
-			
+
 		} else { // parameter
 			result.append(printIdent(ident)
 					+ "MappingUtils.setProperty(true, currentParamMsg, \""
@@ -1709,6 +1776,9 @@ public class TslCompiler {
 				throw new IllegalStateException("Unexpected null mapNode");
 			}
 			String ref = mapNode.getAttribute("ref");
+			if ( ref != null && !"".equals(ref)) {
+				ref = ref.replaceAll("\\$", ""); // replace $ for refs.
+			}
 			String filter = mapNode.getAttribute("filter");
 
 			String mappableArrayName = "mappableObject" + (objectCounter++);
@@ -1851,11 +1921,10 @@ public class TslCompiler {
 					.get(localContextClass);
 
 			if (dependentFields == null
-					&& HasDependentResources.class
-							.isAssignableFrom(localContextClass)) {
+					&& HasDependentResources.class.isAssignableFrom(localContextClass)) {
 				try {
 					HasDependentResources hr = (HasDependentResources) localContextClass
-							.newInstance();
+					        .getDeclaredConstructor().newInstance();
 					dependentFields = hr.getDependentResourceFields();
 				} catch (Throwable t) {
 					logger.error("Dependency detection problem:", t);
@@ -1986,7 +2055,7 @@ public class TslCompiler {
 				result.append(expressionNode(ident + 2,
 						(Element) children.item(i), --exprCount, className,
 						objectName));
-				Boolean b = new Boolean(false);
+				Boolean b = false;
 				exprValues.add((String) getExpressionValue(
 						((Element) children.item(i)), b)[0]);
 			} else if (children.item(i).getNodeName().equals("map")) {
@@ -2337,7 +2406,7 @@ public class TslCompiler {
 						+ type + "\").newInstance(), false);\n");
 				result.append(printIdent(ident + 4)
                         + "currentMap.setNavajoLineNr("+n.getAttribute("linenr") + ");\n");
-				
+
 
 				// Create local variable to address new object.
 				String subObjectsName = "subObject" + subObjectCounter;
@@ -2435,9 +2504,14 @@ public class TslCompiler {
 					+ className + ")");
 			Class result = bc.getService(sr.iterator().next());
 			return result;
-		} catch (InvalidSyntaxException e) {
-			logger.error("Adapter resolution error: ", e);
-			return null;
+		} catch (Exception e) {
+			// Try normal class loader
+			try {
+				return Class.forName(className, false, loader);
+			} catch (Exception e2) {
+				logger.error("Adapter resolution error: ", e);
+				return null;
+			}
 		}
 
 	}
@@ -2446,7 +2520,7 @@ public class TslCompiler {
 	 * Locate a contextclass in the class stack based upon a mappath. Depending
 	 * on the way this method is called an additional offset to stack index must
 	 * be supplied...
-	 * 
+	 *
 	 */
 	private Class locateContextClass(String mapPath, int offset) throws UserException {
 
@@ -2520,12 +2594,12 @@ public class TslCompiler {
 			result.append(printIdent(ident + 2) + "Access.writeToConsole(access, \"Breaking at line: " + linenr + "\");\n");
 			result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
 			result.append(printIdent(ident) + "}\n");
-		} 
+		}
 		else {
 			result.append(printIdent(ident + 2) + "op = Expression.evaluate("
 					+ replaceQuotes(error)
 					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
-					
+
 			result.append(printIdent(ident + 2) + "throw new UserException(UserException.BREAK_EXCEPTION, op.value + \"\");\n");
 			result.append(printIdent(ident) + "}\n");
 		}
@@ -2545,7 +2619,7 @@ public class TslCompiler {
                     + replaceQuotes(condition)
                     + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
         }
-        
+
 		result.append(printIdent(ident + 2)
 				+ "op = Expression.evaluate("
 				+ replaceQuotes(value)
@@ -2554,7 +2628,7 @@ public class TslCompiler {
 		result.append(printIdent(ident) + "}\n");
 		return result.toString();
 	}
-	
+
 	public String logNode(int ident, Element n) {
 		StringBuilder result = new StringBuilder();
         String value = n.getAttribute("value");
@@ -2567,7 +2641,7 @@ public class TslCompiler {
                     + replaceQuotes(condition)
                     + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
         }
-        
+
         result.append(printIdent(ident + 2)
                 + "op = Expression.evaluate("
                 + replaceQuotes(value)
@@ -2612,11 +2686,11 @@ public class TslCompiler {
 		}
 
 		String className = object;
-		
+
 		if (className.equals("")) {
 		    throw new ParseException("Error in reading Map xml - found map with empty object! Line " + n.getAttribute("linenr") +":"+ n.getAttribute("startoffset"));
 		}
-		
+
 		if (contextClass != null) {
 			contextClassStack.push(contextClass);
 		}
@@ -2903,18 +2977,41 @@ public class TslCompiler {
 		return result.toString();
 	}
 
+	private String fetchScriptFileName(String scriptName) {
+
+		// Check for xml based script
+		File f1 = new File(scriptName + ".xml");
+		if ( f1.exists() ) {
+			return scriptName + ".xml";
+		}
+
+		// Check navascript3 based script
+		File f2 = new File(scriptName + ".ns");
+		if ( f2.exists() ) {
+			return scriptName + ".ns";
+		}
+
+		// Check for scala script
+		File f3 = new File(scriptName + ".scala");
+		if ( f3.exists() ) {
+			return scriptName + ".scala";
+		}
+
+		return null;
+	}
+
 	/**
 	 * Resolve include nodes in the script: <include
 	 * script="[name of script to be included]"/>
-	 * 
+	 *
 	 * @param scriptPath
 	 * @param n
 	 * @param parent
 	 * @param deps
-	 * @throws MetaCompileException 
-	 * @throws IOException 
-	 * @throws KeywordException 
-	 * @throws ClassNotFoundException 
+	 * @throws MetaCompileException
+	 * @throws IOException
+	 * @throws KeywordException
+	 * @throws ClassNotFoundException
 	 * @throws Exception
 	 */
 	private final void includeNode(String scriptPath, Node n, Document parent,
@@ -2939,17 +3036,37 @@ public class TslCompiler {
 		String fileName = script + "_" + tenant;
 
 		Document includeDoc = null;
-		File includedFile = new File(scriptPath + "/" + fileName + ".xml");
+		String includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+		File includedFile = null;
 
-		if (includedFile.exists()) {
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(
-					includedFile), false);
-		} else {
+		if (includeFileName != null) {
+			includedFile = new File(includeFileName);
+			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includeFileName), false);
+		} else { // no tenant specific include found. Try non-tenant include instead.
 			fileName = script;
-			includedFile = new File(scriptPath + "/" + fileName + ".xml");
-			includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+			includeFileName = fetchScriptFileName(scriptPath + "/" + fileName);
+			if ( includeFileName != null ) {
+				includedFile = new File(includeFileName);
+				if ( includeFileName.endsWith(".ns")) { // It's an NS3 based script
+					NS3ToNSXML nstoxml = new NS3ToNSXML();
+					nstoxml.initialize();
+					try {
+						String content = nstoxml.read(includeFileName);
+						String tslResult = MapMetaData.getInstance().parse(scriptPath + "/" + fileName + ".ns", nstoxml.parseNavascript(content));
+						includeDoc = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tslResult.getBytes()), false);
+					} catch (Exception e) {
+						throw new UserException(e.getLocalizedMessage(), e);
+					}
+				} else { // It's an XML based script
+					includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+				}
+			}
 		}
 
+		if ( includedFile == null ) {
+			logger.error("Could not file include file: {}", script);
+			throw new UserException("Could not find include file for script: " +script);
+		}
 		// Add dependency.
 		addDependency(
 				"dependentObjects.add( new IncludeDependency( Long.valueOf(\""
@@ -2957,7 +3074,7 @@ public class TslCompiler {
 						+ "\"), \"" + fileName + "\"));\n", "INCLUDE" + script);
 		deps.add(new IncludeDependency(IncludeDependency.getFileTimeStamp(includedFile), fileName , fileName));
 
-		
+
 
 		if (includeDoc.getElementsByTagName("tsl").item(0) == null) { // Maybe
 																		// it is
@@ -3015,7 +3132,7 @@ public class TslCompiler {
 					objectName));
 		}
 
-		else if (n.getNodeName().equals("message")
+		else if (n.getNodeName().equals("message") || n.getNodeName().equals("loop")
 				|| (n.getNodeName().equals("param") && (((Element) n)
 						.getAttribute("type").equals("array") || ((Element) n)
 						.getAttribute("type").equals("array_element")))) {
@@ -3029,8 +3146,11 @@ public class TslCompiler {
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-			methodBuffer.append(messageNode(ident, (Element) n, className,
-					objectName, deps, tenant));
+
+			String code = messageNode(ident, (Element) n, className,
+					objectName, deps, tenant);
+
+			methodBuffer.append(code);
 			methodBuffer.append(printIdent(ident) + "}\n");
 			ident -= 2;
 			methodBuffer.append("}\n");
@@ -3042,7 +3162,7 @@ public class TslCompiler {
 			String messageName = ((Element) n).getAttribute("name");
 			String condition = ((Element) n).getAttribute("condition");
 			boolean conditionClause = false;
-			
+
 			if (!condition.equals("")) {
 				conditionClause = true;
 				result.append(printIdent(ident)
@@ -3051,7 +3171,7 @@ public class TslCompiler {
 						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 				ident += 2;
 			}
-			
+
 			result.append(printIdent(ident)
 					+ "if ( currentOutMsg != null && currentOutMsg.getMessage(\""
 					+ messageName + "\") != null ) {\n");
@@ -3066,12 +3186,12 @@ public class TslCompiler {
 					+ "access.getOutputDoc().removeMessage(\"" + messageName
 					+ "\");\n");
 			result.append(printIdent(ident) + "}\n");
-			
+
 			if (conditionClause) {
 				ident -= 2;
 				result.append(printIdent(ident) + "} // EOF message condition \n");
 			}
-			
+
 		} else if (n.getNodeName().equals("methods")) {
 			result.append(methodsNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("operations")) {
@@ -3091,36 +3211,36 @@ public class TslCompiler {
 			String breakOnNoLock = elt.getAttribute("breakOnNoLock");
 			String keyValue = "null";
 			if ( key != null && !key.equals("") ) {
-			  keyValue=	"(\"\" + Expression.evaluate(\"" 
+			  keyValue=	"(\"\" + Expression.evaluate(\""
 						+ key
 						+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value)";
-			} 
+			}
 			String timeout = elt.getAttribute("timeout");
-			
+
 			boolean user = false;
 			boolean service = false;
-			
+
 			if ( context.indexOf("user") != -1 ) {
 				user = true;
 			}
 			if ( context.indexOf("service") != -1 ) {
 				service = true;
 			}
-			
+
 			String methodName = "execute_sub" + (methodCounter++);
 			result.append(printIdent(ident) + "if (!kill) { " + methodName
 					+ "(access); }\n");
-			
+
 			methodBuffer.append(printIdent(ident) + "private final void "
 					+ methodName + "(Access access) throws Exception {\n\n");
 			ident += 2;
 			methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
 	        ident += 2;
 
-			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+ 
+			String lock = "Lock l = getLock(" + ( user ? "access.rpcUser" : null) + "," + ( service ? "access.rpcName" : "null" )+
 					"," + keyValue + ");\n";
 			methodBuffer.append(printIdent(ident) + lock);
-			
+
 			boolean useTrylock = false;
 			if ( "".equals(timeout)) {
 				useTrylock = false;
@@ -3131,7 +3251,7 @@ public class TslCompiler {
 				methodBuffer.append(printIdent(ident) + "if ( l.tryLock(" + timeout + ", TimeUnit.MILLISECONDS) ) {\n");
 				ident += 2;
 				methodBuffer.append(printIdent(ident) + "try {\n");
-				
+
 			}
 			methodBuffer.append(printIdent(ident + 4) + "acquiredLock(l);\n");
 			NodeList children = n.getChildNodes();
@@ -3140,11 +3260,11 @@ public class TslCompiler {
 					methodBuffer.append(compile(ident + 4, children.item(i), className, objectName, deps, tenant));
 				}
 			}
-			
+
 			methodBuffer.append(printIdent(ident) + "} finally {\n");
             methodBuffer.append(printIdent(ident + 2) +"releaseLock(l);\n");
             methodBuffer.append(printIdent(ident) +"}\n");
-            
+
 			if ( useTrylock ) {
 			    ident -= 2;
 				methodBuffer.append(printIdent(ident) + "} else {");
@@ -3155,7 +3275,7 @@ public class TslCompiler {
 				    methodBuffer.append(printIdent(ident) + "Access.writeToConsole(access, \"No lock was obtained! \");\n");
 				    methodBuffer.append(printIdent(ident) + "}\n");
 				}
-				
+
 			}
 			ident -= 2;
 			methodBuffer.append(printIdent(ident) +"}\n");
@@ -3192,7 +3312,7 @@ public class TslCompiler {
 
 	/**
 	 * Check condition/validation rules inside the script.
-	 * 
+	 *
 	 * @param f
 	 * @return
 	 * @throws Exception
@@ -3209,7 +3329,7 @@ public class TslCompiler {
 					String expression = rules.item(j).getFirstChild().getNodeValue();
 					expression = expression.replace('\r', ' ');
 					expression = expression.replace('\n', ' ');
-					// Replace any references to another define 
+					// Replace any references to another define
 					// (Starting with #) by a dynamic lookup
 					expression = expression.replaceAll("#([A-Za-z0-9]*)",
 							" ( \" + userDefinedRules.get(\"$1\") + \" ) ");
@@ -3222,7 +3342,7 @@ public class TslCompiler {
 
 	/**
 	 * Check condition/validation rules inside the script.
-	 * 
+	 *
 	 * @param f
 	 * @return
 	 * @throws Exception
@@ -3357,7 +3477,7 @@ public class TslCompiler {
 						+ scriptPath);
 			}
 			String debugLevel = tslElt.getAttribute("debug");
-						
+
 			String description = tslElt.getAttribute("notes");
 			String author = tslElt.getAttribute("author");
 
@@ -3368,7 +3488,7 @@ public class TslCompiler {
 					actualPackagePath = "defaultPackage";
 				}
 			}
-			
+
 			String className = script;
 			if (forceTenant) {
 				className += "_" + tenant;
@@ -3453,7 +3573,7 @@ public class TslCompiler {
 
 			String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 			result.append(methodDef);
-			
+
 			result.append("try {\n");
 
 			result.append("inDoc = access.getInDoc();\n");
@@ -3541,16 +3661,28 @@ public class TslCompiler {
 
 		final String extension = ".xml";
 		String fullScriptPath = scriptPath + "/" + packagePath + "/" + script +  extension;
-		
+		String ns3ScriptPath =  scriptPath + "/" + packagePath + "/" + script + ".ns";
 
 		List<String> inheritedScripts = new ArrayList<>();
 		List<String> extendEntities = new ArrayList<>();
 		InputStream is = null;
+		boolean isNavascript = false;
 
 		try {
 
-			// Check for metascript.
-			if (MapMetaData.isMetaScript(fullScriptPath)) {
+
+			if (new File(ns3ScriptPath).exists() ) {
+				NS3ToNSXML ns3toxml = new NS3ToNSXML();
+				ns3toxml.initialize();
+				scriptType = "navascript";
+				String content = ns3toxml.read(ns3ScriptPath);
+				InputStream metais = ns3toxml.parseNavascript(content);
+				MapMetaData mmd = MapMetaData.getInstance();
+				String intermed = mmd.parse(fullScriptPath, metais);
+				metais.close();
+				is = new ByteArrayInputStream(intermed.getBytes());
+				isNavascript = true;
+			} else if (MapMetaData.isMetaScript(fullScriptPath)) { // Check for metascript.
 				scriptType = "navascript";
 				MapMetaData mmd = MapMetaData.getInstance();
 				InputStream metais = navajoIOConfig.getScript(packagePath + "/"
@@ -3564,28 +3696,29 @@ public class TslCompiler {
 						tenant,extension);
 			}
 
-			InputStream sis = navajoIOConfig.getScript(packagePath + "/"
-					+ script, tenant,extension);
-			logger.debug("Getting script: {}/{}", packagePath, script);
-			if (ScriptInheritance.containsInject(sis)) {
-				// Inheritance preprocessor before compiling.
-				InputStream ais = null;
-				ais = ScriptInheritance.inherit(is, scriptPath,
-						inheritedScripts);
-				is.close();
-				is = ais;
+			if ( !isNavascript ) { // NS3 does NOT support inheritance at this moment.
+				InputStream sis = navajoIOConfig.getScript(packagePath + "/" + script, tenant,extension);
+				logger.debug("Getting script: {}/{}", packagePath, script);
+				if (ScriptInheritance.containsInject(sis)) {
+					// Inheritance preprocessor before compiling.
+					InputStream ais = null;
+					ais = ScriptInheritance.inherit(is, scriptPath,
+							inheritedScripts);
+					is.close();
+					is = ais;
+				}
+				sis.close();
 			}
-			sis.close();
-			
+
 			for (int i = 0; i < inheritedScripts.size(); i++) {
-			    File inheritedFile = new File(scriptPath + "/" + inheritedScripts .get(i) + ".xml");
+			    File inheritedFile = new File(fetchScriptFileName(scriptPath + "/" + inheritedScripts .get(i)));
 				addDependency(
 						"dependentObjects.add( new InheritDependency( Long.valueOf(\""
 								+ IncludeDependency.getFileTimeStamp(inheritedFile) + "\"), \""
 								+ inheritedScripts.get(i) + "\"));\n",
 						"INHERIT" + inheritedScripts.get(i));
 			}
-			
+
 			compileScript(is, packagePath, script, scriptPath, outputWriter,
 					deps, tenant, forceTenant);
 
@@ -3616,7 +3749,7 @@ public class TslCompiler {
 
 	/**
 	 * Only used by OSGi now
-	 * 
+	 *
 	 * @param script
 	 * @param input
 	 * @param output
@@ -3642,7 +3775,7 @@ public class TslCompiler {
 			tenantScript = script + "_" + tenant;
 		}
 		String javaFile = output + "/" + tenantScript + ".java";
-		
+
 		TslCompiler tslCompiler = new TslCompiler(classLoader, navajoIOConfig);
 		try {
 			String bareScript;
@@ -3673,7 +3806,7 @@ public class TslCompiler {
 				throw new CompilationException("Other compilation exception:", ex);
 			}
 			return null;
-		} 
+		}
 	}
 
 }

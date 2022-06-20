@@ -1,5 +1,0 @@
-<reactive>
-	<source.inputstream classpath="3persons.json">
-		<msg.csv.binary columns="firstname,dateofbirth" delimiter=","/>
-	</source.inputstream>
-</reactive>

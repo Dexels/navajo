@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.resource.http;
 
 import java.io.File;
@@ -13,13 +18,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.dexels.config.runtime.TestConfig;
 import com.dexels.navajo.client.stream.ReactiveReply;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.resource.http.adapter.BinaryStoreAdapter;
 import com.dexels.navajo.resource.http.impl.ResourceComponent;
+import com.dexels.navajo.runtime.config.TestConfig;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;

@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elasticsearch Driver for Navajo
 Bundle-SymbolicName: com.dexels.navajo.elasticsearch
-Bundle-Version: 1.0.12.qualifier
+Bundle-Version: 1.0.13.qualifier
 Bundle-Activator: elasticsearchadapter.Version
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.dexels.config.runtime;resolution:=optional,
- com.dexels.index.api;version="1.0.0",
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: com.dexels.index.api;version="1.0.0",
  com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.document.types;version="2.2.1",
+ com.dexels.navajo.runtime.config;resolution:=optional,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.version;version="1.1.0",
  com.fasterxml.jackson.core;version="2.8.5",

@@ -1,0 +1,450 @@
+Navascript  ::= DebugDefinition? Validations? TopLevelStatement* Finally? EOF
+
+DebugDefinition ::= DEBUG "=" ( TRUE  | REQUEST | RESPONSE ) ";"
+
+Validations ::= VALIDATIONS "{" Checks "}"
+
+Methods ::= METHODS "{" DefinedMethod* "}"
+
+DefinedMethod ::= DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";" 
+
+Finally ::= FINALLY "{" TopLevelStatement* "}"
+
+TopLevelStatement ::= Include | Message | Var | Break | Map | AntiMessage | Define | ConditionalEmptyMessage | Synchronized | Print | Log | Loop | Methods
+
+Define ::= DEFINE DOUBLE_QUOTE Identifier DOUBLE_QUOTE ( ":" | "=" ) Expression ";"
+
+Include ::= Conditional? INCLUDE DOUBLE_QUOTE ScriptIdentifier DOUBLE_QUOTE ";"
+
+Print ::= Conditional? PRINT "(" Expression ")" ";"
+
+Log ::= Conditional? LOG "(" Expression ")" ";"
+
+InnerBody ::=  Property | MethodOrSetter | TopLevelStatement
+
+InnerBodySelection ::=  Option | MethodOrSetter | TopLevelStatement
+
+Checks ::=  Check*
+
+Check ::= Conditional? CHECK "(" CheckAttributes ")" "=" Expression ";"
+
+CheckAttributes ::= CheckAttribute ( "," CheckAttribute)?
+
+CheckAttribute ::= ("code" LiteralOrExpression) | ("description" LiteralOrExpression)
+
+LiteralOrExpression ::= ( "=" StringConstant | "=" Expression )? 
+
+Break ::= ( Conditional )?  BREAK ( "(" BreakParameters? ")" )? ";"
+
+BreakParameter ::= ( "code" LiteralOrExpression | "description" LiteralOrExpression | "error" LiteralOrExpression ) 
+
+BreakParameters ::= BreakParameter ( "," BreakParameter )?
+
+Conditional ::= IF Expression THEN
+
+Var ::= ( Conditional )? VAR VarName ( "(" VarArguments ")" )? ("=" StringConstant  ";"  |  "=" ConditionalExpressions  ";" | "{" MappedArrayField "}" | "{" MappedArrayMessage "}" | "[" VarArray? "]" | "{" Var* "}"  )
+
+VarArray ::= VarArrayElement ("," VarArrayElement)*
+
+VarArrayElement ::= "{" Var* "}"
+
+VarArguments ::=  VarArgument ( "," VarArgument )*
+
+VarArgument ::= ( VarType | VarMode )
+
+VarType ::= "type" ( ":" | "=" ) ( MessageType | PropertyTypeValue )
+
+VarMode ::= "mode" ( ":" | "=" ) MessageMode
+
+ConditionalExpressions ::= (( Conditional ( Expression | StringConstant ) )* ELSE ( Expression | StringConstant ) | ( Expression | StringConstant ) )
+
+AntiMessage ::= Conditional? ANTIMESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ";"
+ 
+ConditionalEmptyMessage ::= Conditional "{" InnerBody* "}"
+
+Synchronized ::= SYNCHRONIZED "(" SynchronizedArguments ")" "{" TopLevelStatement* "}"
+
+SynchronizedArguments ::= SynchronizedArgument ( "," SynchronizedArgument )*
+
+SynchronizedArgument ::= ( SContext | SKey | STimeout | SBreakOnNoLock )
+
+SContext ::= CONTEXT ( ":" |  "=" ) SContextType 
+
+SKey ::= KEY LiteralOrExpression
+
+STimeout ::= TIMEOUT ( ":" |  "=" ) Expression
+
+SBreakOnNoLock ::= BREAKONNOLOCK ( ":" |  "=" ) Expression
+
+Message ::= ( Conditional )?  MESSAGE DOUBLE_QUOTE MsgIdentifier DOUBLE_QUOTE ( "(" MessageArguments ")" )? ( ";" | ( "{" ( MappedArrayField | MappedArrayMessage | InnerBody* ) "}" ) | "[" MessageArray? "]" )
+
+MessageArray ::= MessageArrayElement ("," MessageArrayElement)*
+
+MessageArrayElement ::= "{" InnerBody* "}"
+
+Property ::= ( Conditional )?  PROPERTY DOUBLE_QUOTE PropertyName DOUBLE_QUOTE ( "(" PropertyArguments ")" )? ( ";" | "=" StringConstant ";" |  "=" ConditionalExpressions ";" | "[" SelectionArray "]"  | "{" MappedArrayFieldSelection "}" | "{" MappedArrayMessageSelection "}"  )? 
+
+SelectionArray ::= SelectionArrayElement ("," SelectionArrayElement)*
+
+SelectionArrayElement ::= "{" InnerBodySelection* "}"
+
+Option ::= ( Conditional )?  OPTION ("name" | "value" | "selected" )  (  "=" StringConstant ";" |  "=" ConditionalExpressions ";" )? 
+
+PropertyArgument ::= ( PropertyType | PropertySubType | PropertyDescription | PropertyLength | PropertyDirection | PropertyCardinality )
+
+PropertyType ::= "type" ( ":" | "=" ) PropertyTypeValue
+
+PropertySubType ::= "subtype" ( ":" | "=" ) Identifier
+
+PropertyCardinality ::= "cardinality" ( ":" | "=" ) PropertyCardinalityValue
+
+PropertyDescription ::= "description" LiteralOrExpression
+
+PropertyLength ::= "length" ( ":" | "=" ) IntegerLiteral
+ 
+PropertyDirection ::= "direction" ( ":" | "=" ) ( PropertyDirectionValue | Expression )
+
+PropertyArguments ::= PropertyArgument ( "," PropertyArgument )*
+
+MessageArgument ::= ( "type" ( ":" | "=" ) MessageType ) | ("mode" ( ":" | "=" ) MessageMode ) 
+
+MessageArguments ::= MessageArgument ( "," MessageArgument )*
+
+KeyValueArguments ::= ParamKeyName LiteralOrExpression ( "," ParamKeyName LiteralOrExpression  )*
+
+Map ::= ( Conditional )? ( "map." AdapterName ( "(" KeyValueArguments? ")" )?  |  "map" "(" "object:" DOUBLE_QUOTE ClassName DOUBLE_QUOTE ( "," KeyValueArguments )?  ")" ) "{" InnerBody* "}"
+
+MethodOrSetter ::= ( Conditional )?  (AdapterMethod | SetterField)
+
+SetterField ::= ( Conditional )?  "$" FieldName ("=" StringConstant ";"  |  "=" ConditionalExpressions ";" | ("(" KeyValueArguments ")")? "{" MappedArrayMessage "}" | MappedMessage | "{" MappedArrayField "}" ) 
+
+AdapterMethod ::= ( Conditional )?  "." MethodName "(" KeyValueArguments? ")" ";"
+
+Loop ::= Conditional? LOOP ( MappableIdentifier | "[" MsgIdentifier "]" )  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappedArrayField ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappedArrayMessage ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBody* "}"
+
+MappedMessage ::= "{" InnerBody* "}"
+
+MappedArrayFieldSelection ::= MappableIdentifier ("(" FILTER "=" Expression ")" )? "{" InnerBodySelection* "}"
+
+MappedArrayMessageSelection ::= "[" MsgIdentifier "]"  ("(" FILTER "=" Expression ")" )? "{" InnerBodySelection* "}"
+
+MappableIdentifier ::= "$" ( ParentMsg )* Identifier ( Arguments )? 
+
+ExpressionLiteral ::= "`" ( Expression )* "`" 
+
+FunctionLiteral ::= Identifier Arguments
+
+ForallLiteral ::= SARTRE "(" TmlLiteral "," ExpressionLiteral ")"
+
+Arguments ::= "(" ( Expression ( "," Expression )*) ? ")" 
+
+Operand ::= NULL | TRUE | FALSE | ForallLiteral | TODAY | FunctionLiteral | IntegerLiteral | StringLiteral | FloatLiteral | DATE_PATTERN | TmlIdentifier | MappableIdentifier | ExistsTmlIdentifier
+
+Expression ::= "#" DefinedExpression | OrExpression
+
+DefinedExpression ::= Identifier
+
+OrExpression ::= AndExpression ( OR AndExpression )*
+
+AndExpression ::= EqualityExpression ( AND EqualityExpression )*
+
+EqualityExpression ::= RelationalExpression ( ( EQ RelationalExpression ) | ( NEQ RelationalExpression ) )*
+
+RelationalExpression ::= AdditiveExpression ( ( LT AdditiveExpression ) | ( LET AdditiveExpression ) | ( GT AdditiveExpression ) | ( GET AdditiveExpression ) )*
+
+AdditiveExpression ::= MultiplicativeExpression ( ( PLUS MultiplicativeExpression ) | ( MIN MultiplicativeExpression ) )*
+
+MultiplicativeExpression ::= UnaryExpression ( ( MULT UnaryExpression ) | ( DIV UnaryExpression ) )*
+
+UnaryExpression ::= ( "!" UnaryExpression | MIN UnaryExpression | PrimaryExpression )
+
+PrimaryExpression ::= Operand | "(" Expression ")"
+
+Ignore   ::= WhiteSpace
+           | Comment
+          /* ws: definition */
+
+<?TOKENS?>
+
+EOF      ::= $
+
+LETTER ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
+ | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+ | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+ | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+ | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+ | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+ | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+ | "x" | "y" | "z"
+
+DIGIT ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+SYMBOL ::= " " | "\n" | "\t" | "!" | "@" | "$" | "#" | "%" | "^" | "&" | "*" | "(" | ")" | "-" | "_" | "=" | "+" | "{" | "}" | "[" | "]" | ":" | ";" | "\" | "/" | "|" | "<" | ">" | "\'" | "," | "." | "?" | "§" | "±" | "~" | "`" 
+
+DOUBLE_QUOTE ::= '"' 
+
+INCLUDE ::= "include"
+
+MESSAGE ::= "message"
+
+PRINT ::= "print"
+
+LOG ::= "log"
+
+ANTIMESSAGE ::= "antimessage"
+
+PROPERTY ::= "property"
+
+OPTION ::= "option"
+
+DEFINE ::= "define"
+
+VALIDATIONS ::= "validations"
+
+METHODS ::= "methods"
+
+FINALLY ::= "finally"
+
+CHECK ::= "check"
+
+BREAK ::= "break"
+
+SYNCHRONIZED ::= "synchronized"
+
+CONTEXT ::= "context"
+
+KEY ::= "key"
+
+TIMEOUT ::= "timeout"
+
+BREAKONNOLOCK ::= "breakOnNoLock"
+
+TODAY ::= "TODAY"
+
+VAR ::= "var"
+
+IF ::= "if"
+
+THEN ::= "then"
+
+ELSE ::= "else"
+
+AND ::= "AND"
+
+OR ::= "OR"
+
+PLUS ::= "+"
+
+MULT ::= "*"
+
+DIV ::= "/"
+
+MIN ::= "-"
+
+LT ::= "<"
+
+LET ::= "<="
+
+GT ::= ">"
+
+GET ::= ">="
+
+EQ ::= "=="
+
+NEQ ::= "!="
+
+FILTER ::= "filter"
+
+LOOP ::= "loop"
+
+DEBUG ::= "@debug"
+
+TRUE ::= "true"
+
+FALSE ::= "false"
+
+REQUEST ::= "request"
+
+RESPONSE ::= "response"
+
+CHARACTER ::= LETTER | DIGIT | SYMBOL
+
+DATE_PATTERN ::= (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) "#" (IntegerLiteral | TmlIdentifier) 
+
+Identifier ::= IDENTIFIER_DEF - Keyword
+
+IDENTIFIER_DEF ::= ( LETTER | "_" ) ( LETTER | DIGIT | "_" )*
+
+VarName ::= Identifier
+
+ParamKeyName ::= Identifier
+
+AdapterName ::= Identifier
+
+ClassName ::= LETTER+ ( "." LETTER+)*
+
+MethodName ::= Identifier
+
+FieldName ::= ParentMsg* Identifier
+
+PropertyName ::= Identifier
+
+NameOption ::= ":name"
+
+ValueOption ::= ":value"
+
+SelectedOption ::= ":selected"
+
+ParentMsg ::= "../"
+
+IntegerLiteral ::= "0" | ( ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) ( DIGIT )* )
+
+FloatLiteral ::= ( "0" | IntegerLiteral ) "." ( DIGIT )*
+
+StringLiteral ::= "'" StringCharacters? "'"
+
+StringCharacters ::= StringCharacter+
+
+StringCharacter ::= InputCharacter - ( "'" | '\' ) | EscapeSequence
+
+TmlLiteral ::= "'" ( MsgIdentifier )* "'" 
+
+ExistsTmlIdentifier ::= "?" TmlIdentifier
+
+StringConstant ::= DOUBLE_QUOTE StringConstantCharacter* DOUBLE_QUOTE 
+
+StringConstantCharacter ::= InputCharacter - ( '"' | '\' ) | EscapeSequence
+
+ScriptIdentifier ::= Identifier ( "/" Identifier )*
+
+MsgElementIdentifier ::= Identifier ( "@" DIGIT | "@" Identifier "=" CHARACTER )?
+
+MsgIdentifier ::= ( "/" | ParentMsg* ) MsgElementIdentifier ( "/" MsgElementIdentifier )*
+
+PropertyIdentifier ::= ( MsgIdentifier )? Identifier ( NameOption | ValueOption | SelectedOption )?
+
+ParamIdentifier ::= ( "/@" | "@" ) Identifier
+
+TmlIdentifier ::= "[" ( ParamIdentifier | MsgIdentifier | PropertyIdentifier ) "]"
+
+PropertyDirectionValue ::= "in" | "out" | "inout"
+
+PropertyCardinalityValue ::= "+" | "1"
+
+MessageType ::= "array" | "simple" | "arrayelement"
+
+MessageMode ::= "ignore" | "overwrite" 
+
+SContextType ::= ( "user" | "service" )
+
+PropertyTypeValue ::= ( "boolean" | "string" | "date" | "float" | "clocktime" | "list" | "integer" | "timestamp" | "binary" | "selection" | "memo" | "money" | "percentage" | "password" )
+
+SARTRE ::= ( "FORALL" | "EXISTS" )
+
+NULL ::= "null"
+
+Keyword  ::= TODAY | IF |  THEN | ELSE | AND | OR | TRUE | FALSE | SARTRE | NULL | PropertyDirectionValue
+
+WhiteSpace
+         ::= ' '
+           | #x0009
+           | #x000C
+           | LineTerminator
+Comment  ::= TraditionalComment
+           | EndOfLineComment
+TraditionalComment
+         ::= '/*' ( CHARACTER | "'" | WhiteSpace | '"' )* '*/'
+EndOfLineComment
+         ::= '//' ( CHARACTER | "'" | '"' ) *
+
+SourceCharacter ::= .
+
+LineContinuation ::= '\' LineTerminatorSequence
+
+InputCharacter ::= UnicodeInputCharacter
+
+UnicodeInputCharacter ::= UnicodeEscape | RawInputCharacter
+
+UnicodeEscape ::= '\' UnicodeMarker HexDigit HexDigit HexDigit HexDigit
+
+UnicodeMarker ::= 'u'+
+
+HexDigit ::= '0'
+           | '1'
+           | '2'
+           | '3'
+           | '4'
+           | '5'
+           | '6'
+           | '7'
+           | '8'
+           | '9'
+           | 'a'
+           | 'b'
+           | 'c'
+           | 'd'
+           | 'e'
+           | 'f'
+           | 'A'
+           | 'B'
+           | 'C'
+           | 'D'
+           | 'E'
+           | 'F'
+
+RawInputCharacter
+         ::= [#x0001-#xD7FF]
+           | [#xE000-#xFFFD]
+           | [#x10000-#x10FFFF]
+
+
+LineTerminatorSequence
+         ::= #x000D #x000A
+           | #x000A
+           | #x000D
+           | #x2028
+           | #x2029
+
+LineTerminator
+         ::= #x000A
+           | #x000D
+           | #x2028
+           | #x2029
+           
+EscapeSequence
+         ::= BackSlash 'b'
+           | BackSlash 't'
+           | BackSlash 'n'
+           | BackSlash 'f'
+           | BackSlash 'r'
+           | BackSlash '"'
+           | BackSlash "'"
+           | BackSlash BackSlash
+           | OctalEscape
+           
+BackSlash
+         ::= '\' ( UnicodeMarker '005' [cC] )?
+         
+OctalDigit ::= '0'
+           | '1'
+           | '2'
+           | '3'
+           | '4'
+           | '5'
+           | '6'
+           | '7'
+
+OctalEscape
+         ::= '\' OctalDigit
+           | '\' OctalDigit OctalDigit
+           | '\' ZeroToThree OctalDigit OctalDigit
+           
+ZeroToThree
+         ::= '0'
+           | '1'
+           | '2'
+           | '3'

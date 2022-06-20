@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.mapping.compiler.meta;
 
 import java.io.File;
@@ -34,7 +39,12 @@ public class IncludeDependency extends Dependency {
 	public final static long getScriptTimeStamp(String id) {
 		// Try to find included script.
 		String scriptPath =  DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-		return getFileTimeStamp(new File(scriptPath, id + ".xml"));
+		File f = new File(scriptPath, id + ".xml");
+		if ( f.exists() ) {
+			return getFileTimeStamp(f);
+		}
+		f = new File(scriptPath, id + ".ns");
+		return getFileTimeStamp(f);
 	}
 	
 	public final static long getFileTimeStamp(File f) {

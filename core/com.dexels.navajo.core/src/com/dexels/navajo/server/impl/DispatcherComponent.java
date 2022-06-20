@@ -1,3 +1,8 @@
+/*
+This file is part of the Navajo Project. 
+It is subject to the license terms in the COPYING file found in the top-level directory of this distribution and at https://www.gnu.org/licenses/agpl-3.0.txt. 
+No part of the Navajo Project, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYING file.
+*/
 package com.dexels.navajo.server.impl;
 
 import org.osgi.framework.BundleContext;
@@ -11,16 +16,19 @@ import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 
-public class DispatcherComponent extends Dispatcher implements
-		DispatcherInterface {
+public class DispatcherComponent extends Dispatcher implements DispatcherInterface {
+
+    private static final Logger logger = LoggerFactory.getLogger(DispatcherComponent.class);
 
 	BundleContext myContext = null;
 	NavajoEventRegistry myRegistry = null;
 	TribeManagerInterface tribeManager = null;
-	
-	private static final Logger logger = LoggerFactory.getLogger(DispatcherComponent.class);
-	
-	public void activate(BundleContext context) {
+
+	@Override
+    public void activate(BundleContext context) {
+
+	    super.activate(context);
+
 		try {
 			logger.info("Activate dispatcher!");
 			DispatcherFactory.createDispatcher(this);
@@ -32,8 +40,13 @@ public class DispatcherComponent extends Dispatcher implements
 			logger.error("Error: ", e);
 		}
 	}
-	public void deactivate() {
-		logger.debug("Deactivate dispatcher!");
+
+	@Override
+    public void deactivate() {
+
+        super.deactivate();
+
+        logger.debug("Deactivate dispatcher!");
 		DispatcherFactory.setInstance(null);
 		myContext = null;
 	}
@@ -47,15 +60,15 @@ public class DispatcherComponent extends Dispatcher implements
 	public void setTribeManager(TribeManagerInterface tmi) {
 		tribeManager = tmi;
 	}
-	
+
 	public void clearTribeManager(TribeManagerInterface tmi) {
 		tribeManager = null;
 	}
-	
+
 	public void setEventRegistry(NavajoEventRegistry ner) {
 		myRegistry = ner;
 	}
-	
+
 	public void clearEventRegistry(NavajoEventRegistry ner) {
 		myRegistry = null;
 	}
